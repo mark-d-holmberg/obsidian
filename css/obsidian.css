@@ -1,0 +1,93 @@
+.dnd5e.sheet.obsidian-window .window-content {
+	padding: 0;
+}
+
+.dnd5e.sheet form.obsidian > * {
+	flex: none;
+}
+
+.obsidian-ptr {
+	cursor: pointer;
+}
+
+.dnd5e.sheet form.editable.obsidian .rollable:hover {
+	color: inherit;
+}
+
+.obsidian {
+	background: #252830;
+	color: #cfd2da;
+	display: flex;
+	padding: 20px;
+	font-family: Roboto, sans-serif;
+}
+
+.obsidian .condensed {
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.dnd5e.sheet form input[type=text].obsidian-charname {
+	color: #cfd2da;
+	font-size: 26px;
+	font-family: 'Roboto Condensed', sans-serif;
+	padding: 6px 0;
+	border-bottom: 1px solid #434857;
+	width: 400px;
+	height: auto;
+	display: block;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.obsidian img {
+	border: none;
+}
+
+.obsidian-sidebar {
+	padding-right: 20px;
+	border-right: 1px solid #434857;
+	text-align: center;
+}
+
+.obsidian-profile-img {
+	max-width: 400px;
+}
+
+.obsidian-char-overview {
+	padding-left: 20px;
+}
+
+.obsidian-char-ability {
+	display: inline-block;
+	padding: 0 20px 20px 0;
+}
+
+.obsidian-char-ability-name {
+	text-transform: uppercase;
+	color: #51586a;
+	font-size: 16px;
+	padding-bottom: 4px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.obsidian-char-ability-mod {
+	border: 4px solid #434857;
+	border-bottom-width: 2px;
+	padding: 8px 0;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.dnd5e.sheet form input[type=text].obsidian-char-ability-score {
+	width: 58px;
+	border: 2px solid #434857;
+	padding: 4px 0;
+	color: #999;
+	font-size: 16px;
+	margin: 0;
+	border-radius: 0;
+	text-align: center;
+	font-family: Roboto, sans-serif;
+}

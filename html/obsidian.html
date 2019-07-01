@@ -1,0 +1,23 @@
+<!--suppress HtmlUnknownTarget, HtmlFormInputWithoutLabel -->
+<form class="obsidian {{cssClass}}" autocomplete="off">
+	<section class="obsidian-sidebar">
+		<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
+		       class="obsidian-charname">
+		<img class="obsidian-profile-img obsidian-ptr" src="{{actor.img}}" title="{{actor.name}}"
+		     alt="{{actor.name}}" data-edit="img">
+	</section>
+	<section class="obsidian-char-overview">
+		<div class="obsidian-char-abilities">
+			{{#each data.abilities as |ability id|}}
+			<div class="obsidian-char-ability">
+				<div class="obsidian-char-ability-name rollable condensed">{{id}}</div>
+				<div class="obsidian-char-ability-mod">
+					{{numberFormat ability.mod decimals=0 sign=true}}
+				</div>
+				<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
+				       placeholder="10" class="obsidian-char-ability-score">
+			</div>
+			{{/each}}
+		</div>
+	</section>
+</form>

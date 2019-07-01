@@ -5,8 +5,9 @@
 	"version": "0.1",
 	"author": "Kim Mantas",
 	"systems": ["dnd5e"],
-	"scripts": [],
-	"styles": [],
+	"scripts": ["js/obsidian.js"],
+	"styles": ["css/obsidian.css", "css/roboto.css"],
 	"packs": [],
-	"url": "https://bitbucket.org/Fyorl/obsidian"
+	"url": "https://bitbucket.org/Fyorl/obsidian",
+	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json"
 }
