@@ -14,10 +14,14 @@
 	color: inherit;
 }
 
+.dnd5e.sheet form.obsidian {
+	display: grid;
+	grid-template-columns: 420px auto;
+}
+
 .obsidian {
 	background: #252830;
 	color: #cfd2da;
-	display: flex;
 	padding: 20px;
 	font-family: Roboto, sans-serif;
 }
