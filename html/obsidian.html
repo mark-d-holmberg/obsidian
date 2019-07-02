@@ -1,16 +1,44 @@
 <!--suppress HtmlUnknownTarget, HtmlFormInputWithoutLabel -->
 <form class="obsidian {{cssClass}}" autocomplete="off">
 	<section class="obsidian-sidebar">
-		<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
-		       class="obsidian-charname">
 		<img class="obsidian-profile-img obsidian-ptr" src="{{actor.img}}" title="{{actor.name}}"
 		     alt="{{actor.name}}" data-edit="img">
+		<div class="obsidian-collapser-container obsidian-ptr">
+			<i class="fas fa-angle-double-down fa-rotate-90"></i>
+		</div>
 	</section>
 	<section class="obsidian-char-overview">
+		<div class="obsidian-char-header obsidian-ptr">
+			<div class="obsidian-char-charname obsidian-condensed">{{actor.name}}</div>
+			<div class="obsidian-char-header-minor">
+				<span>{{data.details.gender.value}}</span>
+				<span>{{data.details.race.value}}</span>
+				<span>{{data.details.subrace.value}}</span>
+			</div>
+			<div class="obsidian-char-xp">
+				<div class="obsidian-char-xp-bar">
+					<span class="obsidian-char-lvl obsidian-condensed">LVL {{data.details.level.value}}</span>
+					<span class="obsidian-char-xp-progress">
+						<span class="obsidian-char-xp-progress-bar"
+						      style="width: {{percent data.details.xp.value data.details.xp.max}}%;"></span>
+					</span>
+					<span class="obsidian-char-lvl obsidian-condensed">
+						{{#if (expr '>=' data.details.level.value data.details.level.max)}}
+							MAX
+						{{else}}
+							LVL {{expr 'add' data.details.level.value 1}}
+						{{/if}}
+					</span>
+				</div>
+				<div class="obsidian-char-xp-data">
+					{{data.details.xp.value}} / {{data.details.xp.max}} XP
+				</div>
+			</div>
+		</div>
 		<div class="obsidian-char-abilities">
 			{{#each data.abilities as |ability id|}}
 			<div class="obsidian-char-ability">
-				<div class="obsidian-char-ability-name rollable condensed">{{id}}</div>
+				<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
 				<div class="obsidian-char-ability-mod">
 					{{numberFormat ability.mod decimals=0 sign=true}}
 				</div>
