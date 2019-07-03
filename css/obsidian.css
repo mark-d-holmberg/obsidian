@@ -29,6 +29,10 @@
 	grid-template-columns: 420px auto;
 }
 
+.dnd5e.sheet form.obsidian.obsidian-collapsed {
+	grid-template-columns: 0 auto;
+}
+
 .obsidian {
 	background: var(--bg);
 	color: var(--text-regular);
@@ -44,6 +48,10 @@
 	border: none;
 }
 
+.obsidian-edit {
+	color: var(--text-secondary);
+}
+
 .obsidian-sidebar {
 	padding-right: 20px;
 	border-right: 1px solid var(--mid);
@@ -51,8 +59,16 @@
 	position: relative;
 }
 
+.obsidian-collapsed .obsidian-sidebar {
+	padding: 0;
+}
+
 .obsidian-profile-img {
 	max-width: 400px;
+}
+
+.obsidian-collapsed .obsidian-profile-img {
+	display: none;
 }
 
 .obsidian-collapser-container {
@@ -67,12 +83,27 @@
 	color: var(--text-secondary);
 }
 
+.obsidian-collapser-container:hover {
+	background-color: rgba(255, 255, 255, .1);
+}
+
 .obsidian-char-overview {
 	padding-left: 20px;
 }
 
-.obsidian-char-charname {
+.dnd5e.sheet form.obsidian .obsidian-char-header-minor span {
+	color: var(--text-subtle);
+	margin-right: 4px;
+	font-size: 12px;
+	display: inline-block;
+}
+
+.dnd5e.sheet form input[type=text].obsidian-char-charname {
+	color: var(--text-regular);
+	height: auto;
+	display: block;
 	font-size: 26px;
+	width: 400px;
 }
 
 .obsidian-char-xp {

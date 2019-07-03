@@ -8,25 +8,44 @@
 		</div>
 	</section>
 	<section class="obsidian-char-overview">
-		<div class="obsidian-char-header obsidian-ptr">
-			<div class="obsidian-char-charname obsidian-condensed">{{actor.name}}</div>
-			<div class="obsidian-char-header-minor">
-				<span>{{data.details.gender.value}}</span>
-				<span>{{data.details.race.value}}</span>
-				<span>{{data.details.subrace.value}}</span>
+		<div class="obsidian-char-header">
+			<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
+			       class="obsidian-char-charname obsidian-condensed">
+			<div class="obsidian-char-header-minor obsidian-condensed">
+				{{#if data.details.gender.value}}
+					<span>{{data.details.gender.value}}</span>
+				{{/if}}
+				{{#if data.details.subrace.value}}
+					<span>{{data.details.subrace.value}}</span>
+				{{/if}}
+				<span>
+					{{#if data.details.race.value}}
+						{{data.details.race.value}}
+					{{else}}
+						Race
+					{{/if}}
+				</span>
+				<span>Class</span>
+				<a title="Edit Details" class="obsidian-edit">
+					<i class="fas fa-edit"></i>
+				</a>
 			</div>
-			<div class="obsidian-char-xp">
+			<div class="obsidian-char-xp obsidian-ptr">
 				<div class="obsidian-char-xp-bar">
 					<span class="obsidian-char-lvl obsidian-condensed">LVL {{data.details.level.value}}</span>
 					<span class="obsidian-char-xp-progress">
-						<span class="obsidian-char-xp-progress-bar"
-						      style="width: {{percent data.details.xp.value data.details.xp.max}}%;"></span>
+						<span class="obsidian-char-xp-progress-bar" style="width:
+							{{~#if (expr '>=' data.details.xp.value data.details.xp.max)~}}
+								100
+							{{~else~}}
+								{{~expr '*' 100 (expr '/' data.details.xp.value data.details.xp.max)~}}
+							{{~/if~}}%;"></span>
 					</span>
 					<span class="obsidian-char-lvl obsidian-condensed">
 						{{#if (expr '>=' data.details.level.value data.details.level.max)}}
 							MAX
 						{{else}}
-							LVL {{expr 'add' data.details.level.value 1}}
+							LVL {{expr '+' data.details.level.value 1}}
 						{{/if}}
 					</span>
 				</div>
