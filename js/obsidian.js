@@ -24,27 +24,6 @@ class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	get template () {
-		Handlebars.registerHelper('expr', function (op, ...args) {
-			args.pop();
-
-			if (op === '>=') {
-				return args[0] >= args[1];
-			}
-
-			let reducer = null;
-			if (op === '+') {
-				reducer = (acc, x) => acc + x;
-			} else if (op === '*') {
-				reducer = (acc, x) => acc * x;
-			} else if (op === '/') {
-				reducer = (acc, x) => acc / x;
-			}
-
-			if (reducer !== null) {
-				return args.reduce(reducer);
-			}
-		});
-
 		return 'public/modules/obsidian/html/obsidian.html';
 	}
 
@@ -70,9 +49,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		// The first element of our template is actually a comment, not the
 		// form element so we override this behaviour here.
 		this.form = html[2];
-
 		this._applySettings();
+
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
+		html.find('.obsidian-char-header-minor .obsidian-edit')
+			.click(this._launchHeaderDetails.bind(this));
 	}
 
 	getData () {
@@ -82,7 +63,35 @@ class Obsidian extends ActorSheet5eCharacter {
 			data.data.details.level.max = ObsidianRules.MAX_LEVEL;
 		}
 
+		if (data.data.details.subrace === undefined) {
+			data.data.details.subrace = {
+				label: 'Subrace',
+				type: 'String'
+			};
+		}
+
+		if (data.data.details.gender === undefined) {
+			data.data.details.gender = {
+				label: 'Gender',
+				type: 'String'
+			};
+		}
+
 		return data;
+	}
+
+	/**
+	 * Whether a modal dialog is currently popped up.
+	 * @param modal {boolean}
+	 */
+
+	setModal (modal) {
+		/** @type {JQuery} */ const win = $(this.form).parents('.obsidian-window');
+		if (modal) {
+			win.addClass('obsidian-background');
+		} else {
+			win.removeClass('obsidian-background');
+		}
 	}
 
 	/**
@@ -90,6 +99,35 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_applySettings () {
 		this._setCollapsed(this.settings.portraitCollapsed);
+	}
+
+	/**
+	 * @private
+	 */
+	async _launchHeaderDetails () {
+		this.setModal(true);
+		const html = await renderTemplate('public/modules/obsidian/html/header-details.html', this);
+		// noinspection JSUnusedGlobalSymbols
+		new Dialog({
+			title: 'Edit Details',
+			content: html,
+			buttons: {
+				save: {
+					icon: '<i class="far fa-save"></i>',
+					label: 'Save',
+					callback: dlg => {
+						this.setModal(false);
+						console.log(dlg);
+					}
+				},
+				cancel: {
+					icon: '<i class="fas fa-times"></i>',
+					label: 'Cancel',
+					callback: () => this.setModal(false)
+				}
+			},
+			default: 'save'
+		}).render(true);
 	}
 
 	/**
@@ -129,6 +167,27 @@ class Obsidian extends ActorSheet5eCharacter {
 		$(this.form).parents('.obsidian-window').width(this.position.width);
 	}
 }
+
+Handlebars.registerHelper('expr', function (op, ...args) {
+	args.pop();
+
+	if (op === '>=') {
+		return args[0] >= args[1];
+	}
+
+	let reducer = null;
+	if (op === '+') {
+		reducer = (acc, x) => acc + x;
+	} else if (op === '*') {
+		reducer = (acc, x) => acc * x;
+	} else if (op === '/') {
+		reducer = (acc, x) => acc / x;
+	}
+
+	if (reducer !== null) {
+		return args.reduce(reducer);
+	}
+});
 
 Actors.registerSheet('dnd5e', Obsidian, {
 	types: ['character'],

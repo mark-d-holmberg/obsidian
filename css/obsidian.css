@@ -8,6 +8,10 @@
 	--highlight: red;
 }
 
+.dnd5e.sheet.obsidian-window.obsidian-background {
+	pointer-events: none;
+}
+
 .dnd5e.sheet.obsidian-window .window-content {
 	padding: 0;
 }
