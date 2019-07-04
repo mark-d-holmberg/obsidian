@@ -104,26 +104,37 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
+	_dialogUpdate (html) {
+		const form = html.find('form')[0];
+		const formData = validateForm(form);
+		// noinspection JSUnresolvedFunction
+		this._updateObject(null, formData);
+	}
+
+	/**
+	 * @private
+	 */
 	async _launchHeaderDetails () {
 		this.setModal(true);
-		const html = await renderTemplate('public/modules/obsidian/html/header-details.html', this);
+		const html =
+			await renderTemplate(
+				'public/modules/obsidian/html/header-details.html',
+				this.object.data);
+
 		// noinspection JSUnusedGlobalSymbols
-		new Dialog({
+		new ObsidianHeaderDetailsDialog({
 			title: 'Edit Details',
 			content: html,
+			close: () => this.setModal(false),
 			buttons: {
 				save: {
-					icon: '<i class="far fa-save"></i>',
+					icon: '<i class="fas fa-save"></i>',
 					label: 'Save',
-					callback: dlg => {
-						this.setModal(false);
-						console.log(dlg);
-					}
+					callback: this._dialogUpdate.bind(this)
 				},
 				cancel: {
 					icon: '<i class="fas fa-times"></i>',
-					label: 'Cancel',
-					callback: () => this.setModal(false)
+					label: 'Cancel'
 				}
 			},
 			default: 'save'
