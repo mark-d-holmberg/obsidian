@@ -99,6 +99,9 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_applySettings () {
 		this._setCollapsed(this.settings.portraitCollapsed);
+		if (this.settings.width !== undefined) {
+			this.position.width = this.settings.width;
+		}
 	}
 
 	/**
@@ -165,8 +168,6 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_togglePortrait () {
 		this.settings.portraitCollapsed = !this.settings.portraitCollapsed;
-		// noinspection JSIgnoredPromiseFromCall
-		game.settings.set('Obsidian', this.object.data._id, JSON.stringify(this.settings));
 		this._setCollapsed(this.settings.portraitCollapsed);
 
 		if (this.settings.portraitCollapsed) {
@@ -176,6 +177,9 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		$(this.form).parents('.obsidian-window').width(this.position.width);
+		this.settings.width = this.position.width;
+		// noinspection JSIgnoredPromiseFromCall
+		game.settings.set('Obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
 }
 

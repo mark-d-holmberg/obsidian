@@ -24,16 +24,22 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 * @private
 	 */
 	static _addClass (html) {
-		let siblings = html.find('.obsidian-class-row');
+		let siblings = html.find('.obsidian-form-row');
 		if (siblings.length < 1) {
 			siblings = html.find('label');
 		}
 
 		const sibling = siblings.last();
 		const classes = Object.keys(ObsidianRules.ClassHitDice);
-		const selectContainer = $('<div></div>');
-		/** @type {JQuery} */ const classSelect = $('<select></select>').appendTo(selectContainer);
-		/** @type {JQuery} */ const hdSelect = $('<select></select>').appendTo(selectContainer);
+		const container = $('<div></div>');
+		/** @type {JQuery} */ const classSelect = $('<select></select>').appendTo(container);
+		$('<input class="obsidian-input-compact" type="text" name="subclass" '
+			+ 'placeholder="Subclass">')
+			.appendTo(container);
+		$('<input class="obsidian-input-compact obsidian-input-num" type="text" name="level" '
+			+ 'value="1">')
+			.appendTo(container);
+		/** @type {JQuery} */ const hdSelect = $('<select></select>').appendTo(container);
 		const rmBtn = $('<button type="button" class="obsidian-btn-negative">Remove</button>');
 
 		classSelect.change(ObsidianHeaderDetailsDialog._selectHD);
@@ -44,8 +50,8 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			.forEach(opt => hdSelect.append(opt));
 
 		/** @type {JQuery} */ const row =
-			$('<div class="obsidian-class-row obsidian-inline"></div>')
-				.append(selectContainer)
+			$('<div class="obsidian-form-row obsidian-inline"></div>')
+				.append(container)
 				.append(rmBtn)
 				.insertAfter(sibling);
 
@@ -71,7 +77,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	static _selectHD (evt) {
 		const cls = $(evt.currentTarget);
 		const hd = `d${ObsidianRules.ClassHitDice[cls.val()]}`;
-		const hdSelect = cls.siblings()[0];
+		const hdSelect = cls.siblings('select')[0];
 
 		for (let i = 0; i < hdSelect.childNodes.length; i++) {
 			const opt = hdSelect.childNodes[i];

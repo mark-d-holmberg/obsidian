@@ -197,6 +197,7 @@
 	display: block;
 	font-size: 26px;
 	width: 400px;
+	line-height: 1;
 }
 
 .obsidian-char-xp {
@@ -265,6 +266,7 @@
 	border-radius: 0;
 	text-align: center;
 	font-family: Roboto, sans-serif;
+	line-height: 1;
 }
 
 .obsidian label {
@@ -273,26 +275,32 @@
 	font-size: 16px;
 }
 
-.obsidian label input {
+.obsidian input {
 	display: block;
 	width: 100%;
-	margin: 6px 0 10px 0;
-	padding: .375rem .75rem;
-	font-size: .9rem;
+	margin: 2px 0 14px 0;
+	padding: 0 3px;
+	font-size: 16px;
 	line-height: 1.5;
-	color: var(--text-bright);
-	background-color: var(--mid);
-	border: 1px solid var(--mid);
-	border-radius: .25rem;
-	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	color: var(--text-regular);
+	background-color: transparent;
+	border: 0 solid var(--mid);
+	border-bottom-width: 1px;
+	border-radius: 0;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 
-.obsidian label input:focus {
-	color: var(--text-inverse);
-	background-color: var(--text-bright);
-	border-color: var(--highlight);
-	outline: 0;
-	box-shadow: 0 0 0 0.2rem var(--highlight-rgba);
+.obsidian input::placeholder {
+	color: var(--text-secondary);
+}
+
+.obsidian input:focus {
+	box-shadow: none;
+}
+
+.obsidian input.obsidian-input-compact {
+	display: inline-block;
+	font-size: 14px;
 }
 
 .obsidian label.obsidian-inline {
@@ -308,16 +316,27 @@
 	margin-bottom: 10px;
 }
 
-.obsidian-class-row {
+.obsidian-form-row {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.obsidian-class-row:last-child {
+.obsidian-form-row:last-child {
 	margin-bottom: 10px;
 }
 
-.obsidian-class-row select {
-	margin-right: 10px;
+.obsidian-form-row select,
+.obsidian-form-row input {
+	margin: 0 10px 0 0;
+}
+
+.obsidian .obsidian-form-row input {
+	padding-bottom: 3px;
+	max-width: 100px;
+}
+
+.obsidian .obsidian-form-row input.obsidian-input-num {
+	max-width: 25px;
+	text-align: center;
 }
