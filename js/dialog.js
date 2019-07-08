@@ -1,90 +1,86 @@
-class ObsidianDialog extends Dialog {
+class ObsidianDialog extends BaseEntitySheet {
+	constructor (parent, options) {
+		super(parent.object, options);
+		this.parent = parent;
+	}
+
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.classes.push('obsidian-window');
+		delete options.template;
+		options.classes = ['form', 'dialog', 'obsidian-window'];
+		options.closeOnSubmit = true;
+		options.submitOnClose = true;
+		options.width = 400;
 		return options;
 	}
 
+	get title () {
+		return this.options.title;
+	}
+
+	/**
+	 * @param html {JQuery}
+	 * @return undefined
+	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		if (this.data.close) {
-			html.parents('.obsidian-window').find('a.close').click(this.data.close);
+		if (this.parent.setModal) {
+			html.parents('.obsidian-window').find('a.close')
+				.click(() => this.parent.setModal(false));
 		}
+	}
+
+	getData () {
+		return this.parent.getData();
+	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		this.parent._updateObject(event, formData);
 	}
 }
 
 class ObsidianHeaderDetailsDialog extends ObsidianDialog {
+	get template () {
+		return 'public/modules/obsidian/html/header-details.html';
+	}
+
+	/**
+	 * @param html {JQuery}
+	 * @return undefined
+	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		html.find('.obsidian-add-class')
-			.click(ObsidianHeaderDetailsDialog._addClass.bind(this, html));
+		html.find('.obsidian-add-class').click(this._onAddClass.bind(this));
 	}
 
 	/**
 	 * @private
 	 */
-	static _addClass (html) {
-		let siblings = html.find('.obsidian-form-row');
-		if (siblings.length < 1) {
-			siblings = html.find('label');
+	async _onAddClass (evt) {
+		evt.preventDefault();
+
+		let classes = this.parent.actor.getFlag('obsidian', 'classes');
+		if (classes == null) {
+			classes = [];
+		} else {
+			classes = JSON.parse(classes);
 		}
 
-		const sibling = siblings.last();
-		const classes = Object.keys(ObsidianRules.ClassHitDice);
-		const container = $('<div></div>');
-		/** @type {JQuery} */ const classSelect = $('<select></select>').appendTo(container);
-		$('<input class="obsidian-input-compact" type="text" name="subclass" '
-			+ 'placeholder="Subclass">')
-			.appendTo(container);
-		$('<input class="obsidian-input-compact obsidian-input-num" type="text" name="level" '
-			+ 'value="1">')
-			.appendTo(container);
-		/** @type {JQuery} */ const hdSelect = $('<select></select>').appendTo(container);
-		const rmBtn = $('<button type="button" class="obsidian-btn-negative">Remove</button>');
+		const firstClass = Object.keys(ObsidianRules.ClassHitDice)[0];
+		classes.push({
+			id: classes.length,
+			name: firstClass,
+			levels: 1,
+			hd: ObsidianRules.ClassHitDice[firstClass]
+		});
 
-		classSelect.change(ObsidianHeaderDetailsDialog._selectHD);
-		rmBtn.click(ObsidianHeaderDetailsDialog._removeClass);
-		classes.map(cls => $(`<option>${cls}</option>`)).forEach(opt => classSelect.append(opt));
-		[12, 10, 8, 6]
-			.map(die => $(`<option>d${die}</option>`))
-			.forEach(opt => hdSelect.append(opt));
-
-		/** @type {JQuery} */ const row =
-			$('<div class="obsidian-form-row obsidian-inline"></div>')
-				.append(container)
-				.append(rmBtn)
-				.insertAfter(sibling);
-
-		const win = html.parents('.dialog');
-		const winHeight = win.height();
-		win.height(winHeight + row.height());
-	}
-
-	/**
-	 * @private
-	 */
-	static _removeClass (evt) {
-		/** @type {JQuery} */ const row = $(evt.currentTarget).parent();
-		const win = row.parents('.dialog');
-		const winHeight = win.height();
-		win.height(winHeight - row.height());
-		row.remove();
-	}
-
-	/**
-	 * @private
-	 */
-	static _selectHD (evt) {
-		const cls = $(evt.currentTarget);
-		const hd = `d${ObsidianRules.ClassHitDice[cls.val()]}`;
-		const hdSelect = cls.siblings('select')[0];
-
-		for (let i = 0; i < hdSelect.childNodes.length; i++) {
-			const opt = hdSelect.childNodes[i];
-			if (opt.value === hd) {
-				hdSelect.selectedIndex = i;
-				break;
-			}
-		}
+		await this.parent.actor.setFlag('obsidian', 'classes', JSON.stringify(classes));
+		this.render(false, {
+			renderContext: 'createExtraFlag',
+			renderData: this.getData()
+		});
 	}
 }

@@ -12,11 +12,11 @@
 			<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
 			       class="obsidian-char-charname obsidian-condensed">
 			<div class="obsidian-char-header-minor obsidian-condensed">
-				{{#if data.details.gender.value}}
-					<span>{{data.details.gender.value}}</span>
+				{{#if extra.details.gender}}
+					<span>{{extra.details.gender}}</span>
 				{{/if}}
-				{{#if data.details.subrace.value}}
-					<span class="obsidian-joined">{{data.details.subrace.value}}</span>
+				{{#if extra.details.subrace}}
+					<span class="obsidian-joined">{{extra.details.subrace}}</span>
 				{{/if}}
 				<span>
 					{{#if data.details.race.value}}
@@ -42,7 +42,7 @@
 							{{~/if~}}%;"></span>
 					</span>
 					<span class="obsidian-char-lvl obsidian-condensed">
-						{{#if (expr '>=' data.details.level.value data.details.level.max)}}
+						{{#if (expr '>=' data.details.level.value ObsidianRules.MAX_LEVEL)}}
 							MAX
 						{{else}}
 							LVL {{expr '+' data.details.level.value 1}}

@@ -1,6 +1,6 @@
 <form class="obsidian" autocomplete="off">
 	<label>
-		<input name="data.details.gender.value" type="text" value="{{data.details.gender.value}}"
+		<input name="extra.details.gender" type="text" value="{{extra.details.gender}}"
 		       placeholder="Gender">
 	</label>
 	<label>
@@ -8,11 +8,43 @@
 		       placeholder="Race">
 	</label>
 	<label>
-		<input name="data.details.subrace.value" type="text" value="{{data.details.subrace.value}}"
+		<input name="extra.details.subrace" type="text" value="{{extra.details.subrace}}"
 		       placeholder="Subrace">
 	</label>
 	<label class="obsidian-inline obsidian-dialog-classes">
 		Classes
 		<button type="button" class="obsidian-btn-positive obsidian-add-class">Add</button>
 	</label>
+	{{#each extra.classes}}
+		<div class="obsidian-form-row obsidian-inline" data-item-id="{{this.id}}">
+			<div>
+				<select name="extra.classes.{{this.id}}.name">
+					{{#select this.name}}
+						{{#each ../ObsidianRules.CLASSES}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input class="obsidian-input-compact {{#if (expr '===' 'Custom' this.name)~}}
+						obsidian-visible
+					{{~else~}}
+						obsidian-hidden
+					{{~/if~}}
+				" type="text" name="extra.classes.{{this.id}}.custom" placeholder="Class"
+				       value="{{this.custom}}">
+				<input class="obsidian-input-compact" type="text" name="extra.classes.{{this.id}}.subclass"
+				       placeholder="Subclass" value="{{this.subclass}}">
+				<input class="obsidian-input-compact obsidian-input-num" type="text"
+				       name="extra.classes.{{this.id}}.levels" value="{{this.levels}}">
+				<select name="extra.classes.{{this.id}}.hd">
+					{{#select this.hd}}
+						{{#each ../ObsidianRules.HD}}
+							<option value="{{this}}">d{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</div>
+			<button type="button" class="btn-obsidian-negative">Remove</button>
+		</div>
+	{{/each}}
 </form>

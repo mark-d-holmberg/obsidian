@@ -1,4 +1,9 @@
 const ObsidianRules = {};
+ObsidianRules.CLASSES = [
+	'Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue',
+	'Sorcerer', 'Warlock', 'Wizard', 'Custom'
+];
+ObsidianRules.HD = [2, 4, 6, 8, 10, 12, 20];
 ObsidianRules.MAX_LEVEL = 20;
 
 ObsidianRules.ClassHitDice = {

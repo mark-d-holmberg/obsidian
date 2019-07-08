@@ -58,33 +58,31 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	getData () {
 		const data = super.getData();
-		if (data.data.details.level.max === undefined) {
-			// noinspection JSPrimitiveTypeWrapperUsage
-			data.data.details.level.max = ObsidianRules.MAX_LEVEL;
-		}
-
-		if (data.data.details.subrace === undefined) {
-			data.data.details.subrace = {
-				label: 'Subrace',
-				type: 'String'
-			};
-		}
-
-		if (data.data.details.gender === undefined) {
-			data.data.details.gender = {
-				label: 'Gender',
-				type: 'String'
-			};
-		}
-
+		data.ObsidianRules = ObsidianRules;
+		data.extra = this.getFlagData();
 		return data;
+	}
+
+	getFlagData () {
+		const extra = {};
+
+		const details = this.actor.getFlag('obsidian', 'details');
+		if (details != null) {
+			extra.details = JSON.parse(details);
+		}
+
+		const classes = this.actor.getFlag('obsidian', 'classes');
+		if (classes != null) {
+			extra.classes = JSON.parse(classes);
+		}
+
+		return extra;
 	}
 
 	/**
 	 * Whether a modal dialog is currently popped up.
 	 * @param modal {boolean}
 	 */
-
 	setModal (modal) {
 		/** @type {JQuery} */ const win = $(this.form).parents('.obsidian-window');
 		if (modal) {
@@ -107,41 +105,9 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_dialogUpdate (html) {
-		const form = html.find('form')[0];
-		const formData = validateForm(form);
-		// noinspection JSUnresolvedFunction
-		this._updateObject(null, formData);
-	}
-
-	/**
-	 * @private
-	 */
 	async _launchHeaderDetails () {
 		this.setModal(true);
-		const html =
-			await renderTemplate(
-				'public/modules/obsidian/html/header-details.html',
-				this.object.data);
-
-		// noinspection JSUnusedGlobalSymbols
-		new ObsidianHeaderDetailsDialog({
-			title: 'Edit Details',
-			content: html,
-			close: () => this.setModal(false),
-			buttons: {
-				save: {
-					icon: '<i class="fas fa-save"></i>',
-					label: 'Save',
-					callback: this._dialogUpdate.bind(this)
-				},
-				cancel: {
-					icon: '<i class="fas fa-times"></i>',
-					label: 'Cancel'
-				}
-			},
-			default: 'save'
-		}).render(true);
+		new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true);
 	}
 
 	/**
@@ -181,6 +147,59 @@ class Obsidian extends ActorSheet5eCharacter {
 		// noinspection JSIgnoredPromiseFromCall
 		game.settings.set('Obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
+
+	/**
+	 * @private
+	 */
+	_updateFlags (data) {
+		const flags = {};
+		for (let [key, val] of Object.entries(data)) {
+			key = key.substring(6);
+			const props = key.split('.');
+			let target = flags;
+
+			for (let i = 0; i < props.length; i++) {
+				const p = props[i];
+				if (p in target) {
+					target = target[p];
+				} else {
+					const next = props[i + 1];
+					if (next === undefined) {
+						target[p] = val;
+					} else {
+						if (next >= '0' && next <= '9') {
+							target[p] = [];
+						} else {
+							target[p] = {};
+						}
+						target = target[p];
+					}
+				}
+			}
+		}
+
+		console.debug(flags);
+	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		const newFormData = {};
+		const extras = {};
+
+		for (const [key, val] of Object.entries(formData)) {
+			if (key.startsWith('extra.')) {
+				extras[key] = val;
+			} else {
+				newFormData[key] = val;
+			}
+		}
+
+		// noinspection JSUnresolvedFunction
+		//super._updateObject(event, newFormData);
+		this._updateFlags(extras);
+	}
 }
 
 Handlebars.registerHelper('expr', function (op, ...args) {
@@ -188,6 +207,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 
 	if (op === '>=') {
 		return args[0] >= args[1];
+	}
+
+	if (op === '===') {
+		return args[0] === args[1];
 	}
 
 	let reducer = null;
