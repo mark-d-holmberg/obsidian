@@ -5,7 +5,7 @@
 	"version": "0.1",
 	"author": "Kim Mantas",
 	"systems": ["dnd5e"],
-	"scripts": ["js/rules.js", "js/obsidian.js", "js/dialog.js"],
+	"scripts": ["js/rules.js", "js/helpers.js", "js/obsidian.js", "js/dialog.js", "js/schema.js"],
 	"styles": ["css/obsidian.css", "css/roboto.css"],
 	"packs": [],
 	"url": "https://bitbucket.org/Fyorl/obsidian",

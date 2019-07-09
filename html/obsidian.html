@@ -12,11 +12,11 @@
 			<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
 			       class="obsidian-char-charname obsidian-condensed">
 			<div class="obsidian-char-header-minor obsidian-condensed">
-				{{#if extra.details.gender}}
-					<span>{{extra.details.gender}}</span>
+				{{#if entity.flags.obsidian.details.gender}}
+					<span>{{entity.flags.obsidian.details.gender}}</span>
 				{{/if}}
-				{{#if extra.details.subrace}}
-					<span class="obsidian-joined">{{extra.details.subrace}}</span>
+				{{#if entity.flags.obsidian.details.subrace}}
+					<span class="obsidian-joined">{{entity.flags.obsidian.details.subrace}}</span>
 				{{/if}}
 				<span>
 					{{#if data.details.race.value}}
@@ -25,7 +25,7 @@
 						Race
 					{{/if}}
 				</span>
-				<span>Class</span>
+				<span>{{classFormat entity.flags.obsidian.classes}}</span>
 				<a title="Edit Details" class="obsidian-edit">
 					<i class="fas fa-edit"></i>
 				</a>

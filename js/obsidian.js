@@ -1,7 +1,6 @@
 class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
 		super(object, options);
-		// noinspection JSUnusedGlobalSymbols
 		game.settings.register('Obsidian', this.object.data._id, {
 			name: 'Obsidian settings',
 			default: '',
@@ -14,13 +13,17 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (settings === '') {
 			settings = {};
 			settings.portraitCollapsed = false;
-			// noinspection JSIgnoredPromiseFromCall
 			game.settings.set('Obsidian', this.object.data._id, JSON.stringify(settings));
 		} else {
 			settings = JSON.parse(settings);
 		}
 
 		this.settings = settings;
+
+		// Seems best to enrich Actor data in the sheet rather than extending
+		// Actor5e and swapping out the entity class because the sheet itself
+		// is configurable whereas the Actor entityClass isn't.
+		Obsidian.enrichFlags(object.data.flags);
 	}
 
 	get template () {
@@ -44,7 +47,6 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		console.debug(this.actor);
 
 		// The first element of our template is actually a comment, not the
 		// form element so we override this behaviour here.
@@ -59,24 +61,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = ObsidianRules;
-		data.extra = this.getFlagData();
 		return data;
-	}
-
-	getFlagData () {
-		const extra = {};
-
-		const details = this.actor.getFlag('obsidian', 'details');
-		if (details != null) {
-			extra.details = JSON.parse(details);
-		}
-
-		const classes = this.actor.getFlag('obsidian', 'classes');
-		if (classes != null) {
-			extra.classes = JSON.parse(classes);
-		}
-
-		return extra;
 	}
 
 	/**
@@ -84,7 +69,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param modal {boolean}
 	 */
 	setModal (modal) {
-		/** @type {JQuery} */ const win = $(this.form).parents('.obsidian-window');
+		const win = $(this.form).parents('.obsidian-window');
 		if (modal) {
 			win.addClass('obsidian-background');
 		} else {
@@ -116,7 +101,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_setCollapsed (collapsed) {
 		const jqForm = $(this.form);
-		/** @type JQuery */ const collapser =
+		const collapser =
 			jqForm.find('.obsidian-collapser-container i')
 				.removeClass('fa-rotate-90 fa-rotate-270');
 
@@ -144,88 +129,9 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		$(this.form).parents('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
-		// noinspection JSIgnoredPromiseFromCall
 		game.settings.set('Obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
-
-	/**
-	 * @private
-	 */
-	_updateFlags (data) {
-		const flags = {};
-		for (let [key, val] of Object.entries(data)) {
-			key = key.substring(6);
-			const props = key.split('.');
-			let target = flags;
-
-			for (let i = 0; i < props.length; i++) {
-				const p = props[i];
-				if (p in target) {
-					target = target[p];
-				} else {
-					const next = props[i + 1];
-					if (next === undefined) {
-						target[p] = val;
-					} else {
-						if (next >= '0' && next <= '9') {
-							target[p] = [];
-						} else {
-							target[p] = {};
-						}
-						target = target[p];
-					}
-				}
-			}
-		}
-
-		console.debug(flags);
-	}
-
-	/**
-	 * @private
-	 */
-	_updateObject (event, formData) {
-		const newFormData = {};
-		const extras = {};
-
-		for (const [key, val] of Object.entries(formData)) {
-			if (key.startsWith('extra.')) {
-				extras[key] = val;
-			} else {
-				newFormData[key] = val;
-			}
-		}
-
-		// noinspection JSUnresolvedFunction
-		//super._updateObject(event, newFormData);
-		this._updateFlags(extras);
-	}
 }
-
-Handlebars.registerHelper('expr', function (op, ...args) {
-	args.pop();
-
-	if (op === '>=') {
-		return args[0] >= args[1];
-	}
-
-	if (op === '===') {
-		return args[0] === args[1];
-	}
-
-	let reducer = null;
-	if (op === '+') {
-		reducer = (acc, x) => acc + x;
-	} else if (op === '*') {
-		reducer = (acc, x) => acc * x;
-	} else if (op === '/') {
-		reducer = (acc, x) => acc / x;
-	}
-
-	if (reducer !== null) {
-		return args.reduce(reducer);
-	}
-});
 
 Actors.registerSheet('dnd5e', Obsidian, {
 	types: ['character'],

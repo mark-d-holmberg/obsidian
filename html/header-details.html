@@ -1,6 +1,6 @@
 <form class="obsidian" autocomplete="off">
 	<label>
-		<input name="extra.details.gender" type="text" value="{{extra.details.gender}}"
+		<input name="flags.obsidian.details.gender" type="text" value="{{entity.flags.obsidian.details.gender}}"
 		       placeholder="Gender">
 	</label>
 	<label>
@@ -8,35 +8,34 @@
 		       placeholder="Race">
 	</label>
 	<label>
-		<input name="extra.details.subrace" type="text" value="{{extra.details.subrace}}"
-		       placeholder="Subrace">
+		<input name="flags.obsidian.details.subrace" type="text" placeholder="Subrace"
+		       value="{{entity.flags.obsidian.details.subrace}}">
 	</label>
 	<label class="obsidian-inline obsidian-dialog-classes">
 		Classes
 		<button type="button" class="obsidian-btn-positive obsidian-add-class">Add</button>
 	</label>
-	{{#each extra.classes}}
+	{{#each entity.flags.obsidian.classes}}
 		<div class="obsidian-form-row obsidian-inline" data-item-id="{{this.id}}">
 			<div>
-				<select name="extra.classes.{{this.id}}.name">
+				<select name="flags.obsidian.classes.{{this.id}}.name">
 					{{#select this.name}}
 						{{#each ../ObsidianRules.CLASSES}}
 							<option value="{{this}}">{{this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input class="obsidian-input-compact {{#if (expr '===' 'Custom' this.name)~}}
-						obsidian-visible
-					{{~else~}}
+				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'Custom' this.name))~}}
 						obsidian-hidden
 					{{~/if~}}
-				" type="text" name="extra.classes.{{this.id}}.custom" placeholder="Class"
-				       value="{{this.custom}}">
-				<input class="obsidian-input-compact" type="text" name="extra.classes.{{this.id}}.subclass"
-				       placeholder="Subclass" value="{{this.subclass}}">
+				" type="text" name="flags.obsidian.classes.{{this.id}}.custom" placeholder="Class"
+				       style="width: 65px;" value="{{this.custom}}">
+				<input class="obsidian-input-compact" type="text" placeholder="Subclass"
+				       name="flags.obsidian.classes.{{this.id}}.subclass" value="{{this.subclass}}"
+				       style="{{#if (expr '===' 'Custom' this.name)}}width: 65px;{{/if}}">
 				<input class="obsidian-input-compact obsidian-input-num" type="text"
-				       name="extra.classes.{{this.id}}.levels" value="{{this.levels}}">
-				<select name="extra.classes.{{this.id}}.hd">
+				       name="flags.obsidian.classes.{{this.id}}.levels" value="{{this.levels}}">
+				<select name="flags.obsidian.classes.{{this.id}}.hd">
 					{{#select this.hd}}
 						{{#each ../ObsidianRules.HD}}
 							<option value="{{this}}">d{{this}}</option>
@@ -44,7 +43,7 @@
 					{{/select}}
 				</select>
 			</div>
-			<button type="button" class="btn-obsidian-negative">Remove</button>
+			<button type="button" class="obsidian-btn-negative obsidian-rm-class">Remove</button>
 		</div>
 	{{/each}}
 </form>

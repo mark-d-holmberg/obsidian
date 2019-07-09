@@ -103,7 +103,7 @@
 }
 
 .obsidian-hidden {
-	display: none;
+	display: none !important;
 }
 
 .obsidian-visible {
@@ -310,10 +310,6 @@
 .obsidian input.obsidian-input-compact {
 	display: inline-block;
 	font-size: 14px;
-}
-
-.obsidian-visible.obsidian-input-compact {
-	display: inline-block;
 }
 
 .obsidian label.obsidian-inline {
