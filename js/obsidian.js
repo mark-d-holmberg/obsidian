@@ -1,7 +1,7 @@
 class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
 		super(object, options);
-		game.settings.register('Obsidian', this.object.data._id, {
+		game.settings.register('obsidian', this.object.data._id, {
 			name: 'Obsidian settings',
 			default: '',
 			type: String,
@@ -9,11 +9,11 @@ class Obsidian extends ActorSheet5eCharacter {
 			onChange: settings => this.settings = JSON.parse(settings)
 		});
 
-		let settings = game.settings.get('Obsidian', this.object.data._id);
+		let settings = game.settings.get('obsidian', this.object.data._id);
 		if (settings === '') {
 			settings = {};
 			settings.portraitCollapsed = false;
-			game.settings.set('Obsidian', this.object.data._id, JSON.stringify(settings));
+			game.settings.set('obsidian', this.object.data._id, JSON.stringify(settings));
 		} else {
 			settings = JSON.parse(settings);
 		}
@@ -129,7 +129,7 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		$(this.form).parents('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
-		game.settings.set('Obsidian', this.object.data._id, JSON.stringify(this.settings));
+		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
 }
 
