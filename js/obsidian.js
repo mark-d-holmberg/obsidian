@@ -47,6 +47,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
+		console.debug(this.actor);
 
 		// The first element of our template is actually a comment, not the
 		// form element so we override this behaviour here.
@@ -54,8 +55,10 @@ class Obsidian extends ActorSheet5eCharacter {
 		this._applySettings();
 
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
-		html.find('.obsidian-char-header-minor .obsidian-edit')
-			.click(this._launchHeaderDetails.bind(this));
+		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
+			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
+		html.find('.obsidian-char-xp').click(() =>
+			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
 	}
 
 	getData () {
@@ -85,14 +88,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (this.settings.width !== undefined) {
 			this.position.width = this.settings.width;
 		}
-	}
-
-	/**
-	 * @private
-	 */
-	async _launchHeaderDetails () {
-		this.setModal(true);
-		new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true);
 	}
 
 	/**

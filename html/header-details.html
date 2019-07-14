@@ -13,7 +13,9 @@
 	</label>
 	<label class="obsidian-inline obsidian-dialog-classes">
 		Classes
-		<button type="button" class="obsidian-btn-positive obsidian-add-class">Add</button>
+		<button type="button" class="obsidian-btn-positive obsidian-add-class obsidian-btn-sm">
+			Add
+		</button>
 	</label>
 	{{#each entity.flags.obsidian.classes}}
 		<div class="obsidian-form-row obsidian-inline" data-item-id="{{this.id}}">
@@ -33,7 +35,7 @@
 				<input class="obsidian-input-compact" type="text" placeholder="Subclass"
 				       name="flags.obsidian.classes.{{this.id}}.subclass" value="{{this.subclass}}"
 				       style="{{#if (expr '===' 'Custom' this.name)}}width: 65px;{{/if}}">
-				<input class="obsidian-input-compact obsidian-input-num" type="text"
+				<input class="obsidian-input-compact obsidian-input-num" type="text" style="width: 25px;"
 				       name="flags.obsidian.classes.{{this.id}}.levels" value="{{this.levels}}">
 				<select name="flags.obsidian.classes.{{this.id}}.hd">
 					{{#select this.hd}}
@@ -43,7 +45,9 @@
 					{{/select}}
 				</select>
 			</div>
-			<button type="button" class="obsidian-btn-negative obsidian-rm-class">Remove</button>
+			<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
+				Remove
+			</button>
 		</div>
 	{{/each}}
 </form>

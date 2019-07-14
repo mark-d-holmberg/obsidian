@@ -11,7 +11,7 @@ class ObsidianDialog extends BaseEntitySheet {
 		options.closeOnSubmit = false;
 		options.submitOnClose = true;
 		options.submitOnUnfocus = true;
-		options.width = 420;
+		options.width = 400;
 		return options;
 	}
 
@@ -25,17 +25,37 @@ class ObsidianDialog extends BaseEntitySheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		if (this.parent.setModal) {
-			html.parents('.obsidian-window').find('a.close')
-				.click(() => this.parent.setModal(false));
-		}
-
 		html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
 		html.find('select').off('change').change(this._onSubmit.bind(this));
+		html.find('.fancy-checkbox').click((evt) => {
+			const target = $(evt.currentTarget);
+			const selected = !target.hasClass('selected');
+			selected ? target.addClass('selected') : target.removeClass('selected');
+
+			if (target.data('bound')) {
+				html.find(`input[name="${target.data('bound')}"]`)[0].checked = selected;
+			}
+		});
+	}
+
+	async close () {
+		if (this.parent.setModal) {
+			this.parent.setModal(false);
+		}
+
+		return super.close();
 	}
 
 	getData () {
 		return this.parent.getData();
+	}
+
+	render (force = false, options = {}) {
+		if (this.parent.setModal) {
+			this.parent.setModal(true);
+		}
+
+		return super.render(force, options);
 	}
 
 	/**
@@ -47,6 +67,12 @@ class ObsidianDialog extends BaseEntitySheet {
 }
 
 class ObsidianHeaderDetailsDialog extends ObsidianDialog {
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		options.width = 420;
+		return options;
+	}
+
 	get template () {
 		return 'public/modules/obsidian/html/header-details.html';
 	}
@@ -153,5 +179,46 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const diff = total - content.height();
 		const win = content.parents('.obsidian-window');
 		win.height(win.height() + diff);
+	}
+}
+
+class ObsidianXPDialog extends ObsidianDialog {
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		options.width = 250;
+		return options;
+	}
+
+	get template () {
+		return 'public/modules/obsidian/html/xp-dialog.html';
+	}
+
+	activateListeners (html) {
+		super.activateListeners(html);
+		html.find('input[name="addRemoveXP"]').keypress((evt) => {
+			if (evt.key === 'Enter') {
+				this.close();
+			}
+		});
+
+		if (html.find('input[name="flags.obsidian.details.milestone"]')[0].checked) {
+			html.find('.fancy-checkbox').addClass('selected');
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onSubmit (event, {preventClose = false} = {}) {
+		const xpDeltaStr = this.element.find('input[name="addRemoveXP"]').val();
+		if (xpDeltaStr != null && xpDeltaStr !== '') {
+			const delta = Number(xpDeltaStr);
+			if (!isNaN(delta)) {
+				this.element.find('input[name="data.details.xp.value"]')
+					.val(parseInt(this.parent.actor.data.data.details.xp.value) + delta);
+			}
+		}
+
+		return super._onSubmit(event, {preventClose: preventClose});
 	}
 }

@@ -1,0 +1,30 @@
+<form class="obsidian" autocomplete="off">
+	<div class="fancy-checkbox" data-bound="flags.obsidian.details.milestone">
+		<div class="checkbox-container">
+			<div class="checkbox-inner-box"></div>
+			<div class="checkmark-container">
+				<div class="checkmark">
+					<div class="checkmark-short"></div>
+					<div class="checkmark-long"></div>
+				</div>
+			</div>
+		</div>
+		<div class="checkbox-content">Milestone Levelling</div>
+	</div>
+	<input type="checkbox" data-dtype="Boolean" name="flags.obsidian.details.milestone"
+	       class="obsidian-hidden" {{checked entity.flags.obsidian.details.milestone}}>
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			Set Level
+			<input type="text" name="data.details.level.value" value="{{data.details.level.value}}"
+			       style="width: 25px;" class="obsidian-input-compact obsidian-input-num">
+		</label>
+		<label class="obsidian-inline">
+			Set XP
+			<input type="text" name="data.details.xp.value" value="{{data.details.xp.value}}"
+			       class="obsidian-input-compact obsidian-input-num" style="width: 75px;">
+		</label>
+	</div>
+	<input type="text" name="addRemoveXP" placeholder="Add/Remove XP"
+	       class="obsidian-input-compact">
+</form>

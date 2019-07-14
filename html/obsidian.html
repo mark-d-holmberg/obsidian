@@ -8,49 +8,71 @@
 		</div>
 	</section>
 	<section class="obsidian-char-overview">
-		<div class="obsidian-char-header">
-			<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
-			       class="obsidian-char-charname obsidian-condensed">
-			<div class="obsidian-char-header-minor obsidian-condensed">
-				{{#if entity.flags.obsidian.details.gender}}
-					<span>{{entity.flags.obsidian.details.gender}}</span>
-				{{/if}}
-				{{#if entity.flags.obsidian.details.subrace}}
-					<span class="obsidian-joined">{{entity.flags.obsidian.details.subrace}}</span>
-				{{/if}}
-				<span>
-					{{#if data.details.race.value}}
-						{{data.details.race.value}}
-					{{else}}
-						Race
+		<div class="obsidian-char-header-container">
+			<div class="obsidian-char-header">
+				<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
+				       class="obsidian-char-charname obsidian-condensed">
+				<div class="obsidian-char-header-minor obsidian-condensed">
+					{{#if entity.flags.obsidian.details.gender}}
+						<span>{{entity.flags.obsidian.details.gender}}</span>
 					{{/if}}
-				</span>
-				<span>{{classFormat entity.flags.obsidian.classes}}</span>
-				<a title="Edit Details" class="obsidian-edit">
-					<i class="fas fa-edit"></i>
-				</a>
-			</div>
-			<div class="obsidian-char-xp obsidian-ptr">
-				<div class="obsidian-char-xp-bar">
-					<span class="obsidian-char-lvl obsidian-condensed">LVL {{data.details.level.value}}</span>
-					<span class="obsidian-char-xp-progress">
-						<span class="obsidian-char-xp-progress-bar" style="width:
-							{{~#if (expr '>=' data.details.xp.value data.details.xp.max)~}}
-								100
-							{{~else~}}
-								{{~expr '*' 100 (expr '/' data.details.xp.value data.details.xp.max)~}}
-							{{~/if~}}%;"></span>
-					</span>
-					<span class="obsidian-char-lvl obsidian-condensed">
-						{{#if (expr '>=' data.details.level.value ObsidianRules.MAX_LEVEL)}}
-							MAX
+					{{#if entity.flags.obsidian.details.subrace}}
+						<span class="obsidian-joined">{{entity.flags.obsidian.details.subrace}}</span>
+					{{/if}}
+					<span>
+						{{#if data.details.race.value}}
+							{{data.details.race.value}}
 						{{else}}
-							LVL {{expr '+' data.details.level.value 1}}
+							Race
 						{{/if}}
 					</span>
+					<span>{{classFormat entity.flags.obsidian.classes}}</span>
+					<a title="Edit Details" class="obsidian-edit">
+						<i class="fas fa-edit"></i>
+					</a>
 				</div>
-				<div class="obsidian-char-xp-data">
-					{{data.details.xp.value}} / {{data.details.xp.max}} XP
+				<div class="obsidian-char-xp obsidian-ptr">
+					<div class="obsidian-char-xp-bar">
+						<span class="obsidian-char-lvl obsidian-condensed">LVL {{data.details.level.value}}</span>
+						<span class="obsidian-char-xp-progress">
+							<span class="obsidian-char-xp-progress-bar" style="width:
+								{{~#if (expr '>=' data.details.xp.value data.details.xp.max)~}}
+									100
+								{{~else~}}
+									{{~expr '*' 100 (expr '/' data.details.xp.value data.details.xp.max)~}}
+								{{~/if~}}%;"></span>
+						</span>
+						<span class="obsidian-char-lvl obsidian-condensed">
+							{{#if (expr '>=' data.details.level.value ObsidianRules.MAX_LEVEL)}}
+								MAX
+							{{else}}
+								LVL {{expr '+' data.details.level.value 1}}
+							{{/if}}
+						</span>
+					</div>
+					<div class="obsidian-char-xp-data">
+						{{#if entity.flags.obsidian.details.milestone}}
+							Milestone
+						{{else}}
+							{{data.details.xp.value}} / {{data.details.xp.max}} XP
+						{{/if}}
+					</div>
+				</div>
+			</div>
+			<div class="obsidian-char-top-level">
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text">Proficiency</div>
+					<div class="obsidian-char-box">
+						{{numberFormat data.attributes.prof.value decimals=0 sign=true}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text">Inspiration</div>
+					<div class="obsidian-char-box obsidian-inspiration"></div>
+				</div>
+				<div class="obsidian-char-box-container">
+					<button type="button" class="obsidian-btn-outline obsidian-long-rest">Long Rest</button>
+					<button type="button" class="obsidian-btn-outline obsidian-short-rest">Short Rest</button>
 				</div>
 			</div>
 		</div>

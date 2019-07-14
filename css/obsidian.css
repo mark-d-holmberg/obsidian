@@ -24,7 +24,7 @@
 	color: var(--text-regular);
 }
 
-.obsidian .obsidian-inline button {
+.obsidian button.obsidian-btn-sm {
 	display: inline-block;
 	width: auto;
 	font-size: 8px;
@@ -189,6 +189,45 @@
 	padding-left: 20px;
 }
 
+.obsidian-char-header-container {
+	display: flex;
+}
+
+.obsidian-char-header {
+	min-width: 300px;
+	display: inline-block;
+}
+
+.obsidian-char-top-level {
+	display: inline-flex;
+	padding-left: 20px;
+}
+
+.obsidian-char-box-container {
+	display: flex;
+	padding: 0 20px 20px 0;
+	flex-direction: column;
+	align-items: center;
+}
+
+.obsidian-char-box-text {
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+	padding-bottom: 4px;
+	color: var(--text-secondary);
+}
+
+.obsidian-char-box {
+	border: 4px solid var(--mid);
+	padding: 8px 0;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	width: 58px;
+}
+
 .dnd5e.sheet form.obsidian .obsidian-char-header-minor span {
 	color: var(--text-subtle);
 	margin-right: 4px;
@@ -205,7 +244,7 @@
 	height: auto;
 	display: block;
 	font-size: 26px;
-	width: 400px;
+	max-width: 300px;
 	line-height: 1;
 }
 
@@ -240,6 +279,7 @@
 	margin-top: 3px;
 	text-align: center;
 	color: var(--text-subtle);
+	text-transform: uppercase;
 }
 
 .obsidian-char-ability {
@@ -281,7 +321,9 @@
 .obsidian label {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	color: var(--text-secondary);
-	font-size: 16px;
+	font-size: 12px;
+	text-transform: uppercase;
+	font-weight: bold;
 }
 
 .obsidian input {
@@ -297,6 +339,10 @@
 	border-bottom-width: 1px;
 	border-radius: 0;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
+}
+
+.obsidian > input:last-child {
+	margin-bottom: 0;
 }
 
 .obsidian input::placeholder {
@@ -315,6 +361,27 @@
 .obsidian label.obsidian-inline {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+.obsidian label.obsidian-dialog-classes {
+	align-items: flex-start;
+	margin: 0;
+	font-size: 16px;
+	text-transform: none;
+	font-weight: normal;
+}
+
+.obsidian label.obsidian-inline > input[type=text],
+.obsidian label.obsidian-inline > select {
+	margin: 0;
+	max-width: 70%;
+}
+
+.obsidian .obsidian-form-row label.obsidian-inline > input[type=text],
+.obsidian .obsidian-form-row label.obsidian-inline > select {
+	margin-left: 10px;
 }
 
 .dialog form label.obsidian-dialog-classes button {
@@ -346,6 +413,75 @@
 }
 
 .obsidian .obsidian-form-row input.obsidian-input-num {
-	max-width: 25px;
 	text-align: center;
+}
+
+.fancy-checkbox {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+.checkbox-content {
+	display: inline-block;
+	margin-left: .75em;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-size: 12px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: var(--text-secondary);
+}
+
+.checkbox-container {
+	border: 10px solid var(--mid);
+	border-radius: 3px;
+	display: inline-block;
+	outline: none;
+	position: relative;
+}
+
+.checkbox-inner-box {
+	border: 8px solid var(--bg);
+	position: absolute;
+	left: -8px;
+	top: -8px;
+}
+
+.checkmark-container {
+	position: absolute;
+	height: 20px;
+	width: 20px;
+	top: -10px;
+	left: -10px;
+}
+
+.checkmark {
+	height: 100%;
+	width: 100%;
+	pointer-events: none;
+	position: absolute;
+	top: 7px;
+	left: 11px;
+	transform-origin: 0;
+	transform: rotate(-45deg);
+}
+
+.checkmark-short {
+	border: 1px solid var(--bg);
+	height: 5px;
+	left: 0;
+	position: absolute;
+}
+
+.checkmark-long {
+	border: 1px solid var(--bg);
+	position: absolute;
+	left: 0;
+	top: 5px;
+	width: 11px;
+}
+
+.selected .checkbox-inner-box {
+	border-color: var(--mid);
 }
