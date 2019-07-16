@@ -59,6 +59,8 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
 		html.find('.obsidian-char-xp').click(() =>
 			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
+		html.find('.obsidian-inspiration')
+			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
 	}
 
 	getData () {
@@ -107,6 +109,18 @@ class Obsidian extends ActorSheet5eCharacter {
 			jqForm.removeClass('obsidian-collapsed');
 			collapser.addClass('fa-rotate-90');
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {String} property
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_toggleControl (property, evt) {
+		const state = !getProperty(this.actor.data, property);
+		const icon = $(evt.currentTarget).find('i');
+		state ? icon.removeClass('obsidian-hidden') : icon.addClass('obsidian-hidden');
+		setProperty(this.actor.data, property, state);
 	}
 
 	/**

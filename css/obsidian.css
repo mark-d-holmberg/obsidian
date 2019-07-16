@@ -106,10 +106,6 @@
 	display: none !important;
 }
 
-.obsidian-visible {
-	display: block;
-}
-
 .dnd5e.sheet form.editable.obsidian .rollable:hover {
 	color: inherit;
 }
@@ -191,6 +187,7 @@
 
 .obsidian-char-header-container {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .obsidian-char-header {
@@ -200,14 +197,36 @@
 
 .obsidian-char-top-level {
 	display: inline-flex;
-	padding-left: 20px;
+	padding: 8px 0 0 20px;
+}
+
+.obsidian-char-column {
+	display: flex;
+	flex-direction: column-reverse;
+	padding: 0 20px 20px 0;
+}
+
+button.obsidian-btn-sm.obsidian-char-rest {
+	height: auto;
+	font-size: 10px;
+	font-weight: bold;
+	min-width: 80px;
+	margin-bottom: 10px;
+}
+
+.obsidian-char-rest i {
+	color: var(--highlight);
+	margin-right: 6px;
 }
 
 .obsidian-char-box-container {
 	display: flex;
-	padding: 0 20px 20px 0;
 	flex-direction: column;
 	align-items: center;
+}
+
+.obsidian-char-box-container.obsidian-char-rest {
+	padding-bottom: 16px;
 }
 
 .obsidian-char-box-text {
@@ -225,7 +244,38 @@
 	font-size: 18px;
 	font-weight: bold;
 	text-align: center;
-	width: 58px;
+	min-width: 58px;
+}
+
+.obsidian-hp-box {
+	padding: 4px 8px;
+	font-size: 14px;
+	color: var(--text-secondary);
+}
+
+.obsidian-hp-box .obsidian-bisect div,
+.obsidian .obsidian-hp-box input {
+	display: inline-block;
+}
+
+.obsidian-char-box .obsidian-input-num {
+	max-width: 40px;
+}
+
+.dnd5e.sheet form .obsidian-char-box input[type=text] {
+	height: auto;
+	color: var(--text-subtle);
+	text-transform: uppercase;
+	font-size: 14px;
+}
+
+.obsidian-bisect {
+	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-max-hp {
+	min-width: 40px;
+	color: var(--text-regular);
 }
 
 .dnd5e.sheet form.obsidian .obsidian-char-header-minor span {
@@ -280,6 +330,13 @@
 	text-align: center;
 	color: var(--text-subtle);
 	text-transform: uppercase;
+}
+
+.obsidian-inspiration {
+	color: var(--highlight);
+	min-height: 46px;
+	padding: 2px 0;
+	font-size: 28px;
 }
 
 .obsidian-char-ability {

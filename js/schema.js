@@ -3,7 +3,9 @@ Obsidian.SCHEMA = {
 		classes: [],
 		details: {
 			gender: null,
-			subrace: null
+			subrace: null,
+			milestone: false,
+			inspiration: false
 		}
 	}
 };

@@ -33,13 +33,15 @@
 				</div>
 				<div class="obsidian-char-xp obsidian-ptr">
 					<div class="obsidian-char-xp-bar">
-						<span class="obsidian-char-lvl obsidian-condensed">LVL {{data.details.level.value}}</span>
+						<span class="obsidian-char-lvl obsidian-condensed">
+							LVL {{data.details.level.value}}
+						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
 								{{~#if (expr '>=' data.details.xp.value data.details.xp.max)~}}
 									100
 								{{~else~}}
-									{{~expr '*' 100 (expr '/' data.details.xp.value data.details.xp.max)~}}
+									{{~data.details.xp.pct~}}
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
@@ -60,19 +62,47 @@
 				</div>
 			</div>
 			<div class="obsidian-char-top-level">
-				<div class="obsidian-char-box-container">
-					<div class="obsidian-char-box-text">Proficiency</div>
-					<div class="obsidian-char-box">
-						{{numberFormat data.attributes.prof.value decimals=0 sign=true}}
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Proficiency</div>
+						<div class="obsidian-char-box">
+							{{numberFormat data.attributes.prof.value decimals=0 sign=true}}
+						</div>
 					</div>
+					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-char-rest
+					        obsidian-short-rest">
+						<i class="fas fa-hourglass-half"></i>
+						Short Rest
+					</button>
 				</div>
-				<div class="obsidian-char-box-container">
-					<div class="obsidian-char-box-text">Inspiration</div>
-					<div class="obsidian-char-box obsidian-inspiration"></div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Inspiration</div>
+						<div class="obsidian-char-box obsidian-inspiration obsidian-ptr">
+							<i class="fas fa-sun {{#if (expr '!' entity.flags.obsidian.details.inspiration)~}}
+								obsidian-hidden
+							{{~/if}}"></i>
+						</div>
+					</div>
+					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-char-rest
+					        obsidian-long-rest">
+						<i class="fas fa-campground"></i>
+						Long Rest
+					</button>
 				</div>
-				<div class="obsidian-char-box-container">
-					<button type="button" class="obsidian-btn-outline obsidian-long-rest">Long Rest</button>
-					<button type="button" class="obsidian-btn-outline obsidian-short-rest">Short Rest</button>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Hit Points</div>
+						<div class="obsidian-char-box obsidian-hp-box">
+							<div class="obsidian-bisect">
+								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
+								       value="{{data.attributes.hp.value}}">
+								/ <div class="obsidian-ptr obsidian-max-hp">{{data.attributes.hp.max}}</div>
+							</div>
+							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
+							       class="obsidian-input-num" placeholder="tmp">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
