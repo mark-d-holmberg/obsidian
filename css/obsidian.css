@@ -204,6 +204,7 @@
 	display: flex;
 	flex-direction: column-reverse;
 	padding: 0 20px 20px 0;
+	align-items: center;
 }
 
 button.obsidian-btn-sm.obsidian-char-rest {
@@ -229,13 +230,18 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	padding-bottom: 16px;
 }
 
-.obsidian-char-box-text {
+.obsidian-char-box-text,
+.obsidian-char-column-title {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: bold;
 	padding-bottom: 4px;
 	color: var(--text-secondary);
+}
+
+.obsidian-char-column-title {
+	padding: 0;
 }
 
 .obsidian-char-box {
@@ -247,22 +253,42 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	min-width: 58px;
 }
 
-.obsidian-hp-box {
+.obsidian-resource-box {
 	padding: 4px 8px;
 	font-size: 14px;
 	color: var(--text-secondary);
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 
-.obsidian-hp-box .obsidian-bisect div,
-.obsidian .obsidian-hp-box input {
+.obsidian-compact-resource-box {
+	min-width: 100px;
+	padding: 0;
+	margin-top: 4px;
+}
+
+.obsidian-char-hp {
+	padding: 10px 8px;
+}
+
+.obsidian-resource-box-subtle,
+.obsidian-resource-box .obsidian-resource-box-max,
+.obsidian .obsidian-resource-box input {
 	display: inline-block;
 }
 
-.obsidian-char-box .obsidian-input-num {
+.obsidian-resource-box-subtle {
+	font-weight: normal;
+}
+
+.obsidian-resource-box .obsidian-input-num {
 	max-width: 40px;
 }
 
-.dnd5e.sheet form .obsidian-char-box input[type=text] {
+.obsidian-resource-box.obsidian-compact-resource-box .obsidian-input-num {
+	max-width: 25px;
+}
+
+.dnd5e.sheet form .obsidian-resource-box input[type=text] {
 	height: auto;
 	color: var(--text-subtle);
 	text-transform: uppercase;
@@ -273,9 +299,14 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-max-hp {
+.obsidian-resource-box-max {
 	min-width: 40px;
 	color: var(--text-regular);
+	font-weight: normal;
+}
+
+.obsidian-compact-resource-box .obsidian-resource-box-max {
+	min-width: 25px;
 }
 
 .dnd5e.sheet form.obsidian .obsidian-char-header-minor span {

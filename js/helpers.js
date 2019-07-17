@@ -47,3 +47,7 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 		return args.reduce(reducer);
 	}
 });
+
+Handlebars.registerHelper('notEmpty', function (obj) {
+	return obj != null && Object.keys(obj).length > 0;
+});

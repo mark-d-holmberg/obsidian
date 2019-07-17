@@ -19,11 +19,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		this.settings = settings;
-
-		// Seems best to enrich Actor data in the sheet rather than extending
-		// Actor5e and swapping out the entity class because the sheet itself
-		// is configurable whereas the Actor entityClass isn't.
-		Obsidian.enrichFlags(object.data.flags);
 	}
 
 	get template () {
@@ -90,6 +85,16 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (this.settings.width !== undefined) {
 			this.position.width = this.settings.width;
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onResize (event) {
+		super._onResize(event);
+		this.settings.width = this.position.width;
+		this.settings.height = this.position.height;
+		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
 
 	/**

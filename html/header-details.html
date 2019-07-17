@@ -17,28 +17,28 @@
 			Add
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.classes}}
-		<div class="obsidian-form-row obsidian-inline" data-item-id="{{this.id}}">
+	{{#each entity.flags.obsidian.classes as |class id|}}
+		<div class="obsidian-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
-				<select name="flags.obsidian.classes.{{this.id}}.name">
-					{{#select this.name}}
+				<select name="flags.obsidian.classes.{{id}}.name">
+					{{#select class.name}}
 						{{#each ../ObsidianRules.CLASSES}}
 							<option value="{{this}}">{{this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'Custom' this.name))~}}
+				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'Custom' class.name))~}}
 						obsidian-hidden
 					{{~/if~}}
-				" type="text" name="flags.obsidian.classes.{{this.id}}.custom" placeholder="Class"
-				       style="width: 65px;" value="{{this.custom}}">
+				" type="text" name="flags.obsidian.classes.{{id}}.custom" placeholder="Class"
+				       style="width: 65px;" value="{{class.custom}}">
 				<input class="obsidian-input-compact" type="text" placeholder="Subclass"
-				       name="flags.obsidian.classes.{{this.id}}.subclass" value="{{this.subclass}}"
-				       style="{{#if (expr '===' 'Custom' this.name)}}width: 65px;{{/if}}">
+				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"
+				       style="{{#if (expr '===' 'Custom' class.name)}}width: 65px;{{/if}}">
 				<input class="obsidian-input-compact obsidian-input-num" type="text" style="width: 25px;"
-				       name="flags.obsidian.classes.{{this.id}}.levels" value="{{this.levels}}">
-				<select name="flags.obsidian.classes.{{this.id}}.hd">
-					{{#select this.hd}}
+				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}">
+				<select name="flags.obsidian.classes.{{id}}.hd">
+					{{#select class.hd}}
 						{{#each ../ObsidianRules.HD}}
 							<option value="{{this}}">d{{this}}</option>
 						{{/each}}

@@ -180,6 +180,32 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const win = content.parents('.obsidian-window');
 		win.height(win.height() + diff);
 	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		const newData = {};
+		const classes = [];
+
+		for (const [key, val] of Object.entries(formData)) {
+			if (key.startsWith('flags.obsidian.classes')) {
+				let [index, property] = key.substring(23).split('.');
+				index = parseInt(index);
+
+				if (classes[index] === undefined) {
+					classes[index] = {};
+				}
+
+				classes[index][property] = val;
+			} else {
+				newData[key] = val;
+			}
+		}
+
+		newData['flags.obsidian.classes'] = classes;
+		super._updateObject(event, newData);
+	}
 }
 
 class ObsidianXPDialog extends ObsidianDialog {
