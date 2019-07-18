@@ -107,28 +107,32 @@
 						</div>
 					</div>
 				</div>
+				{{#if (notEmpty entity.flags.obsidian.attributes.hd)}}
 				<div class="obsidian-char-column">
-					{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
-						<div class="obsidian-char-box-container">
-							<div class="obsidian-char-box obsidian-resource-box obsidian-compact-resource-box">
-								<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
-								       class="obsidian-input-num" value="{{hd.value}}">
-								/
-								<div class="obsidian-ptr obsidian-resource-box-max">
-									{{#if hd.override}}
-										{{hd.override}}
-									{{else}}
-										{{hd.max}}
-									{{/if}}
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text rollable">Hit Dice</div>
+						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
+							<div>
+							{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
+								<div class="obsidian-bisect">
+									<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
+									       class="obsidian-input-num" value="{{hd.value}}">
+									/
+									<div class="obsidian-ptr obsidian-resource-box-max">
+										{{#if hd.override}}
+											{{hd.override}}
+										{{else}}
+											{{hd.max}}
+										{{/if}}
+									</div>
+									<div class="obsidian-resource-box-subtle">d{{id}}</div>
 								</div>
-								<div class="obsidian-resource-box-subtle">d{{id}}</div>
+							{{/each}}
 							</div>
 						</div>
-					{{/each}}
-					{{#if (notEmpty entity.flags.obsidian.attributes.hd)}}
-						<div class="obsidian-char-column-title rollable">Hit Dice</div>
-					{{/if}}
+					</div>
 				</div>
+				{{/if}}
 			</div>
 		</div>
 		<div class="obsidian-char-abilities">

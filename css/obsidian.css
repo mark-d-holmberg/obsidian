@@ -230,18 +230,13 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	padding-bottom: 16px;
 }
 
-.obsidian-char-box-text,
-.obsidian-char-column-title {
+.obsidian-char-box-text {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: bold;
 	padding-bottom: 4px;
 	color: var(--text-secondary);
-}
-
-.obsidian-char-column-title {
-	padding: 0;
 }
 
 .obsidian-char-box {
@@ -260,14 +255,15 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 
-.obsidian-compact-resource-box {
-	min-width: 100px;
-	padding: 0;
-	margin-top: 4px;
-}
-
 .obsidian-char-hp {
 	padding: 10px 8px;
+}
+
+.obsidian-char-hd {
+	padding: 0 8px;
+	display: flex;
+	align-items: center;
+	min-height: 79px;
 }
 
 .obsidian-resource-box-subtle,
@@ -284,7 +280,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	max-width: 40px;
 }
 
-.obsidian-resource-box.obsidian-compact-resource-box .obsidian-input-num {
+.obsidian-char-hd .obsidian-input-num {
 	max-width: 25px;
 }
 
@@ -299,13 +295,18 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	border-bottom: 1px solid var(--mid);
 }
 
+.obsidian-bisect:last-child {
+	border: none;
+}
+
 .obsidian-resource-box-max {
 	min-width: 40px;
 	color: var(--text-regular);
 	font-weight: normal;
 }
 
-.obsidian-compact-resource-box .obsidian-resource-box-max {
+.obsidian-char-hd .obsidian-resource-box-max,
+.obsidian-char-hd .obsidian-resource-box-subtle {
 	min-width: 25px;
 }
 

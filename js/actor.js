@@ -17,7 +17,6 @@ class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
 		ObsidianActor._enrichFlags(actorData.flags);
-		ObsidianActor._updateHD(actorData.flags.obsidian);
 		return actorData;
 	}
 
@@ -38,12 +37,12 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	/**
-	 * @private
-	 */
-	static _updateHD (flags) {
+	updateHD (classes) {
+		const existing = this.data.flags.obsidian.attributes.hd;
 		const totals = {};
-		for (const cls of flags.classes) {
+		const newHD = {};
+
+		for (const cls of classes) {
 			if (totals[cls.hd] === undefined) {
 				totals[cls.hd] = 0;
 			}
@@ -52,24 +51,29 @@ class ObsidianActor extends Actor5e {
 		}
 
 		for (const [hd, val] of Object.entries(totals)) {
-			const storedHD = flags.attributes.hd[hd];
+			const storedHD = existing[hd];
 			if (storedHD === undefined) {
-				flags.attributes.hd[hd] = {
+				newHD[hd] = {
 					value: val,
 					max: val
+				};
+			} else {
+				newHD[hd] = duplicate(storedHD);
+				if (storedHD.max !== val) {
+					const diff = val - storedHD.max;
+					newHD[hd].max = val;
+					newHD[hd].value = parseInt(storedHD.value) + diff;
 				}
-			} else if (storedHD.max !== val) {
-				const diff = val - storedHD.max;
-				storedHD.max = val;
-				storedHD.value = parseInt(storedHD.value) + diff;
 			}
 		}
 
-		for (const [hd, val] of Object.entries(flags.attributes.hd)) {
+		for (const [hd, val] of Object.entries(existing)) {
 			if (totals[hd] === undefined && val.override == null) {
-				delete flags.attributes.hd[hd];
+				delete newHD[hd];
 			}
 		}
+
+		return newHD;
 	}
 }
 
