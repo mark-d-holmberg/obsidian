@@ -15,6 +15,8 @@
 	--btn-negative: #c53131;
 	--btn-negative-hover: #9c2727;
 	--btn-negative-inner: #731d1d;
+	--negative: #c53131;
+	--positive: #40d250;
 }
 
 .obsidian button {
@@ -136,6 +138,14 @@
 
 .obsidian .obsidian-condensed {
 	font-family: 'Roboto Condensed', sans-serif;
+}
+
+.obsidian .obsidian-positive {
+	color: var(--positive);
+}
+
+.obsidian .obsidian-negative {
+	color: var(--negative);
 }
 
 .obsidian img {
@@ -454,7 +464,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 6px;
 }
 
-.obsidian label.obsidian-dialog-classes {
+.obsidian label.obsidian-label-lg {
 	align-items: flex-start;
 	margin: 0;
 	font-size: 16px;
@@ -468,16 +478,17 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	max-width: 70%;
 }
 
-.obsidian .obsidian-form-row label.obsidian-inline > input[type=text],
-.obsidian .obsidian-form-row label.obsidian-inline > select {
+.obsidian .obsidian-form-row label.obsidian-inline > input[type=text]:last-child,
+.obsidian .obsidian-form-row label.obsidian-inline > select:last-child,
+.obsidian .obsidian-form-row label.obsidian-inline > span:last-child {
 	margin-left: 10px;
 }
 
-.dialog form label.obsidian-dialog-classes button {
+.dialog form label.obsidian-label-lg button {
 	margin-bottom: 3px;
 }
 
-.dialog form label.obsidian-dialog-classes:last-child button {
+.dialog form label.obsidian-label-lg:last-child button {
 	margin-bottom: 10px;
 }
 

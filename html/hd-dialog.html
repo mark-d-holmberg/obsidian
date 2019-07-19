@@ -1,0 +1,24 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-inline obsidian-label-lg">
+		Hit Dice Override
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-hd">Add</button>
+	</label>
+	{{#each entity.flags.obsidian.attributes.hd as |hd die|}}
+		<div class="obsidian-form-row obsidian-inline">
+			<div>
+				<select name="die">
+					{{#select die}}
+						{{#each ../ObsidianRules.HD}}
+							<option value="{{this}}">d{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input class="obsidian-input-compact obsidian-input-num" type="text" placeholder="0"
+				       name="override" value="{{hd.override}}" style="width: 25px;">
+			</div>
+			<button type="button" class="obsidian-btn-negative obsidian-rm-hd obsidian-btn-sm">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+</form>

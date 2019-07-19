@@ -1,7 +1,8 @@
 Obsidian.SCHEMA = {
 	obsidian: {
 		attributes: {
-			hd: {}
+			hd: {},
+			hpMaxMod: 0
 		},
 		classes: [],
 		details: {
@@ -17,6 +18,12 @@ class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
 		ObsidianActor._enrichFlags(actorData.flags);
+
+		const data = actorData.data;
+		const flags = actorData.flags.obsidian;
+		data.attributes.hp.maxAdjusted =
+			Number(data.attributes.hp.max) + Number(flags.attributes.hpMaxMod);
+
 		return actorData;
 	}
 
@@ -47,7 +54,7 @@ class ObsidianActor extends Actor5e {
 				totals[cls.hd] = 0;
 			}
 
-			totals[cls.hd] += parseInt(cls.levels);
+			totals[cls.hd] += Number(cls.levels);
 		}
 
 		for (const [hd, val] of Object.entries(totals)) {
@@ -62,7 +69,7 @@ class ObsidianActor extends Actor5e {
 				if (storedHD.max !== val) {
 					const diff = val - storedHD.max;
 					newHD[hd].max = val;
-					newHD[hd].value = parseInt(storedHD.value) + diff;
+					newHD[hd].value = Number(storedHD.value) + diff;
 				}
 			}
 		}

@@ -98,8 +98,13 @@
 								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
 								       value="{{data.attributes.hp.value}}">
 								/
-								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max">
-									{{data.attributes.hp.max}}
+								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
+								{{#if (expr '>' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+									obsidian-positive
+								{{else if (expr '<' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+									obsidian-negative
+								{{~/if}}">
+									{{data.attributes.hp.maxAdjusted}}
 								</div>
 							</div>
 							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
@@ -118,8 +123,15 @@
 									<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
 									       class="obsidian-input-num" value="{{hd.value}}">
 									/
-									<div class="obsidian-ptr obsidian-resource-box-max">
-										{{#if hd.override}}
+									<div class="obsidian-ptr obsidian-resource-box-max
+									{{#if (defined hd.override)~}}
+										{{#if (expr '>' hd.override hd.max)~}}
+											obsidian-positive
+										{{else if (expr '<' hd.override hd.max)~}}
+											obsidian-negative
+										{{~/if}}
+									{{~/if}}">
+										{{#if (defined hd.override)}}
 											{{hd.override}}
 										{{else}}
 											{{hd.max}}

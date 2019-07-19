@@ -56,6 +56,10 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
+		html.find('.obsidian-max-hp').click(() =>
+			new ObsidianMaxHPDialog(this, {title: 'Edit Max HP'}).render(true));
+		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
+			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
 	}
 
 	getData () {

@@ -19,11 +19,23 @@ Handlebars.registerHelper('classFormat', function (classes) {
 	}).join(' / ');
 });
 
+Handlebars.registerHelper('defined', function (arg) {
+	return arg !== undefined;
+});
+
 Handlebars.registerHelper('expr', function (op, ...args) {
 	args.pop();
 
 	if (op === '!') {
 		return !args[0];
+	}
+
+	if (op === '>') {
+		return args[0] > args[1];
+	}
+
+	if (op === '<') {
+		return args[0] < args[1];
 	}
 
 	if (op === '>=') {
