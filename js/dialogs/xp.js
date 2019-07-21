@@ -18,10 +18,7 @@ class ObsidianXPDialog extends ObsidianDialog {
 		});
 	}
 
-	/**
-	 * @private
-	 */
-	_onSubmit (event, {preventClose = false} = {}) {
+	async close () {
 		const xpDeltaStr = this.element.find('input[name="addRemoveXP"]').val();
 		if (xpDeltaStr != null && xpDeltaStr !== '') {
 			const delta = Number(xpDeltaStr);
@@ -31,6 +28,6 @@ class ObsidianXPDialog extends ObsidianDialog {
 			}
 		}
 
-		return super._onSubmit(event, {preventClose: preventClose});
+		return super.close();
 	}
 }

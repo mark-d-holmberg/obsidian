@@ -2,6 +2,9 @@ class ObsidianDialog extends BaseEntitySheet {
 	constructor (parent, options) {
 		super(parent.object, options);
 		this.parent = parent;
+
+		// Deregister the sheet as this is just a modal dialog.
+		delete this.entity.apps[this.appId];
 	}
 
 	static get defaultOptions () {

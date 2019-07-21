@@ -44,11 +44,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		super.activateListeners(html);
 		console.debug(this.actor);
 
-		// The first element of our template is actually a comment, not the
-		// form element so we override this behaviour here.
-		this.form = html[2];
-		this._applySettings();
-
+		this._setCollapsed(this.settings.portraitCollapsed);
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
@@ -72,6 +68,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		return data;
 	}
 
+	render (force = false, options = {}) {
+		this._applySettings();
+		return super.render(force, options);
+	}
+
 	/**
 	 * Whether a modal dialog is currently popped up.
 	 * @param modal {boolean}
@@ -89,9 +90,12 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	_applySettings () {
-		this._setCollapsed(this.settings.portraitCollapsed);
 		if (this.settings.width !== undefined) {
 			this.position.width = this.settings.width;
+		}
+
+		if (this.settings.height !== undefined) {
+			this.position.height = this.settings.height;
 		}
 	}
 
