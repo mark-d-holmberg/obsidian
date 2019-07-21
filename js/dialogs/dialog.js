@@ -35,6 +35,13 @@ class ObsidianDialog extends BaseEntitySheet {
 			if (target.data('bound')) {
 				html.find(`input[name="${target.data('bound')}"]`)[0].checked = selected;
 			}
+		}).each((i, el) => {
+			const jqel = $(el);
+			if (jqel.data('bound')) {
+				if (html.find(`input[name="${jqel.data('bound')}"]`)[0].checked) {
+					jqel.addClass('selected');
+				}
+			}
 		});
 	}
 

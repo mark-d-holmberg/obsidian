@@ -62,7 +62,7 @@
 				</div>
 			</div>
 			<div class="obsidian-char-top-level">
-				<div class="obsidian-char-column">
+				<div class="obsidian-char-column" style="padding-right: 2px;">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">Proficiency</div>
 						<div class="obsidian-char-box">
@@ -89,6 +89,29 @@
 						<i class="fas fa-campground"></i>
 						Long Rest
 					</button>
+				</div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Speed</div>
+						{{#if entity.flags.obsidian.attributes.speedDisplay}}
+							<div class="obsidian-char-box-text" style="color: var(--text-subtle);">
+								{{lookup ObsidianRules.Speeds entity.flags.obsidian.attributes.speedDisplay}}
+							</div>
+						{{/if}}
+						<div class="obsidian-char-box obsidian-speed obsidian-ptr">
+							{{#with entity.flags.obsidian.attributes as |attr|}}
+								{{#if attr.speedDisplay}}
+									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
+										{{#if spd.override}}
+											{{spd.override}}
+										{{else}}
+											{{spd.value}}
+										{{/if}}
+									{{/with}}
+								{{/if}}
+							{{/with}}
+						</div>
+					</div>
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
@@ -147,17 +170,47 @@
 				{{/if}}
 			</div>
 		</div>
-		<div class="obsidian-char-abilities">
-			{{#each data.abilities as |ability id|}}
-			<div class="obsidian-char-ability">
-				<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
-				<div class="obsidian-char-ability-mod">
-					{{numberFormat ability.mod decimals=0 sign=true}}
+		<div class="obsidian-char-header-container">
+			<div class="obsidian-char-abilities">
+				{{#each data.abilities as |ability id|}}
+				<div class="obsidian-char-ability">
+					<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
+					<div class="obsidian-char-ability-mod">
+						{{numberFormat ability.mod decimals=0 sign=true}}
+					</div>
+					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
+					       placeholder="10" class="obsidian-char-ability-score">
 				</div>
-				<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
-				       placeholder="10" class="obsidian-char-ability-score">
+				{{/each}}
 			</div>
-			{{/each}}
+			<div class="obsidian-char-top-level">
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text rollable">Initiative</div>
+						<div class="obsidian-char-box obsidian-init obsidian-ptr">
+							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
+						</div>
+					</div>
+				</div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">AC</div>
+						<div class="obsidian-char-box">{{data.attributes.ac.min}}</div>
+					</div>
+				</div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Defenses</div>
+						<div class="obsidian-char-box obsidian-list-box obsidian-defenses"></div>
+					</div>
+				</div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">Conditions</div>
+						<div class="obsidian-char-box obsidian-list-box obsidian-conditions"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 </form>

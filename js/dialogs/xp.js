@@ -16,10 +16,6 @@ class ObsidianXPDialog extends ObsidianDialog {
 				this.close();
 			}
 		});
-
-		if (html.find('input[name="flags.obsidian.details.milestone"]')[0].checked) {
-			html.find('.fancy-checkbox').addClass('selected');
-		}
 	}
 
 	/**

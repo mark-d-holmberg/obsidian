@@ -20,3 +20,11 @@ ObsidianRules.ClassHitDice = {
 	'Warlock': 8,
 	'Wizard': 6
 };
+
+ObsidianRules.Speeds = {
+	walk: 'Walking',
+	burrow: 'Burrowing',
+	climb: 'Climbing',
+	fly: 'Flying',
+	swim: 'Swimming'
+};

@@ -2,7 +2,8 @@ Obsidian.SCHEMA = {
 	obsidian: {
 		attributes: {
 			hd: {},
-			hpMaxMod: 0
+			hpMaxMod: 0,
+			speed: {}
 		},
 		classes: [],
 		details: {

@@ -60,6 +60,8 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianMaxHPDialog(this, {title: 'Edit Max HP'}).render(true));
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
 			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
+		html.find('.obsidian-speed').click(() =>
+			new ObsidianSpeedDialog(this, {title: 'Override Speed'}).render(true));
 	}
 
 	getData () {
@@ -129,7 +131,9 @@ class Obsidian extends ActorSheet5eCharacter {
 		const state = !getProperty(this.actor.data, property);
 		const icon = $(evt.currentTarget).find('i');
 		state ? icon.removeClass('obsidian-hidden') : icon.addClass('obsidian-hidden');
-		setProperty(this.actor.data, property, state);
+		const update = {};
+		update[property] = state;
+		this.actor.update(update);
 	}
 
 	/**

@@ -1,0 +1,45 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			<select name="flags.obsidian.attributes.speedDisplay">
+				{{#select entity.flags.obsidian.attributes.speedDisplay}}
+					{{#each ObsidianRules.Speeds as |display id|}}
+						<option value="{{id}}">{{display}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<span>Display Speed</span>
+		</label>
+	</div>
+	{{#each ObsidianRules.Speeds as |display id|}}
+		<div class="obsidian-form-row obsidian-inline">
+			<div class="obsidian-flex">
+				<label class="obsidian-inline">
+					<input class="obsidian-input-compact obsidian-input-num" type="text" style="width: 40px;"
+					       name="flags.obsidian.attributes.speed.{{id}}.override"
+					       value="
+					       {{~#with (lookup ../entity.flags.obsidian.attributes.speed id) as |spd|~}}
+					        {{~spd.override~}}
+					       {{~/with~}}">
+					<span>{{display}}</span>
+				</label>
+				{{#if (expr '===' id 'fly')}}
+					<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.speed.fly.hover">
+						<div class="checkbox-container">
+							<div class="checkbox-inner-box"></div>
+							<div class="checkmark-container">
+								<div class="checkmark">
+									<div class="checkmark-short"></div>
+									<div class="checkmark-long"></div>
+								</div>
+							</div>
+						</div>
+						<div class="checkbox-content">Hover</div>
+					</div>
+					<input type="checkbox" data-dtype="Boolean" name="flags.obsidian.attributes.speed.fly.hover"
+					       class="obsidian-hidden" {{checked ../entity.flags.obsidian.attributes.speed.fly.hover}}>
+				{{/if}}
+			</div>
+		</div>
+	{{/each}}
+</form>

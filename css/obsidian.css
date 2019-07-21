@@ -17,6 +17,8 @@
 	--btn-negative-inner: #731d1d;
 	--negative: #c53131;
 	--positive: #40d250;
+	--horizontal-space: 10px;
+	--vertical-space: 20px;
 }
 
 .obsidian button {
@@ -106,6 +108,10 @@
 
 .obsidian-hidden {
 	display: none !important;
+}
+
+.obsidian-flex {
+	display: flex;
 }
 
 .dnd5e.sheet form.editable.obsidian .rollable:hover {
@@ -207,13 +213,13 @@
 
 .obsidian-char-top-level {
 	display: inline-flex;
-	padding: 8px 0 0 20px;
+	padding-left: var(--horizontal-space);
 }
 
 .obsidian-char-column {
 	display: flex;
 	flex-direction: column-reverse;
-	padding: 0 20px 20px 0;
+	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
 	align-items: center;
 }
 
@@ -256,6 +262,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-weight: bold;
 	text-align: center;
 	min-width: 58px;
+	min-height: 46px;
 }
 
 .obsidian-resource-box {
@@ -265,12 +272,17 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 
+.obsidian-list-box {
+	height: 80px;
+	width: 150px;
+}
+
 .obsidian-char-hp {
-	padding: 10px 8px;
+	padding: 10px 16px;
 }
 
 .obsidian-char-hd {
-	padding: 0 8px;
+	padding: 0 17px;
 	display: flex;
 	align-items: center;
 	min-height: 79px;
@@ -376,14 +388,17 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-inspiration {
 	color: var(--highlight);
-	min-height: 46px;
 	padding: 2px 0;
 	font-size: 28px;
 }
 
 .obsidian-char-ability {
 	display: inline-block;
-	padding: 0 20px 20px 0;
+	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
+}
+
+.obsidian-char-ability:last-child {
+	padding-right: 0;
 }
 
 .obsidian-char-ability-name {
@@ -464,6 +479,11 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 6px;
 }
 
+.obsidian .obsidian-inline label.obsidian-inline {
+	display: inline-flex;
+	margin-right: 20px;
+}
+
 .obsidian label.obsidian-label-lg {
 	align-items: flex-start;
 	margin: 0;
@@ -502,6 +522,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 10px;
 }
 
+.obsidian-form-bare .obsidian-form-row:last-child {
+	margin-bottom: 0;
+}
+
 .obsidian-form-row select,
 .obsidian-form-row input {
 	margin: 0 10px 0 0;
@@ -521,6 +545,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	display: flex;
 	align-items: center;
 	margin-bottom: 6px;
+}
+
+.obsidian-inline .fancy-checkbox {
+	display: inline-flex;
 }
 
 .checkbox-content {
