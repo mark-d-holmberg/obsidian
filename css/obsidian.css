@@ -526,14 +526,21 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 0;
 }
 
+.obsidian-checkbox-row {
+	margin-top: 10px;
+}
+
 .obsidian-form-row select,
 .obsidian-form-row input {
 	margin: 0 10px 0 0;
 }
 
 .obsidian .obsidian-form-row input {
-	padding-bottom: 3px;
 	max-width: 100px;
+}
+
+.obsidian .obsidian-form-row.obsidian-mixed-form-row input {
+	padding-bottom: 3px;
 }
 
 .obsidian .obsidian-form-row input.obsidian-input-num {
@@ -612,4 +619,11 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .selected .checkbox-inner-box {
 	border-color: var(--mid);
+}
+
+.obsidian-binary-operator {
+	color: var(--text-secondary);
+	margin-right: 10px;
+	font-weight: bold;
+	font-size: 16px;
 }

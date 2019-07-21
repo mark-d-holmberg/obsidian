@@ -23,6 +23,10 @@ Handlebars.registerHelper('defined', function (arg) {
 	return arg !== undefined;
 });
 
+Handlebars.registerHelper('exists', function (arg) {
+	return arg != null;
+});
+
 Handlebars.registerHelper('expr', function (op, ...args) {
 	args.pop();
 

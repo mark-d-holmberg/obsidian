@@ -1,0 +1,42 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<label class="obsidian-label-lg">Formula</label>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div>
+			<select name="flags.obsidian.attributes.init.ability">
+				{{#select entity.flags.obsidian.attributes.init.ability}}
+					{{#each data.abilities as |ability id|}}
+						<option value="{{id}}">{{ability.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<input type="text" name="data.attributes.init.value" value="{{data.attributes.init.value}}"
+			       class="obsidian-input-compact obsidian-input-num" style="width: 25px;" placeholder="0">
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-checkbox-row">
+		<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.init.adv"
+		     style="margin-left: 2px;">
+			<div class="checkbox-container">
+				<div class="checkbox-inner-box"></div>
+				<div class="checkmark-container">
+					<div class="checkmark">
+						<div class="checkmark-short"></div>
+						<div class="checkmark-long"></div>
+					</div>
+				</div>
+			</div>
+			<div class="checkbox-content">Advantage</div>
+		</div>
+		<input type="checkbox" data-dtype="Boolean" name="flags.obsidian.attributes.init.adv"
+		       class="obsidian-hidden" {{checked entity.flags.obsidian.attributes.init.adv}}>
+	</div>
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			<input type="text" name="flags.obsidian.attributes.init.override" style="width: 25px;"
+			       class="obsidian-input-compact obsidian-input-num"
+			       value="{{entity.flags.obsidian.attributes.init.override}}">
+			<span>Override</span>
+		</label>
+	</div>
+</form>

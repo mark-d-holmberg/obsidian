@@ -18,7 +18,7 @@
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.classes as |class id|}}
-		<div class="obsidian-form-row obsidian-inline" data-item-id="{{id}}">
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.classes.{{id}}.name">
 					{{#select class.name}}
