@@ -31,7 +31,7 @@ class ObsidianActor extends Actor5e {
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ Number(data.attributes.init.value || 0);
-		if (flags.attributes.init.override !== '') {
+		if (flags.attributes.init.override !== undefined && flags.attributes.init.override !== '') {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
 		}
 
