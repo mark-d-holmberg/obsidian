@@ -60,6 +60,8 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianSpeedDialog(this, {title: 'Override Speed'}).render(true));
 		html.find('.obsidian-init').click(() =>
 			new ObsidianInitDialog(this, {title: 'Manage Initiative'}).render(true));
+		html.find('.obsidian-ac').click(() =>
+			new ObsidianACDialog(this, {title: 'Manage Armour Class'}).render(true));
 	}
 
 	getData () {

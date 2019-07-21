@@ -1,12 +1,16 @@
 Obsidian.SCHEMA = {
 	obsidian: {
 		attributes: {
+			ac: {
+				ability1: 'dex',
+				base: 10
+			},
 			hd: {},
 			hpMaxMod: 0,
-			speed: {},
 			init: {
 				ability: 'dex'
-			}
+			},
+			speed: {}
 		},
 		classes: [],
 		details: {
@@ -25,14 +29,26 @@ class ObsidianActor extends Actor5e {
 
 		const data = actorData.data;
 		const flags = actorData.flags.obsidian;
+
 		data.attributes.hp.maxAdjusted =
 			Number(data.attributes.hp.max) + Number(flags.attributes.hpMaxMod);
 
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ Number(data.attributes.init.value || 0);
+
 		if (flags.attributes.init.override !== undefined && flags.attributes.init.override !== '') {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
+		}
+
+		data.attributes.ac.min =
+			Number(flags.attributes.ac.base || 10)
+			+ data.abilities[flags.attributes.ac.ability1].mod
+			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0)
+			+ Number(flags.attributes.ac.mod || 0);
+
+		if (flags.attributes.ac.override !== undefined && flags.attributes.ac.override !== '') {
+			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
 		return actorData;
