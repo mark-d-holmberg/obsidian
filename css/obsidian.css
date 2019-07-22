@@ -96,6 +96,7 @@
 
 .dnd5e.sheet.obsidian-window .window-content {
 	padding: 0;
+	overflow: auto;
 }
 
 .dnd5e.sheet form.obsidian > * {
@@ -121,6 +122,7 @@
 .dnd5e.sheet form.obsidian {
 	display: grid;
 	grid-template-columns: 420px auto;
+	overflow: auto;
 }
 
 .dnd5e.sheet form.obsidian.obsidian-collapsed {
@@ -273,7 +275,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 }
 
 .obsidian-list-box {
-	height: 80px;
+	height: 79px;
 	width: 150px;
 }
 
@@ -395,10 +397,6 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-char-ability {
 	display: inline-block;
 	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
-}
-
-.obsidian-char-ability:last-child {
-	padding-right: 0;
 }
 
 .obsidian-char-ability-name {
@@ -626,4 +624,73 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-right: 10px;
 	font-weight: bold;
 	font-size: 16px;
+}
+
+.obsidian-char-details {
+	display: grid;
+	grid-template-columns: 280px auto;
+}
+
+.obsidian-skills-box {
+	width: 100%;
+	padding: 8px 8px 0 8px;
+}
+
+.obsidian-skill-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-skill-item:last-child {
+	border: none;
+}
+
+.obsidian-prof {
+	display: flex;
+	align-items: center;
+	padding-left: 3px;
+	width: 25px;
+}
+
+.obsidian-not-proficient span {
+	width: 10px;
+	height: 10px;
+	border: 1px solid var(--mid);
+	border-radius: 50%;
+}
+
+.dnd5e.sheet form .obsidian-skill-item select {
+	margin-right: 5px;
+	text-transform: uppercase;
+	background: transparent;
+	font-size: 12px;
+	border: none;
+}
+
+.obsidian-skill-name {
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-size: 14px;
+	padding: 5px 0;
+	flex: 1;
+	font-weight: normal;
+	text-align: left;
+}
+
+.obsidian-skill-mod,
+.obsidian-skill-passive {
+	padding: 5px;
+	text-align: right;
+	font-size: 14px;
+	font-weight: bold;
+	align-self: flex-end;
+	width: 25px;
+}
+
+.obsidian-skill-passive {
+	color: var(--text-subtle);
+	font-weight: normal;
+	font-size: 12px;
+	align-self: center;
 }

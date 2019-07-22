@@ -18,6 +18,10 @@ class ObsidianDialog extends BaseEntitySheet {
 		return options;
 	}
 
+	get template () {
+		return this.options.template;
+	}
+
 	get title () {
 		return this.options.title;
 	}

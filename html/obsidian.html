@@ -114,6 +114,36 @@
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text rollable">Initiative</div>
+						<div class="obsidian-char-box obsidian-init obsidian-ptr">
+							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
+						</div>
+					</div>
+				</div>
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">AC</div>
+						<div class="obsidian-char-box obsidian-ac obsidian-ptr">{{data.attributes.ac.min}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="obsidian-char-header-container">
+			<div class="obsidian-char-abilities">
+				{{#each data.abilities as |ability id|}}
+				<div class="obsidian-char-ability">
+					<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
+					<div class="obsidian-char-ability-mod">
+						{{numberFormat ability.mod decimals=0 sign=true}}
+					</div>
+					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
+					       placeholder="10" class="obsidian-char-ability-score">
+				</div>
+				{{/each}}
+			</div>
+			<div class="obsidian-char-top-level">
+				<div class="obsidian-char-column">
+					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">Hit Points</div>
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
@@ -135,81 +165,76 @@
 					</div>
 				</div>
 				{{#if (notEmpty entity.flags.obsidian.attributes.hd)}}
-				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text rollable">Hit Dice</div>
-						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
-							<div>
-							{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
-								<div class="obsidian-bisect">
-									<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
-									       class="obsidian-input-num" value="{{hd.value}}">
-									/
-									<div class="obsidian-ptr obsidian-resource-box-max
+					<div class="obsidian-char-column">
+						<div class="obsidian-char-box-container">
+							<div class="obsidian-char-box-text rollable">Hit Dice</div>
+							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
+								<div>
+									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
+										<div class="obsidian-bisect">
+											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
+											       class="obsidian-input-num" value="{{hd.value}}">
+											/
+											<div class="obsidian-ptr obsidian-resource-box-max
 									{{#if (defined hd.override)~}}
-										{{#if (expr '>' hd.override hd.max)~}}
+												{{#if (expr '>' hd.override hd.max)~}}
 											obsidian-positive
 										{{else if (expr '<' hd.override hd.max)~}}
 											obsidian-negative
 										{{~/if}}
-									{{~/if}}">
-										{{#if (defined hd.override)}}
-											{{hd.override}}
-										{{else}}
-											{{hd.max}}
-										{{/if}}
-									</div>
-									<div class="obsidian-resource-box-subtle">d{{id}}</div>
+											{{~/if}}">
+												{{#if (defined hd.override)}}
+													{{hd.override}}
+												{{else}}
+													{{hd.max}}
+												{{/if}}
+											</div>
+											<div class="obsidian-resource-box-subtle">d{{id}}</div>
+										</div>
+									{{/each}}
 								</div>
-							{{/each}}
 							</div>
 						</div>
 					</div>
-				</div>
 				{{/if}}
-			</div>
-		</div>
-		<div class="obsidian-char-header-container">
-			<div class="obsidian-char-abilities">
-				{{#each data.abilities as |ability id|}}
-				<div class="obsidian-char-ability">
-					<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
-					<div class="obsidian-char-ability-mod">
-						{{numberFormat ability.mod decimals=0 sign=true}}
-					</div>
-					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
-					       placeholder="10" class="obsidian-char-ability-score">
-				</div>
-				{{/each}}
-			</div>
-			<div class="obsidian-char-top-level">
-				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text rollable">Initiative</div>
-						<div class="obsidian-char-box obsidian-init obsidian-ptr">
-							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
-						</div>
-					</div>
-				</div>
-				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">AC</div>
-						<div class="obsidian-char-box obsidian-ac obsidian-ptr">{{data.attributes.ac.min}}</div>
-					</div>
-				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">Defenses</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses"></div>
 					</div>
 				</div>
-				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Conditions</div>
-						<div class="obsidian-char-box obsidian-list-box obsidian-conditions"></div>
-					</div>
-				</div>
 			</div>
 		</div>
+		<section class="obsidian-char-details">
+			<div class="obsidian-char-box-container">
+				<div class="obsidian-char-box-text">
+					Skills
+					<a title="Edit Skills" class="obsidian-edit">
+						<i class="fas fa-edit"></i>
+					</a>
+				</div>
+				<div class="obsidian-char-box obsidian-skills-box">
+					{{#each data.skills as |skill id|}}
+						<div class="obsidian-skill-item">
+							<div class="obsidian-prof obsidian-ptr obsidian-not-proficient">
+								<span></span>
+							</div>
+							<select>
+								{{#select skill.ability}}
+									{{#each ../data.abilities}}
+										<option value="{{@key}}">{{@key}}</option>
+									{{/each}}
+								{{/select}}
+							</select>
+							<div class="obsidian-skill-name rollable">{{skill.label}}</div>
+							<div class="obsidian-skill-mod obsidian-ptr">
+								{{numberFormat skill.mod decimals=0 sign=true}}
+							</div>
+							<div class="obsidian-skill-passive obsidian-ptr">({{expr '+' skill.mod 10}})</div>
+						</div>
+					{{/each}}
+				</div>
+			</div>
+		</section>
 	</section>
 </form>

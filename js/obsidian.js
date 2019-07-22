@@ -46,22 +46,37 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		this._setCollapsed(this.settings.portraitCollapsed);
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
+		html.find('.obsidian-inspiration')
+			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
 		html.find('.obsidian-char-xp').click(() =>
 			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
-		html.find('.obsidian-inspiration')
-			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
-		html.find('.obsidian-max-hp').click(() =>
-			new ObsidianMaxHPDialog(this, {title: 'Edit Max HP'}).render(true));
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
 			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
+		html.find('.obsidian-max-hp').click(() =>
+			new ObsidianDialog(this, {
+				title: 'Edit Max HP',
+				width: 250,
+				template: 'public/modules/obsidian/html/hp-dialog.html'
+			}).render(true));
 		html.find('.obsidian-speed').click(() =>
-			new ObsidianSpeedDialog(this, {title: 'Override Speed'}).render(true));
+			new ObsidianDialog(this, {
+				title: 'Override Speed',
+				width: 250,
+				template: 'public/modules/obsidian/html/speed-dialog.html'
+			}).render(true));
 		html.find('.obsidian-init').click(() =>
-			new ObsidianInitDialog(this, {title: 'Manage Initiative'}).render(true));
+			new ObsidianDialog(this, {
+				title: 'Manage Initiative',
+				width: 250,
+				template: 'public/modules/obsidian/html/init-dialog.html'
+			}).render(true));
 		html.find('.obsidian-ac').click(() =>
-			new ObsidianACDialog(this, {title: 'Manage Armour Class'}).render(true));
+			new ObsidianDialog(this, {
+				title: 'Manage Armour Class',
+				template: 'public/modules/obsidian/html/ac-dialog.html'
+			}).render(true));
 	}
 
 	getData () {
