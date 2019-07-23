@@ -64,6 +64,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 	}
 });
 
+Handlebars.registerHelper('lc', function (arg) {
+	return arg.toLocaleLowerCase();
+});
+
 Handlebars.registerHelper('notEmpty', function (obj) {
 	return obj != null && Object.keys(obj).length > 0;
 });

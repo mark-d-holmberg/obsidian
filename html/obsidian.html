@@ -215,12 +215,20 @@
 				</div>
 				<div class="obsidian-char-box obsidian-skills-box">
 					{{#each data.skills as |skill id|}}
-						<div class="obsidian-skill-item">
-							<div class="obsidian-prof obsidian-ptr obsidian-not-proficient">
+						<div class="obsidian-skill-item" data-skill-id="{{id}}">
+							<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
+								obsidian-half-proficient
+							{{~else if (expr '===' 1 skill.value)~}}
+								obsidian-proficient
+							{{~else if (expr '===' 2 skill.value)~}}
+								obsidian-expertise
+							{{~else~}}
+								obsidian-not-proficient
+							{{~/if~}}">
 								<span></span>
 							</div>
-							<select>
-								{{#select skill.ability}}
+							<select name="data.skills.{{id}}.ability">
+								{{#select (lc skill.ability)}}
 									{{#each ../data.abilities}}
 										<option value="{{@key}}">{{@key}}</option>
 									{{/each}}

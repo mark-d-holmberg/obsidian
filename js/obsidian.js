@@ -19,6 +19,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		this.settings = settings;
+		this.scrolling = false;
 	}
 
 	get template () {
@@ -44,16 +45,24 @@ class Obsidian extends ActorSheet5eCharacter {
 		super.activateListeners(html);
 		console.debug(this.actor);
 
+		this.form.addEventListener('scroll', this._onScroll.bind(this));
 		this._setCollapsed(this.settings.portraitCollapsed);
+		if (this.settings.scrollTop !== undefined) {
+			this.form.scrollTop = this.settings.scrollTop;
+		}
+
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
+		html.find('.obsidian-prof').click(this._setProficiency.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
 		html.find('.obsidian-char-xp').click(() =>
 			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
 			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
+		html.find('[title="Edit Skills"]').click(() =>
+			new ObsidianSkillsDialog(this, {title: 'Manage Skills'}).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Edit Max HP',
@@ -77,6 +86,11 @@ class Obsidian extends ActorSheet5eCharacter {
 				title: 'Manage Armour Class',
 				template: 'public/modules/obsidian/html/ac-dialog.html'
 			}).render(true));
+		html.find('.obsidian-skill-mod').click(evt =>
+			new ObsidianSkillDialog(
+				this,
+				$(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id'))
+				.render(true));
 	}
 
 	getData () {
@@ -118,6 +132,22 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {Event} evt
+	 */
+	_onScroll (evt) {
+		if (!this.scrolling) {
+			setTimeout(() => {
+				this.settings.scrollTop = this.form.scrollTop;
+				game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+				this.scrolling = false;
+			}, 200);
+
+			this.scrolling = true;
+		}
+	}
+
+	/**
+	 * @private
 	 */
 	_onResize (event) {
 		super._onResize(event);
@@ -143,6 +173,26 @@ class Obsidian extends ActorSheet5eCharacter {
 			jqForm.removeClass('obsidian-collapsed');
 			collapser.addClass('fa-rotate-90');
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_setProficiency (evt) {
+		const id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
+		const skill = this.actor.data.data.skills[id];
+
+		let newValue = 0;
+		if (skill.value === 0) {
+			newValue = 1;
+		} else if (skill.value === 1) {
+			newValue = 2;
+		}
+
+		const update = {};
+		update[`data.skills.${id}.value`] = newValue;
+		this.actor.update(update);
 	}
 
 	/**

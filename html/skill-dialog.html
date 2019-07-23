@@ -1,0 +1,23 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<div class="obsidian-form-row">
+		<select name="data.skills.{{skillID}}.value">
+			{{#with (lookup data.skills skillID) as |skill|}}
+				{{#select skill.value}}
+					{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
+						<option value="{{value}}">{{level}}</option>
+					{{/each}}
+				{{/select}}
+			{{/with}}
+		</select>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<label class="obsidian-inline">
+			<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" style="width: 25px;"
+			       class="obsidian-input-compact obsidian-input-num"
+			       value="{{#with (lookup entity.flags.obsidian.skills skillID) as |skill|}}
+				       {{~skill.bonus~}}
+			       {{/with}}">
+			<span>Bonus</span>
+		</label>
+	</div>
+</form>

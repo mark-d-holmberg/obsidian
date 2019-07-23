@@ -1,0 +1,58 @@
+<form class="obsidian" autocomplete="off">
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			<input type="text" style="width: 25px;" placeholder="0"
+			       name="flags.obsidian.skills.bonus"
+			       value="{{entity.flags.obsidian.skills.bonus}}"
+			       class="obsidian-input-compact obsidian-input-num">
+			<span>Bonus</span>
+		</label>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div class="fancy-checkbox" data-bound="flags.obsidian.skills.joat">
+			<div class="checkbox-container">
+				<div class="checkbox-inner-box"></div>
+				<div class="checkmark-container">
+					<div class="checkmark">
+						<div class="checkmark-short"></div>
+						<div class="checkmark-long"></div>
+					</div>
+				</div>
+			</div>
+			<div class="checkbox-content">Jack of all Trades</div>
+		</div>
+		<input type="checkbox" name="flags.obsidian.skills.joat" class="obsidian-hidden"
+			     {{checked entity.flags.obsidian.skills.joat}}>
+	</div>
+	<label class="obsidian-inline obsidian-label-lg">
+		Custom Skills
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-skill">
+			Add
+		</button>
+	</label>
+	{{#each entity.flags.skills.custom as |skill id|}}
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+			<div>
+				<select name="flags.obsidian.skills.custom.{{id}}.value">
+					{{#select skill.value}}
+						{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
+							<option value="{{value}}">{{level}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.skills.custom.{{id}}.ability">
+					{{#select (lc skill.ability)}}
+						{{#each ../data.abilities}}
+							<option value="{{@key}}">{{@key}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input class="obsidian-input-compact" type="text" placeholder="Name" value="{{skill.label}}"
+				       name="flags.obsidian.skills.custom.{{id}}.label">
+			</div>
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+</form>

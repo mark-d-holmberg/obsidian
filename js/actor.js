@@ -18,6 +18,11 @@ Obsidian.SCHEMA = {
 			subrace: null,
 			milestone: false,
 			inspiration: false
+		},
+		skills: {
+			bonus: 0,
+			joat: false,
+			custom: []
 		}
 	}
 };
@@ -49,6 +54,10 @@ class ObsidianActor extends Actor5e {
 
 		if (flags.attributes.ac.override !== undefined && flags.attributes.ac.override !== '') {
 			data.attributes.ac.min = flags.attributes.ac.override;
+		}
+
+		for (const [key, val] of Object.entries(flags.skills)) {
+			data.skills[key].mod += Number(val.bonus);
 		}
 
 		return actorData;

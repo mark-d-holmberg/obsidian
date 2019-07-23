@@ -134,6 +134,16 @@
 	color: var(--text-regular);
 	padding: 20px;
 	font-family: Roboto, sans-serif;
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+}
+
+.obsidian::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+.obsidian::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
 }
 
 .dialog .obsidian {
@@ -652,13 +662,56 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	align-items: center;
 	padding-left: 3px;
 	width: 25px;
+	position: relative;
 }
 
-.obsidian-not-proficient span {
+.obsidian-not-proficient span,
+.obsidian-half-proficient span,
+.obsidian-proficient span,
+.obsidian-expertise span {
 	width: 10px;
 	height: 10px;
 	border: 1px solid var(--mid);
 	border-radius: 50%;
+}
+
+.obsidian-half-proficient span,
+.obsidian-proficient span,
+.obsidian-expertise span {
+	background: var(--mid);
+}
+
+.obsidian-half-proficient span {
+	width: 4px;
+	height: 8px;
+	border-bottom-right-radius: 8px;
+	border-top-right-radius: 8px;
+	margin-left: 5px;
+}
+
+.obsidian-half-proficient:before {
+	content: '';
+	width: 8px;
+	height: 8px;
+	border: 1px solid var(--mid);
+	border-radius: 50%;
+	position: absolute;
+}
+
+.obsidian-expertise span {
+	width: 7px;
+	height: 7px;
+	margin-left: 2px;
+}
+
+.obsidian-expertise:before {
+	content: '';
+	width: 11px;
+	height: 11px;
+	border: 2px solid var(--mid);
+	border-radius: 50%;
+	position: absolute;
+	left: 1px;
 }
 
 .dnd5e.sheet form .obsidian-skill-item select {

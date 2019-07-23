@@ -21,6 +21,13 @@ ObsidianRules.ClassHitDice = {
 	'Wizard': 6
 };
 
+ObsidianRules.ProficiencyLevels = {
+	0: 'Not Proficient',
+	0.5: 'Half Proficient',
+	1: 'Proficient',
+	2: 'Expertise'
+};
+
 ObsidianRules.Speeds = {
 	walk: 'Walking',
 	burrow: 'Burrowing',
