@@ -1,9 +1,18 @@
 class ObsidianSkillDialog extends ObsidianDialog {
 	constructor (parent, skillID) {
+		const custom = skillID.startsWith('custom.');
+		if (custom) {
+			skillID = parseInt(skillID.split('.')[1]);
+		}
+
 		super(parent, {
-			title: `Manage Skill: ${parent.actor.data.data.skills[skillID].label}`,
+			title: `Manage Skill: ${custom
+				? parent.actor.data.flags.obsidian.skills.custom[skillID].label
+				: parent.actor.data.data.skills[skillID].label}`,
 			width: 250
 		});
+
+		this.custom = custom;
 		this.skillID = skillID;
 	}
 
@@ -13,16 +22,8 @@ class ObsidianSkillDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
+		data.custom = this.custom;
 		data.skillID = this.skillID;
 		return data;
-	}
-
-	/**
-	 * @private
-	 */
-	_updateObject (event, formData) {
-		const key = `data.skills.${this.skillID}.value`;
-		formData[key] = parseFloat(formData[key]);
-		super._updateObject(event, formData);
 	}
 }

@@ -214,7 +214,7 @@
 					</a>
 				</div>
 				<div class="obsidian-char-box obsidian-skills-box">
-					{{#each data.skills as |skill id|}}
+					{{#each entity.allSkills as |skill id|}}
 						<div class="obsidian-skill-item" data-skill-id="{{id}}">
 							<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
 								obsidian-half-proficient
@@ -222,12 +222,19 @@
 								obsidian-proficient
 							{{~else if (expr '===' 2 skill.value)~}}
 								obsidian-expertise
+							{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 skill.value))~}}
+								obsidian-half-proficient
 							{{~else~}}
 								obsidian-not-proficient
 							{{~/if~}}">
 								<span></span>
 							</div>
-							<select name="data.skills.{{id}}.ability">
+							<select name="
+							{{~#if (startsWith id 'custom.')~}}
+								flags.obsidian.skills.{{id}}.ability
+							{{~else~}}
+								data.skills.{{id}}.ability
+							{{~/if~}}">
 								{{#select (lc skill.ability)}}
 									{{#each ../data.abilities}}
 										<option value="{{@key}}">{{@key}}</option>

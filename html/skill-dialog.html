@@ -1,7 +1,14 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-form-row">
-		<select name="data.skills.{{skillID}}.value">
-			{{#with (lookup data.skills skillID) as |skill|}}
+		<select name="
+		        {{~#if custom~}}
+		          flags.obsidian.skills.custom.
+		        {{~else~}}
+		          data.skills.
+		        {{~/if~}}
+			      {{~skillID}}.value"
+		        data-dtype="Number">
+			{{#with (bi-lookup entity.flags.obsidian.skills.custom data.skills custom skillID) as |skill|}}
 				{{#select skill.value}}
 					{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
 						<option value="{{value}}">{{level}}</option>
@@ -12,11 +19,11 @@
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
 		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" style="width: 25px;"
-			       class="obsidian-input-compact obsidian-input-num"
-			       value="{{#with (lookup entity.flags.obsidian.skills skillID) as |skill|}}
+			<input type="text" name="flags.obsidian.skills.{{#if custom}}custom.{{/if}}{{skillID}}.bonus"
+			       class="obsidian-input-compact obsidian-input-num" placeholder="0" data-dtype="Number"
+			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID) as |skill|}}
 				       {{~skill.bonus~}}
-			       {{/with}}">
+			       {{/with}}" style="width: 25px;">
 			<span>Bonus</span>
 		</label>
 	</div>

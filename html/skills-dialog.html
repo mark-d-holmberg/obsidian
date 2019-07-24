@@ -1,14 +1,13 @@
 <form class="obsidian" autocomplete="off">
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
-			<input type="text" style="width: 25px;" placeholder="0"
-			       name="flags.obsidian.skills.bonus"
-			       value="{{entity.flags.obsidian.skills.bonus}}"
+			<input type="text" style="width: 25px;" placeholder="0" name="flags.obsidian.skills.bonus"
+			       value="{{entity.flags.obsidian.skills.bonus}}" data-dtype="Number"
 			       class="obsidian-input-compact obsidian-input-num">
 			<span>Bonus</span>
 		</label>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row">
+	<div class="obsidian-form-row" style="margin-left: 2px;">
 		<div class="fancy-checkbox" data-bound="flags.obsidian.skills.joat">
 			<div class="checkbox-container">
 				<div class="checkbox-inner-box"></div>
@@ -30,25 +29,30 @@
 			Add
 		</button>
 	</label>
-	{{#each entity.flags.skills.custom as |skill id|}}
+	{{#each entity.flags.obsidian.skills.custom as |skill id|}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
-				<select name="flags.obsidian.skills.custom.{{id}}.value">
+				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">
 					{{#select skill.value}}
 						{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
 							<option value="{{value}}">{{level}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.skills.custom.{{id}}.ability">
+				<select name="flags.obsidian.skills.custom.{{id}}.ability"
+				        style="text-transform: uppercase;">
 					{{#select (lc skill.ability)}}
 						{{#each ../data.abilities}}
 							<option value="{{@key}}">{{@key}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input class="obsidian-input-compact" type="text" placeholder="Name" value="{{skill.label}}"
-				       name="flags.obsidian.skills.custom.{{id}}.label">
+				<input class="obsidian-input-compact" type="text" placeholder="Skill"
+				       name="flags.obsidian.skills.custom.{{id}}.label" value="{{skill.label}}">
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input class="obsidian-input-compact obsidian-input-num" style="width: 25px;" type="text"
+				       placeholder="0" value="{{skill.bonus}}" data-dtype="Number"
+				       name="flags.obsidian.skills.custom.{{id}}.bonus">
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
 				Remove

@@ -56,8 +56,30 @@ class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
-		for (const [key, val] of Object.entries(flags.skills)) {
-			data.skills[key].mod += Number(val.bonus);
+		for (const [id, skill] of Object.entries(data.skills)) {
+			if (flags.skills.hasOwnProperty(id)) {
+				skill.mod += Number(flags.skills[id].bonus);
+			}
+
+			if (flags.skills.joat && skill.value === 0) {
+				skill.mod += Math.floor(data.attributes.prof.value / 2);
+			}
+
+			skill.mod += Number(flags.skills.bonus);
+		}
+
+		actorData.allSkills = duplicate(data.skills);
+		for (const [id, skill] of Object.entries(flags.skills.custom)) {
+			actorData.allSkills[`custom.${id}`] = skill;
+			skill.mod =
+				data.abilities[skill.ability].mod
+				+ Number(skill.bonus)
+				+ Number(flags.skills.bonus)
+				+ Math.floor(skill.value * data.attributes.prof.value);
+
+			if (flags.skills.joat && skill.value === 0) {
+				skill.mod += Math.floor(data.attributes.prof.value / 2);
+			}
 		}
 
 		return actorData;

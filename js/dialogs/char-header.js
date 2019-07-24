@@ -71,21 +71,8 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
-
-		const row = $(evt.currentTarget).parents('.obsidian-form-row');
-		const id = Number(row.data('item-id'));
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		const newClasses = [];
-
-		for (let i = 0; i < classes.length; i++) {
-			const cls = classes[i];
-			if (i !== id) {
-				cls.id = newClasses.length;
-				newClasses.push(cls);
-			}
-		}
-
-		await this._updateFlags(newClasses);
+		await this._updateFlags(ObsidianDialog.removeRow(classes, evt));
 		this.render(false);
 	}
 
@@ -105,26 +92,9 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	_updateObject (event, formData) {
 		const newData = {};
-		const classes = [];
-
-		for (const [key, val] of Object.entries(formData)) {
-			if (key.startsWith('flags.obsidian.classes')) {
-				let [index, property] = key.substring(23).split('.');
-				index = parseInt(index);
-
-				if (classes[index] === undefined) {
-					classes[index] = {};
-				}
-
-				classes[index][property] = val;
-			} else {
-				newData[key] = val;
-			}
-		}
-
-		const hd = this.parent.actor.updateHD(classes);
-		newData['flags.obsidian.classes'] = classes;
-		newData['flags.obsidian.attributes.hd'] = hd;
+		const classes =
+			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
+		newData['flags.obsidian.attributes.hd'] = this.parent.actor.updateHD(classes);
 		super._updateObject(event, newData);
 	}
 }

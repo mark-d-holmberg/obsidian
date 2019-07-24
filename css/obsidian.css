@@ -90,6 +90,10 @@
 	pointer-events: none;
 }
 
+.obsidian-window.dialog .window-content {
+	overflow-y: hidden;
+}
+
 .obsidian-window .window-content {
 	background: var(--bg);
 }

@@ -79,18 +79,58 @@ class ObsidianDialog extends BaseEntitySheet {
 		this.parent._updateObject(event, formData);
 	}
 
-	static recalculateHeight (html) {
+	static recalculateHeight (html, bareLabels = true) {
 		let total = 0;
-		html.find('label > input, .obsidian-form-row')
+		let selector = '.obsidian-form-row, label.obsidian-label-lg';
+		if (bareLabels) {
+			selector += ', label > input';
+		}
+
+		html.find(selector)
 			.each((i, el) => total += $(el).outerHeight(true));
 
 		const content = html.parents('.window-content');
 		html.height(total);
-		const padding = parseInt(content.css('padding'));
-		total += padding * 2.5;
 
 		const diff = total - content.height();
 		const win = content.parents('.obsidian-window');
 		win.height(win.height() + diff);
+	}
+
+	static reconstructArray (formData, newData, keySubstr) {
+		const ar = [];
+		for (const [key, val] of Object.entries(formData)) {
+			if (key.startsWith(keySubstr)) {
+				let [index, property] = key.substring(keySubstr.length + 1).split('.');
+				index = parseInt(index);
+
+				if (ar[index] === undefined) {
+					ar[index] = {};
+				}
+
+				ar[index][property] = val;
+			} else {
+				newData[key] = val;
+			}
+		}
+
+		newData[keySubstr] = ar;
+		return ar;
+	}
+
+	static removeRow (data, evt) {
+		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const id = Number(row.data('item-id'));
+		const newData = [];
+
+		for (let i = 0; i < data.length; i++) {
+			const item = data[i];
+			if (i !== id) {
+				item.id = newData.length;
+				newData.push(item);
+			}
+		}
+
+		return newData;
 	}
 }

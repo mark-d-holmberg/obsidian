@@ -180,8 +180,17 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setProficiency (evt) {
-		const id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
-		const skill = this.actor.data.data.skills[id];
+		let id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
+		const custom = id.startsWith('custom');
+
+		if (custom) {
+			id = parseInt(id.split('.')[1]);
+		}
+
+		const skill =
+			custom
+				? this.actor.data.flags.obsidian.skills.custom[id]
+				: this.actor.data.data.skills[id];
 
 		let newValue = 0;
 		if (skill.value === 0) {
@@ -191,7 +200,14 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		update[`data.skills.${id}.value`] = newValue;
+		if (custom) {
+			const newSkills = duplicate(this.actor.data.flags.obsidian.skills.custom);
+			newSkills[id].value = newValue;
+			update['flags.obsidian.skills.custom'] = newSkills;
+		} else {
+			update[`data.skills.${id}.value`] = newValue;
+		}
+
 		this.actor.update(update);
 	}
 
@@ -225,6 +241,34 @@ class Obsidian extends ActorSheet5eCharacter {
 		$(this.form).parents('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		if (!Object.keys(formData).some(key => key.startsWith('flags.obsidian.skills.custom'))) {
+			super._updateObject(event, formData);
+			return;
+		}
+
+		const newData = {};
+		const skills =
+			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.skills.custom');
+
+		for (const [key, skill] of Object.entries(this.actor.data.flags.obsidian.skills.custom)) {
+			for (const prop in skill) {
+				if (skills[key] === undefined) {
+					skills[key] = duplicate(skill);
+				}
+
+				if (!skills[key].hasOwnProperty(prop)) {
+					skills[key][prop] = skill[prop];
+				}
+			}
+		}
+
+		super._updateObject(event, newData);
 	}
 }
 

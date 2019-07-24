@@ -1,3 +1,7 @@
+Handlebars.registerHelper('bi-lookup', function (a, b, predicate, prop) {
+	return predicate ? a[prop] : b[prop];
+});
+
 Handlebars.registerHelper('classFormat', function (classes) {
 	if (classes.length < 1) {
 		return 'Class';
@@ -32,6 +36,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 
 	if (op === '!') {
 		return !args[0];
+	}
+
+	if (op === '&&') {
+		return args[0] && args[1];
 	}
 
 	if (op === '>') {
@@ -70,4 +78,8 @@ Handlebars.registerHelper('lc', function (arg) {
 
 Handlebars.registerHelper('notEmpty', function (obj) {
 	return obj != null && Object.keys(obj).length > 0;
+});
+
+Handlebars.registerHelper('startsWith', function (haystack, needle) {
+	return haystack.startsWith(needle);
 });
