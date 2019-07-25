@@ -5,6 +5,7 @@ Obsidian.SCHEMA = {
 				ability1: 'dex',
 				base: 10
 			},
+			conditions: {},
 			hd: {},
 			hpMaxMod: 0,
 			init: {
@@ -16,8 +17,7 @@ Obsidian.SCHEMA = {
 		details: {
 			gender: null,
 			subrace: null,
-			milestone: false,
-			inspiration: false
+			milestone: false
 		},
 		skills: {
 			bonus: 0,
@@ -35,22 +35,21 @@ class ObsidianActor extends Actor5e {
 		const data = actorData.data;
 		const flags = actorData.flags.obsidian;
 
-		data.attributes.hp.maxAdjusted =
-			Number(data.attributes.hp.max) + Number(flags.attributes.hpMaxMod);
+		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
-			+ Number(data.attributes.init.value || 0);
+			+ data.attributes.init.value;
 
 		if (flags.attributes.init.override !== undefined && flags.attributes.init.override !== '') {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
 		}
 
 		data.attributes.ac.min =
-			Number(flags.attributes.ac.base || 10)
+			flags.attributes.ac.base
 			+ data.abilities[flags.attributes.ac.ability1].mod
 			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0)
-			+ Number(flags.attributes.ac.mod || 0);
+			+ flags.attributes.ac.mod;
 
 		if (flags.attributes.ac.override !== undefined && flags.attributes.ac.override !== '') {
 			data.attributes.ac.min = flags.attributes.ac.override;
@@ -58,14 +57,14 @@ class ObsidianActor extends Actor5e {
 
 		for (const [id, skill] of Object.entries(data.skills)) {
 			if (flags.skills.hasOwnProperty(id)) {
-				skill.mod += Number(flags.skills[id].bonus);
+				skill.mod += flags.skills[id].bonus;
 			}
 
 			if (flags.skills.joat && skill.value === 0) {
 				skill.mod += Math.floor(data.attributes.prof.value / 2);
 			}
 
-			skill.mod += Number(flags.skills.bonus);
+			skill.mod += flags.skills.bonus;
 		}
 
 		actorData.allSkills = duplicate(data.skills);
@@ -73,8 +72,8 @@ class ObsidianActor extends Actor5e {
 			actorData.allSkills[`custom.${id}`] = skill;
 			skill.mod =
 				data.abilities[skill.ability].mod
-				+ Number(skill.bonus)
-				+ Number(flags.skills.bonus)
+				+ skill.bonus
+				+ flags.skills.bonus
 				+ Math.floor(skill.value * data.attributes.prof.value);
 
 			if (flags.skills.joat && skill.value === 0) {
@@ -112,7 +111,7 @@ class ObsidianActor extends Actor5e {
 				totals[cls.hd] = 0;
 			}
 
-			totals[cls.hd] += Number(cls.levels);
+			totals[cls.hd] += cls.levels;
 		}
 
 		for (const [hd, val] of Object.entries(totals)) {
@@ -127,7 +126,7 @@ class ObsidianActor extends Actor5e {
 				if (storedHD.max !== val) {
 					const diff = val - storedHD.max;
 					newHD[hd].max = val;
-					newHD[hd].value = Number(storedHD.value) + diff;
+					newHD[hd].value = storedHD.value + diff;
 				}
 			}
 		}

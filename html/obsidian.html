@@ -78,7 +78,7 @@
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">Inspiration</div>
 						<div class="obsidian-char-box obsidian-inspiration obsidian-ptr">
-							<i class="fas fa-sun {{#if (expr '!' entity.flags.obsidian.details.inspiration)~}}
+							<i class="fas fa-sun {{#if (expr '!' data.attributes.inspiration.value)~}}
 								obsidian-hidden
 							{{~/if}}"></i>
 						</div>
@@ -137,7 +137,7 @@
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
 					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
-					       placeholder="10" class="obsidian-char-ability-score">
+					       placeholder="10" class="obsidian-char-ability-score" data-dtype="Number">
 				</div>
 				{{/each}}
 			</div>
@@ -148,7 +148,7 @@
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
 								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
-								       value="{{data.attributes.hp.value}}">
+								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
 								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
 								{{#if (expr '>' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
@@ -160,7 +160,7 @@
 								</div>
 							</div>
 							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
-							       class="obsidian-input-num" placeholder="tmp">
+							       class="obsidian-input-num" placeholder="tmp" data-dtype="Number">
 						</div>
 					</div>
 				</div>
@@ -248,6 +248,33 @@
 							<div class="obsidian-skill-passive obsidian-ptr">({{expr '+' skill.mod 10}})</div>
 						</div>
 					{{/each}}
+				</div>
+			</div>
+			<div class="obsidian-char-top-level">
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text">Conditions</div>
+					<div class="obsidian-char-box obsidian-char-box-lg">
+						<div class="obsidian-bisect obsidian-conditions">
+						{{#each ObsidianRules.Conditions}}
+							<div class="obsidian-radio-label" data-value="{{this}}">
+								<div class="
+								{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
+									obsidian-radio-selected
+								{{~/if}} obsidian-radio"><span></span></div>
+								{{capitalise this}}
+							</div>
+						{{/each}}
+						</div>
+						<div class="obsidian-meatballs-title">Exhaustion</div>
+						<div class="obsidian-meatballs obsidian-exhaustion">
+							{{#each (range 1 6) as |level|}}
+								<div class="
+								{{~#if (expr '<=' level ../data.attributes.exhaustion.value)~}}
+									obsidian-radio-selected
+								{{~/if}} obsidian-radio" data-value="{{level}}"><span></span></div>
+							{{/each}}
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

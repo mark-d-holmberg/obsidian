@@ -54,7 +54,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 
 		if (removedHD !== undefined) {
 			delete removedHD.override;
-			if (removedHD.max === undefined || Number(removedHD.max) === 0) {
+			if (removedHD.max === 0) {
 				delete hd[hdVal];
 			}
 
@@ -96,9 +96,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		}
 
 		for (const key of Object.keys(hd)) {
-			if (total[key] === undefined
-				&& (hd[key].max === undefined || Number(hd[key].max) === 0))
-			{
+			if (total[key] === undefined && hd[key].max === 0) {
 				delete hd[key];
 			}
 		}

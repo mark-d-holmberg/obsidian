@@ -36,8 +36,9 @@
 				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"
 				       style="{{#if (expr '===' 'Custom' class.name)}}width: 65px;{{/if}}">
 				<input class="obsidian-input-compact obsidian-input-num" type="text" style="width: 25px;"
-				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}">
-				<select name="flags.obsidian.classes.{{id}}.hd">
+				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}"
+				       data-dtype="Number">
+				<select name="flags.obsidian.classes.{{id}}.hd" data-dtype="Number">
 					{{#select class.hd}}
 						{{#each ../ObsidianRules.HD}}
 							<option value="{{this}}">d{{this}}</option>

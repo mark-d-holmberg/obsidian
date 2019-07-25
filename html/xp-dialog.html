@@ -17,14 +17,15 @@
 		<label class="obsidian-inline">
 			<span>Set Level</span>
 			<input type="text" name="data.details.level.value" value="{{data.details.level.value}}"
-			       style="width: 25px;" class="obsidian-input-compact obsidian-input-num">
+			       style="width: 25px;" class="obsidian-input-compact obsidian-input-num" data-dtype="Number">
 		</label>
 		<label class="obsidian-inline">
 			<span>Set XP</span>
 			<input type="text" name="data.details.xp.value" value="{{data.details.xp.value}}"
-			       class="obsidian-input-compact obsidian-input-num" style="width: 75px;">
+			       class="obsidian-input-compact obsidian-input-num" style="width: 75px;"
+			       data-dtype="Number">
 		</label>
 	</div>
-	<input type="text" name="addRemoveXP" placeholder="Add/Remove XP"
+	<input type="text" name="addRemoveXP" placeholder="Add/Remove XP" data-dtype="Number"
 	       class="obsidian-input-compact">
 </form>

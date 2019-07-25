@@ -24,7 +24,7 @@ class ObsidianXPDialog extends ObsidianDialog {
 			const delta = Number(xpDeltaStr);
 			if (!isNaN(delta)) {
 				this.element.find('input[name="data.details.xp.value"]')
-					.val(Number(this.parent.actor.data.data.details.xp.value) + delta);
+					.val(this.parent.actor.data.data.details.xp.value + delta);
 			}
 		}
 

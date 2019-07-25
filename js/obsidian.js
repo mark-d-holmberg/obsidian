@@ -53,8 +53,11 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
-			.click(this._toggleControl.bind(this, 'flags.obsidian.details.inspiration'));
+			.click(this._toggleControl.bind(this, 'data.attributes.inspiration.value'));
 		html.find('.obsidian-prof').click(this._setProficiency.bind(this));
+		html.find('.obsidian-conditions .obsidian-radio-label')
+			.click(this._setCondition.bind(this));
+		html.find('.obsidian-exhaustion .obsidian-radio').click(this._setExhaustion.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
 		html.find('.obsidian-char-xp').click(() =>
@@ -173,6 +176,37 @@ class Obsidian extends ActorSheet5eCharacter {
 			jqForm.removeClass('obsidian-collapsed');
 			collapser.addClass('fa-rotate-90');
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_setCondition (evt) {
+		const id = $(evt.currentTarget).data('value');
+		let state = this.actor.data.flags.obsidian.attributes.conditions[id];
+		if (state === undefined) {
+			state = false;
+		}
+
+		const update = {};
+		update[`flags.obsidian.attributes.conditions.${id}`] = !state;
+		this.actor.update(update);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_setExhaustion (evt) {
+		let value = Number($(evt.currentTarget).data('value'));
+		const current = this.actor.data.data.attributes.exhaustion.value;
+
+		if (value === 1 && current === 1) {
+			value = 0;
+		}
+
+		this.actor.update({'data.attributes.exhaustion.value': value});
 	}
 
 	/**

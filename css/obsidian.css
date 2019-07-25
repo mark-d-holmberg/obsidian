@@ -661,7 +661,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	border: none;
 }
 
-.obsidian-prof {
+.obsidian-prof,
+.obsidian-radio {
 	display: flex;
 	align-items: center;
 	padding-left: 3px;
@@ -672,7 +673,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-not-proficient span,
 .obsidian-half-proficient span,
 .obsidian-proficient span,
-.obsidian-expertise span {
+.obsidian-expertise span,
+.obsidian-radio span {
 	width: 10px;
 	height: 10px;
 	border: 1px solid var(--mid);
@@ -681,7 +683,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-half-proficient span,
 .obsidian-proficient span,
-.obsidian-expertise span {
+.obsidian-expertise span,
+.obsidian-radio-selected span {
 	background: var(--mid);
 }
 
@@ -750,4 +753,41 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-weight: normal;
 	font-size: 12px;
 	align-self: center;
+}
+
+.obsidian-char-box-lg {
+	width: 300px;
+	padding: 8px;
+}
+
+.obsidian-radio-label {
+	display: inline-flex;
+	width: 135px;
+	cursor: pointer;
+	font-size: 14px;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-weight: normal;
+}
+
+.obsidian-radio {
+	padding-left: 0;
+	width: 22px;
+}
+
+.obsidian-char-box-lg .obsidian-bisect {
+	padding-bottom: 8px;
+	margin-bottom: 8px;
+}
+
+.obsidian-meatballs .obsidian-radio {
+	cursor: pointer;
+	display: inline-flex;
+}
+
+.obsidian-meatballs-title {
+	color: var(--text-subtle);
+	font-size: 14px;
+	text-align: center;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-weight: normal;
 }

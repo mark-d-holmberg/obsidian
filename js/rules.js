@@ -6,6 +6,11 @@ ObsidianRules.CLASSES = [
 ObsidianRules.HD = [2, 4, 6, 8, 10, 12, 20];
 ObsidianRules.MAX_LEVEL = 20;
 
+ObsidianRules.Conditions = [
+	'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible',
+	'paralysed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'
+];
+
 ObsidianRules.ClassHitDice = {
 	'Barbarian': 12,
 	'Bard': 8,
