@@ -683,8 +683,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-half-proficient span,
 .obsidian-proficient span,
-.obsidian-expertise span,
-.obsidian-radio-selected span {
+.obsidian-expertise span {
 	background: var(--mid);
 }
 
@@ -767,6 +766,23 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-size: 14px;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-weight: normal;
+	color: var(--text-secondary);
+}
+
+.obsidian-radio-label.obsidian-radio-selected {
+	color: var(--text-regular);
+}
+
+.obsidian-radio-selected .obsidian-radio-negative span,
+.obsidian-radio-selected.obsidian-radio-negative span {
+	border-color: var(--negative);
+	background: var(--negative);
+}
+
+.obsidian-radio-selected .obsidian-radio-positive span,
+.obsidian-radio-selected.obsidian-radio-positive span {
+	border-color: var(--positive);
+	background: var(--positive);
 }
 
 .obsidian-radio {
@@ -785,9 +801,13 @@ button.obsidian-btn-sm.obsidian-char-rest {
 }
 
 .obsidian-meatballs-title {
-	color: var(--text-subtle);
+	color: var(--text-secondary);
 	font-size: 14px;
 	text-align: center;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-weight: normal;
+}
+
+.obsidian-meatballs-active {
+	color: var(--text-regular);
 }

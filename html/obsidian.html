@@ -256,22 +256,36 @@
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-conditions">
 						{{#each ObsidianRules.Conditions}}
-							<div class="obsidian-radio-label" data-value="{{this}}">
+							<div class="
+							{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
+								obsidian-radio-selected
+							{{~/if}} obsidian-radio-label" data-value="{{this}}">
 								<div class="
-								{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
-									obsidian-radio-selected
-								{{~/if}} obsidian-radio"><span></span></div>
+								{{~#if (expr '===' 'invisible' this)~}}
+									obsidian-radio-positive
+								{{~else~}}
+									obsidian-radio-negative
+								{{~/if}} obsidian-radio">
+									<span></span>
+								</div>
 								{{capitalise this}}
 							</div>
 						{{/each}}
 						</div>
-						<div class="obsidian-meatballs-title">Exhaustion</div>
+						<div class="
+						{{~#if (expr '>' data.attributes.exhaustion.value 0)~}}
+							obsidian-meatballs-active
+						{{~/if}} obsidian-meatballs-title">
+							Exhaustion
+						</div>
 						<div class="obsidian-meatballs obsidian-exhaustion">
 							{{#each (range 1 6) as |level|}}
 								<div class="
 								{{~#if (expr '<=' level ../data.attributes.exhaustion.value)~}}
 									obsidian-radio-selected
-								{{~/if}} obsidian-radio" data-value="{{level}}"><span></span></div>
+								{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{level}}">
+									<span></span>
+								</div>
 							{{/each}}
 						</div>
 					</div>
