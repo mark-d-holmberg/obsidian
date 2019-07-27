@@ -812,6 +812,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-meatballs .obsidian-radio {
 	cursor: pointer;
 	display: inline-flex;
+	justify-content: center;
 }
 
 .obsidian-meatballs-title {
@@ -832,4 +833,44 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-save-mod {
 	width: 40px;
+}
+
+.obsidian-conditions-and-saves {
+	padding-left: var(--horizontal-space);
+	width: 598px;
+	height: 0px;
+}
+
+.obsidian-vertical-bisect {
+	border-right: 1px solid var(--mid);
+}
+
+.obsidian-vertical-bisect:last-child {
+	border: none;
+}
+
+.obsidian-vertical-bisect .obsidian-char-box-text {
+	padding: 0;
+}
+
+.dnd5e.sheet form span.rollable {
+	display: inline;
+}
+
+.dnd5e.sheet form.editable.obsidian span.rollable:hover {
+	color: var(--text-regular);
+}
+
+.obsidian-formula-constant {
+	color: var(--text-secondary);
+	margin-right: 10px;
+	font-size: 14px;
+}
+
+.obsidian-input-num-sm {
+	width: 25px !important;
+}
+
+.obsidian-input-num-md {
+	width: 40px !important;
 }

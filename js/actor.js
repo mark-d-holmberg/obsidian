@@ -6,6 +6,11 @@ Obsidian.SCHEMA = {
 				base: 10
 			},
 			conditions: {},
+			death: {
+				adv: false,
+				bonus: 0,
+				threshold: 10
+			},
 			hd: {},
 			hpMaxMod: 0,
 			init: {

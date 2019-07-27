@@ -1,0 +1,32 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<label class="obsidian-label-lg">Formula</label>
+	<div class="obsidian-form-row obsidian-inline">
+		<div>
+			<span class="obsidian-formula-constant">1d20</span>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       name="flags.obsidian.attributes.death.bonus" data-dtype="Number" placeholder="0"
+			       value="{{entity.flags.obsidian.attributes.death.bonus}}">
+			<span class="obsidian-binary-operator">&gt;&equals;</span>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       name="flags.obsidian.attributes.death.threshold" data-dtype="Number"
+			       value="{{entity.flags.obsidian.attributes.death.threshold}}" placeholder="0">
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.death.adv">
+			<div class="checkbox-container">
+				<div class="checkbox-inner-box"></div>
+				<div class="checkmark-container">
+					<div class="checkmark">
+						<div class="checkmark-short"></div>
+						<div class="checkmark-long"></div>
+					</div>
+				</div>
+			</div>
+			<div class="checkbox-content">Advantage</div>
+		</div>
+		<input type="checkbox" name="flags.obsidian.attributes.death.adv" class="obsidian-hidden"
+		       {{checked entity.flags.obsidian.attributes.death.adv}}>
+	</div>
+</form>

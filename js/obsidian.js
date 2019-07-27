@@ -57,7 +57,12 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
 		html.find('.obsidian-conditions .obsidian-radio-label')
 			.click(this._setCondition.bind(this));
-		html.find('.obsidian-exhaustion .obsidian-radio').click(this._setExhaustion.bind(this));
+		html.find('.obsidian-exhaustion .obsidian-radio').click(
+			this._setAttributeLevel.bind(this, 'data.attributes.exhaustion.value'));
+		html.find('.obsidian-death-successes .obsidian-radio').click(
+			this._setAttributeLevel.bind(this, 'data.attributes.death.success'));
+		html.find('.obsidian-death-failures .obsidian-radio').click(
+			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
@@ -72,6 +77,12 @@ class Obsidian extends ActorSheet5eCharacter {
 				title: 'Manage Saving Throws',
 				width: 250,
 				template: 'public/modules/obsidian/html/saves-dialog.html'
+			}).render(true));
+		html.find('[title="Edit Death Saves"]').click(() =>
+			new ObsidianDialog(this, {
+				title: 'Manage Death Saves',
+				width: 250,
+				template: 'public/modules/obsidian/html/death-saves-dialog.html'
 			}).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
@@ -208,17 +219,20 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {String} prop
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_setExhaustion (evt) {
+	_setAttributeLevel (prop, evt) {
 		let value = Number($(evt.currentTarget).data('value'));
-		const current = this.actor.data.data.attributes.exhaustion.value;
+		const current = getProperty(this.actor.data, prop);
 
 		if (value === 1 && current === 1) {
 			value = 0;
 		}
 
-		this.actor.update({'data.attributes.exhaustion.value': value});
+		const update = {};
+		update[prop] = value;
+		this.actor.update(update);
 	}
 
 	/**

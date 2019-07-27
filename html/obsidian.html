@@ -250,8 +250,8 @@
 					{{/each}}
 				</div>
 			</div>
-			<div class="obsidian-char-top-level">
-				<div class="obsidian-char-box-container">
+			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
+				<div class="obsidian-char-box-container" style="grid-row: 1 / span 2">
 					<div class="obsidian-char-box-text">Conditions</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
@@ -316,6 +316,44 @@
 								</div>
 							</div>
 						{{/each}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text" style="padding: 5px 0 3px 0;">
+						<span class="rollable">Death Saves</span>
+						<a title="Edit Death Saves" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-char-box-lg">
+						<div class="obsidian-grid-2-col">
+							<div class="obsidian-vertical-bisect">
+								<div class="obsidian-char-box-text">Successes</div>
+								<div class="obsidian-meatballs obsidian-death-successes">
+									{{#each (range 1 3) as |n|}}
+										<div class="
+										{{~#if (expr '<=' n ../data.attributes.death.success)~}}
+											obsidian-radio-selected
+										{{~/if}} obsidian-radio obsidian-radio-positive" data-value="{{n}}">
+											<span></span>
+										</div>
+									{{/each}}
+								</div>
+							</div>
+							<div class="obsidian-vertical-bisect">
+								<div class="obsidian-char-box-text">Failures</div>
+								<div class="obsidian-meatballs obsidian-death-failures">
+									{{#each (range 1 3) as |n|}}
+										<div class="
+										{{~#if (expr '<=' n ../data.attributes.death.failure)~}}
+											obsidian-radio-selected
+										{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{n}}">
+											<span></span>
+										</div>
+									{{/each}}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

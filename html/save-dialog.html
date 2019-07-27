@@ -1,16 +1,15 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
-			<input type="text" placeholder="0" data-dtype="Number" style="width: 25px;"
-			       class="obsidian-input-compact obsidian-input-num"
-			       name="flags.obsidian.saves.{{saveID}}.bonus"
+			<input placeholder="0" data-dtype="Number" name="flags.obsidian.saves.{{saveID}}.bonus"
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
 			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{bonus}}{{/with}}">
 			<span>Bonus</span>
 		</label>
 	</div>
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
-			<input type="text" style="width: 25px;" class="obsidian-input-compact obsidian-input-num"
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       name="flags.obsidian.saves.{{saveID}}.override"
 			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{override}}{{/with}}">
 			<span>Override</span>

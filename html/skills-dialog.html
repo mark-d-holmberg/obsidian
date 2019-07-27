@@ -1,9 +1,9 @@
 <form class="obsidian" autocomplete="off">
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
-			<input type="text" style="width: 25px;" placeholder="0" name="flags.obsidian.skills.bonus"
+			<input type="text" placeholder="0" name="flags.obsidian.skills.bonus"
 			       value="{{entity.flags.obsidian.skills.bonus}}" data-dtype="Number"
-			       class="obsidian-input-compact obsidian-input-num">
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 			<span>Bonus</span>
 		</label>
 	</div>
@@ -50,7 +50,7 @@
 				<input class="obsidian-input-compact" type="text" placeholder="Skill"
 				       name="flags.obsidian.skills.custom.{{id}}.label" value="{{skill.label}}">
 				<span class="obsidian-binary-operator">&plus;</span>
-				<input class="obsidian-input-compact obsidian-input-num" style="width: 25px;" type="text"
+				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
 				       placeholder="0" value="{{skill.bonus}}" data-dtype="Number"
 				       name="flags.obsidian.skills.custom.{{id}}.bonus">
 			</div>
