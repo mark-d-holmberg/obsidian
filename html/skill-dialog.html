@@ -21,10 +21,20 @@
 		<label class="obsidian-inline">
 			<input type="text" name="flags.obsidian.skills.{{#if custom}}custom.{{/if}}{{skillID}}.bonus"
 			       class="obsidian-input-compact obsidian-input-num" placeholder="0" data-dtype="Number"
-			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID) as |skill|}}
-				       {{~skill.bonus~}}
+			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID)}}
+				       {{~bonus~}}
 			       {{/with}}" style="width: 25px;">
 			<span>Bonus</span>
+		</label>
+	</div>
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			<input type="text" class="obsidian-input-compact obsidian-input-num" style="width: 25px;"
+			       name="flags.obsidian.skills.{{#if custom}}custom.{{/if}}{{skillID}}.override"
+			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID)}}
+				       {{~override~}}
+			       {{/with}}">
+			<span>Override</span>
 		</label>
 	</div>
 </form>

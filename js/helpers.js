@@ -2,8 +2,16 @@ Handlebars.registerHelper('bi-lookup', function (a, b, predicate, prop) {
 	return predicate ? a[prop] : b[prop];
 });
 
+String.prototype.capitalise = function () {
+	if (!this.length) {
+		return this;
+	}
+
+	return this[0].toLocaleUpperCase() + this.substring(1);
+};
+
 Handlebars.registerHelper('capitalise', function (str) {
-	return str && str.length ? str[0].toLocaleUpperCase() + str.substring(1) : '';
+	return str ? str.capitalise() : '';
 });
 
 Handlebars.registerHelper('classFormat', function (classes) {

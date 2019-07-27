@@ -650,7 +650,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	padding: 8px 8px 0 8px;
 }
 
-.obsidian-skill-item {
+.obsidian-skill-item,
+.obsidian-save-item {
 	display: flex;
 	align-items: center;
 	margin-bottom: 5px;
@@ -659,6 +660,11 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-skill-item:last-child {
 	border: none;
+}
+
+.obsidian-save-item:nth-child(3n) {
+	border: none;
+	margin: 0;
 }
 
 .obsidian-prof,
@@ -683,7 +689,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-half-proficient span,
 .obsidian-proficient span,
-.obsidian-expertise span {
+.obsidian-expertise span,
+.obsidian-radio-selected span {
 	background: var(--mid);
 }
 
@@ -728,7 +735,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	border: none;
 }
 
-.obsidian-skill-name {
+.obsidian-skill-name,
+.obsidian-save-name {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-size: 14px;
 	padding: 5px 0;
@@ -738,7 +746,8 @@ button.obsidian-btn-sm.obsidian-char-rest {
 }
 
 .obsidian-skill-mod,
-.obsidian-skill-passive {
+.obsidian-skill-passive,
+.obsidian-save-mod {
 	padding: 5px;
 	text-align: right;
 	font-size: 14px;
@@ -755,13 +764,18 @@ button.obsidian-btn-sm.obsidian-char-rest {
 }
 
 .obsidian-char-box-lg {
-	width: 300px;
+	width: 284px;
 	padding: 8px;
+	margin-right: var(--horizontal-space);
+}
+
+.obsidian-grid-2-col {
+	display: grid;
+	grid-template-columns: 50% 50%;
 }
 
 .obsidian-radio-label {
-	display: inline-flex;
-	width: 135px;
+	display: flex;
 	cursor: pointer;
 	font-size: 14px;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
@@ -810,4 +824,12 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-meatballs-active {
 	color: var(--text-regular);
+}
+
+.obsidian-save-item .obsidian-radio {
+	padding-left: 3px;
+}
+
+.obsidian-save-mod {
+	width: 40px;
 }

@@ -54,10 +54,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration.value'));
-		html.find('.obsidian-prof').click(this._setProficiency.bind(this));
+		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
 		html.find('.obsidian-conditions .obsidian-radio-label')
 			.click(this._setCondition.bind(this));
 		html.find('.obsidian-exhaustion .obsidian-radio').click(this._setExhaustion.bind(this));
+		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
 			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
 		html.find('.obsidian-char-xp').click(() =>
@@ -66,6 +67,12 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
 		html.find('[title="Edit Skills"]').click(() =>
 			new ObsidianSkillsDialog(this, {title: 'Manage Skills'}).render(true));
+		html.find('[title="Edit Saving Throws"]').click(() =>
+			new ObsidianDialog(this, {
+				title: 'Manage Saving Throws',
+				width: 250,
+				template: 'public/modules/obsidian/html/saves-dialog.html'
+			}).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Edit Max HP',
@@ -93,6 +100,11 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianSkillDialog(
 				this,
 				$(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id'))
+				.render(true));
+		html.find('.obsidian-save-mod').click(evt =>
+			new ObsidianSaveDialog(
+				this,
+				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
 	}
 
@@ -213,7 +225,26 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_setProficiency (evt) {
+	_setSaveProficiency (evt) {
+		const save = $(evt.currentTarget).parents('.obsidian-save-item').data('value');
+		let state = this.actor.data.data.abilities[save].proficient;
+
+		if (state === undefined || state === 0) {
+			state = 1;
+		} else {
+			state = 0;
+		}
+
+		const update = {};
+		update[`data.abilities.${save}.proficient`] = state;
+		this.actor.update(update);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_setSkillProficiency (evt) {
 		let id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
 		const custom = id.startsWith('custom');
 

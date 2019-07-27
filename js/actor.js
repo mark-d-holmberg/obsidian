@@ -19,6 +19,9 @@ Obsidian.SCHEMA = {
 			subrace: null,
 			milestone: false
 		},
+		saves: {
+			bonus: 0
+		},
 		skills: {
 			bonus: 0,
 			joat: false,
@@ -55,9 +58,17 @@ class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
-		for (const [id, skill] of Object.entries(data.skills)) {
-			if (flags.skills.hasOwnProperty(id)) {
-				skill.mod += flags.skills[id].bonus;
+		actorData.allSkills = {};
+		for (const [id, skill] of
+				Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
+		{
+			const custom = !isNaN(Number(id));
+			actorData.allSkills[custom ? `custom.${id}` : id] = skill;
+
+			if (custom) {
+				skill.mod =
+					data.abilities[skill.ability].mod
+					+ Math.floor(skill.value * data.attributes.prof.value);
 			}
 
 			if (flags.skills.joat && skill.value === 0) {
@@ -65,19 +76,25 @@ class ObsidianActor extends Actor5e {
 			}
 
 			skill.mod += flags.skills.bonus;
+
+			if (custom || flags.skills.hasOwnProperty(id)) {
+				const assoc = custom ? skill : flags.skills[id];
+				skill.mod += assoc.bonus;
+
+				if (assoc.override !== undefined && assoc.override !== '') {
+					skill.mod = Number(assoc.override);
+				}
+			}
 		}
 
-		actorData.allSkills = duplicate(data.skills);
-		for (const [id, skill] of Object.entries(flags.skills.custom)) {
-			actorData.allSkills[`custom.${id}`] = skill;
-			skill.mod =
-				data.abilities[skill.ability].mod
-				+ skill.bonus
-				+ flags.skills.bonus
-				+ Math.floor(skill.value * data.attributes.prof.value);
-
-			if (flags.skills.joat && skill.value === 0) {
-				skill.mod += Math.floor(data.attributes.prof.value / 2);
+		for (const [id, save] of Object.entries(data.abilities)) {
+			save.save += flags.saves.bonus;
+			if (flags.saves.hasOwnProperty(id)) {
+				save.save += flags.saves[id].bonus;
+				const override = flags.saves[id].override;
+				if (override !== undefined && override !== '') {
+					save.save = Number(override);
+				}
 			}
 		}
 

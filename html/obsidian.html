@@ -254,7 +254,7 @@
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">Conditions</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
-						<div class="obsidian-bisect obsidian-conditions">
+						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
 						{{#each ObsidianRules.Conditions}}
 							<div class="
 							{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
@@ -288,6 +288,34 @@
 								</div>
 							{{/each}}
 						</div>
+					</div>
+				</div>
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text">
+						Saving Throws
+						<a title="Edit Saving Throws" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
+						{{#each data.abilities as |ability id|}}
+							<div {{#if (expr '===' id 'dex')}}
+								style="grid-row-start: 2;"
+							{{else if (expr '===' id 'con')}}
+								style="grid-row-start: 3;"
+							{{/if}} class="obsidian-save-item" data-value="{{id}}">
+								<div class="
+								{{~#if ability.proficient~}}
+									obsidian-radio-selected
+								{{~/if}} obsidian-radio obsidian-ptr">
+									<span></span>
+								</div>
+								<div class="obsidian-save-name rollable">{{ability.label}}</div>
+								<div class="obsidian-save-mod obsidian-ptr">
+									{{numberFormat ability.save decimals=0 sign=true}}
+								</div>
+							</div>
+						{{/each}}
 					</div>
 				</div>
 			</div>
