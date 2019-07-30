@@ -250,8 +250,48 @@
 					{{/each}}
 				</div>
 			</div>
+			<div class="obsidian-char-box-container obsidian-char-box-stacked"
+			     style="grid-row: 2; grid-column: 1;">
+				<div class="obsidian-char-box-text">
+					Tools
+					<a title="Edit Tools" class="obsidian-edit">
+						<i class="fas fa-edit"></i>
+					</a>
+				</div>
+				<div class="obsidian-char-box obsidian-skills-box">
+					{{#each entity.flags.obsidian.skills.tools as |tool id|}}
+						<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
+							<div class="
+							{{~#if (expr '===' 0.5 tool.value)~}}
+								obsidian-half-proficient
+							{{~else if (expr '===' 1 tool.value)~}}
+								obsidian-proficient
+							{{~else if (expr '===' 2 tool.value)~}}
+								obsidian-expertise
+							{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 tool.value))~}}
+								obsidian-half-proficient
+							{{~else~}}
+								obsidian-not-proficient
+							{{~/if}} obsidian-prof obsidian-ptr">
+								<span></span>
+							</div>
+							<select name="flags.obsidian.skills.tools.{{id}}.ability">
+								{{#select (lc tool.ability)}}
+									{{#each ../data.abilities}}
+										<option value="{{@key}}">{{@key}}</option>
+									{{/each}}
+								{{/select}}
+							</select>
+							<div class="obsidian-skill-name rollable">{{tool.label}}</div>
+							<div class="obsidian-skill-mod obsidian-ptr">
+								{{numberFormat tool.mod decimals=0 sign=true}}
+							</div>
+						</div>
+					{{/each}}
+				</div>
+			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
-				<div class="obsidian-char-box-container" style="grid-row: 1 / span 2">
+				<div class="obsidian-char-box-container" style="grid-row: 1 / span 2; grid-column: 2;">
 					<div class="obsidian-char-box-text">Conditions</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">

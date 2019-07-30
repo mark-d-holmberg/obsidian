@@ -5,10 +5,6 @@ class ObsidianSkillsDialog extends ObsidianDialog {
 		return options;
 	}
 
-	get template () {
-		return 'public/modules/obsidian/html/skills-dialog.html';
-	}
-
 	/**
 	 * @param {JQuery} html
 	 * @return undefined
@@ -25,7 +21,7 @@ class ObsidianSkillsDialog extends ObsidianDialog {
 	 */
 	async _onAddSkill (evt) {
 		evt.preventDefault();
-		const skills = duplicate(this.parent.actor.data.flags.obsidian.skills.custom);
+		const skills = duplicate(getProperty(this.parent.actor.data, this.options.dataPath));
 
 		skills.push({
 			id: skills.length,
@@ -35,7 +31,9 @@ class ObsidianSkillsDialog extends ObsidianDialog {
 			label: ''
 		});
 
-		await this.parent.actor.update({'flags.obsidian.skills.custom': skills});
+		const update = {};
+		update[this.options.dataPath] = skills;
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 
@@ -44,11 +42,10 @@ class ObsidianSkillsDialog extends ObsidianDialog {
 	 */
 	async _onRemoveSkill (evt) {
 		evt.preventDefault();
-		const skills = duplicate(this.parent.actor.data.flags.obsidian.skills.custom);
-		await this.parent.actor.update({
-			'flags.obsidian.skills.custom': ObsidianDialog.removeRow(skills, evt)
-		});
-
+		const skills = duplicate(getProperty(this.parent.actor.data, this.options.dataPath));
+		const update = {};
+		update[this.options.dataPath] = ObsidianDialog.removeRow(skills, evt);
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 }

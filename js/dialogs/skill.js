@@ -1,13 +1,15 @@
 class ObsidianSkillDialog extends ObsidianDialog {
 	constructor (parent, skillID) {
-		const custom = skillID.startsWith('custom.');
+		let custom = skillID.includes('.');
 		if (custom) {
-			skillID = parseInt(skillID.split('.')[1]);
+			const split = skillID.split('.');
+			custom = split[0];
+			skillID = parseInt(split[1]);
 		}
 
 		super(parent, {
-			title: `Manage Skill: ${custom
-				? parent.actor.data.flags.obsidian.skills.custom[skillID].label
+			title: `Manage ${custom === 'tools' ? 'Tool' : 'Skill'}: ${custom
+				? parent.actor.data.flags.obsidian.skills[custom][skillID].label
 				: parent.actor.data.data.skills[skillID].label}`,
 			width: 250
 		});

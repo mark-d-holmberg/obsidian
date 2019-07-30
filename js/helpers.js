@@ -1,5 +1,5 @@
-Handlebars.registerHelper('bi-lookup', function (a, b, predicate, prop) {
-	return predicate ? a[prop] : b[prop];
+Handlebars.registerHelper('skill-lookup', function (flags, data, key, prop) {
+	return key ? flags[key][prop] : data[prop];
 });
 
 String.prototype.capitalise = function () {

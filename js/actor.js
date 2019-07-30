@@ -30,7 +30,8 @@ Obsidian.SCHEMA = {
 		skills: {
 			bonus: 0,
 			joat: false,
-			custom: []
+			custom: [],
+			tools: []
 		}
 	}
 };
@@ -89,6 +90,23 @@ class ObsidianActor extends Actor5e {
 				if (assoc.override !== undefined && assoc.override !== '') {
 					skill.mod = Number(assoc.override);
 				}
+			}
+		}
+
+		for (const tool of flags.skills.tools) {
+			if (tool.override !== undefined && tool.override !== '') {
+				tool.mod = Number(tool.override);
+				continue;
+			}
+
+			tool.mod =
+				data.abilities[tool.ability].mod
+				+ tool.bonus
+				+ flags.skills.bonus
+				+ Math.floor(tool.value * data.attributes.prof.value);
+
+			if (flags.skills.joat && tool.value === 0) {
+				tool.mod += Math.floor(data.attributes.prof.value / 2);
 			}
 		}
 

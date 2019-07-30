@@ -71,7 +71,17 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
 			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
 		html.find('[title="Edit Skills"]').click(() =>
-			new ObsidianSkillsDialog(this, {title: 'Manage Skills'}).render(true));
+			new ObsidianSkillsDialog(this, {
+				title: 'Manage Skills',
+				dataPath: 'flags.obsidian.skills.custom',
+				template: 'public/modules/obsidian/html/skills-dialog.html'
+			}).render(true));
+		html.find('[title="Edit Tools"]').click(() =>
+			new ObsidianSkillsDialog(this, {
+				title: 'Manage Tools',
+				dataPath: 'flags.obsidian.skills.tools',
+				template: 'public/modules/obsidian/html/tools-dialog.html'
+			}).render(true));
 		html.find('[title="Edit Saving Throws"]').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Manage Saving Throws',
@@ -260,15 +270,17 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_setSkillProficiency (evt) {
 		let id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
-		const custom = id.startsWith('custom');
+		let skillKey;
 
-		if (custom) {
-			id = parseInt(id.split('.')[1]);
+		if (id.includes('.')) {
+			const split = id.split('.');
+			skillKey = split[0];
+			id = parseInt(split[1]);
 		}
 
 		const skill =
-			custom
-				? this.actor.data.flags.obsidian.skills.custom[id]
+			skillKey
+				? this.actor.data.flags.obsidian.skills[skillKey][id]
 				: this.actor.data.data.skills[id];
 
 		let newValue = 0;
@@ -279,10 +291,10 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		if (custom) {
-			const newSkills = duplicate(this.actor.data.flags.obsidian.skills.custom);
+		if (skillKey) {
+			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[skillKey]);
 			newSkills[id].value = newValue;
-			update['flags.obsidian.skills.custom'] = newSkills;
+			update[`flags.obsidian.skills.${skillKey}`] = newSkills;
 		} else {
 			update[`data.skills.${id}.value`] = newValue;
 		}
@@ -326,26 +338,27 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	_updateObject (event, formData) {
-		if (!Object.keys(formData).some(key => key.startsWith('flags.obsidian.skills.custom'))) {
+		const special = ['flags.obsidian.skills.custom', 'flags.obsidian.skills.tools'];
+		if (!Object.keys(formData).some(key => special.some(path => key.startsWith(path)))) {
 			super._updateObject(event, formData);
 			return;
 		}
 
 		const newData = {};
-		const skills =
-			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.skills.custom');
+		special.forEach(path => {
+			const skills = ObsidianDialog.reconstructArray(formData, newData, path);
+			for (const [key, skill] of Object.entries(getProperty(this.actor.data, path))) {
+				for (const prop in skill) {
+					if (skills[key] === undefined) {
+						skills[key] = duplicate(skill);
+					}
 
-		for (const [key, skill] of Object.entries(this.actor.data.flags.obsidian.skills.custom)) {
-			for (const prop in skill) {
-				if (skills[key] === undefined) {
-					skills[key] = duplicate(skill);
-				}
-
-				if (!skills[key].hasOwnProperty(prop)) {
-					skills[key][prop] = skill[prop];
+					if (!skills[key].hasOwnProperty(prop)) {
+						skills[key][prop] = skill[prop];
+					}
 				}
 			}
-		}
+		});
 
 		super._updateObject(event, newData);
 	}

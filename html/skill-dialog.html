@@ -2,13 +2,13 @@
 	<div class="obsidian-form-row">
 		<select name="
 		        {{~#if custom~}}
-		          flags.obsidian.skills.custom.
+		          flags.obsidian.skills.{{custom}}.
 		        {{~else~}}
 		          data.skills.
 		        {{~/if~}}
 			      {{~skillID}}.value"
 		        data-dtype="Number">
-			{{#with (bi-lookup entity.flags.obsidian.skills.custom data.skills custom skillID) as |skill|}}
+			{{#with (skill-lookup entity.flags.obsidian.skills data.skills custom skillID) as |skill|}}
 				{{#select skill.value}}
 					{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
 						<option value="{{value}}">{{level}}</option>
@@ -19,9 +19,9 @@
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
 		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.skills.{{#if custom}}custom.{{/if}}{{skillID}}.bonus"
+			<input type="text" name="flags.obsidian.skills.{{#if custom}}{{custom}}.{{/if}}{{skillID}}.bonus"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID)}}
+			       value="{{#with (skill-lookup entity.flags.obsidian.skills entity.flags.obsidian.skills custom skillID)}}
 				       {{~bonus~}}
 			       {{/with}}" data-dtype="Number">
 			<span>Bonus</span>
@@ -30,8 +30,8 @@
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       name="flags.obsidian.skills.{{#if custom}}custom.{{/if}}{{skillID}}.override"
-			       value="{{#with (bi-lookup entity.flags.obsidian.skills.custom entity.flags.obsidian.skills custom skillID)}}
+			       name="flags.obsidian.skills.{{#if custom}}{{custom}}.{{/if}}{{skillID}}.override"
+			       value="{{#with (skill-lookup entity.flags.obsidian.skills entity.flags.obsidian.skills custom skillID)}}
 				       {{~override~}}
 			       {{/with}}">
 			<span>Override</span>
