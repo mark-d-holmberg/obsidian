@@ -1,0 +1,3 @@
+class ObsidianSensesDialog extends ObsidianDialog {
+
+}

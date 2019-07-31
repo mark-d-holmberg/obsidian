@@ -94,6 +94,8 @@ class Obsidian extends ActorSheet5eCharacter {
 				width: 250,
 				template: 'public/modules/obsidian/html/death-saves-dialog.html'
 			}).render(true));
+		html.find('[title="Edit Senses"]').click(() =>
+			new ObsidianSensesDialog(this, {title: 'Manage Senses'}).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Edit Max HP',

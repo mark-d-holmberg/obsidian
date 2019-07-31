@@ -878,3 +878,20 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-input-num-md {
 	width: 40px !important;
 }
+
+.obsidian-passive-item {
+	display: flex;
+	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-passive-item:last-child {
+	border: none;
+}
+
+.obsidian-char-senses span:after {
+	content: ', ';
+}
+
+.obsidian-char-senses span:last-child:after {
+	content: '';
+}

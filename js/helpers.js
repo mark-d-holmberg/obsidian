@@ -1,7 +1,3 @@
-Handlebars.registerHelper('skill-lookup', function (flags, data, key, prop) {
-	return key ? flags[key][prop] : data[prop];
-});
-
 String.prototype.capitalise = function () {
 	if (!this.length) {
 		return this;
@@ -86,6 +82,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 	if (reducer !== null) {
 		return args.reduce(reducer);
 	}
+});
+
+Handlebars.registerHelper('get-property', function (data, key) {
+	return getProperty(data, key);
 });
 
 Handlebars.registerHelper('lc', function (arg) {

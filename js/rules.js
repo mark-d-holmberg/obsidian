@@ -33,6 +33,13 @@ ObsidianRules.ProficiencyLevels = {
 	2: 'Expertise'
 };
 
+ObsidianRules.Senses = {
+	dark: 'Darkvision',
+	blind: 'Blindsight',
+	tremor: 'Tremorsense',
+	true: 'Truesight'
+};
+
 ObsidianRules.Speeds = {
 	walk: 'Walking',
 	burrow: 'Burrowing',

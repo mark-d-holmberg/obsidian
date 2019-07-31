@@ -1,14 +1,7 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-form-row">
-		<select name="
-		        {{~#if custom~}}
-		          flags.obsidian.skills.{{custom}}.
-		        {{~else~}}
-		          data.skills.
-		        {{~/if~}}
-			      {{~skillID}}.value"
-		        data-dtype="Number">
-			{{#with (skill-lookup entity.flags.obsidian.skills data.skills custom skillID) as |skill|}}
+		<select name="flags.obsidian.skills.{{~skillID}}.value" data-dtype="Number">
+			{{#with (get-property entity.flags.obsidian.skills skillID) as |skill|}}
 				{{#select skill.value}}
 					{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
 						<option value="{{value}}">{{level}}</option>
@@ -19,22 +12,48 @@
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
 		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.skills.{{#if custom}}{{custom}}.{{/if}}{{skillID}}.bonus"
+			<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" data-dtype="Number"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-			       value="{{#with (skill-lookup entity.flags.obsidian.skills entity.flags.obsidian.skills custom skillID)}}
+			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
 				       {{~bonus~}}
-			       {{/with}}" data-dtype="Number">
+			       {{/with}}">
 			<span>Bonus</span>
 		</label>
-	</div>
-	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       name="flags.obsidian.skills.{{#if custom}}{{custom}}.{{/if}}{{skillID}}.override"
-			       value="{{#with (skill-lookup entity.flags.obsidian.skills entity.flags.obsidian.skills custom skillID)}}
+			       name="flags.obsidian.skills.{{skillID}}.override"
+			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
 				       {{~override~}}
 			       {{/with}}">
 			<span>Override</span>
 		</label>
+	</div>
+	<div class="obsidian-form-row">
+		<label class="obsidian-inline">
+			<input type="text" name="flags.obsidian.skills.{{skillID}}.passiveBonus" data-dtype="Number"
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
+			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
+				       {{~passiveBonus~}}
+			       {{/with}}">
+			<span>Passive Bonus</span>
+		</label>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div class="fancy-checkbox" style="padding-left: 2px;"
+		     data-bound="flags.obsidian.skills.{{skillID}}.adv">
+			<div class="checkbox-container">
+				<div class="checkbox-inner-box"></div>
+				<div class="checkmark-container">
+					<div class="checkmark">
+						<div class="checkmark-short"></div>
+						<div class="checkmark-long"></div>
+					</div>
+				</div>
+			</div>
+			<div class="checkbox-content">Advantage</div>
+		</div>
+		<input type="checkbox" class="obsidian-hidden"
+		       name="flags.obsidian.skills.{{skillID}}.adv"
+			     {{#with (get-property entity.flags.obsidian.skills skillID)}}{{checked adv}}{{/with}}>
 	</div>
 </form>

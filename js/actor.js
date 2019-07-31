@@ -16,6 +16,7 @@ Obsidian.SCHEMA = {
 			init: {
 				ability: 'dex'
 			},
+			senses: {},
 			speed: {}
 		},
 		classes: [],
@@ -31,7 +32,8 @@ Obsidian.SCHEMA = {
 			bonus: 0,
 			joat: false,
 			custom: [],
-			tools: []
+			tools: [],
+			passives: ['prc', 'inv']
 		}
 	}
 };
@@ -50,6 +52,10 @@ class ObsidianActor extends Actor5e {
 			data.abilities[flags.attributes.init.ability].mod
 			+ data.attributes.init.value;
 
+		if (flags.skills.joat) {
+			data.attributes.init.mod += Math.floor(data.attributes.prof.value / 2);
+		}
+
 		if (flags.attributes.init.override !== undefined && flags.attributes.init.override !== '') {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
 		}
@@ -65,31 +71,36 @@ class ObsidianActor extends Actor5e {
 		}
 
 		actorData.allSkills = {};
-		for (const [id, skill] of
+		for (let [id, skill] of
 				Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
 		{
 			const custom = !isNaN(Number(id));
+			if (!custom && flags.skills[id] === undefined) {
+				flags.skills[id] = duplicate(skill);
+			} else if (!custom) {
+				flags.skills[id] = mergeObject(flags.skills[id], skill);
+			}
+
+			skill = flags.skills[id];
 			actorData.allSkills[custom ? `custom.${id}` : id] = skill;
 
-			if (custom) {
-				skill.mod =
-					data.abilities[skill.ability].mod
-					+ Math.floor(skill.value * data.attributes.prof.value);
-			}
+			skill.mod =
+				data.abilities[skill.ability].mod
+				+ Math.floor(skill.value * data.attributes.prof.value)
+				+ flags.skills.bonus
+				+ (skill.bonus || 0);
 
 			if (flags.skills.joat && skill.value === 0) {
 				skill.mod += Math.floor(data.attributes.prof.value / 2);
 			}
 
-			skill.mod += flags.skills.bonus;
+			if (skill.override !== undefined && skill.override !== '') {
+				skill.mod = Number(skill.override);
+			}
 
-			if (custom || flags.skills.hasOwnProperty(id)) {
-				const assoc = custom ? skill : flags.skills[id];
-				skill.mod += assoc.bonus;
-
-				if (assoc.override !== undefined && assoc.override !== '') {
-					skill.mod = Number(assoc.override);
-				}
+			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			if (skill.adv) {
+				skill.passive += 5;
 			}
 		}
 

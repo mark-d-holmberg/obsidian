@@ -229,12 +229,7 @@
 							{{~/if~}}">
 								<span></span>
 							</div>
-							<select name="
-							{{~#if (startsWith id 'custom.')~}}
-								flags.obsidian.skills.{{id}}.ability
-							{{~else~}}
-								data.skills.{{id}}.ability
-							{{~/if~}}">
+							<select name="flags.obsidian.skills.{{id}}.ability">
 								{{#select (lc skill.ability)}}
 									{{#each ../data.abilities}}
 										<option value="{{@key}}">{{@key}}</option>
@@ -245,7 +240,7 @@
 							<div class="obsidian-skill-mod obsidian-ptr">
 								{{numberFormat skill.mod decimals=0 sign=true}}
 							</div>
-							<div class="obsidian-skill-passive obsidian-ptr">({{expr '+' skill.mod 10}})</div>
+							<div class="obsidian-skill-passive">({{skill.passive}})</div>
 						</div>
 					{{/each}}
 				</div>
@@ -288,6 +283,30 @@
 							</div>
 						</div>
 					{{/each}}
+				</div>
+			</div>
+			<div class="obsidian-char-box-container obsidian-char-box-stacked"
+			     style="grid-row: 3; grid-column: 1;">
+				<div class="obsidian-char-box-text">
+					Senses
+					<a title="Edit Senses" class="obsidian-edit">
+						<i class="fas fa-edit"></i>
+					</a>
+				</div>
+				<div class="obsidian-char-box obsidian-skills-box">
+					{{#each entity.flags.obsidian.skills.passives}}
+					{{#with (get-property ../entity.flags.obsidian.skills this)}}
+						<div class="obsidian-passive-item">
+							<div class="obsidian-skill-name">Passive {{label}}</div>
+							<div class="obsidian-skill-passive">{{passive}}</div>
+						</div>
+					{{/with}}
+					{{/each}}
+					<div class="obsidian-char-senses">
+						{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
+							<span>{{lookup ObsidianRules.Senses id}} {{sense.radius}} ft.</span>
+						{{/each}}
+					</div>
 				</div>
 			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
