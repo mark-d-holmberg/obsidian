@@ -65,11 +65,11 @@ class Obsidian extends ActorSheet5eCharacter {
 			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
-			new ObsidianHeaderDetailsDialog(this, {title: 'Edit Details'}).render(true));
+			new ObsidianHeaderDetailsDialog(this).render(true));
 		html.find('.obsidian-char-xp').click(() =>
-			new ObsidianXPDialog(this, {title: 'Manage XP'}).render(true));
+			new ObsidianXPDialog(this).render(true));
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
-			new ObsidianHDDialog(this, {title: 'Override HD'}).render(true));
+			new ObsidianHDDialog(this).render(true));
 		html.find('[title="Edit Skills"]').click(() =>
 			new ObsidianSkillsDialog(this, {
 				title: 'Manage Skills',
@@ -95,7 +95,7 @@ class Obsidian extends ActorSheet5eCharacter {
 				template: 'public/modules/obsidian/html/death-saves-dialog.html'
 			}).render(true));
 		html.find('[title="Edit Senses"]').click(() =>
-			new ObsidianSensesDialog(this, {title: 'Manage Senses'}).render(true));
+			new ObsidianSensesDialog(this).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Edit Max HP',

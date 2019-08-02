@@ -81,7 +81,10 @@ class ObsidianActor extends Actor5e {
 				flags.skills[id] = mergeObject(flags.skills[id], skill);
 			}
 
-			skill = flags.skills[id];
+			if (!custom) {
+				skill = flags.skills[id];
+			}
+
 			actorData.allSkills[custom ? `custom.${id}` : id] = skill;
 
 			skill.mod =

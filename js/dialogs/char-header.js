@@ -2,6 +2,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 420;
+		options.title = 'Edit Details';
 		return options;
 	}
 

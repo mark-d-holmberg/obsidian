@@ -302,11 +302,15 @@
 						</div>
 					{{/with}}
 					{{/each}}
+					{{#if (nonZero entity.flags.obsidian.attributes.senses 'radius')}}
 					<div class="obsidian-char-senses">
 						{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
-							<span>{{lookup ObsidianRules.Senses id}} {{sense.radius}} ft.</span>
+							{{#if (expr '>' sense.radius 0)}}
+								<span>{{lookup ../ObsidianRules.Senses id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
+							{{/if}}
 						{{/each}}
 					</div>
+					{{/if}}
 				</div>
 			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">

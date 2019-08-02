@@ -17,16 +17,17 @@
 			Add
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.skills.passives as |id|}}
-		<div class="obsidian-form-row obsidian-inline" data-item-id="{{id}}">
+	{{#each entity.flags.obsidian.skills.passives as |passive id|}}
+		<div class="obsidian-form-row obsidian-inline">
 			<select>
-				{{#select id}}
+				{{#select passive}}
 					{{#each ../entity.allSkills as |skill id|}}
 						<option value="{{id}}">{{skill.label}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
-			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-passive">
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-passive"
+			        data-row-id="{{id}}">
 				Remove
 			</button>
 		</div>

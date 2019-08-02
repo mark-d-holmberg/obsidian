@@ -2,6 +2,7 @@ class ObsidianXPDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
+		options.title = 'Manage XP';
 		return options;
 	}
 

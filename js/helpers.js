@@ -92,6 +92,16 @@ Handlebars.registerHelper('lc', function (arg) {
 	return arg.toLocaleLowerCase();
 });
 
+Handlebars.registerHelper('nonZero', function (obj, key) {
+	for (const p in obj) {
+		if (obj[p][key] > 0) {
+			return true;
+		}
+	}
+
+	return false;
+});
+
 Handlebars.registerHelper('notEmpty', function (obj) {
 	return obj != null && Object.keys(obj).length > 0;
 });

@@ -886,6 +886,11 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-passive-item:last-child {
 	border: none;
+	margin-bottom: 6px;
+}
+
+.obsidian-char-senses {
+	margin: 8px 0;
 }
 
 .obsidian-char-senses span:after {
@@ -894,4 +899,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-char-senses span:last-child:after {
 	content: '';
+}
+
+.dnd5e.sheet form.obsidian .obsidian-char-senses span {
+	display: inline;
+	font-size: 12px;
+	font-weight: normal;
 }
