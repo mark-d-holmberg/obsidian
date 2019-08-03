@@ -1,0 +1,50 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-inline obsidian-label-lg">
+		Armour
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
+		        data-cat="armour">
+			Add
+		</button>
+	</label>
+	{{#each entity.flags.obsidian.traits.profs.custom.armour as |armour id|}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="armour"
+		     data-item-id="{{id}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{armour}}">
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
+		Weapons
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
+		        data-cat="weapons">
+			Add
+		</button>
+	</label>
+	{{#each entity.flags.obsidian.traits.profs.custom.weapons as |weapon id|}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="weapons"
+		     data-item-id="{{id}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{weapon}}">
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
+		Languages
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
+		        data-cat="langs">
+			Add
+		</button>
+	</label>
+	{{#each entity.flags.obsidian.traits.profs.custom.langs as |language id|}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="langs"
+		     data-item-id="{{id}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{language}}">
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+</form>

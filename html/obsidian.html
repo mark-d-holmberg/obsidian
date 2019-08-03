@@ -2,6 +2,30 @@
 	<section class="obsidian-sidebar">
 		<img class="obsidian-profile-img obsidian-ptr" src="{{actor.img}}" title="{{actor.name}}"
 		     alt="{{actor.name}}" data-edit="img">
+		<div class="obsidian-char-box-container obsidian-char-box-stacked">
+			<div class="obsidian-char-box-text">Personality Traits</div>
+			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.trait.value">
+				{{{data.details.trait.value}}}
+			</div>
+		</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked">
+			<div class="obsidian-char-box-text">Ideals</div>
+			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.ideal.value">
+				{{{data.details.ideal.value}}}
+			</div>
+		</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked">
+			<div class="obsidian-char-box-text">Bonds</div>
+			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.bond.value">
+				{{{data.details.bond.value}}}
+			</div>
+		</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked">
+			<div class="obsidian-char-box-text">Flaws</div>
+			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.flaw.value">
+				{{{data.details.flaw.value}}}
+			</div>
+		</div>
 		<div class="obsidian-collapser-container obsidian-ptr">
 			<i class="fas fa-angle-double-down fa-rotate-90"></i>
 		</div>
@@ -206,111 +230,154 @@
 			</div>
 		</div>
 		<section class="obsidian-char-details">
-			<div class="obsidian-char-box-container">
-				<div class="obsidian-char-box-text">
-					Skills
-					<a title="Edit Skills" class="obsidian-edit">
-						<i class="fas fa-edit"></i>
-					</a>
-				</div>
-				<div class="obsidian-char-box obsidian-skills-box">
-					{{#each entity.allSkills as |skill id|}}
-						<div class="obsidian-skill-item" data-skill-id="{{id}}">
-							<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
-								obsidian-half-proficient
-							{{~else if (expr '===' 1 skill.value)~}}
-								obsidian-proficient
-							{{~else if (expr '===' 2 skill.value)~}}
-								obsidian-expertise
-							{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 skill.value))~}}
-								obsidian-half-proficient
-							{{~else~}}
-								obsidian-not-proficient
-							{{~/if~}}">
-								<span></span>
+			<div style="grid-row: 1 / span 2;">
+				<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-text">
+						Skills
+						<a title="Edit Skills" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-skills-box">
+						{{#each entity.allSkills as |skill id|}}
+							<div class="obsidian-skill-item" data-skill-id="{{id}}">
+								<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
+									obsidian-half-proficient
+								{{~else if (expr '===' 1 skill.value)~}}
+									obsidian-proficient
+								{{~else if (expr '===' 2 skill.value)~}}
+									obsidian-expertise
+								{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 skill.value))~}}
+									obsidian-half-proficient
+								{{~else~}}
+									obsidian-not-proficient
+								{{~/if~}}">
+									<span></span>
+								</div>
+								<select name="flags.obsidian.skills.{{id}}.ability">
+									{{#select (lc skill.ability)}}
+										{{#each ../data.abilities}}
+											<option value="{{@key}}">{{@key}}</option>
+										{{/each}}
+									{{/select}}
+								</select>
+								<div class="obsidian-skill-name rollable">{{skill.label}}</div>
+								<div class="obsidian-skill-mod obsidian-ptr">
+									{{numberFormat skill.mod decimals=0 sign=true}}
+								</div>
+								<div class="obsidian-skill-passive">({{skill.passive}})</div>
 							</div>
-							<select name="flags.obsidian.skills.{{id}}.ability">
-								{{#select (lc skill.ability)}}
-									{{#each ../data.abilities}}
-										<option value="{{@key}}">{{@key}}</option>
-									{{/each}}
-								{{/select}}
-							</select>
-							<div class="obsidian-skill-name rollable">{{skill.label}}</div>
-							<div class="obsidian-skill-mod obsidian-ptr">
-								{{numberFormat skill.mod decimals=0 sign=true}}
-							</div>
-							<div class="obsidian-skill-passive">({{skill.passive}})</div>
-						</div>
-					{{/each}}
-				</div>
-			</div>
-			<div class="obsidian-char-box-container obsidian-char-box-stacked"
-			     style="grid-row: 2; grid-column: 1;">
-				<div class="obsidian-char-box-text">
-					Tools
-					<a title="Edit Tools" class="obsidian-edit">
-						<i class="fas fa-edit"></i>
-					</a>
-				</div>
-				<div class="obsidian-char-box obsidian-skills-box">
-					{{#each entity.flags.obsidian.skills.tools as |tool id|}}
-						<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
-							<div class="
-							{{~#if (expr '===' 0.5 tool.value)~}}
-								obsidian-half-proficient
-							{{~else if (expr '===' 1 tool.value)~}}
-								obsidian-proficient
-							{{~else if (expr '===' 2 tool.value)~}}
-								obsidian-expertise
-							{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 tool.value))~}}
-								obsidian-half-proficient
-							{{~else~}}
-								obsidian-not-proficient
-							{{~/if}} obsidian-prof obsidian-ptr">
-								<span></span>
-							</div>
-							<select name="flags.obsidian.skills.tools.{{id}}.ability">
-								{{#select (lc tool.ability)}}
-									{{#each ../data.abilities}}
-										<option value="{{@key}}">{{@key}}</option>
-									{{/each}}
-								{{/select}}
-							</select>
-							<div class="obsidian-skill-name rollable">{{tool.label}}</div>
-							<div class="obsidian-skill-mod obsidian-ptr">
-								{{numberFormat tool.mod decimals=0 sign=true}}
-							</div>
-						</div>
-					{{/each}}
-				</div>
-			</div>
-			<div class="obsidian-char-box-container obsidian-char-box-stacked"
-			     style="grid-row: 3; grid-column: 1;">
-				<div class="obsidian-char-box-text">
-					Senses
-					<a title="Edit Senses" class="obsidian-edit">
-						<i class="fas fa-edit"></i>
-					</a>
-				</div>
-				<div class="obsidian-char-box obsidian-skills-box">
-					{{#each entity.flags.obsidian.skills.passives}}
-					{{#with (get-property ../entity.flags.obsidian.skills this)}}
-						<div class="obsidian-passive-item">
-							<div class="obsidian-skill-name">Passive {{label}}</div>
-							<div class="obsidian-skill-passive">{{passive}}</div>
-						</div>
-					{{/with}}
-					{{/each}}
-					{{#if (nonZero entity.flags.obsidian.attributes.senses 'radius')}}
-					<div class="obsidian-char-senses">
-						{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
-							{{#if (expr '>' sense.radius 0)}}
-								<span>{{lookup ../ObsidianRules.Senses id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
-							{{/if}}
 						{{/each}}
 					</div>
-					{{/if}}
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">
+						Tools
+						<a title="Edit Tools" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-skills-box">
+						{{#each entity.flags.obsidian.skills.tools as |tool id|}}
+							<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
+								<div class="
+								{{~#if (expr '===' 0.5 tool.value)~}}
+									obsidian-half-proficient
+								{{~else if (expr '===' 1 tool.value)~}}
+									obsidian-proficient
+								{{~else if (expr '===' 2 tool.value)~}}
+									obsidian-expertise
+								{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 tool.value))~}}
+									obsidian-half-proficient
+								{{~else~}}
+									obsidian-not-proficient
+								{{~/if}} obsidian-prof obsidian-ptr">
+									<span></span>
+								</div>
+								<select name="flags.obsidian.skills.tools.{{id}}.ability">
+									{{#select (lc tool.ability)}}
+										{{#each ../data.abilities}}
+											<option value="{{@key}}">{{@key}}</option>
+										{{/each}}
+									{{/select}}
+								</select>
+								<div class="obsidian-skill-name rollable">{{tool.label}}</div>
+								<div class="obsidian-skill-mod obsidian-ptr">
+									{{numberFormat tool.mod decimals=0 sign=true}}
+								</div>
+							</div>
+						{{/each}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">
+						Senses
+						<a title="Edit Senses" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-skills-box">
+						{{#each entity.flags.obsidian.skills.passives}}
+						{{#with (get-property ../entity.flags.obsidian.skills this)}}
+							<div class="obsidian-passive-item">
+								<div class="obsidian-skill-name">Passive {{label}}</div>
+								<div class="obsidian-skill-passive">{{passive}}</div>
+							</div>
+						{{/with}}
+						{{/each}}
+						{{#if (nonZero entity.flags.obsidian.attributes.senses 'radius')}}
+						<div class="obsidian-horizontal-list">
+							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
+								{{#if (expr '>' sense.radius 0)}}
+									<span>{{lookup ../ObsidianRules.Senses id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
+								{{/if}}
+							{{/each}}
+						</div>
+						{{/if}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">
+						Proficiencies
+						<a title="Edit Proficiencies" class="obsidian-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+					</div>
+					<div class="obsidian-char-box obsidian-skills-box">
+						<div class="obsidian-bisect">
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Armour</div>
+							<div class="obsidian-horizontal-list obsidian-list-compact">
+								{{#each entity.flags.obsidian.traits.profs.armour}}
+									<span>{{this}}</span>
+								{{/each}}
+								{{#each entity.flags.obsidian.traits.profs.custom.armour}}
+									<span>{{this}}</span>
+								{{/each}}
+							</div>
+						</div>
+						<div class="obsidian-bisect">
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Weapons</div>
+							<div class="obsidian-horizontal-list obsidian-list-compact">
+								{{#each entity.flags.obsidian.traits.profs.weapons}}
+									<span>{{this}}</span>
+								{{/each}}
+								{{#each entity.flags.obsidian.traits.profs.custom.weapons}}
+									<span>{{this}}</span>
+								{{/each}}
+							</div>
+						</div>
+						<div class="obsidian-bisect">
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Languages</div>
+							<div class="obsidian-horizontal-list obsidian-list-compact">
+								{{#each data.traits.languages.value}}
+									<span>{{this}}</span>
+								{{/each}}
+								{{#each entity.flags.obsidian.traits.profs.custom.langs}}
+									<span>{{this}}</span>
+								{{/each}}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
@@ -419,6 +486,9 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="obsidian-char-box-container obsidian-main-container">
+				<div class="obsidian-char-box obsidian-main"></div>
 			</div>
 		</section>
 	</section>

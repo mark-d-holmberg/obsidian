@@ -141,6 +141,10 @@
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 }
 
+.obsidian::-webkit-scrollbar {
+	height: 6px;
+}
+
 .obsidian::-webkit-scrollbar-track {
 	box-shadow: none;
 }
@@ -189,12 +193,24 @@
 	padding: 0;
 }
 
-.obsidian-profile-img {
+.obsidian img.obsidian-profile-img {
 	max-width: 400px;
+	padding-bottom: var(--vertical-space);
+	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-collapsed .obsidian-profile-img {
+.obsidian-collapsed .obsidian-profile-img,
+.obsidian-collapsed .obsidian-sidebar .obsidian-char-box-container {
 	display: none;
+}
+
+.obsidian-sidebar .obsidian-char-box {
+	width: 100%;
+	font-weight: normal;
+	text-align: left;
+	color: var(--text-regular);
+	font-size: 13px;
+	padding: 8px;
 }
 
 .obsidian-collapser-container {
@@ -508,6 +524,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	font-weight: normal;
 }
 
+.obsidian label.obsidian-label-lg.obsidian-stacked-row {
+	margin-top: 10px;
+}
+
 .obsidian label.obsidian-inline > input[type=text],
 .obsidian label.obsidian-inline > select {
 	margin: 0;
@@ -555,8 +575,16 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	max-width: 100px;
 }
 
+.obsidian .obsidian-form-row input.obsidian-input-lg {
+	max-width: 150px;
+}
+
 .obsidian .obsidian-form-row.obsidian-mixed-form-row input {
 	padding-bottom: 3px;
+}
+
+.obsidian .obsidian-form-row.obsidian-stacked-form-row input {
+	margin-bottom: 3px;
 }
 
 .obsidian .obsidian-form-row input.obsidian-input-num {
@@ -647,6 +675,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-char-details {
 	display: grid;
 	grid-template-columns: 280px auto;
+	grid-template-rows: 230px auto;
 }
 
 .obsidian-skills-box {
@@ -889,20 +918,37 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 6px;
 }
 
-.obsidian-char-senses {
+.obsidian-horizontal-list {
 	margin: 8px 0;
 }
 
-.obsidian-char-senses span:after {
+.obsidian-horizontal-list span:after {
 	content: ', ';
 }
 
-.obsidian-char-senses span:last-child:after {
+.obsidian-horizontal-list span:last-child:after {
 	content: '';
 }
 
-.dnd5e.sheet form.obsidian .obsidian-char-senses span {
+.dnd5e.sheet form.obsidian .obsidian-horizontal-list span {
 	display: inline;
 	font-size: 12px;
 	font-weight: normal;
+}
+
+.obsidian-skills-box .obsidian-bisect {
+	margin-bottom: 8px;
+}
+
+.obsidian-bisect .obsidian-char-box-text {
+	text-align: left;
+}
+
+.obsidian-list-compact {
+	margin-top: 0;
+	text-align: left;
+}
+
+.obsidian-char-box-text-compact {
+	padding-bottom: 0;
 }

@@ -94,8 +94,9 @@ class Obsidian extends ActorSheet5eCharacter {
 				width: 250,
 				template: 'public/modules/obsidian/html/death-saves-dialog.html'
 			}).render(true));
-		html.find('[title="Edit Senses"]').click(() =>
-			new ObsidianSensesDialog(this).render(true));
+		html.find('[title="Edit Senses"]').click(() => new ObsidianSensesDialog(this).render(true));
+		html.find('[title="Edit Proficiencies"]').click(() =>
+			new ObsidianProficienciesDialog(this).render(true));
 		html.find('.obsidian-max-hp').click(() =>
 			new ObsidianDialog(this, {
 				title: 'Edit Max HP',
@@ -129,6 +130,8 @@ class Obsidian extends ActorSheet5eCharacter {
 				this,
 				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
+		html.find('.obsidian-char-box[contenteditable]')
+			.focusout(this._onUnfocusContentEditable.bind(this));
 	}
 
 	getData () {
@@ -192,6 +195,20 @@ class Obsidian extends ActorSheet5eCharacter {
 		this.settings.width = this.position.width;
 		this.settings.height = this.position.height;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+	}
+
+	/**
+	 * @private
+	 */
+	_onUnfocusContentEditable () {
+		setTimeout(() => {
+			if (!$(':focus').length) {
+				const update = {};
+				this.element.find('.obsidian-char-box[contenteditable]')
+					.each((i, el) => update[el.dataset.prop] = el.innerHTML);
+				this.actor.update(update);
+			}
+		}, 25);
 	}
 
 	/**

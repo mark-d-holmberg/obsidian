@@ -1,0 +1,10 @@
+.obsidian-main-container {
+	padding-left: 10px;
+	align-items: flex-start;
+}
+
+.obsidian-main {
+	width: 578px;
+	height: 100%;
+	min-height: 660px;
+}

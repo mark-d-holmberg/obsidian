@@ -34,6 +34,15 @@ Obsidian.SCHEMA = {
 			custom: [],
 			tools: [],
 			passives: ['prc', 'inv']
+		},
+		traits: {
+			profs: {
+				custom: {
+					armour: [],
+					weapons: [],
+					langs: []
+				}
+			}
 		}
 	}
 };
