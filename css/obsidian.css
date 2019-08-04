@@ -407,11 +407,13 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	flex-grow: 1;
 	margin: 0 5px;
 	background-color: var(--mid);
+	height: 1px;
 }
 
 .obsidian-char-xp-progress-bar {
 	height: 1px;
 	background-color: var(--highlight);
+	display: block;
 }
 
 .obsidian-char-xp-data {
