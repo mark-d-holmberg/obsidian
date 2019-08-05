@@ -7,4 +7,32 @@
 	width: 578px;
 	height: 100%;
 	min-height: 660px;
+	padding: 12px 8px;
+}
+
+.obsidian-tab-bar {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: space-around;
+}
+
+.obsidian-tab {
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	color: var(--text-secondary);
+	cursor: pointer;
+	text-transform: uppercase;
+	line-height: 1.4;
+}
+
+.obsidian-tab:hover {
+	color: var(--text-regular);
+}
+
+.obsidian-tab.active {
+	color: var(--text-regular);
+	border-bottom: 3px solid var(--highlight);
 }

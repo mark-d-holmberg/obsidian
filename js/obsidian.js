@@ -20,6 +20,7 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		this.settings = settings;
 		this.scrolling = false;
+		this.tabs = {};
 	}
 
 	get template () {
@@ -50,6 +51,16 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (this.settings.scrollTop !== undefined) {
 			this.form.scrollTop = this.settings.scrollTop;
 		}
+
+		html.find('.obsidian-tab-bar').each((i, el) => {
+			const bar = $(el);
+			const group = bar.data('group');
+			const active = this.tabs[group];
+			new Tabs(bar, {
+				initial: active,
+				callback: clicked => this.tabs[group] = clicked.data('tab')
+			});
+		});
 
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
