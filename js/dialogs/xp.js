@@ -1,4 +1,4 @@
-class ObsidianXPDialog extends ObsidianDialog {
+Obsidian.Dialog.XP = class ObsidianXPDialog extends Obsidian.Dialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,7 +7,7 @@ class ObsidianXPDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/xp-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/xp.html';
 	}
 
 	activateListeners (html) {
@@ -31,4 +31,4 @@ class ObsidianXPDialog extends ObsidianDialog {
 
 		return super.close();
 	}
-}
+};

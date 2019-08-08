@@ -1,4 +1,4 @@
-class ObsidianSensesDialog extends ObsidianDialog {
+Obsidian.Dialog.Senses = class ObsidianSensesDialog extends Obsidian.Dialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,7 +7,7 @@ class ObsidianSensesDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/senses-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/senses.html';
 	}
 
 	/**
@@ -18,7 +18,7 @@ class ObsidianSensesDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-passive').click(this._onAddPassive.bind(this));
 		html.find('.obsidian-rm-passive').click(this._onRemovePassive.bind(this));
-		ObsidianDialog.recalculateHeight(html, false);
+		Obsidian.Dialog.recalculateHeight(html, false);
 	}
 
 	/**
@@ -66,4 +66,4 @@ class ObsidianSensesDialog extends ObsidianDialog {
 		formData['flags.obsidian.skills.passives'] = passives;
 		super._updateObject(event, formData);
 	}
-}
+};

@@ -76,78 +76,46 @@ class Obsidian extends ActorSheet5eCharacter {
 			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
-			new ObsidianHeaderDetailsDialog(this).render(true));
+			new Obsidian.Dialog.HeaderDetails(this).render(true));
 		html.find('.obsidian-char-xp').click(() =>
-			new ObsidianXPDialog(this).render(true));
+			new Obsidian.Dialog.XP(this).render(true));
 		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
-			new ObsidianHDDialog(this).render(true));
+			new Obsidian.Dialog.HD(this).render(true));
 		html.find('[title="Edit Skills"]').click(() =>
-			new ObsidianSkillsDialog(this, {
+			new Obsidian.Dialog.Skills(this, {
 				title: 'Manage Skills',
 				dataPath: 'flags.obsidian.skills.custom',
-				template: 'public/modules/obsidian/html/skills-dialog.html'
+				template: 'public/modules/obsidian/html/dialogs/skills.html'
 			}).render(true));
 		html.find('[title="Edit Tools"]').click(() =>
-			new ObsidianSkillsDialog(this, {
+			new Obsidian.Dialog.Skills(this, {
 				title: 'Manage Tools',
 				dataPath: 'flags.obsidian.skills.tools',
-				template: 'public/modules/obsidian/html/tools-dialog.html'
+				template: 'public/modules/obsidian/html/dialogs/tools.html'
 			}).render(true));
-		html.find('[title="Edit Saving Throws"]').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Manage Saving Throws',
-				width: 250,
-				template: 'public/modules/obsidian/html/saves-dialog.html'
-			}).render(true));
-		html.find('[title="Edit Death Saves"]').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Manage Death Saves',
-				width: 250,
-				template: 'public/modules/obsidian/html/death-saves-dialog.html'
-			}).render(true));
-		html.find('[title="Edit Senses"]').click(() => new ObsidianSensesDialog(this).render(true));
+		html.find('[title="Edit Senses"]').click(() =>
+			new Obsidian.Dialog.Senses(this).render(true));
 		html.find('[title="Edit Proficiencies"]').click(() =>
-			new ObsidianProficienciesDialog(this).render(true));
-		html.find('.obsidian-max-hp').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Edit Max HP',
-				width: 250,
-				template: 'public/modules/obsidian/html/hp-dialog.html'
-			}).render(true));
-		html.find('.obsidian-speed').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Override Speed',
-				width: 250,
-				template: 'public/modules/obsidian/html/speed-dialog.html'
-			}).render(true));
-		html.find('.obsidian-init').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Manage Initiative',
-				width: 250,
-				template: 'public/modules/obsidian/html/init-dialog.html'
-			}).render(true));
-		html.find('.obsidian-ac').click(() =>
-			new ObsidianDialog(this, {
-				title: 'Manage Armour Class',
-				template: 'public/modules/obsidian/html/ac-dialog.html'
-			}).render(true));
+			new Obsidian.Dialog.Proficiencies(this).render(true));
 		html.find('.obsidian-skill-mod').click(evt =>
-			new ObsidianSkillDialog(
+			new Obsidian.Dialog.Skill(
 				this,
 				$(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id'))
 				.render(true));
 		html.find('.obsidian-save-mod').click(evt =>
-			new ObsidianSaveDialog(
+			new Obsidian.Dialog.Save(
 				this,
 				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
+
+		this._activateSimpleDialogs(html);
 	}
 
 	getData () {
 		const data = super.getData();
-		data.ObsidianRules = ObsidianRules;
+		data.ObsidianRules = Obsidian.Rules;
 		return data;
 	}
 
@@ -167,6 +135,26 @@ class Obsidian extends ActorSheet5eCharacter {
 		} else {
 			win.removeClass('obsidian-background');
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {HTML} html
+	 */
+	_activateSimpleDialogs (html) {
+		html.find('.obsidian-simple-dialog').click(evt => {
+			const options = duplicate(evt.currentTarget.dataset);
+
+			if (options.width !== undefined) {
+				options.width = parseInt(options.width);
+			}
+
+			if (options.template !== undefined) {
+				options.template = 'public/modules/obsidian/html/dialogs/' + options.template;
+			}
+
+			new Obsidian.Dialog(this, options).render(true);
+		});
 	}
 
 	/**
@@ -376,7 +364,7 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		const newData = {};
 		special.forEach(path => {
-			const skills = ObsidianDialog.reconstructArray(formData, newData, path);
+			const skills = Obsidian.Dialog.reconstructArray(formData, newData, path);
 			for (const [key, skill] of Object.entries(getProperty(this.actor.data, path))) {
 				for (const prop in skill) {
 					if (skills[key] === undefined) {
@@ -397,4 +385,11 @@ class Obsidian extends ActorSheet5eCharacter {
 Actors.registerSheet('dnd5e', Obsidian, {
 	types: ['character'],
 	makeDefault: true
+});
+
+Hooks.once('init', () => {
+	loadTemplates([
+		'public/modules/obsidian/html/obsidian.html',
+		'public/modules/obsidian/html/tabs/actions.html'
+	]);
 });

@@ -3,7 +3,7 @@
 		<select name="flags.obsidian.skills.{{~skillID}}.value" data-dtype="Number">
 			{{#with (get-property entity.flags.obsidian.skills skillID) as |skill|}}
 				{{#select skill.value}}
-					{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
+					{{#each ../ObsidianRules.PROFICIENCY_LEVELS as |level value|}}
 						<option value="{{value}}">{{level}}</option>
 					{{/each}}
 				{{/select}}

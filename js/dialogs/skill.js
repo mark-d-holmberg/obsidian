@@ -1,4 +1,4 @@
-class ObsidianSkillDialog extends ObsidianDialog {
+Obsidian.Dialog.Skill = class ObsidianSkillDialog extends Obsidian.Dialog {
 	constructor (parent, skillID) {
 		super(parent, {
 			title: `Manage ${skillID.startsWith('tools') ? 'Tool' : 'Skill'}: `
@@ -10,7 +10,7 @@ class ObsidianSkillDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/skill-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/skill.html';
 	}
 
 	getData () {
@@ -18,4 +18,4 @@ class ObsidianSkillDialog extends ObsidianDialog {
 		data.skillID = this.skillID;
 		return data;
 	}
-}
+};

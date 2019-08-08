@@ -1,4 +1,4 @@
-class ObsidianHeaderDetailsDialog extends ObsidianDialog {
+Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidian.Dialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 420;
@@ -7,7 +7,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/header-details.html';
+		return 'public/modules/obsidian/html/dialogs/header-details.html';
 	}
 
 	/**
@@ -22,7 +22,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 		// render doesn't correctly recalculate height when adding and removing
 		// form rows.
-		ObsidianDialog.recalculateHeight(html);
+		Obsidian.Dialog.recalculateHeight(html);
 	}
 
 	/**
@@ -31,13 +31,13 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	async _onAddClass (evt) {
 		evt.preventDefault();
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		const firstClass = Object.keys(ObsidianRules.ClassHitDice)[0];
+		const firstClass = Object.keys(Obsidian.Rules.CLASS_HIT_DICE)[0];
 
 		classes.push({
 			id: classes.length,
 			name: firstClass,
 			levels: 1,
-			hd: ObsidianRules.ClassHitDice[firstClass]
+			hd: Obsidian.Rules.CLASS_HIT_DICE[firstClass]
 		});
 
 		await this._updateFlags(classes);
@@ -64,7 +64,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			subclass.style.width = '';
 		}
 
-		hd.selectedIndex = ObsidianRules.HD.indexOf(ObsidianRules.ClassHitDice[cls]);
+		hd.selectedIndex = Obsidian.Rules.HD.indexOf(Obsidian.Rules.CLASS_HIT_DICE[cls]);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		await this._updateFlags(ObsidianDialog.removeRow(classes, evt));
+		await this._updateFlags(Obsidian.Dialog.removeRow(classes, evt));
 		this.render(false);
 	}
 
@@ -94,8 +94,8 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	_updateObject (event, formData) {
 		const newData = {};
 		const classes =
-			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
+			Obsidian.Dialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
 		newData['flags.obsidian.attributes.hd'] = this.parent.actor.updateHD(classes);
 		super._updateObject(event, newData);
 	}
-}
+};

@@ -10,7 +10,7 @@
 			<div>
 				<select name="flags.obsidian.skills.tools.{{id}}.value" data-dtype="Number">
 					{{#select tool.value}}
-						{{#each ../ObsidianRules.ProficiencyLevels as |level value|}}
+						{{#each ../ObsidianRules.PROFICIENCY_LEVELS as |level value|}}
 							<option value="{{value}}">{{level}}</option>
 						{{/each}}
 					{{/select}}

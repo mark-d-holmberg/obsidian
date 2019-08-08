@@ -1,4 +1,4 @@
-class ObsidianSaveDialog extends ObsidianDialog {
+Obsidian.Dialog.Save = class ObsidianSaveDialog extends Obsidian.Dialog {
 	constructor (parent, saveID) {
 		super(parent, {
 			title: `Manage Save: ${parent.actor.data.data.abilities[saveID].label}`,
@@ -9,7 +9,7 @@ class ObsidianSaveDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/save-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/save.html';
 	}
 
 	getData () {
@@ -17,4 +17,4 @@ class ObsidianSaveDialog extends ObsidianDialog {
 		data.saveID = this.saveID;
 		return data;
 	}
-}
+};

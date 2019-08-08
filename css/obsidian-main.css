@@ -12,13 +12,18 @@
 
 .obsidian-tab-bar {
 	list-style: none;
-	margin: 0;
+	margin: 0 0 10px 0;
 	padding: 0;
 	display: flex;
 	justify-content: space-around;
 }
 
-.obsidian-tab {
+.obsidian-tab-container .obsidian-tab-bar {
+	justify-content: flex-start;
+}
+
+.obsidian-tab,
+.obsidian-sub-tab {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-weight: bold;
 	font-size: 14px;
@@ -28,8 +33,23 @@
 	line-height: 1.4;
 }
 
+.obsidian-sub-tab {
+	line-height: 1;
+	font-size: 12px;
+	border-radius: 3px;
+	margin: 3px 2px;
+	padding: 5px 7px;
+	border: 1px solid var(--mid);
+}
+
 .obsidian-tab:hover {
 	color: var(--text-regular);
+}
+
+.obsidian-sub-tab:hover,
+.obsidian-sub-tab.active {
+	color: var(--bg);
+	background-color: var(--mid);
 }
 
 .obsidian-tab.active {

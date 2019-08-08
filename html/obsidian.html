@@ -118,10 +118,11 @@
 						<div class="obsidian-char-box-text">Speed</div>
 						{{#if entity.flags.obsidian.attributes.speedDisplay}}
 							<div class="obsidian-char-box-text" style="color: var(--text-subtle);">
-								{{lookup ObsidianRules.Speeds entity.flags.obsidian.attributes.speedDisplay}}
+								{{lookup ObsidianRules.SPEEDS entity.flags.obsidian.attributes.speedDisplay}}
 							</div>
 						{{/if}}
-						<div class="obsidian-char-box obsidian-speed obsidian-ptr">
+						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
+						     data-title="Manage Speed" data-width="250" data-template="speed.html">
 							{{#with entity.flags.obsidian.attributes as |attr|}}
 								{{#if attr.speedDisplay}}
 									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
@@ -139,7 +140,8 @@
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text rollable">Initiative</div>
-						<div class="obsidian-char-box obsidian-init obsidian-ptr">
+						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
+						     data-title="Manage Initiative" data-width="250" data-template="init.html">
 							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
 						</div>
 					</div>
@@ -147,7 +149,10 @@
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">AC</div>
-						<div class="obsidian-char-box obsidian-ac obsidian-ptr">{{data.attributes.ac.min}}</div>
+						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
+						     data-title="Manage Armour Class" data-template="ac.html">
+							{{data.attributes.ac.min}}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -179,7 +184,8 @@
 									obsidian-positive
 								{{else if (expr '<' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
 									obsidian-negative
-								{{~/if}}">
+								{{~/if}} obsidian-simple-dialog" data-title="Edit Max HP" data-width="250"
+								     data-template="hp.html">
 									{{data.attributes.hp.maxAdjusted}}
 								</div>
 							</div>
@@ -329,7 +335,7 @@
 						<div class="obsidian-horizontal-list">
 							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
 								{{#if (expr '>' sense.radius 0)}}
-									<span>{{lookup ../ObsidianRules.Senses id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
+									<span>{{lookup ../ObsidianRules.SENSES id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
 								{{/if}}
 							{{/each}}
 						</div>
@@ -385,7 +391,7 @@
 					<div class="obsidian-char-box-text">Conditions</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
-						{{#each ObsidianRules.Conditions}}
+						{{#each ObsidianRules.CONDITIONS}}
 							<div class="
 							{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
 								obsidian-radio-selected
@@ -423,7 +429,8 @@
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">
 						Saving Throws
-						<a title="Edit Saving Throws" class="obsidian-edit">
+						<a title="Edit Saving Throws" class="obsidian-edit obsidian-simple-dialog"
+						   data-title="Manage Saving Throws" data-width="250" data-template="saves.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -451,7 +458,9 @@
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text" style="padding: 5px 0 3px 0;">
 						<span class="rollable">Death Saves</span>
-						<a title="Edit Death Saves" class="obsidian-edit">
+						<a title="Edit Death Saves" class="obsidian-edit obsidian-simple-dialog"
+						   data-title="Manage Death Saves" data-width="250"
+						   data-template="death-saves.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -498,6 +507,7 @@
 						<li class="obsidian-tab item" data-tab="notes">Notes</li>
 						<li class="obsidian-tab item" data-tab="extras">Extras</li>
 					</ul>
+					{{> public/modules/obsidian/html/tabs/actions.html}}
 				</div>
 			</div>
 		</section>

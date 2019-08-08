@@ -1,17 +1,17 @@
-const ObsidianRules = {};
-ObsidianRules.CLASSES = [
+Obsidian.Rules = {};
+Obsidian.Rules.CLASSES = [
 	'Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue',
 	'Sorcerer', 'Warlock', 'Wizard', 'Custom'
 ];
-ObsidianRules.HD = [2, 4, 6, 8, 10, 12, 20];
-ObsidianRules.MAX_LEVEL = 20;
+Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
+Obsidian.Rules.MAX_LEVEL = 20;
 
-ObsidianRules.Conditions = [
+Obsidian.Rules.CONDITIONS = [
 	'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible',
 	'paralysed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'
 ];
 
-ObsidianRules.ClassHitDice = {
+Obsidian.Rules.CLASS_HIT_DICE = {
 	'Barbarian': 12,
 	'Bard': 8,
 	'Cleric': 8,
@@ -26,21 +26,21 @@ ObsidianRules.ClassHitDice = {
 	'Wizard': 6
 };
 
-ObsidianRules.ProficiencyLevels = {
+Obsidian.Rules.PROFICIENCY_LEVELS = {
 	0: 'Not Proficient',
 	0.5: 'Half Proficient',
 	1: 'Proficient',
 	2: 'Expertise'
 };
 
-ObsidianRules.Senses = {
+Obsidian.Rules.SENSES = {
 	dark: 'Darkvision',
 	blind: 'Blindsight',
 	tremor: 'Tremorsense',
 	true: 'Truesight'
 };
 
-ObsidianRules.Speeds = {
+Obsidian.Rules.SPEEDS = {
 	walk: 'Walking',
 	burrow: 'Burrowing',
 	climb: 'Climbing',

@@ -1,4 +1,4 @@
-class ObsidianProficienciesDialog extends ObsidianDialog {
+Obsidian.Dialog.Proficiencies = class ObsidianProficienciesDialog extends Obsidian.Dialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,7 +7,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/profs-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/profs.html';
 	}
 
 	/**
@@ -18,7 +18,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-prof').click(this._onAddProficiency.bind(this));
 		html.find('.obsidian-rm-prof').click(this._onRemoveProficiency.bind(this));
-		ObsidianDialog.recalculateHeight(html, true);
+		Obsidian.Dialog.recalculateHeight(html, true);
 	}
 
 	/**
@@ -73,4 +73,4 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 		formData = {'flags.obsidian.traits.profs.custom': profs};
 		super._updateObject(event, formData);
 	}
-}
+};

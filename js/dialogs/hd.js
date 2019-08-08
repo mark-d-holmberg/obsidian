@@ -1,4 +1,4 @@
-class ObsidianHDDialog extends ObsidianDialog {
+Obsidian.Dialog.HD = class ObsidianHDDialog extends Obsidian.Dialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,7 +7,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/hd-dialog.html';
+		return 'public/modules/obsidian/html/dialogs/hd.html';
 	}
 
 	/**
@@ -18,7 +18,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-hd').click(this._onAddHD.bind(this));
 		html.find('.obsidian-rm-hd').click(this._onRemoveHD.bind(this));
-		ObsidianDialog.recalculateHeight(html);
+		Obsidian.Dialog.recalculateHeight(html);
 	}
 
 	/**
@@ -28,7 +28,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 		const existingHD = Object.keys(hd);
-		const availableHD = ObsidianRules.HD.filter(x => !existingHD.includes(String(x)));
+		const availableHD = Obsidian.Rules.HD.filter(x => !existingHD.includes(String(x)));
 
 		if (availableHD.length > 0) {
 			const newHD = availableHD[0];
@@ -105,4 +105,4 @@ class ObsidianHDDialog extends ObsidianDialog {
 		formData = {'flags.obsidian.attributes.hd': hd};
 		super._updateObject(event, formData);
 	}
-}
+};

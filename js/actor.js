@@ -47,7 +47,7 @@ Obsidian.SCHEMA = {
 	}
 };
 
-class ObsidianActor extends Actor5e {
+Obsidian.Actor = class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
 		ObsidianActor._enrichFlags(actorData.flags);
@@ -81,8 +81,7 @@ class ObsidianActor extends Actor5e {
 
 		actorData.allSkills = {};
 		for (let [id, skill] of
-				Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
-		{
+			Object.entries(data.skills).concat(Object.entries(flags.skills.custom))) {
 			const custom = !isNaN(Number(id));
 			if (!custom && flags.skills[id] === undefined) {
 				flags.skills[id] = duplicate(skill);
@@ -202,6 +201,6 @@ class ObsidianActor extends Actor5e {
 
 		return newHD;
 	}
-}
+};
 
-CONFIG.Actor.entityClass = ObsidianActor;
+CONFIG.Actor.entityClass = Obsidian.Actor;

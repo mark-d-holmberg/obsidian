@@ -3,7 +3,7 @@
 		<label class="obsidian-inline">
 			<select name="flags.obsidian.attributes.speedDisplay">
 				{{#select entity.flags.obsidian.attributes.speedDisplay}}
-					{{#each ObsidianRules.Speeds as |display id|}}
+					{{#each ObsidianRules.SPEEDS as |display id|}}
 						<option value="{{id}}">{{display}}</option>
 					{{/each}}
 				{{/select}}
@@ -11,7 +11,7 @@
 			<span>Display Speed</span>
 		</label>
 	</div>
-	{{#each ObsidianRules.Speeds as |display id|}}
+	{{#each ObsidianRules.SPEEDS as |display id|}}
 		<div class="obsidian-form-row obsidian-inline">
 			<div class="obsidian-flex">
 				<label class="obsidian-inline">
