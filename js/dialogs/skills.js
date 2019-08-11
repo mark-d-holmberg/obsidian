@@ -1,4 +1,4 @@
-Obsidian.Dialog.Skills = class ObsidianSkillsDialog extends Obsidian.Dialog {
+class ObsidianSkillsDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 420;
@@ -13,7 +13,7 @@ Obsidian.Dialog.Skills = class ObsidianSkillsDialog extends Obsidian.Dialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-skill').click(this._onAddSkill.bind(this));
 		html.find('.obsidian-rm-skill').click(this._onRemoveSkill.bind(this));
-		Obsidian.Dialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html, false);
 	}
 
 	/**
@@ -45,8 +45,8 @@ Obsidian.Dialog.Skills = class ObsidianSkillsDialog extends Obsidian.Dialog {
 		evt.preventDefault();
 		const skills = duplicate(getProperty(this.parent.actor.data, this.options.dataPath));
 		const update = {};
-		update[this.options.dataPath] = Obsidian.Dialog.removeRow(skills, evt);
+		update[this.options.dataPath] = ObsidianDialog.removeRow(skills, evt);
 		await this.parent.actor.update(update);
 		this.render(false);
 	}
-};
+}

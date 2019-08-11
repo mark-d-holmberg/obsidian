@@ -1,7 +1,8 @@
-Obsidian.Dialog.Save = class ObsidianSaveDialog extends Obsidian.Dialog {
+class ObsidianSaveDialog extends ObsidianDialog {
 	constructor (parent, saveID) {
 		super(parent, {
-			title: `Manage Save: ${parent.actor.data.data.abilities[saveID].label}`,
+			title: `${game.i18n.localize('OBSIDIAN.ManageSave')}: `
+				+ parent.actor.data.data.abilities[saveID].label,
 			width: 250
 		});
 
@@ -17,4 +18,4 @@ Obsidian.Dialog.Save = class ObsidianSaveDialog extends Obsidian.Dialog {
 		data.saveID = this.saveID;
 		return data;
 	}
-};
+}

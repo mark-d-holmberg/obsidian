@@ -1,0 +1,73 @@
+<form class="obsidian" autocomplete="off">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text"
+			       name="flags.obsidian.attacks.custom.{{attackID}}.label"
+			       placeholder="{{localize 'OBSIDIAN.Attack'}}"
+			       value="{{attack.label}}">
+			<select name="flags.obsidian.attacks.custom.{{attackID}}.type">
+				{{#select attack.type}}
+					{{#each ObsidianRules.ATTACK_TYPES}}
+						<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.AttackType-' this)}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<label class="obsidian-inline">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="flags.obsidian.attacks.custom.{{attackID}}.crit" placeholder="20"
+				       value="{{attack.crit}}">
+				<span>{{localize 'OBSIDIAN.Crit'}}</span>
+			</label>
+			<label class="obsidian-inline">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="flags.obsidian.attacks.custom.{{attackID}}.magic" placeholder="0"
+				       data-dtype="Number" value="{{attack.magic}}">
+				<span>{{localize 'OBSIDIAN.Magic'}}</span>
+			</label>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.ToHit'}}
+				<select name="flags.obsidian.attacks.custom.{{attackID}}.stat">
+					{{#select attack.stat}}
+						{{#each data.abilities}}
+							<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" name="flags.obsidian.attacks.custom.{{attackID}}.bonus"
+			       placeholder="0" value="{{attack.bonus}}">
+			<div class="fancy-checkbox"
+			     data-bound="flags.obsidian.attacks.custom.{{attackID}}.proficient">
+				<div class="checkbox-container">
+					<div class="checkbox-inner-box"></div>
+					<div class="checkmark-container">
+						<div class="checkmark">
+							<div class="checkmark-short"></div>
+							<div class="checkmark-long"></div>
+						</div>
+					</div>
+				</div>
+				<div class="checkbox-content">{{localize 'OBSIDIAN.Proficiency-prof'}}</div>
+			</div>
+			<input type="checkbox" name="flags.obsidian.attacks.custom.{{attackID}}.proficient"
+			       class="obsidian-hidden" {{checked attack.proficient}}>
+		</div>
+		<div class="obsidian-form-row obsidian-hidden obsidian-range-row obsidian-inline">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Range'}}
+				<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range1" placeholder="0"
+				       data-dtype="Number" value="{{attack.range1}}"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
+			</label>
+			<span class="obsidian-binary-operator">&sol;</span>
+			<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range2" placeholder="0"
+			       data-dtype="Number" value="{{attack.range2}}"
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
+		</div>
+	</fieldset>
+</form>

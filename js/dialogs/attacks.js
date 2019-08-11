@@ -1,8 +1,8 @@
-Obsidian.Dialog.Attacks = class ObsidianAttacksDialog extends Obsidian.Dialog {
+class ObsidianAttacksDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = 'Manage Attacks';
+		options.title = game.i18n.localize('OBSIDIAN.Manage Attacks');
 		options.template = 'public/modules/obsidian/html/dialogs/attacks.html';
 		return options;
 	}
@@ -15,7 +15,7 @@ Obsidian.Dialog.Attacks = class ObsidianAttacksDialog extends Obsidian.Dialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-rm-attack').click(this._onRemoveAttack.bind(this));
-		Obsidian.Dialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html, false);
 	}
 
 	/**
@@ -34,10 +34,8 @@ Obsidian.Dialog.Attacks = class ObsidianAttacksDialog extends Obsidian.Dialog {
 			damage: [],
 			tags: {},
 			stat: 'str',
-			ma: false,
-			proficient: true,
-			silver: false,
-			adamantine: false
+			bonus: 0,
+			proficient: true
 		});
 
 		await this.parent.actor.update({'flags.obsidian.attacks.custom': attacks});
@@ -51,8 +49,8 @@ Obsidian.Dialog.Attacks = class ObsidianAttacksDialog extends Obsidian.Dialog {
 		evt.preventDefault();
 		const attacks = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
 		await this.parent.actor.update({
-			'flags.obsidian.attacks.custom': Obsidian.Dialog.removeRow(attacks, evt)
+			'flags.obsidian.attacks.custom': ObsidianDialog.removeRow(attacks, evt)
 		});
 		this.render(false);
 	}
-};
+}

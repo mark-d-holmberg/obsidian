@@ -1,8 +1,8 @@
-Obsidian.Dialog.Senses = class ObsidianSensesDialog extends Obsidian.Dialog {
+class ObsidianSensesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = 'Manage Senses';
+		options.title = game.i18n.localize('OBSIDIAN.EditSenses');
 		return options;
 	}
 
@@ -18,7 +18,7 @@ Obsidian.Dialog.Senses = class ObsidianSensesDialog extends Obsidian.Dialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-passive').click(this._onAddPassive.bind(this));
 		html.find('.obsidian-rm-passive').click(this._onRemovePassive.bind(this));
-		Obsidian.Dialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html, false);
 	}
 
 	/**
@@ -67,4 +67,4 @@ Obsidian.Dialog.Senses = class ObsidianSensesDialog extends Obsidian.Dialog {
 		formData['flags.obsidian.skills.passives'] = passives;
 		super._updateObject(event, formData);
 	}
-};
+}

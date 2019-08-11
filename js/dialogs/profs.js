@@ -1,8 +1,8 @@
-Obsidian.Dialog.Proficiencies = class ObsidianProficienciesDialog extends Obsidian.Dialog {
+class ObsidianProficienciesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = 'Manage Proficiencies';
+		options.title = game.i18n.localize('OBSIDIAN.EditProficiencies');
 		return options;
 	}
 
@@ -18,7 +18,7 @@ Obsidian.Dialog.Proficiencies = class ObsidianProficienciesDialog extends Obsidi
 		super.activateListeners(html);
 		html.find('.obsidian-add-prof').click(this._onAddProficiency.bind(this));
 		html.find('.obsidian-rm-prof').click(this._onRemoveProficiency.bind(this));
-		Obsidian.Dialog.recalculateHeight(html, true);
+		ObsidianDialog.recalculateHeight(html, true);
 	}
 
 	/**
@@ -73,4 +73,4 @@ Obsidian.Dialog.Proficiencies = class ObsidianProficienciesDialog extends Obsidi
 		formData = {'flags.obsidian.traits.profs.custom': profs};
 		super._updateObject(event, formData);
 	}
-};
+}

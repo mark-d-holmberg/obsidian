@@ -50,7 +50,7 @@ Obsidian.SCHEMA = {
 	}
 };
 
-Obsidian.Actor = class ObsidianActor extends Actor5e {
+class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
 		ObsidianActor._enrichFlags(actorData.flags);
@@ -168,6 +168,10 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 					attack.reach +=5;
 				}
 			}
+
+			if (attack.crit === undefined || attack.crit === '') {
+				attack.crit = 20;
+			}
 		}
 
 		return actorData;
@@ -228,6 +232,6 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 
 		return newHD;
 	}
-};
+}
 
-CONFIG.Actor.entityClass = Obsidian.Actor;
+CONFIG.Actor.entityClass = ObsidianActor;

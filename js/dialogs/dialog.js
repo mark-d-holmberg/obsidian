@@ -1,4 +1,4 @@
-Obsidian.Dialog = class ObsidianDialog extends BaseEntitySheet {
+class ObsidianDialog extends BaseEntitySheet {
 	constructor (parent, options) {
 		super(parent.object, options);
 		this.parent = parent;
@@ -133,4 +133,4 @@ Obsidian.Dialog = class ObsidianDialog extends BaseEntitySheet {
 
 		return newData;
 	}
-};
+}

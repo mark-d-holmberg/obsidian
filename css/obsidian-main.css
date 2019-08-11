@@ -175,3 +175,30 @@
 .obsidian-tooltip {
 	display: none;
 }
+
+.obsidian-attack-toggle {
+	cursor: pointer;
+}
+
+.obsidian-icon {
+	width: 20px;
+	height: 20px;
+	background: 50% transparent no-repeat;
+	background-size: 20px 20px;
+}
+
+.obsidian-icon-melee {
+	background-image: url('../img/melee.svg');
+}
+
+.obsidian-icon-ranged {
+	background-image: url('../img/ranged.svg');
+}
+
+.obsidian-icon-unarmed {
+	background-image: url('../img/unarmed.svg');
+}
+
+.obsidian-icon-versatile {
+	background-image: url('../img/versatile.svg');
+}

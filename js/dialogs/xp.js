@@ -1,8 +1,8 @@
-Obsidian.Dialog.XP = class ObsidianXPDialog extends Obsidian.Dialog {
+class ObsidianXPDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = 'Manage XP';
+		options.title = game.i18n.localize('OBSIDIAN.ManageXP');
 		return options;
 	}
 
@@ -10,6 +10,10 @@ Obsidian.Dialog.XP = class ObsidianXPDialog extends Obsidian.Dialog {
 		return 'public/modules/obsidian/html/dialogs/xp.html';
 	}
 
+	/**
+	 * @param {JQuery} html
+	 * @return undefined
+	 */
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('input[name="addRemoveXP"]').keypress((evt) => {
@@ -31,4 +35,4 @@ Obsidian.Dialog.XP = class ObsidianXPDialog extends Obsidian.Dialog {
 
 		return super.close();
 	}
-};
+}

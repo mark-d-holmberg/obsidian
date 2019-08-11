@@ -76,15 +76,17 @@ class Obsidian extends ActorSheet5eCharacter {
 			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>
-			new Obsidian.Dialog.Skill(
+			new ObsidianSkillDialog(
 				this,
 				$(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id'))
 				.render(true));
 		html.find('.obsidian-save-mod').click(evt =>
-			new Obsidian.Dialog.Save(
+			new ObsidianSaveDialog(
 				this,
 				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
+		html.find('[data-attack-id]').click(evt =>
+			new ObsidianAttackDialog(this, evt.currentTarget.dataset['attackId']).render(true));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
 
@@ -132,9 +134,10 @@ class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			if (options.dialog === undefined) {
-				new Obsidian.Dialog(this, options).render(true);
+				new ObsidianDialog(this, options).render(true);
 			} else {
-				new Obsidian.Dialog[options.dialog](this, options).render(true);
+				const dialog = eval(`Obsidian${options.dialog}Dialog.prototype.constructor`);
+				new dialog(this, options).render(true);
 			}
 		});
 	}
@@ -346,7 +349,7 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		const newData = {};
 		special.forEach(path => {
-			const skills = Obsidian.Dialog.reconstructArray(formData, newData, path);
+			const skills = ObsidianDialog.reconstructArray(formData, newData, path);
 			for (const [key, skill] of Object.entries(getProperty(this.actor.data, path))) {
 				for (const prop in skill) {
 					if (skills[key] === undefined) {

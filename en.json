@@ -95,6 +95,7 @@
 	"OBSIDIAN.Exhaustion": "Exhaustion",
 	"OBSIDIAN.SavingThrows": "Saving Throws",
 	"OBSIDIAN.ManageSaves": "Manage Saves",
+	"OBSIDIAN.ManageSave": "Manage Save",
 	"OBSIDIAN.DeathSaves": "Death Saves",
 	"OBSIDIAN.ManageDeathSaves": "Manage Death Saves",
 	"OBSIDIAN.Successes": "Successes",
@@ -162,5 +163,15 @@
 	"OBSIDIAN.MilestoneLevelling": "Milestone Levelling",
 	"OBSIDIAN.SetLevel": "Set Level",
 	"OBSIDIAN.SetXP": "Set XP",
-	"OBSIDIAN.AddRemoveXP": "Add/Remove XP"
+	"OBSIDIAN.AddRemoveXP": "Add/Remove XP",
+	"OBSIDIAN.ManageSkill": "Manage Skill",
+	"OBSIDIAN.ManageTool": "Manage Tool",
+	"OBSIDIAN.OverrideHD": "Override HD",
+	"OBSIDIAN.ManageXP": "Manage XP",
+	"OBSIDIAN.AttackType-melee": "Melee",
+	"OBSIDIAN.AttackType-ranged": "Ranged",
+	"OBSIDIAN.AttackType-unarmed": "Unarmed",
+	"OBSIDIAN.Crit": "Crit",
+	"OBSIDIAN.Magic": "Magic",
+	"OBSIDIAN.ToHit": "To Hit"
 }

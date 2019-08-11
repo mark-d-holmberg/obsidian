@@ -1,8 +1,8 @@
-Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidian.Dialog {
+class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 420;
-		options.title = 'Edit Details';
+		options.title = game.i18n.localize('OBSIDIAN.EditDetails');
 		return options;
 	}
 
@@ -22,7 +22,7 @@ Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidi
 
 		// render doesn't correctly recalculate height when adding and removing
 		// form rows.
-		Obsidian.Dialog.recalculateHeight(html);
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**
@@ -73,7 +73,7 @@ Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidi
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		await this._updateFlags(Obsidian.Dialog.removeRow(classes, evt));
+		await this._updateFlags(ObsidianDialog.removeRow(classes, evt));
 		this.render(false);
 	}
 
@@ -94,8 +94,8 @@ Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidi
 	_updateObject (event, formData) {
 		const newData = {};
 		const classes =
-			Obsidian.Dialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
+			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
 		newData['flags.obsidian.attributes.hd'] = this.parent.actor.updateHD(classes);
 		super._updateObject(event, newData);
 	}
-};
+}

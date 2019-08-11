@@ -1,4 +1,5 @@
 Obsidian.Rules = {};
+Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
 Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];

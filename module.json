@@ -9,7 +9,7 @@
 		"js/helpers.js", "js/obsidian.js", "js/rules.js", "js/actor.js", "js/dialogs/dialog.js",
 		"js/dialogs/char-header.js", "js/dialogs/xp.js", "js/dialogs/hd.js", "js/dialogs/skill.js",
 		"js/dialogs/skills.js", "js/dialogs/save.js", "js/dialogs/senses.js", "js/dialogs/profs.js",
-		"js/dialogs/attacks.js"
+		"js/dialogs/attacks.js", "js/dialogs/attack.js"
 	],
 	"styles": ["css/roboto.css", "css/obsidian.css", "css/obsidian-main.css"],
 	"packs": [],

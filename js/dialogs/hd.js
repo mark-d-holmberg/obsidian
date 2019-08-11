@@ -1,8 +1,8 @@
-Obsidian.Dialog.HD = class ObsidianHDDialog extends Obsidian.Dialog {
+class ObsidianHDDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = 'Override HD';
+		options.title = game.i18n.localize('OBSIDIAN.OverrideHD');
 		return options;
 	}
 
@@ -18,7 +18,7 @@ Obsidian.Dialog.HD = class ObsidianHDDialog extends Obsidian.Dialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-hd').click(this._onAddHD.bind(this));
 		html.find('.obsidian-rm-hd').click(this._onRemoveHD.bind(this));
-		Obsidian.Dialog.recalculateHeight(html);
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**
@@ -105,4 +105,4 @@ Obsidian.Dialog.HD = class ObsidianHDDialog extends Obsidian.Dialog {
 		formData = {'flags.obsidian.attributes.hd': hd};
 		super._updateObject(event, formData);
 	}
-};
+}

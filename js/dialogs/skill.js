@@ -1,8 +1,11 @@
-Obsidian.Dialog.Skill = class ObsidianSkillDialog extends Obsidian.Dialog {
+class ObsidianSkillDialog extends ObsidianDialog {
 	constructor (parent, skillID) {
+		const skill = getProperty(parent.actor.data.flags.obsidian.skills, skillID);
 		super(parent, {
-			title: `Manage ${skillID.startsWith('tools') ? 'Tool' : 'Skill'}: `
-				+ getProperty(parent.actor.data.flags.obsidian.skills, skillID).label,
+			title: game.i18n.localize(
+				`OBSIDIAN.Manage${skillID.startsWith('tools') ? 'Tool' : 'Skill'}`)
+				+ ': '
+				+ (skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${skillID}`)),
 			width: 250
 		});
 
@@ -16,6 +19,7 @@ Obsidian.Dialog.Skill = class ObsidianSkillDialog extends Obsidian.Dialog {
 	getData () {
 		const data = super.getData();
 		data.skillID = this.skillID;
+		data.skill = getProperty(this.parent.actor.data.flags.obsidian.skills, this.skillID);
 		return data;
 	}
-};
+}
