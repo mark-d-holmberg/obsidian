@@ -1,7 +1,9 @@
 <form class="obsidian" autocomplete="off">
 	<label class="obsidian-inline obsidian-label-lg">
-		Hit Dice Override
-		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-hd">Add</button>
+		{{localize 'OBSIDIAN.HitDiceOverride'}}
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-hd">
+			{{localize 'OBSIDIAN.Add'}}
+		</button>
 	</label>
 	{{#each entity.flags.obsidian.attributes.hd as |hd die|}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -17,7 +19,7 @@
 				       value="{{hd.override}}" data-dtype="Number" placeholder="0">
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-rm-hd obsidian-btn-sm">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}

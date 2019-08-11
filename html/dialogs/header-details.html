@@ -1,20 +1,22 @@
 <form class="obsidian" autocomplete="off">
 	<label>
-		<input name="flags.obsidian.details.gender" type="text" placeholder="Gender"
+		<input name="flags.obsidian.details.gender" type="text"
+		       placeholder="{{localize 'OBSIDIAN.Gender'}}"
 		       value="{{entity.flags.obsidian.details.gender}}">
 	</label>
 	<label>
 		<input name="data.details.race.value" type="text" value="{{data.details.race.value}}"
-		       placeholder="Race">
+		       placeholder="{{localize 'OBSIDIAN.Race'}}">
 	</label>
 	<label>
-		<input name="flags.obsidian.details.subrace" type="text" placeholder="Subrace"
+		<input name="flags.obsidian.details.subrace" type="text"
+		       placeholder="{{localize 'OBSIDIAN.Subrace'}}"
 		       value="{{entity.flags.obsidian.details.subrace}}">
 	</label>
 	<label class="obsidian-inline obsidian-label-lg">
-		Classes
+		{{localize 'OBSIDIAN.Classes'}}
 		<button type="button" class="obsidian-btn-positive obsidian-add-class obsidian-btn-sm">
-			Add
+			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.classes as |class id|}}
@@ -23,18 +25,20 @@
 				<select name="flags.obsidian.classes.{{id}}.name">
 					{{#select class.name}}
 						{{#each ../ObsidianRules.CLASSES}}
-							<option value="{{this}}">{{this}}</option>
+							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Class-' this)}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'Custom' class.name))~}}
+				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'custom' class.name))~}}
 						obsidian-hidden
 					{{~/if~}}
-				" type="text" name="flags.obsidian.classes.{{id}}.custom" placeholder="Class"
-				       style="width: 65px;" value="{{class.custom}}">
-				<input class="obsidian-input-compact" type="text" placeholder="Subclass"
+				" type="text" name="flags.obsidian.classes.{{id}}.custom"
+				       placeholder="{{localize 'OBSIDIAN.Class'}}" style="width: 65px;"
+				       value="{{class.custom}}">
+				<input class="obsidian-input-compact" type="text"
+				       placeholder="{{localize 'OBSIDIAN.Subclass'}}"
 				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"
-				       style="{{#if (expr '===' 'Custom' class.name)}}width: 65px;{{/if}}">
+				       style="{{#if (expr '===' 'custom' class.name)}}width: 65px;{{/if}}">
 				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
 				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}"
 				       data-dtype="Number">
@@ -47,7 +51,7 @@
 				</select>
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}

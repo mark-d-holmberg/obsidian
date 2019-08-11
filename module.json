@@ -14,5 +14,8 @@
 	"styles": ["css/roboto.css", "css/obsidian.css", "css/obsidian-main.css"],
 	"packs": [],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
-	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json"
+	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
+	"languages": {
+		"en": "en.json"
+	}
 }

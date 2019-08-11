@@ -9,24 +9,24 @@
 				</div>
 			</div>
 		</div>
-		<div class="checkbox-content">Milestone Levelling</div>
+		<div class="checkbox-content">{{localize 'OBSIDIAN.MilestoneLevelling'}}</div>
 	</div>
 	<input type="checkbox" data-dtype="Boolean" name="flags.obsidian.details.milestone"
 	       class="obsidian-hidden" {{checked entity.flags.obsidian.details.milestone}}>
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
-			<span>Set Level</span>
+			<span>{{localize 'OBSIDIAN.SetLevel'}}</span>
 			<input type="text" name="data.details.level.value" value="{{data.details.level.value}}"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       data-dtype="Number">
 		</label>
 		<label class="obsidian-inline">
-			<span>Set XP</span>
+			<span>{{localize 'OBSIDIAN.SetXP'}}</span>
 			<input type="text" name="data.details.xp.value" value="{{data.details.xp.value}}"
 			       class="obsidian-input-compact obsidian-input-num" style="width: 75px;"
 			       data-dtype="Number">
 		</label>
 	</div>
-	<input type="text" name="addRemoveXP" placeholder="Add/Remove XP" data-dtype="Number"
-	       class="obsidian-input-compact">
+	<input type="text" name="addRemoveXP" placeholder="{{localize 'OBSIDIAN.AddRemoveXP'}}"
+	       class="obsidian-input-compact" data-dtype="Number">
 </form>

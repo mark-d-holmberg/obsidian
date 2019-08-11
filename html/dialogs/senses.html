@@ -1,20 +1,20 @@
 <form class="obsidian" autocomplete="off">
-	{{#each ObsidianRules.SENSES as |sense id|}}
+	{{#each ObsidianRules.SENSES as |sense|}}
 		<div class="obsidian-form-row obsidian-inline">
 			<label class="obsidian-inline">
 				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md" type="text"
-				       name="flags.obsidian.attributes.senses.{{id}}.radius" data-dtype="Number"
-				       value="{{#with (lookup ../entity.flags.obsidian.attributes.senses id)}}
+				       name="flags.obsidian.attributes.senses.{{sense}}.radius" data-dtype="Number"
+				       value="{{#with (lookup ../entity.flags.obsidian.attributes.senses sense)}}
 					       {{~radius~}}
 				       {{/with}}">
-				<span>{{sense}}</span>
+				<span>{{localize (expr '+' 'OBSIDIAN.Sense-' sense)}}</span>
 			</label>
 		</div>
 	{{/each}}
 	<label class="obsidian-inline obsidian-label-lg">
-		Passive Display
+		{{localize 'OBSIDIAN.PassiveDisplay'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-passive">
-			Add
+			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.skills.passives as |passive id|}}
@@ -22,13 +22,19 @@
 			<select>
 				{{#select passive}}
 					{{#each ../entity.obsidian.skills as |skill id|}}
-						<option value="{{id}}">{{skill.label}}</option>
+						<option value="{{id}}">
+							{{#if skill.custom}}
+								{{skill.label}}
+							{{else}}
+								{{localize (expr '+' 'OBSIDIAN.Skill-' id)}}
+							{{/if}}
+						</option>
 					{{/each}}
 				{{/select}}
 			</select>
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-passive"
 			        data-row-id="{{id}}">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}

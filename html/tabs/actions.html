@@ -1,15 +1,15 @@
 <div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="actions">
 	<ul class="obsidian-tab-bar" data-group="actions-tabs">
-		<li class="obsidian-sub-tab item" data-tab="attacks">Attacks</li>
-		<li class="obsidian-sub-tab item" data-tab="actions">Actions</li>
-		<li class="obsidian-sub-tab item" data-tab="bonus-actions">Bonus Actions</li>
-		<li class="obsidian-sub-tab item" data-tab="reactions">Reactions</li>
-		<li class="obsidian-sub-tab item" data-tab="other">Other</li>
+		<li class="obsidian-sub-tab item" data-tab="attacks">{{localize 'OBSIDIAN.Attacks'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="actions">{{localize 'OBSIDIAN.Actions'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="bonus-actions">{{localize 'OBSIDIAN.BonusActions'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="reactions">{{localize 'OBSIDIAN.Reactions'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="other">{{localize 'OBSIDIAN.Other'}}</li>
 	</ul>
 	<div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="attacks">
 		<h3>
-			Attacks
-			<a title="Manage Attacks" class="obsidian-edit" data-dialog="Attacks">
+			{{localize 'OBSIDIAN.Attacks'}}
+			<a title="{{localize 'OBSIDIAN.ManageAttacks'}}" class="obsidian-edit" data-dialog="Attacks">
 				<i class="fas fa-edit"></i>
 			</a>
 		</h3>
@@ -17,31 +17,34 @@
 			<div class="obsidian-thead">
 				{{#if (notEmpty entity.obsidian.attacks)}}
 					<div class="obsidian-col-icon"></div>
-					<div class="obsidian-col-attack">Attack</div>
-					<div class="obsidian-col-range">Range</div>
-					<div class="obsidian-col-hit">Hit</div>
-					<div class="obsidian-col-damage">Damage</div>
-					<div class="obsidian-col-notes">Notes</div>
+					<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
+					<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
+					<div class="obsidian-col-hit">{{localize 'OBSIDIAN.Hit'}}</div>
+					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
+					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 					<div class="obsidian-col-icon"></div>
 				{{else}}
-					<div class="obsidian-col-empty">Empty</div>
+					<div class="obsidian-col-empty">{{localize 'OBSIDIAN.Empty'}}</div>
 				{{/if}}
 			</div>
 			<div class="obsidian-tbody">
 				{{#each entity.obsidian.attacks as |attack id|}}
 					<div class="obsidian-tr">
 						<div class="obsidian-col-icon">
-							<div class="obsidian-icon obsidian-icon-{{attack.mode}}"></div>
+							<div class="
+								{{~#if (expr '||' attack.tags.thrown attack.tags.versatile)~}}
+									obsidian-attack-toggle
+								{{~/if}} obsidian-icon obsidian-icon-{{attack.mode}}"></div>
 						</div>
 						<div class="obsidian-col-attack">
 							<div class="obsidian-table-text rollable">{{attack.label}}</div>
 							<div class="obsidian-table-sub-text">
 								{{#if (expr '===' attack.mode 'melee')}}
-									Melee Weapon
+									{{localize 'OBSIDIAN.MeleeWeapon'}}
 								{{else if (expr '===' attack.mode 'ranged')}}
-									Ranged Weapon
+									{{localize 'OBSIDIAN.RangedWeapon'}}
 								{{else}}
-									Melee Attack
+									{{localize 'OBSIDIAN.MeleeAttack'}}
 								{{/if}}
 							</div>
 						</div>
@@ -51,13 +54,14 @@
 									{{attack.range1}}
 									<span class="obsidian-table-number-split">/</span>
 									<span class="obsidian-table-number-minor">{{attack.range2}}</span>
-									<span class="obsidian-table-unit">ft.</span>
+									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 								</div>
 							{{else}}
 								<div class="obsidian-table-number-md">
-									{{attack.reach}} <span class="obsidian-table-unit">ft.</span>
+									{{attack.reach}}
+									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 								</div>
-								<div class="obsidian-table-sub-text">Reach</div>
+								<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
 							{{/if}}
 						</div>
 						<div class="obsidian-col-hit">
@@ -66,22 +70,32 @@
 							</div>
 						</div>
 						<div class="obsidian-col-damage">
-							{{#each attack.damage}}
+							{{#each attack.damage as |dmg|}}
 								<div class="obsidian-table-dmg">
-									{{#each this as |dmg|}}
-										<div class="obsidian-dmg-component">
-											{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-											<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
-										</div>
-									{{/each}}
+									<div class="obsidian-dmg-component">
+										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+									</div>
 								</div>
 								<div class="obsidian-tooltip">
-									{{#each this as |dmg|}}
-										<div class="obsidian-dmg-component">
-											{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-											<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
-										</div>
-									{{/each}}
+									<div class="obsidian-dmg-component">
+										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+									</div>
+								</div>
+							{{/each}}
+							{{#each attack.versatile as |dmg|}}
+								<div class="obsidian-table-dmg obsidian-table-versatile">
+									<div class="obsidian-dmg-component">
+										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+									</div>
+								</div>
+								<div class="obsidian-tooltip">
+									<div class="obsidian-dmg-component">
+										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+									</div>
 								</div>
 							{{/each}}
 						</div>
@@ -92,7 +106,9 @@
 						</div>
 						<div class="obsidian-col-icon">
 							{{#if attack.custom}}
-								<a title="Edit Attack" class="obsidian-edit"><i class="fas fa-edit"></i></a>
+								<a title="{{localize 'OBSIDIAN.EditAttack'}}" class="obsidian-edit">
+									<i class="fas fa-edit"></i>
+								</a>
 							{{/if}}
 						</div>
 					</div>

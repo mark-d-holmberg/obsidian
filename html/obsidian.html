@@ -3,25 +3,25 @@
 		<img class="obsidian-profile-img obsidian-ptr" src="{{actor.img}}" title="{{actor.name}}"
 		     alt="{{actor.name}}" data-edit="img">
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">Personality Traits</div>
+			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.PersonalityTraits'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.trait.value">
 				{{{data.details.trait.value}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">Ideals</div>
+			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Ideals'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.ideal.value">
 				{{{data.details.ideal.value}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">Bonds</div>
+			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Bonds'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.bond.value">
 				{{{data.details.bond.value}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">Flaws</div>
+			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Flaws'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-prop="data.details.flaw.value">
 				{{{data.details.flaw.value}}}
 			</div>
@@ -33,7 +33,8 @@
 	<section class="obsidian-char-overview">
 		<div class="obsidian-char-header-container">
 			<div class="obsidian-char-header">
-				<input name="name" type="text" value="{{actor.name}}" placeholder="Character Name"
+				<input name="name" type="text" value="{{actor.name}}"
+				       placeholder="{{localize OBSIDIAN.CharacterName}}"
 				       class="obsidian-char-charname obsidian-condensed">
 				<div class="obsidian-char-header-minor obsidian-condensed">
 					{{#if entity.flags.obsidian.details.gender}}
@@ -46,18 +47,19 @@
 						{{#if data.details.race.value}}
 							{{data.details.race.value}}
 						{{else}}
-							Race
+							{{localize 'OBSIDIAN.Race'}}
 						{{/if}}
 					</span>
 					<span>{{classFormat entity.flags.obsidian.classes}}</span>
-					<a title="Edit Details" class="obsidian-edit" data-dialog="HeaderDetails">
+					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
+					   data-dialog="HeaderDetails">
 						<i class="fas fa-edit"></i>
 					</a>
 				</div>
 				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							LVL {{data.details.level.value}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level.value}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -69,17 +71,17 @@
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
 							{{#if (expr '>=' data.details.level.value ObsidianRules.MAX_LEVEL)}}
-								MAX
+								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
 							{{else}}
-								LVL {{expr '+' data.details.level.value 1}}
+								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{expr '+' data.details.level.value 1}}
 							{{/if}}
 						</span>
 					</div>
 					<div class="obsidian-char-xp-data">
 						{{#if entity.flags.obsidian.details.milestone}}
-							Milestone
+							{{localize 'OBSIDIAN.Milestone'}}
 						{{else}}
-							{{data.details.xp.value}} / {{data.details.xp.max}} XP
+							{{data.details.xp.value}} / {{data.details.xp.max}} {{localize 'OBSIDIAN.XP'}}
 						{{/if}}
 					</div>
 				</div>
@@ -87,7 +89,7 @@
 			<div class="obsidian-char-top-level">
 				<div class="obsidian-char-column" style="padding-right: 2px;">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Proficiency</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Proficiency'}}</div>
 						<div class="obsidian-char-box">
 							{{numberFormat data.attributes.prof.value decimals=0 sign=true}}
 						</div>
@@ -95,12 +97,12 @@
 					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-char-rest
 					        obsidian-short-rest">
 						<i class="fas fa-hourglass-half"></i>
-						Short Rest
+						{{localize 'OBSIDIAN.ShortRest'}}
 					</button>
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Inspiration</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Inspiration'}}</div>
 						<div class="obsidian-char-box obsidian-inspiration obsidian-ptr">
 							<i class="fas fa-sun {{#if (expr '!' data.attributes.inspiration.value)~}}
 								obsidian-hidden
@@ -110,19 +112,20 @@
 					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-char-rest
 					        obsidian-long-rest">
 						<i class="fas fa-campground"></i>
-						Long Rest
+						{{localize 'OBSIDIAN.LongRest'}}
 					</button>
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Speed</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Speed'}}</div>
 						{{#if entity.flags.obsidian.attributes.speedDisplay}}
 							<div class="obsidian-char-box-text" style="color: var(--text-subtle);">
-								{{lookup ObsidianRules.SPEEDS entity.flags.obsidian.attributes.speedDisplay}}
+								{{localize (expr '+' 'OBSIDIAN.Speed-' entity.flags.obsidian.attributes.speedDisplay)}}
 							</div>
 						{{/if}}
 						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
-						     data-title="Manage Speed" data-width="250" data-template="speed.html">
+						     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250"
+						     data-template="speed.html">
 							{{#with entity.flags.obsidian.attributes as |attr|}}
 								{{#if attr.speedDisplay}}
 									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
@@ -139,18 +142,19 @@
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text rollable">Initiative</div>
+						<div class="obsidian-char-box-text rollable">{{localize 'OBSIDIAN.Initiative'}}</div>
 						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
-						     data-title="Manage Initiative" data-width="250" data-template="init.html">
+						     data-title="{{localize 'OBSIDIAN.ManageInitiative'}}" data-width="250"
+						     data-template="init.html">
 							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
 						</div>
 					</div>
 				</div>
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">AC</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.ACAbbr'}}</div>
 						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
-						     data-title="Manage Armour Class" data-template="ac.html">
+						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html">
 							{{data.attributes.ac.min}}
 						</div>
 					</div>
@@ -161,7 +165,9 @@
 			<div class="obsidian-char-abilities">
 				{{#each data.abilities as |ability id|}}
 				<div class="obsidian-char-ability">
-					<div class="obsidian-char-ability-name rollable obsidian-condensed">{{id}}</div>
+					<div class="obsidian-char-ability-name rollable obsidian-condensed">
+						{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' id)}}
+					</div>
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
@@ -173,7 +179,7 @@
 			<div class="obsidian-char-top-level">
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Hit Points</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.HP'}}</div>
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
 								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
@@ -184,8 +190,8 @@
 									obsidian-positive
 								{{else if (expr '<' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
 									obsidian-negative
-								{{~/if}} obsidian-simple-dialog" data-title="Edit Max HP" data-width="250"
-								     data-template="hp.html">
+								{{~/if}} obsidian-simple-dialog" data-title="{{localize 'OBSIDIAN.EditMaxHP'}}"
+								     data-width="250" data-template="hp.html">
 									{{data.attributes.hp.maxAdjusted}}
 								</div>
 							</div>
@@ -197,7 +203,7 @@
 				{{#if (notEmpty entity.flags.obsidian.attributes.hd)}}
 					<div class="obsidian-char-column">
 						<div class="obsidian-char-box-container">
-							<div class="obsidian-char-box-text rollable">Hit Dice</div>
+							<div class="obsidian-char-box-text rollable">{{localize 'OBSIDIAN.HD'}}</div>
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
 									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
@@ -229,7 +235,7 @@
 				{{/if}}
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">Defenses</div>
+						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses"></div>
 					</div>
 				</div>
@@ -239,10 +245,10 @@
 			<div style="grid-row: 1 / span 2;">
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">
-						Skills
+						{{localize 'OBSIDIAN.Skills'}}
 						<a title="Edit Skills" class="obsidian-edit" data-dialog="Skills"
-						   data-data-path="flags.obsidian.skills.custom" data-title="Manage Skills"
-						   data-template="skills.html">
+						   data-data-path="flags.obsidian.skills.custom" data-template="skills.html"
+						   data-title="{{localize 'OBSIDIAN.ManageSkills'}}">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -265,11 +271,19 @@
 								<select name="flags.obsidian.skills.{{id}}.ability">
 									{{#select (lc skill.ability)}}
 										{{#each ../data.abilities}}
-											<option value="{{@key}}">{{@key}}</option>
+											<option value="{{@key}}">
+												{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+											</option>
 										{{/each}}
 									{{/select}}
 								</select>
-								<div class="obsidian-skill-name rollable">{{skill.label}}</div>
+								<div class="obsidian-skill-name rollable">
+									{{#if skill.custom}}
+										{{skill.label}}
+									{{else}}
+										{{localize (expr '+' 'OBSIDIAN.Skill-' id)}}
+									{{/if}}
+								</div>
 								<div class="obsidian-skill-mod obsidian-ptr">
 									{{numberFormat skill.mod decimals=0 sign=true}}
 								</div>
@@ -280,10 +294,10 @@
 				</div>
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
-						Tools
-						<a title="Edit Tools" class="obsidian-edit" data-dialog="Skills"
-						   data-title="Manage Tools" data-data-path="flags.obsidian.skills.tools"
-						   data-template="tools.html">
+						{{localize 'OBSIDIAN.Tools'}}
+						<a title="{{localize 'OBSIDIAN.ManageTools'}}" class="obsidian-edit"
+						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Skills"
+						   data-data-path="flags.obsidian.skills.tools" data-template="tools.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -307,7 +321,9 @@
 								<select name="flags.obsidian.skills.tools.{{id}}.ability">
 									{{#select (lc tool.ability)}}
 										{{#each ../data.abilities}}
-											<option value="{{@key}}">{{@key}}</option>
+											<option value="{{@key}}">
+												{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+											</option>
 										{{/each}}
 									{{/select}}
 								</select>
@@ -321,8 +337,9 @@
 				</div>
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
-						Senses
-						<a title="Edit Senses" class="obsidian-edit" data-dialog="Senses">
+						{{localize 'OBSIDIAN.Senses'}}
+						<a title="{{localize 'OBSIDIAN.EditSenses'}}" class="obsidian-edit"
+						   data-dialog="Senses">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -330,7 +347,7 @@
 						{{#each entity.flags.obsidian.skills.passives}}
 						{{#with (get-property ../entity.flags.obsidian.skills this)}}
 							<div class="obsidian-passive-item">
-								<div class="obsidian-skill-name">Passive {{label}}</div>
+								<div class="obsidian-skill-name">{{localize 'OBSIDIAN.Passive'}} {{label}}</div>
 								<div class="obsidian-skill-passive">{{passive}}</div>
 							</div>
 						{{/with}}
@@ -339,7 +356,9 @@
 						<div class="obsidian-horizontal-list">
 							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
 								{{#if (expr '>' sense.radius 0)}}
-									<span>{{lookup ../ObsidianRules.SENSES id}}&nbsp;{{sense.radius}}&nbsp;ft.</span>
+									<span>
+										{{localize (expr '+' 'OBSIDIAN.Sense-' id)}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
+									</span>
 								{{/if}}
 							{{/each}}
 						</div>
@@ -348,14 +367,17 @@
 				</div>
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
-						Proficiencies
-						<a title="Edit Proficiencies" class="obsidian-edit" data-dialog="Proficiencies">
+						{{localize 'OBSIDIAN.Proficiencies'}}
+						<a title="{{localize 'OBSIDIAN.EditProficiencies'}}" class="obsidian-edit"
+						   data-dialog="Proficiencies">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
 						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Armour</div>
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+								{{localize 'OBSIDIAN.Armour'}}
+							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each entity.obsidian.profs.armour}}
 									<span>{{this}}</span>
@@ -363,7 +385,9 @@
 							</div>
 						</div>
 						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Weapons</div>
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+								{{localize 'OBSIDIAN.Weapons'}}
+							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each entity.obsidian.profs.weapons}}
 									<span>{{this}}</span>
@@ -371,7 +395,9 @@
 							</div>
 						</div>
 						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Languages</div>
+							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+								{{localize 'OBSIDIAN.Languages'}}
+							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each data.traits.languages.value}}
 									<span>{{this}}</span>
@@ -386,7 +412,7 @@
 			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
 				<div class="obsidian-char-box-container" style="grid-row: 1 / span 2; grid-column: 2;">
-					<div class="obsidian-char-box-text">Conditions</div>
+					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Conditions'}}</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
 						{{#each ObsidianRules.CONDITIONS}}
@@ -402,7 +428,7 @@
 								{{~/if}} obsidian-radio">
 									<span></span>
 								</div>
-								{{capitalise this}}
+								{{localize (expr '+' 'OBSIDIAN.Condition-' this)}}
 							</div>
 						{{/each}}
 						</div>
@@ -410,7 +436,7 @@
 						{{~#if (expr '>' data.attributes.exhaustion.value 0)~}}
 							obsidian-meatballs-active
 						{{~/if}} obsidian-meatballs-title">
-							Exhaustion
+							{{localize 'OBSIDIAN.Exhaustion'}}
 						</div>
 						<div class="obsidian-meatballs obsidian-exhaustion">
 							{{#each (range 1 6) as |level|}}
@@ -426,9 +452,10 @@
 				</div>
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">
-						Saving Throws
-						<a title="Edit Saving Throws" class="obsidian-edit obsidian-simple-dialog"
-						   data-title="Manage Saving Throws" data-width="250" data-template="saves.html">
+						{{localize 'OBSIDIAN.SavingThrows'}}
+						<a title="{{localize 'OBSIDIAN.ManageSaves'}}" data-template="saves.html"
+						   class="obsidian-edit obsidian-simple-dialog" data-width="250"
+						   data-title="{{localize 'OBSIDIAN.ManageSaves'}}">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -445,7 +472,9 @@
 								{{~/if}} obsidian-radio obsidian-ptr">
 									<span></span>
 								</div>
-								<div class="obsidian-save-name rollable">{{ability.label}}</div>
+								<div class="obsidian-save-name rollable">
+									{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}
+								</div>
 								<div class="obsidian-save-mod obsidian-ptr">
 									{{numberFormat ability.save decimals=0 sign=true}}
 								</div>
@@ -455,17 +484,17 @@
 				</div>
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text" style="padding: 5px 0 3px 0;">
-						<span class="rollable">Death Saves</span>
-						<a title="Edit Death Saves" class="obsidian-edit obsidian-simple-dialog"
-						   data-title="Manage Death Saves" data-width="250"
-						   data-template="death-saves.html">
+						<span class="rollable">{{localize 'OBSIDIAN.DeathSaves'}}</span>
+						<a title="{{localize 'OBSIDIAN.ManageDeathSaves'}}"
+						   class="obsidian-edit obsidian-simple-dialog" data-template="death-saves.html"
+						   data-title="{{localize 'OBSIDIAN.ManageDeathSaves'}}" data-width="250">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-grid-2-col">
 							<div class="obsidian-vertical-bisect">
-								<div class="obsidian-char-box-text">Successes</div>
+								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Successes'}}</div>
 								<div class="obsidian-meatballs obsidian-death-successes">
 									{{#each (range 1 3) as |n|}}
 										<div class="
@@ -478,7 +507,7 @@
 								</div>
 							</div>
 							<div class="obsidian-vertical-bisect">
-								<div class="obsidian-char-box-text">Failures</div>
+								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Failures'}}</div>
 								<div class="obsidian-meatballs obsidian-death-failures">
 									{{#each (range 1 3) as |n|}}
 										<div class="
@@ -497,13 +526,13 @@
 			<div class="obsidian-char-box-container obsidian-main-container">
 				<div class="obsidian-char-box obsidian-main">
 					<ul class="obsidian-tab-bar" data-group="main-tabs">
-						<li class="obsidian-tab item" data-tab="actions">Actions</li>
-						<li class="obsidian-tab item" data-tab="spells">Spells</li>
-						<li class="obsidian-tab item" data-tab="equipment">Equipment</li>
-						<li class="obsidian-tab item" data-tab="features">Features & Traits</li>
-						<li class="obsidian-tab item" data-tab="desc">Description</li>
-						<li class="obsidian-tab item" data-tab="notes">Notes</li>
-						<li class="obsidian-tab item" data-tab="extras">Extras</li>
+						<li class="obsidian-tab item" data-tab="actions">{{localize 'OBSIDIAN.Actions'}}</li>
+						<li class="obsidian-tab item" data-tab="spells">{{localize 'OBSIDIAN.Spells'}}</li>
+						<li class="obsidian-tab item" data-tab="equipment">{{localize 'OBSIDIAN.Equipment'}}</li>
+						<li class="obsidian-tab item" data-tab="features">{{localize 'OBSIDIAN.FeaturesAndTraits'}}</li>
+						<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
+						<li class="obsidian-tab item" data-tab="notes">{{localize 'OBSIDIAN.Notes'}}</li>
+						<li class="obsidian-tab item" data-tab="extras">{{localize 'OBSIDIAN.Extras'}}</li>
 					</ul>
 					{{> public/modules/obsidian/html/tabs/actions.html}}
 				</div>

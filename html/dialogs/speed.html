@@ -3,15 +3,15 @@
 		<label class="obsidian-inline">
 			<select name="flags.obsidian.attributes.speedDisplay">
 				{{#select entity.flags.obsidian.attributes.speedDisplay}}
-					{{#each ObsidianRules.SPEEDS as |display id|}}
-						<option value="{{id}}">{{display}}</option>
+					{{#each ObsidianRules.SPEEDS as |id|}}
+						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Speed-' id)}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
-			<span>Display Speed</span>
+			<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
 		</label>
 	</div>
-	{{#each ObsidianRules.SPEEDS as |display id|}}
+	{{#each ObsidianRules.SPEEDS as |id|}}
 		<div class="obsidian-form-row obsidian-inline">
 			<div class="obsidian-flex">
 				<label class="obsidian-inline">
@@ -21,7 +21,7 @@
 					       {{~#with (lookup ../entity.flags.obsidian.attributes.speed id) as |spd|~}}
 					        {{~spd.override~}}
 					       {{~/with~}}">
-					<span>{{display}}</span>
+					<span>{{localize (expr '+' 'OBSIDIAN.Speed-' id)}}</span>
 				</label>
 				{{#if (expr '===' id 'fly')}}
 					<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.speed.fly.hover">
@@ -34,7 +34,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="checkbox-content">Hover</div>
+						<div class="checkbox-content">{{localize 'OBSIDIAN.Hover'}}</div>
 					</div>
 					<input type="checkbox" data-dtype="Boolean" class="obsidian-hidden"
 					       name="flags.obsidian.attributes.speed.fly.hover"

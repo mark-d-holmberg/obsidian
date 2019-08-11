@@ -171,3 +171,7 @@
 .obsidian-table-number-lg {
 	font-size: 16px;
 }
+
+.obsidian-tooltip {
+	display: none;
+}

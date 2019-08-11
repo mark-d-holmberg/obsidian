@@ -1,9 +1,9 @@
 <form class="obsidian" autocomplete="off">
 	<label class="obsidian-inline obsidian-label-lg">
-		Armour
+		{{localize 'OBSIDIAN.Armour'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
 		        data-cat="armour">
-			Add
+			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.traits.profs.custom.armour as |armour id|}}
@@ -11,15 +11,15 @@
 		     data-item-id="{{id}}">
 			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{armour}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}
 	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
-		Weapons
+		{{localize 'OBSIDIAN.Weapons'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
 		        data-cat="weapons">
-			Add
+			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.traits.profs.custom.weapons as |weapon id|}}
@@ -27,15 +27,15 @@
 		     data-item-id="{{id}}">
 			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{weapon}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}
 	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
-		Languages
+		{{localize 'OBSIDIAN.Languages'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
 		        data-cat="langs">
-			Add
+			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.traits.profs.custom.langs as |language id|}}
@@ -43,7 +43,7 @@
 		     data-item-id="{{id}}">
 			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{language}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
-				Remove
+				{{localize 'OBSIDIAN.Remove'}}
 			</button>
 		</div>
 	{{/each}}

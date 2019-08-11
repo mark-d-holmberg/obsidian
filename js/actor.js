@@ -96,6 +96,7 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 
 			if (!custom) {
 				skill = flags.skills[id];
+				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 			}
 
 			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
@@ -156,13 +157,16 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 
 		actorData.obsidian.attacks = flags.attacks.custom;
 		for (const attack of Object.values(actorData.obsidian.attacks)) {
-			attack.hit = 0;
-			if (attack.stat !== 'none') {
-				attack.hit += data.abilities[attack.stat].mod
-			}
-
+			attack.hit = data.abilities[attack.stat].mod;
 			if (attack.proficient) {
 				attack.hit += data.attributes.prof.value;
+			}
+
+			if (attack.type === 'melee') {
+				attack.reach = 5;
+				if (attack.tags.reach) {
+					attack.reach +=5;
+				}
 			}
 		}
 

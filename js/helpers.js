@@ -12,7 +12,7 @@ Handlebars.registerHelper('capitalise', function (str) {
 
 Handlebars.registerHelper('classFormat', function (classes) {
 	if (classes.length < 1) {
-		return 'Class';
+		return game.i18n.localize('OBSIDIAN.Class');
 	}
 
 	return classes.sort((a, b) => b.levels - a.levels).map(cls => {
@@ -21,10 +21,10 @@ Handlebars.registerHelper('classFormat', function (classes) {
 			result += `${cls.subclass} `;
 		}
 
-		if (cls.name === 'Custom') {
+		if (cls.name === 'custom') {
 			result += `${cls.custom} `;
 		} else {
-			result += `${cls.name} `;
+			result += `${game.i18n.localize(`OBSIDIAN.Class-${cls.name}`)} `;
 		}
 
 		return result + cls.levels;
@@ -48,6 +48,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 
 	if (op === '&&') {
 		return args[0] && args[1];
+	}
+
+	if (op === '||') {
+		return args[0] || args[1];
 	}
 
 	if (op === '>') {

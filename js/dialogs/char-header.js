@@ -55,7 +55,7 @@ Obsidian.Dialog.HeaderDetails = class ObsidianHeaderDetailsDialog extends Obsidi
 		const subclass = siblings[1];
 		const hd = siblings[3];
 
-		if (cls === 'Custom') {
+		if (cls === 'custom') {
 			custom.removeClass('obsidian-hidden');
 			subclass.style.width = '65px';
 			return;

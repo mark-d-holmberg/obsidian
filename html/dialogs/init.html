@@ -5,7 +5,7 @@
 			<select name="flags.obsidian.attributes.init.ability">
 				{{#select entity.flags.obsidian.attributes.init.ability}}
 					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{ability.label}}</option>
+						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
@@ -27,7 +27,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="checkbox-content">Advantage</div>
+			<div class="checkbox-content">{{localize 'OBSIDIAN.Advantage'}}</div>
 		</div>
 		<input type="checkbox" name="flags.obsidian.attributes.init.adv" class="obsidian-hidden"
 		       {{checked entity.flags.obsidian.attributes.init.adv}}>
@@ -37,7 +37,7 @@
 			<input type="text" name="flags.obsidian.attributes.init.override"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       value="{{entity.flags.obsidian.attributes.init.override}}">
-			<span>Override</span>
+			<span>{{localize 'OBSIDIAN.Override'}}</span>
 		</label>
 	</div>
 </form>

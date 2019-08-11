@@ -1,10 +1,10 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-form-row">
-		<select name="flags.obsidian.skills.{{~skillID}}.value" data-dtype="Number">
+		<select name="flags.obsidian.skills.{{skillID}}.value" data-dtype="Number">
 			{{#with (get-property entity.flags.obsidian.skills skillID) as |skill|}}
 				{{#select skill.value}}
-					{{#each ../ObsidianRules.PROFICIENCY_LEVELS as |level value|}}
-						<option value="{{value}}">{{level}}</option>
+					{{#each ../ObsidianRules.PROFICIENCY_LEVELS}}
+						<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Proficiency-' this)}}</option>
 					{{/each}}
 				{{/select}}
 			{{/with}}
@@ -17,7 +17,7 @@
 			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
 				       {{~bonus~}}
 			       {{/with}}">
-			<span>Bonus</span>
+			<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 		</label>
 		<label class="obsidian-inline">
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
@@ -25,7 +25,7 @@
 			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
 				       {{~override~}}
 			       {{/with}}">
-			<span>Override</span>
+			<span>{{localize 'OBSIDIAN.Override'}}</span>
 		</label>
 	</div>
 	<div class="obsidian-form-row">
@@ -35,7 +35,7 @@
 			       value="{{#with (get-property entity.flags.obsidian.skills skillID)}}
 				       {{~passiveBonus~}}
 			       {{/with}}">
-			<span>Passive Bonus</span>
+			<span>{{localize 'OBSIDIAN.PassiveBonus'}}</span>
 		</label>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="checkbox-content">Advantage</div>
+			<div class="checkbox-content">{{localize 'OBSIDIAN.Advantage'}}</div>
 		</div>
 		<input type="checkbox" class="obsidian-hidden"
 		       name="flags.obsidian.skills.{{skillID}}.adv"

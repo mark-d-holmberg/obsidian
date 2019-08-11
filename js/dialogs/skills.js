@@ -28,7 +28,8 @@ Obsidian.Dialog.Skills = class ObsidianSkillsDialog extends Obsidian.Dialog {
 			ability: 'str',
 			bonus: 0,
 			value: 0,
-			label: ''
+			label: '',
+			custom: true
 		});
 
 		const update = {};

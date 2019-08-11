@@ -4,7 +4,7 @@
 			<input placeholder="0" data-dtype="Number" name="flags.obsidian.saves.{{saveID}}.bonus"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
 			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{bonus}}{{/with}}">
-			<span>Bonus</span>
+			<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 		</label>
 	</div>
 	<div class="obsidian-form-row">
@@ -12,7 +12,7 @@
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       name="flags.obsidian.saves.{{saveID}}.override"
 			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{override}}{{/with}}">
-			<span>Override</span>
+			<span>{{localize 'OBSIDIAN.Override'}}</span>
 		</label>
 	</div>
 </form>
