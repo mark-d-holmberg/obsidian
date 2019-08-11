@@ -1,0 +1,17 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-inline obsidian-label-lg">
+		Custom Attacks
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-attack">
+			Add
+		</button>
+	</label>
+	{{#each entity.flags.obsidian.attacks.custom as |attack id|}}
+		<div class="obsidian-form-row obsidian-inline" data-item-id="{{id}}">
+			<input type="text" class="obsidian-input-compact" placeholder="Attack"
+			       value="{{attack.label}}" name="flags.obsidian.attacks.custom.{{id}}.label">
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-attack">
+				Remove
+			</button>
+		</div>
+	{{/each}}
+</form>

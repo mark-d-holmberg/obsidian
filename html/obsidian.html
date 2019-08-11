@@ -50,11 +50,11 @@
 						{{/if}}
 					</span>
 					<span>{{classFormat entity.flags.obsidian.classes}}</span>
-					<a title="Edit Details" class="obsidian-edit">
+					<a title="Edit Details" class="obsidian-edit" data-dialog="HeaderDetails">
 						<i class="fas fa-edit"></i>
 					</a>
 				</div>
-				<div class="obsidian-char-xp obsidian-ptr">
+				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
 							LVL {{data.details.level.value}}
@@ -206,13 +206,13 @@
 											       class="obsidian-input-num" value="{{hd.value}}">
 											/
 											<div class="obsidian-ptr obsidian-resource-box-max
-									{{#if (defined hd.override)~}}
+											{{#if (defined hd.override)~}}
 												{{#if (expr '>' hd.override hd.max)~}}
-											obsidian-positive
-										{{else if (expr '<' hd.override hd.max)~}}
-											obsidian-negative
-										{{~/if}}
-											{{~/if}}">
+													obsidian-positive
+												{{else if (expr '<' hd.override hd.max)~}}
+													obsidian-negative
+												{{~/if}}
+											{{~/if}}" data-dialog="HD">
 												{{#if (defined hd.override)}}
 													{{hd.override}}
 												{{else}}
@@ -240,12 +240,14 @@
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">
 						Skills
-						<a title="Edit Skills" class="obsidian-edit">
+						<a title="Edit Skills" class="obsidian-edit" data-dialog="Skills"
+						   data-data-path="flags.obsidian.skills.custom" data-title="Manage Skills"
+						   data-template="skills.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each entity.allSkills as |skill id|}}
+						{{#each entity.obsidian.skills as |skill id|}}
 							<div class="obsidian-skill-item" data-skill-id="{{id}}">
 								<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
 									obsidian-half-proficient
@@ -279,7 +281,9 @@
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
 						Tools
-						<a title="Edit Tools" class="obsidian-edit">
+						<a title="Edit Tools" class="obsidian-edit" data-dialog="Skills"
+						   data-title="Manage Tools" data-data-path="flags.obsidian.skills.tools"
+						   data-template="tools.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -318,7 +322,7 @@
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
 						Senses
-						<a title="Edit Senses" class="obsidian-edit">
+						<a title="Edit Senses" class="obsidian-edit" data-dialog="Senses">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -345,7 +349,7 @@
 				<div class="obsidian-char-box-container obsidian-char-box-stacked">
 					<div class="obsidian-char-box-text">
 						Proficiencies
-						<a title="Edit Proficiencies" class="obsidian-edit">
+						<a title="Edit Proficiencies" class="obsidian-edit" data-dialog="Proficiencies">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
@@ -353,10 +357,7 @@
 						<div class="obsidian-bisect">
 							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Armour</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each entity.flags.obsidian.traits.profs.armour}}
-									<span>{{this}}</span>
-								{{/each}}
-								{{#each entity.flags.obsidian.traits.profs.custom.armour}}
+								{{#each entity.obsidian.profs.armour}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -364,10 +365,7 @@
 						<div class="obsidian-bisect">
 							<div class="obsidian-char-box-text obsidian-char-box-text-compact">Weapons</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each entity.flags.obsidian.traits.profs.weapons}}
-									<span>{{this}}</span>
-								{{/each}}
-								{{#each entity.flags.obsidian.traits.profs.custom.weapons}}
+								{{#each entity.obsidian.profs.weapons}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -378,7 +376,7 @@
 								{{#each data.traits.languages.value}}
 									<span>{{this}}</span>
 								{{/each}}
-								{{#each entity.flags.obsidian.traits.profs.custom.langs}}
+								{{#each entity.obsidian.profs.langs}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>

@@ -42,22 +42,22 @@
 }
 
 .obsidian button.obsidian-btn-positive {
-	background-color: var(--btn-positive);
-	color: var(--text-bright);
+	background-color: transparent;
+	color: var(--btn-positive);
+	border: 1px solid var(--btn-positive);
 }
 
 .obsidian button.obsidian-btn-positive:hover {
-	background-color: var(--btn-positive-hover);
 	box-shadow: inset 0 0 10px 2px var(--btn-positive-inner);
 }
 
 .obsidian button.obsidian-btn-negative {
-	background-color: var(--btn-negative);
-	color: var(--text-bright);
+	background-color: transparent;
+	color: var(--btn-negative);
+	border: 1px solid var(--btn-negative);
 }
 
 .obsidian button.obsidian-btn-negative:hover {
-	background-color: var(--btn-negative-hover);
 	box-shadow: inset 0 0 10px 2px var(--btn-negative-inner);
 }
 

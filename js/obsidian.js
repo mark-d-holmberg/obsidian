@@ -75,28 +75,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-death-failures .obsidian-radio').click(
 			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
-		html.find('.obsidian-char-header-minor .obsidian-edit').click(() =>
-			new Obsidian.Dialog.HeaderDetails(this).render(true));
-		html.find('.obsidian-char-xp').click(() =>
-			new Obsidian.Dialog.XP(this).render(true));
-		html.find('.obsidian-char-hd .obsidian-resource-box-max').click(() =>
-			new Obsidian.Dialog.HD(this).render(true));
-		html.find('[title="Edit Skills"]').click(() =>
-			new Obsidian.Dialog.Skills(this, {
-				title: 'Manage Skills',
-				dataPath: 'flags.obsidian.skills.custom',
-				template: 'public/modules/obsidian/html/dialogs/skills.html'
-			}).render(true));
-		html.find('[title="Edit Tools"]').click(() =>
-			new Obsidian.Dialog.Skills(this, {
-				title: 'Manage Tools',
-				dataPath: 'flags.obsidian.skills.tools',
-				template: 'public/modules/obsidian/html/dialogs/tools.html'
-			}).render(true));
-		html.find('[title="Edit Senses"]').click(() =>
-			new Obsidian.Dialog.Senses(this).render(true));
-		html.find('[title="Edit Proficiencies"]').click(() =>
-			new Obsidian.Dialog.Proficiencies(this).render(true));
 		html.find('.obsidian-skill-mod').click(evt =>
 			new Obsidian.Dialog.Skill(
 				this,
@@ -110,7 +88,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
 
-		this._activateSimpleDialogs(html);
+		this._activateDialogs(html);
 	}
 
 	getData () {
@@ -141,8 +119,8 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {HTML} html
 	 */
-	_activateSimpleDialogs (html) {
-		html.find('.obsidian-simple-dialog').click(evt => {
+	_activateDialogs (html) {
+		html.find('.obsidian-simple-dialog, [data-dialog]').click(evt => {
 			const options = duplicate(evt.currentTarget.dataset);
 
 			if (options.width !== undefined) {
@@ -153,7 +131,11 @@ class Obsidian extends ActorSheet5eCharacter {
 				options.template = 'public/modules/obsidian/html/dialogs/' + options.template;
 			}
 
-			new Obsidian.Dialog(this, options).render(true);
+			if (options.dialog === undefined) {
+				new Obsidian.Dialog(this, options).render(true);
+			} else {
+				new Obsidian.Dialog[options.dialog](this, options).render(true);
+			}
 		});
 	}
 

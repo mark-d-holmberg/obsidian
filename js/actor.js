@@ -1,5 +1,8 @@
 Obsidian.SCHEMA = {
 	obsidian: {
+		attacks: {
+			custom: []
+		},
 		attributes: {
 			ac: {
 				ability1: 'dex',
@@ -54,6 +57,7 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 
 		const data = actorData.data;
 		const flags = actorData.flags.obsidian;
+		actorData.obsidian = {};
 
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
@@ -79,9 +83,10 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
-		actorData.allSkills = {};
+		actorData.obsidian.skills = {};
 		for (let [id, skill] of
-			Object.entries(data.skills).concat(Object.entries(flags.skills.custom))) {
+			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
+		{
 			const custom = !isNaN(Number(id));
 			if (!custom && flags.skills[id] === undefined) {
 				flags.skills[id] = duplicate(skill);
@@ -93,7 +98,7 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 				skill = flags.skills[id];
 			}
 
-			actorData.allSkills[custom ? `custom.${id}` : id] = skill;
+			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
 
 			skill.mod =
 				data.abilities[skill.ability].mod
@@ -140,6 +145,24 @@ Obsidian.Actor = class ObsidianActor extends Actor5e {
 				if (override !== undefined && override !== '') {
 					save.save = Number(override);
 				}
+			}
+		}
+
+		actorData.obsidian.profs = {
+			armour: flags.traits.profs.custom.armour,
+			weapons: flags.traits.profs.custom.weapons,
+			langs: flags.traits.profs.custom.langs
+		};
+
+		actorData.obsidian.attacks = flags.attacks.custom;
+		for (const attack of Object.values(actorData.obsidian.attacks)) {
+			attack.hit = 0;
+			if (attack.stat !== 'none') {
+				attack.hit += data.abilities[attack.stat].mod
+			}
+
+			if (attack.proficient) {
+				attack.hit += data.attributes.prof.value;
 			}
 		}
 

@@ -21,7 +21,7 @@
 		<div class="obsidian-form-row obsidian-inline">
 			<select>
 				{{#select passive}}
-					{{#each ../entity.allSkills as |skill id|}}
+					{{#each ../entity.obsidian.skills as |skill id|}}
 						<option value="{{id}}">{{skill.label}}</option>
 					{{/each}}
 				{{/select}}

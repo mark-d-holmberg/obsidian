@@ -6,4 +6,98 @@
 		<li class="obsidian-sub-tab item" data-tab="reactions">Reactions</li>
 		<li class="obsidian-sub-tab item" data-tab="other">Other</li>
 	</ul>
+	<div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="attacks">
+		<h3>
+			Attacks
+			<a title="Manage Attacks" class="obsidian-edit" data-dialog="Attacks">
+				<i class="fas fa-edit"></i>
+			</a>
+		</h3>
+		<div class="obsidian-table">
+			<div class="obsidian-thead">
+				{{#if (notEmpty entity.obsidian.attacks)}}
+					<div class="obsidian-col-icon"></div>
+					<div class="obsidian-col-attack">Attack</div>
+					<div class="obsidian-col-range">Range</div>
+					<div class="obsidian-col-hit">Hit</div>
+					<div class="obsidian-col-damage">Damage</div>
+					<div class="obsidian-col-notes">Notes</div>
+					<div class="obsidian-col-icon"></div>
+				{{else}}
+					<div class="obsidian-col-empty">Empty</div>
+				{{/if}}
+			</div>
+			<div class="obsidian-tbody">
+				{{#each entity.obsidian.attacks as |attack id|}}
+					<div class="obsidian-tr">
+						<div class="obsidian-col-icon">
+							<div class="obsidian-icon obsidian-icon-{{attack.mode}}"></div>
+						</div>
+						<div class="obsidian-col-attack">
+							<div class="obsidian-table-text rollable">{{attack.label}}</div>
+							<div class="obsidian-table-sub-text">
+								{{#if (expr '===' attack.mode 'melee')}}
+									Melee Weapon
+								{{else if (expr '===' attack.mode 'ranged')}}
+									Ranged Weapon
+								{{else}}
+									Melee Attack
+								{{/if}}
+							</div>
+						</div>
+						<div class="obsidian-col-range">
+							{{#if (expr '===' attack.mode 'ranged')}}
+								<div class="obsidian-table-number-md">
+									{{attack.range1}}
+									<span class="obsidian-table-number-split">/</span>
+									<span class="obsidian-table-number-minor">{{attack.range2}}</span>
+									<span class="obsidian-table-unit">ft.</span>
+								</div>
+							{{else}}
+								<div class="obsidian-table-number-md">
+									{{attack.reach}} <span class="obsidian-table-unit">ft.</span>
+								</div>
+								<div class="obsidian-table-sub-text">Reach</div>
+							{{/if}}
+						</div>
+						<div class="obsidian-col-hit">
+							<div class="obsidian-table-number-lg">
+								{{numberFormat attack.hit decimals=0 sign=true}}
+							</div>
+						</div>
+						<div class="obsidian-col-damage">
+							{{#each attack.damage}}
+								<div class="obsidian-table-dmg">
+									{{#each this as |dmg|}}
+										<div class="obsidian-dmg-component">
+											{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+											<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+										</div>
+									{{/each}}
+								</div>
+								<div class="obsidian-tooltip">
+									{{#each this as |dmg|}}
+										<div class="obsidian-dmg-component">
+											{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
+											<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+										</div>
+									{{/each}}
+								</div>
+							{{/each}}
+						</div>
+						<div class="obsidian-col-notes">
+							{{#each attack.tags as |tag|}}
+								<div class="obsidian-table-note-text">{{tag}}</div>
+							{{/each}}
+						</div>
+						<div class="obsidian-col-icon">
+							{{#if attack.custom}}
+								<a title="Edit Attack" class="obsidian-edit"><i class="fas fa-edit"></i></a>
+							{{/if}}
+						</div>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	</div>
 </div>
