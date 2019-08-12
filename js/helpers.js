@@ -92,6 +92,14 @@ Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });
 
+Handlebars.registerHelper('is-attack-toggleable', function (attack) {
+	return (attack.type === 'melee' && attack.tags.thrown) || attack.tags.versatile;
+});
+
+Handlebars.registerHelper('is-custom-tag', function (key, val) {
+	return val.custom ? 'custom' : key;
+});
+
 Handlebars.registerHelper('lc', function (arg) {
 	return arg.toLocaleLowerCase();
 });

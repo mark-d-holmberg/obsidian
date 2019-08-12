@@ -22,7 +22,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 		// render doesn't correctly recalculate height when adding and removing
 		// form rows.
-		ObsidianDialog.recalculateHeight(html);
+		ObsidianDialog.recalculateHeight(html, {bareLabels: true});
 	}
 
 	/**

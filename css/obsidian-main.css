@@ -202,3 +202,23 @@
 .obsidian-icon-versatile {
 	background-image: url('../img/versatile.svg');
 }
+
+.obsidian fieldset {
+	border: 1px solid var(--mid);
+	margin-bottom: 10px;
+}
+
+.obsidian fieldset:last-child {
+	margin: 0;
+}
+
+.obsidian fieldset .obsidian-form-row:last-child {
+	margin-bottom: 0;
+}
+
+.obsidian legend {
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-size: 16px;
+	color: var(--text-secondary);
+	padding: 0 8px;
+}

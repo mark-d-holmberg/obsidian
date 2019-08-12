@@ -171,6 +171,8 @@ class ObsidianActor extends Actor5e {
 
 			if (attack.crit === undefined || attack.crit === '') {
 				attack.crit = 20;
+			} else {
+				attack.crit = parseInt(attack.crit);
 			}
 		}
 

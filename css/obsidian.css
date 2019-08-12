@@ -513,6 +513,11 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 6px;
 }
 
+.obsidian .obsidian-mixed-form-row label.obsidian-inline,
+.obsidian .obsidian-stacked-row label.obsidian-inline {
+	margin-bottom: 0;
+}
+
 .obsidian .obsidian-inline label.obsidian-inline {
 	display: inline-flex;
 	margin-right: 20px;
@@ -553,7 +558,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 .obsidian-form-row {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: baseline;
 }
 
 .obsidian-form-row:last-child {
@@ -591,6 +596,20 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian .obsidian-form-row input.obsidian-input-num {
 	text-align: center;
+}
+
+.obsidian-form-row label.obsidian-inline + span {
+	margin-left: -10px;
+}
+
+.obsidian-checkbox-row {
+	display: flex;
+	align-items: baseline;
+}
+
+.obsidian-checkbox-row .fancy-checkbox {
+	align-self: center;
+	margin-bottom: 0;
 }
 
 .fancy-checkbox {

@@ -18,7 +18,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-hd').click(this._onAddHD.bind(this));
 		html.find('.obsidian-rm-hd').click(this._onRemoveHD.bind(this));
-		ObsidianDialog.recalculateHeight(html);
+		ObsidianDialog.recalculateHeight(html, {bareLabels: true});
 	}
 
 	/**

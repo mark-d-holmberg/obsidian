@@ -13,7 +13,7 @@ class ObsidianSkillsDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-skill').click(this._onAddSkill.bind(this));
 		html.find('.obsidian-rm-skill').click(this._onRemoveSkill.bind(this));
-		ObsidianDialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**

@@ -2,7 +2,7 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
-		options.title = game.i18n.localize('OBSIDIAN.Manage Attacks');
+		options.title = game.i18n.localize('OBSIDIAN.ManageAttacks');
 		options.template = 'public/modules/obsidian/html/dialogs/attacks.html';
 		return options;
 	}
@@ -15,7 +15,7 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-rm-attack').click(this._onRemoveAttack.bind(this));
-		ObsidianDialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**

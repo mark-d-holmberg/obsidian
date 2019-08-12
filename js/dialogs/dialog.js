@@ -79,11 +79,15 @@ class ObsidianDialog extends BaseEntitySheet {
 		this.parent._updateObject(event, formData);
 	}
 
-	static recalculateHeight (html, bareLabels = true) {
+	static recalculateHeight (html, {fieldset, bareLabels} = {}) {
 		let total = 0;
 		let selector = '.obsidian-form-row, label.obsidian-label-lg';
 		if (bareLabels) {
 			selector += ', label > input';
+		}
+
+		if (fieldset) {
+			selector = 'fieldset';
 		}
 
 		html.find(selector)

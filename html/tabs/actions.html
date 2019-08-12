@@ -32,7 +32,7 @@
 					<div class="obsidian-tr">
 						<div class="obsidian-col-icon">
 							<div class="
-								{{~#if (expr '||' attack.tags.thrown attack.tags.versatile)~}}
+								{{~#if (is-attack-toggleable attack)~}}
 									obsidian-attack-toggle
 								{{~/if}} obsidian-icon obsidian-icon-{{attack.mode}}"></div>
 						</div>
@@ -101,7 +101,13 @@
 						</div>
 						<div class="obsidian-col-notes">
 							{{#each attack.tags as |tag|}}
-								<div class="obsidian-table-note-text">{{tag}}</div>
+								<div class="obsidian-table-note-text">
+									{{#if tag.custom}}
+										{{~tag.label~}}
+									{{else}}
+										{{~localize (expr '+' 'OBSIDIAN.AtkTag-' @key)~}}
+									{{/if}}
+								</div>
 							{{/each}}
 						</div>
 						<div class="obsidian-col-icon">

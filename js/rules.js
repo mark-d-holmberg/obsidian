@@ -1,11 +1,18 @@
 Obsidian.Rules = {};
+Obsidian.Rules.ATTACK_TAGS = [
+	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
+	'lance', 'net', 'thrown', 'twohanded', 'versatile', 'custom'
+];
+
 Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
 Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];
 
-Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
-Obsidian.Rules.MAX_LEVEL = 20;
+Obsidian.Rules.DAMAGE_DICE = [4, 6, 8, 10, 12];
+Obsidian.Rules.DAMAGE_TYPES = [
+	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn'
+];
 
 Obsidian.Rules.CONDITIONS = [
 	'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible',
@@ -26,6 +33,9 @@ Obsidian.Rules.CLASS_HIT_DICE = {
 	war: 8,
 	wiz: 6
 };
+
+Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
+Obsidian.Rules.MAX_LEVEL = 20;
 
 Obsidian.Rules.PROFICIENCY_LEVELS = {
 	0: 'none',

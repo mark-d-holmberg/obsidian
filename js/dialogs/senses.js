@@ -18,7 +18,7 @@ class ObsidianSensesDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-passive').click(this._onAddPassive.bind(this));
 		html.find('.obsidian-rm-passive').click(this._onRemovePassive.bind(this));
-		ObsidianDialog.recalculateHeight(html, false);
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**

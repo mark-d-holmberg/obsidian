@@ -1,4 +1,6 @@
 <form class="obsidian" autocomplete="off">
+	<input type="hidden" name="flags.obsidian.attacks.custom.{{attackID}}.custom" data-dtype="Boolean"
+	       value="true">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -6,7 +8,7 @@
 			       name="flags.obsidian.attacks.custom.{{attackID}}.label"
 			       placeholder="{{localize 'OBSIDIAN.Attack'}}"
 			       value="{{attack.label}}">
-			<select name="flags.obsidian.attacks.custom.{{attackID}}.type">
+			<select name="flags.obsidian.attacks.custom.{{attackID}}.type" class="obsidian-attack-type">
 				{{#select attack.type}}
 					{{#each ObsidianRules.ATTACK_TYPES}}
 						<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.AttackType-' this)}}</option>
@@ -26,48 +28,192 @@
 				<span>{{localize 'OBSIDIAN.Magic'}}</span>
 			</label>
 		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<label class="obsidian-inline">
-				{{localize 'OBSIDIAN.ToHit'}}
-				<select name="flags.obsidian.attacks.custom.{{attackID}}.stat">
-					{{#select attack.stat}}
-						{{#each data.abilities}}
-							<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-			</label>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" name="flags.obsidian.attacks.custom.{{attackID}}.bonus"
-			       placeholder="0" value="{{attack.bonus}}">
-			<div class="fancy-checkbox"
-			     data-bound="flags.obsidian.attacks.custom.{{attackID}}.proficient">
-				<div class="checkbox-container">
-					<div class="checkbox-inner-box"></div>
-					<div class="checkmark-container">
-						<div class="checkmark">
-							<div class="checkmark-short"></div>
-							<div class="checkmark-long"></div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-checkbox-row">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.ToHit'}}
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.stat">
+						{{#select attack.stat}}
+							{{#each data.abilities}}
+								<option value="{{@key}}">
+									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" name="flags.obsidian.attacks.custom.{{attackID}}.bonus"
+				       placeholder="0" value="{{attack.bonus}}">
+				<div class="fancy-checkbox"
+				     data-bound="flags.obsidian.attacks.custom.{{attackID}}.proficient">
+					<div class="checkbox-container">
+						<div class="checkbox-inner-box"></div>
+						<div class="checkmark-container">
+							<div class="checkmark">
+								<div class="checkmark-short"></div>
+								<div class="checkmark-long"></div>
+							</div>
 						</div>
 					</div>
+					<div class="checkbox-content">{{localize 'OBSIDIAN.Proficiency-prof'}}</div>
 				</div>
-				<div class="checkbox-content">{{localize 'OBSIDIAN.Proficiency-prof'}}</div>
+				<input type="checkbox" name="flags.obsidian.attacks.custom.{{attackID}}.proficient"
+				       class="obsidian-hidden" {{checked attack.proficient}}>
 			</div>
-			<input type="checkbox" name="flags.obsidian.attacks.custom.{{attackID}}.proficient"
-			       class="obsidian-hidden" {{checked attack.proficient}}>
 		</div>
-		<div class="obsidian-form-row obsidian-hidden obsidian-range-row obsidian-inline">
-			<label class="obsidian-inline">
-				{{localize 'OBSIDIAN.Range'}}
-				<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range1" placeholder="0"
-				       data-dtype="Number" value="{{attack.range1}}"
+		<div class="{{#if (expr '&&' (expr '!' attack.tags.thrown) (expr '===' attack.type 'melee'))~}}
+			obsidian-hidden
+		{{~/if}} obsidian-form-row obsidian-range-row obsidian-inline obsidian-stacked-row">
+			<div>
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Range'}}
+					<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range1"
+					       data-dtype="Number" value="{{attack.range1}}" placeholder="0"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
+				</label>
+				<span class="obsidian-binary-operator">&sol;</span>
+				<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range2" placeholder="0"
+				       data-dtype="Number" value="{{attack.range2}}"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
-			</label>
-			<span class="obsidian-binary-operator">&sol;</span>
-			<input type="text" name="flags.obsidian.attacks.custom.{{attackID}}.range2" placeholder="0"
-			       data-dtype="Number" value="{{attack.range2}}"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
+			</div>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
+		{{#each attack.damage as |dmg id|}}
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}"
+			     data-prop="damage">
+				<div>
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
+					       name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.ndice">
+					d
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.die"
+					        data-dtype="Number">
+						{{#select dmg.die}}
+							{{#each ../ObsidianRules.DAMAGE_DICE}}
+								<option value="{{this}}">{{this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<span class="obsidian-binary-operator">&plus;</span>
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.stat">
+						{{#select dmg.stat}}
+							<option value="">&mdash;</option>
+							{{#each ../data.abilities}}
+								<option value="{{@key}}">
+									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<span class="obsidian-binary-operator">&plus;</span>
+					<input type="text" name="obsidian.flags.attacks.custom.{{attackID}}.damage.{{id}}.bonus"
+					       data-dtype="Number" placeholder="0"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.type">
+						{{#select dmg.type}}
+							<option value="">&mdash;</option>
+							{{#each ../ObsidianRules.DAMAGE_TYPES}}
+								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Damage-' this)}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+		<div class="obsidian-form-row" style="justify-content: flex-end;">
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+		</div>
+	</fieldset>
+	<fieldset class="{{#if (expr '!' attack.tags.versatile)}}
+		obsidian-hidden
+	{{/if}} obsidian-versatile-block">
+		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
+		{{#each attack.versatile as |dmg id|}}
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}"
+			     data-prop="versatile">
+				<div>
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
+					       name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.ndice">
+					d
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.die"
+					        data-dtype="Number">
+						{{#select dmg.die}}
+							{{#each ../ObsidianRules.DAMAGE_DICE}}
+								<option value="{{this}}">{{this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<span class="obsidian-binary-operator">&plus;</span>
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.stat">
+						{{#select dmg.stat}}
+							<option value="">&mdash;</option>
+							{{#each ../data.abilities}}
+								<option value="{{@key}}">
+									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<span class="obsidian-binary-operator">&plus;</span>
+					<input type="text" data-dtype="Number" placeholder="0"
+					       name="obsidian.flags.attacks.custom.{{attackID}}.versatile.{{id}}.bonus"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.type">
+						{{#select dmg.type}}
+							<option value="">&mdash;</option>
+							{{#each ../ObsidianRules.DAMAGE_TYPES}}
+								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Damage-' this)}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+		<div class="obsidian-form-row" style="justify-content: flex-end;">
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
+		{{#each attack.tags as |tag|}}
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+				<div>
+					<select class="obsidian-attack-tag">
+						{{#select (is-custom-tag @key tag)}}
+							{{#each ../ObsidianRules.ATTACK_TAGS}}
+								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.AtkTag-' this)}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<input type="text" placeholder="{{localize 'OBSIDIAN.Tag'}}"
+					       class="{{#if (expr '!' tag.custom)}}obsidian-hidden{{/if}} obsidian-input-compact
+					       obsidian-input-lg" value="{{tag.label}}">
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tag"
+				        data-key="{{@key}}">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+		<div class="obsidian-form-row" style="justify-content: flex-end;">
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-tag">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
 		</div>
 	</fieldset>
 </form>
