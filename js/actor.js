@@ -174,6 +174,13 @@ class ObsidianActor extends Actor5e {
 			} else {
 				attack.crit = parseInt(attack.crit);
 			}
+
+			for (const dmg of attack.damage.concat(attack.versatile ? attack.versatile : [])) {
+				dmg.mod = dmg.bonus || 0;
+				if (dmg.stat.length > 0) {
+					dmg.mod += data.abilities[dmg.stat].mod;
+				}
+			}
 		}
 
 		return actorData;

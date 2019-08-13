@@ -187,6 +187,14 @@
 	background-size: 20px 20px;
 }
 
+.obsidian-icon-sm {
+	width: 16px;
+	height: 16px;
+	background: 50% transparent no-repeat;
+	background-size: 16px 16px;
+	margin-left: 5px;
+}
+
 .obsidian-icon-melee {
 	background-image: url('../img/melee.svg');
 }
@@ -201,6 +209,58 @@
 
 .obsidian-icon-versatile {
 	background-image: url('../img/versatile.svg');
+}
+
+.obsidian-icon-blg {
+	background-image: url('../img/bludgeoning.svg');
+}
+
+.obsidian-icon-prc {
+	background-image: url('../img/piercing.svg');
+}
+
+.obsidian-icon-slh {
+	background-image: url('../img/slashing.svg');
+}
+
+.obsidian-icon-acd {
+	background-image: url('../img/acid.svg');
+}
+
+.obsidian-icon-cld {
+	background-image: url('../img/cold.svg');
+}
+
+.obsidian-icon-fir {
+	background-image: url('../img/fire.svg');
+}
+
+.obsidian-icon-frc {
+	background-image: url('../img/force.svg');
+}
+
+.obsidian-icon-lig {
+	background-image: url('../img/lightning.svg');
+}
+
+.obsidian-icon-ncr {
+	background-image: url('../img/necrotic.svg');
+}
+
+.obsidian-icon-psn {
+	background-image: url('../img/poison.svg');
+}
+
+.obsidian-icon-psy {
+	background-image: url('../img/psychic.svg');
+}
+
+.obsidian-icon-rad {
+	background-image: url('../img/radiant.svg');
+}
+
+.obsidian-icon-thn {
+	background-image: url('../img/thunder.svg');
 }
 
 .obsidian fieldset {
@@ -221,4 +281,31 @@
 	font-size: 16px;
 	color: var(--text-secondary);
 	padding: 0 8px;
+}
+
+.obsidian-btn-row {
+	margin-top: 4px;
+}
+
+.obsidian-dmg-component {
+	font-size: 13px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-table-note-text,
+.obsidian-table-note-text:after {
+	font-size: 12px;
+	color: var(--text-subtle);
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	display: inline;
+}
+
+.obsidian-table-note-text:after {
+	content: ', ';
+}
+
+.obsidian-table-note-text:last-child:after {
+	content: '';
 }

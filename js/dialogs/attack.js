@@ -2,7 +2,8 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	constructor (parent, attackID) {
 		super(parent, {
 			title: game.i18n.localize('OBSIDIAN.EditAttack'),
-			template: 'public/modules/obsidian/html/dialogs/attack.html'
+			template: 'public/modules/obsidian/html/dialogs/attack.html',
+			width: 460
 		});
 
 		this.attackID = parseInt(attackID);
@@ -79,11 +80,15 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 */
 	async _onAddDamage (evt) {
 		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('.obsidian-form-row').data('prop');
+		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
 		const damage = this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID][prop];
 
 		damage.push({
-
+			ndice: 1,
+			die: 4,
+			stat: 'str',
+			bonus: 0,
+			type: ''
 		});
 
 		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
@@ -113,7 +118,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 				custom: true
 			};
 		} else {
-			tags[tag] = true;
+			tags[available] = true;
 		}
 
 		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
@@ -144,7 +149,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	_onModifyTags () {
 		const tags = this._collectTags();
 		const range = this.element.find('.obsidian-range-row');
-		const versatile = this.element.find('.obsidian-versatile-row');
+		const versatile = this.element.find('.obsidian-versatile-block');
 
 		if (tags.thrown) {
 			range.removeClass('obsidian-hidden');
@@ -167,7 +172,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 */
 	async _onRemoveDamage (evt) {
 		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('.obsidian-form-row').data('prop');
+		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
 		const damage = this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID][prop];
 		const newDamage = ObsidianDialog.removeRow(damage, evt);
 		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);

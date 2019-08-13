@@ -70,34 +70,18 @@
 							</div>
 						</div>
 						<div class="obsidian-col-damage">
-							{{#each attack.damage as |dmg|}}
 								<div class="obsidian-table-dmg">
+									{{#each (which-damage attack) as |dmg|}}
 									<div class="obsidian-dmg-component">
-										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
+										{{dmg.ndice}}d{{dmg.die}}
+										{{~#if (expr '>' dmg.mod 0)~}}
+											{{~numberFormat dmg.mod decimals=0 sign=true~}}
+										{{~/if~}}
+										<div class="obsidian-icon-sm obsidian-icon-{{dmg.type}}"
+										     title="{{localize (expr '+' 'OBSIDIAN.Damage-' dmg.type)}}"></div>
 									</div>
+									{{/each}}
 								</div>
-								<div class="obsidian-tooltip">
-									<div class="obsidian-dmg-component">
-										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
-									</div>
-								</div>
-							{{/each}}
-							{{#each attack.versatile as |dmg|}}
-								<div class="obsidian-table-dmg obsidian-table-versatile">
-									<div class="obsidian-dmg-component">
-										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
-									</div>
-								</div>
-								<div class="obsidian-tooltip">
-									<div class="obsidian-dmg-component">
-										{{dmg.ndice}}d{{dmg.die}}{{numberFormat dmg.mod decimals=0 sign=true}}
-										<div class="obsidian-icon obsidian-icon-{{dmg.type}}"></div>
-									</div>
-								</div>
-							{{/each}}
 						</div>
 						<div class="obsidian-col-notes">
 							{{#each attack.tags as |tag|}}

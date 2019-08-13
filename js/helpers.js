@@ -130,3 +130,7 @@ Handlebars.registerHelper('range', function (start, end) {
 Handlebars.registerHelper('startsWith', function (haystack, needle) {
 	return haystack.startsWith(needle);
 });
+
+Handlebars.registerHelper('which-damage', function (attack) {
+	return attack.mode === 'versatile' ? attack.versatile : attack.damage;
+});

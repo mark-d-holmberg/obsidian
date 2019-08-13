@@ -80,26 +80,24 @@
 			</div>
 		</div>
 	</fieldset>
-	<fieldset>
+	<fieldset data-prop="damage">
 		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
 		{{#each attack.damage as |dmg id|}}
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}"
-			     data-prop="damage">
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 				<div>
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
-					       name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.ndice">
-					d
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.die"
+					       name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.ndice">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.die"
 					        data-dtype="Number">
 						{{#select dmg.die}}
 							{{#each ../ObsidianRules.DAMAGE_DICE}}
-								<option value="{{this}}">{{this}}</option>
+								<option value="{{this}}">d{{this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 					<span class="obsidian-binary-operator">&plus;</span>
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.stat">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.stat">
 						{{#select dmg.stat}}
 							<option value="">&mdash;</option>
 							{{#each ../data.abilities}}
@@ -110,10 +108,10 @@
 						{{/select}}
 					</select>
 					<span class="obsidian-binary-operator">&plus;</span>
-					<input type="text" name="obsidian.flags.attacks.custom.{{attackID}}.damage.{{id}}.bonus"
-					       data-dtype="Number" placeholder="0"
+					<input name="obsidian.flags.attacks.custom.{{../attackID}}.damage.{{id}}.bonus"
+					       data-dtype="Number" placeholder="0" type="text"
 					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.damage.{{id}}.type">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.type">
 						{{#select dmg.type}}
 							<option value="">&mdash;</option>
 							{{#each ../ObsidianRules.DAMAGE_TYPES}}
@@ -127,7 +125,7 @@
 				</button>
 			</div>
 		{{/each}}
-		<div class="obsidian-form-row" style="justify-content: flex-end;">
+		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
 			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
 				{{localize 'OBSIDIAN.Add'}}
 			</button>
@@ -135,26 +133,24 @@
 	</fieldset>
 	<fieldset class="{{#if (expr '!' attack.tags.versatile)}}
 		obsidian-hidden
-	{{/if}} obsidian-versatile-block">
+	{{/if}} obsidian-versatile-block" data-prop="versatile">
 		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
 		{{#each attack.versatile as |dmg id|}}
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}"
-			     data-prop="versatile">
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 				<div>
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
-					       name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.ndice">
-					d
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.die"
+					       name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.ndice">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.die"
 					        data-dtype="Number">
 						{{#select dmg.die}}
 							{{#each ../ObsidianRules.DAMAGE_DICE}}
-								<option value="{{this}}">{{this}}</option>
+								<option value="{{this}}">d{{this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 					<span class="obsidian-binary-operator">&plus;</span>
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.stat">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.stat">
 						{{#select dmg.stat}}
 							<option value="">&mdash;</option>
 							{{#each ../data.abilities}}
@@ -166,9 +162,9 @@
 					</select>
 					<span class="obsidian-binary-operator">&plus;</span>
 					<input type="text" data-dtype="Number" placeholder="0"
-					       name="obsidian.flags.attacks.custom.{{attackID}}.versatile.{{id}}.bonus"
+					       name="obsidian.flags.attacks.custom.{{../attackID}}.versatile.{{id}}.bonus"
 					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.versatile.{{id}}.type">
+					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.type">
 						{{#select dmg.type}}
 							<option value="">&mdash;</option>
 							{{#each ../ObsidianRules.DAMAGE_TYPES}}
@@ -182,7 +178,7 @@
 				</button>
 			</div>
 		{{/each}}
-		<div class="obsidian-form-row" style="justify-content: flex-end;">
+		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
 			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
 				{{localize 'OBSIDIAN.Add'}}
 			</button>
@@ -210,7 +206,7 @@
 				</button>
 			</div>
 		{{/each}}
-		<div class="obsidian-form-row" style="justify-content: flex-end;">
+		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
 			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-tag">
 				{{localize 'OBSIDIAN.Add'}}
 			</button>
