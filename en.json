@@ -120,6 +120,7 @@
 	"OBSIDIAN.MeleeWeapon": "Melee Weapon",
 	"OBSIDIAN.RangedWeapon": "Ranged Weapon",
 	"OBSIDIAN.MeleeAttack": "Melee Attack",
+	"OBSIDIAN.RangedAttack": "Ranged Attack",
 	"OBSIDIAN.Reach": "Reach",
 	"OBSIDIAN.EditAttack": "Edit Attack",
 	"OBSIDIAN.Formula": "Formula",
@@ -202,7 +203,7 @@
 	"OBSIDIAN.AtkTag-lance": "Lance",
 	"OBSIDIAN.AtkTag-net": "Net",
 	"OBSIDIAN.AtkTag-thrown": "Thrown",
-	"OBSIDIAN.AtkTag-twohanded": "Two-Handed",
+	"OBSIDIAN.AtkTag-twohanded": "Two&#8209;Handed",
 	"OBSIDIAN.AtkTag-versatile": "Versatile",
 	"OBSIDIAN.AtkTag-custom": "Custom"
 }

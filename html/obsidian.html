@@ -50,7 +50,7 @@
 							{{localize 'OBSIDIAN.Race'}}
 						{{/if}}
 					</span>
-					<span>{{classFormat entity.flags.obsidian.classes}}</span>
+					<span>{{entity.obsidian.classFormat}}</span>
 					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
 					   data-dialog="HeaderDetails">
 						<i class="fas fa-edit"></i>
@@ -242,7 +242,7 @@
 			</div>
 		</div>
 		<section class="obsidian-char-details">
-			<div style="grid-row: 1 / span 2;">
+			<div style="grid-row: 1 / span 2;" class="obsidian-main-left">
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text">
 						{{localize 'OBSIDIAN.Skills'}}
@@ -411,7 +411,8 @@
 				</div>
 			</div>
 			<div class="obsidian-grid-2-col obsidian-conditions-and-saves">
-				<div class="obsidian-char-box-container" style="grid-row: 1 / span 2; grid-column: 2;">
+				<div class="obsidian-char-box-container obsidian-conditions-box"
+				     style="grid-row: 1 / span 2; grid-column: 2;">
 					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Conditions'}}</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">
 						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">

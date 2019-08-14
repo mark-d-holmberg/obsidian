@@ -8,6 +8,7 @@
 	height: 100%;
 	min-height: 660px;
 	padding: 12px 8px;
+	overflow: hidden;
 }
 
 .obsidian-tab-bar {
@@ -61,10 +62,25 @@
 	padding: 0 5px;
 }
 
-.obsidian-tab-contents {
+.dnd5e.sheet form .tab.obsidian-tab-contents {
 	overflow: auto;
 	padding: 0 5px;
 	text-align: left;
+	height: 100%;
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+}
+
+.obsidian-tab-contents::-webkit-scrollbar {
+	height: 6px;
+}
+
+.obsidian-tab-contents::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+.obsidian-tab-contents::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
 }
 
 .tab[data-tab].active.obsidian-tab-contents {
@@ -308,4 +324,15 @@
 
 .obsidian-table-note-text:last-child:after {
 	content: '';
+}
+
+.obsidian-table-number-split {
+	font-weight: normal;
+	color: var(--text-secondary);
+}
+
+.obsidian-table-number-minor {
+	font-weight: normal;
+	color: var(--text-subtle);
+	font-size: 13px;
 }

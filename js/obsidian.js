@@ -87,10 +87,12 @@ class Obsidian extends ActorSheet5eCharacter {
 				.render(true));
 		html.find('[data-attack-id]').click(evt =>
 			new ObsidianAttackDialog(this, evt.currentTarget.dataset['attackId']).render(true));
+		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
 
 		this._activateDialogs(html);
+		Obsidian._resizeMain(html);
 	}
 
 	getData () {
@@ -157,6 +159,35 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onAttackToggle (evt) {
+		evt.preventDefault();
+		const attackID = evt.currentTarget.dataset.itemId;
+		const attack = this.actor.data.flags.obsidian.attacks.custom[attackID];
+		let mode = 'melee';
+
+		if (attack.tags.thrown && attack.tags.versatile) {
+			if (attack.mode === 'melee') {
+				mode = 'ranged';
+			} else if (attack.mode === 'ranged') {
+				mode = 'versatile';
+			}
+		} else if (attack.mode === 'melee') {
+			if (attack.tags.thrown) {
+				mode = 'ranged';
+			} else if (attack.tags.versatile) {
+				mode = 'versatile';
+			}
+		}
+
+		const existing = duplicate(this.actor.data.flags.obsidian.attacks.custom);
+		existing[attackID].mode = mode;
+		this.actor.update({'flags.obsidian.attacks.custom': existing});
+	}
+
+	/**
+	 * @private
 	 * @param {Event} evt
 	 */
 	_onScroll (evt) {
@@ -193,6 +224,18 @@ class Obsidian extends ActorSheet5eCharacter {
 				this.actor.update(update);
 			}
 		}, 25);
+	}
+
+	/**
+	 * @private
+	 */
+	static _resizeMain (html) {
+		let total = 0;
+		html.find('.obsidian-main-left > .obsidian-char-box-container')
+			.each((i, el) => total += $(el).outerHeight(true));
+
+		total -= html.find('.obsidian-conditions-box').outerHeight() + 23;
+		html.find('.obsidian-main').height(total);
 	}
 
 	/**

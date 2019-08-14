@@ -15,7 +15,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		html.find('.obsidian-attack-type').change(this._onChangeAttackType.bind(this));
+		html.find('.obsidian-attack-type').change(this._updateDisplay.bind(this));
 		html.find('.obsidian-attack-tag').change(this._onModifyTags.bind(this));
 		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
@@ -62,7 +62,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 			const tag = jqel.val();
 
 			if (tag === 'custom') {
-				tags[Object.keys(tags).length] = {
+				tags[`custom-${Object.keys(tags).length}`] = {
 					label: jqel.next().val(),
 					custom: true
 				};
@@ -113,7 +113,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		}
 
 		if (available === null || available === 'custom') {
-			tags[Object.keys(tags).length] = {
+			tags[`custom-${Object.keys(tags).length}`] = {
 				label: '',
 				custom: true
 			};
@@ -130,40 +130,18 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	_onChangeAttackType () {
-		const type = this.element.find('.obsidian-attack-type').val();
-		const range = this.element.find('.obsidian-range-row');
-
-		if (type === 'melee') {
-			range.addClass('obsidian-hidden');
-		} else {
-			range.removeClass('obsidian-hidden');
-		}
-
-		ObsidianDialog.recalculateHeight(this.element.find('form'), {fieldset: true});
-	}
-
-	/**
-	 * @private
-	 */
 	_onModifyTags () {
-		const tags = this._collectTags();
-		const range = this.element.find('.obsidian-range-row');
-		const versatile = this.element.find('.obsidian-versatile-block');
+		this.element.find('.obsidian-attack-tag').each((i, el) => {
+			const jqel = $(el);
+			const input = jqel.next();
+			if (jqel.val() === 'custom') {
+				input.removeClass('obsidian-hidden');
+			} else {
+				input.addClass('obsidian-hidden');
+			}
+		});
 
-		if (tags.thrown) {
-			range.removeClass('obsidian-hidden');
-		} else {
-			range.addClass('obsidian-hidden');
-		}
-
-		if (tags.versatile) {
-			versatile.removeClass('obsidian-hidden');
-		} else {
-			versatile.addClass('obsidian-hidden');
-		}
-
-		ObsidianDialog.recalculateHeight(this.element.find('form'), {fieldset: true});
+		this._updateDisplay();
 	}
 
 	/**
@@ -193,6 +171,30 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
 		await this.parent.actor.update({'flags.obsidian.attacks.custom': existing});
 		this.render(false);
+	}
+
+	/**
+	 * @private
+	 */
+	_updateDisplay () {
+		const tags = this._collectTags();
+		const range = this.element.find('.obsidian-range-row');
+		const versatile = this.element.find('.obsidian-versatile-block');
+		const type = this.element.find('.obsidian-attack-type').val();
+
+		if (tags.thrown || type === 'ranged') {
+			range.removeClass('obsidian-hidden');
+		} else {
+			range.addClass('obsidian-hidden');
+		}
+
+		if (tags.versatile) {
+			versatile.removeClass('obsidian-hidden');
+		} else {
+			versatile.addClass('obsidian-hidden');
+		}
+
+		ObsidianDialog.recalculateHeight(this.element.find('form'), {fieldset: true});
 	}
 
 	/**

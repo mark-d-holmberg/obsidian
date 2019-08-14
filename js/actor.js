@@ -59,6 +59,7 @@ class ObsidianActor extends Actor5e {
 		const flags = actorData.flags.obsidian;
 		actorData.obsidian = {};
 
+		actorData.obsidian.classFormat = ObsidianActor._classFormat(flags.classes);
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
 		data.attributes.init.mod =
@@ -156,13 +157,14 @@ class ObsidianActor extends Actor5e {
 		};
 
 		actorData.obsidian.attacks = flags.attacks.custom;
+
 		for (const attack of Object.values(actorData.obsidian.attacks)) {
 			attack.hit = data.abilities[attack.stat].mod;
 			if (attack.proficient) {
 				attack.hit += data.attributes.prof.value;
 			}
 
-			if (attack.type === 'melee') {
+			if (['melee', 'unarmed'].includes(attack.type)) {
 				attack.reach = 5;
 				if (attack.tags.reach) {
 					attack.reach +=5;
@@ -180,10 +182,72 @@ class ObsidianActor extends Actor5e {
 				if (dmg.stat.length > 0) {
 					dmg.mod += data.abilities[dmg.stat].mod;
 				}
+
+				dmg.display = ObsidianActor._damageFormat(dmg);
+			}
+
+			attack.attackType = 'OBSIDIAN.MeleeWeapon';
+			if (attack.mode === 'ranged') {
+				if (attack.type === 'melee') {
+					attack.attackType = 'OBSIDIAN.RangedAttack';
+				} else {
+					attack.attackType = 'OBSIDIAN.RangedWeapon';
+				}
+			} else if (attack.mode === 'unarmed') {
+				attack.attackType = 'OBSIDIAN.MeleeAttack'
 			}
 		}
 
 		return actorData;
+	}
+
+	/**
+	 * @private
+	 */
+	static _classFormat (classes) {
+		if (classes.length < 1) {
+			return game.i18n.localize('OBSIDIAN.Class');
+		}
+
+		return classes.sort((a, b) => b.levels - a.levels).map(cls => {
+			let result = '';
+			if (cls.subclass) {
+				result += `${cls.subclass} `;
+			}
+
+			if (cls.name === 'custom') {
+				result += `${cls.custom} `;
+			} else {
+				result += `${game.i18n.localize(`OBSIDIAN.Class-${cls.name}`)} `;
+			}
+
+			return result + cls.levels;
+		}).join(' / ');
+	}
+
+	/**
+	 * @private
+	 */
+	static _damageFormat (dmg) {
+		let out = '';
+
+		if (dmg.ndice > 0) {
+			out += `${dmg.ndice}d${dmg.die}`;
+		}
+
+		if (dmg.mod !== 0) {
+			if (dmg.ndice > 0) {
+				out += dmg.mod > 0 ? '+' : '-';
+			}
+
+			out += dmg.mod;
+		}
+
+		if (out.length < 1) {
+			out = '0';
+		}
+
+		return out;
 	}
 
 	/**
