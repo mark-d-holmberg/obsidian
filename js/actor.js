@@ -28,6 +28,9 @@ Obsidian.SCHEMA = {
 			subrace: null,
 			milestone: false
 		},
+		features : {
+			custom: []
+		},
 		saves: {
 			bonus: 0
 		},
@@ -194,9 +197,11 @@ class ObsidianActor extends Actor5e {
 					attack.attackType = 'OBSIDIAN.RangedWeapon';
 				}
 			} else if (attack.mode === 'unarmed') {
-				attack.attackType = 'OBSIDIAN.MeleeAttack'
+				attack.attackType = 'OBSIDIAN.MeleeAttack';
 			}
 		}
+
+		actorData.obsidian.features = flags.features.custom;
 
 		return actorData;
 	}

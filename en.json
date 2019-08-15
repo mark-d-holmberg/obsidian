@@ -205,5 +205,6 @@
 	"OBSIDIAN.AtkTag-thrown": "Thrown",
 	"OBSIDIAN.AtkTag-twohanded": "Two&#8209;Handed",
 	"OBSIDIAN.AtkTag-versatile": "Versatile",
-	"OBSIDIAN.AtkTag-custom": "Custom"
+	"OBSIDIAN.AtkTag-custom": "Custom",
+	"OBSIDIAN.ManageFeatures": "Manage Features"
 }

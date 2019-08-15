@@ -1,0 +1,94 @@
+<div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="attacks">
+	<h3>
+		{{localize 'OBSIDIAN.Attacks'}}
+		<a title="{{localize 'OBSIDIAN.ManageAttacks'}}" class="obsidian-edit" data-dialog="Attacks">
+			<i class="fas fa-edit"></i>
+		</a>
+	</h3>
+	<div class="obsidian-table">
+		<div class="obsidian-thead">
+			{{#if (notEmpty entity.obsidian.attacks)}}
+				<div class="obsidian-col-icon"></div>
+				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
+				<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
+				<div class="obsidian-col-hit">{{localize 'OBSIDIAN.Hit'}}</div>
+				<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
+				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+				<div class="obsidian-col-icon"></div>
+			{{else}}
+				<div class="obsidian-col-empty">{{localize 'OBSIDIAN.Empty'}}</div>
+			{{/if}}
+		</div>
+		<div class="obsidian-tbody">
+			{{#each entity.obsidian.attacks as |attack id|}}
+				<div class="obsidian-tr">
+					<div class="obsidian-col-icon">
+						<div class="
+								{{~#if (is-attack-toggleable attack)~}}
+									obsidian-attack-toggle
+								{{~/if}} obsidian-icon obsidian-icon-{{attack.mode}}" data-item-id="{{id}}"></div>
+					</div>
+					<div class="obsidian-col-attack">
+						<div class="obsidian-table-text rollable">{{attack.label}}</div>
+						<div class="obsidian-table-sub-text">{{localize attack.attackType}}</div>
+					</div>
+					<div class="obsidian-col-range">
+						{{#if (expr '===' attack.mode 'ranged')}}
+							<div class="obsidian-table-number-md">
+								<div>
+									{{attack.range1}}
+									<span class="obsidian-table-number-split">/</span>
+								</div>
+								<div>
+									<span class="obsidian-table-number-minor">{{attack.range2}}</span>
+									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+								</div>
+							</div>
+						{{else}}
+							<div class="obsidian-table-number-md">
+								{{attack.reach}}
+								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+							</div>
+							<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
+						{{/if}}
+					</div>
+					<div class="obsidian-col-hit">
+						<div class="obsidian-table-number-lg">
+							{{numberFormat attack.hit decimals=0 sign=true}}
+						</div>
+					</div>
+					<div class="obsidian-col-damage">
+						<div class="obsidian-table-dmg">
+							{{#each (which-damage attack) as |dmg|}}
+								<div class="obsidian-dmg-component">
+									{{dmg.display}}
+									<div class="obsidian-icon-sm obsidian-icon-{{dmg.type}}"
+									     title="{{localize (expr '+' 'OBSIDIAN.Damage-' dmg.type)}}"></div>
+								</div>
+							{{/each}}
+						</div>
+					</div>
+					<div class="obsidian-col-notes">
+						{{#each attack.tags as |tag|}}
+							<div class="obsidian-table-note-text">
+								{{~#if tag.custom~}}
+									{{~tag.label~}}
+									{{~else~}}
+									{{{localize (expr '+' 'OBSIDIAN.AtkTag-' @key)}}}
+								{{~/if~}}
+							</div>
+						{{/each}}
+					</div>
+					<div class="obsidian-col-icon">
+						{{#if attack.custom}}
+							<a title="{{localize 'OBSIDIAN.EditAttack'}}" class="obsidian-edit"
+							   data-attack-id="{{id}}">
+								<i class="fas fa-edit"></i>
+							</a>
+						{{/if}}
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</div>

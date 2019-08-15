@@ -1,0 +1,18 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-inline obsidian-label-lg">
+		{{localize 'OBSIDIAN.CustomFeatures'}}
+		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-feature">
+			{{localize 'OBSIDIAN.Add'}}
+		</button>
+	</label>
+	{{#each entity.flags.obsidian.features.custom as |feat id|}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-item-id="{{id}}">
+			<div>
+
+			</div>
+			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-feature">
+				{{localize 'OBSIDIAN.Remove'}}
+			</button>
+		</div>
+	{{/each}}
+</form>

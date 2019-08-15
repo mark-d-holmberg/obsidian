@@ -47,10 +47,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		console.debug(this.actor);
 
 		this.form.addEventListener('scroll', this._onScroll.bind(this));
+		html.find('.obsidian-tab-contents').on('scroll', this._onScroll.bind(this));
 		this._setCollapsed(this.settings.portraitCollapsed);
-		if (this.settings.scrollTop !== undefined) {
-			this.form.scrollTop = this.settings.scrollTop;
-		}
 
 		html.find('.obsidian-tab-bar').each((i, el) => {
 			const bar = $(el);
@@ -93,6 +91,17 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		this._activateDialogs(html);
 		Obsidian._resizeMain(html);
+
+		if (this.settings.scrollTop !== undefined) {
+			this.form.scrollTop = this.settings.scrollTop;
+		}
+
+		if (this.settings.subScroll !== undefined) {
+			const activeTab = html.find('.obsidian-tab-contents.active');
+			if (activeTab.length > 0) {
+				activeTab[0].scrollTop = this.settings.subScroll;
+			}
+		}
 	}
 
 	getData () {
@@ -211,6 +220,10 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (!this.scrolling) {
 			setTimeout(() => {
 				this.settings.scrollTop = this.form.scrollTop;
+				const activeTab = this.element.find('.obsidian-tab-contents.active');
+				if (activeTab.length > 0) {
+					this.settings.subScroll = activeTab[0].scrollTop;
+				}
 				game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 				this.scrolling = false;
 			}, 200);
@@ -456,6 +469,8 @@ Actors.registerSheet('dnd5e', Obsidian, {
 Hooks.once('init', () => {
 	loadTemplates([
 		'public/modules/obsidian/html/obsidian.html',
-		'public/modules/obsidian/html/tabs/actions.html'
+		'public/modules/obsidian/html/tabs/actions.html',
+		'public/modules/obsidian/html/tabs/attacks.html',
+		'public/modules/obsidian/html/tabs/sub-actions.html'
 	]);
 });
