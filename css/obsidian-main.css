@@ -63,7 +63,7 @@
 }
 
 .dnd5e.sheet form .tab.obsidian-tab-contents {
-	overflow: auto;
+	overflow-y: auto;
 	padding: 0 5px;
 	text-align: left;
 	height: 100%;

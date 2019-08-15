@@ -157,6 +157,23 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 	}
 
+	_injectHTML (html) {
+		/**
+		 * For some reason, the first time this dialog is opened, the heights
+		 * of its elements are not calculated correctly until the dialog is
+		 * fully visible, so our resize code, which is called after rendering,
+		 * fails to calculate the height correctly as the dialog is still
+		 * fading in.
+		 *
+		 * Application#_injectHTML does not provide a callback for its call to
+		 * fadeIn so we must override it here in order to call our resize code
+		 * at the correct time, once the dialog is fully visible.
+		 */
+		$('body').append(html);
+		this._element = html;
+		html.hide().fadeIn(200, Obsidian._resizeMain.bind(this, html));
+	}
+
 	/**
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
@@ -234,8 +251,29 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-main-left > .obsidian-char-box-container')
 			.each((i, el) => total += $(el).outerHeight(true));
 
-		total -= html.find('.obsidian-conditions-box').outerHeight() + 23;
-		html.find('.obsidian-main').height(total);
+		total -= html.find('.obsidian-conditions-box').outerHeight() + 13;
+		html.find('.obsidian-main').css('height', `${total}px`);
+		html.find('.obsidian-tab-contents').each((i, el) => {
+			const jqel = $(el);
+			let innerTotal = 0;
+			let current = jqel.prev();
+
+			if (current.length < 1) {
+				current = jqel.parent();
+			}
+
+			while (!current.hasClass('obsidian-main')) {
+				innerTotal += current.outerHeight(true);
+				const tmp = current.prev();
+				if (tmp.length < 1) {
+					current = current.parent();
+				} else {
+					current = tmp;
+				}
+			}
+
+			jqel.css('height', `${total - innerTotal - 30}px`);
+		});
 	}
 
 	/**
