@@ -1,4 +1,4 @@
-class ObsidianAttacksDialog extends ObsidianDialog {
+class ObsidianAttacksDialog extends ObsidianArrayDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,26 +7,16 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 		return options;
 	}
 
-	/**
-	 * @param {JQuery} html
-	 * @return undefined
-	 */
-	activateListeners (html) {
-		super.activateListeners(html);
-		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
-		html.find('.obsidian-rm-attack').click(this._onRemoveAttack.bind(this));
-		ObsidianDialog.recalculateHeight(html);
+	get cls () {
+		return 'attack';
 	}
 
-	/**
-	 * @private
-	 */
-	async _onAddAttack (evt) {
-		evt.preventDefault();
-		const attacks = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
+	get flag () {
+		return 'flags.obsidian.attacks.custom';
+	}
 
-		attacks.push({
-			id: attacks.length,
+	get item () {
+		return {
 			custom: true,
 			type: 'melee',
 			mode: 'melee',
@@ -36,21 +26,6 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 			stat: 'str',
 			bonus: 0,
 			proficient: true
-		});
-
-		await this.parent.actor.update({'flags.obsidian.attacks.custom': attacks});
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 */
-	async _onRemoveAttack (evt) {
-		evt.preventDefault();
-		const attacks = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		await this.parent.actor.update({
-			'flags.obsidian.attacks.custom': ObsidianDialog.removeRow(attacks, evt)
-		});
-		this.render(false);
+		}
 	}
 }

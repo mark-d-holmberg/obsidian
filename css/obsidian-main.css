@@ -336,3 +336,22 @@
 	color: var(--text-subtle);
 	font-size: 13px;
 }
+
+.obsidian-feature {
+	margin-bottom: 13px;
+}
+
+.obsidian-feature-header {
+	font-size: 13px;
+	line-height: 1.2;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	display: flex;
+}
+
+.obsidian-feature-header h4 {
+	font-weight: bold;
+}
+
+.obsidian-feature-header i {
+	margin-left: 8px;
+}

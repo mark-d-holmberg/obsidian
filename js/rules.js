@@ -34,6 +34,8 @@ Obsidian.Rules.CLASS_HIT_DICE = {
 	wiz: 6
 };
 
+Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
+Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
 Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
 Obsidian.Rules.MAX_LEVEL = 20;
 

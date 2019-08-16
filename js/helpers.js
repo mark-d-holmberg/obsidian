@@ -67,6 +67,10 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 	}
 });
 
+Handlebars.registerHelper('format-uses', function (feat) {
+	return Handlebars.SafeString('');
+});
+
 Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });

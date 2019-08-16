@@ -6,9 +6,26 @@
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.features.custom as |feat id|}}
-		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-item-id="{{id}}">
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
-
+				<input type="text" class="obsidian-input-compact"
+				       placeholder="{{localize 'OBSIDIAN.Feature'}}" value="{{feat.label}}"
+				       name="flags.obsidian.features.custom.{{id}}.label">
+				<select name="flags.obsidian.features.custom.{{id}}.active" class="obsidian-feat-active">
+					{{#select feat.active}}
+						{{#each ../ObsidianRules.FEAT_ACTIVE}}
+							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatActive-' this)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.features.custom.{{id}}.action"
+				        class="{{#if (expr '===' 'passive' feat.active)}}obsidian-hidden{{/if}}">
+					{{#select feat.action}}
+						{{#each ../ObsidianRules.FEAT_ACTION}}
+							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatAction-' this)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-feature">
 				{{localize 'OBSIDIAN.Remove'}}

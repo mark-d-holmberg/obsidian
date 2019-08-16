@@ -276,7 +276,10 @@ class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			while (!current.hasClass('obsidian-main')) {
-				innerTotal += current.outerHeight(true);
+				if (!current.hasClass('obsidian-tab-contents')) {
+					innerTotal += current.outerHeight(true);
+				}
+
 				const tmp = current.prev();
 				if (tmp.length < 1) {
 					current = current.parent();

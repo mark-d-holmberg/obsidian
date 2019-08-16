@@ -7,7 +7,8 @@
 	</label>
 	{{#each entity.flags.obsidian.attacks.custom as |attack id|}}
 		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-item-id="{{id}}">
-			<input type="text" class="obsidian-input-compact obsidian-input-lg" placeholder="Attack"
+			<input type="text" class="obsidian-input-compact obsidian-input-lg"
+			       placeholder="{{localize 'OBSIDIAN.Attack'}}"
 			       value="{{attack.label}}" name="flags.obsidian.attacks.custom.{{id}}.label">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-attack">
 				{{localize 'OBSIDIAN.Remove'}}

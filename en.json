@@ -206,5 +206,14 @@
 	"OBSIDIAN.AtkTag-twohanded": "Two&#8209;Handed",
 	"OBSIDIAN.AtkTag-versatile": "Versatile",
 	"OBSIDIAN.AtkTag-custom": "Custom",
-	"OBSIDIAN.ManageFeatures": "Manage Features"
+	"OBSIDIAN.ManageFeatures": "Manage Features",
+	"OBSIDIAN.Feature": "Feature",
+	"OBSIDIAN.FeatActive-active": "Active",
+	"OBSIDIAN.FeatActive-passive": "Passive",
+	"OBSIDIAN.FeatAction-action": "Action",
+	"OBSIDIAN.FeatAction-ba": "Bonus Action",
+	"OBSIDIAN.FeatAction-react": "Reaction",
+	"OBSIDIAN.FeatAction-trigger": "Triggered",
+	"OBSIDIAN.CustomFeatures": "Custom Features",
+	"OBSIDIAN.EditFeature": "Edit Feature"
 }
