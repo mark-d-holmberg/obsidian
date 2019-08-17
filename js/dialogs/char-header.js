@@ -40,7 +40,12 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			hd: Obsidian.Rules.CLASS_HIT_DICE[firstClass]
 		});
 
-		await this._updateFlags(classes);
+		const hd = this.parent.actor.updateHD(classes);
+		await this.parent.actor.update({
+			'flags.obsidian.classes': classes,
+			'flags.obsidian.attributes.hd': hd
+		});
+
 		this.render(false);
 	}
 
@@ -73,19 +78,11 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		await this._updateFlags(ObsidianDialog.removeRow(classes, evt));
+		const newClasses = ObsidianDialog.removeRow(classes, evt);
+		const update = {'flags.obsidian.classes': newClasses};
+		this.parent.actor.updateClasses(classes, newClasses, update);
+		await this.parent.actor.update(update);
 		this.render(false);
-	}
-
-	/**
-	 * @private
-	 */
-	async _updateFlags (newClasses) {
-		const hd = this.parent.actor.updateHD(newClasses);
-		await this.parent.actor.update({
-			'flags.obsidian.classes': newClasses,
-			'flags.obsidian.attributes.hd': hd
-		});
 	}
 
 	/**
@@ -95,7 +92,8 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const newData = {};
 		const classes =
 			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
-		newData['flags.obsidian.attributes.hd'] = this.parent.actor.updateHD(classes);
+		this.parent.actor.updateClasses(
+			this.parent.actor.getFlag('obsidian', 'classes'), classes, newData);
 		super._updateObject(event, newData);
 	}
 }

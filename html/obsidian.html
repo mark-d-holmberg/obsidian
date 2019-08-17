@@ -209,7 +209,7 @@
 									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
 										<div class="obsidian-bisect">
 											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
-											       class="obsidian-input-num" value="{{hd.value}}">
+											       class="obsidian-input-num" value="{{hd.value}}" data-dtype="Number">
 											/
 											<div class="obsidian-ptr obsidian-resource-box-max
 											{{#if (defined hd.override)~}}

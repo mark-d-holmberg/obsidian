@@ -215,5 +215,17 @@
 	"OBSIDIAN.FeatAction-react": "Reaction",
 	"OBSIDIAN.FeatAction-trigger": "Triggered",
 	"OBSIDIAN.CustomFeatures": "Custom Features",
-	"OBSIDIAN.EditFeature": "Edit Feature"
+	"OBSIDIAN.EditFeature": "Edit Feature",
+	"OBSIDIAN.FeatSrc-class": "Class",
+	"OBSIDIAN.FeatSrc-race": "Race",
+	"OBSIDIAN.FeatSrc-feat": "Feat",
+	"OBSIDIAN.FeatSrc-other": "Other",
+	"OBSIDIAN.Uses": "Uses",
+	"OBSIDIAN.UsesKey-abl": "Ability",
+	"OBSIDIAN.UsesKey-chr": "Character Level",
+	"OBSIDIAN.UsesKey-cls": "Class Level",
+	"OBSIDIAN.DC": "DC",
+	"OBSIDIAN.PlusProf-half": "Half Proficiency",
+	"OBSIDIAN.PlusProf-prof": "Proficiency",
+	"OBSIDIAN.PlusProf-expert": "Double Proficiency"
 }

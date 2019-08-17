@@ -72,7 +72,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		this.element.find('select').each((i, el) => {
 			const jqel = $(el);
 			const hd = jqel.val();
-			const add = parseInt(jqel.siblings().val());
+			const add = parseInt(jqel.next().val());
 
 			if (!isNaN(add)) {
 				if (total[hd] === undefined) {

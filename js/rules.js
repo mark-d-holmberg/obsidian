@@ -36,8 +36,16 @@ Obsidian.Rules.CLASS_HIT_DICE = {
 
 Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
+Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
+Obsidian.Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
 Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
 Obsidian.Rules.MAX_LEVEL = 20;
+
+Obsidian.Rules.PLUS_PROF = {
+	0.5: 'half',
+	1: 'prof',
+	2: 'expert'
+};
 
 Obsidian.Rules.PROFICIENCY_LEVELS = {
 	0: 'none',

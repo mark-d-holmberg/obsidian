@@ -20,6 +20,9 @@ class ObsidianFeaturesDialog extends ObsidianArrayDialog {
 			label: '',
 			active: 'active',
 			action: 'action',
+			source: {},
+			uses: {enabled: false},
+			dc: {enabled: false},
 			desc: ''
 		};
 	}

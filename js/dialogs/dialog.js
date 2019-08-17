@@ -79,7 +79,7 @@ class ObsidianDialog extends BaseEntitySheet {
 		this.parent._updateObject(event, formData);
 	}
 
-	static recalculateHeight (html, {fieldset, bareLabels} = {}) {
+	static recalculateHeight (html, {fieldset, bareLabels, richText} = {}) {
 		let total = 0;
 		let selector = '.obsidian-form-row, label.obsidian-label-lg';
 		if (bareLabels) {
@@ -88,6 +88,10 @@ class ObsidianDialog extends BaseEntitySheet {
 
 		if (fieldset) {
 			selector = 'fieldset';
+		}
+
+		if (richText) {
+			selector = 'fieldset, form > label, .obsidian-rich-text';
 		}
 
 		html.find(selector)

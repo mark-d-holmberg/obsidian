@@ -14,6 +14,10 @@ Handlebars.registerHelper('defined', function (arg) {
 	return arg !== undefined;
 });
 
+Handlebars.registerHelper('disabled', function (arg) {
+	return arg ? '' : 'disabled';
+});
+
 Handlebars.registerHelper('exists', function (arg) {
 	return arg != null;
 });

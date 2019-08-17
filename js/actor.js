@@ -1,58 +1,3 @@
-Obsidian.SCHEMA = {
-	obsidian: {
-		attacks: {
-			custom: []
-		},
-		attributes: {
-			ac: {
-				ability1: 'dex',
-				base: 10
-			},
-			conditions: {},
-			death: {
-				adv: false,
-				bonus: 0,
-				threshold: 10
-			},
-			hd: {},
-			hpMaxMod: 0,
-			init: {
-				ability: 'dex'
-			},
-			senses: {},
-			speed: {}
-		},
-		classes: [],
-		details: {
-			gender: null,
-			subrace: null,
-			milestone: false
-		},
-		features : {
-			custom: []
-		},
-		saves: {
-			bonus: 0
-		},
-		skills: {
-			bonus: 0,
-			joat: false,
-			custom: [],
-			tools: [],
-			passives: ['prc', 'inv']
-		},
-		traits: {
-			profs: {
-				custom: {
-					armour: [],
-					weapons: [],
-					langs: []
-				}
-			}
-		}
-	}
-};
-
 class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
@@ -64,6 +9,13 @@ class ObsidianActor extends Actor5e {
 
 		actorData.obsidian.classFormat = ObsidianActor._classFormat(flags.classes);
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
+
+		data.details.level.value = 0;
+		for (const cls of Object.values(flags.classes)) {
+			cls.label =
+				cls.name === 'custom' ? cls.name : game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
+			data.details.level.value += cls.levels;
+		}
 
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
@@ -272,10 +224,39 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
+	updateClasses (before, after, update) {
+		const existing = this.data.flags.obsidian.features.custom;
+		const features = [];
+
+		for (const feature of existing) {
+			feature.id = features.length;
+			if (feature.source.type === 'class') {
+				const cls = before[feature.source.class];
+				if (after.includes(cls)) {
+					feature.source.class = cls.id;
+					features.push(feature);
+				}
+			} else {
+				if (feature.source.uses.key === 'class') {
+					const cls = before[feature.source.uses.key];
+					if (after.includes(cls)) {
+						feature.source.uses.class = cls.id;
+						features.push(feature);
+					}
+				} else {
+					features.push(feature);
+				}
+			}
+		}
+
+		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
+		update['flags.obsidian.features.custom'] = features;
+	}
+
 	updateHD (classes) {
 		const existing = this.data.flags.obsidian.attributes.hd;
-		const totals = {};
 		const newHD = {};
+		const totals = {};
 
 		for (const cls of classes) {
 			if (totals[cls.hd] === undefined) {
@@ -285,26 +266,23 @@ class ObsidianActor extends Actor5e {
 			totals[cls.hd] += cls.levels;
 		}
 
-		for (const [hd, val] of Object.entries(totals)) {
-			const storedHD = existing[hd];
-			if (storedHD === undefined) {
-				newHD[hd] = {
-					value: val,
-					max: val
-				};
-			} else {
-				newHD[hd] = duplicate(storedHD);
-				if (storedHD.max !== val) {
-					const diff = val - storedHD.max;
-					newHD[hd].max = val;
-					newHD[hd].value = storedHD.value + diff;
-				}
+		for (const [hd, val] of Object.entries(existing)) {
+			const updated = duplicate(val);
+			const diff = (totals[hd] || 0) - val.max;
+			updated.max = totals[hd] || 0;
+			updated.value = val.value + diff;
+
+			if (updated.max > 0 || updated.override !== undefined) {
+				newHD[hd] = updated;
 			}
 		}
 
-		for (const [hd, val] of Object.entries(existing)) {
-			if (totals[hd] === undefined && val.override == null) {
-				delete newHD[hd];
+		for (const [hd, val] of Object.entries(totals)) {
+			if (newHD[hd] === undefined) {
+				newHD[hd] = {
+					max: val,
+					value: val
+				};
 			}
 		}
 
