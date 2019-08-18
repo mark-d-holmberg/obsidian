@@ -34,7 +34,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const firstClass = Object.keys(Obsidian.Rules.CLASS_HIT_DICE)[0];
 
 		classes.push({
-			id: classes.length,
+			id: Obsidian.uuid(),
 			name: firstClass,
 			levels: 1,
 			hd: Obsidian.Rules.CLASS_HIT_DICE[firstClass]
@@ -56,16 +56,13 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const el = $(evt.currentTarget);
 		const siblings = el.siblings();
 		const cls = el.val();
-		const custom = $(siblings[0]);
 		const subclass = siblings[1];
 		const hd = siblings[3];
 
 		if (cls === 'custom') {
-			custom.removeClass('obsidian-hidden');
 			subclass.style.width = '65px';
 			return;
 		} else {
-			custom.addClass('obsidian-hidden');
 			subclass.style.width = '';
 		}
 

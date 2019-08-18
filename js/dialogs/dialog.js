@@ -163,7 +163,10 @@ class ObsidianDialog extends BaseEntitySheet {
 		for (let i = 0; i < data.length; i++) {
 			const item = data[i];
 			if (i !== id) {
-				item.id = newData.length;
+				if (typeof item.id !== 'string') {
+					item.id = newData.length;
+				}
+
 				newData.push(item);
 			}
 		}

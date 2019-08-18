@@ -5,7 +5,7 @@
 			<select name="flags.obsidian.attributes.init.ability">
 				{{#select entity.flags.obsidian.attributes.init.ability}}
 					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}</option>
+						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

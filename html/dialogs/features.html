@@ -14,7 +14,7 @@
 				<select name="flags.obsidian.features.custom.{{id}}.active" class="obsidian-feat-active">
 					{{#select feat.active}}
 						{{#each ../ObsidianRules.FEAT_ACTIVE}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatActive-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -22,7 +22,7 @@
 				        class="{{#if (expr '===' 'passive' feat.active)}}obsidian-hidden{{/if}}">
 					{{#select feat.action}}
 						{{#each ../ObsidianRules.FEAT_ACTION}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatAction-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>

@@ -11,7 +11,7 @@
 				<select name="flags.obsidian.features.custom.{{featureID}}.active" data-selector="active">
 					{{#select feature.active}}
 						{{#each ObsidianRules.FEAT_ACTIVE}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatActive-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -19,7 +19,7 @@
 				        data-selector-parent="active">
 					{{#select feature.action}}
 						{{#each ObsidianRules.FEAT_ACTION}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatAction-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -33,16 +33,16 @@
 					        class="obsidian-feat-source" data-selector="action">
 						{{#select feature.source.type}}
 							{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
-								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatSrc-' this)}}</option>
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 				</label>
-				<select name="flags.obsidian.features.custom.{{featureID}}.source.class" data-dtype="Number"
-				        data-selector-parent="action" data-show="class">
+				<select name="flags.obsidian.features.custom.{{featureID}}.source.class" data-show="class"
+				        data-selector-parent="action">
 					{{#select feature.source.class}}
-						{{#each entity.flags.obsidian.classes as |class id|}}
-							<option value="{{id}}">{{class.label}}</option>
+						{{#each entity.flags.obsidian.classes}}
+							<option value="{{this.id}}">{{this.label}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -90,7 +90,7 @@
 					{{#select feature.uses.key}}
 						<option value="">&mdash;</option>
 						{{#each ObsidianRules.FEAT_USES_KEYS}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.UsesKey-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.UsesKey-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -98,15 +98,15 @@
 				        data-selector-parent="uses-key">
 					{{#select feature.uses.ability}}
 						{{#each data.abilities}}
-							<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Ability-' @key)}}</option>
+							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
 				<select name="flags.obsidian.features.custom.{{featureID}}.uses.class" data-show="cls"
 				        data-selector-parent="uses-key">
 					{{#select feature.uses.class}}
-						{{#each entity.flags.obsidian.classes as |class id|}}
-							<option value="{{id}}">{{class.label}}</option>
+						{{#each entity.flags.obsidian.classes}}
+							<option value="{{this.id}}">{{this.label}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -164,7 +164,7 @@
 				{{#select feature.dc.prof}}
 					<option value="">&mdash;</option>
 					{{#each ObsidianRules.PLUS_PROF}}
-						<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.PlusProf-' this)}}</option>
+						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.PlusProf-' this}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
@@ -173,7 +173,7 @@
 				{{#select feature.dc.ability}}
 					<option value="">&mdash;</option>
 					{{#each data.abilities}}
-						<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Ability-' @key)}}</option>
+						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

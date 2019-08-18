@@ -63,7 +63,7 @@
 								<div class="obsidian-dmg-component">
 									{{dmg.display}}
 									<div class="obsidian-icon-sm obsidian-icon-{{dmg.type}}"
-									     title="{{localize (expr '+' 'OBSIDIAN.Damage-' dmg.type)}}"></div>
+									     title="{{i18n-join 'OBSIDIAN.Damage-' dmg.type}}"></div>
 								</div>
 							{{/each}}
 						</div>
@@ -74,7 +74,7 @@
 								{{~#if tag.custom~}}
 									{{~tag.label~}}
 									{{~else~}}
-									{{{localize (expr '+' 'OBSIDIAN.AtkTag-' @key)}}}
+									{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
 								{{~/if~}}
 							</div>
 						{{/each}}

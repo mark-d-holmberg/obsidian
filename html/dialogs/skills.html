@@ -36,7 +36,7 @@
 					{{#select skill.value}}
 						{{#each ../ObsidianRules.PROFICIENCY_LEVELS}}
 							<option value="{{@key}}">
-								{{localize (expr '+' 'OBSIDIAN.Proficiency-' this)}}
+								{{i18n-join 'OBSIDIAN.Proficiency-' this}}
 							</option>
 						{{/each}}
 					{{/select}}
@@ -45,7 +45,7 @@
 				        style="text-transform: uppercase;">
 					{{#select (lc skill.ability)}}
 						{{#each ../data.abilities}}
-							<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}</option>
+							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</option>
 						{{/each}}
 					{{/select}}
 				</select>

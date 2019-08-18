@@ -20,21 +20,19 @@
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.classes as |class id|}}
+		<input type="hidden" name="flags.obsidian.classes.{{id}}.id" value="{{class.id}}">
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
-				<select name="flags.obsidian.classes.{{id}}.name">
+				<select name="flags.obsidian.classes.{{id}}.name" data-selector="class.{{id}}">
 					{{#select class.name}}
 						{{#each ../ObsidianRules.CLASSES}}
-							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Class-' this)}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Class-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input class="obsidian-input-compact {{#if (expr '!' (expr '===' 'custom' class.name))~}}
-						obsidian-hidden
-					{{~/if~}}
-				" type="text" name="flags.obsidian.classes.{{id}}.custom"
-				       placeholder="{{localize 'OBSIDIAN.Class'}}" style="width: 65px;"
-				       value="{{class.custom}}">
+				<input class="obsidian-input-compact" type="text" style="width: 65px;" data-show="custom"
+				       name="flags.obsidian.classes.{{id}}.custom" value="{{class.custom}}"
+				       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="class.{{id}}">
 				<input class="obsidian-input-compact" type="text"
 				       placeholder="{{localize 'OBSIDIAN.Subclass'}}"
 				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"

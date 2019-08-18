@@ -9,7 +9,7 @@
 			<select name="flags.obsidian.attributes.ac.ability1">
 				{{#select entity.flags.obsidian.attributes.ac.ability1}}
 					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}</option>
+						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
@@ -18,7 +18,7 @@
 				<option value="">&mdash;</option>
 				{{#select entity.flags.obsidian.attributes.ac.ability2}}
 					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}</option>
+						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

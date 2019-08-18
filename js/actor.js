@@ -161,7 +161,10 @@ class ObsidianActor extends Actor5e {
 				} else if (feat.uses.key === 'chr') {
 					feat.uses.value += data.details.level.value;
 				} else if (feat.uses.key === 'cls') {
-					feat.uses.value += flags.classes[feat.uses.class].levels;
+					const cls = flags.classes.find(cls => cls.id === feat.uses.class);
+					if (cls) {
+						feat.uses.value += cls.levels;
+					}
 				}
 
 				feat.uses.value = Math.max(feat.uses.min, feat.uses.value);
@@ -253,27 +256,20 @@ class ObsidianActor extends Actor5e {
 
 	updateClasses (before, after, update) {
 		const existing = this.data.flags.obsidian.features.custom;
+		const clsMap = new Map(after.map(cls => [cls.id, cls]));
 		const features = [];
 
 		for (const feature of existing) {
-			feature.id = features.length;
-			if (feature.source.type === 'class') {
-				const cls = before[feature.source.class];
-				if (after.includes(cls)) {
-					feature.source.class = cls.id;
-					features.push(feature);
-				}
-			} else {
-				if (feature.source.uses.key === 'class') {
-					const cls = before[feature.source.uses.key];
-					if (after.includes(cls)) {
-						feature.source.uses.class = cls.id;
-						features.push(feature);
-					}
-				} else {
-					features.push(feature);
-				}
+			if (feature.source.type === 'class' && !clsMap.has(feature.source.class)) {
+				continue;
 			}
+
+			if (feature.uses.key === 'cls' && !clsMap.has(feature.uses.class)) {
+				continue;
+			}
+
+			feature.id = features.length;
+			features.push(feature);
 		}
 
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);

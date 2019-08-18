@@ -79,6 +79,11 @@ Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });
 
+Handlebars.registerHelper('i18n-join', function (...args) {
+	args.pop();
+	return game.i18n.localize(args.reduce((acc, x) => acc + x));
+});
+
 Handlebars.registerHelper('is-attack-toggleable', function (attack) {
 	return (attack.type === 'melee' && attack.tags.thrown) || attack.tags.versatile;
 });

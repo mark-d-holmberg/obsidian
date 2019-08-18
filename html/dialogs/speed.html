@@ -4,7 +4,7 @@
 			<select name="flags.obsidian.attributes.speedDisplay">
 				{{#select entity.flags.obsidian.attributes.speedDisplay}}
 					{{#each ObsidianRules.SPEEDS as |id|}}
-						<option value="{{id}}">{{localize (expr '+' 'OBSIDIAN.Speed-' id)}}</option>
+						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
@@ -21,7 +21,7 @@
 					       {{~#with (lookup ../entity.flags.obsidian.attributes.speed id) as |spd|~}}
 					        {{~spd.override~}}
 					       {{~/with~}}">
-					<span>{{localize (expr '+' 'OBSIDIAN.Speed-' id)}}</span>
+					<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
 				</label>
 				{{#if (expr '===' id 'fly')}}
 					<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.speed.fly.hover">

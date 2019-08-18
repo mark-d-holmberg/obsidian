@@ -3,7 +3,7 @@
 		<select name="flags.obsidian.skills.{{skillID}}.value" data-dtype="Number">
 			{{#select skill.value}}
 				{{#each ObsidianRules.PROFICIENCY_LEVELS}}
-					<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Proficiency-' this)}}</option>
+					<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Proficiency-' this}}</option>
 				{{/each}}
 			{{/select}}
 		</select>

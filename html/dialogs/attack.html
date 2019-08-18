@@ -11,7 +11,7 @@
 			<select name="flags.obsidian.attacks.custom.{{attackID}}.type" class="obsidian-attack-type">
 				{{#select attack.type}}
 					{{#each ObsidianRules.ATTACK_TYPES}}
-						<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.AttackType-' this)}}</option>
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
@@ -36,7 +36,7 @@
 						{{#select attack.stat}}
 							{{#each data.abilities}}
 								<option value="{{@key}}">
-									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 								</option>
 							{{/each}}
 						{{/select}}
@@ -102,7 +102,7 @@
 							<option value="">&mdash;</option>
 							{{#each ../data.abilities}}
 								<option value="{{@key}}">
-									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 								</option>
 							{{/each}}
 						{{/select}}
@@ -115,7 +115,7 @@
 						{{#select dmg.type}}
 							<option value="">&mdash;</option>
 							{{#each ../ObsidianRules.DAMAGE_TYPES}}
-								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Damage-' this)}}</option>
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
@@ -155,7 +155,7 @@
 							<option value="">&mdash;</option>
 							{{#each ../data.abilities}}
 								<option value="{{@key}}">
-									{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 								</option>
 							{{/each}}
 						{{/select}}
@@ -168,7 +168,7 @@
 						{{#select dmg.type}}
 							<option value="">&mdash;</option>
 							{{#each ../ObsidianRules.DAMAGE_TYPES}}
-								<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.Damage-' this)}}</option>
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
@@ -192,7 +192,7 @@
 					<select class="obsidian-attack-tag">
 						{{#select (is-custom-tag @key tag)}}
 							{{#each ../ObsidianRules.ATTACK_TAGS}}
-								<option value="{{this}}">{{{localize (expr '+' 'OBSIDIAN.AtkTag-' this)}}}</option>
+								<option value="{{this}}">{{{i18n-join 'OBSIDIAN.AtkTag-' this}}}</option>
 							{{/each}}
 						{{/select}}
 					</select>

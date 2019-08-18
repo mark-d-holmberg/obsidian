@@ -120,7 +120,7 @@
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Speed'}}</div>
 						{{#if entity.flags.obsidian.attributes.speedDisplay}}
 							<div class="obsidian-char-box-text" style="color: var(--text-subtle);">
-								{{localize (expr '+' 'OBSIDIAN.Speed-' entity.flags.obsidian.attributes.speedDisplay)}}
+								{{i18n-join 'OBSIDIAN.Speed-' entity.flags.obsidian.attributes.speedDisplay}}
 							</div>
 						{{/if}}
 						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
@@ -166,7 +166,7 @@
 				{{#each data.abilities as |ability id|}}
 				<div class="obsidian-char-ability">
 					<div class="obsidian-char-ability-name rollable obsidian-condensed">
-						{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' id)}}
+						{{i18n-join 'OBSIDIAN.AbilityAbbr-' id}}
 					</div>
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
@@ -272,7 +272,7 @@
 									{{#select (lc skill.ability)}}
 										{{#each ../data.abilities}}
 											<option value="{{@key}}">
-												{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+												{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 											</option>
 										{{/each}}
 									{{/select}}
@@ -281,7 +281,7 @@
 									{{#if skill.custom}}
 										{{skill.label}}
 									{{else}}
-										{{localize (expr '+' 'OBSIDIAN.Skill-' id)}}
+										{{i18n-join 'OBSIDIAN.Skill-' id}}
 									{{/if}}
 								</div>
 								<div class="obsidian-skill-mod obsidian-ptr">
@@ -322,7 +322,7 @@
 									{{#select (lc tool.ability)}}
 										{{#each ../data.abilities}}
 											<option value="{{@key}}">
-												{{localize (expr '+' 'OBSIDIAN.AbilityAbbr-' @key)}}
+												{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 											</option>
 										{{/each}}
 									{{/select}}
@@ -357,7 +357,7 @@
 							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
 								{{#if (expr '>' sense.radius 0)}}
 									<span>
-										{{localize (expr '+' 'OBSIDIAN.Sense-' id)}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
+										{{i18n-join 'OBSIDIAN.Sense-' id}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
 									</span>
 								{{/if}}
 							{{/each}}
@@ -429,7 +429,7 @@
 								{{~/if}} obsidian-radio">
 									<span></span>
 								</div>
-								{{localize (expr '+' 'OBSIDIAN.Condition-' this)}}
+								{{i18n-join 'OBSIDIAN.Condition-' this}}
 							</div>
 						{{/each}}
 						</div>
@@ -474,7 +474,7 @@
 									<span></span>
 								</div>
 								<div class="obsidian-save-name rollable">
-									{{localize (expr '+' 'OBSIDIAN.Ability-' id)}}
+									{{i18n-join 'OBSIDIAN.Ability-' id}}
 								</div>
 								<div class="obsidian-save-mod obsidian-ptr">
 									{{numberFormat ability.save decimals=0 sign=true}}

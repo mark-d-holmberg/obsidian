@@ -14,3 +14,5 @@ createEditor = (function () {
 		return capture;
 	};
 })();
+
+

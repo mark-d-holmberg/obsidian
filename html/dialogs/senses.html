@@ -7,7 +7,7 @@
 				       value="{{#with (lookup ../entity.flags.obsidian.attributes.senses sense)}}
 					       {{~radius~}}
 				       {{/with}}">
-				<span>{{localize (expr '+' 'OBSIDIAN.Sense-' sense)}}</span>
+				<span>{{i18n-join 'OBSIDIAN.Sense-' sense}}</span>
 			</label>
 		</div>
 	{{/each}}
@@ -26,7 +26,7 @@
 							{{#if skill.custom}}
 								{{skill.label}}
 							{{else}}
-								{{localize (expr '+' 'OBSIDIAN.Skill-' id)}}
+								{{i18n-join 'OBSIDIAN.Skill-' id}}
 							{{/if}}
 						</option>
 					{{/each}}
