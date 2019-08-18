@@ -112,7 +112,6 @@ class ObsidianActor extends Actor5e {
 		};
 
 		actorData.obsidian.attacks = flags.attacks.custom;
-
 		for (const attack of Object.values(actorData.obsidian.attacks)) {
 			attack.hit = data.abilities[attack.stat].mod;
 			if (attack.proficient) {
@@ -154,6 +153,34 @@ class ObsidianActor extends Actor5e {
 		}
 
 		actorData.obsidian.features = flags.features.custom;
+		for (const feat of Object.values(actorData.obsidian.features)) {
+			if (feat.uses.enabled) {
+				feat.uses.value = feat.uses.bonus;
+				if (feat.uses.key === 'abl') {
+					feat.uses.value += data.abilities[feat.uses.ability].mod;
+				} else if (feat.uses.key === 'chr') {
+					feat.uses.value += data.details.level.value;
+				} else if (feat.uses.key === 'cls') {
+					feat.uses.value += flags.classes[feat.uses.class].levels;
+				}
+
+				feat.uses.value = Math.max(feat.uses.min, feat.uses.value);
+				if (feat.uses.fixed !== undefined && feat.uses.fixed !== '') {
+					feat.uses.value = Number(feat.uses.fixed);
+				}
+			}
+
+			if (feat.dc.enabled) {
+				feat.dc.value = (feat.dc.bonus || 8) + feat.dc.prof * data.attributes.prof.value;
+				if (feat.dc.ability !== '') {
+					feat.dc.value += data.abilities[feat.dc.ability].mod;
+				}
+
+				if (feat.dc.fixed !== undefined && feat.dc.fixed !== '') {
+					feat.dc.value = Number(feat.dc.fixed);
+				}
+			}
+		}
 
 		return actorData;
 	}

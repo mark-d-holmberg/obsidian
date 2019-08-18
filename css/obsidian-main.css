@@ -370,6 +370,12 @@
 	font-weight: normal;
 }
 
+.obsidian-feature-recharge {
+	margin-left: 3px;
+	font-weight: normal;
+	color: var(--text-subtle);
+}
+
 .obsidian .mce-btn-group .mce-btn,
 .obsidian .mce-btn-group .mce-btn:active,
 .obsidian .mce-btn-group .mce-btn:focus,

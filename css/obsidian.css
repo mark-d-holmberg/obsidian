@@ -615,6 +615,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	align-items: baseline;
 }
 
+.obsidian-checkbox-row label+label {
+	margin-left: 10px;
+}
+
 .obsidian-checkbox-row .fancy-checkbox {
 	align-self: center;
 	margin-bottom: 0;

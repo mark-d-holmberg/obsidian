@@ -2,7 +2,8 @@ class ObsidianFeatureDialog extends ObsidianDialog {
 	constructor (parent, featureID) {
 		super(parent, {
 			title: game.i18n.localize('OBSIDIAN.EditFeature'),
-			template: 'public/modules/obsidian/html/dialogs/feature.html'
+			template: 'public/modules/obsidian/html/dialogs/feature.html',
+			width: 420
 		});
 
 		this.featureID = parseInt(featureID);

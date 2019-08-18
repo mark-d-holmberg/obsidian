@@ -227,5 +227,8 @@
 	"OBSIDIAN.DC": "DC",
 	"OBSIDIAN.PlusProf-half": "Half Proficiency",
 	"OBSIDIAN.PlusProf-prof": "Proficiency",
-	"OBSIDIAN.PlusProf-expert": "Double Proficiency"
+	"OBSIDIAN.PlusProf-expert": "Double Proficiency",
+	"OBSIDIAN.Source": "Source",
+	"OBSIDIAN.Minimum": "Minimum",
+	"OBSIDIAN.Fixed": "Fixed"
 }
