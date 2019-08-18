@@ -37,16 +37,28 @@ class ObsidianDialog extends BaseEntitySheet {
 		html.find('.fancy-checkbox').click((evt) => {
 			const target = $(evt.currentTarget);
 			const selected = !target.hasClass('selected');
+			const parent = target.parent();
 			selected ? target.addClass('selected') : target.removeClass('selected');
 
 			if (target.data('bound')) {
 				html.find(`input[name="${target.data('bound')}"]`)[0].checked = selected;
+			}
+
+			if (parent[0].tagName === 'LEGEND') {
+				parent.parent()[0].disabled = !selected;
 			}
 		}).each((i, el) => {
 			const jqel = $(el);
 			if (jqel.data('bound')) {
 				if (html.find(`input[name="${jqel.data('bound')}"]`)[0].checked) {
 					jqel.addClass('selected');
+				}
+			}
+
+			const parent = jqel.parent();
+			if (parent[0].tagName === 'LEGEND') {
+				if (!jqel.hasClass('selected')) {
+					parent.parent()[0].disabled = true;
 				}
 			}
 		});
@@ -102,7 +114,7 @@ class ObsidianDialog extends BaseEntitySheet {
 
 		const diff = total - content.height();
 		const win = content.parents('.obsidian-window');
-		win.height(win.height() + diff);
+		win.height(win.height() + diff + (richText ? 20 : 0));
 	}
 
 	static reconstructArray (formData, newData, keySubstr) {

@@ -1,10 +1,10 @@
-<form class="obsidian" autocomplete="off" data-name="feature">
+<form class="obsidian" autocomplete="off" data-obsidian-name="feature">
 	<input type="hidden" name="flags.obsidian.features.custom.{{featureID}}.custom" value="true"
 	       data-dtype="Boolean">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Feature'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input class="obsidian-input-compact" type="text" value="{{feature.label}}"
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{feature.label}}"
 			       placeholder="{{localize 'OBSIDIAN.Feature'}}"
 			       name="flags.obsidian.features.custom.{{featureID}}.label">
 			<select name="flags.obsidian.features.custom.{{featureID}}.active"
@@ -25,39 +25,41 @@
 			</select>
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<select name="flags.obsidian.features.custom.{{featureID}}.source.type"
-			        class="obsidian-feat-source">
-				{{#select feature.source.type}}
-					{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
-						<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatSrc-' this)}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="flags.obsidian.features.custom.{{featureID}}.source.class" data-dtype="Number"
-			        class="{{#if (expr '!' (expr '===' feature.source.type 'class'))~}}
-			          obsidian-hidden
-			        {{~/if}} obsidian-feat-source-class">
-				{{#select feature.source.class}}
-					{{#each entity.data.flags.obsidian.classes as |class id|}}
-						<option value="{{id}}">{{class.label}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="flags.obsidian.features.custom.{{featureID}}.source.level" data-dtype="Number"
-			        class="{{#if (expr '!' (expr '===' feature.source.type 'feat'))~}}
-			          obsidian-hidden
-			        {{~/if}} obsidian-feat-source-level">
-				{{#select feature.source.level}}
-					{{#each (range 1 data.attributes.level.value)}}
-						<option value="{{this}}">{{this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<input type="text" name="flags.obsidian.features.custom.{{featureID}}.source.other"
-			       placeholder="{{localize 'OBSIDIAN.Source'}}" value="{{feature.source.other}}"
-			       class="{{#if (expr '!' (expr '===' feature.source.type 'other'))~}}
-			        obsidian-hidden
-			       {{~/if}} obsidian-input-compact obsidian-input-lg">
+			<div>
+				<select name="flags.obsidian.features.custom.{{featureID}}.source.type"
+				        class="obsidian-feat-source">
+					{{#select feature.source.type}}
+						{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
+							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.FeatSrc-' this)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.features.custom.{{featureID}}.source.class" data-dtype="Number"
+				        class="{{#if (expr '!' (expr '===' feature.source.type 'class'))~}}
+				          obsidian-hidden
+				        {{~/if}} obsidian-feat-source-class">
+					{{#select feature.source.class}}
+						{{#each entity.flags.obsidian.classes as |class id|}}
+							<option value="{{id}}">{{class.label}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.features.custom.{{featureID}}.source.level" data-dtype="Number"
+				        class="{{#if (expr '!' (expr '===' feature.source.type 'feat'))~}}
+				          obsidian-hidden
+				        {{~/if}} obsidian-feat-source-level">
+					{{#select feature.source.level}}
+						{{#each (range 1 data.attributes.level.value)}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input type="text" name="flags.obsidian.features.custom.{{featureID}}.source.other"
+				       placeholder="{{localize 'OBSIDIAN.Source'}}" value="{{feature.source.other}}"
+				       class="{{#if (expr '!' (expr '===' feature.source.type 'other'))~}}
+				        obsidian-hidden
+				       {{~/if}} obsidian-input-compact obsidian-input-lg">
+			</div>
 		</div>
 	</fieldset>
 	<fieldset {{disabled (expr '!' feature.uses.enabled)}}>
@@ -79,39 +81,41 @@
 			       class="obsidian-hidden" {{checked feature.uses.enabled}}>
 		</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="0" value="{{feature.uses.bonus}}"
-			       name="flags.obsidian.features.custom.{{featureID}}.uses.bonus">
-			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.features.custom.{{featureID}}.uses.key"
-			        class="obsidian-feat-uses-key">
-				{{#select feature.uses.key}}
-					<option value="">&mdash;</option>
-					{{#each ObsidianRules.FEAT_USES_KEYS}}
-						<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.UsesKey-' this)}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="flags.obsidian.features.custom.{{featureID}}.uses.ability"
-			        class="{{#if (expr '!' (expr '===' feature.uses.key 'abl'))~}}
-				        obsidian-hidden
-			        {{~/if}} obsidian-feat-uses-ability">
-				{{#select feature.uses.ability}}
-					{{#each data.abilities}}
-						<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Ability-' @key)}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="flags.obsidian.features.custom.{{featureID}}.uses.class"
-			        class="{{#if (expr '!' (expr '===' feature.uses.key 'cls'))~}}
-				        obsidian-hidden
-			        {{~/if}} obsidian-feat-uses-class">
-				{{#select feature.uses.class}}
-					{{#each entity.data.flags.obsidian.classes as |class id|}}
-						<option value="{{id}}">{{class.label}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
+			<div>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" placeholder="0" value="{{feature.uses.bonus}}"
+				       name="flags.obsidian.features.custom.{{featureID}}.uses.bonus">
+				<span class="obsidian-binary-operator">&plus;</span>
+				<select name="flags.obsidian.features.custom.{{featureID}}.uses.key"
+				        class="obsidian-feat-uses-key">
+					{{#select feature.uses.key}}
+						<option value="">&mdash;</option>
+						{{#each ObsidianRules.FEAT_USES_KEYS}}
+							<option value="{{this}}">{{localize (expr '+' 'OBSIDIAN.UsesKey-' this)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.features.custom.{{featureID}}.uses.ability"
+				        class="{{#if (expr '!' (expr '===' feature.uses.key 'abl'))~}}
+					        obsidian-hidden
+				        {{~/if}} obsidian-feat-uses-ability">
+					{{#select feature.uses.ability}}
+						{{#each data.abilities}}
+							<option value="{{@key}}">{{localize (expr '+' 'OBSIDIAN.Ability-' @key)}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.features.custom.{{featureID}}.uses.class"
+				        class="{{#if (expr '!' (expr '===' feature.uses.key 'cls'))~}}
+					        obsidian-hidden
+				        {{~/if}} obsidian-feat-uses-class">
+					{{#select feature.uses.class}}
+						{{#each entity.flags.obsidian.classes as |class id|}}
+							<option value="{{id}}">{{class.label}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</div>
 		</div>
 	</fieldset>
 	<fieldset {{disabled (expr '!' feature.dc.enabled)}}>

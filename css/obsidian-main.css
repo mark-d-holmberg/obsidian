@@ -292,11 +292,18 @@
 	margin-bottom: 0;
 }
 
-.obsidian legend {
+.obsidian legend,
+.obsidian legend .checkbox-content {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-size: 16px;
 	color: var(--text-secondary);
 	padding: 0 8px;
+}
+
+.obsidian legend .checkbox-content {
+	padding: 0;
+	text-transform: none;
+	font-weight: normal;
 }
 
 .obsidian-btn-row {
@@ -346,6 +353,7 @@
 	line-height: 1.2;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	display: flex;
+	height: 15px;
 }
 
 .obsidian-feature-header h4 {
@@ -354,4 +362,34 @@
 
 .obsidian-feature-header i {
 	margin-left: 8px;
+}
+
+.obsidian-feature-body {
+	font-size: 12px;
+	font-family: Roboto, sans-serif;
+	font-weight: normal;
+}
+
+.obsidian .mce-btn-group .mce-btn,
+.obsidian .mce-btn-group .mce-btn:active,
+.obsidian .mce-btn-group .mce-btn:focus,
+.obsidian .mce-btn-group .mce-btn.mce-active {
+	color: var(--text-regular);
+	background: transparent;
+}
+
+.obsidian .mce-menubtn button {
+	color: var(--text-regular);
+}
+
+.app .obsidian .mce-btn .mce-ico {
+	color: var(--text-secondary);
+}
+
+.obsidian .mce-btn-has-text.mce-last {
+	display: none;
+}
+
+.app .obsidian .mce-top-part {
+	border-bottom: 1px solid var(--mid);
 }

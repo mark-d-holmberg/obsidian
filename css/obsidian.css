@@ -82,8 +82,16 @@
 	font-size: 14px;
 }
 
+.obsidian :disabled select {
+	color: var(--text-secondary);
+}
+
 .obsidian option {
 	color: var(--text-inverse);
+}
+
+.obsidian hr {
+	border: 1px solid var(--mid);
 }
 
 .dnd5e.sheet.obsidian-window.obsidian-background {
@@ -621,6 +629,10 @@ button.obsidian-btn-sm.obsidian-char-rest {
 
 .obsidian-inline .fancy-checkbox {
 	display: inline-flex;
+}
+
+legend .fancy-checkbox {
+	margin-bottom: 0;
 }
 
 .checkbox-content {
