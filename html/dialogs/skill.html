@@ -31,20 +31,7 @@
 		</label>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
-		<div class="fancy-checkbox" style="padding-left: 2px;"
-		     data-bound="flags.obsidian.skills.{{skillID}}.adv">
-			<div class="checkbox-container">
-				<div class="checkbox-inner-box"></div>
-				<div class="checkmark-container">
-					<div class="checkmark">
-						<div class="checkmark-short"></div>
-						<div class="checkmark-long"></div>
-					</div>
-				</div>
-			</div>
-			<div class="checkbox-content">{{localize 'OBSIDIAN.Advantage'}}</div>
-		</div>
-		<input type="checkbox" class="obsidian-hidden" {{checked skill.adv}}
-		       name="flags.obsidian.skills.{{skillID}}.adv">
+		{{fancy-checkbox 'flags.obsidian.skills' skillID 'adv' style='padding-left: 2px;'
+		                 content='OBSIDIAN.Advantage' checked=skill.adv}}
 	</div>
 </form>

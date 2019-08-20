@@ -17,6 +17,7 @@ class ObsidianActor extends Actor5e {
 			data.details.level.value += cls.levels;
 		}
 
+		data.attributes.prof.value = Math.floor((data.details.level.value + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ data.attributes.init.value;
@@ -113,9 +114,21 @@ class ObsidianActor extends Actor5e {
 
 		actorData.obsidian.attacks = flags.attacks.custom;
 		for (const attack of Object.values(actorData.obsidian.attacks)) {
-			attack.hit = data.abilities[attack.stat].mod;
-			if (attack.proficient) {
-				attack.hit += data.attributes.prof.value;
+			if (attack.hit.enabled) {
+				attack.hit.value = data.abilities[attack.hit.stat].mod;
+				if (attack.hit.proficient) {
+					attack.hit.value += data.attributes.prof.value;
+				}
+
+				if (attack.hit.crit === undefined || attack.hit.crit === '') {
+					attack.hit.crit = 20;
+				} else {
+					attack.hit.crit = parseInt(attack.hit.crit);
+				}
+			}
+
+			if (attack.dc.enabled) {
+				ObsidianActor._calculateSave(attack.dc, data);
 			}
 
 			if (['melee', 'unarmed'].includes(attack.type)) {
@@ -123,12 +136,6 @@ class ObsidianActor extends Actor5e {
 				if (attack.tags.reach) {
 					attack.reach +=5;
 				}
-			}
-
-			if (attack.crit === undefined || attack.crit === '') {
-				attack.crit = 20;
-			} else {
-				attack.crit = parseInt(attack.crit);
 			}
 
 			for (const dmg of attack.damage.concat(attack.versatile ? attack.versatile : [])) {
@@ -174,18 +181,26 @@ class ObsidianActor extends Actor5e {
 			}
 
 			if (feat.dc.enabled) {
-				feat.dc.value = (feat.dc.bonus || 8) + feat.dc.prof * data.attributes.prof.value;
-				if (feat.dc.ability !== '') {
-					feat.dc.value += data.abilities[feat.dc.ability].mod;
-				}
-
-				if (feat.dc.fixed !== undefined && feat.dc.fixed !== '') {
-					feat.dc.value = Number(feat.dc.fixed);
-				}
+				ObsidianActor._calculateSave(feat.dc, data);
 			}
 		}
 
 		return actorData;
+	}
+
+	/**
+	 * @private
+	 */
+	static _calculateSave (dc, data) {
+		dc.value = (dc.bonus || 8) + dc.prof * data.attributes.prof.value;
+
+		if (dc.ability !== '') {
+			dc.value += data.abilities[dc.ability].mod;
+		}
+
+		if (dc.fixed !== undefined && dc.fixed !== '') {
+			dc.value = Number(dc.fixed);
+		}
 	}
 
 	/**

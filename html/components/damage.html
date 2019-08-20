@@ -1,0 +1,49 @@
+<legend>{{localize title}}</legend>
+{{#each dmgs as |dmg id|}}
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+		<div>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
+			       name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.ndice">
+			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.die"
+			        data-dtype="Number">
+				{{#select dmg.die}}
+					{{#each ../ObsidianRules.DAMAGE_DICE}}
+						<option value="{{this}}">d{{this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.stat">
+				{{#select dmg.stat}}
+					<option value="">&mdash;</option>
+					{{#each ../abilities}}
+						<option value="{{@key}}">
+							{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+						</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<input name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.bonus"
+			       data-dtype="Number" placeholder="0" type="text"
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.type">
+				{{#select dmg.type}}
+					<option value="">&mdash;</option>
+					{{#each ../ObsidianRules.DAMAGE_TYPES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+		<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
+			{{localize 'OBSIDIAN.Remove'}}
+		</button>
+	</div>
+{{/each}}
+<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
+	<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
+		{{localize 'OBSIDIAN.Add'}}
+	</button>
+</div>

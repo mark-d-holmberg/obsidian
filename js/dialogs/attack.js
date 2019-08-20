@@ -81,7 +81,8 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	async _onAddDamage (evt) {
 		evt.preventDefault();
 		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
-		const damage = this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID][prop];
+		const damage =
+			duplicate(this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID][prop]);
 
 		damage.push({
 			ndice: 1,
@@ -91,8 +92,9 @@ class ObsidianAttackDialog extends ObsidianDialog {
 			type: ''
 		});
 
-		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		await this.parent.actor.update({'flags.obsidian.attacks.custom': existing});
+		const update = {};
+		update[`flags.obsidian.attacks.custom.${this.attackID}.${prop}`] = damage;
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 
@@ -112,18 +114,18 @@ class ObsidianAttackDialog extends ObsidianDialog {
 			}
 		}
 
+		const update = {};
 		if (available === null || available === 'custom') {
-			tags[`custom-${Object.keys(tags).length}`] = {
+			const tagID = `custom-${Object.keys(tags).length}`;
+			update[`flags.obsidian.attacks.custom.${this.attackID}.tags.${tagID}`] = {
 				label: '',
 				custom: true
 			};
 		} else {
-			tags[available] = true;
+			update[`flags.obsidian.attacks.custom.${this.attackID}.tags.${available}`] = true;
 		}
 
-		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		existing[this.attackID].tags = tags;
-		await this.parent.actor.update({'flags.obsidian.attacks.custom': existing});
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 
@@ -152,10 +154,10 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
 		const damage = this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID][prop];
-		const newDamage = ObsidianDialog.removeRow(damage, evt);
-		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		existing[this.attackID][prop] = newDamage;
-		await this.parent.actor.update({'flags.obsidian.attacks.custom': existing});
+		const update = {};
+		update[`flags.obsidian.attacks.custom.${this.attackID}.${prop}`] =
+			ObsidianDialog.removeRow(damage, evt);
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 
@@ -166,10 +168,12 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	async _onRemoveTag (evt) {
 		evt.preventDefault();
 		const tag = $(evt.currentTarget).data('key');
-		const tags = this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID].tags;
+		const tags =
+			duplicate(this.parent.actor.data.flags.obsidian.attacks.custom[this.attackID].tags);
 		delete tags[tag];
-		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		await this.parent.actor.update({'flags.obsidian.attacks.custom': existing});
+		const update = {};
+		update[`flags.obsidian.attacks.custom.${this.attackID}.tags`] = tags;
+		await this.parent.actor.update(update);
 		this.render(false);
 	}
 
@@ -201,25 +205,10 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 * @private
 	 */
 	_updateObject (event, formData) {
-		const damageData = {};
-		ObsidianDialog.reconstructArray(
-			formData, damageData, `flags.obsidian.attacks.custom.${this.attackID}.damage`);
-
-		const versatileData = {};
-		ObsidianDialog.reconstructArray(
-			damageData, versatileData, `flags.obsidian.attacks.custom.${this.attackID}.versatile`);
-
-		const customData = {};
-		ObsidianDialog.reconstructArray(versatileData, customData, 'flags.obsidian.attacks.custom');
-
 		const tags = this._collectTags();
-		customData['flags.obsidian.attacks.custom'][this.attackID].tags = tags;
-		customData['flags.obsidian.attacks.custom'][this.attackID].mode =
+		formData[`flags.obsidian.attacks.custom.${this.attackID}.tags`] = tags;
+		formData[`flags.obsidian.attacks.custom.${this.attackID}.mode`] =
 			this._adjustMode(formData, tags);
-
-		const existing = duplicate(this.parent.actor.data.flags.obsidian.attacks.custom);
-		existing[this.attackID] = customData['flags.obsidian.attacks.custom'][this.attackID];
-
-		super._updateObject(event, {'flags.obsidian.attacks.custom': existing});
+		super._updateObject(event, formData);
 	}
 }

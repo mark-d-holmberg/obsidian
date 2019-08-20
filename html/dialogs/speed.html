@@ -24,21 +24,8 @@
 					<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
 				</label>
 				{{#if (expr '===' id 'fly')}}
-					<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.speed.fly.hover">
-						<div class="checkbox-container">
-							<div class="checkbox-inner-box"></div>
-							<div class="checkmark-container">
-								<div class="checkmark">
-									<div class="checkmark-short"></div>
-									<div class="checkmark-long"></div>
-								</div>
-							</div>
-						</div>
-						<div class="checkbox-content">{{localize 'OBSIDIAN.Hover'}}</div>
-					</div>
-					<input type="checkbox" data-dtype="Boolean" class="obsidian-hidden"
-					       name="flags.obsidian.attributes.speed.fly.hover"
-						     {{checked ../entity.flags.obsidian.attributes.speed.fly.hover}}>
+					{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
+					                 checked=../entity.flags.obsidian.attributes.speed.fly.hover}}
 				{{/if}}
 			</div>
 		</div>

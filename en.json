@@ -114,6 +114,7 @@
 	"OBSIDIAN.ManageAttacks": "Manage Attacks",
 	"OBSIDIAN.Attack": "Attack",
 	"OBSIDIAN.Range": "Range",
+	"OBSIDIAN.HitDC": "Hit / DC",
 	"OBSIDIAN.Hit": "Hit",
 	"OBSIDIAN.Damage": "Damage",
 	"OBSIDIAN.Empty": "Empty",
@@ -230,5 +231,7 @@
 	"OBSIDIAN.PlusProf-expert": "Double Proficiency",
 	"OBSIDIAN.Source": "Source",
 	"OBSIDIAN.Minimum": "Minimum",
-	"OBSIDIAN.Fixed": "Fixed"
+	"OBSIDIAN.Fixed": "Fixed",
+	"OBSIDIAN.Effect": "Effect",
+	"OBSIDIAN.Target": "Target"
 }

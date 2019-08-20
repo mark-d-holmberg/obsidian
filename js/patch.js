@@ -14,5 +14,3 @@ createEditor = (function () {
 		return capture;
 	};
 })();
-
-

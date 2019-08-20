@@ -441,35 +441,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		this.settings.width = this.position.width;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
-
-	/**
-	 * @private
-	 */
-	_updateObject (event, formData) {
-		const special = ['flags.obsidian.skills.custom', 'flags.obsidian.skills.tools'];
-		if (!Object.keys(formData).some(key => special.some(path => key.startsWith(path)))) {
-			super._updateObject(event, formData);
-			return;
-		}
-
-		const newData = {};
-		special.forEach(path => {
-			const skills = ObsidianDialog.reconstructArray(formData, newData, path);
-			for (const [key, skill] of Object.entries(getProperty(this.actor.data, path))) {
-				for (const prop in skill) {
-					if (skills[key] === undefined) {
-						skills[key] = duplicate(skill);
-					}
-
-					if (!skills[key].hasOwnProperty(prop)) {
-						skills[key][prop] = skill[prop];
-					}
-				}
-			}
-		});
-
-		super._updateObject(event, newData);
-	}
 }
 
 Actors.registerSheet('dnd5e', Obsidian, {
@@ -482,6 +453,8 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/obsidian.html',
 		'public/modules/obsidian/html/tabs/actions.html',
 		'public/modules/obsidian/html/tabs/attacks.html',
-		'public/modules/obsidian/html/tabs/sub-actions.html'
+		'public/modules/obsidian/html/tabs/sub-actions.html',
+		'public/modules/obsidian/html/components/damage.html',
+		'public/modules/obsidian/html/components/dc.html'
 	]);
 });

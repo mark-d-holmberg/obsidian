@@ -1,0 +1,49 @@
+<fieldset {{disabled (expr '!' enabled)}}>
+	<legend>
+		{{fancy-checkbox prop id 'dc.enabled' content='OBSIDIAN.DC' checked=enabled}}
+	</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<input type="text" name="{{prop}}.{{id}}.dc.bonus" placeholder="8" value="{{bonus}}"
+		       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+		<span class="obsidian-binary-operator">&plus;</span>
+		<select name="{{prop}}.{{id}}.dc.prof" data-dtype="Number">
+			{{#select prof}}
+				<option value="">&mdash;</option>
+				{{#each ObsidianRules.PLUS_PROF}}
+					<option value="{{@key}}">{{i18n-join 'OBSIDIAN.PlusProf-' this}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
+		<span class="obsidian-binary-operator">&plus;</span>
+		<select name="{{prop}}.{{id}}.dc.ability">
+			{{#select ability}}
+				<option value="">&mdash;</option>
+				{{#each abilities}}
+					<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
+		<label>
+			<input type="text" name="{{prop}}.{{id}}.dc.fixed" value="{{fixed}}"
+			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+			<span>{{localize 'OBSIDIAN.Fixed'}}</span>
+		</label>
+	</div>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+		<div class="obsidian-checkbox-row">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Target'}}
+				<select name="{{prop}}.{{id}}.dc.target">
+					{{#select target}}
+						{{#each abilities}}
+							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<input type="text" name="{{prop}}.{{id}}.dc.effect" value="{{effect}}"
+			       class="obsidian-input-compact obsidian-input-lg"
+			       placeholder="{{localize 'OBSIDIAN.Effect'}}">
+		</div>
+	</div>
+</fieldset>

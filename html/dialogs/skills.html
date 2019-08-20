@@ -8,20 +8,8 @@
 		</label>
 	</div>
 	<div class="obsidian-form-row" style="margin-left: 2px;">
-		<div class="fancy-checkbox" data-bound="flags.obsidian.skills.joat">
-			<div class="checkbox-container">
-				<div class="checkbox-inner-box"></div>
-				<div class="checkmark-container">
-					<div class="checkmark">
-						<div class="checkmark-short"></div>
-						<div class="checkmark-long"></div>
-					</div>
-				</div>
-			</div>
-			<div class="checkbox-content">{{localize 'OBSIDIAN.JackOfAllTrades'}}</div>
-		</div>
-		<input type="checkbox" name="flags.obsidian.skills.joat" class="obsidian-hidden"
-			     {{checked entity.flags.obsidian.skills.joat}}>
+		{{fancy-checkbox 'flags.obsidian.skills.joat' content='OBSIDIAN.JackOfAllTrades'
+		                 checked=entity.flags.obsidian.skills.joat}}
 	</div>
 	<label class="obsidian-inline obsidian-label-lg">
 		{{localize 'OBSIDIAN.CustomSkills'}}

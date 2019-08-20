@@ -4,63 +4,24 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input class="obsidian-input-compact obsidian-input-lg" type="text"
-			       name="flags.obsidian.attacks.custom.{{attackID}}.label"
-			       placeholder="{{localize 'OBSIDIAN.Attack'}}"
-			       value="{{attack.label}}">
-			<select name="flags.obsidian.attacks.custom.{{attackID}}.type" class="obsidian-attack-type">
-				{{#select attack.type}}
-					{{#each ObsidianRules.ATTACK_TYPES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="flags.obsidian.attacks.custom.{{attackID}}.crit" placeholder="20"
-				       value="{{attack.crit}}">
-				<span>{{localize 'OBSIDIAN.Crit'}}</span>
-			</label>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="flags.obsidian.attacks.custom.{{attackID}}.magic" placeholder="0"
-				       data-dtype="Number" value="{{attack.magic}}">
-				<span>{{localize 'OBSIDIAN.Magic'}}</span>
-			</label>
-		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
-			<div class="obsidian-checkbox-row">
+			<div style="width: 350px;">
+				<input class="obsidian-input-compact obsidian-input-lg" type="text"
+				       name="flags.obsidian.attacks.custom.{{attackID}}.label"
+				       placeholder="{{localize 'OBSIDIAN.Attack'}}"
+				       value="{{attack.label}}">
+				<select name="flags.obsidian.attacks.custom.{{attackID}}.type" class="obsidian-attack-type">
+					{{#select attack.type}}
+						{{#each ObsidianRules.ATTACK_TYPES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
 				<label class="obsidian-inline">
-					{{localize 'OBSIDIAN.ToHit'}}
-					<select name="flags.obsidian.attacks.custom.{{attackID}}.stat">
-						{{#select attack.stat}}
-							{{#each data.abilities}}
-								<option value="{{@key}}">
-									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
-								</option>
-							{{/each}}
-						{{/select}}
-					</select>
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="flags.obsidian.attacks.custom.{{attackID}}.magic" placeholder="0"
+					       data-dtype="Number" value="{{attack.magic}}">
+					<span>{{localize 'OBSIDIAN.Magic'}}</span>
 				</label>
-				<span class="obsidian-binary-operator">&plus;</span>
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" name="flags.obsidian.attacks.custom.{{attackID}}.bonus"
-				       placeholder="0" value="{{attack.bonus}}">
-				<div class="fancy-checkbox"
-				     data-bound="flags.obsidian.attacks.custom.{{attackID}}.proficient">
-					<div class="checkbox-container">
-						<div class="checkbox-inner-box"></div>
-						<div class="checkmark-container">
-							<div class="checkmark">
-								<div class="checkmark-short"></div>
-								<div class="checkmark-long"></div>
-							</div>
-						</div>
-					</div>
-					<div class="checkbox-content">{{localize 'OBSIDIAN.Proficiency-prof'}}</div>
-				</div>
-				<input type="checkbox" name="flags.obsidian.attacks.custom.{{attackID}}.proficient"
-				       class="obsidian-hidden" {{checked attack.proficient}}>
 			</div>
 		</div>
 		<div class="{{#if (expr '&&' (expr '!' attack.tags.thrown) (expr '===' attack.type 'melee'))~}}
@@ -80,109 +41,46 @@
 			</div>
 		</div>
 	</fieldset>
-	<fieldset data-prop="damage">
-		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
-		{{#each attack.damage as |dmg id|}}
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
-				<div>
+	<fieldset {{disabled (expr '!' attack.hit.enabled)}}>
+		<legend>
+			{{fancy-checkbox 'flags.obsidian.attacks.custom' attackID 'hit.enabled'
+			                 content='OBSIDIAN.Hit' checked=attack.hit.enabled}}
+		</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-checkbox-row">
+				<select name="flags.obsidian.attacks.custom.{{attackID}}.hit.stat">
+					{{#select attack.hit.stat}}
+						{{#each data.abilities}}
+							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" name="flags.obsidian.attacks.custom.{{attackID}}.hit.bonus"
+				       placeholder="0" value="{{attack.hit.bonus}}">
+				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
-					       name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.ndice">
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.die"
-					        data-dtype="Number">
-						{{#select dmg.die}}
-							{{#each ../ObsidianRules.DAMAGE_DICE}}
-								<option value="{{this}}">d{{this}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-					<span class="obsidian-binary-operator">&plus;</span>
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.stat">
-						{{#select dmg.stat}}
-							<option value="">&mdash;</option>
-							{{#each ../data.abilities}}
-								<option value="{{@key}}">
-									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
-								</option>
-							{{/each}}
-						{{/select}}
-					</select>
-					<span class="obsidian-binary-operator">&plus;</span>
-					<input name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.bonus"
-					       data-dtype="Number" placeholder="0" type="text"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.damage.{{id}}.type">
-						{{#select dmg.type}}
-							<option value="">&mdash;</option>
-							{{#each ../ObsidianRules.DAMAGE_TYPES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
-					{{localize 'OBSIDIAN.Remove'}}
-				</button>
+					       name="flags.obsidian.attacks.custom.{{attackID}}.hit.crit" placeholder="20"
+					       value="{{attack.hit.crit}}">
+					<span>{{localize 'OBSIDIAN.Crit'}}</span>
+				</label>
+				{{fancy-checkbox 'flags.obsidian.attacks.custom' attackID 'hit.proficient'
+				                 content='OBSIDIAN.Proficiency-prof' checked=attack.hit.proficient}}
 			</div>
-		{{/each}}
-		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
-			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
-				{{localize 'OBSIDIAN.Add'}}
-			</button>
 		</div>
+	</fieldset>
+	{{> public/modules/obsidian/html/components/dc.html attack.dc prop='flags.obsidian.attacks.custom'
+			id=attackID abilities=data.abilities ObsidianRules=ObsidianRules}}
+	<fieldset data-prop="damage">
+		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.damage
+				title='OBSIDIAN.Damage' attackID=attackID prop='damage' abilities=data.abilities}}
 	</fieldset>
 	<fieldset class="{{#if (expr '!' attack.tags.versatile)}}
 		obsidian-hidden
 	{{/if}} obsidian-versatile-block" data-prop="versatile">
-		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
-		{{#each attack.versatile as |dmg id|}}
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
-				<div>
-					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
-					       name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.ndice">
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.die"
-					        data-dtype="Number">
-						{{#select dmg.die}}
-							{{#each ../ObsidianRules.DAMAGE_DICE}}
-								<option value="{{this}}">d{{this}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-					<span class="obsidian-binary-operator">&plus;</span>
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.stat">
-						{{#select dmg.stat}}
-							<option value="">&mdash;</option>
-							{{#each ../data.abilities}}
-								<option value="{{@key}}">
-									{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
-								</option>
-							{{/each}}
-						{{/select}}
-					</select>
-					<span class="obsidian-binary-operator">&plus;</span>
-					<input type="text" data-dtype="Number" placeholder="0"
-					       name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.bonus"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-					<select name="flags.obsidian.attacks.custom.{{../attackID}}.versatile.{{id}}.type">
-						{{#select dmg.type}}
-							<option value="">&mdash;</option>
-							{{#each ../ObsidianRules.DAMAGE_TYPES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
-							{{/each}}
-						{{/select}}
-					</select>
-				</div>
-				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
-					{{localize 'OBSIDIAN.Remove'}}
-				</button>
-			</div>
-		{{/each}}
-		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
-			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-damage">
-				{{localize 'OBSIDIAN.Add'}}
-			</button>
-		</div>
+		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.versatile prop='versatile'
+				title='OBSIDIAN.VersatileDamage' attackID=attackID abilities=data.abilities}}
 	</fieldset>
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>

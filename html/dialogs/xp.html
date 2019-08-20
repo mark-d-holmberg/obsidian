@@ -1,18 +1,6 @@
 <form class="obsidian" autocomplete="off">
-	<div class="fancy-checkbox" data-bound="flags.obsidian.details.milestone">
-		<div class="checkbox-container">
-			<div class="checkbox-inner-box"></div>
-			<div class="checkmark-container">
-				<div class="checkmark">
-					<div class="checkmark-short"></div>
-					<div class="checkmark-long"></div>
-				</div>
-			</div>
-		</div>
-		<div class="checkbox-content">{{localize 'OBSIDIAN.MilestoneLevelling'}}</div>
-	</div>
-	<input type="checkbox" data-dtype="Boolean" name="flags.obsidian.details.milestone"
-	       class="obsidian-hidden" {{checked entity.flags.obsidian.details.milestone}}>
+	{{fancy-checkbox 'flags.obsidian.details.milestone' content='OBSIDIAN.MilestoneLevelling'
+	                 checked=entity.flags.obsidian.details.milestone}}
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
 			<span>{{localize 'OBSIDIAN.SetXP'}}</span>

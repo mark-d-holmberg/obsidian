@@ -140,9 +140,14 @@
 	width: 140px;
 }
 
-.obsidian-col-range,
+.obsidian-col-range {
+	width: 50px;
+}
+
 .obsidian-col-hit {
 	width: 55px;
+	text-align: center;
+	margin-right: 5px;
 }
 
 .obsidian-col-damage {
@@ -173,6 +178,10 @@
 .obsidian-table-unit {
 	font-size: 10px;
 	color: var(--text-subtle);
+}
+
+.obsidian-table-sub-text {
+	font-weight: normal;
 }
 
 .obsidian-table-number-md,
@@ -398,4 +407,10 @@
 
 .app .obsidian .mce-top-part {
 	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-na {
+	font-size: 14px;
+	color: var(--text-secondary);
+	font-weight: normal;
 }

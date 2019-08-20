@@ -71,8 +71,31 @@ Handlebars.registerHelper('expr', function (op, ...args) {
 	}
 });
 
+Handlebars.registerHelper('fancy-checkbox', function (...args) {
+	const options = args.pop();
+	const prop = args.join('.');
+
+	return new Handlebars.SafeString(`
+		<div class="fancy-checkbox" data-bound="${prop}"
+		     ${options.hash.style ? `style="${options.hash.style}"` : ''}>
+			<div class="checkbox-container">
+				<div class="checkbox-inner-box"></div>
+				<div class="checkmark-container">
+					<div class="checkmark">
+						<div class="checkmark-short"></div>
+						<div class="checkmark-long"></div>
+					</div>
+				</div>
+			</div>
+			<div class="checkbox-content">${game.i18n.localize(options.hash.content)}</div>
+		</div>
+		<input type="checkbox" name="${prop}" class="obsidian-hidden"
+		       ${options.hash.checked ? 'checked' : ''}>
+	`);
+});
+
 Handlebars.registerHelper('format-uses', function (feat) {
-	return Handlebars.SafeString('');
+	return new Handlebars.SafeString('');
 });
 
 Handlebars.registerHelper('get-property', function (data, key) {

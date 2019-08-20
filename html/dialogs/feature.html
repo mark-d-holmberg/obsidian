@@ -63,130 +63,63 @@
 	</fieldset>
 	<fieldset {{disabled (expr '!' feature.uses.enabled)}}>
 		<legend>
-			<div class="fancy-checkbox"
-			     data-bound="flags.obsidian.features.custom.{{featureID}}.uses.enabled">
-				<div class="checkbox-container">
-					<div class="checkbox-inner-box"></div>
-					<div class="checkmark-container">
-						<div class="checkmark">
-							<div class="checkmark-short"></div>
-							<div class="checkmark-long"></div>
-						</div>
-					</div>
-				</div>
-				<div class="checkbox-content">{{localize 'OBSIDIAN.Uses'}}</div>
-			</div>
-			<input type="checkbox" name="flags.obsidian.features.custom.{{featureID}}.uses.enabled"
-			       class="obsidian-hidden" {{checked feature.uses.enabled}}>
+			{{fancy-checkbox 'flags.obsidian.features.custom' featureID 'uses.enabled'
+			                 content='OBSIDIAN.Uses' checked=feature.uses.enabled}}
 		</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<div>
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" placeholder="0" value="{{feature.uses.bonus}}"
-				       name="flags.obsidian.features.custom.{{featureID}}.uses.bonus">
-				<span class="obsidian-binary-operator">&plus;</span>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.key"
-				        data-selector="uses-key">
-					{{#select feature.uses.key}}
-						<option value="">&mdash;</option>
-						{{#each ObsidianRules.FEAT_USES_KEYS}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.UsesKey-' this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.ability" data-show="abl"
-				        data-selector-parent="uses-key">
-					{{#select feature.uses.ability}}
-						{{#each data.abilities}}
-							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.class" data-show="cls"
-				        data-selector-parent="uses-key">
-					{{#select feature.uses.class}}
-						{{#each entity.flags.obsidian.classes}}
-							<option value="{{this.id}}">{{this.label}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-			</div>
-		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row">
-			<div class="obsidian-checkbox-row">
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.recharge">
-					{{#select feature.uses.recharge}}
-						<option value="short">{{localize 'OBSIDIAN.ShortRest'}}</option>
-						<option value="long">{{localize 'OBSIDIAN.LongRest'}}</option>
-					{{/select}}
-				</select>
-				<div class="obsidian-flex">
-					<label class="obsidian-inline">
-						<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.min"
-						       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-						       placeholder="0" data-dtype="Number" value="{{feature.uses.min}}">
-						<span>{{localize 'OBSIDIAN.Minimum'}}</span>
-					</label>
-					<label class="obsidian-inline">
-						<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.fixed"
-						       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-						       value="{{feature.uses.fixed}}">
-						<span>{{localize 'OBSIDIAN.Fixed'}}</span>
-					</label>
-				</div>
-			</div>
-		</div>
-	</fieldset>
-	<fieldset {{disabled (expr '!' feature.dc.enabled)}}>
-		<legend>
-			<div class="fancy-checkbox"
-			     data-bound="flags.obsidian.features.custom.{{featureID}}.dc.enabled">
-				<div class="checkbox-container">
-					<div class="checkbox-inner-box"></div>
-					<div class="checkmark-container">
-						<div class="checkmark">
-							<div class="checkmark-short"></div>
-							<div class="checkmark-long"></div>
-						</div>
-					</div>
-				</div>
-				<div class="checkbox-content">{{localize 'OBSIDIAN.DC'}}</div>
-			</div>
-			<input type="checkbox" name="flags.obsidian.features.custom.{{featureID}}.dc.enabled"
-			       class="obsidian-hidden" {{checked feature.dc.enabled}}>
-		</legend>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" name="flags.obsidian.features.custom.{{featureID}}.dc.bonus"
-			       placeholder="8" value="{{feature.dc.bonus}}"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+			<select name="flags.obsidian.features.custom.{{featureID}}.uses.recharge">
+				{{#select feature.uses.recharge}}
+					<option value="short">{{localize 'OBSIDIAN.ShortRest'}}</option>
+					<option value="long">{{localize 'OBSIDIAN.LongRest'}}</option>
+				{{/select}}
+			</select>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" value="{{feature.uses.bonus}}"
+			       name="flags.obsidian.features.custom.{{featureID}}.uses.bonus">
 			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.features.custom.{{featureID}}.dc.prof" data-dtype="Number">
-				{{#select feature.dc.prof}}
+			<select name="flags.obsidian.features.custom.{{featureID}}.uses.key"
+			        data-selector="uses-key">
+				{{#select feature.uses.key}}
 					<option value="">&mdash;</option>
-					{{#each ObsidianRules.PLUS_PROF}}
-						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.PlusProf-' this}}</option>
+					{{#each ObsidianRules.FEAT_USES_KEYS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.UsesKey-' this}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.features.custom.{{featureID}}.dc.ability">
-				{{#select feature.dc.ability}}
-					<option value="">&mdash;</option>
+			<select name="flags.obsidian.features.custom.{{featureID}}.uses.ability" data-show="abl"
+			        data-selector-parent="uses-key">
+				{{#select feature.uses.ability}}
 					{{#each data.abilities}}
 						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
-		</div>
-		<div class="obsidian-form-row obsidian-stacked-row">
+			<select name="flags.obsidian.features.custom.{{featureID}}.uses.class" data-show="cls"
+			        data-selector-parent="uses-key">
+				{{#select feature.uses.class}}
+					{{#each entity.flags.obsidian.classes}}
+						<option value="{{this.id}}">{{this.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
 			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.features.custom.{{featureID}}.dc.fixed"
+				<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.min"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       value="{{feature.dc.fixed}}">
+				       placeholder="0" data-dtype="Number" value="{{feature.uses.min}}">
+				<span>{{localize 'OBSIDIAN.Minimum'}}</span>
+			</label>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row">
+			<label class="obsidian-inline">
+				<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.fixed"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       value="{{feature.uses.fixed}}">
 				<span>{{localize 'OBSIDIAN.Fixed'}}</span>
 			</label>
 		</div>
 	</fieldset>
+	{{> public/modules/obsidian/html/components/dc.html feature.dc id=featureID
+			abilities=data.abilities ObsidianRules=ObsidianRules prop='flags.obsidian.features.custom'}}
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 	<div class="obsidian-rich-text">
 		{{editor content=feature.desc button=false editable=editable

@@ -16,21 +16,9 @@
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
-		<div class="fancy-checkbox" data-bound="flags.obsidian.attributes.init.adv"
-		     style="margin-left: 2px;">
-			<div class="checkbox-container">
-				<div class="checkbox-inner-box"></div>
-				<div class="checkmark-container">
-					<div class="checkmark">
-						<div class="checkmark-short"></div>
-						<div class="checkmark-long"></div>
-					</div>
-				</div>
-			</div>
-			<div class="checkbox-content">{{localize 'OBSIDIAN.Advantage'}}</div>
-		</div>
-		<input type="checkbox" name="flags.obsidian.attributes.init.adv" class="obsidian-hidden"
-		       {{checked entity.flags.obsidian.attributes.init.adv}}>
+		{{fancy-checkbox 'flags.obsidian.attributes.init.adv' style='margin-left: 2px;'
+		                 content='OBSIDIAN.Advantage'
+		                 checked=entity.flags.obsidian.attributes.init.adv}}
 	</div>
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">

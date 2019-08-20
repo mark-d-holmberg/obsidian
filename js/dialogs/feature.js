@@ -3,7 +3,7 @@ class ObsidianFeatureDialog extends ObsidianDialog {
 		super(parent, {
 			title: game.i18n.localize('OBSIDIAN.EditFeature'),
 			template: 'public/modules/obsidian/html/dialogs/feature.html',
-			width: 420
+			width: 460
 		});
 
 		this.featureID = parseInt(featureID);
