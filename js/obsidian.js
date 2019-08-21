@@ -90,6 +90,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
+		html.find('.obsidian-feature-use').click(this._onUseClicked.bind(this));
 
 		this._activateDialogs(html);
 		Obsidian._resizeMain(html);
@@ -262,6 +263,28 @@ class Obsidian extends ActorSheet5eCharacter {
 				this.actor.update(update);
 			}
 		}, 25);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onUseClicked (evt) {
+		const target = $(evt.currentTarget);
+		const featID = Number(target.parent().data('feat-id'));
+		const n = Number(target.data('n'));
+		const feat = this.actor.data.flags.obsidian.features.custom[featID];
+		let used = feat.uses.max - feat.uses.remaining;
+
+		if (n > used) {
+			used++;
+		} else {
+			used--;
+		}
+
+		const update = {};
+		update[`flags.obsidian.features.custom.${featID}.uses.remaining`] = feat.uses.max - used;
+		this.actor.update(update);
 	}
 
 	/**

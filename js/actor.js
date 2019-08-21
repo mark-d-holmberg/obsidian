@@ -40,150 +40,17 @@ class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
-		actorData.obsidian.skills = {};
-		for (let [id, skill] of
-			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
-		{
-			const custom = !isNaN(Number(id));
-			if (!custom && flags.skills[id] === undefined) {
-				flags.skills[id] = duplicate(skill);
-			} else if (!custom) {
-				flags.skills[id] = mergeObject(flags.skills[id], skill);
-			}
-
-			if (!custom) {
-				skill = flags.skills[id];
-				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
-			}
-
-			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
-
-			skill.mod =
-				data.abilities[skill.ability].mod
-				+ Math.floor(skill.value * data.attributes.prof.value)
-				+ flags.skills.bonus
-				+ (skill.bonus || 0);
-
-			if (flags.skills.joat && skill.value === 0) {
-				skill.mod += Math.floor(data.attributes.prof.value / 2);
-			}
-
-			if (skill.override !== undefined && skill.override !== '') {
-				skill.mod = Number(skill.override);
-			}
-
-			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
-			if (skill.adv) {
-				skill.passive += 5;
-			}
-		}
-
-		for (const tool of flags.skills.tools) {
-			if (tool.override !== undefined && tool.override !== '') {
-				tool.mod = Number(tool.override);
-				continue;
-			}
-
-			tool.mod =
-				data.abilities[tool.ability].mod
-				+ tool.bonus
-				+ flags.skills.bonus
-				+ Math.floor(tool.value * data.attributes.prof.value);
-
-			if (flags.skills.joat && tool.value === 0) {
-				tool.mod += Math.floor(data.attributes.prof.value / 2);
-			}
-		}
-
-		for (const [id, save] of Object.entries(data.abilities)) {
-			save.save += flags.saves.bonus;
-			if (flags.saves.hasOwnProperty(id)) {
-				save.save += flags.saves[id].bonus;
-				const override = flags.saves[id].override;
-				if (override !== undefined && override !== '') {
-					save.save = Number(override);
-				}
-			}
-		}
-
 		actorData.obsidian.profs = {
 			armour: flags.traits.profs.custom.armour,
 			weapons: flags.traits.profs.custom.weapons,
 			langs: flags.traits.profs.custom.langs
 		};
 
-		actorData.obsidian.attacks = flags.attacks.custom;
-		for (const attack of Object.values(actorData.obsidian.attacks)) {
-			if (attack.hit.enabled) {
-				attack.hit.value = data.abilities[attack.hit.stat].mod;
-				if (attack.hit.proficient) {
-					attack.hit.value += data.attributes.prof.value;
-				}
-
-				if (attack.hit.crit === undefined || attack.hit.crit === '') {
-					attack.hit.crit = 20;
-				} else {
-					attack.hit.crit = parseInt(attack.hit.crit);
-				}
-			}
-
-			if (attack.dc.enabled) {
-				ObsidianActor._calculateSave(attack.dc, data);
-			}
-
-			if (['melee', 'unarmed'].includes(attack.type)) {
-				attack.reach = 5;
-				if (attack.tags.reach) {
-					attack.reach +=5;
-				}
-			}
-
-			for (const dmg of attack.damage.concat(attack.versatile ? attack.versatile : [])) {
-				dmg.mod = dmg.bonus || 0;
-				if (dmg.stat.length > 0) {
-					dmg.mod += data.abilities[dmg.stat].mod;
-				}
-
-				dmg.display = ObsidianActor._damageFormat(dmg);
-			}
-
-			attack.attackType = 'OBSIDIAN.MeleeWeapon';
-			if (attack.mode === 'ranged') {
-				if (attack.type === 'melee') {
-					attack.attackType = 'OBSIDIAN.RangedAttack';
-				} else {
-					attack.attackType = 'OBSIDIAN.RangedWeapon';
-				}
-			} else if (attack.mode === 'unarmed') {
-				attack.attackType = 'OBSIDIAN.MeleeAttack';
-			}
-		}
-
-		actorData.obsidian.features = flags.features.custom;
-		for (const feat of Object.values(actorData.obsidian.features)) {
-			if (feat.uses.enabled) {
-				feat.uses.value = feat.uses.bonus;
-				if (feat.uses.key === 'abl') {
-					feat.uses.value += data.abilities[feat.uses.ability].mod;
-				} else if (feat.uses.key === 'chr') {
-					feat.uses.value += data.details.level.value;
-				} else if (feat.uses.key === 'cls') {
-					const cls = flags.classes.find(cls => cls.id === feat.uses.class);
-					if (cls) {
-						feat.uses.value += cls.levels;
-					}
-				}
-
-				feat.uses.value = Math.max(feat.uses.min, feat.uses.value);
-				if (feat.uses.fixed !== undefined && feat.uses.fixed !== '') {
-					feat.uses.value = Number(feat.uses.fixed);
-				}
-			}
-
-			if (feat.dc.enabled) {
-				ObsidianActor._calculateSave(feat.dc, data);
-			}
-		}
+		ObsidianActor._prepareSkills(actorData, data, flags);
+		ObsidianActor._prepareTools(actorData, data, flags);
+		ObsidianActor._prepareSaves(actorData, data, flags);
+		ObsidianActor._prepareAttacks(actorData, data, flags);
+		ObsidianActor._prepareFeatures(actorData, data, flags);
 
 		return actorData;
 	}
@@ -267,6 +134,181 @@ class ObsidianActor extends Actor5e {
 		};
 
 		walk(duplicate(Obsidian.SCHEMA), flags);
+	}
+
+	/**
+	 * @private
+	 */
+	static _prepareAttacks (actorData, data, flags) {
+		actorData.obsidian.attacks = flags.attacks.custom;
+		for (const attack of Object.values(actorData.obsidian.attacks)) {
+			if (attack.hit.enabled) {
+				attack.hit.value = data.abilities[attack.hit.stat].mod;
+				if (attack.hit.proficient) {
+					attack.hit.value += data.attributes.prof.value;
+				}
+
+				if (attack.hit.crit === undefined || attack.hit.crit === '') {
+					attack.hit.crit = 20;
+				} else {
+					attack.hit.crit = parseInt(attack.hit.crit);
+				}
+			}
+
+			if (attack.dc.enabled) {
+				ObsidianActor._calculateSave(attack.dc, data);
+			}
+
+			if (['melee', 'unarmed'].includes(attack.type)) {
+				attack.reach = 5;
+				if (attack.tags.reach) {
+					attack.reach +=5;
+				}
+			}
+
+			for (const dmg of attack.damage.concat(attack.versatile ? attack.versatile : [])) {
+				dmg.mod = dmg.bonus || 0;
+				if (dmg.stat.length > 0) {
+					dmg.mod += data.abilities[dmg.stat].mod;
+				}
+
+				dmg.display = ObsidianActor._damageFormat(dmg);
+			}
+
+			attack.attackType = 'OBSIDIAN.MeleeWeapon';
+			if (attack.mode === 'ranged') {
+				if (attack.type === 'melee') {
+					attack.attackType = 'OBSIDIAN.RangedAttack';
+				} else {
+					attack.attackType = 'OBSIDIAN.RangedWeapon';
+				}
+			} else if (attack.mode === 'unarmed') {
+				attack.attackType = 'OBSIDIAN.MeleeAttack';
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	static _prepareFeatures (actorData, data, flags) {
+		const ops = {
+			plus: (a, b) => a + b,
+			mult: (a, b) => a * b
+		};
+
+		actorData.obsidian.features = flags.features.custom;
+		for (const feat of Object.values(actorData.obsidian.features)) {
+			if (feat.uses.enabled) {
+				const op = ops[feat.uses.operator];
+				if (feat.uses.key === 'abl') {
+					feat.uses.max = op(feat.uses.bonus, data.abilities[feat.uses.ability].mod);
+				} else if (feat.uses.key === 'chr') {
+					feat.uses.max = op(feat.uses.bonus, data.details.level.value);
+				} else if (feat.uses.key === 'cls') {
+					const cls = flags.classes.find(cls => cls.id === feat.uses.class);
+					if (cls) {
+						feat.uses.max = op(feat.uses.bonus, cls.levels);
+					}
+				}
+
+				feat.uses.max = Math.max(feat.uses.min, feat.uses.max);
+				if (feat.uses.fixed !== undefined && feat.uses.fixed !== '') {
+					feat.uses.max = Number(feat.uses.fixed);
+				}
+
+				if (feat.uses.remaining === undefined || feat.uses.remaining > feat.uses.max) {
+					feat.uses.remaining = feat.uses.max;
+				} else if (feat.uses.remaining < 0) {
+					feat.uses.remaining = 0;
+				}
+			}
+
+			if (feat.dc.enabled) {
+				ObsidianActor._calculateSave(feat.dc, data);
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	static _prepareSaves (actorData, data, flags) {
+		for (const [id, save] of Object.entries(data.abilities)) {
+			save.save += flags.saves.bonus;
+			if (flags.saves.hasOwnProperty(id)) {
+				save.save += flags.saves[id].bonus;
+				const override = flags.saves[id].override;
+				if (override !== undefined && override !== '') {
+					save.save = Number(override);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	static _prepareSkills (actorData, data, flags) {
+		actorData.obsidian.skills = {};
+		for (let [id, skill] of
+			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
+		{
+			const custom = !isNaN(Number(id));
+			if (!custom && flags.skills[id] === undefined) {
+				flags.skills[id] = duplicate(skill);
+			} else if (!custom) {
+				flags.skills[id] = mergeObject(flags.skills[id], skill);
+			}
+
+			if (!custom) {
+				skill = flags.skills[id];
+				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
+			}
+
+			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
+
+			skill.mod =
+				data.abilities[skill.ability].mod
+				+ Math.floor(skill.value * data.attributes.prof.value)
+				+ flags.skills.bonus
+				+ (skill.bonus || 0);
+
+			if (flags.skills.joat && skill.value === 0) {
+				skill.mod += Math.floor(data.attributes.prof.value / 2);
+			}
+
+			if (skill.override !== undefined && skill.override !== '') {
+				skill.mod = Number(skill.override);
+			}
+
+			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			if (skill.adv) {
+				skill.passive += 5;
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	static _prepareTools (actorData, data, flags) {
+		for (const tool of flags.skills.tools) {
+			if (tool.override !== undefined && tool.override !== '') {
+				tool.mod = Number(tool.override);
+				continue;
+			}
+
+			tool.mod =
+				data.abilities[tool.ability].mod
+				+ tool.bonus
+				+ flags.skills.bonus
+				+ Math.floor(tool.value * data.attributes.prof.value);
+
+			if (flags.skills.joat && tool.value === 0) {
+				tool.mod += Math.floor(data.attributes.prof.value / 2);
+			}
+		}
 	}
 
 	updateClasses (before, after, update) {

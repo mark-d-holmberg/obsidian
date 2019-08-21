@@ -363,14 +363,21 @@
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	display: flex;
 	height: 15px;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .obsidian-feature-header h4 {
 	font-weight: bold;
+	margin: 0;
 }
 
 .obsidian-feature-header i {
 	margin-left: 8px;
+}
+
+.obsidian-feature-header > div:first-child {
+	display: flex;
 }
 
 .obsidian-feature-body {
@@ -383,6 +390,29 @@
 	margin-left: 3px;
 	font-weight: normal;
 	color: var(--text-subtle);
+}
+
+.obsidian-feature-use {
+	height: 15px;
+	width: 15px;
+	border: 2px solid var(--highlight);
+	border-radius: 3px;
+	cursor: pointer;
+	display: inline-block;
+	margin-right: 3px;
+}
+
+.obsidian-feature-used {
+	border-color: var(--mid);
+	background: var(--mid);
+}
+
+.obsidian-feature-max {
+	font-size: 14px;
+	min-width: 40px;
+	text-align: center;
+	font-family: Roboto, sans-serif;
+	display: inline-block;
 }
 
 .obsidian .mce-btn-group .mce-btn,

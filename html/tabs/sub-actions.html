@@ -10,24 +10,26 @@
 		{{#each entity.obsidian.features as |feat id|}}
 			<div class="obsidian-feature">
 				<div class="obsidian-feature-header">
-					<h4>{{feat.label}}</h4>
-					{{#if feat.uses.enabled}}
-						<div class="obsidian-feature-recharge">
-							&bull;
-							{{#if (expr '===' feat.uses.recharge 'short')}}
-								{{localize 'OBSIDIAN.ShortRest'}}
-							{{else}}
-								{{localize 'OBSIDIAN.LongRest'}}
-							{{/if}}
-						</div>
-					{{/if}}
-					{{#if feat.custom}}
-						<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit"
-						   data-feature-id="{{id}}">
-							<i class="fas fa-edit"></i>
-						</a>
-					{{/if}}
-					{{format-uses feat.uses.value}}
+					<div>
+						<h4>{{feat.label}}</h4>
+						{{#if feat.uses.enabled}}
+							<div class="obsidian-feature-recharge">
+								&bull;
+								{{#if (expr '===' feat.uses.recharge 'short')}}
+									{{localize 'OBSIDIAN.ShortRest'}}
+								{{else}}
+									{{localize 'OBSIDIAN.LongRest'}}
+								{{/if}}
+							</div>
+						{{/if}}
+						{{#if feat.custom}}
+							<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit"
+							   data-feature-id="{{id}}">
+								<i class="fas fa-edit"></i>
+							</a>
+						{{/if}}
+					</div>
+					{{format-uses feat.uses id=id}}
 				</div>
 				<div class="obsidian-feature-body">{{{feat.desc}}}</div>
 			</div>

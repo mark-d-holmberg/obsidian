@@ -94,8 +94,38 @@ Handlebars.registerHelper('fancy-checkbox', function (...args) {
 	`);
 });
 
-Handlebars.registerHelper('format-uses', function (feat) {
-	return new Handlebars.SafeString('');
+Handlebars.registerHelper('format-uses', function (uses, options) {
+	if (!uses.enabled || uses.max === undefined || uses.max < 1) {
+		return '';
+	}
+
+	const id = options.hash.id;
+	let used = uses.max - uses.remaining;
+
+	if (used < 0) {
+		used = 0;
+	}
+
+	let out = `<div class="obsidian-feature-uses" data-feat-id="${id}">`;
+
+	if (uses.max < 11) {
+		for (let i = 0; i < uses.max; i++) {
+			out += `
+				<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
+				     data-n="${i + 1}"></div>
+			`;
+		}
+	} else {
+		out += `
+			<input type="number" name="flags.obsidian.features.custom.${id}.uses.remaining"
+			       class="obsidian-input-sheet" value="${uses.remaining}" data-dtype="Number">
+			<span class="obsidian-binary-operator">&sol;</span>
+			<span class="obsidian-feature-max">${uses.max}</span>
+		`;
+	}
+
+	out += '</div>';
+	return new Handlebars.SafeString(out);
 });
 
 Handlebars.registerHelper('get-property', function (data, key) {
