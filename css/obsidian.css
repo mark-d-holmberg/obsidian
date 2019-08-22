@@ -267,7 +267,7 @@
 	align-items: center;
 }
 
-button.obsidian-btn-sm.obsidian-char-rest {
+button.obsidian-btn-sm.obsidian-btn-sheet {
 	height: auto;
 	font-size: 10px;
 	font-weight: bold;
@@ -275,7 +275,7 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-bottom: 10px;
 }
 
-.obsidian-char-rest i {
+.obsidian-btn-sheet i {
 	color: var(--highlight);
 	margin-right: 6px;
 }
@@ -290,8 +290,40 @@ button.obsidian-btn-sm.obsidian-char-rest {
 	margin-top: 5px;
 }
 
-.obsidian-char-box-container.obsidian-char-rest {
+.obsidian-char-box-container.obsidian-btn-sheet {
 	padding-bottom: 16px;
+}
+
+.obsidian button.obsidian-btn-positive.obsidian-btn-sheet {
+	color: var(--text-regular);
+	border-color: var(--positive);
+}
+
+.obsidian button.obsidian-btn-positive.obsidian-btn-sheet:hover {
+	background: var(--dark);
+	color: var(--text-bright);
+	box-shadow: 0 0 5px var(--positive);
+}
+
+.obsidian button.obsidian-btn-positive.obsidian-btn-sheet.obsidian-btn-active {
+	background: var(--positive);
+	color: var(--bg);
+}
+
+.obsidian button.obsidian-btn-negative.obsidian-btn-sheet {
+	color: var(--text-regular);
+	border-color: var(--negative);
+}
+
+.obsidian button.obsidian-btn-negative.obsidian-btn-sheet:hover {
+	background: var(--dark);
+	color: var(--text-bright);
+	box-shadow: 0 0 5px var(--negative);
+}
+
+.obsidian button.obsidian-btn-negative.obsidian-btn-sheet.obsidian-btn-active {
+	background: var(--negative);
+	color: var(--bg);
 }
 
 .obsidian-char-box-text {

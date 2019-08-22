@@ -6,6 +6,7 @@
 		</button>
 	</label>
 	{{#each entity.flags.obsidian.features.custom as |feat id|}}
+		<input type="hidden" name="flags.obsidian.features.custom.{{id}}.id" value="{{feat.id}}">
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
 				<input type="text" class="obsidian-input-compact"

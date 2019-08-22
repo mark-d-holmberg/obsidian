@@ -34,6 +34,9 @@ Obsidian.SCHEMA = {
 		saves: {
 			bonus: 0
 		},
+		sheet: {
+			roll: 'reg'
+		},
 		skills: {
 			bonus: 0,
 			joat: false,

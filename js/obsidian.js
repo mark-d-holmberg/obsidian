@@ -91,6 +91,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
 		html.find('.obsidian-feature-use').click(this._onUseClicked.bind(this));
+		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
+		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 
 		this._activateDialogs(html);
 		Obsidian._resizeMain(html);
@@ -325,6 +327,24 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {String} prop
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_setAttributeLevel (prop, evt) {
+		let value = Number($(evt.currentTarget).data('value'));
+		const current = getProperty(this.actor.data, prop);
+
+		if (value === 1 && current === 1) {
+			value = 0;
+		}
+
+		const update = {};
+		update[prop] = value;
+		this.actor.update(update);
+	}
+
+	/**
+	 * @private
 	 * @param collapsed {boolean}
 	 */
 	_setCollapsed (collapsed) {
@@ -360,20 +380,15 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {String} prop
-	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_setAttributeLevel (prop, evt) {
-		let value = Number($(evt.currentTarget).data('value'));
-		const current = getProperty(this.actor.data, prop);
-
-		if (value === 1 && current === 1) {
-			value = 0;
+	_setGlobalRoll (roll) {
+		const current = this.actor.data.flags.obsidian.sheet.roll;
+		let result = 'reg';
+		if (roll !== current) {
+			result = roll;
 		}
 
-		const update = {};
-		update[prop] = value;
-		this.actor.update(update);
+		this.actor.update({'flags.obsidian.sheet.roll': result});
 	}
 
 	/**

@@ -56,6 +56,33 @@ class ObsidianActor extends Actor5e {
 	}
 
 	/**
+	 * Determines whether a given roll has advantage, disadvantage, or neither,
+	 * depending on all the modifiers applied to the roll.
+	 * @param mods An array of strings with values of 'adv', 'dis', or 'reg'.
+	 * @return {number} Returns 1 for advantage, -1 for disadvantage, and 0 for
+	 *                  neither.
+	 */
+
+	static determineAdvantage (...mods) {
+		let hasAdvantage = mods.some(mod => mod === 'adv');
+		let hasDisadvantage = mods.some(mod => mod === 'dis');
+
+		if (hasAdvantage && hasDisadvantage) {
+			return 0;
+		}
+
+		if (hasAdvantage) {
+			return 1;
+		}
+
+		if (hasDisadvantage) {
+			return -1;
+		}
+
+		return 0;
+	}
+
+	/**
 	 * @private
 	 */
 	static _calculateSave (dc, data) {
@@ -217,6 +244,10 @@ class ObsidianActor extends Actor5e {
 					feat.uses.max = Number(feat.uses.fixed);
 				}
 
+				if (isNaN(feat.uses.max)) {
+					feat.uses.max = 0;
+				}
+
 				if (feat.uses.remaining === undefined || feat.uses.remaining > feat.uses.max) {
 					feat.uses.remaining = feat.uses.max;
 				} else if (feat.uses.remaining < 0) {
@@ -283,9 +314,7 @@ class ObsidianActor extends Actor5e {
 			}
 
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
-			if (skill.adv) {
-				skill.passive += 5;
-			}
+			skill.passive += 5 * ObsidianActor.determineAdvantage(skill.roll, flags.skills.roll);
 		}
 	}
 
@@ -331,6 +360,16 @@ class ObsidianActor extends Actor5e {
 
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
 		update['flags.obsidian.features.custom'] = features;
+	}
+
+	static updateFeatures (features, update) {
+		const featMap = new Map(features.map(feat => [feat.id, feat]));
+		for (let i = 0; i < features.length; i++) {
+			const feature = features[i];
+			if (feature.uses.type === 'shared' && !featMap.has(feature.uses.shared)) {
+				update[`flags.obsidian.features.custom.${i}.uses.type`] = 'formula';
+			}
+		}
 	}
 
 	updateHD (classes) {

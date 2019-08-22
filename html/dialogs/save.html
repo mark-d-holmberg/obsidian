@@ -1,18 +1,27 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-form-row">
-		<label class="obsidian-inline">
-			<input placeholder="0" data-dtype="Number" name="flags.obsidian.saves.{{saveID}}.bonus"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
-			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{bonus}}{{/with}}">
-			<span>{{localize 'OBSIDIAN.Bonus'}}</span>
-		</label>
+		<select name="flags.obsidian.saves.{{saveID}}.roll">
+			{{#select save.roll}}
+				{{#each ObsidianRules.ROLL}}
+					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
 	</div>
-	<div class="obsidian-form-row">
-		<label class="obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       name="flags.obsidian.saves.{{saveID}}.override"
-			       value="{{#with (lookup entity.flags.obsidian.saves saveID)}}{{override}}{{/with}}">
-			<span>{{localize 'OBSIDIAN.Override'}}</span>
-		</label>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+		<div class="obsidian-flex">
+			<label class="obsidian-inline">
+				<input placeholder="0" data-dtype="Number" name="flags.obsidian.saves.{{saveID}}.bonus"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
+				       value="{{save.bonus}}">
+				<span>{{localize 'OBSIDIAN.Bonus'}}</span>
+			</label>
+			<label class="obsidian-inline">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="flags.obsidian.saves.{{saveID}}.override"
+				       value="{{save.override}}">
+				<span>{{localize 'OBSIDIAN.Override'}}</span>
+			</label>
+		</div>
 	</div>
 </form>

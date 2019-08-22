@@ -54,5 +54,6 @@ Obsidian.Rules.PROFICIENCY_LEVELS = {
 	2: 'expert'
 };
 
+Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
 Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];

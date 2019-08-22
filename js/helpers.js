@@ -6,6 +6,19 @@ String.prototype.capitalise = function () {
 	return this[0].toLocaleUpperCase() + this.substring(1);
 };
 
+Handlebars.registerHelper('badge', function (badge) {
+	const advantage = badge === 'adv';
+	const colour = `obsidian-css-icon-${advantage ? 'positive' : 'negative'}`;
+	const label = advantage ? 'A' : 'D';
+
+	return new Handlebars.SafeString(`
+		<div class="obsidian-css-icon obsidian-css-icon-hexagon ${colour}">
+			<div class="obsidian-css-icon-shape"></div>
+			<div class="obsidian-css-icon-label">${label}</div>
+		</div>
+	`);
+});
+
 Handlebars.registerHelper('capitalise', function (str) {
 	return str ? str.capitalise() : '';
 });
@@ -94,22 +107,35 @@ Handlebars.registerHelper('fancy-checkbox', function (...args) {
 	`);
 });
 
-Handlebars.registerHelper('format-uses', function (uses, options) {
-	if (!uses.enabled || uses.max === undefined || uses.max < 1) {
+Handlebars.registerHelper('format-uses', function (features, uses, options) {
+	if (!uses.enabled) {
 		return '';
 	}
 
-	const id = options.hash.id;
-	let used = uses.max - uses.remaining;
+	let id = options.hash.id;
+	let max = uses.max;
+	let remaining = uses.remaining;
 
+	if (uses.type === 'shared') {
+		id = features.findIndex(feat => feat.id === uses.shared);
+		if (id > -1) {
+			max = features[id].uses.max;
+			remaining = features[id].uses.remaining;
+		}
+	}
+
+	if (max === undefined || max < 0) {
+		return '';
+	}
+
+	let used = max - remaining;
 	if (used < 0) {
 		used = 0;
 	}
 
 	let out = `<div class="obsidian-feature-uses" data-feat-id="${id}">`;
-
-	if (uses.max < 11) {
-		for (let i = 0; i < uses.max; i++) {
+	if (max < 11) {
+		for (let i = 0; i < max; i++) {
 			out += `
 				<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
 				     data-n="${i + 1}"></div>
@@ -118,9 +144,9 @@ Handlebars.registerHelper('format-uses', function (uses, options) {
 	} else {
 		out += `
 			<input type="number" name="flags.obsidian.features.custom.${id}.uses.remaining"
-			       class="obsidian-input-sheet" value="${uses.remaining}" data-dtype="Number">
+			       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 			<span class="obsidian-binary-operator">&sol;</span>
-			<span class="obsidian-feature-max">${uses.max}</span>
+			<span class="obsidian-feature-max">${max}</span>
 		`;
 	}
 

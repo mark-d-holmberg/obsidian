@@ -105,6 +105,7 @@
 	"OBSIDIAN.Equipment": "Equipment",
 	"OBSIDIAN.FeaturesAndTraits": "Features & Traits",
 	"OBSIDIAN.Description": "Description",
+	"OBSIDIAN.Effects": "Effects",
 	"OBSIDIAN.Notes": "Notes",
 	"OBSIDIAN.Extras": "Extras",
 	"OBSIDIAN.Attacks": "Attacks",
@@ -130,6 +131,10 @@
 	"OBSIDIAN.Add": "Add",
 	"OBSIDIAN.Remove": "Remove",
 	"OBSIDIAN.Advantage": "Advantage",
+	"OBSIDIAN.Roll": "Roll",
+	"OBSIDIAN.Roll-adv": "Advantage",
+	"OBSIDIAN.Roll-dis": "Disadvantage",
+	"OBSIDIAN.Roll-reg": "Normal",
 	"OBSIDIAN.HitDiceOverride": "Hit Dice Override",
 	"OBSIDIAN.Gender": "Gender",
 	"OBSIDIAN.Subrace": "Subrace",
@@ -233,5 +238,6 @@
 	"OBSIDIAN.Minimum": "Minimum",
 	"OBSIDIAN.Fixed": "Fixed",
 	"OBSIDIAN.Effect": "Effect",
-	"OBSIDIAN.Target": "Target"
+	"OBSIDIAN.Target": "Target",
+	"OBSIDIAN.Shared": "Shared"
 }

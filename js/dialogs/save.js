@@ -16,6 +16,7 @@ class ObsidianSaveDialog extends ObsidianDialog {
 	getData () {
 		const data = super.getData();
 		data.saveID = this.saveID;
+		data.save = this.parent.actor.data.flags.obsidian.saves[this.saveID];
 		return data;
 	}
 }

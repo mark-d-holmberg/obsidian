@@ -14,7 +14,12 @@
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
-		{{fancy-checkbox 'flags.obsidian.attributes.death.adv' content='OBSIDIAN.Advantage'
-		                 checked=entity.flags.obsidian.attributes.death.adv}}
+		<select name="flags.obsidian.attributes.death.roll">
+			{{#select entity.flags.obsidian.attributes.death.roll}}
+				{{#each ObsidianRules.ROLL}}
+					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
 	</div>
 </form>

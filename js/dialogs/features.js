@@ -16,6 +16,7 @@ class ObsidianFeaturesDialog extends ObsidianArrayDialog {
 
 	get item () {
 		return {
+			id: Obsidian.uuid(),
 			custom: true,
 			label: '',
 			active: 'active',
@@ -34,6 +35,10 @@ class ObsidianFeaturesDialog extends ObsidianArrayDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('.obsidian-feat-active').change(ObsidianFeaturesDialog._onActiveChange);
+	}
+
+	onRemove (features, update) {
+		ObsidianActor.updateFeatures(features, update);
 	}
 
 	/**

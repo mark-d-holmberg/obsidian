@@ -18,7 +18,9 @@ class ObsidianArrayDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const array = duplicate(getProperty(this.parent.actor.data, this.flag));
 		const item = this.item;
-		item.id = array.length;
+		if (item.id === undefined) {
+			item.id = array.length;
+		}
 		array.push(this.item);
 		const update = {};
 		update[this.flag] = array;
@@ -35,6 +37,9 @@ class ObsidianArrayDialog extends ObsidianDialog {
 		const array = getProperty(this.parent.actor.data, this.flag);
 		const update = {};
 		update[this.flag] = ObsidianDialog.removeRow(array, evt);
+		if (this.onRemove) {
+			this.onRemove(array, update);
+		}
 		await this.parent.actor.update(update);
 		this.render(false);
 	}

@@ -15,17 +15,21 @@
 			       data-dtype="Number">
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row">
-		{{fancy-checkbox 'flags.obsidian.attributes.init.adv' style='margin-left: 2px;'
-		                 content='OBSIDIAN.Advantage'
-		                 checked=entity.flags.obsidian.attributes.init.adv}}
-	</div>
-	<div class="obsidian-form-row">
-		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.attributes.init.override"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       value="{{entity.flags.obsidian.attributes.init.override}}">
-			<span>{{localize 'OBSIDIAN.Override'}}</span>
-		</label>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-flex">
+			<label class="obsidian-inline">
+				<input type="text" name="flags.obsidian.attributes.init.override"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       value="{{entity.flags.obsidian.attributes.init.override}}">
+				<span>{{localize 'OBSIDIAN.Override'}}</span>
+			</label>
+			<select name="flags.obsidian.attributes.init.roll">
+				{{#select entity.flags.obsidian.attributes.init.roll}}
+					{{#each ObsidianRules.ROLL}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
 	</div>
 </form>

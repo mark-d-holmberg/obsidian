@@ -77,8 +77,15 @@ class ObsidianDialog extends BaseEntitySheet {
 		};
 
 		html.find('[data-selector]')
-			.change(evt => updateSelections($(evt.currentTarget)))
-			.each((i, el) => updateSelections($(el)));
+			.change(evt => {
+				updateSelections($(evt.currentTarget));
+				const recalculate = evt.currentTarget.dataset.recalculate;
+				if (recalculate) {
+					const options = {};
+					options[recalculate] = true;
+					ObsidianDialog.recalculateHeight($(this.form), options);
+				}
+			}).each((i, el) => updateSelections($(el)));
 	}
 
 	async close () {

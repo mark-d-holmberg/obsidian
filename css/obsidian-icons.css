@@ -1,0 +1,163 @@
+.obsidian-icon {
+	width: 20px;
+	height: 20px;
+	background: 50% transparent no-repeat;
+	background-size: 20px 20px;
+}
+
+.obsidian-icon-sm {
+	width: 16px;
+	height: 16px;
+	background: 50% transparent no-repeat;
+	background-size: 16px 16px;
+	margin-left: 5px;
+}
+
+.obsidian-icon-melee {
+	background-image: url('../img/melee.svg');
+}
+
+.obsidian-icon-ranged {
+	background-image: url('../img/ranged.svg');
+}
+
+.obsidian-icon-unarmed {
+	background-image: url('../img/unarmed.svg');
+}
+
+.obsidian-icon-versatile {
+	background-image: url('../img/versatile.svg');
+}
+
+.obsidian-icon-blg {
+	background-image: url('../img/bludgeoning.svg');
+}
+
+.obsidian-icon-prc {
+	background-image: url('../img/piercing.svg');
+}
+
+.obsidian-icon-slh {
+	background-image: url('../img/slashing.svg');
+}
+
+.obsidian-icon-acd {
+	background-image: url('../img/acid.svg');
+}
+
+.obsidian-icon-cld {
+	background-image: url('../img/cold.svg');
+}
+
+.obsidian-icon-fir {
+	background-image: url('../img/fire.svg');
+}
+
+.obsidian-icon-frc {
+	background-image: url('../img/force.svg');
+}
+
+.obsidian-icon-lig {
+	background-image: url('../img/lightning.svg');
+}
+
+.obsidian-icon-ncr {
+	background-image: url('../img/necrotic.svg');
+}
+
+.obsidian-icon-psn {
+	background-image: url('../img/poison.svg');
+}
+
+.obsidian-icon-psy {
+	background-image: url('../img/psychic.svg');
+}
+
+.obsidian-icon-rad {
+	background-image: url('../img/radiant.svg');
+}
+
+.obsidian-icon-thn {
+	background-image: url('../img/thunder.svg');
+}
+
+.obsidian-css-icon {
+	position: relative;
+}
+
+.obsidian-css-icon-sm {
+	transform: scale(.7);
+}
+
+.obsidian-css-icon-label {
+	position: absolute;
+	font-family: Roboto, sans-serif;
+	font-size: 16px;
+	color: var(--text-regular);
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.obsidian-css-icon-hexagon,
+.obsidian-css-icon-hexagon .obsidian-css-icon-shape,
+.obsidian-css-icon-hexagon .obsidian-css-icon-label {
+	width: 20px;
+	height: 12px;
+}
+
+.obsidian-css-icon-shape {
+	position: relative;
+}
+
+.obsidian-css-icon-shape:before,
+.obsidian-css-icon-shape:after {
+	content: '';
+	position: absolute;
+}
+
+.obsidian-css-icon-hexagon .obsidian-css-icon-shape:before {
+	top: -5px;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 5px solid transparent;
+}
+
+.obsidian-css-icon-hexagon .obsidian-css-icon-shape:after {
+	bottom: -5px;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 5px solid transparent;
+}
+
+.obsidian-css-icon-positive {
+	background: var(--positive);
+}
+
+.obsidian-css-icon-negative {
+	background: var(--negative);
+}
+
+.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:before {
+	border-bottom-color: var(--positive);
+}
+
+.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
+	border-top-color: var(--positive);
+}
+
+.obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:before {
+	border-bottom-color: var(--negative);
+}
+
+.obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
+	border-top-color: var(--negative);
+}

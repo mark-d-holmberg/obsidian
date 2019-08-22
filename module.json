@@ -13,7 +13,9 @@
 		"js/dialogs/attacks.js", "js/dialogs/attack.js", "js/dialogs/features.js",
 		"js/dialogs/feature.js"
 	],
-	"styles": ["css/roboto.css", "css/obsidian.css", "css/obsidian-main.css"],
+	"styles": [
+		"css/roboto.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
+	],
 	"packs": [],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
