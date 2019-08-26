@@ -1,13 +1,13 @@
-<div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="actions">
+<div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="{{group}}">
 	<h3>
-		{{localize 'OBSIDIAN.Actions'}}
-		<a title="{{localize 'OBSIDIAN.ManageFeatures'}}" class="obsidian-edit" data-dialog="Features"
-		   data-active="active" data-action="action">
+		{{localize title}}
+		<a title="{{localize 'OBSIDIAN.ManageFeatures'}}" class="obsidian-edit"
+		   data-dialog="Features" data-active="{{active}}" data-action="{{action}}">
 			<i class="fas fa-edit"></i>
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each entity.obsidian.features as |feat id|}}
+		{{#each (filter entity.obsidian.features 'active' active 'action' action) as |feat|}}
 			<div class="obsidian-feature">
 				<div class="obsidian-feature-header">
 					<div>
@@ -24,12 +24,12 @@
 						{{/if}}
 						{{#if feat.custom}}
 							<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit"
-							   data-feature-id="{{id}}">
+							   data-feature-id="{{feat.id}}">
 								<i class="fas fa-edit"></i>
 							</a>
 						{{/if}}
 					</div>
-					{{format-uses ../entity.obsidian.features feat.uses id=id}}
+					{{format-uses ../entity.obsidian.features feat}}
 				</div>
 				<div class="obsidian-feature-body">{{{feat.desc}}}</div>
 			</div>

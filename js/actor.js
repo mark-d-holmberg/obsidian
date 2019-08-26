@@ -354,7 +354,6 @@ class ObsidianActor extends Actor5e {
 				continue;
 			}
 
-			feature.id = features.length;
 			features.push(feature);
 		}
 

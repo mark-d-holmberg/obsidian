@@ -273,9 +273,16 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onUseClicked (evt) {
 		const target = $(evt.currentTarget);
-		const featID = Number(target.parent().data('feat-id'));
+		const featID = target.parent().data('feat-id');
 		const n = Number(target.data('n'));
-		const feat = this.actor.data.flags.obsidian.features.custom[featID];
+		const featIndex =
+			this.actor.data.flags.obsidian.features.custom.findIndex(feat => feat.id === featID);
+
+		if (featIndex < 0) {
+			return;
+		}
+
+		const feat = this.actor.data.flags.obsidian.features.custom[featIndex];
 		let used = feat.uses.max - feat.uses.remaining;
 
 		if (n > used) {
@@ -285,7 +292,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		update[`flags.obsidian.features.custom.${featID}.uses.remaining`] = feat.uses.max - used;
+		update[`flags.obsidian.features.custom.${featIndex}.uses.remaining`] = feat.uses.max - used;
 		this.actor.update(update);
 	}
 

@@ -12,15 +12,17 @@
 				<input type="text" class="obsidian-input-compact"
 				       placeholder="{{localize 'OBSIDIAN.Feature'}}" value="{{feat.label}}"
 				       name="flags.obsidian.features.custom.{{id}}.label">
-				<select name="flags.obsidian.features.custom.{{id}}.active" class="obsidian-feat-active">
+				<select name="flags.obsidian.features.custom.{{id}}.active" class="obsidian-feat-active"
+				        data-selector="active.{{id}}">
 					{{#select feat.active}}
 						{{#each ../ObsidianRules.FEAT_ACTIVE}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{id}}.action"
-				        class="{{#if (expr '===' 'passive' feat.active)}}obsidian-hidden{{/if}}">
+				<select name="flags.obsidian.features.custom.{{id}}.action" data-show="active"
+				        class="{{#if (expr '===' 'passive' feat.active)}}obsidian-hidden{{/if}}"
+				        data-selector-parent="active.{{id}}">
 					{{#select feat.action}}
 						{{#each ../ObsidianRules.FEAT_ACTION}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>

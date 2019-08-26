@@ -107,20 +107,46 @@ Handlebars.registerHelper('fancy-checkbox', function (...args) {
 	`);
 });
 
-Handlebars.registerHelper('format-uses', function (features, uses, options) {
+Handlebars.registerHelper('filter', function (...args) {
+	/**
+	 * This helper expects an array as its first argument, followed by any
+	 * number of key-value pairs. It will filter out all items of the array
+	 * that do not have a value for the given key that equals the supplied
+	 * value.
+	 */
+
+	args.pop();
+	const list = args.shift();
+
+	return list.filter(item => {
+		let valid = true;
+		for (let i = 0; i < args.length - 1; i += 2) {
+			valid = valid && item[args[i]] === args[i + 1];
+		}
+
+		return valid;
+	});
+});
+
+Handlebars.registerHelper('format-uses', function (features, feature) {
+	const uses = feature.uses;
 	if (!uses.enabled) {
 		return '';
 	}
 
-	let id = options.hash.id;
+	const map = new Map(features.map(feat => [feat.id, feat]));
+	let id = feature.id;
+	let idx = features.findIndex(feat => feat.id === id);
 	let max = uses.max;
 	let remaining = uses.remaining;
 
 	if (uses.type === 'shared') {
-		id = features.findIndex(feat => feat.id === uses.shared);
-		if (id > -1) {
-			max = features[id].uses.max;
-			remaining = features[id].uses.remaining;
+		const shared = features.findIndex(feat => feat.id === uses.shared);
+		if (shared > -1) {
+			id = features[shared].id;
+			idx = shared;
+			max = map.get(id).uses.max;
+			remaining = map.get(id).uses.remaining;
 		}
 	}
 
@@ -143,7 +169,7 @@ Handlebars.registerHelper('format-uses', function (features, uses, options) {
 		}
 	} else {
 		out += `
-			<input type="number" name="flags.obsidian.features.custom.${id}.uses.remaining"
+			<input type="number" name="flags.obsidian.features.custom.${idx}.uses.remaining"
 			       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 			<span class="obsidian-binary-operator">&sol;</span>
 			<span class="obsidian-feature-max">${max}</span>

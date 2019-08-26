@@ -6,7 +6,7 @@ class ObsidianFeatureDialog extends ObsidianDialog {
 			width: 460
 		});
 
-		this.featureID = parseInt(featureID);
+		this.featureID = featureID;
 		Hooks.once('MCEInit-feature', init => {
 			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
 		});
@@ -14,8 +14,10 @@ class ObsidianFeatureDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.featureID = this.featureID;
-		data.feature = this.parent.actor.data.flags.obsidian.features.custom[this.featureID];
+		data.featureID =
+			this.parent.actor.data.flags.obsidian.features.custom.findIndex(feat =>
+				feat.id === this.featureID);
+		data.feature = this.parent.actor.data.flags.obsidian.features.custom[data.featureID];
 		return data;
 	}
 }
