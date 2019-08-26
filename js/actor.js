@@ -49,7 +49,6 @@ class ObsidianActor extends Actor5e {
 		ObsidianActor._prepareSkills(actorData, data, flags);
 		ObsidianActor._prepareTools(actorData, data, flags);
 		ObsidianActor._prepareSaves(actorData, data, flags);
-		ObsidianActor._prepareAttacks(actorData, data, flags);
 		ObsidianActor._prepareFeatures(actorData, data, flags);
 
 		return actorData;
@@ -163,37 +162,39 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	/**
-	 * @private
-	 */
-	static _prepareAttacks (actorData, data, flags) {
-		actorData.obsidian.attacks = flags.attacks.custom;
+	static prepareAttacks (actorData) {
+		const data = actorData.data;
+		actorData.obsidian.attacks =
+			actorData.items.filter(item =>
+				item.type === 'weapon' && item.flags.obsidian && item.flags.obsidian.custom);
+
 		for (const attack of Object.values(actorData.obsidian.attacks)) {
-			if (attack.hit.enabled) {
-				attack.hit.value = data.abilities[attack.hit.stat].mod;
-				if (attack.hit.proficient) {
-					attack.hit.value += data.attributes.prof.value;
+			const flags = attack.flags.obsidian;
+			if (flags.hit.enabled) {
+				flags.hit.value = data.abilities[flags.hit.stat].mod;
+				if (flags.hit.proficient) {
+					flags.hit.value += data.attributes.prof.value;
 				}
 
-				if (attack.hit.crit === undefined || attack.hit.crit === '') {
-					attack.hit.crit = 20;
+				if (flags.hit.crit === undefined || flags.hit.crit === '') {
+					flags.hit.crit = 20;
 				} else {
-					attack.hit.crit = parseInt(attack.hit.crit);
+					flags.hit.crit = parseInt(flags.hit.crit);
 				}
 			}
 
-			if (attack.dc.enabled) {
-				ObsidianActor._calculateSave(attack.dc, data);
+			if (flags.dc.enabled) {
+				ObsidianActor._calculateSave(flags.dc, data);
 			}
 
-			if (['melee', 'unarmed'].includes(attack.type)) {
-				attack.reach = 5;
-				if (attack.tags.reach) {
-					attack.reach +=5;
+			if (['melee', 'unarmed'].includes(flags.type)) {
+				flags.reach = 5;
+				if (flags.tags.reach) {
+					flags.reach +=5;
 				}
 			}
 
-			for (const dmg of attack.damage.concat(attack.versatile ? attack.versatile : [])) {
+			for (const dmg of flags.damage.concat(flags.versatile || [])) {
 				dmg.mod = dmg.bonus || 0;
 				if (dmg.stat.length > 0) {
 					dmg.mod += data.abilities[dmg.stat].mod;
@@ -202,15 +203,15 @@ class ObsidianActor extends Actor5e {
 				dmg.display = ObsidianActor._damageFormat(dmg);
 			}
 
-			attack.attackType = 'OBSIDIAN.MeleeWeapon';
-			if (attack.mode === 'ranged') {
-				if (attack.type === 'melee') {
-					attack.attackType = 'OBSIDIAN.RangedAttack';
+			flags.attackType = 'OBSIDIAN.MeleeWeapon';
+			if (flags.mode === 'ranged') {
+				if (flags.type === 'melee') {
+					flags.attackType = 'OBSIDIAN.RangedAttack';
 				} else {
-					attack.attackType = 'OBSIDIAN.RangedWeapon';
+					flags.attackType = 'OBSIDIAN.RangedWeapon';
 				}
-			} else if (attack.mode === 'unarmed') {
-				attack.attackType = 'OBSIDIAN.MeleeAttack';
+			} else if (flags.mode === 'unarmed') {
+				flags.attackType = 'OBSIDIAN.MeleeAttack';
 			}
 		}
 	}

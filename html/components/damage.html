@@ -4,9 +4,8 @@
 		<div>
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       data-dtype="Number" placeholder="0" value="{{dmg.ndice}}"
-			       name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.ndice">
-			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.die"
-			        data-dtype="Number">
+			       name="flags.obsidian.{{../prop}}.{{id}}.ndice">
+			<select name="flags.obsidian.{{../prop}}.{{id}}.die" data-dtype="Number">
 				{{#select dmg.die}}
 					{{#each ../ObsidianRules.DAMAGE_DICE}}
 						<option value="{{this}}">d{{this}}</option>
@@ -14,7 +13,7 @@
 				{{/select}}
 			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.stat">
+			<select name="flags.obsidian.{{../prop}}.{{id}}.stat">
 				{{#select dmg.stat}}
 					<option value="">&mdash;</option>
 					{{#each ../abilities}}
@@ -25,10 +24,10 @@
 				{{/select}}
 			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
-			<input name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.bonus"
+			<input name="flags.obsidian.{{../prop}}.{{id}}.bonus"
 			       data-dtype="Number" placeholder="0" type="text"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-			<select name="flags.obsidian.attacks.custom.{{../attackID}}.{{../prop}}.{{id}}.type">
+			<select name="flags.obsidian.{{../prop}}.{{id}}.type">
 				{{#select dmg.type}}
 					<option value="">&mdash;</option>
 					{{#each ../ObsidianRules.DAMAGE_TYPES}}

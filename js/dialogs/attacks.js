@@ -1,4 +1,4 @@
-class ObsidianAttacksDialog extends ObsidianArrayDialog {
+class ObsidianAttacksDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -7,25 +7,71 @@ class ObsidianAttacksDialog extends ObsidianArrayDialog {
 		return options;
 	}
 
-	get cls () {
-		return 'attack';
+	/**
+	 * @param {JQuery} html
+	 * @returns undefined
+	 */
+	activateListeners (html) {
+		super.activateListeners(html);
+		html.find('.obsidian-add-attack').click(this._onAdd.bind(this));
+		html.find('.obsidian-rm-attack').click(this._onRemove.bind(this));
+		ObsidianDialog.recalculateHeight(html);
 	}
 
-	get flag () {
-		return 'flags.obsidian.attacks.custom';
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onAdd (evt) {
+		evt.preventDefault();
+		await this.parent.actor.createOwnedItem({
+			type: 'weapon',
+			name: game.i18n.localize('OBSIDIAN.NewAttack'),
+			flags: {
+				obsidian: {
+					custom: true,
+					type: 'melee',
+					mode: 'melee',
+					damage: [],
+					versatile: [],
+					tags: {},
+					hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
+					dc: {enabled: false}
+				}
+			}
+		});
+
+		this.render(false);
 	}
 
-	get item () {
-		return {
-			custom: true,
-			type: 'melee',
-			mode: 'melee',
-			label: '',
-			damage: [],
-			versatile: [],
-			tags: {},
-			hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
-			dc: {enabled: false}
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onRemove (evt) {
+		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const id = Number(row.data('item-id'));
+		await this.parent.actor.deleteOwnedItem(id);
+		this.render(false);
+	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		formData = {};
+		const ids =
+			Array.from(this.element.find('[data-item-id]')).map(el => Number(el.dataset.itemId));
+
+		for (let i = 0; i < this.parent.actor.items.length; i++) {
+			const item = this.parent.actor.items[i];
+			const index = ids.indexOf(item.id);
+
+			if (index > -1) {
+				formData[`items.${i}.name`] = this.element.find(`[name="${item.id}.name"]`).val();
+			}
 		}
+
+		super._updateObject(event, formData);
 	}
 }

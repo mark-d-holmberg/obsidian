@@ -190,7 +190,9 @@ Handlebars.registerHelper('i18n-join', function (...args) {
 });
 
 Handlebars.registerHelper('is-attack-toggleable', function (attack) {
-	return (attack.type === 'melee' && attack.tags.thrown) || attack.tags.versatile;
+	const type = attack.flags.obsidian.type;
+	const tags = attack.flags.obsidian.tags;
+	return (type === 'melee' && tags.thrown) || tags.versatile;
 });
 
 Handlebars.registerHelper('is-custom-tag', function (key, val) {
@@ -229,5 +231,7 @@ Handlebars.registerHelper('startsWith', function (haystack, needle) {
 });
 
 Handlebars.registerHelper('which-damage', function (attack) {
-	return attack.mode === 'versatile' ? attack.versatile : attack.damage;
+	return attack.flags.obsidian.mode === 'versatile'
+		? attack.flags.obsidian.versatile
+		: attack.flags.obsidian.damage;
 });

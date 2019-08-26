@@ -44,7 +44,6 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		console.debug(this.actor);
 
 		this.form.addEventListener('scroll', this._onScroll.bind(this));
 		html.find('.obsidian-tab-contents').on('scroll', this._onScroll.bind(this));
@@ -112,6 +111,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = Obsidian.Rules;
+		console.debug(this.actor, data);
 		return data;
 	}
 
@@ -201,26 +201,26 @@ class Obsidian extends ActorSheet5eCharacter {
 	_onAttackToggle (evt) {
 		evt.preventDefault();
 		const attackID = evt.currentTarget.dataset.itemId;
-		const attack = this.actor.data.flags.obsidian.attacks.custom[attackID];
+		const attack = this.actor.getOwnedItem(attackID);
+		const tags = attack.data.flags.obsidian.tags;
+		const current = attack.data.flags.obsidian.mode;
 		let mode = 'melee';
 
-		if (attack.tags.thrown && attack.tags.versatile) {
-			if (attack.mode === 'melee') {
+		if (tags.thrown && tags.versatile) {
+			if (current === 'melee') {
 				mode = 'ranged';
-			} else if (attack.mode === 'ranged') {
+			} else if (current === 'ranged') {
 				mode = 'versatile';
 			}
-		} else if (attack.mode === 'melee') {
-			if (attack.tags.thrown) {
+		} else if (current === 'melee') {
+			if (tags.thrown) {
 				mode = 'ranged';
-			} else if (attack.tags.versatile) {
+			} else if (tags.versatile) {
 				mode = 'versatile';
 			}
 		}
 
-		const existing = duplicate(this.actor.data.flags.obsidian.attacks.custom);
-		existing[attackID].mode = mode;
-		this.actor.update({'flags.obsidian.attacks.custom': existing});
+		attack.update({'flags.obsidian.mode': mode});
 	}
 
 	/**
@@ -294,6 +294,14 @@ class Obsidian extends ActorSheet5eCharacter {
 		const update = {};
 		update[`flags.obsidian.features.custom.${featIndex}.uses.remaining`] = feat.uses.max - used;
 		this.actor.update(update);
+	}
+
+	/**
+	 * @private
+	 */
+	_prepareItems (actorData) {
+		super._prepareItems(actorData);
+		ObsidianActor.prepareAttacks(actorData);
 	}
 
 	/**

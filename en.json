@@ -239,5 +239,6 @@
 	"OBSIDIAN.Fixed": "Fixed",
 	"OBSIDIAN.Effect": "Effect",
 	"OBSIDIAN.Target": "Target",
-	"OBSIDIAN.Shared": "Shared"
+	"OBSIDIAN.Shared": "Shared",
+	"OBSIDIAN.NewAttack": "New Attack"
 }
