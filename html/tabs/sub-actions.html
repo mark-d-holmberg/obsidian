@@ -7,31 +7,31 @@
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each (filter entity.obsidian.features 'active' active 'action' action) as |feat|}}
+		{{#each (filter entity.obsidian.features 'flags.obsidian.active' active 'flags.obsidian.action' action) as |feat|}}
 			<div class="obsidian-feature">
 				<div class="obsidian-feature-header">
 					<div>
-						<h4>{{feat.label}}</h4>
-						{{#if feat.uses.enabled}}
+						<h4>{{feat.name}}</h4>
+						{{#if feat.flags.obsidian.uses.enabled}}
 							<div class="obsidian-feature-recharge">
 								&bull;
-								{{#if (expr '===' feat.uses.recharge 'short')}}
+								{{#if (expr '===' feat.flags.obsidian.uses.recharge 'short')}}
 									{{localize 'OBSIDIAN.ShortRest'}}
 								{{else}}
 									{{localize 'OBSIDIAN.LongRest'}}
 								{{/if}}
 							</div>
 						{{/if}}
-						{{#if feat.custom}}
+						{{#if feat.flags.obsidian.custom}}
 							<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit"
 							   data-feature-id="{{feat.id}}">
 								<i class="fas fa-edit"></i>
 							</a>
 						{{/if}}
 					</div>
-					{{format-uses ../entity.obsidian.features feat}}
+					{{format-uses ../entity.items feat}}
 				</div>
-				<div class="obsidian-feature-body">{{{feat.desc}}}</div>
+				<div class="obsidian-feature-body">{{{feat.data.description.value}}}</div>
 			</div>
 		{{/each}}
 	</div>

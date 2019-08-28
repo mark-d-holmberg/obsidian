@@ -140,14 +140,9 @@
 	width: 140px;
 }
 
-.obsidian-col-range {
-	width: 50px;
-}
-
+.obsidian-col-range,
 .obsidian-col-hit {
-	width: 55px;
-	text-align: center;
-	margin-right: 5px;
+	width: 50px;
 }
 
 .obsidian-col-damage {
@@ -182,6 +177,12 @@
 
 .obsidian-table-sub-text {
 	font-weight: normal;
+}
+
+.obsidian-table-save {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-family: Roboto, sans-serif;
 }
 
 .obsidian-table-number-md,
@@ -376,4 +377,42 @@
 	font-size: 14px;
 	color: var(--text-secondary);
 	font-weight: normal;
+}
+
+.obsidian-char-spell-header {
+	display: flex;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid var(--mid);
+	justify-content: center;
+	width: 100%;
+	cursor: pointer;
+}
+
+.obsidian-char-spell-header > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-weight: bold;
+	margin-right: 15px;
+}
+
+.obsidian-char-spell-header > div:last-child {
+	margin-right: 0;
+}
+
+.obsidian-char-spell-header .obsidian-table-number-lg > span:after {
+	content : ' / ';
+	color: var(--text-secondary);
+}
+
+.obsidian-char-spell-header .obsidian-table-number-lg > span:last-child:after {
+	content: '';
+}
+
+.obsidian-char-spell-header-label {
+	font-size: 10px;
+	color: var(--text-subtle);
+	text-transform: uppercase;
 }

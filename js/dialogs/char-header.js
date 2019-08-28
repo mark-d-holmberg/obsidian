@@ -77,7 +77,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const classes = this.parent.actor.getFlag('obsidian', 'classes');
 		const newClasses = ObsidianDialog.removeRow(classes, evt);
 		const update = {'flags.obsidian.classes': newClasses};
-		this.parent.actor.updateClasses(classes, newClasses, update);
+		await this.parent.actor.updateClasses(classes, newClasses, update);
 		await this.parent.actor.update(update);
 		this.render(false);
 	}
@@ -85,11 +85,11 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		const newData = {};
 		const classes =
 			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
-		this.parent.actor.updateClasses(
+		await this.parent.actor.updateClasses(
 			this.parent.actor.getFlag('obsidian', 'classes'), classes, newData);
 		super._updateObject(event, newData);
 	}

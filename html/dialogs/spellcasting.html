@@ -1,0 +1,22 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.SpellMod'}}</label>
+	{{#each entity.flags.obsidian.classes as |class id|}}
+		<div class="obsidian-form-row obsidian-inline">
+			<span class="obsidian-constant">
+				{{~#if (expr '===' class.name 'custom')~}}
+					{{class.custom}}
+				{{else}}
+					{{i18n-join 'OBSIDIAN.Class-' class.name}}
+				{{~/if~}}
+			</span>
+			<select name="flags.obsidian.classes.{{id}}.spell">
+				<option value="">&mdash;</option>
+				{{#select class.spell}}
+					{{#each ../data.abilities}}
+						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	{{/each}}
+</form>

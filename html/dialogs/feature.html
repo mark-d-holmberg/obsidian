@@ -1,23 +1,20 @@
 <form class="obsidian" autocomplete="off" data-obsidian-name="feature">
-	<input type="hidden" name="flags.obsidian.features.custom.{{featureID}}.custom" value="true"
-	       data-dtype="Boolean">
+	<input type="hidden" name="flags.obsidian.custom" value="true" data-dtype="Boolean">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Feature'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div style="width: 380px;">
-				<input class="obsidian-input-compact obsidian-input-lg" type="text"
-				       value="{{feature.label}}" placeholder="{{localize 'OBSIDIAN.Feature'}}"
-				       name="flags.obsidian.features.custom.{{featureID}}.label">
-				<select name="flags.obsidian.features.custom.{{featureID}}.active" data-selector="active">
-					{{#select feature.active}}
+				<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
+				       value="{{feature.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
+				<select name="flags.obsidian.active" data-selector="active">
+					{{#select feature.flags.obsidian.active}}
 						{{#each ObsidianRules.FEAT_ACTIVE}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.action" data-hide="passive"
-				        data-selector-parent="active">
-					{{#select feature.action}}
+				<select name="flags.obsidian.action" data-hide="passive" data-selector-parent="active">
+					{{#select feature.flags.obsidian.action}}
 						{{#each ObsidianRules.FEAT_ACTION}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
 						{{/each}}
@@ -29,62 +26,61 @@
 			<div class="obsidian-checkbox-row">
 				<label class="obsidian-inline">
 					{{localize 'OBSIDIAN.Source'}}
-					<select name="flags.obsidian.features.custom.{{featureID}}.source.type"
-					        class="obsidian-feat-source" data-selector="action">
-						{{#select feature.source.type}}
+					<select name="flags.obsidian.source.type" class="obsidian-feat-source"
+					        data-selector="action">
+						{{#select feature.flags.obsidian.source.type}}
 							{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
 								<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 				</label>
-				<select name="flags.obsidian.features.custom.{{featureID}}.source.class" data-show="class"
-				        data-selector-parent="action">
-					{{#select feature.source.class}}
+				<select name="flags.obsidian.source.class" data-show="class" data-selector-parent="action">
+					{{#select feature.flags.obsidian.source.class}}
 						{{#each entity.flags.obsidian.classes}}
 							<option value="{{this.id}}">{{this.label}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.source.level" data-dtype="Number"
-				        data-selector-parent="action" data-show="feat">
-					{{#select feature.source.level}}
+				<select name="flags.obsidian.source.level" data-dtype="Number" data-show="feat"
+				        data-selector-parent="action">
+					{{#select feature.flags.obsidian.source.level}}
 						{{#each (range 1 data.details.level.value)}}
 							<option value="{{this}}">{{this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<input type="text" name="flags.obsidian.features.custom.{{featureID}}.source.other"
-				       placeholder="{{localize 'OBSIDIAN.Source'}}" value="{{feature.source.other}}"
-				       class="obsidian-input-compact obsidian-input-lg" data-selector-parent="action"
-				       data-show="other">
+				<input type="text" name="flags.obsidian.source.other" data-selector-parent="action"
+				       placeholder="{{localize 'OBSIDIAN.Source'}}" data-show="other"
+				       class="obsidian-input-compact obsidian-input-lg"
+				       value="{{feature.flags.obsidian.source.other}}">
 			</div>
 		</div>
 	</fieldset>
-	<fieldset {{disabled (expr '!' feature.uses.enabled)}}>
+	<fieldset {{disabled (expr '!' feature.flags.obsidian.uses.enabled)}}>
 		<legend>
-			{{fancy-checkbox 'flags.obsidian.features.custom' featureID 'uses.enabled'
-			                 content='OBSIDIAN.Uses' checked=feature.uses.enabled}}
+			{{fancy-checkbox 'flags.obsidian.uses.enabled' content='OBSIDIAN.Uses'
+			                 checked=feature.flags.obsidian.uses.enabled}}
 		</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.type"
-				        data-selector="uses-type" data-recalculate="richText">
-					{{#select feature.uses.type}}
+				<select name="flags.obsidian.uses.type" data-selector="uses-type"
+				        data-recalculate="richText">
+					{{#select feature.flags.obsidian.uses.type}}
 						<option value="formula">{{localize 'OBSIDIAN.Formula'}}</option>
 						<option value="shared">{{localize 'OBSIDIAN.Shared'}}</option>
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.shared"
-				        data-selector-parent="uses-type" data-show="shared">
-					{{#select feature.uses.shared}}
+				<select name="flags.obsidian.uses.shared" data-selector-parent="uses-type"
+				        data-show="shared" data-dtype="Number">
+					{{#select feature.flags.obsidian.uses.shared}}
 						{{#each entity.obsidian.features}}
-							<option value="{{id}}">{{label}}</option>
+							<option value="{{id}}">{{name}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.recharge">
-					{{#select feature.uses.recharge}}
+				<select name="flags.obsidian.uses.recharge">
+					{{#select feature.flags.obsidian.uses.recharge}}
 						<option value="short">{{localize 'OBSIDIAN.ShortRest'}}</option>
 						<option value="long">{{localize 'OBSIDIAN.LongRest'}}</option>
 					{{/select}}
@@ -95,35 +91,31 @@
 		     data-selector-parent="uses-type" data-show="formula">
 			<div>
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" placeholder="0" value="{{feature.uses.bonus}}"
-				       name="flags.obsidian.features.custom.{{featureID}}.uses.bonus">
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.operator"
-				        class="obsidian-select-operator">
-					{{#select feature.uses.operator}}
+				       data-dtype="Number" placeholder="0" value="{{feature.flags.obsidian.uses.bonus}}"
+				       name="flags.obsidian.uses.bonus">
+				<select name="flags.obsidian.uses.operator" class="obsidian-select-operator">
+					{{#select feature.flags.obsidian.uses.operator}}
 						<option value="plus">&plus;</option>
 						<option value="mult">&times;</option>
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.key"
-				        data-selector="uses-key">
-					{{#select feature.uses.key}}
+				<select name="flags.obsidian.uses.key" data-selector="uses-key">
+					{{#select feature.flags.obsidian.uses.key}}
 						<option value="">&mdash;</option>
 						{{#each ObsidianRules.FEAT_USES_KEYS}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.UsesKey-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.ability" data-show="abl"
-				        data-selector-parent="uses-key">
-					{{#select feature.uses.ability}}
+				<select name="flags.obsidian.uses.ability" data-show="abl" data-selector-parent="uses-key">
+					{{#select feature.flags.obsidian.uses.ability}}
 						{{#each data.abilities}}
 							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{featureID}}.uses.class" data-show="cls"
-				        data-selector-parent="uses-key">
-					{{#select feature.uses.class}}
+				<select name="flags.obsidian.uses.class" data-show="cls" data-selector-parent="uses-key">
+					{{#select feature.flags.obsidian.uses.class}}
 						{{#each entity.flags.obsidian.classes}}
 							<option value="{{id}}">{{label}}</option>
 						{{/each}}
@@ -135,25 +127,25 @@
 		     data-show="formula">
 			<div class="obsidian-checkbox-row">
 				<label>
-					<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.min"
+					<input type="text" name="flags.obsidian.uses.min" placeholder="0" data-dtype="Number"
 					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       placeholder="0" data-dtype="Number" value="{{feature.uses.min}}">
+					       value="{{feature.flags.obsidian.uses.min}}">
 					<span>{{localize 'OBSIDIAN.Minimum'}}</span>
 				</label>
 				<label>
-					<input type="text" name="flags.obsidian.features.custom.{{featureID}}.uses.fixed"
+					<input type="text" name="flags.obsidian.uses.fixed"
 					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       value="{{feature.uses.fixed}}">
+					       value="{{feature.flags.obsidian.uses.fixed}}">
 					<span>{{localize 'OBSIDIAN.Fixed'}}</span>
 				</label>
 			</div>
 		</div>
 	</fieldset>
-	{{> public/modules/obsidian/html/components/dc.html feature.dc id=featureID
-			abilities=data.abilities ObsidianRules=ObsidianRules prop='flags.obsidian.features.custom'}}
+	{{> public/modules/obsidian/html/components/dc.html feature.flags.obsidian.dc
+			abilities=data.abilities ObsidianRules=ObsidianRules}}
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 	<div class="obsidian-rich-text">
-		{{editor content=feature.desc button=false editable=editable
-		         target=(expr '+' 'flags.obsidian.features.custom.' featureID '.desc')}}
+		{{editor content=feature.data.description.value button=false editable=editable
+		         target='data.description.value'}}
 	</div>
 </form>

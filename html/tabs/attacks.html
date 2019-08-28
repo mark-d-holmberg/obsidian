@@ -59,10 +59,10 @@
 							{{#if attack.flags.obsidian.hit.enabled}}
 								{{numberFormat attack.flags.obsidian.hit.value decimals=0 sign=true}}
 							{{else if attack.flags.obsidian.dc.enabled}}
-								<div class="obsidian-table-number-md">{{attack.flags.obsidian.dc.value}}</div>
-								<div class="obsidian-table-sub-text">
-									{{i18n-join 'OBSIDIAN.Ability-' attack.flags.obsidian.dc.target}}
+								<div class="obsidian-table-sub-text obsidian-table-save">
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' attack.flags.obsidian.dc.target}}
 								</div>
+								<div class="obsidian-table-number-md">{{attack.flags.obsidian.dc.value}}</div>
 							{{else}}
 								<span class="obsidian-na">&mdash;</span>
 							{{/if}}

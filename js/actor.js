@@ -49,7 +49,9 @@ class ObsidianActor extends Actor5e {
 		ObsidianActor._prepareSkills(actorData, data, flags);
 		ObsidianActor._prepareTools(actorData, data, flags);
 		ObsidianActor._prepareSaves(actorData, data, flags);
-		ObsidianActor._prepareFeatures(actorData, data, flags);
+		ObsidianActor._prepareSpellcasting(data, flags);
+		ObsidianActor._prepareAttacks(actorData);
+		ObsidianActor._prepareFeatures(actorData);
 
 		return actorData;
 	}
@@ -85,7 +87,12 @@ class ObsidianActor extends Actor5e {
 	 * @private
 	 */
 	static _calculateSave (dc, data) {
-		dc.value = (dc.bonus || 8) + dc.prof * data.attributes.prof.value;
+		let bonus = 8;
+		if (dc.bonus !== undefined && dc.bonus !== '') {
+			bonus = Number(dc.bonus);
+		}
+
+		dc.value = bonus + dc.prof * data.attributes.prof.value;
 
 		if (dc.ability !== '') {
 			dc.value += data.abilities[dc.ability].mod;
@@ -162,7 +169,10 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	static prepareAttacks (actorData) {
+	/**
+	 * @private
+	 */
+	static _prepareAttacks (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.attacks =
 			actorData.items.filter(item =>
@@ -219,45 +229,52 @@ class ObsidianActor extends Actor5e {
 	/**
 	 * @private
 	 */
-	static _prepareFeatures (actorData, data, flags) {
+	static _prepareFeatures (actorData) {
 		const ops = {
 			plus: (a, b) => a + b,
 			mult: (a, b) => a * b
 		};
 
-		actorData.obsidian.features = flags.features.custom;
+		const data = actorData.data;
+		actorData.obsidian.features =
+			actorData.items.filter(item =>
+				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
+
 		for (const feat of Object.values(actorData.obsidian.features)) {
-			if (feat.uses.enabled) {
-				const op = ops[feat.uses.operator];
-				if (feat.uses.key === 'abl') {
-					feat.uses.max = op(feat.uses.bonus, data.abilities[feat.uses.ability].mod);
-				} else if (feat.uses.key === 'chr') {
-					feat.uses.max = op(feat.uses.bonus, data.details.level.value);
-				} else if (feat.uses.key === 'cls') {
-					const cls = flags.classes.find(cls => cls.id === feat.uses.class);
+			const flags = feat.flags.obsidian;
+			if (flags.uses.enabled) {
+				const op = ops[flags.uses.operator];
+				if (flags.uses.key === 'abl') {
+					flags.uses.max = op(flags.uses.bonus, data.abilities[flags.uses.ability].mod);
+				} else if (flags.uses.key === 'chr') {
+					flags.uses.max = op(flags.uses.bonus, data.details.level.value);
+				} else if (flags.uses.key === 'cls') {
+					const cls =
+						actorData.flags.obsidian.classes.find(cls => cls.id === flags.uses.class);
+
 					if (cls) {
-						feat.uses.max = op(feat.uses.bonus, cls.levels);
+						flags.uses.max = op(flags.uses.bonus, cls.levels);
 					}
 				}
 
-				feat.uses.max = Math.max(feat.uses.min, feat.uses.max);
-				if (feat.uses.fixed !== undefined && feat.uses.fixed !== '') {
-					feat.uses.max = Number(feat.uses.fixed);
+				flags.uses.max = Math.max(flags.uses.min, flags.uses.max);
+				if (flags.uses.fixed !== undefined && flags.uses.fixed !== '') {
+					flags.uses.max = Number(flags.uses.fixed);
 				}
 
-				if (isNaN(feat.uses.max)) {
-					feat.uses.max = 0;
+				if (isNaN(flags.uses.max)) {
+					flags.uses.max = 0;
 				}
 
-				if (feat.uses.remaining === undefined || feat.uses.remaining > feat.uses.max) {
-					feat.uses.remaining = feat.uses.max;
-				} else if (feat.uses.remaining < 0) {
-					feat.uses.remaining = 0;
+				if (flags.uses.remaining === undefined || flags.uses.remaining > flags.uses.max) {
+					flags.uses.remaining = flags.uses.max;
+				} else if (flags.uses.remaining < 0) {
+					flags.uses.remaining = 0;
 				}
 			}
 
-			if (feat.dc.enabled) {
-				ObsidianActor._calculateSave(feat.dc, data);
+			if (flags.dc.enabled) {
+				ObsidianActor._calculateSave(flags.dc, data);
 			}
 		}
 	}
@@ -322,6 +339,31 @@ class ObsidianActor extends Actor5e {
 	/**
 	 * @private
 	 */
+	static _prepareSpellcasting (data, flags) {
+		const mods = [];
+		const attacks = [];
+		const saves = [];
+		const existing = {};
+
+		flags.attributes.spellcasting = {mods: mods, attacks: attacks, saves: saves};
+		for (const cls of flags.classes) {
+			if (cls.spell === undefined || cls.spell === '') {
+				cls.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
+			}
+
+			if (cls.spell !== undefined && cls.spell !== '' && !existing[cls.spell]) {
+				const val = data.abilities[cls.spell].mod;
+				mods.push(val);
+				attacks.push(val + data.attributes.prof.value);
+				saves.push(val + data.attributes.prof.value + 8);
+				existing[cls.spell] = true;
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
 	static _prepareTools (actorData, data, flags) {
 		for (const tool of flags.skills.tools) {
 			if (tool.override !== undefined && tool.override !== '') {
@@ -341,33 +383,41 @@ class ObsidianActor extends Actor5e {
 		}
 	}
 
-	updateClasses (before, after, update) {
-		const existing = this.data.flags.obsidian.features.custom;
+	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
-		const features = [];
+		const features =
+			this.items.filter(item =>
+				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
 
-		for (const feature of existing) {
+		for (const feature of features) {
 			if (feature.source.type === 'class' && !clsMap.has(feature.source.class)) {
-				continue;
+				await this.deleteOwnedItem(feature.id);
 			}
 
 			if (feature.uses.key === 'cls' && !clsMap.has(feature.uses.class)) {
-				continue;
+				await this.deleteOwnedItem(feature.id);
 			}
-
-			features.push(feature);
 		}
 
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
-		update['flags.obsidian.features.custom'] = features;
 	}
 
-	static updateFeatures (features, update) {
+	static updateFeatures (items, update) {
+		const features =
+			items.filter(item =>
+				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
+
 		const featMap = new Map(features.map(feat => [feat.id, feat]));
-		for (let i = 0; i < features.length; i++) {
-			const feature = features[i];
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			if (item.type !== 'feat' || !item.flags.obsidian || !item.flags.obsidian.custom) {
+				continue;
+			}
+
+			const feature = item.flags.obsidian;
 			if (feature.uses.type === 'shared' && !featMap.has(feature.uses.shared)) {
-				update[`flags.obsidian.features.custom.${i}.uses.type`] = 'formula';
+				update[`items.${i}.flags.obsidian.uses.type`] = 'formula';
 			}
 		}
 	}

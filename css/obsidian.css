@@ -658,6 +658,11 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-left: -10px;
 }
 
+.obsidian-form-row .obsidian-constant {
+	align-self: flex-end;
+	color: var(--text-subtle);
+}
+
 .obsidian-checkbox-row {
 	display: flex;
 	align-items: baseline;

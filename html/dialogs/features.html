@@ -5,25 +5,23 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.features.custom as |feat id|}}
-		<input type="hidden" name="flags.obsidian.features.custom.{{id}}.id" value="{{feat.id}}">
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+	{{#each entity.obsidian.features as |feat id|}}
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline"
+		     data-item-id="{{feat.id}}">
 			<div>
-				<input type="text" class="obsidian-input-compact"
-				       placeholder="{{localize 'OBSIDIAN.Feature'}}" value="{{feat.label}}"
-				       name="flags.obsidian.features.custom.{{id}}.label">
-				<select name="flags.obsidian.features.custom.{{id}}.active" class="obsidian-feat-active"
+				<input type="text" class="obsidian-input-compact" name="{{feat.id}}.name"
+				       placeholder="{{localize 'OBSIDIAN.Feature'}}" value="{{feat.name}}">
+				<select name="{{feat.id}}.active" class="obsidian-feat-active"
 				        data-selector="active.{{id}}">
-					{{#select feat.active}}
+					{{#select feat.flags.obsidian.active}}
 						{{#each ../ObsidianRules.FEAT_ACTIVE}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.features.custom.{{id}}.action" data-show="active"
-				        class="{{#if (expr '===' 'passive' feat.active)}}obsidian-hidden{{/if}}"
-				        data-selector-parent="active.{{id}}">
-					{{#select feat.action}}
+				<select name="{{feat.id}}.action" data-show="active" data-selector-parent="active.{{id}}"
+				        class="{{#if (expr '===' 'passive' feat.flags.obsidian.active)}}obsidian-hidden{{/if}}">
+					{{#select feat.flags.obsidian.action}}
 						{{#each ../ObsidianRules.FEAT_ACTION}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
 						{{/each}}

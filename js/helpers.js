@@ -121,32 +121,36 @@ Handlebars.registerHelper('filter', function (...args) {
 	return list.filter(item => {
 		let valid = true;
 		for (let i = 0; i < args.length - 1; i += 2) {
-			valid = valid && item[args[i]] === args[i + 1];
+			valid = valid && getProperty(item, args[i]) === args[i + 1];
 		}
 
 		return valid;
 	});
 });
 
-Handlebars.registerHelper('format-uses', function (features, feature) {
-	const uses = feature.uses;
+Handlebars.registerHelper('format-uses', function (items, feature) {
+	const uses = feature.flags.obsidian.uses;
 	if (!uses.enabled) {
 		return '';
 	}
 
+	const features =
+		items.filter(item =>
+			item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
+
 	const map = new Map(features.map(feat => [feat.id, feat]));
 	let id = feature.id;
-	let idx = features.findIndex(feat => feat.id === id);
+	let idx = items.findIndex(feat => feat.id === id);
 	let max = uses.max;
 	let remaining = uses.remaining;
 
 	if (uses.type === 'shared') {
-		const shared = features.findIndex(feat => feat.id === uses.shared);
+		const shared = items.findIndex(feat => feat.id === uses.shared);
 		if (shared > -1) {
-			id = features[shared].id;
+			id = items[shared].id;
 			idx = shared;
-			max = map.get(id).uses.max;
-			remaining = map.get(id).uses.remaining;
+			max = map.get(id).flags.obsidian.uses.max;
+			remaining = map.get(id).flags.obsidian.uses.remaining;
 		}
 	}
 
@@ -169,7 +173,7 @@ Handlebars.registerHelper('format-uses', function (features, feature) {
 		}
 	} else {
 		out += `
-			<input type="number" name="flags.obsidian.features.custom.${idx}.uses.remaining"
+			<input type="number" name="items.${idx}.flags.obsidian.uses.remaining"
 			       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 			<span class="obsidian-binary-operator">&sol;</span>
 			<span class="obsidian-feature-max">${max}</span>

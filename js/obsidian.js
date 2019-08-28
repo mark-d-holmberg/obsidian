@@ -44,6 +44,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
+		console.debug(this.actor);
 
 		this.form.addEventListener('scroll', this._onScroll.bind(this));
 		html.find('.obsidian-tab-contents').on('scroll', this._onScroll.bind(this));
@@ -83,9 +84,9 @@ class Obsidian extends ActorSheet5eCharacter {
 				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
 		html.find('[data-attack-id]').click(evt =>
-			new ObsidianAttackDialog(this, evt.currentTarget.dataset['attackId']).render(true));
+			new ObsidianAttackDialog(this, evt.currentTarget.dataset.attackId).render(true));
 		html.find('[data-feature-id]').click(evt =>
-			new ObsidianFeatureDialog(this, evt.currentTarget.dataset['featureId']).render(true));
+			new ObsidianFeatureDialog(this, evt.currentTarget.dataset.featureId).render(true));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
@@ -109,9 +110,9 @@ class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	getData () {
+		this.actor.data = this.actor.prepareData(this.actor.data);
 		const data = super.getData();
 		data.ObsidianRules = Obsidian.Rules;
-		console.debug(this.actor, data);
 		return data;
 	}
 
@@ -275,15 +276,15 @@ class Obsidian extends ActorSheet5eCharacter {
 		const target = $(evt.currentTarget);
 		const featID = target.parent().data('feat-id');
 		const n = Number(target.data('n'));
-		const featIndex =
-			this.actor.data.flags.obsidian.features.custom.findIndex(feat => feat.id === featID);
+		const featIndex = this.actor.items.findIndex(feat => feat.id === featID);
 
 		if (featIndex < 0) {
 			return;
 		}
 
-		const feat = this.actor.data.flags.obsidian.features.custom[featIndex];
-		let used = feat.uses.max - feat.uses.remaining;
+		const feat = this.actor.items[featIndex];
+		const max = feat.flags.obsidian.uses.max;
+		let used = max - feat.flags.obsidian.uses.remaining;
 
 		if (n > used) {
 			used++;
@@ -292,16 +293,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		update[`flags.obsidian.features.custom.${featIndex}.uses.remaining`] = feat.uses.max - used;
+		update[`items.${featIndex}.flags.obsidian.uses.remaining`] = max - used;
 		this.actor.update(update);
-	}
-
-	/**
-	 * @private
-	 */
-	_prepareItems (actorData) {
-		super._prepareItems(actorData);
-		ObsidianActor.prepareAttacks(actorData);
 	}
 
 	/**
@@ -507,6 +500,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/actions.html',
 		'public/modules/obsidian/html/tabs/attacks.html',
 		'public/modules/obsidian/html/tabs/sub-actions.html',
+		'public/modules/obsidian/html/tabs/spells.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html'
 	]);

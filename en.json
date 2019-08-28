@@ -240,5 +240,11 @@
 	"OBSIDIAN.Effect": "Effect",
 	"OBSIDIAN.Target": "Target",
 	"OBSIDIAN.Shared": "Shared",
-	"OBSIDIAN.NewAttack": "New Attack"
+	"OBSIDIAN.NewAttack": "New Attack",
+	"OBSIDIAN.NewFeature": "New Feature",
+	"OBSIDIAN.Modifier": "Modifier",
+	"OBSIDIAN.SpellAttack": "Spell Attack",
+	"OBSIDIAN.SaveDC": "Save DC",
+	"OBSIDIAN.ManageSpellcasting": "Manage Spellcasting",
+	"OBSIDIAN.SpellMod": "Spellcasting Modifier"
 }

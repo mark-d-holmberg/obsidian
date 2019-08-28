@@ -34,6 +34,17 @@ Obsidian.Rules.CLASS_HIT_DICE = {
 	wiz: 6
 };
 
+Obsidian.Rules.CLASS_SPELL_MODS = {
+	brd: 'cha',
+	clr: 'wis',
+	drd: 'wis',
+	pal: 'cha',
+	rng: 'wis',
+	src: 'cha',
+	war: 'cha',
+	wiz: 'int'
+};
+
 Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
 Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
