@@ -2,6 +2,8 @@
 	--bg: #252830;
 	--mid: #434857;
 	--dark: black;
+	--light: white;
+	--border-subtle: rgba(0, 0, 0, .15);
 	--text-regular: #cfd2da;
 	--text-inverse: #495057;
 	--text-bright: white;
@@ -69,6 +71,16 @@
 .obsidian button.obsidian-btn-outline:hover {
 	background: var(--dark);
 	color: var(--text-bright);
+}
+
+.obsidian button.obsidian-btn-highlight {
+	background-color: transparent;
+	color: var(--highlight);
+	border: 1px solid var(--highlight);
+}
+
+.obsidian button.obsidian-btn-highlight:hover {
+	background: var(--dark);
 }
 
 .obsidian select {
@@ -278,6 +290,10 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .obsidian-btn-sheet i {
 	color: var(--highlight);
 	margin-right: 6px;
+}
+
+button.obsidian-btn-sm.obsidian-btn-sheet.obsidian-btn-minor {
+	font-weight: normal;
 }
 
 .obsidian-char-box-container {
@@ -659,7 +675,6 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian-form-row .obsidian-constant {
-	align-self: flex-end;
 	color: var(--text-subtle);
 }
 

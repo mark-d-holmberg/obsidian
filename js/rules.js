@@ -45,6 +45,17 @@ Obsidian.Rules.CLASS_SPELL_MODS = {
 	wiz: 'int'
 };
 
+Obsidian.Rules.CLASS_SPELL_PROGRESSION = {
+	brd: 'full',
+	clr: 'full',
+	drd: 'full',
+	pal: 'half',
+	rng: 'half',
+	src: 'full',
+	war: 'pact',
+	wiz: 'full'
+};
+
 Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
 Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
@@ -68,3 +79,4 @@ Obsidian.Rules.PROFICIENCY_LEVELS = {
 Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
 Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
+Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];

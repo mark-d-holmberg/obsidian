@@ -1,5 +1,5 @@
 <form class="obsidian" autocomplete="off">
-	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.SpellMod'}}</label>
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Spellcasting'}}</label>
 	{{#each entity.flags.obsidian.classes as |class id|}}
 		<div class="obsidian-form-row obsidian-inline">
 			<span class="obsidian-constant">
@@ -14,6 +14,13 @@
 				{{#select class.spell}}
 					{{#each ../data.abilities}}
 						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="flags.obsidian.classes.{{id}}.progression">
+				{{#select class.progression}}
+					{{#each ../ObsidianRules.SPELL_PROGRESSION}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellProg-' this}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

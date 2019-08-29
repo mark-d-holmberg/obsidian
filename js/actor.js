@@ -358,6 +358,10 @@ class ObsidianActor extends Actor5e {
 				saves.push(val + data.attributes.prof.value + 8);
 				existing[cls.spell] = true;
 			}
+
+			if (cls.progression === undefined || cls.progression === '') {
+				cls.progression = Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls.name];
+			}
 		}
 	}
 
@@ -390,11 +394,12 @@ class ObsidianActor extends Actor5e {
 				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
 
 		for (const feature of features) {
-			if (feature.source.type === 'class' && !clsMap.has(feature.source.class)) {
+			const flags = feature.flags.obsidian;
+			if (flags.source.type === 'class' && !clsMap.has(flags.source.class)) {
 				await this.deleteOwnedItem(feature.id);
 			}
 
-			if (feature.uses.key === 'cls' && !clsMap.has(feature.uses.class)) {
+			if (flags.uses.key === 'cls' && !clsMap.has(flags.uses.class)) {
 				await this.deleteOwnedItem(feature.id);
 			}
 		}

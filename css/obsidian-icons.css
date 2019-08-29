@@ -81,6 +81,14 @@
 	background-image: url('../img/thunder.svg');
 }
 
+.obsidian-icon-concentration {
+	background-image: url('../img/concentration.svg');
+}
+
+.obsidian-icon-ritual {
+	background-image: url('../img/ritual.svg');
+}
+
 .obsidian-css-icon {
 	position: relative;
 }

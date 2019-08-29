@@ -245,6 +245,13 @@
 	"OBSIDIAN.Modifier": "Modifier",
 	"OBSIDIAN.SpellAttack": "Spell Attack",
 	"OBSIDIAN.SaveDC": "Save DC",
+	"OBSIDIAN.Spellcasting": "Spellcasting",
 	"OBSIDIAN.ManageSpellcasting": "Manage Spellcasting",
-	"OBSIDIAN.SpellMod": "Spellcasting Modifier"
+	"OBSIDIAN.SpellProg-third": "Third Caster",
+	"OBSIDIAN.SpellProg-half": "Half Caster",
+	"OBSIDIAN.SpellProg-full": "Full Caster",
+	"OBSIDIAN.SpellProg-pact": "Pact Magic",
+	"OBSIDIAN.SpellProg-artificer": "Artificer",
+	"OBSIDIAN.SpellName": "Spell name",
+	"OBSIDIAN.ManageSpells": "Manage Spells"
 }

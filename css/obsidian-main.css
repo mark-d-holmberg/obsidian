@@ -416,3 +416,77 @@
 	color: var(--text-subtle);
 	text-transform: uppercase;
 }
+
+.obsidian-char-spell-search {
+	margin-bottom: 12px;
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-input-search-container {
+	flex: 1;
+	margin-right: 8px;
+	position: relative;
+}
+
+.dnd5e.sheet form.obsidian input.obsidian-input-search {
+	color: var(--text-bright);
+	background-color: var(--mid);
+	border: 1px solid var(--border-subtle);
+	border-radius: .25rem;
+	height: 34px;
+	padding: 6px 34px;
+	font-size: 13px;
+	line-height: 1.4;
+	font-family: Roboto, sans-serif;
+	transition: border-color ease-in-out .15s;
+	box-shadow: none;
+	text-align: left;
+}
+
+.dnd5e.sheet form.obsidian input.obsidian-input-search:hover {
+	box-shadow: none;
+}
+
+.dnd5e.sheet form.obsidian .obsidian-input-search::placeholder {
+	color: var(--text-subtle);
+}
+
+.dnd5e.sheet form.obsidian input.obsidian-input-search:focus {
+	color: var(--text-inverse);
+	background-color: var(--light);
+	border-color: var(--light);
+	outline: none;
+}
+
+.dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i,
+.dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span {
+	color: var(--text-inverse);
+}
+
+.obsidian-input-search-container > i,
+.obsidian-input-search-container > span {
+	display: flex;
+	width: 34px;
+	height: 34px;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	font-size: 14px;
+	color: var(--text-subtle);
+}
+
+.obsidian-input-search-container > i {
+	top: 2px;
+	left: 0;
+}
+
+.obsidian-input-search-container > span {
+	top: 0;
+	right: 0;
+	cursor: pointer;
+}
+
+.obsidian-char-spell-search > button.obsidian-btn-sm.obsidian-btn-sheet {
+	margin: 0;
+}
