@@ -449,7 +449,7 @@
 }
 
 .dnd5e.sheet form.obsidian .obsidian-input-search::placeholder {
-	color: var(--text-subtle);
+	color: var(--text-placeholder);
 }
 
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus {
@@ -473,7 +473,7 @@
 	justify-content: center;
 	position: absolute;
 	font-size: 14px;
-	color: var(--text-subtle);
+	color: var(--text-placeholder);
 }
 
 .obsidian-input-search-container > i {

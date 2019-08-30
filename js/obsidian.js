@@ -318,7 +318,9 @@ class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			while (!current.hasClass('obsidian-main')) {
-				if (!current.hasClass('obsidian-tab-contents')) {
+				if (!current.hasClass('obsidian-tab-contents')
+					&& !current.hasClass('obsidian-tab-container'))
+				{
 					innerTotal += current.outerHeight(true);
 				}
 

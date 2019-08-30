@@ -9,6 +9,7 @@
 	--text-bright: white;
 	--text-secondary: #51586a;
 	--text-subtle: #999;
+	--text-placeholder: #6c757d;
 	--highlight: #c53131;
 	--highlight-rgba: rgba(197, 49, 49, .15);
 	--btn-positive: #40d250;
@@ -71,16 +72,6 @@
 .obsidian button.obsidian-btn-outline:hover {
 	background: var(--dark);
 	color: var(--text-bright);
-}
-
-.obsidian button.obsidian-btn-highlight {
-	background-color: transparent;
-	color: var(--highlight);
-	border: 1px solid var(--highlight);
-}
-
-.obsidian button.obsidian-btn-highlight:hover {
-	background: var(--dark);
 }
 
 .obsidian select {
@@ -290,10 +281,6 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .obsidian-btn-sheet i {
 	color: var(--highlight);
 	margin-right: 6px;
-}
-
-button.obsidian-btn-sm.obsidian-btn-sheet.obsidian-btn-minor {
-	font-weight: normal;
 }
 
 .obsidian-char-box-container {
@@ -676,6 +663,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet.obsidian-btn-minor {
 
 .obsidian-form-row .obsidian-constant {
 	color: var(--text-subtle);
+	width: 25%;
 }
 
 .obsidian-checkbox-row {

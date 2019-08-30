@@ -80,3 +80,26 @@ Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
 Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
 Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
+
+Obsidian.Rules.SPELL_SLOT_TABLE = [
+	[2],
+	[3],
+	[4, 2],
+	[4, 3],
+	[4, 3, 2],
+	[4, 3, 3],
+	[4, 3, 3, 1],
+	[4, 3, 3, 2],
+	[4, 3, 3, 3, 1],
+	[4, 3, 3, 3, 2],
+	[4, 3, 3, 3, 2, 1],
+	[4, 3, 3, 3, 2, 1],
+	[4, 3, 3, 3, 2, 1, 1],
+	[4, 3, 3, 3, 2, 1, 1],
+	[4, 3, 3, 3, 2, 1, 1, 1],
+	[4, 3, 3, 3, 2, 1, 1, 1],
+	[4, 3, 3, 3, 2, 1, 1, 1, 1],
+	[4, 3, 3, 3, 3, 1, 1, 1, 1],
+	[4, 3, 3, 3, 3, 2, 1, 1, 1],
+	[4, 3, 3, 3, 3, 2, 2, 1, 1]
+];

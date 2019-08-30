@@ -18,6 +18,7 @@
 				{{/select}}
 			</select>
 			<select name="flags.obsidian.classes.{{id}}.progression">
+				<option value="">&mdash;</option>
 				{{#select class.progression}}
 					{{#each ../ObsidianRules.SPELL_PROGRESSION}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellProg-' this}}</option>

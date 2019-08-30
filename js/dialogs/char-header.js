@@ -30,7 +30,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onAddClass (evt) {
 		evt.preventDefault();
-		const classes = this.parent.actor.getFlag('obsidian', 'classes');
+		const classes = duplicate(this.parent.actor.getFlag('obsidian', 'classes'));
 		const firstClass = Object.keys(Obsidian.Rules.CLASS_HIT_DICE)[0];
 
 		classes.push({
@@ -86,11 +86,10 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 * @private
 	 */
 	async _updateObject (event, formData) {
-		const newData = {};
+		const existing = this.parent.actor.getFlag('obsidian', 'classes');
 		const classes =
-			ObsidianDialog.reconstructArray(formData, newData, 'flags.obsidian.classes');
-		await this.parent.actor.updateClasses(
-			this.parent.actor.getFlag('obsidian', 'classes'), classes, newData);
-		super._updateObject(event, newData);
+			ObsidianDialog.reconstructArray(formData, {}, 'flags.obsidian.classes');
+		await this.parent.actor.updateClasses(existing, classes, formData);
+		super._updateObject(event, formData);
 	}
 }

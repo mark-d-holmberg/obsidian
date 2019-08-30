@@ -344,10 +344,14 @@ class ObsidianActor extends Actor5e {
 		const attacks = [];
 		const saves = [];
 		const existing = {};
+		let slotLevel = 0;
+		let pactLevel = 0;
+		let nonFullCasters = 0;
+		let totalCasters = 0;
 
 		flags.attributes.spellcasting = {mods: mods, attacks: attacks, saves: saves};
 		for (const cls of flags.classes) {
-			if (cls.spell === undefined || cls.spell === '') {
+			if (cls.spell === undefined) {
 				cls.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
 			}
 
@@ -359,8 +363,61 @@ class ObsidianActor extends Actor5e {
 				existing[cls.spell] = true;
 			}
 
-			if (cls.progression === undefined || cls.progression === '') {
+			if (cls.progression === undefined) {
 				cls.progression = Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls.name];
+			}
+
+			if (cls.progression !== undefined && cls.progression !== '') {
+				if (cls.progression !== 'pact') {
+					totalCasters++;
+				}
+
+				switch (cls.progression) {
+					case 'third': slotLevel += Math.floor(cls.levels / 3); nonFullCasters++; break;
+					case 'half': slotLevel += Math.floor(cls.levels / 2); nonFullCasters++; break;
+					case 'full': slotLevel += cls.levels; break;
+					case 'artificer': slotLevel += Math.ceil(cls.levels / 2); break;
+					case 'pact': pactLevel += cls.levels; break;
+				}
+			}
+		}
+
+		if (slotLevel > 0) {
+			if (totalCasters === 1 && nonFullCasters === 1) {
+				slotLevel++;
+			}
+
+			const slots = Obsidian.Rules.SPELL_SLOT_TABLE[slotLevel - 1];
+			slots.forEach((n, i) => {
+				const spell = data.spells[`spell${i + 1}`];
+				spell.max = n;
+
+				if (spell.value === undefined || spell.value < 0) {
+					spell.value = 0;
+				}
+
+				if (spell.value > spell.max) {
+					spell.value = spell.max;
+				}
+			});
+		}
+
+		if (pactLevel > 0) {
+			if (data.spells.pact === undefined) {
+				data.spells.pact = {};
+			}
+
+			data.spells.pact.level = Math.ceil(Math.min(10, pactLevel) / 2);
+			data.spells.pact.slots =
+				Math.max(1, Math.min(pactLevel, 2), Math.min(pactLevel - 8, 3),
+					Math.min(pactLevel - 13, 4));
+
+			if (data.spells.pact.used === undefined || data.spells.pact.used < 0) {
+				data.spells.pact.used = 0;
+			}
+
+			if (data.spells.pact.used > data.spells.pact.slots) {
+				data.spells.pact.used = data.spells.pact.slots;
 			}
 		}
 	}
