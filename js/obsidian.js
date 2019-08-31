@@ -56,7 +56,10 @@ class Obsidian extends ActorSheet5eCharacter {
 			const active = this.tabs[group];
 			new Tabs(bar, {
 				initial: active,
-				callback: clicked => this.tabs[group] = clicked.data('tab')
+				callback: clicked => {
+					this.tabs[group] = clicked.data('tab');
+					Obsidian._resizeTabs(html);
+				}
 			});
 		});
 
@@ -90,7 +93,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
-		html.find('.obsidian-feature-use').click(this._onUseClicked.bind(this));
+		html.find('[data-feat-id] .obsidian-feature-use').click(this._onUseClicked.bind(this));
+		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 
@@ -257,6 +261,33 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onSlotClicked (evt) {
+		const target = $(evt.currentTarget);
+		const spellLevel = target.parent().data('spell-level');
+		const spellKey = spellLevel === 'pact' ? 'pact' : `spell${spellLevel}`;
+		const n = Number(target.data('n'));
+		const spell = this.actor.data.data.spells[spellKey];
+
+		if (spell === undefined) {
+			return;
+		}
+
+		let uses = spell.value || spell.uses || 0;
+		if (n > uses) {
+			uses++;
+		} else {
+			uses--;
+		}
+
+		const update = {};
+		update[`data.spells.${spellKey}.${spellLevel === 'pact' ? 'uses' : 'value'}`] = uses;
+		this.actor.update(update);
+	}
+
+	/**
+	 * @private
 	 */
 	_onUnfocusContentEditable () {
 		setTimeout(() => {
@@ -308,6 +339,14 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		total -= html.find('.obsidian-conditions-box').outerHeight() + 13;
 		html.find('.obsidian-main').css('height', `${total}px`);
+		Obsidian._resizeTabs(html);
+	}
+
+	/**
+	 * @private
+	 */
+	static _resizeTabs (html) {
+		const total = html.find('.obsidian-main').outerHeight();
 		html.find('.obsidian-tab-contents').each((i, el) => {
 			const jqel = $(el);
 			let innerTotal = 0;
@@ -504,6 +543,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/attacks.html',
 		'public/modules/obsidian/html/tabs/sub-actions.html',
 		'public/modules/obsidian/html/tabs/spells.html',
+		'public/modules/obsidian/html/tabs/sub-spells.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html'
 	]);

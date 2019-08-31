@@ -96,6 +96,8 @@
 	border-bottom: 1px solid var(--mid);
 	line-height: 1.4;
 	padding-left: 2px;
+	display: flex;
+	justify-content: space-between;
 }
 
 .obsidian-tab-contents h3 i {
@@ -157,6 +159,22 @@
 	text-align: center;
 	color: var(--text-subtle);
 	flex: 1;
+}
+
+.obsidian-col-spell {
+	width: 135px;
+}
+
+.obsidian-col-time {
+	width: 35px;
+}
+
+.obsidian-col-dc {
+	width: 45px;
+}
+
+.obsidian-table {
+	margin-bottom: 30px;
 }
 
 .obsidian-table-text,
@@ -309,6 +327,10 @@
 	margin-left: 3px;
 	font-weight: normal;
 	color: var(--text-subtle);
+}
+
+.obsidian-feature-uses {
+	margin-left: 10px;
 }
 
 .obsidian-feature-use {
@@ -489,4 +511,23 @@
 
 .obsidian-char-spell-search > button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin: 0;
+}
+
+.obsidian-spell-level-tab {
+	min-width: 34px;
+}
+
+.obsidian-spells-slots-pact {
+	display: flex;
+	justify-content: space-between;
+}
+
+.obsidian-spells-slots,
+.obsidian-spells-pact {
+	display: flex;
+}
+
+.obsidian-spells-slots > span,
+.obsidian-spells-pact > span {
+	margin-left: 5px;
 }

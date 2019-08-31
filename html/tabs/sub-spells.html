@@ -1,0 +1,35 @@
+<div class="obsidian-tab-contents tab" data-group="spells" data-tab="{{level}}">
+	{{#each entity.spellbook}}
+		{{#if (expr '||' (expr '===' 'all' ../level) (expr '===' ../level @key))}}
+			<h3>
+				{{spellLevelFormat @key cantrip=true level=true}}
+				<div class="obsidian-spells-slots-pact">
+					{{#if (expr '===' ../data.spells.pact.level (num @key))}}
+						<div class="obsidian-spells-pact">
+							{{format-slots ../data.spells.pact 'pact'}}
+							<span>{{localize 'OBSIDIAN.Pact'}}</span>
+						</div>
+					{{/if}}
+					{{#if (expr '>' slots 0)}}
+						<div class="obsidian-spells-slots">
+							{{format-slots this @key}}
+							<span>{{localize 'OBSIDIAN.Slots'}}</span>
+						</div>
+					{{/if}}
+				</div>
+			</h3>
+			<div class="obsidian-table">
+				<div class="obsidian-thead">
+					<div class="obsidian-col-icon"></div>
+					<div class="obsidian-col-spell">{{localize 'OBSIDIAN.Name'}}</div>
+					<div class="obsidian-col-time">{{localize 'OBSIDIAN.Time'}}</div>
+					<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
+					<div class="obsidian-col-dc">{{localize 'OBSIDIAN.HitDC'}}</div>
+					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
+					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+					<div class="obsidian-col-icon"></div>
+				</div>
+			</div>
+		{{/if}}
+	{{/each}}
+</div>

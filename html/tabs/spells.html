@@ -29,7 +29,7 @@
 	<div class="obsidian-char-spell-search">
 		<div class="obsidian-input-search-container">
 			<input type="text" class="obsidian-input-search"
-			       placeholder="{{localize 'OBSIDIAN.SpellName'}}">
+			       placeholder="{{localize 'OBSIDIAN.SpellName'}}...">
 			<i class="fas fa-search"></i>
 			<span class="obsidian-clear-search">&times;</span>
 		</div>
@@ -38,7 +38,16 @@
 			{{localize 'OBSIDIAN.ManageSpells'}}
 		</button>
 	</div>
-	<ul class="obsidian-tab-bar" data-group="spells-tabs">
-
+	<ul class="obsidian-tab-bar" data-group="spells">
+		<li class="obsidian-sub-tab item" data-tab="all">{{localize 'OBSIDIAN.All'}}</li>
+		{{#each entity.spellbook}}
+			<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="{{@key}}">
+				{{spellLevelFormat @key}}
+			</li>
+		{{/each}}
 	</ul>
+	{{> public/modules/obsidian/html/tabs/sub-spells.html level='all'}}
+	{{#each entity.spellbook}}
+		{{> public/modules/obsidian/html/tabs/sub-spells.html ../this level=@key}}
+	{{/each}}
 </div>

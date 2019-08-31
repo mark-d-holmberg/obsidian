@@ -253,5 +253,16 @@
 	"OBSIDIAN.SpellProg-pact": "Pact Magic",
 	"OBSIDIAN.SpellProg-artificer": "Artificer",
 	"OBSIDIAN.SpellName": "Spell name",
-	"OBSIDIAN.ManageSpells": "Manage Spells"
+	"OBSIDIAN.ManageSpells": "Manage Spells",
+	"OBSIDIAN.All": "All",
+	"OBSIDIAN.Cantrip": "Cantrip",
+	"OBSIDIAN.FirstN": "1st",
+	"OBSIDIAN.SecondN": "2nd",
+	"OBSIDIAN.ThirdN": "3rd",
+	"OBSIDIAN.th": "th",
+	"OBSIDIAN.Level": "Level",
+	"OBSIDIAN.Name": "Name",
+	"OBSIDIAN.Time": "Time",
+	"OBSIDIAN.Pact": "Pact",
+	"OBSIDIAN.Slots": "Slots"
 }

@@ -391,8 +391,9 @@ class ObsidianActor extends Actor5e {
 			slots.forEach((n, i) => {
 				const spell = data.spells[`spell${i + 1}`];
 				spell.max = n;
+				spell.value = Number(spell.value);
 
-				if (spell.value === undefined || spell.value < 0) {
+				if (spell.value < 0) {
 					spell.value = 0;
 				}
 
@@ -412,12 +413,12 @@ class ObsidianActor extends Actor5e {
 				Math.max(1, Math.min(pactLevel, 2), Math.min(pactLevel - 8, 3),
 					Math.min(pactLevel - 13, 4));
 
-			if (data.spells.pact.used === undefined || data.spells.pact.used < 0) {
-				data.spells.pact.used = 0;
+			if (data.spells.pact.uses === undefined || data.spells.pact.uses < 0) {
+				data.spells.pact.uses = 0;
 			}
 
-			if (data.spells.pact.used > data.spells.pact.slots) {
-				data.spells.pact.used = data.spells.pact.slots;
+			if (data.spells.pact.uses > data.spells.pact.slots) {
+				data.spells.pact.uses = data.spells.pact.slots;
 			}
 		}
 	}

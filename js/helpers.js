@@ -128,6 +128,27 @@ Handlebars.registerHelper('filter', function (...args) {
 	});
 });
 
+Handlebars.registerHelper('format-slots', function (data, level) {
+	if (data.slots === undefined
+		|| typeof data.slots !== 'number'
+		|| data.uses === undefined
+		|| typeof data.uses !== 'number')
+	{
+		return '';
+	}
+
+	let out = `<div class="obsidian-feature-uses" data-spell-level="${level}">`;
+	for (let i = 0; i < data.slots; i++) {
+		out += `
+			<div class="obsidian-feature-use${i < data.uses ? ' obsidian-feature-used' : ''}"
+			     data-n="${i + 1}"></div>
+		`;
+	}
+
+	out += '</div>';
+	return new Handlebars.SafeString(out);
+});
+
 Handlebars.registerHelper('format-uses', function (items, feature) {
 	const uses = feature.flags.obsidian.uses;
 	if (!uses.enabled) {
@@ -221,6 +242,10 @@ Handlebars.registerHelper('notEmpty', function (obj) {
 	return obj != null && Object.keys(obj).length > 0;
 });
 
+Handlebars.registerHelper('num', function (n) {
+	return Number(n);
+});
+
 Handlebars.registerHelper('range', function (start, end) {
 	if (end === undefined) {
 		end = start;
@@ -228,6 +253,31 @@ Handlebars.registerHelper('range', function (start, end) {
 	}
 
 	return [...Array(end - start + 1).keys()].map(i => i + start);
+});
+
+Handlebars.registerHelper('spellLevelFormat', function (level, options) {
+	level = Number(level);
+	if (level < 1) {
+		return options.hash.cantrip ? game.i18n.localize('OBSIDIAN.Cantrip') : 0;
+	}
+
+	let n;
+	if (level === 1) {
+		n = game.i18n.localize('OBSIDIAN.FirstN');
+	} else if (level === 2) {
+		n = game.i18n.localize('OBSIDIAN.SecondN');
+	} else if (level === 3) {
+		n = game.i18n.localize('OBSIDIAN.ThirdN');
+	} else {
+		n = level + game.i18n.localize('OBSIDIAN.th');
+	}
+
+	let out = n;
+	if (options.hash.level) {
+		out += ` ${game.i18n.localize('OBSIDIAN.Level')}`;
+	}
+
+	return out;
 });
 
 Handlebars.registerHelper('startsWith', function (haystack, needle) {
