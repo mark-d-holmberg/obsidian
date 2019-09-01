@@ -12,3 +12,5 @@ The images found in the `img` directory are used and redistributed under the ter
 * [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `concentration.svg`, `ritual.svg`
 * [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`
+
+The symbols for the schools of magic are ©  Wizards of the Coast and were assembled into the font file `fonts/SchoolsOfMagic.otf` by [Pjotr Frank](https://www.dmsguild.com/product/217275/Symbols-to-Represent-the-8-Schools-of-Magic).

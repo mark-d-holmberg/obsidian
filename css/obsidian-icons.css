@@ -89,6 +89,48 @@
 	background-image: url('../img/ritual.svg');
 }
 
+.obsidian-spell-school {
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+	font-family: magic, sans-serif;
+	color: var(--text-regular);
+}
+
+.obsidian-spell-school-abj:before {
+	content: 'A';
+}
+
+.obsidian-spell-school-con:before {
+	content: 'C';
+}
+
+.obsidian-spell-school-div:before {
+	content: 'D';
+}
+
+.obsidian-spell-school-enc:before {
+	content: 'E';
+}
+
+.obsidian-spell-school-ill:before {
+	content: 'I';
+}
+
+.obsidian-spell-school-trs:before {
+	content: 'T';
+}
+
+.obsidian-spell-school-evo:before {
+	content: 'V';
+}
+
+.obsidian-spell-school-nec:before {
+	content: 'N';
+}
+
 .obsidian-css-icon {
 	position: relative;
 }

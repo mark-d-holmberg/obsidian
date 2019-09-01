@@ -53,3 +53,10 @@
 	font-weight: 700;
 	src: url('../fonts/RobotoCondensed-BoldItalic.woff2') format('woff2');
 }
+
+@font-face {
+	font-family: magic;
+	font-style: normal;
+	font-weight: 400;
+	src: url('../fonts/SchoolsOfMagic.otf') format('opentype');
+}

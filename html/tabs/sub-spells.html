@@ -29,6 +29,30 @@
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 					<div class="obsidian-col-icon"></div>
 				</div>
+				<div class="obsidian-tbody">
+					{{#each spells}}
+						<div class="obsidian-tr">
+							<div class="obsidian-col-icon">
+								<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
+							</div>
+							<div class="obsidian-col-spell">
+								<div class="obsidian-table-text rollable">{{name}}</div>
+								<div class="obsidian-table-sub-text"></div>
+							</div>
+							<div class="obsidian-col-time"></div>
+							<div class="obsidian-col-range"></div>
+							<div class="obsidian-col-dc"></div>
+							<div class="obsidian-col-damage"></div>
+							<div class="obsidian-col-notes"></div>
+							<div class="obsidian-col-icon">
+								<a title="{{localize 'OBSIDIAN.EditSpell'}}" class="obsidian-edit"
+								   data-spell-id="{{id}}">
+									<i class="fas fa-edit"></i>
+								</a>
+							</div>
+						</div>
+					{{/each}}
+				</div>
 			</div>
 		{{/if}}
 	{{/each}}

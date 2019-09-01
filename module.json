@@ -14,7 +14,7 @@
 		"js/dialogs/feature.js"
 	],
 	"styles": [
-		"css/roboto.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
+		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
 	],
 	"packs": [],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
