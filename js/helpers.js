@@ -129,18 +129,21 @@ Handlebars.registerHelper('filter', function (...args) {
 });
 
 Handlebars.registerHelper('format-slots', function (data, level) {
-	if (data.slots === undefined
-		|| typeof data.slots !== 'number'
-		|| data.uses === undefined
-		|| typeof data.uses !== 'number')
-	{
+	if (data === undefined) {
+		return '';
+	}
+
+	const slots = data.max == null ? data.slots : data.max;
+	const uses = data.value == null ? data.uses : data.value;
+
+	if (slots == null || typeof slots !== 'number' || uses == null || typeof uses !== 'number') {
 		return '';
 	}
 
 	let out = `<div class="obsidian-feature-uses" data-spell-level="${level}">`;
-	for (let i = 0; i < data.slots; i++) {
+	for (let i = 0; i < slots; i++) {
 		out += `
-			<div class="obsidian-feature-use${i < data.uses ? ' obsidian-feature-used' : ''}"
+			<div class="obsidian-feature-use${i < uses ? ' obsidian-feature-used' : ''}"
 			     data-n="${i + 1}"></div>
 		`;
 	}
@@ -207,6 +210,12 @@ Handlebars.registerHelper('format-uses', function (items, feature) {
 
 Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
+});
+
+Handlebars.registerHelper('has-spells', function (actor, level) {
+	const spell = actor.data.spells[`spell${level}`];
+	const spellbook = actor.spellbook[level];
+	return (spellbook && spellbook.spells.length > 0) || (level > 0 && Number(spell.max));
 });
 
 Handlebars.registerHelper('i18n-join', function (...args) {

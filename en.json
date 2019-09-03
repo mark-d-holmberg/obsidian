@@ -264,5 +264,7 @@
 	"OBSIDIAN.Name": "Name",
 	"OBSIDIAN.Time": "Time",
 	"OBSIDIAN.Pact": "Pact",
-	"OBSIDIAN.Slots": "Slots"
+	"OBSIDIAN.Slots": "Slots",
+	"OBSIDIAN.SlotOverride": "Slot Override",
+	"OBSIDIAN.PactSlotLevel": "Pact Slot Level"
 }

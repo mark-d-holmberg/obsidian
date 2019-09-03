@@ -44,6 +44,9 @@ Obsidian.SCHEMA = {
 			tools: [],
 			passives: ['prc', 'inv']
 		},
+		spells: {
+			slots: {}
+		},
 		traits: {
 			profs: {
 				custom: {

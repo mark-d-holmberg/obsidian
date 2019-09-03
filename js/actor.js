@@ -384,6 +384,7 @@ class ObsidianActor extends Actor5e {
 
 		if (slotLevel > 0) {
 			if (totalCasters === 1 && nonFullCasters === 1) {
+				// Single-classed non-half-caster.
 				slotLevel++;
 			}
 
@@ -391,16 +392,27 @@ class ObsidianActor extends Actor5e {
 			slots.forEach((n, i) => {
 				const spell = data.spells[`spell${i + 1}`];
 				spell.max = n;
-				spell.value = Number(spell.value);
+			});
 
-				if (spell.value < 0) {
+			for (let i = 1; i < 10; i++) {
+				const spell = data.spells[`spell${i}`];
+				const override = flags.spells.slots[i];
+
+				if (override !== undefined && override !== '') {
+					spell.max = Number(override);
+				} else if (slots[i - 1] === undefined) {
+					spell.max = 0;
+				}
+
+				spell.value = Number(spell.value);
+				if (isNaN(spell.value) || spell.value < 0) {
 					spell.value = 0;
 				}
 
 				if (spell.value > spell.max) {
 					spell.value = spell.max;
 				}
-			});
+			}
 		}
 
 		if (pactLevel > 0) {
@@ -412,6 +424,17 @@ class ObsidianActor extends Actor5e {
 			data.spells.pact.slots =
 				Math.max(1, Math.min(pactLevel, 2), Math.min(pactLevel - 8, 3),
 					Math.min(pactLevel - 13, 4));
+
+			const slotOverride = flags.spells.slots.pact;
+			const levelOverride = flags.spells.slots.pactLevel;
+
+			if (slotOverride !== undefined && slotOverride !== '') {
+				data.spells.pact.slots = Number(slotOverride);
+			}
+
+			if (levelOverride !== undefined && levelOverride !== '') {
+				data.spells.pact.level = Number(levelOverride);
+			}
 
 			if (data.spells.pact.uses === undefined || data.spells.pact.uses < 0) {
 				data.spells.pact.uses = 0;

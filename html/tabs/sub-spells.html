@@ -1,21 +1,23 @@
 <div class="obsidian-tab-contents tab" data-group="spells" data-tab="{{level}}">
-	{{#each entity.spellbook}}
-		{{#if (expr '||' (expr '===' 'all' ../level) (expr '===' ../level @key))}}
+	{{#each (range 0 9)}}
+		{{#if (expr '||' (expr '&&' (expr '===' 'all' ../level) (has-spells ../entity this)) (expr '===' ../level this))}}
 			<h3>
-				{{spellLevelFormat @key cantrip=true level=true}}
+				{{spellLevelFormat this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
-					{{#if (expr '===' ../data.spells.pact.level (num @key))}}
+					{{#if (expr '===' ../data.spells.pact.level this)}}
 						<div class="obsidian-spells-pact">
 							{{format-slots ../data.spells.pact 'pact'}}
 							<span>{{localize 'OBSIDIAN.Pact'}}</span>
 						</div>
 					{{/if}}
-					{{#if (expr '>' slots 0)}}
+					{{#with (lookup ../data.spells (expr '+' 'spell' this))}}
+					{{#if (expr '>' max 0)}}
 						<div class="obsidian-spells-slots">
-							{{format-slots this @key}}
+							{{format-slots this ../this}}
 							<span>{{localize 'OBSIDIAN.Slots'}}</span>
 						</div>
 					{{/if}}
+					{{/with}}
 				</div>
 			</h3>
 			<div class="obsidian-table">
@@ -30,6 +32,7 @@
 					<div class="obsidian-col-icon"></div>
 				</div>
 				<div class="obsidian-tbody">
+					{{#with (lookup ../entity.spellbook this)}}
 					{{#each spells}}
 						<div class="obsidian-tr">
 							<div class="obsidian-col-icon">
@@ -52,6 +55,7 @@
 							</div>
 						</div>
 					{{/each}}
+					{{/with}}
 				</div>
 			</div>
 		{{/if}}

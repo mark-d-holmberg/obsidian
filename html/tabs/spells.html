@@ -1,6 +1,6 @@
 <div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="spells">
 	<div class="obsidian-char-spell-header obsidian-simple-dialog" data-template="spellcasting.html"
-	     data-title="{{localize 'OBSIDIAN.ManageSpellcasting'}}" data-width="325">
+	     data-title="{{localize 'OBSIDIAN.ManageSpellcasting'}}" data-width="400">
 		<div>
 			<div class="obsidian-table-number-lg">
 				{{#each entity.flags.obsidian.attributes.spellcasting.mods}}
@@ -40,14 +40,18 @@
 	</div>
 	<ul class="obsidian-tab-bar" data-group="spells">
 		<li class="obsidian-sub-tab item" data-tab="all">{{localize 'OBSIDIAN.All'}}</li>
-		{{#each entity.spellbook}}
-			<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="{{@key}}">
-				{{spellLevelFormat @key}}
-			</li>
+		{{#each (range 0 9)}}
+			{{#if (has-spells ../entity this)}}
+				<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="{{this}}">
+					{{spellLevelFormat this}}
+				</li>
+			{{/if}}
 		{{/each}}
 	</ul>
 	{{> public/modules/obsidian/html/tabs/sub-spells.html level='all'}}
-	{{#each entity.spellbook}}
-		{{> public/modules/obsidian/html/tabs/sub-spells.html ../this level=@key}}
+	{{#each (range 0 9)}}
+		{{#if (has-spells ../entity this)}}
+			{{> public/modules/obsidian/html/tabs/sub-spells.html ../this level=@key}}
+		{{/if}}
 	{{/each}}
 </div>
