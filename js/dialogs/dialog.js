@@ -34,15 +34,25 @@ class ObsidianDialog extends BaseEntitySheet {
 		super.activateListeners(html);
 		html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
 		html.find('select').off('change').change(this._onSubmit.bind(this));
+		ObsidianDialog.initialiseComponents(html);
+	}
+
+	static initialiseComponents (html) {
 		html.find('.fancy-checkbox').click(evt => {
 			const target = $(evt.currentTarget);
 			const selected = !target.hasClass('selected');
 			const parent = target.parent();
-			selected ? target.addClass('selected') : target.removeClass('selected');
 
 			if (target.data('bound')) {
-				html.find(`input[name="${target.data('bound')}"]`)[0].checked = selected;
+				const bound =  html.find(`input[name="${target.data('bound')}"]`)[0];
+				if (bound.disabled) {
+					return;
+				}
+
+				bound.checked = selected;
 			}
+
+			selected ? target.addClass('selected') : target.removeClass('selected');
 
 			if (parent[0].tagName === 'LEGEND') {
 				parent.parent()[0].disabled = !selected;
@@ -66,9 +76,10 @@ class ObsidianDialog extends BaseEntitySheet {
 			const val = parent.val();
 			html.find(`[data-selector-parent="${selector}"]`).each((i, el) => {
 				const jqel = $(el);
-				if ((el.dataset.show && el.dataset.show === val)
-					|| (el.dataset.hide && el.dataset.hide !== val))
-				{
+				const show = el.dataset.show && el.dataset.show.split(',').map(s => s.trimStart());
+				const hide = el.dataset.hide && el.dataset.hide.split(',').map(s => s.trimStart());
+
+				if ((show && show.includes(val)) || (hide && !hide.includes(val))) {
 					jqel.removeClass('obsidian-hidden');
 				} else {
 					jqel.addClass('obsidian-hidden');

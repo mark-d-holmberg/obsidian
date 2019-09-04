@@ -40,7 +40,12 @@
 							</div>
 							<div class="obsidian-col-spell">
 								<div class="obsidian-table-text rollable">{{name}}</div>
-								<div class="obsidian-table-sub-text"></div>
+								<div class="obsidian-table-sub-text">
+									{{flags.obsidian.source.display}}
+									{{#if flags.obsidian.components.display}}
+										&bull; {{flags.obsidian.components.display}}
+									{{/if}}
+								</div>
 							</div>
 							<div class="obsidian-col-time"></div>
 							<div class="obsidian-col-range"></div>

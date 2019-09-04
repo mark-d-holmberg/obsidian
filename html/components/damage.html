@@ -1,4 +1,3 @@
-<legend>{{localize title}}</legend>
 {{#each dmgs as |dmg id|}}
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 		<div>
@@ -12,17 +11,19 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.{{../prop}}.{{id}}.stat">
-				{{#select dmg.stat}}
-					<option value="">&mdash;</option>
-					{{#each ../abilities}}
-						<option value="{{@key}}">
-							{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
-						</option>
-					{{/each}}
-				{{/select}}
-			</select>
+			{{#if ../spell}}
+				<input type="hidden" name="flags.obsidian.{{../prop}}.{{id}}.stat" value="spell">
+			{{else}}
+				<span class="obsidian-binary-operator">&plus;</span>
+				<select name="flags.obsidian.{{../prop}}.{{id}}.stat">
+					{{#select dmg.stat}}
+						<option value="">&mdash;</option>
+						{{#each ../ObsidianRules.ABILITIES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			{{/if}}
 			<span class="obsidian-binary-operator">&plus;</span>
 			<input name="flags.obsidian.{{../prop}}.{{id}}.bonus"
 			       data-dtype="Number" placeholder="0" type="text"
@@ -33,6 +34,9 @@
 					{{#each ../ObsidianRules.DAMAGE_TYPES}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 					{{/each}}
+					{{#if ../spell}}
+						<option value="hlg">{{localize 'OBSIDIAN.Healing'}}</option>
+					{{/if}}
 				{{/select}}
 			</select>
 		</div>

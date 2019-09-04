@@ -90,7 +90,12 @@ Handlebars.registerHelper('fancy-checkbox', function (...args) {
 
 	return new Handlebars.SafeString(`
 		<div class="fancy-checkbox" data-bound="${prop}"
-		     ${options.hash.style ? `style="${options.hash.style}"` : ''}>
+			${options.hash.style ? ` style="${options.hash.style}"` : ''}
+			${options.hash.show ? ` data-show="${options.hash.show}"` : ''}
+			${options.hash.hide ? ` data-hide="${options.hash.hide}"` : ''}
+			${options.hash.selectorParent
+				? ` data-selector-parent="${options.hash.selectorParent}"`
+				: ''}>
 			<div class="checkbox-container">
 				<div class="checkbox-inner-box"></div>
 				<div class="checkmark-container">

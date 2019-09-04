@@ -1,4 +1,6 @@
 Obsidian.Rules = {};
+Obsidian.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
 Obsidian.Rules.ATTACK_TAGS = [
 	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
 	'lance', 'net', 'thrown', 'twohanded', 'versatile', 'custom'
@@ -79,6 +81,11 @@ Obsidian.Rules.PROFICIENCY_LEVELS = {
 Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
 Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
+Obsidian.Rules.SPELL_COMPONENT_MAP = {v: 'Verbal', s: 'Somatic', m: 'Material', r: 'Royalty'};
+Obsidian.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour'];
+Obsidian.Rules.SPELL_DURATIONS = ['instant', 'dispel', 'special', 'round', 'min', 'hour'];
+Obsidian.Rules.SPELL_RANGES = ['self', 'touch', 'short', 'long'];
+Obsidian.Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
 Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
 
 Obsidian.Rules.SPELL_SLOT_TABLE = [

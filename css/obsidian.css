@@ -74,6 +74,17 @@
 	color: var(--text-bright);
 }
 
+.obsidian button:disabled {
+	border: 1px solid var(--mid);
+	color: var(--text-secondary);
+	cursor: default;
+}
+
+.obsidian button:disabled:hover {
+	box-shadow: none;
+	cursor: default;
+}
+
 .obsidian select {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	background: transparent;
@@ -89,7 +100,8 @@
 	font-family: Roboto, sans-serif;
 }
 
-.obsidian :disabled select {
+.obsidian :disabled select,
+.obsidian select:disabled {
 	color: var(--text-secondary);
 }
 
@@ -106,7 +118,20 @@
 }
 
 .obsidian-window.dialog .window-content {
-	overflow-y: hidden;
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+}
+
+.obsidian-window.dialog .window-content::-webkit-scrollbar {
+	height: 6px;
+}
+
+.obsidian-window.dialog .window-content::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+.obsidian-window.dialog .window-content::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
 }
 
 .obsidian-window .window-content {
@@ -578,8 +603,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian .obsidian-inline label.obsidian-inline {
-	display: inline-flex;
+	display: inline-block;
 	margin-right: 20px;
+}
+
+.obsidian .obsidian-inline label.obsidian-inline + select {
+	margin-left: -10px;
 }
 
 .obsidian label.obsidian-label-lg {
@@ -600,10 +629,14 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	max-width: 70%;
 }
 
+.obsidian .obsidian-fullwidth label.obsidian-inline {
+	align-items: baseline;
+}
+
 .obsidian .obsidian-form-row label.obsidian-inline > input[type=text]:last-child,
 .obsidian .obsidian-form-row label.obsidian-inline > select:last-child,
 .obsidian .obsidian-form-row label.obsidian-inline > span:last-child {
-	margin-left: 10px;
+	margin-left: 6px;
 }
 
 .dialog form label.obsidian-label-lg button {
@@ -686,6 +719,14 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	display: flex;
 	align-items: center;
 	margin-bottom: 6px;
+}
+
+.obsidian-form-row input[type=checkbox].obsidian-hidden + .fancy-checkbox {
+	margin-left: 10px;
+}
+
+.obsidian-form-row input[type=checkbox].obsidian-hidden + input {
+	margin-left: 10px;
 }
 
 .obsidian-inline .fancy-checkbox {
@@ -1045,4 +1086,8 @@ legend .fancy-checkbox {
 
 .obsidian-char-box-text-compact {
 	padding-bottom: 0;
+}
+
+.obsidian-fullwidth {
+	width: 100%;
 }

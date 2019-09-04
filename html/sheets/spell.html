@@ -1,0 +1,175 @@
+<form class="obsidian" autocomplete="off" data-obsidian-name="spell">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Spell'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-checkbox-row obsidian-fullwidth">
+				<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
+				       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
+				<select name="data.school.value">
+					{{#select data.school.value}}
+						{{#each ObsidianRules.SPELL_SCHOOLS}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellSchool-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Level'}}
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       value="{{data.level.value}}" name="data.level.value" data-dtype="Number">
+				</label>
+				{{fancy-checkbox 'data.ritual.value' content='OBSIDIAN.Ritual' checked=data.ritual.value}}
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.CastTime'}}
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="flags.obsidian.time.n" placeholder="1"
+					       value="{{item.flags.obsidian.time.n}}">
+				</label>
+				<select name="flags.obsidian.time.type" data-selector="cast-time">
+					{{#select item.flags.obsidian.time.type}}
+						{{#each ObsidianRules.SPELL_CAST_TIMES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.CastTime-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="react"
+				       value="{{item.flags.obsidian.time.react}}" data-selector-parent="cast-time"
+				       placeholder="{{localize 'OBSIDIAN.CastTime-react'}}" style="max-width: 240px;"
+				       name="flags.obsidian.time.react">
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Range'}}
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+					       name="flags.obsidian.range.n" value="{{item.flags.obsidian.range.n}}"
+					       data-dtype="Number" data-selector-parent="range" data-show="short, long">
+				</label>
+				<select name="flags.obsidian.range.type" data-selector="range">
+					{{#select item.flags.obsidian.range.type}}
+						{{#each ObsidianRules.SPELL_RANGES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellRange-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-fullwidth obsidian-checkbox-row">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Duration'}}
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" data-selector-parent="duration" data-show="round, min, hour"
+					       name="flags.obsidian.duration.n" value="{{item.flags.obsidian.duration.n}}">
+				</label>
+				<select name="flags.obsidian.duration.type" data-selector="duration">
+					{{#select item.flags.obsidian.duration.type}}
+						{{#each ObsidianRules.SPELL_DURATIONS}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Duration-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				{{fancy-checkbox 'data.concentration.value' content='OBSIDIAN.Concentration'
+				                 checked=data.concentration.value selectorParent='duration'
+				                 show='round, min, hour'}}
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-fullwidth obsidian-checkbox-row">
+				{{fancy-checkbox 'flags.obsidian.components.v' content='OBSIDIAN.VerbalAbbr'
+                         checked=item.flags.obsidian.components.v}}
+				{{fancy-checkbox 'flags.obsidian.components.s' content='OBSIDIAN.SomaticAbbr'
+				                 checked=item.flags.obsidian.components.s}}
+				{{fancy-checkbox 'flags.obsidian.components.r' content='OBSIDIAN.RoyaltyAbbr'
+				                 checked=item.flags.obsidian.components.r}}
+				{{fancy-checkbox 'flags.obsidian.components.m' content='OBSIDIAN.MaterialAbbr'
+				                 checked=item.flags.obsidian.components.m}}
+				<input type="text" class="obsidian-input-compact obsidian-input-lg"
+				       name="data.materials.value" value="{{data.materials.value}}"
+				       style="max-width: 290px;">
+			</div>
+		</div>
+	</fieldset>
+	<fieldset {{disabled (expr '!' item.flags.obsidian.hit.enabled)}}>
+		<legend>
+			{{fancy-checkbox 'flags.obsidian.hit.enabled' content='OBSIDIAN.Hit'
+			                 checked=item.flags.obsidian.hit.enabled}}
+		</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-checkbox-row">
+				<select name="flags.obsidian.hit.attack">
+					{{#select item.flags.obsidian.hit.attack}}
+						<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
+						<option value="ranged">{{localize 'OBSIDIAN.AttackType-ranged'}}</option>
+						<option value="unerring">{{localize 'OBSIDIAN.AttackType-unerring'}}</option>
+					{{/select}}
+				</select>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset {{disabled (expr '!' item.flags.obsidian.dc.enabled)}}>
+		<legend>
+			{{fancy-checkbox 'flags.obsidian.dc.enabled' content='OBSIDIAN.DC'
+			                 checked=item.flags.obsidian.dc.enabled}}
+		</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Target'}}
+					<select name="flags.obsidian.dc.target">
+						{{#select item.flags.obsidian.dc.target}}
+							{{#each ObsidianRules.ABILITIES}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+				<input type="text" name="flags.obsidian.dc.effect" value="{{item.flags.obsidian.dc.effect}}"
+				       class="obsidian-input-compact obsidian-input-lg"
+				       placeholder="{{localize 'OBSIDIAN.Effect'}}">
+			</div>
+		</div>
+	</fieldset>
+	<fieldset data-prop="damage">
+		<legend>{{localize 'OBSIDIAN.DamageHeal'}}</legend>
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+				prop='damage' spell=true}}
+	</fieldset>
+	<fieldset data-prop="upcast.damage" {{disabled (expr '!' item.flags.obsidian.upcast.enabled)}}>
+		<legend>
+			{{fancy-checkbox 'flags.obsidian.upcast.enabled' content='OBSIDIAN.AtHigherLevels'
+			                 checked=item.flags.obsidian.upcast.enabled}}
+		</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" name="flags.obsidian.upcast.natk" placeholder="0"
+					       value="{{item.flags.obsidian.upcast.natk}}">
+					<span>{{localize 'OBSIDIAN.Attacks'}}</span>
+				</label>
+				<span class="obsidian-binary-operator">&sol;</span>
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       placeholder="1" name="flags.obsidian.upcast.nlvl"
+					       value="{{item.flags.obsidian.upcast.nlvl}}">
+					<span>{{localize 'OBSIDIAN.Level'}}</span>
+				</label>
+			</div>
+		</div>
+		<label class="obsidian-label-lg obsidian-stacked-row obsidian-inline">
+			{{localize 'OBSIDIAN.DamageLevel'}}
+		</label>
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.upcast.damage
+				prop='upcast.damage' spell=true}}
+	</fieldset>
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
+	<div class="obsidian-rich-text">
+		{{editor content=item.data.description.value button=false editable=editable
+		         target='data.description.value'}}
+	</div>
+</form>

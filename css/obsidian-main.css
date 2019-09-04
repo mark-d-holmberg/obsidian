@@ -357,7 +357,7 @@
 
 .obsidian .editor,
 .obsidian .tox.tox-tinymce {
-	max-height: none;
+	max-height: 300px;
 	min-height: 200px;
 }
 

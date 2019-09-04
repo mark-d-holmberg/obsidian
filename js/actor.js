@@ -52,6 +52,7 @@ class ObsidianActor extends Actor5e {
 		ObsidianActor._prepareSpellcasting(data, flags);
 		ObsidianActor._prepareAttacks(actorData);
 		ObsidianActor._prepareFeatures(actorData);
+		ObsidianActor._prepareSpells(actorData);
 
 		return actorData;
 	}
@@ -449,6 +450,25 @@ class ObsidianActor extends Actor5e {
 	/**
 	 * @private
 	 */
+	static _prepareSpells (actorData) {
+		for (const spell of Object.values(actorData.items.filter(item => item.type === 'spell'))) {
+			const flags = spell.flags.obsidian;
+			if (flags.source === undefined) {
+				flags.source = {display: game.i18n.localize('OBSIDIAN.Class-custom')};
+			}
+
+			flags.components.display =
+				Object.keys(flags.components)
+					.map(key => Obsidian.Rules.SPELL_COMPONENT_MAP[key])
+					.filter(s => s !== undefined)
+					.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
+					.join(', ');
+		}
+	}
+
+	/**
+	 * @private
+	 */
 	static _prepareTools (actorData, data, flags) {
 		for (const tool of flags.skills.tools) {
 			if (tool.override !== undefined && tool.override !== '') {
@@ -470,6 +490,7 @@ class ObsidianActor extends Actor5e {
 
 	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
+		const spells = this.items.filter(item => item.type === 'spell');
 		const features =
 			this.items.filter(item =>
 				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
@@ -485,18 +506,32 @@ class ObsidianActor extends Actor5e {
 			}
 		}
 
+		for (const spell of spells) {
+			const flags = spell.flags.obsidian;
+			if (flags.source && flags.source.type === 'class' && !clsMap.has(flags.source.id)) {
+				await this.deleteOwnedItem(spell.id);
+			}
+		}
+
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
 	}
 
-	static updateFeatures (items, update) {
+	async updateFeatures (update) {
 		const features =
-			items.filter(item =>
+			this.items.filter(item =>
 				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
 
 		const featMap = new Map(features.map(feat => [feat.id, feat]));
 
-		for (let i = 0; i < items.length; i++) {
-			const item = items[i];
+		for (let i = 0; i < this.items.length; i++) {
+			const item = this.items[i];
+			if (item.type === 'spell') {
+				const flags = item.flags.obsidian;
+				if (flags.source && flags.source.type === 'feat' && !featMap.has(flags.source.id)) {
+					await this.deleteOwnedItem(item.id);
+				}
+			}
+
 			if (item.type !== 'feat' || !item.flags.obsidian || !item.flags.obsidian.custom) {
 				continue;
 			}

@@ -74,14 +74,16 @@
 	{{> public/modules/obsidian/html/components/dc.html attack.flags.obsidian.dc
 			abilities=data.abilities ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">
+		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
 		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.flags.obsidian.damage
-				title='OBSIDIAN.Damage' prop='damage' abilities=data.abilities}}
+				prop='damage'}}
 	</fieldset>
 	<fieldset class="{{#if (expr '!' attack.flags.obsidian.tags.versatile)}}
 		obsidian-hidden
 	{{/if}} obsidian-versatile-block" data-prop="versatile">
+		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
 		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.flags.obsidian.versatile
-				prop='versatile' title='OBSIDIAN.VersatileDamage' abilities=data.abilities}}
+				prop='versatile'}}
 	</fieldset>
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>

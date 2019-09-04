@@ -51,7 +51,7 @@ class ObsidianFeaturesDialog extends ObsidianDialog {
 		await this.parent.actor.deleteOwnedItem(id);
 
 		const update = {};
-		ObsidianActor.updateFeatures(this.parent.actor.items, update);
+		await this.parent.actor.updateFeatures(update);
 		if (!$.isEmptyObject(update)) {
 			await this.parent.actor.update(update);
 		}
