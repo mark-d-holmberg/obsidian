@@ -11,19 +11,18 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			{{#if ../spell}}
-				<input type="hidden" name="flags.obsidian.{{../prop}}.{{id}}.stat" value="spell">
-			{{else}}
-				<span class="obsidian-binary-operator">&plus;</span>
-				<select name="flags.obsidian.{{../prop}}.{{id}}.stat">
-					{{#select dmg.stat}}
-						<option value="">&mdash;</option>
-						{{#each ../ObsidianRules.ABILITIES}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-			{{/if}}
+			<span class="obsidian-binary-operator">&plus;</span>
+			<select name="flags.obsidian.{{../prop}}.{{id}}.stat">
+				{{#select dmg.stat}}
+					<option value="">&mdash;</option>
+					{{#if ../spell}}
+						<option value="spell">{{localize 'OBSIDIAN.SpellAbbr'}}</option>
+					{{/if}}
+					{{#each ../ObsidianRules.ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
 			<input name="flags.obsidian.{{../prop}}.{{id}}.bonus"
 			       data-dtype="Number" placeholder="0" type="text"

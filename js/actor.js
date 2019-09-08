@@ -356,12 +356,20 @@ class ObsidianActor extends Actor5e {
 				cls.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
 			}
 
-			if (cls.spell !== undefined && cls.spell !== '' && !existing[cls.spell]) {
+			if (cls.spell !== undefined && cls.spell !== '') {
 				const val = data.abilities[cls.spell].mod;
-				mods.push(val);
-				attacks.push(val + data.attributes.prof.value);
-				saves.push(val + data.attributes.prof.value + 8);
-				existing[cls.spell] = true;
+				cls.spellcasting = {
+					mod: val,
+					attack: val + data.attributes.prof.value,
+					save: val + data.attributes.prof.value + 8
+				};
+
+				if (!existing[cls.spell]) {
+					mods.push(cls.spellcasting.mod);
+					attacks.push(cls.spellcasting.attack);
+					saves.push(cls.spellcasting.save);
+					existing[cls.spell] = true;
+				}
 			}
 
 			if (cls.progression === undefined) {
@@ -453,16 +461,80 @@ class ObsidianActor extends Actor5e {
 	static _prepareSpells (actorData) {
 		for (const spell of Object.values(actorData.items.filter(item => item.type === 'spell'))) {
 			const flags = spell.flags.obsidian;
+			flags.notes = [];
+			let cls;
+
+			if (flags.time.n === undefined || flags.time.n === '') {
+				flags.time.n = 1;
+			} else {
+				flags.time.n = Number(flags.time.n);
+			}
+
 			if (flags.source === undefined) {
 				flags.source = {display: game.i18n.localize('OBSIDIAN.Class-custom')};
+			} else if (flags.source.type === 'class') {
+				cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.id);
+				flags.source.display =
+					cls.name === 'custom'
+						? cls.custom
+						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
 			}
 
 			flags.components.display =
-				Object.keys(flags.components)
-					.map(key => Obsidian.Rules.SPELL_COMPONENT_MAP[key])
+				Object.entries(flags.components)
+					.filter(([, val]) => val)
+					.map(([key,]) => Obsidian.Rules.SPELL_COMPONENT_MAP[key])
 					.filter(s => s !== undefined)
 					.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 					.join(', ');
+
+			if (flags.hit.enabled) {
+				if (flags.hit.n === undefined || flags.hit.n === '') {
+					flags.hit.n = 1;
+				} else {
+					flags.hit.n = Number(flags.hit.n);
+				}
+
+				flags.hit.count = flags.hit.n;
+				if (spell.data.level.value < 1) {
+					flags.hit.count +=
+						Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1;
+				}
+
+				flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
+				flags.hit.value =
+					cls ? cls.spellcasting.attack : actorData.data.attributes.prof.value;
+			}
+
+			if (flags.dc.enabled) {
+				flags.dc.value =
+					cls ? cls.spellcasting.save : 8 + actorData.data.attributes.prof.value;
+			}
+
+			for (const dmg of flags.damage) {
+				dmg.mod = dmg.bonus || 0;
+				if (dmg.stat && dmg.stat.length > 0) {
+					if (dmg.stat === 'spell') {
+						dmg.mod += cls ? cls.spellcasting.mod : 0;
+					} else {
+						dmg.mod += data.abilities[dmg.stat].mod;
+					}
+				}
+
+				dmg.display = ObsidianActor._damageFormat(dmg);
+			}
+
+			if (flags.components.m && spell.data.materials.value.length > 0) {
+				flags.notes.push(
+					`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: `
+					+ spell.data.materials.value);
+			}
+
+			if (flags.time.type === 'react' && flags.time.react.length > 0) {
+				flags.notes.push(
+					`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}: `
+					+ flags.time.react);
+			}
 		}
 	}
 

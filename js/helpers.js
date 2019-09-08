@@ -225,6 +225,12 @@ Handlebars.registerHelper('has-spells', function (actor, level) {
 
 Handlebars.registerHelper('i18n-join', function (...args) {
 	args.pop();
+	args = args.filter(arg => arg !== undefined && arg.length > 0);
+
+	if (args.length < 2) {
+		return '';
+	}
+
 	return game.i18n.localize(args.reduce((acc, x) => acc + x));
 });
 

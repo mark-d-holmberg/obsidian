@@ -90,7 +90,7 @@
 				                 checked=item.flags.obsidian.components.m}}
 				<input type="text" class="obsidian-input-compact obsidian-input-lg"
 				       name="data.materials.value" value="{{data.materials.value}}"
-				       style="max-width: 290px;">
+				       style="max-width: 290px;" placeholder="{{localize 'OBSIDIAN.Materials'}}">
 			</div>
 		</div>
 	</fieldset>
@@ -108,6 +108,11 @@
 						<option value="unerring">{{localize 'OBSIDIAN.AttackType-unerring'}}</option>
 					{{/select}}
 				</select>
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="flags.obsidian.hit.n" placeholder="1" value="{{item.flags.obsidian.hit.n}}">
+					<span>{{localize 'OBSIDIAN.Count'}}</span>
+				</label>
 			</div>
 		</div>
 	</fieldset>

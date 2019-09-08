@@ -47,11 +47,57 @@
 									{{/if}}
 								</div>
 							</div>
-							<div class="obsidian-col-time"></div>
-							<div class="obsidian-col-range"></div>
-							<div class="obsidian-col-dc"></div>
-							<div class="obsidian-col-damage"></div>
-							<div class="obsidian-col-notes"></div>
+							<div class="obsidian-col-time">
+								<div class="obsidian-table-text">
+									{{flags.obsidian.time.n}}{{i18n-join 'OBSIDIAN.CastTimeAbbr-' flags.obsidian.time.type}}
+								</div>
+							</div>
+							<div class="obsidian-col-range">
+								{{#if (expr '||'
+									(expr '===' flags.obsidian.range.type 'short')
+						      (expr '===' flags.obsidian.range.type 'long'))}}
+									<div class="obsidian-table-number-md">
+										{{flags.obsidian.range.n}}
+										<span class="obsidian-table-unit">
+											{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
+										</span>
+									</div>
+								{{else}}
+									<div class="obsidian-table-text">
+										{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}
+									</div>
+								{{/if}}
+							</div>
+							<div class="obsidian-col-dc">
+								<div class="obsidian-table-number-lg">
+									{{#if flags.obsidian.hit.enabled}}
+										{{numberFormat flags.obsidian.hit.value decimals=0 sign=true}}
+									{{else if flags.obsidian.dc.enabled}}
+										<div class="obsidian-table-sub-text obsidian-table-save">
+											{{i18n-join 'OBSIDIAN.AbilityAbbr-' flags.obsidian.dc.target}}
+										</div>
+										<div class="obsidian-table-number-md">{{flags.obsidian.dc.value}}</div>
+									{{else}}
+										<span class="obsidian-na">&mdash;</span>
+									{{/if}}
+								</div>
+							</div>
+							<div class="obsidian-col-damage">
+								<div class="obsidian-table-dmg">
+									{{#each flags.obsidian.damage}}
+										<div class="obsidian-dmg-component">
+											{{display}}
+											<div class="obsidian-icon-sm obsidian-icon-{{type}}"
+											     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+										</div>
+									{{/each}}
+								</div>
+							</div>
+							<div class="obsidian-col-notes">
+								{{#each flags.obsidian.notes}}
+									<div class="obsidian-table-note-text">{{this}}</div>
+								{{/each}}
+							</div>
 							<div class="obsidian-col-icon">
 								<a title="{{localize 'OBSIDIAN.EditSpell'}}" class="obsidian-edit"
 								   data-spell-id="{{id}}">

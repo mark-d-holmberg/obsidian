@@ -285,10 +285,17 @@
 	"OBSIDIAN.CastTime-react": "Reaction",
 	"OBSIDIAN.CastTime-min": "Minute",
 	"OBSIDIAN.CastTime-hour": "Hour",
+	"OBSIDIAN.CastTimeAbbr-action": "A",
+	"OBSIDIAN.CastTimeAbbr-ba": "BA",
+	"OBSIDIAN.CastTimeAbbr-react": "R",
+	"OBSIDIAN.CastTimeAbbr-min": "m",
+	"OBSIDIAN.CastTimeAbbr-hour": "h",
 	"OBSIDIAN.SpellRange-self": "Self",
 	"OBSIDIAN.SpellRange-touch": "Touch",
 	"OBSIDIAN.SpellRange-short": "Feet",
 	"OBSIDIAN.SpellRange-long": "Miles",
+	"OBSIDIAN.SpellRangeAbbr-short": "ft.",
+	"OBSIDIAN.SpellRangeAbbr-long": "mi.",
 	"OBSIDIAN.Duration": "Duration",
 	"OBSIDIAN.Duration-instant": "Instantaneous",
 	"OBSIDIAN.Duration-dispel": "Until Dispelled",
@@ -305,5 +312,6 @@
 	"OBSIDIAN.Healing": "Healing",
 	"OBSIDIAN.DamageHeal": "Damage / Healing",
 	"OBSIDIAN.AtHigherLevels": "At Higher Levels",
-	"OBSIDIAN.DamageLevel": "Damage / Level"
+	"OBSIDIAN.DamageLevel": "Damage / Level",
+	"OBSIDIAN.Count": "Count"
 }

@@ -31,7 +31,7 @@ class ObsidianSpellSheet extends ItemSheet {
 	}
 
 	static enrichFlags (data) {
-		if (data.type === 'spell') {
+		if (data.type === 'spell' && !data.flags.obsidian) {
 			data.flags.obsidian = {
 				damage: [],
 				upcast: {enabled: false, damage: []},
