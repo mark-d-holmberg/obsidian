@@ -1,6 +1,7 @@
 class ObsidianSpellSheet extends ItemSheet {
 	constructor (...args) {
 		super(...args);
+		this.scrolling = false;
 		Hooks.once('MCEInit-spell', init => {
 			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
 		});
@@ -28,6 +29,11 @@ class ObsidianSpellSheet extends ItemSheet {
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
 		ObsidianDialog.initialiseComponents(html);
 		ObsidianDialog.recalculateHeight(html, {richText: true});
+
+		this.element.on('scroll', this._onScroll.bind(this));
+		if (this.item.data.flags['_scroll'] !== undefined) {
+			this.element.prop('scrollTop', this.item.flags['_scroll']);
+		}
 	}
 
 	static enrichFlags (data) {
@@ -92,6 +98,21 @@ class ObsidianSpellSheet extends ItemSheet {
 		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
 		const damage = getProperty(this.item.data.flags.obsidian, prop);
 		this.item.update({[`flags.obsidian.${prop}`]: ObsidianDialog.removeRow(damage, evt)});
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onScroll (evt) {
+		if (!this.scrolling) {
+			setTimeout(() => {
+				this.item.data.flags['_scroll'] = this.element.prop('scrollTop');
+				this.scrolling = false;
+			}, 200);
+
+			this.scrolling = true;
+		}
 	}
 }
 
