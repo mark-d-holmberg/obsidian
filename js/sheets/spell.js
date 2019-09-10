@@ -47,8 +47,28 @@ class ObsidianSpellSheet extends ItemSheet {
 
 	getData () {
 		const data = super.getData();
+		data.actor = this.actor;
 		data.ObsidianRules = Obsidian.Rules;
 		return data;
+	}
+
+	async close () {
+		await super.close();
+		if (this.actor && this.actor.apps) {
+			Object.values(this.actor.apps)
+				.filter(app => app.setModal)
+				.forEach(app => app.setModal(false));
+		}
+	}
+
+	render (force = false, options = {}) {
+		if (this.actor && this.actor.apps) {
+			Object.values(this.actor.apps)
+				.filter(app => app.setModal)
+				.forEach(app => app.setModal(true));
+		}
+
+		return super.render(force, options);
 	}
 
 	/**

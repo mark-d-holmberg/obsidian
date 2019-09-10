@@ -20,6 +20,37 @@
 				{{fancy-checkbox 'data.ritual.value' content='OBSIDIAN.Ritual' checked=data.ritual.value}}
 			</div>
 		</div>
+		{{#if actor}}
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Source'}}
+					<select name="flags.obsidian.source.type" data-selector="source">
+						{{#select item.flags.obsidian.source.type}}
+							<option value="class">{{localize 'OBSIDIAN.Class'}}</option>
+							<option value="feat">{{localize 'OBSIDIAN.Feature'}}</option>
+							<option value="custom">{{localize 'OBSIDIAN.Custom'}}</option>
+						{{/select}}
+					</select>
+				</label>
+				<select name="flags.obsidian.source.class" data-show="class" data-selector-parent="source">
+					{{#select item.flags.obsidian.source.class}}
+						{{#each actor.data.flags.obsidian.classes}}
+							<option value="{{id}}">{{label}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.source.feat" data-show="feat" data-selector-parent="source"
+				        data-dtype="Number">
+					{{#select item.flags.obsidian.source.feat}}
+						{{#each actor.data.obsidian.features}}
+							<option value="{{id}}">{{name}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</div>
+		</div>
+		{{/if}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
 			<div class="obsidian-fullwidth">
 				<label class="obsidian-inline">

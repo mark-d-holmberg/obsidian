@@ -313,5 +313,7 @@
 	"OBSIDIAN.DamageHeal": "Damage / Healing",
 	"OBSIDIAN.AtHigherLevels": "At Higher Levels",
 	"OBSIDIAN.DamageLevel": "Damage / Level",
-	"OBSIDIAN.Count": "Count"
+	"OBSIDIAN.Count": "Count",
+	"OBSIDIAN.Custom": "Custom",
+	"OBSIDIAN.EditSpell": "Edit Spell"
 }

@@ -34,7 +34,7 @@
 				<div class="obsidian-tbody">
 					{{#with (lookup ../entity.spellbook this)}}
 					{{#each spells}}
-						<div class="obsidian-tr">
+						<div class="obsidian-tr item" data-item-id="{{id}}">
 							<div class="obsidian-col-icon">
 								<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
 							</div>
@@ -99,8 +99,7 @@
 								{{/each}}
 							</div>
 							<div class="obsidian-col-icon">
-								<a title="{{localize 'OBSIDIAN.EditSpell'}}" class="obsidian-edit"
-								   data-spell-id="{{id}}">
+								<a title="{{localize 'OBSIDIAN.EditSpell'}}" class="obsidian-edit item-edit">
 									<i class="fas fa-edit"></i>
 								</a>
 							</div>

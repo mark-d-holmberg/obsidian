@@ -121,6 +121,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		return data;
 	}
 
+	async maximize () {
+		await super.maximize();
+		Obsidian._resizeMain(this.element);
+	}
+
 	render (force = false, options = {}) {
 		this._applySettings();
 		return super.render(force, options);

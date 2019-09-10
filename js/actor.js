@@ -473,11 +473,8 @@ class ObsidianActor extends Actor5e {
 			if (flags.source === undefined) {
 				flags.source = {display: game.i18n.localize('OBSIDIAN.Class-custom')};
 			} else if (flags.source.type === 'class') {
-				cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.id);
-				flags.source.display =
-					cls.name === 'custom'
-						? cls.custom
-						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
+				cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.class);
+				flags.source.display = cls.label;
 			}
 
 			flags.components.display =
@@ -580,7 +577,7 @@ class ObsidianActor extends Actor5e {
 
 		for (const spell of spells) {
 			const flags = spell.flags.obsidian;
-			if (flags.source && flags.source.type === 'class' && !clsMap.has(flags.source.id)) {
+			if (flags.source && flags.source.type === 'class' && !clsMap.has(flags.source.class)) {
 				await this.deleteOwnedItem(spell.id);
 			}
 		}
@@ -599,7 +596,9 @@ class ObsidianActor extends Actor5e {
 			const item = this.items[i];
 			if (item.type === 'spell') {
 				const flags = item.flags.obsidian;
-				if (flags.source && flags.source.type === 'feat' && !featMap.has(flags.source.id)) {
+				if (flags.source && flags.source.type === 'feat'
+					&& !featMap.has(flags.source.feat))
+				{
 					await this.deleteOwnedItem(item.id);
 				}
 			}
