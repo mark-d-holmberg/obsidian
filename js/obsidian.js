@@ -88,8 +88,6 @@ class Obsidian extends ActorSheet5eCharacter {
 				.render(true));
 		html.find('[data-attack-id]').click(evt =>
 			new ObsidianAttackDialog(this, evt.currentTarget.dataset.attackId).render(true));
-		html.find('[data-feature-id]').click(evt =>
-			new ObsidianFeatureDialog(this, evt.currentTarget.dataset.featureId).render(true));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));

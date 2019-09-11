@@ -30,10 +30,7 @@ class ObsidianFeaturesDialog extends ObsidianDialog {
 				obsidian: {
 					custom: true,
 					active: this.options.active,
-					action: this.options.action,
-					source: {},
-					uses: {enabled: false},
-					dc: {enabled: false}
+					action: this.options.action
 				}
 			}
 		});

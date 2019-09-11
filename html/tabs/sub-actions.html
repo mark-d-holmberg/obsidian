@@ -7,8 +7,8 @@
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each (filter entity.obsidian.features 'flags.obsidian.active' active 'flags.obsidian.action' action) as |feat|}}
-			<div class="obsidian-feature">
+		{{#each (filter entity.feats 'flags.obsidian.active' active 'flags.obsidian.action' action) as |feat|}}
+			<div class="obsidian-feature item" data-item-id="{{feat.id}}">
 				<div class="obsidian-feature-header">
 					<div>
 						<h4>{{feat.name}}</h4>
@@ -22,12 +22,9 @@
 								{{/if}}
 							</div>
 						{{/if}}
-						{{#if feat.flags.obsidian.custom}}
-							<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit"
-							   data-feature-id="{{feat.id}}">
-								<i class="fas fa-edit"></i>
-							</a>
-						{{/if}}
+						<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
+							<i class="fas fa-edit"></i>
+						</a>
 					</div>
 					{{format-uses ../entity.items feat}}
 				</div>

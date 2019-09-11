@@ -237,11 +237,7 @@ class ObsidianActor extends Actor5e {
 		};
 
 		const data = actorData.data;
-		actorData.obsidian.features =
-			actorData.items.filter(item =>
-				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
-
-		for (const feat of Object.values(actorData.obsidian.features)) {
+		for (const feat of actorData.items.filter(item => item.type === 'feat')) {
 			const flags = feat.flags.obsidian;
 			if (flags.uses.enabled) {
 				const op = ops[flags.uses.operator];
