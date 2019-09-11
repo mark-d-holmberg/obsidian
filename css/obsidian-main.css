@@ -531,3 +531,7 @@
 .obsidian-spells-pact > span {
 	margin-left: 5px;
 }
+
+.obsidian-rich-text .editor-content {
+	font-size: 13px;
+}

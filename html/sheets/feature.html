@@ -1,5 +1,4 @@
 <form class="obsidian" autocomplete="off" data-obsidian-name="feature">
-	<input type="hidden" name="flags.obsidian.custom" value="true" data-dtype="Boolean">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Feature'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -23,7 +22,7 @@
 			</div>
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
-			<div class="obsidian-checkbox-row">
+			<div class="obsidian-fullwidth">
 				<label class="obsidian-inline">
 					{{localize 'OBSIDIAN.Source'}}
 					<select name="flags.obsidian.source.type" class="obsidian-feat-source"
@@ -35,13 +34,21 @@
 						{{/select}}
 					</select>
 				</label>
-				<select name="flags.obsidian.source.class" data-show="class" data-selector-parent="action">
+				<select name="flags.obsidian.source.class" data-show="class" data-selector-parent="action"
+				        data-selector="class">
 					{{#select item.flags.obsidian.source.class}}
-						{{#each actor.data.flags.obsidian.classes}}
-							<option value="{{this.id}}">{{this.label}}</option>
-						{{/each}}
+						{{#if actor}}
+							{{#each actor.data.flags.obsidian.classes}}
+								<option value="{{this.id}}">{{this.label}}</option>
+							{{/each}}
+						{{else}}
+							{{#each ObsidianRules.CLASSES}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Class-' this}}</option>
+							{{/each}}
+						{{/if}}
 					{{/select}}
 				</select>
+				{{#if actor}}
 				<select name="flags.obsidian.source.level" data-dtype="Number" data-show="feat"
 				        data-selector-parent="action">
 					{{#select item.flags.obsidian.source.level}}
@@ -50,10 +57,17 @@
 						{{/each}}
 					{{/select}}
 				</select>
+				{{/if}}
 				<input type="text" name="flags.obsidian.source.other" data-selector-parent="action"
 				       placeholder="{{localize 'OBSIDIAN.Source'}}" data-show="other"
 				       class="obsidian-input-compact obsidian-input-lg"
 				       value="{{item.flags.obsidian.source.other}}">
+				{{#if (expr '===' item.flags.obsidian.source.type 'class')}}
+				<input type="text" name="flags.obsidian.source.custom" data-selector-parent="class"
+				       placeholder="{{localize 'OBSIDIAN.Class'}}" data-show="custom"
+				       class="obsidian-input-compact obsidian-input-lg"
+				       value="{{item.flags.obsidian.source.custom}}">
+				{{/if}}
 			</div>
 		</div>
 	</fieldset>
@@ -64,6 +78,7 @@
 		</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div>
+				{{#if actor}}
 				<select name="flags.obsidian.uses.type" data-selector="uses-type"
 				        data-recalculate="richText">
 					{{#select item.flags.obsidian.uses.type}}
@@ -79,6 +94,9 @@
 						{{/each}}
 					{{/select}}
 				</select>
+				{{else}}
+				<input type="hidden" name="flags.obsidian.uses.type" value="formula">
+				{{/if}}
 				<select name="flags.obsidian.uses.recharge">
 					{{#select item.flags.obsidian.uses.recharge}}
 						<option value="short">{{localize 'OBSIDIAN.ShortRest'}}</option>
@@ -88,7 +106,7 @@
 			</div>
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row"
-		     data-selector-parent="uses-type" data-show="formula">
+		     {{#if actor}}data-selector-parent="uses-type" data-show="formula"{{/if}}>
 			<div>
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 				       data-dtype="Number" placeholder="0" value="{{item.flags.obsidian.uses.bonus}}"
@@ -114,6 +132,7 @@
 						{{/each}}
 					{{/select}}
 				</select>
+				{{#if actor}}
 				<select name="flags.obsidian.uses.class" data-show="cls" data-selector-parent="uses-key">
 					{{#select item.flags.obsidian.uses.class}}
 						{{#each actor.data.flags.obsidian.classes}}
@@ -121,6 +140,7 @@
 						{{/each}}
 					{{/select}}
 				</select>
+				{{/if}}
 			</div>
 		</div>
 		<div class="obsidian-form-row obsidian-stacked-row" data-selector-parent="uses-type"

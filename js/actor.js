@@ -84,6 +84,35 @@ class ObsidianActor extends Actor5e {
 		return 0;
 	}
 
+	linkClasses (item) {
+		if (item.flags.obsidian.source.type !== 'class') {
+			return;
+		}
+
+		if (item.flags.obsidian.source.class === 'custom') {
+			const needle = item.flags.obsidian.source.custom.toLowerCase();
+			const cls = this.data.flags.obsidian.classes.find(cls =>
+				cls.name === 'custom' && cls.custom.toLowerCase() === needle);
+
+			if (cls === undefined) {
+				item.flags.obsidian.source.type = 'other';
+				item.flags.obsidian.source.other = item.flags.obsidian.source.custom;
+			} else {
+				item.flags.obsidian.source.class = cls.id;
+			}
+		} else {
+			const needle = item.flags.obsidian.source.class;
+			const cls = this.data.flags.obsidian.classes.find(cls => cls.name === needle);
+
+			if (cls === undefined) {
+				item.flags.obsidian.source.type = 'other';
+				item.flags.obsidian.source.other = game.i18n.localize(`OBSIDIAN.Class-${needle}`);
+			} else {
+				item.flags.obsidian.source.class = cls.id;
+			}
+		}
+	}
+
 	/**
 	 * @private
 	 */

@@ -20,6 +20,15 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 		this._rememberScrollPosition();
 	}
 
+	getData () {
+		const data = super.getData();
+		if (data.actor) {
+			data.actor.data.feats = data.actor.data.items.filter(item => item.type === 'feat');
+		}
+
+		return data;
+	}
+
 	static enrichFlags (data) {
 		if (data.type === 'feat') {
 			data.flags.obsidian =
@@ -37,3 +46,4 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 Hooks.on('preCreateItem', (constructor, data) => ObsidianFeatureSheet.enrichFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianFeatureSheet.enrichFlags(data));
+Hooks.on('createOwnedItem', (item, id, data) => item.actor.linkClasses(data));
