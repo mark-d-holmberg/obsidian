@@ -220,7 +220,9 @@ Handlebars.registerHelper('get-property', function (data, key) {
 Handlebars.registerHelper('has-spells', function (actor, level) {
 	const spell = actor.data.spells[`spell${level}`];
 	const spellbook = actor.spellbook[level];
-	return (spellbook && spellbook.spells.length > 0) || (level > 0 && Number(spell.max));
+	return (spellbook
+		&& spellbook.spells.filter(spell => spell.flags.obsidian.visible).length > 0)
+		|| (level > 0 && Number(spell.max));
 });
 
 Handlebars.registerHelper('i18n-join', function (...args) {

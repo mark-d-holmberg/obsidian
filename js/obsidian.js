@@ -86,6 +86,8 @@ class Obsidian extends ActorSheet5eCharacter {
 				this,
 				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
 				.render(true));
+		html.find('.obsidian-manage-spells').click(() =>
+			new ObsidianSpellsDialog(this).render(true));
 		html.find('[data-attack-id]').click(evt =>
 			new ObsidianAttackDialog(this, evt.currentTarget.dataset.attackId).render(true));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
@@ -550,4 +552,15 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html'
 	]);
+
+	Obsidian.Data = {};
+	fetch('modules/obsidian/data/spell-partitions.json')
+		.then(response => {
+			if (response.ok) {
+				return response.json();
+			}
+
+			console.error(`Failed to fetch spell-partitions.json: ${response.status}`);
+		})
+		.then(json => Obsidian.Data.SPELL_PARTITIONS = json);
 });

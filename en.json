@@ -253,6 +253,11 @@
 	"OBSIDIAN.SpellProg-full": "Full Caster",
 	"OBSIDIAN.SpellProg-pact": "Pact Magic",
 	"OBSIDIAN.SpellProg-artificer": "Artificer",
+	"OBSIDIAN.SpellPrep-known": "Spells Known",
+	"OBSIDIAN.SpellPrep-prep": "Spells Prepared",
+	"OBSIDIAN.SpellPrep-book": "Spellbook",
+	"OBSIDIAN.RitualCast-prep": "Prepared Rituals",
+	"OBSIDIAN.RitualCast-book": "Ritual Book",
 	"OBSIDIAN.SpellName": "Spell name",
 	"OBSIDIAN.ManageSpells": "Manage Spells",
 	"OBSIDIAN.All": "All",
@@ -315,5 +320,6 @@
 	"OBSIDIAN.DamageLevel": "Damage / Level",
 	"OBSIDIAN.Count": "Count",
 	"OBSIDIAN.Custom": "Custom",
-	"OBSIDIAN.EditSpell": "Edit Spell"
+	"OBSIDIAN.EditSpell": "Edit Spell",
+	"OBSIDIAN.CustomSpells": "Custom Spells"
 }

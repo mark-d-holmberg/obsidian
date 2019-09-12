@@ -414,6 +414,14 @@ class ObsidianActor extends Actor5e {
 					case 'pact': pactLevel += cls.levels; break;
 				}
 			}
+
+			if (cls.preparation === undefined) {
+				cls.preparation = Obsidian.Rules.CLASS_SPELL_PREP[cls.name];
+			}
+
+			if (cls.rituals === undefined) {
+				cls.rituals = Obsidian.Rules.CLASS_RITUALS[cls.name];
+			}
 		}
 
 		if (slotLevel > 0) {
@@ -497,6 +505,8 @@ class ObsidianActor extends Actor5e {
 
 			if (flags.source === undefined) {
 				flags.source = {display: game.i18n.localize('OBSIDIAN.Class-custom')};
+			} else if (flags.source.type === 'custom') {
+				flags.source.display = flags.source.custom;
 			} else if (flags.source.type === 'class') {
 				cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.class);
 				flags.source.display = cls.label;
@@ -556,6 +566,44 @@ class ObsidianActor extends Actor5e {
 				flags.notes.push(
 					`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}: `
 					+ flags.time.react);
+			}
+
+			if (cls) {
+				if (cls.preparation === 'known') {
+					if (flags.known === undefined) {
+						flags.known = true;
+					}
+
+					flags.visible = flags.known;
+				} else if (cls.preparation === 'prep') {
+					if (flags.prepared === undefined) {
+						flags.prepared = true;
+					}
+
+					flags.visible = flags.prepared;
+				} else if (cls.preparation === 'book') {
+					if (flags.book === undefined) {
+						flags.book = true;
+					}
+
+					if (flags.prepared === undefined) {
+						flags.prepared = true;
+					}
+
+					flags.visible = flags.book && flags.prepared;
+				}
+
+				if (spell.data.level.value === 0) {
+					flags.visible = true;
+				}
+
+				if (spell.data.ritual.value) {
+					flags.visible =
+						(cls.rituals === 'prep' && flags.prepared)
+						|| (cls.rituals === 'book' && flags.book);
+				}
+			} else {
+				flags.visible = true;
 			}
 		}
 	}

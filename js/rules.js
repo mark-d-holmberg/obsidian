@@ -58,6 +58,24 @@ Obsidian.Rules.CLASS_SPELL_PROGRESSION = {
 	wiz: 'full'
 };
 
+Obsidian.Rules.CLASS_SPELL_PREP = {
+	brd: 'known',
+	clr: 'prep',
+	drd: 'prep',
+	pal: 'prep',
+	rng: 'known',
+	src: 'known',
+	war: 'known',
+	wiz: 'book'
+};
+
+Obsidian.Rules.CLASS_RITUALS = {
+	brd: 'prep',
+	clr: 'prep',
+	drd: 'prep',
+	wiz: 'book'
+};
+
 Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
 Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
@@ -86,7 +104,9 @@ Obsidian.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour'];
 Obsidian.Rules.SPELL_DURATIONS = ['instant', 'dispel', 'special', 'round', 'min', 'hour'];
 Obsidian.Rules.SPELL_RANGES = ['self', 'touch', 'short', 'long'];
 Obsidian.Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
+Obsidian.Rules.SPELL_PREP = ['known', 'prep', 'book'];
 Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
+Obsidian.Rules.SPELL_RITUALS = ['prep', 'book'];
 
 Obsidian.Rules.SPELL_SLOT_TABLE = [
 	[2],

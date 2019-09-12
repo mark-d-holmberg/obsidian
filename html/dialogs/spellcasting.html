@@ -2,7 +2,7 @@
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Spellcasting'}}</label>
 	{{#each entity.flags.obsidian.classes as |class id|}}
 		<div class="obsidian-form-row obsidian-inline">
-			<div style="width: 100%;">
+			<div class="obsidian-fullwidth">
 				<span class="obsidian-constant">
 					{{~#if (expr '===' class.name 'custom')~}}
 						{{class.custom}}
@@ -11,18 +11,34 @@
 					{{~/if~}}
 				</span>
 				<select name="flags.obsidian.classes.{{id}}.spell">
-					<option value="">&mdash;</option>
 					{{#select class.spell}}
+						<option value="">&mdash;</option>
 						{{#each ../data.abilities}}
 							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
 				<select name="flags.obsidian.classes.{{id}}.progression">
-					<option value="">&mdash;</option>
 					{{#select class.progression}}
+						<option value="">&mdash;</option>
 						{{#each ../ObsidianRules.SPELL_PROGRESSION}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellProg-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.classes.{{id}}.preparation">
+					{{#select class.preparation}}
+						<option value="">&mdash;</option>
+						{{#each ../ObsidianRules.SPELL_PREP}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellPrep-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.classes.{{id}}.rituals">
+					{{#select class.rituals}}
+						<option value="">&mdash;</option>
+						{{#each ../ObsidianRules.SPELL_RITUALS}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.RitualCast-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
@@ -30,7 +46,7 @@
 		</div>
 	{{/each}}
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.SlotOverride'}}</label>
-	<div class="obsidian-form-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-inline obsidian-align-labels">
 		{{#each (range 1 5)}}
 			<label class="obsidian-inline">
 				<input type="text" name="flags.obsidian.spells.slots.{{this}}"
@@ -50,7 +66,7 @@
 			</label>
 		{{/each}}
 	</div>
-	<div class="obsidian-form-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-inline obsidian-align-labels">
 		{{#each (range 6 9)}}
 			<label class="obsidian-inline">
 				<input type="text" name="flags.obsidian.spells.slots.{{this}}"

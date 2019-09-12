@@ -639,6 +639,11 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-left: 6px;
 }
 
+.obsidian .obsidian-form-row.obsidian-align-labels label.obsidian-inline > span:last-child {
+	width: 28px;
+	display: inline-block;
+}
+
 .dialog form label.obsidian-label-lg button {
 	margin-bottom: 3px;
 }
@@ -696,7 +701,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-form-row .obsidian-constant {
 	color: var(--text-subtle);
-	width: 25%;
+	width: 100px;
 	display: inline-block;
 }
 
