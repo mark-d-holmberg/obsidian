@@ -447,10 +447,14 @@
 
 .obsidian-input-search-container {
 	flex: 1;
-	margin-right: 8px;
 	position: relative;
 }
 
+.sheet .obsidian-input-search-container {
+	margin-right: 8px;
+}
+
+form.obsidian input.obsidian-input-search,
 .dnd5e.sheet form.obsidian input.obsidian-input-search {
 	color: var(--text-bright);
 	background-color: var(--mid);
@@ -466,14 +470,17 @@
 	text-align: left;
 }
 
+form.obsidian input.obsidian-input-search:hover,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:hover {
 	box-shadow: none;
 }
 
+form.obsidian .obsidian-input-search::placeholder,
 .dnd5e.sheet form.obsidian .obsidian-input-search::placeholder {
 	color: var(--text-placeholder);
 }
 
+form.obsidian input.obsidian-input-search:focus,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus {
 	color: var(--text-inverse);
 	background-color: var(--light);
@@ -481,6 +488,8 @@
 	outline: none;
 }
 
+form.obsidian input.obsidian-input-search:focus + i,
+form.obsidian input.obsidian-input-search:focus + i + span,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span {
 	color: var(--text-inverse);
@@ -534,4 +543,13 @@
 
 .obsidian-rich-text .editor-content {
 	font-size: 13px;
+}
+
+.obsidian-spell-filter .obsidian-tab-bar {
+	display: block;
+}
+
+.obsidian-spell-filter .obsidian-spell-level-tab {
+	display: inline-block;
+	text-align: center;
 }

@@ -1,6 +1,7 @@
 <form class="obsidian" autocomplete="off">
 	<details>
 		<summary>{{localize 'OBSIDIAN.CustomSpells'}}</summary>
-		{{> public/modules/obsidian/components/spell-filter.html}}
+		{{> public/modules/obsidian/html/components/spell-filter.html
+				spells=entity.obsidian.spells.custom}}
 	</details>
 </form>

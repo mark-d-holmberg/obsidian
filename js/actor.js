@@ -492,6 +492,10 @@ class ObsidianActor extends Actor5e {
 	 * @private
 	 */
 	static _prepareSpells (actorData) {
+		actorData.obsidian.spells = {custom: []};
+		Object.keys(Obsidian.Rules.CLASS_SPELL_MODS)
+			.forEach(key => actorData.obsidian.spells[key] = {known: [], prepared: [], book: []});
+
 		for (const spell of Object.values(actorData.items.filter(item => item.type === 'spell'))) {
 			const flags = spell.flags.obsidian;
 			flags.notes = [];
@@ -569,7 +573,10 @@ class ObsidianActor extends Actor5e {
 			}
 
 			if (cls) {
-				if (cls.preparation === 'known') {
+				if (spell.data.level.value === 0) {
+					flags.known = true;
+					flags.visible = true;
+				} else if (cls.preparation === 'known') {
 					if (flags.known === undefined) {
 						flags.known = true;
 					}
@@ -593,17 +600,33 @@ class ObsidianActor extends Actor5e {
 					flags.visible = flags.book && flags.prepared;
 				}
 
-				if (spell.data.level.value === 0) {
-					flags.visible = true;
-				}
-
 				if (spell.data.ritual.value) {
 					flags.visible =
 						(cls.rituals === 'prep' && flags.prepared)
 						|| (cls.rituals === 'book' && flags.book);
 				}
+
+				if (actorData.obsidian.spells[cls.name]) {
+					const clsSpells = actorData.obsidian.spells[cls.name];
+					if (spell.data.level.value === 0) {
+						clsSpells.known.push(spell);
+					} else if (cls.preparation === 'known' && flags.known) {
+						clsSpells.known.push(spell);
+					} else if (cls.preparation === 'prep' && flags.prepared) {
+						clsSpells.prepared.push(spell);
+					} else if (cls.preparation === 'book') {
+						if (flags.book && flags.prepared) {
+							clsSpells.prepared.push(spell);
+						} else if (flags.book) {
+							clsSpells.book.push(spell);
+						}
+					}
+				} else {
+					actorData.obsidian.spells.custom.push(spell);
+				}
 			} else {
 				flags.visible = true;
+				actorData.obsidian.spells.custom.push(spell);
 			}
 		}
 	}
