@@ -23,6 +23,10 @@ Handlebars.registerHelper('capitalise', function (str) {
 	return str ? str.capitalise() : '';
 });
 
+Handlebars.registerHelper('count', function (ar) {
+	return ar.length;
+});
+
 Handlebars.registerHelper('defined', function (arg) {
 	return arg !== undefined;
 });
@@ -155,6 +159,20 @@ Handlebars.registerHelper('format-slots', function (data, level) {
 
 	out += '</div>';
 	return new Handlebars.SafeString(out);
+});
+
+Handlebars.registerHelper('format-spell-duration', function (spell) {
+	const duration = spell.flags.obsidian.duration;
+	if (!['round', 'min', 'hour'].includes(duration.type)) {
+		return game.i18n.localize(`OBSIDIAN.Duration-${duration.type}`);
+	}
+
+	let prefix = 'OBSIDIAN.DurationPlural-';
+	if (Number(duration.n) === 1) {
+		prefix = 'OBSIDIAN.Duration-';
+	}
+
+	return `${duration.n} ${game.i18n.localize(`${prefix}${duration.type}`).toLocaleLowerCase()}`;
 });
 
 Handlebars.registerHelper('format-uses', function (items, feature) {

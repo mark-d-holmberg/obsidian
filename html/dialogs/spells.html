@@ -1,7 +1,10 @@
 <form class="obsidian" autocomplete="off">
 	<details>
-		<summary>{{localize 'OBSIDIAN.CustomSpells'}}</summary>
-		{{> public/modules/obsidian/html/components/spell-filter.html
-				spells=entity.obsidian.spells.custom}}
+		<summary>
+			<h3>{{localize 'OBSIDIAN.CustomSpells'}} ({{count entity.obsidian.spells.custom}})</h3>
+			<i class="fas fa-angle-down"></i>
+		</summary>
+		{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Remove'
+				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell'}}
 	</details>
 </form>

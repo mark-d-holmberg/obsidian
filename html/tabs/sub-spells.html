@@ -1,8 +1,6 @@
 <div class="obsidian-tab-contents tab" data-group="spells" data-tab="{{level}}">
 	{{#each (range 0 9)}}
-		{{#if (expr '||'
-				      (expr '&&' (expr '===' 'all' ../level) (has-spells ../entity this))
-				      (expr '&&' (expr '===' ../level this) (has-spells ../entity this)))}}
+		{{#if (expr '||' (expr '&&' (expr '===' 'all' ../level) (has-spells ../entity this)) (expr '===' ../level this))}}
 			<h3>
 				{{spellLevelFormat this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
@@ -95,7 +93,7 @@
 									{{/each}}
 								</div>
 							</div>
-							<div class="obsidian-col-notes">
+							<div class="obsidian-col-spell-notes">
 								{{#each flags.obsidian.notes}}
 									<div class="obsidian-table-note-text">{{this}}</div>
 								{{/each}}

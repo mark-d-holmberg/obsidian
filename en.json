@@ -308,6 +308,9 @@
 	"OBSIDIAN.Duration-round": "Round",
 	"OBSIDIAN.Duration-min": "Minute",
 	"OBSIDIAN.Duration-hour": "Hour",
+	"OBSIDIAN.DurationPlural-round": "Rounds",
+	"OBSIDIAN.DurationPlural-min": "Minutes",
+	"OBSIDIAN.DurationPlural-hour": "Hours",
 	"OBSIDIAN.Concentration": "Concentration",
 	"OBSIDIAN.VerbalAbbr": "V",
 	"OBSIDIAN.SomaticAbbr": "S",
@@ -321,5 +324,7 @@
 	"OBSIDIAN.Count": "Count",
 	"OBSIDIAN.Custom": "Custom",
 	"OBSIDIAN.EditSpell": "Edit Spell",
-	"OBSIDIAN.CustomSpells": "Custom Spells"
+	"OBSIDIAN.CustomSpells": "Custom Spells",
+	"OBSIDIAN.Components": "Components",
+	"OBSIDIAN.UpTo": "up to"
 }

@@ -354,6 +354,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	color: var(--bg);
 }
 
+.obsidian button.obsidian-btn-outline.obsidian-btn-active {
+	background: var(--highlight);
+	color: var(--bg);
+	font-weight: bold;
+}
+
 .obsidian-char-box-text {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	text-transform: uppercase;
