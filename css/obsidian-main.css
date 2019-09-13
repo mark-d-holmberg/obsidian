@@ -720,6 +720,10 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-size: 13px;
 }
 
+.obsidian-spell-card-body p {
+	text-align: justify;
+}
+
 .obsidian-spell-card-body p:last-child {
 	margin-bottom: 0;
 }

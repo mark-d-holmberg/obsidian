@@ -20,7 +20,11 @@
 	"packs": [],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
-	"languages": {
-		"en": "en.json"
-	}
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "en.json"
+		}
+	]
 }
