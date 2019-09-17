@@ -650,6 +650,10 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	display: inline-block;
 }
 
+.obsidian-spell-list .obsidian-col-spell .obsidian-icon-flag {
+	display: inline-block;
+}
+
 .obsidian .obsidian-spell-list .obsidian-btn-outline {
 	width: 47px;
 	height: 22px;

@@ -6,6 +6,12 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 		});
 	}
 
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		options.width = 560;
+		return options;
+	}
+
 	get template () {
 		return 'public/modules/obsidian/html/sheets/spell.html';
 	}
@@ -19,7 +25,6 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
 		ObsidianDialog.recalculateHeight(html, {richText: true});
-		this._rememberScrollPosition();
 	}
 
 	static enrichFlags (data) {

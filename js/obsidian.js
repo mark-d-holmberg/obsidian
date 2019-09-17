@@ -18,8 +18,8 @@ class Obsidian extends ActorSheet5eCharacter {
 			settings = JSON.parse(settings);
 		}
 
+		this.scroll = {};
 		this.settings = settings;
-		this.scrolling = false;
 		this.tabs = {};
 	}
 
@@ -46,8 +46,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		super.activateListeners(html);
 		console.debug(this.actor);
 
-		this.form.addEventListener('scroll', this._onScroll.bind(this));
-		html.find('.obsidian-tab-contents').on('scroll', this._onScroll.bind(this));
 		this._setCollapsed(this.settings.portraitCollapsed);
 
 		html.find('.obsidian-tab-bar').each((i, el) => {
@@ -236,26 +234,6 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {Event} evt
-	 */
-	_onScroll (evt) {
-		if (!this.scrolling) {
-			setTimeout(() => {
-				this.settings.scrollTop = this.form.scrollTop;
-				const activeTab = this.element.find('.obsidian-tab-contents.active');
-				if (activeTab.length > 0) {
-					this.settings.subScroll = activeTab[0].scrollTop;
-				}
-				game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
-				this.scrolling = false;
-			}, 200);
-
-			this.scrolling = true;
-		}
-	}
-
-	/**
-	 * @private
 	 */
 	_onResize (event) {
 		super._onResize(event);
@@ -337,6 +315,15 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
+	async _render (force = false, options = {}) {
+		this._saveScrollPositions();
+		await super._render(force, options);
+		this._restoreScrollPositions();
+	}
+
+	/**
+	 * @private
+	 */
 	static _resizeMain (html) {
 		let total = 0;
 		html.find('.obsidian-main-left > .obsidian-char-box-container')
@@ -378,6 +365,38 @@ class Obsidian extends ActorSheet5eCharacter {
 
 			jqel.css('height', `${total - innerTotal - 30}px`);
 		});
+	}
+
+	/**
+	 * @private
+	 */
+	_restoreScrollPositions () {
+		if (this.form) {
+			this.form.scrollTop = this.scroll.main;
+		}
+
+		if (this.element) {
+			const activeTab = this.element.find('.obsidian-tab-contents.active');
+			if (activeTab.length > 0) {
+				activeTab[0].scrollTop = this.scroll.tab;
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_saveScrollPositions () {
+		if (this.form) {
+			this.scroll.main = this.form.scrollTop;
+		}
+
+		if (this.element) {
+			const activeTab = this.element.find('.obsidian-tab-contents.active');
+			if (activeTab.length > 0) {
+				this.scroll.tab = activeTab[0].scrollTop;
+			}
+		}
 	}
 
 	/**

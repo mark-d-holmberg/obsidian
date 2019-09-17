@@ -9,4 +9,24 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	get template () {
 		return 'public/modules/obsidian/html/dialogs/spells.html';
 	}
+
+	/**
+	 * @param html {JQuery}
+	 * @return undefined
+	 */
+	activateListeners (html) {
+		super.activateListeners(html);
+		html.find('.obsidian-rm-spell').click(this._onRemoveSpell.bind(this));
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onRemoveSpell (evt) {
+		const row = $(evt.currentTarget).parents('details');
+		const id = Number(row.data('item-id'));
+		await this.parent.actor.deleteOwnedItem(id);
+		this.render(false);
+	}
 }

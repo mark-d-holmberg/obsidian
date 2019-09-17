@@ -17,16 +17,6 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 	activateListeners (html) {
 		super.activateListeners(html);
 		ObsidianDialog.recalculateHeight(html, {richText: true});
-		this._rememberScrollPosition();
-	}
-
-	getData () {
-		const data = super.getData();
-		if (data.actor) {
-			data.actor.data.feats = data.actor.data.items.filter(item => item.type === 'feat');
-		}
-
-		return data;
 	}
 
 	static enrichFlags (data) {

@@ -15,7 +15,7 @@
 </div>
 <div class="obsidian-spell-list">
 	{{#each spells}}
-		<details>
+		<details data-item-id="{{id}}">
 			<summary>
 				<div class="obsidian-col-icon">
 					<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
@@ -23,16 +23,20 @@
 				<div class="obsidian-col-spell">
 					<div class="obsidian-table-text">{{name}}</div>
 					{{#if data.concentration.value}}
-						<div class="obsidian-icon obsidian-icon-concentration"></div>
+						<div class="obsidian-icon-flag obsidian-icon-concentration"
+						     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
 					{{/if}}
 					{{#if data.ritual.value}}
-						<div class="obsidian-icon obsidian-icon-ritual"></div>
+						<div class="obsidian-icon-flag obsidian-icon-ritual"
+						     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
 					{{/if}}
 					<div class="obsidian-table-sub-text">
 						({{spellLevelFormat data.level.value cantrip=true}})
 					</div>
 				</div>
-				<button type="button" class="obsidian-btn-outline {{btnClass}}">{{localize ../btn}}</button>
+				<button type="button" class="obsidian-btn-outline {{../btnClass}}">
+					{{localize ../btn}}
+				</button>
 				<i class="fas fa-angle-down"></i>
 			</summary>
 			<div class="obsidian-spell-card">

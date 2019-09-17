@@ -38,6 +38,11 @@
 					{{/if}}
 				{{/select}}
 			</select>
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.CritDice'}}
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       placeholder="1" name="flags.obsidian.{{../prop}}.{{id}}.ncrit" value="{{dmg.ncrit}}">
+			</label>
 		</div>
 		<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-damage">
 			{{localize 'OBSIDIAN.Remove'}}

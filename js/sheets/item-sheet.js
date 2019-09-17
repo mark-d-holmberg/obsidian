@@ -27,6 +27,11 @@ class ObsidianItemSheet extends ItemSheet {
 		const data = super.getData();
 		data.actor = this.actor;
 		data.ObsidianRules = Obsidian.Rules;
+
+		if (data.actor) {
+			data.actor.data.feats = data.actor.data.items.filter(item => item.type === 'feat');
+		}
+
 		return data;
 	}
 
@@ -66,23 +71,28 @@ class ObsidianItemSheet extends ItemSheet {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onScroll (evt) {
-		if (!this.scrolling) {
-			setTimeout(() => {
-				this.item.data.flags['_scroll'] = this.element.prop('scrollTop');
-				this.scrolling = false;
-			}, 200);
-
-			this.scrolling = true;
+	_saveScrollPosition () {
+		if (this.element) {
+			this.scroll = this.element.prop('scrollTop');
 		}
 	}
 
-	_rememberScrollPosition () {
-		this.element.on('scroll', this._onScroll.bind(this));
-		if (this.item.data.flags['_scroll'] !== undefined) {
-			this.element.prop('scrollTop', this.item.flags['_scroll']);
+	/**
+	 * @private
+	 */
+	async _render (force = false, options = {}) {
+		this._saveScrollPosition();
+		await super._render(force, options);
+		this._restoreScrollPosition();
+	}
+
+	/**
+	 * @private
+	 */
+	_restoreScrollPosition () {
+		if (this.element) {
+			this.element.prop('scrollTop', this.scroll);
 		}
 	}
 }

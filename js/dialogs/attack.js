@@ -3,7 +3,7 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		super(parent, {
 			title: game.i18n.localize('OBSIDIAN.EditAttack'),
 			template: 'public/modules/obsidian/html/dialogs/attack.html',
-			width: 460
+			width: 560
 		});
 
 		this.attackID = parseInt(attackID);

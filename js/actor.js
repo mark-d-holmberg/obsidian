@@ -240,6 +240,12 @@ class ObsidianActor extends Actor5e {
 					dmg.mod += data.abilities[dmg.stat].mod;
 				}
 
+				if (dmg.ncrit === undefined || dmg.ncrit === '') {
+					dmg.ncrit = 1;
+				} else {
+					dmg.ncrit = Number(dmg.ncrit);
+				}
+
 				dmg.display = ObsidianActor._damageFormat(dmg);
 			}
 
@@ -555,6 +561,12 @@ class ObsidianActor extends Actor5e {
 					} else {
 						dmg.mod += data.abilities[dmg.stat].mod;
 					}
+				}
+
+				if (dmg.ncrit === undefined || dmg.ncrit === '') {
+					dmg.ncrit = 1;
+				} else {
+					dmg.ncrit = Number(dmg.ncrit);
 				}
 
 				dmg.display = ObsidianActor._damageFormat(dmg);
