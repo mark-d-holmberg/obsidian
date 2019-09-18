@@ -576,6 +576,10 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	outline: none;
 }
 
+.obsidian > details {
+	margin-bottom: 10px;
+}
+
 .obsidian .obsidian-spell-list details > summary {
 	background-color: transparent;
 	display: flex;
@@ -730,4 +734,20 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 
 .obsidian-spell-card-body p:last-child {
 	margin-bottom: 0;
+}
+
+.dialog .obsidian h2 {
+	font-family: Roboto, sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	text-transform: uppercase;
+	color: var(--text-secondary);
+	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-spell-totals {
+	padding: 5px;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-size: 14px;
+	color: var(--text-regular);
 }

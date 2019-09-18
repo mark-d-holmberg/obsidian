@@ -235,6 +235,14 @@ Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });
 
+Handlebars.registerHelper('has-spell-with-name', function (haystack, needle) {
+	if (haystack === undefined || needle === undefined) {
+		return false;
+	}
+
+	return haystack.findIndex(spell => spell.name === needle.name) > -1;
+});
+
 Handlebars.registerHelper('has-spells', function (actor, level) {
 	const spell = actor.data.spells[`spell${level}`];
 	const spellbook = actor.spellbook[level];

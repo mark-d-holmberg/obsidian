@@ -35,5 +35,7 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 
 Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 Hooks.on('preCreateItem', (constructor, data) => ObsidianFeatureSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianFeatureSheet.enrichFlags(data));
-Hooks.on('createOwnedItem', (item, id, data) => item.actor.linkClasses(data));
+Hooks.on('preCreateOwnedItem', (actor, id, data) => {
+	ObsidianFeatureSheet.enrichFlags(data);
+	actor.linkClasses(data);
+});

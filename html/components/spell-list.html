@@ -1,62 +1,91 @@
-<div class="obsidian-spell-filter">
-	<div class="obsidian-input-search-container">
-		<input type="text" class="obsidian-input-search"
-		       placeholder="{{localize 'OBSIDIAN.SpellName'}}...">
-		<i class="fas fa-search"></i>
-		<span class="obsidian-clear-search">&times;</span>
+{{#if (expr '||' maxCantrips (expr '||' maxKnown maxPrepared))}}
+	<div class="obsidian-spell-totals">
+		{{#if maxCantrips}}
+			<div>{{localize 'OBSIDIAN.Cantrips'}}: {{totalCantrips}}&sol;{{maxCantrips}}</div>
+		{{/if}}
+		{{#if maxKnown}}
+			<div>{{localize 'OBSIDIAN.KnownSpells'}}: {{totalKnown}}&sol;{{maxKnown}}</div>
+		{{/if}}
+		{{#if maxPrepared}}
+			<div>{{localize 'OBSIDIAN.PreparedSpells'}}: {{totalPrepared}}&sol;{{maxPrepared}}</div>
+		{{/if}}
 	</div>
-	<ul class="obsidian-tab-bar">
-		{{#each (range 0 9)}}
-			{{#if (notEmpty (filter ../spells 'data.level.value' this))}}
-				<li class="obsidian-sub-tab obsidian-spell-level-tab">{{spellLevelFormat this}}</li>
-			{{/if}}
-		{{/each}}
-	</ul>
-</div>
+{{/if}}
+{{#if filter}}
+	<div class="obsidian-spell-filter">
+		<div class="obsidian-input-search-container">
+			<input type="text" class="obsidian-input-search"
+			       placeholder="{{localize 'OBSIDIAN.SpellName'}}...">
+			<i class="fas fa-search"></i>
+			<span class="obsidian-clear-search">&times;</span>
+		</div>
+		<ul class="obsidian-tab-bar">
+			{{#each (range 0 9)}}
+				{{#if (notEmpty (filter ../spells 'data.level.value' this))}}
+					<li class="obsidian-sub-tab obsidian-spell-level-tab">{{spellLevelFormat this}}</li>
+				{{/if}}
+			{{/each}}
+		</ul>
+	</div>
+{{/if}}
 <div class="obsidian-spell-list">
-	{{#each spells}}
-		<details data-item-id="{{id}}">
+	{{#each spells as |spell id|}}
+		<details data-item-id="{{#if spell._id}}{{id}}{{else}}{{spell.id}}{{/if}}"
+		         data-spell-list="{{../spellList}}">
 			<summary>
 				<div class="obsidian-col-icon">
-					<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
+					<i class="obsidian-spell-school obsidian-spell-school-{{spell.data.school.value}}"></i>
 				</div>
 				<div class="obsidian-col-spell">
-					<div class="obsidian-table-text">{{name}}</div>
-					{{#if data.concentration.value}}
+					<div class="obsidian-table-text">{{spell.name}}</div>
+					{{#if spell.data.concentration.value}}
 						<div class="obsidian-icon-flag obsidian-icon-concentration"
 						     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
 					{{/if}}
-					{{#if data.ritual.value}}
+					{{#if spell.data.ritual.value}}
 						<div class="obsidian-icon-flag obsidian-icon-ritual"
 						     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
 					{{/if}}
 					<div class="obsidian-table-sub-text">
-						({{spellLevelFormat data.level.value cantrip=true}})
+						({{spellLevelFormat spell.data.level.value cantrip=true}})
 					</div>
 				</div>
-				<button type="button" class="obsidian-btn-outline {{../btnClass}}">
-					{{localize ../btn}}
+				<button type="button" class="{{#if (has-spell-with-name ../active spell)}}obsidian-btn-active{{/if}}
+				        obsidian-btn-outline obsidian-spell-action">
+					{{#if (has-spell-with-name ../active spell)}}
+						{{#if (expr '||' spell.data.level.value (expr '!' ../btnCantripActive))}}
+							{{localize ../btnActive}}
+						{{else}}
+							{{localize ../btnCantripActive}}
+						{{/if}}
+					{{else}}
+						{{#if (expr '||' spell.data.level.value (expr '!' ../btnCantrip))}}
+							{{localize ../btn}}
+						{{else}}
+							{{localize ../btnCantrip}}
+						{{/if}}
+					{{/if}}
 				</button>
 				<i class="fas fa-angle-down"></i>
 			</summary>
 			<div class="obsidian-spell-card">
 				<div class="obsidian-spell-card-header">
 					<h3>
-						{{#if (expr '===' data.level.value 0)}}
-							{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
-							{{spellLevelFormat data.level.value cantrip=true}}
+						{{#if (expr '===' spell.data.level.value 0)}}
+							{{i18n-join 'OBSIDIAN.SpellSchool-' spell.data.school.value}}
+							{{spellLevelFormat spell.data.level.value cantrip=true}}
 						{{else}}
-							{{spellLevelFormat data.level.value level=true}}
-							{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
+							{{spellLevelFormat spell.data.level.value level=true}}
+							{{i18n-join 'OBSIDIAN.SpellSchool-' spell.data.school.value}}
 						{{/if}}
 					</h3>
 					<div class="obsidian-spell-card-header-row">
 						<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.CastTime'}}:</div>
 						<div class="obsidian-spell-card-header-value">
-							{{flags.obsidian.time.n}}
-							{{lc (i18n-join 'OBSIDIAN.CastTime-' flags.obsidian.time.type)}}
-							{{~#if (expr '===' flags.obsidian.time.type 'react')~}}
-								, {{flags.obsidian.time.react}}
+							{{spell.flags.obsidian.time.n}}
+							{{lc (i18n-join 'OBSIDIAN.CastTime-' spell.flags.obsidian.time.type)}}
+							{{~#if (expr '===' spell.flags.obsidian.time.type 'react')~}}
+								, {{spell.flags.obsidian.time.react}}
 							{{/if}}
 						</div>
 					</div>
@@ -64,39 +93,39 @@
 						<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Range'}}:</div>
 						<div class="obsidian-spell-card-header-value">
 							{{#if (expr '||'
-									      (expr '===' flags.obsidian.range.type 'short')
-									      (expr '===' flags.obsidian.range.type 'long'))}}
-								{{flags.obsidian.range.n}}
+									      (expr '===' spell.flags.obsidian.range.type 'short')
+									      (expr '===' spell.flags.obsidian.range.type 'long'))}}
+								{{spell.flags.obsidian.range.n}}
 								<span class="obsidian-table-unit">
-									{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
+									{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' spell.flags.obsidian.range.type}}
 								</span>
 							{{else}}
-								{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}
+								{{i18n-join 'OBSIDIAN.SpellRange-' spell.flags.obsidian.range.type}}
 							{{/if}}
 						</div>
 					</div>
 					<div class="obsidian-spell-card-header-row">
 						<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Components'}}:</div>
 						<div class="obsidian-spell-card-header-value">
-							{{flags.obsidian.components.display}}
-							{{#if flags.obsidian.components.m}}
-								<span class="obsidian-table-sub-text">({{data.materials.value}})</span>
+							{{spell.flags.obsidian.components.display}}
+							{{#if spell.flags.obsidian.components.m}}
+								<span class="obsidian-table-sub-text">({{spell.data.materials.value}})</span>
 							{{/if}}
 						</div>
 					</div>
 					<div class="obsidian-spell-card-header-row">
 						<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Duration'}}:</div>
 						<div class="obsidian-spell-card-header-value">
-							{{#if data.concentration.value}}
+							{{#if spell.data.concentration.value}}
 								{{localize 'OBSIDIAN.Concentration'}},
-								{{localize 'OBSIDIAN.UpTo'}} {{format-spell-duration this}}
+								{{localize 'OBSIDIAN.UpTo'}} {{format-spell-duration spell}}
 							{{else}}
-								{{format-spell-duration this}}
+								{{format-spell-duration spell}}
 							{{/if}}
 						</div>
 					</div>
 				</div>
-				<div class="obsidian-spell-card-body">{{{data.description.value}}}</div>
+				<div class="obsidian-spell-card-body">{{{spell.data.description.value}}}</div>
 			</div>
 		</details>
 	{{/each}}

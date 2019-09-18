@@ -5,6 +5,88 @@
 			<i class="fas fa-angle-down"></i>
 		</summary>
 		{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Remove'
-				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell'}}
+				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
+	{{#each entity.flags.obsidian.classes}}
+		{{#if (notEmpty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
+			<h2>{{label}}</h2>
+			{{#if (expr '===' preparation 'prep')}}
+				{{#with (lookup ../entity.obsidian.spells name)}}
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.KnownSpells'}}</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
+								btnActive='OBSIDIAN.Prepared' filter=true active=prepared spellList=../name
+								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name)
+								totalCantrips=../totalCantrips maxCantrips=../maxCantrips
+								totalPrepared=../totalPrepared maxPrepared=../maxPrepared
+								btnCantrip='OBSIDIAN.Learn' btnCantripActive='OBSIDIAN.Remove'}}
+					</details>
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.PreparedSpells'}} ({{count prepared}})</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Unprepare'
+								filter=false spells=prepared btnCantrip='OBSIDIAN.Remove'}}
+					</details>
+				{{/with}}
+			{{else if (expr '===' preparation 'known')}}
+				{{#with (lookup ../entity.obsidian.spells name)}}
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
+								btnActive='OBSIDIAN.Remove' filter=true active=known totalKnown=../totalKnown
+								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name) spellList=../name
+								totalCantrips=../totalCantrips maxCantrips=../maxCantrips maxKnown=../maxKnown}}
+					</details>
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.KnownSpells'}} ({{count known}})</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Remove'
+								btnClass='obsidian-rm-spell' filter=false spells=known}}
+					</details>
+				{{/with}}
+			{{else if (expr '===' preparation 'book')}}
+				{{#with (lookup ../entity.obsidian.spells name)}}
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
+								btnActive='OBSIDIAN.Remove' filter=true spellList=../name active=book
+								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name)
+								totalCantrips=../totalCantrips maxCantrips=../maxCantrips}}
+					</details>
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.PreparedSpells'}} ({{count prepared}})</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Unprepare'
+								filter=false spells=prepared btnCantrip='OBSIDIAN.Remove'}}
+					</details>
+					<details>
+						<summary>
+							<h3>{{localize 'OBSIDIAN.Spellbook'}}</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
+								btnActive='OBSIDIAN.Prepared' filter=true spells=book active=prepared
+								totalCantrips=../totalCantrips maxCantrips=../maxCantrips
+								totalPrepared=../totalPrepared maxPrepared=../maxPrepared
+								btnCantripActive='OBSIDIAN.Remove'}}
+					</details>
+				{{/with}}
+			{{/if}}
+		{{/if}}
+	{{/each}}
 </form>

@@ -29,16 +29,7 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'spell' && !data.flags.obsidian) {
-			data.flags.obsidian = {
-				damage: [],
-				upcast: {enabled: false, damage: []},
-				time: {},
-				range: {},
-				duration: {},
-				components: {},
-				hit: {enabled: false, stat: 'spell'},
-				dc: {enabled: false, bonus: 8, prof: 1, ability: 'spell'}
-			};
+			data.flags.obsidian = duplicate(Obsidian.SPELL_SCHEMA);
 		}
 	}
 

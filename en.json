@@ -327,5 +327,14 @@
 	"OBSIDIAN.CustomSpells": "Custom Spells",
 	"OBSIDIAN.Components": "Components",
 	"OBSIDIAN.UpTo": "up to",
-	"OBSIDIAN.CritDice": "Crit Dice"
+	"OBSIDIAN.CritDice": "Crit Dice",
+	"OBSIDIAN.KnownSpells": "Known Spells",
+	"OBSIDIAN.Prepare": "Prepare",
+	"OBSIDIAN.Prepared": "Prepared",
+	"OBSIDIAN.PreparedSpells": "Prepared Spells",
+	"OBSIDIAN.Unprepare": "Unprepare",
+	"OBSIDIAN.AddSpells": "Add Spells",
+	"OBSIDIAN.Learn": "Learn",
+	"OBSIDIAN.Spellbook": "Spellbook",
+	"OBSIDIAN.Cantrips": "Cantrips"
 }

@@ -108,6 +108,37 @@ Obsidian.Rules.SPELL_PREP = ['known', 'prep', 'book'];
 Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
 Obsidian.Rules.SPELL_RITUALS = ['prep', 'book'];
 
+Obsidian.Rules.SPELLS_KNOWN_TABLE = {
+	brd: {
+		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
+		known: [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22]
+	},
+	clr: {
+		cantrips: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5],
+		known: []
+	},
+	drd: {
+		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
+		known: []
+	},
+	rng: {
+		cantrips: [],
+		known: [0, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11]
+	},
+	src: {
+		cantrips: [4, 4, 4, 5, 5, 5, 5, 5, 5, 6],
+		known: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 13, 13, 14, 14, 15, 15, 15, 15]
+	},
+	war: {
+		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
+		known: [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15]
+	},
+	wiz: {
+		cantrips: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5],
+		known: []
+	}
+};
+
 Obsidian.Rules.SPELL_SLOT_TABLE = [
 	[2],
 	[3],

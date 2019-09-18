@@ -58,3 +58,15 @@ Obsidian.SCHEMA = {
 		}
 	}
 };
+
+Obsidian.SPELL_SCHEMA = {
+	damage: [],
+	upcast: {enabled: false, damage: []},
+	time: {},
+	range: {},
+	duration: {},
+	components: {},
+	hit: {enabled: false, stat: ''},
+	dc: {enabled: false, bonus: 8, prof: 1, ability: 'spell'},
+	source: {type: 'custom'}
+};
