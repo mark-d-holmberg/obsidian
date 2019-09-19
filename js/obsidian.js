@@ -95,6 +95,13 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
+		html.find('.obsidian-input-search').keyup(this._filterSpellName.bind(this));
+		html.find('.obsidian-clear-search').click(evt => {
+			const target = $(evt.currentTarget);
+			const search = target.siblings('.obsidian-input-search');
+			search.val('');
+			this._filterSpellName({currentTarget: search[0]});
+		});
 
 		this._activateDialogs(html);
 		Obsidian._resizeMain(html);
@@ -184,6 +191,22 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (this.settings.height !== undefined) {
 			this.position.height = this.settings.height;
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_filterSpellName (evt) {
+		const target = $(evt.currentTarget);
+		const needle = target.val();
+		this.element.find('[data-group="spells"] .obsidian-tr.item').each((_, el) => {
+			const jqel = $(el);
+			jqel.removeClass('obsidian-hidden');
+
+			if (needle.length > 0 && !el.dataset.name.toLowerCase().includes(needle)) {
+				jqel.addClass('obsidian-hidden');
+			}
+		});
 	}
 
 	_injectHTML (html) {

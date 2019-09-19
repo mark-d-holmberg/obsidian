@@ -22,7 +22,9 @@
 		<ul class="obsidian-tab-bar">
 			{{#each (range 0 9)}}
 				{{#if (notEmpty (filter ../spells 'data.level.value' this))}}
-					<li class="obsidian-sub-tab obsidian-spell-level-tab">{{spellLevelFormat this}}</li>
+					<li class="obsidian-sub-tab obsidian-spell-level-tab" data-value="{{this}}">
+						{{spellLevelFormat this}}
+					</li>
 				{{/if}}
 			{{/each}}
 		</ul>
@@ -31,7 +33,8 @@
 <div class="obsidian-spell-list">
 	{{#each spells as |spell id|}}
 		<details data-item-id="{{#if spell._id}}{{id}}{{else}}{{spell.id}}{{/if}}"
-		         data-spell-list="{{../spellList}}">
+		         data-spell-list="{{../spellList}}" data-name="{{spell.name}}"
+		         data-level="{{spell.data.level.value}}">
 			<summary>
 				<div class="obsidian-col-icon">
 					<i class="obsidian-spell-school obsidian-spell-school-{{spell.data.school.value}}"></i>

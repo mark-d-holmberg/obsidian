@@ -1,4 +1,9 @@
 class ObsidianSpellsDialog extends ObsidianDialog {
+	constructor (...args) {
+		super(...args);
+		this._filters = [];
+	}
+
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 520;
@@ -18,6 +23,14 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('.obsidian-spell-action').click(this._onSpellAction.bind(this));
+		html.find('.obsidian-input-search').keyup(this._filterOnName.bind(this));
+		html.find('.obsidian-spell-level-tab').click(this._filterOnLevel.bind(this));
+		html.find('.obsidian-clear-search').click(evt => {
+			const target = $(evt.currentTarget);
+			const search = target.siblings('input');
+			search.val('');
+			this._filterOnName({currentTarget: search[0]});
+		});
 	}
 
 	getData () {
@@ -90,6 +103,97 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 		});
 
 		return data;
+	}
+
+	/**
+	 * @private
+	 */
+	_applyFilters () {
+		const filterBlocks = this.element.find('.obsidian-spell-filter');
+		filterBlocks.each((_, el) =>
+			$(el).find('.obsidian-spell-level-tab').removeClass('obsidian-active'));
+
+		this._filters.forEach((filter, id) => {
+			const levels =
+				filter.levels
+					.map((on, lvl) => [lvl, on])
+					.filter(([_, on]) => on)
+					.map(([lvl, _]) => lvl);
+
+			const filterBlock = $(filterBlocks[id]);
+			filterBlock.find('.obsidian-spell-level-tab').each((_, el) => {
+				if (levels.includes(Number(el.dataset.value))) {
+					$(el).addClass('obsidian-active');
+				}
+			});
+
+			filterBlock.next().find('details').each((i, el) => {
+				el.className = '';
+				if (filter.name !== undefined
+					&& filter.name.length > 0
+					&& !el.dataset.name.toLowerCase().includes(filter.name))
+				{
+					el.className = 'obsidian-hidden';
+					return;
+				}
+
+				if (levels.length > 0 && !levels.includes(Number(el.dataset.level))) {
+					el.className = 'obsidian-hidden';
+				}
+			});
+		});
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery} el
+	 */
+	_filterIDFromElement (el) {
+		const allFilterBlocks = this.element.find('.obsidian-spell-filter');
+		for (let i = 0; i < allFilterBlocks.length; i++) {
+			if (el[0] === allFilterBlocks[i]) {
+				return i;
+			}
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_filterOnLevel (evt) {
+		const target = $(evt.currentTarget);
+		const level = Number(target.data('value'));
+		const filter = this._getFilterFromEvent(evt);
+		filter.levels[level] = !filter.levels[level];
+		this._applyFilters();
+	}
+
+	/**
+	 * @private
+	 */
+	_filterOnName (evt) {
+		const target = $(evt.currentTarget);
+		const filter = this._getFilterFromEvent(evt);
+		filter.name = target.val();
+		this._applyFilters();
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_getFilterFromEvent (evt) {
+		const target = $(evt.currentTarget);
+		const filterBlock = target.parents('.obsidian-spell-filter');
+		const filterID = this._filterIDFromElement(filterBlock);
+		let filter = this._filters[filterID];
+
+		if (filter === undefined) {
+			filter = {levels: []};
+			this._filters[filterID] = filter;
+		}
+
+		return filter;
 	}
 
 	/**

@@ -538,6 +538,12 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	min-width: 34px;
 }
 
+.obsidian-spell-level-tab.obsidian-active {
+	border: 1px solid var(--highlight);
+	background: var(--highlight);
+	color: var(--bg);
+}
+
 .obsidian-spells-slots-pact {
 	display: flex;
 	justify-content: space-between;

@@ -34,7 +34,7 @@
 				<div class="obsidian-tbody">
 					{{#with (lookup ../entity.spellbook this)}}
 					{{#each spells}}
-						<div class="obsidian-tr item" data-item-id="{{id}}">
+						<div class="obsidian-tr item" data-item-id="{{id}}" data-name="{{name}}">
 							<div class="obsidian-col-icon">
 								<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
 							</div>
