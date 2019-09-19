@@ -81,6 +81,14 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 		}
 
+		Object.values(data.actor.obsidian.spells).forEach(entry => {
+			if (Array.isArray(entry)) {
+				entry.sort(Obsidian.spellComparator);
+			} else {
+				Object.values(entry).forEach(list => list.sort(Obsidian.spellComparator));
+			}
+		});
+
 		return data;
 	}
 
@@ -154,7 +162,9 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	_restoreDetailsState () {
 		if (this.element && Array.isArray(this._detailState)) {
 			this.element.find('.obsidian > details')
-				.each((i, el) => el.open = this._detailState[i]);
+				.each((i, el) => {
+					el.open = this._detailState[i];
+				});
 		}
 	}
 

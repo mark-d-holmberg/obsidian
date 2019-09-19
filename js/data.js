@@ -1,4 +1,13 @@
 Obsidian.Data = {};
+Obsidian.spellComparator = (a, b) => {
+	const diff = a.data.level.value - b.data.level.value;
+	if (diff === 0) {
+		return a.name.localeCompare(b.name);
+	}
+
+	return diff;
+};
+
 Hooks.once('ready', () => {
 	const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 	fetch('modules/obsidian/data/spell-partitions.json')
@@ -25,13 +34,6 @@ Hooks.once('ready', () => {
 				Obsidian.Data.SPELLS_BY_CLASS[cls] =
 					slugs.map(slug => bySlug.get(slug))
 						.filter(spell => spell !== undefined)
-						.sort((a, b) => {
-							const diff = a.data.level.value - b.data.level.value;
-							if (diff === 0) {
-								return a.name.localeCompare(b.name);
-							}
-
-							return diff;
-						}));
+						.sort(Obsidian.spellComparator));
 		});
 });
