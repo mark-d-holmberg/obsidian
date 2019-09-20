@@ -49,7 +49,10 @@
 							</div>
 							<div class="obsidian-col-time">
 								<div class="obsidian-table-text">
-									{{flags.obsidian.time.n}}{{i18n-join 'OBSIDIAN.CastTimeAbbr-' flags.obsidian.time.type}}
+									{{~#unless (expr '===' flags.obsidian.time.type 'special')~}}
+										{{~flags.obsidian.time.n~}}
+									{{~/unless~}}
+									{{~i18n-join 'OBSIDIAN.CastTimeAbbr-' flags.obsidian.time.type~}}
 								</div>
 							</div>
 							<div class="obsidian-col-range">
