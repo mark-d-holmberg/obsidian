@@ -17,7 +17,16 @@
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
 	],
-	"packs": [],
+	"packs": [
+		{
+			"name": "spells",
+			"label": "Spells",
+			"system": "dnd5e",
+			"module": "obsidian",
+			"path": "packs/spells.db",
+			"entity": "Item"
+		}
+	],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
 	"languages": [

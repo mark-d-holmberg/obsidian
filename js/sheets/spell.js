@@ -28,8 +28,14 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 	}
 
 	static enrichFlags (data) {
-		if (data.type === 'spell' && !data.flags.obsidian) {
-			data.flags.obsidian = duplicate(Obsidian.SPELL_SCHEMA);
+		if (data.type === 'spell') {
+			if (!data.flags) {
+				data.flags = {};
+			}
+
+			if (!data.flags.obsidian) {
+				data.flags.obsidian = duplicate(Obsidian.SPELL_SCHEMA);
+			}
 		}
 	}
 

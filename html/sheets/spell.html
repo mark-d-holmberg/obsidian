@@ -98,8 +98,9 @@
 				<label class="obsidian-inline">
 					{{localize 'OBSIDIAN.Duration'}}
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       data-dtype="Number" data-selector-parent="duration" data-show="round, min, hour"
-					       name="flags.obsidian.duration.n" value="{{item.flags.obsidian.duration.n}}">
+					       data-dtype="Number" data-selector-parent="duration"
+					       data-show="round, min, hour, day" name="flags.obsidian.duration.n"
+					       value="{{item.flags.obsidian.duration.n}}">
 				</label>
 				<select name="flags.obsidian.duration.type" data-selector="duration">
 					{{#select item.flags.obsidian.duration.type}}
@@ -110,7 +111,7 @@
 				</select>
 				{{fancy-checkbox 'data.concentration.value' content='OBSIDIAN.Concentration'
 				                 checked=data.concentration.value selectorParent='duration'
-				                 show='round, min, hour'}}
+				                 show='round, min, hour, day'}}
 			</div>
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
