@@ -565,8 +565,26 @@ class ObsidianActor extends Actor5e {
 			}
 
 			if (flags.dc.enabled) {
-				flags.dc.value =
-					cls ? cls.spellcasting.save : 8 + actorData.data.attributes.prof.value;
+				if (flags.dc.bonus === undefined || flags.dc.bonus === '') {
+					flags.dc.bonus = 8
+				} else {
+					flags.dc.bonus = Number(flags.dc.bonus);
+				}
+
+				flags.dc.value = flags.dc.bonus + flags.dc.prof * actorData.data.attributes.prof.value;
+				if (flags.dc.ability !== undefined && flags.dc.ability !== '') {
+					if (flags.dc.ability === 'spell') {
+						if (cls) {
+							flags.dc.value += cls.spellcasting.mod;
+						}
+					} else {
+						flags.dc.value += actorData.data.abilities[flags.dc.ability].mod;
+					}
+				}
+
+				if (flags.dc.fixed !== undefined && flags.dc.fixed !== '') {
+					flags.dc.value = Number(flags.dc.fixed);
+				}
 			}
 
 			for (const dmg of flags.damage) {
