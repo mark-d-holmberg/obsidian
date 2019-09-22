@@ -26,10 +26,7 @@ Hooks.once('ready', () => {
 		})
 		.then(entries => {
 			const bySlug =
-				new Map(entries.map(entry => [
-					toSlug(entry.name),
-					mergeObject(entry.data, {flags: {obsidian: duplicate(Obsidian.SPELL_SCHEMA)}})
-				]));
+				new Map(entries.map(entry => [toSlug(entry.name), entry.data]));
 
 			Obsidian.Data.SPELLS_BY_CLASS = {};
 			Object.entries(Obsidian.Data.SPELL_PARTITIONS.classes).forEach(([cls, slugs]) =>
