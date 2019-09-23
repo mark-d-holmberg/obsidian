@@ -1,0 +1,12 @@
+{
+	"name": "obsidian",
+	"title": "Obsidian Character Sheets",
+	"description": "Dark theme character sheets.",
+	"version": "0.1",
+	"author": "Kim Mantas",
+	"systems": ["dnd5e"],
+	"scripts": [],
+	"styles": [],
+	"packs": [],
+	"url": "https://bitbucket.org/Fyorl/obsidian"
+}
