@@ -255,30 +255,42 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	 * @private
 	 */
 	async _render (force = false, options = {}) {
-		this._saveDetailsState();
+		this._saveViewState();
 		await super._render(force, options);
-		this._restoreDetailsState();
+		this._restoreViewState();
 	}
 
 	/**
 	 * @private
 	 */
-	_restoreDetailsState () {
+	_restoreViewState () {
 		if (this.element && Array.isArray(this._detailState)) {
 			this.element.find('.obsidian > details')
 				.each((i, el) => {
 					el.open = this._detailState[i];
 				});
 		}
+
+		if (this.element && this._scroll !== undefined) {
+			const win = this.element.find('.window-content');
+			if (win.length > 0) {
+				win[0].scrollTop = this._scroll;
+			}
+		}
 	}
 
 	/**
 	 * @private
 	 */
-	_saveDetailsState () {
+	_saveViewState () {
 		if (this.element) {
 			this._detailState =
 				Array.from(this.element.find('.obsidian > details')).map(el => el.open);
+
+			const win = this.element.find('.window-content');
+			if (win.length > 0) {
+				this._scroll = win[0].scrollTop;
+			}
 		}
 	}
 }

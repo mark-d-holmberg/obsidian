@@ -1,9 +1,4 @@
 class ObsidianItemSheet extends ItemSheet {
-	constructor (...args) {
-		super(...args);
-		this.scrolling = false;
-	}
-
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 520;
@@ -74,7 +69,7 @@ class ObsidianItemSheet extends ItemSheet {
 	 */
 	_saveScrollPosition () {
 		if (this.element) {
-			this.scroll = this.element.prop('scrollTop');
+			this._scroll = this.element.find('.window-content').prop('scrollTop');
 		}
 	}
 
@@ -92,7 +87,7 @@ class ObsidianItemSheet extends ItemSheet {
 	 */
 	_restoreScrollPosition () {
 		if (this.element) {
-			this.element.prop('scrollTop', this.scroll);
+			this.element.find('.window-content').prop('scrollTop', this._scroll);
 		}
 	}
 }

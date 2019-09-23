@@ -1102,3 +1102,7 @@ legend .fancy-checkbox {
 .obsidian-fullwidth {
 	width: 100%;
 }
+
+[data-pack='dnd5e.spells'] {
+	display: none !important;
+}

@@ -9,8 +9,6 @@ Obsidian.spellComparator = (a, b) => {
 };
 
 Hooks.once('ready', () => {
-	$('[data-pack="dnd5e.spells"]').hide();
-
 	const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 	fetch('modules/obsidian/data/spell-partitions.json')
 		.then(response => {
