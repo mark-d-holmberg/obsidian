@@ -130,48 +130,8 @@
 			</div>
 		</div>
 	</fieldset>
-	<fieldset {{disabled (expr '!' item.flags.obsidian.hit.enabled)}}>
-		<legend>
-			{{fancy-checkbox 'flags.obsidian.hit.enabled' content='OBSIDIAN.Hit'
-			                 checked=item.flags.obsidian.hit.enabled}}
-		</legend>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<div class="obsidian-checkbox-row">
-				<select name="flags.obsidian.hit.attack">
-					{{#select item.flags.obsidian.hit.attack}}
-						<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
-						<option value="ranged">{{localize 'OBSIDIAN.AttackType-ranged'}}</option>
-						<option value="unerring">{{localize 'OBSIDIAN.AttackType-unerring'}}</option>
-					{{/select}}
-				</select>
-				<label class="obsidian-inline">
-					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="flags.obsidian.hit.n" placeholder="1" value="{{item.flags.obsidian.hit.n}}">
-					<span>{{localize 'OBSIDIAN.Count'}}</span>
-				</label>
-				{{#if actor}}
-				<select name="flags.obsidian.hit.stat">
-					{{#select item.flags.obsidian.hit.stat}}
-						<option value="spell">{{localize 'OBSIDIAN.Spell'}}</option>
-						{{#each ObsidianRules.ABILITIES}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<span class="obsidian-binary-operator">&plus;</span>
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" name="flags.obsidian.hit.bonus" placeholder="0"
-				       value="{{item.flags.obsidian.hit.bonus}}">
-				<label class="obsidian-inline">
-					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="flags.obsidian.hit.crit" placeholder="20"
-					       value="{{item.flags.obsidian.hit.crit}}">
-					<span>{{localize 'OBSIDIAN.Crit'}}</span>
-				</label>
-				{{/if}}
-			</div>
-		</div>
-	</fieldset>
+	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit spell=true
+			actor=actor ObsidianRules=ObsidianRules}}
 	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc spell=true actor=actor
 			ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">

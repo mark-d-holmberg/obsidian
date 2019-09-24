@@ -593,6 +593,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/sub-spells.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
+		'public/modules/obsidian/html/components/hit.html',
 		'public/modules/obsidian/html/components/spell-list.html'
 	]);
 });
