@@ -50,7 +50,7 @@ class ObsidianActor extends Actor5e {
 		Obsidian.Rules.Prepare.tools(actorData, data, flags);
 		Obsidian.Rules.Prepare.saves(actorData, data, flags);
 		Obsidian.Rules.Prepare.spellcasting(data, flags);
-		Obsidian.Rules.Prepare.attacks(actorData);
+		Obsidian.Rules.Prepare.weapons(actorData);
 		Obsidian.Rules.Prepare.features(actorData);
 		Obsidian.Rules.Prepare.spells(actorData);
 
@@ -58,7 +58,7 @@ class ObsidianActor extends Actor5e {
 	}
 
 	linkClasses (item) {
-		if (item.flags.obsidian.source.type !== 'class') {
+		if (!item.flags || !item.flags.obsidian || item.flags.obsidian.source.type !== 'class') {
 			return;
 		}
 

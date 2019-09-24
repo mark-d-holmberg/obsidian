@@ -1,13 +1,12 @@
 <form class="obsidian" autocomplete="off">
-	<input type="hidden" name="flags.obsidian.custom" data-dtype="Boolean" value="true">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<div style="width: 350px;">
+			<div class="obsidian-fullwidth">
 				<input class="obsidian-input-compact obsidian-input-lg" type="text"
-				       name="name" placeholder="{{localize 'OBSIDIAN.Attack'}}" value="{{attack.name}}">
+				       name="name" placeholder="{{localize 'OBSIDIAN.Attack'}}" value="{{item.name}}">
 				<select name="flags.obsidian.type" class="obsidian-attack-type">
-					{{#select attack.flags.obsidian.type}}
+					{{#select item.flags.obsidian.type}}
 						{{#each ObsidianRules.ATTACK_TYPES}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
 						{{/each}}
@@ -16,63 +15,60 @@
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 					       name="flags.obsidian.magic" placeholder="0" data-dtype="Number"
-					       value="{{attack.flags.obsidian.magic}}">
+					       value="{{item.flags.obsidian.magic}}">
 					<span>{{localize 'OBSIDIAN.Magic'}}</span>
 				</label>
 			</div>
 		</div>
 		<div class="
-			{{#if
-				(expr '&&'
-					(expr '!' attack.flags.obsidian.tags.thrown)
-					(expr '===' attack.flags.obsidian.type 'melee'))~}}
+			{{#unless (expr '||' item.flags.obsidian.tags.thrown (expr '===' item.flags.obsidian.type 'ranged'))~}}
 				obsidian-hidden
-			{{~/if}} obsidian-form-row obsidian-range-row obsidian-inline obsidian-stacked-row">
+			{{~/unless}} obsidian-form-row obsidian-range-row obsidian-inline obsidian-stacked-row">
 			<div>
 				<label class="obsidian-inline">
 					{{localize 'OBSIDIAN.Range'}}
 					<input type="text" name="flags.obsidian.range1"
-					       data-dtype="Number" value="{{attack.flags.obsidian.range1}}" placeholder="0"
+					       data-dtype="Number" value="{{item.flags.obsidian.range1}}" placeholder="0"
 					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
 				</label>
 				<span class="obsidian-binary-operator">&sol;</span>
 				<input type="text" name="flags.obsidian.range2" placeholder="0"
-				       data-dtype="Number" value="{{attack.flags.obsidian.range2}}"
+				       data-dtype="Number" value="{{item.flags.obsidian.range2}}"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-md">
 			</div>
 		</div>
 	</fieldset>
-	{{> public/modules/obsidian/html/components/hit.html attack.flags.obsidian.hit
+	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit
 			ObsidianRules=ObsidianRules}}
-	{{> public/modules/obsidian/html/components/dc.html attack.flags.obsidian.dc
+	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc
 			ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">
 		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.flags.obsidian.damage
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage'}}
 	</fieldset>
-	<fieldset class="{{#if (expr '!' attack.flags.obsidian.tags.versatile)}}
+	<fieldset class="{{#if (expr '!' item.flags.obsidian.tags.versatile)}}
 		obsidian-hidden
 	{{/if}} obsidian-versatile-block" data-prop="versatile">
 		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=attack.flags.obsidian.versatile
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.versatile
 				prop='versatile'}}
 	</fieldset>
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
-		{{#each attack.flags.obsidian.tags as |tag|}}
+		{{#each item.flags.obsidian.tags}}
 			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 				<div style="width: 300px;">
 					<select class="obsidian-attack-tag">
-						{{#select (is-custom-tag @key tag)}}
-							{{#each ../ObsidianRules.ATTACK_TAGS}}
+						{{#select (is-custom-tag @key this)}}
+							{{#each ../ObsidianRules.WEAPON_TAGS}}
 								<option value="{{this}}">{{{i18n-join 'OBSIDIAN.AtkTag-' this}}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 					<input type="text" placeholder="{{localize 'OBSIDIAN.Tag'}}"
-					       class="{{#if (expr '!' tag.custom)}}obsidian-hidden{{/if}} obsidian-input-compact
-					       obsidian-input-lg" value="{{tag.label}}">
+					       class="{{#if (expr '!' custom)}}obsidian-hidden{{/if}} obsidian-input-compact
+					       obsidian-input-lg" value="{{label}}">
 				</div>
 				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tag"
 				        data-key="{{@key}}">

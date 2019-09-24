@@ -1,16 +1,14 @@
 <form class="obsidian" autocomplete="off">
 	<label class="obsidian-inline obsidian-label-lg">
-		{{localize 'OBSIDIAN.CustomAttacks'}}
+		{{localize 'OBSIDIAN.ManageAttacks'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-attack">
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.obsidian.attacks as |attack|}}
-		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline"
-		     data-item-id="{{attack.id}}">
+	{{#each entity.obsidian.weapons}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-item-id="{{id}}">
 			<input type="text" class="obsidian-input-compact obsidian-input-lg"
-			       placeholder="{{localize 'OBSIDIAN.Attack'}}"
-			       value="{{attack.name}}" name="{{attack.id}}.name">
+			       placeholder="{{localize 'OBSIDIAN.Attack'}}" value="{{name}}" name="{{id}}.name">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-attack">
 				{{localize 'OBSIDIAN.Remove'}}
 			</button>

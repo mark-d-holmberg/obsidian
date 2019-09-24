@@ -38,32 +38,6 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 			}
 		}
 	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onAddDamage (evt) {
-		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
-		const damage = getProperty(this.item.data.flags.obsidian, prop);
-		const newDamage = {ndice: 1, die: 4, stat: 'spell', bonus: 0, type: ''};
-		const formData = this._formData;
-		formData[`flags.obsidian.${prop}.${damage.length}`] = newDamage;
-		this.item.update(formData);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	async _onRemoveDamage (evt) {
-		evt.preventDefault();
-		await this.item.update(this._formData);
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
-		const damage = getProperty(this.item.data.flags.obsidian, prop);
-		this.item.update({[`flags.obsidian.${prop}`]: ObsidianDialog.removeRow(damage, evt)});
-	}
 }
 
 Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});

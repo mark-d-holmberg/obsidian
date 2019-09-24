@@ -87,12 +87,12 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
-	attacks: function (actorData) {
+	weapons: function (actorData) {
 		const data = actorData.data;
-		actorData.obsidian.attacks = actorData.items.filter(item => item.type === 'weapon');
+		actorData.obsidian.weapons = actorData.items.filter(item => item.type === 'weapon');
 
-		for (const attack of Object.values(actorData.obsidian.attacks)) {
-			const flags = attack.flags.obsidian;
+		for (const weapon of Object.values(actorData.obsidian.weapons)) {
+			const flags = weapon.flags.obsidian;
 			if (flags.hit.enabled) {
 				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);
 			}

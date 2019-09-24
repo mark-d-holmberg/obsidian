@@ -1,13 +1,12 @@
-class ObsidianAttackDialog extends ObsidianDialog {
-	constructor (parent, attackID) {
-		super(parent, {
-			title: game.i18n.localize('OBSIDIAN.EditAttack'),
-			template: 'public/modules/obsidian/html/dialogs/attack.html',
-			width: 560
-		});
+class ObsidianWeaponSheet extends ObsidianItemSheet {
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		options.width = 560;
+		return options;
+	}
 
-		this.attackID = parseInt(attackID);
-		this.attack = this.parent.actor.getOwnedItem(this.attackID);
+	get template () {
+		return 'public/modules/obsidian/html/sheets/weapon.html';
 	}
 
 	/**
@@ -25,18 +24,23 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html, {fieldset: true});
 	}
 
-	getData () {
-		const data = super.getData();
-		data.attackID = this.attackID;
-		data.attack = this.attack.data;
-		return data;
+	static enrichFlags (data) {
+		if (data.type === 'weapon') {
+			if (!data.flags) {
+				data.flags = {};
+			}
+
+			if (!data.flags.obsidian) {
+				data.flags.obsidian = duplicate(Obsidian.WEAPON_SCHEMA);
+			}
+		}
 	}
 
 	/**
 	 * @private
 	 */
 	_adjustMode (formData, tags) {
-		const current = this.attack.data.flags.obsidian.mode;
+		const current = this.item.data.flags.obsidian.mode;
 		const type = formData[`flags.obsidian.type`];
 
 		if (type === 'ranged' || type === 'unarmed') {
@@ -79,54 +83,27 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	async _onAddDamage (evt) {
-		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
-		const damage = duplicate(this.attack.data.flags.obsidian[prop]);
-
-		damage.push({
-			ndice: 1,
-			die: 4,
-			stat: 'str',
-			bonus: 0,
-			type: ''
-		});
-
-		const update = {};
-		update[`flags.obsidian.${prop}`] = damage;
-		await this.attack.update(update);
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
 	async _onAddTag (evt) {
 		evt.preventDefault();
-		const tags = this.attack.data.flags.obsidian.tags;
+		const tags = this.item.data.flags.obsidian.tags;
 
 		let available = null;
-		for (const tag of Obsidian.Rules.ATTACK_TAGS) {
+		for (const tag of Obsidian.Rules.WEAPON_TAGS) {
 			if (tags[tag] === undefined) {
 				available = tag;
 				break;
 			}
 		}
 
-		const update = {};
+		const formData = this._formData;
 		if (available === null || available === 'custom') {
 			const tagID = `custom-${Object.keys(tags).length}`;
-			update[`flags.obsidian.tags.${tagID}`] = {
-				label: '',
-				custom: true
-			};
+			formData[`flags.obsidian.tags.${tagID}`] = {label: '', custom: true};
 		} else {
-			update[`flags.obsidian.tags.${available}`] = true;
+			formData[`flags.obsidian.tags.${available}`] = true;
 		}
 
-		await this.attack.update(update);
-		this.render(false);
+		this.item.update(formData);
 	}
 
 	/**
@@ -150,27 +127,14 @@ class ObsidianAttackDialog extends ObsidianDialog {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	async _onRemoveDamage (evt) {
-		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
-		const damage = this.attack.data.flags.obsidian[prop];
-		const update = {};
-		update[`flags.obsidian.${prop}`] = ObsidianDialog.removeRow(damage, evt);
-		await this.attack.update(update);
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
 	async _onRemoveTag (evt) {
 		evt.preventDefault();
+		const formData = this._formData;
 		const tag = $(evt.currentTarget).data('key');
-		const tags = duplicate(this.attack.data.flags.obsidian.tags);
+		const tags = duplicate(this.item.data.flags.obsidian.tags);
 		delete tags[tag];
-		await this.attack.update({'flags.obsidian.tags': tags});
-		this.render(false);
+		formData['flags.obsidian.tags'] = tags;
+		this.item.update(formData);
 	}
 
 	/**
@@ -204,6 +168,10 @@ class ObsidianAttackDialog extends ObsidianDialog {
 		const tags = this._collectTags();
 		formData['flags.obsidian.tags'] = tags;
 		formData['flags.obsidian.mode'] = this._adjustMode(formData, tags);
-		this.attack.update(formData);
+		this.item.update(formData);
 	}
 }
+
+Items.registerSheet('dnd5e', ObsidianWeaponSheet, {types: ['weapon'], makeDefault: true});
+Hooks.on('preCreateItem', (constructor, data) => ObsidianWeaponSheet.enrichFlags(data));
+Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianWeaponSheet.enrichFlags(data));

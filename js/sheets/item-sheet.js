@@ -13,6 +13,12 @@ class ObsidianItemSheet extends ItemSheet {
 	 * @return undefined
 	 */
 	activateListeners (html) {
+		if (this.actor && this.actor.apps) {
+			Object.values(this.actor.apps)
+				.filter(app => app.setModal)
+				.forEach(app => app.setModal(true));
+		}
+
 		super.activateListeners(html);
 		console.debug(this.item);
 		ObsidianDialog.initialiseComponents(html);
@@ -37,16 +43,6 @@ class ObsidianItemSheet extends ItemSheet {
 				.filter(app => app.setModal)
 				.forEach(app => app.setModal(false));
 		}
-	}
-
-	render (force = false, options = {}) {
-		if (this.actor && this.actor.apps) {
-			Object.values(this.actor.apps)
-				.filter(app => app.setModal)
-				.forEach(app => app.setModal(true));
-		}
-
-		return super.render(force, options);
 	}
 
 	get _formData () {
@@ -89,5 +85,31 @@ class ObsidianItemSheet extends ItemSheet {
 		if (this.element) {
 			this.element.find('.window-content').prop('scrollTop', this._scroll);
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onAddDamage (evt) {
+		evt.preventDefault();
+		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
+		const damage = getProperty(this.item.data.flags.obsidian, prop);
+		const newDamage = {ndice: 1, die: 4, stat: 'str', bonus: 0, type: ''};
+		const formData = this._formData;
+		formData[`flags.obsidian.${prop}.${damage.length}`] = newDamage;
+		this.item.update(formData);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onRemoveDamage (evt) {
+		evt.preventDefault();
+		await this.item.update(this._formData);
+		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
+		const damage = getProperty(this.item.data.flags.obsidian, prop);
+		this.item.update({[`flags.obsidian.${prop}`]: ObsidianDialog.removeRow(damage, evt)});
 	}
 }

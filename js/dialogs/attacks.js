@@ -26,19 +26,7 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 		evt.preventDefault();
 		await this.parent.actor.createOwnedItem({
 			type: 'weapon',
-			name: game.i18n.localize('OBSIDIAN.NewAttack'),
-			flags: {
-				obsidian: {
-					custom: true,
-					type: 'melee',
-					mode: 'melee',
-					damage: [],
-					versatile: [],
-					tags: {},
-					hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
-					dc: {enabled: false}
-				}
-			}
+			name: game.i18n.localize('OBSIDIAN.NewAttack')
 		});
 
 		this.render(false);

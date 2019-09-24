@@ -7,7 +7,7 @@
 	</h3>
 	<div class="obsidian-table">
 		<div class="obsidian-thead">
-			{{#if (notEmpty entity.obsidian.attacks)}}
+			{{#if (notEmpty entity.obsidian.weapons)}}
 				<div class="obsidian-col-icon"></div>
 				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
 				<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
@@ -20,35 +20,35 @@
 			{{/if}}
 		</div>
 		<div class="obsidian-tbody">
-			{{#each entity.obsidian.attacks as |attack|}}
-				<div class="obsidian-tr">
+			{{#each entity.obsidian.weapons}}
+				<div class="obsidian-tr item" data-item-id="{{id}}" data-name="{{name}}">
 					<div class="obsidian-col-icon">
 						<div class="
-								{{~#if (is-attack-toggleable attack)~}}
+								{{~#if (is-attack-toggleable this)~}}
 									obsidian-attack-toggle
-								{{~/if}} obsidian-icon obsidian-icon-{{attack.flags.obsidian.mode}}"
-						     data-item-id="{{attack.id}}">
+								{{~/if}} obsidian-icon obsidian-icon-{{flags.obsidian.mode}}"
+						     data-item-id="{{id}}">
 						</div>
 					</div>
 					<div class="obsidian-col-attack">
-						<div class="obsidian-table-text rollable">{{attack.name}}</div>
-						<div class="obsidian-table-sub-text">{{localize attack.flags.obsidian.attackType}}</div>
+						<div class="obsidian-table-text rollable">{{name}}</div>
+						<div class="obsidian-table-sub-text">{{localize flags.obsidian.attackType}}</div>
 					</div>
 					<div class="obsidian-col-range">
-						{{#if (expr '===' attack.flags.obsidian.mode 'ranged')}}
+						{{#if (expr '===' flags.obsidian.mode 'ranged')}}
 							<div class="obsidian-table-number-md">
 								<div>
-									{{attack.flags.obsidian.range1}}
+									{{flags.obsidian.range1}}
 									<span class="obsidian-table-number-split">/</span>
 								</div>
 								<div>
-									<span class="obsidian-table-number-minor">{{attack.flags.obsidian.range2}}</span>
+									<span class="obsidian-table-number-minor">{{flags.obsidian.range2}}</span>
 									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 								</div>
 							</div>
 						{{else}}
 							<div class="obsidian-table-number-md">
-								{{attack.flags.obsidian.reach}}
+								{{flags.obsidian.reach}}
 								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 							</div>
 							<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
@@ -56,13 +56,13 @@
 					</div>
 					<div class="obsidian-col-hit">
 						<div class="obsidian-table-number-lg">
-							{{#if attack.flags.obsidian.hit.enabled}}
-								{{numberFormat attack.flags.obsidian.hit.value decimals=0 sign=true}}
-							{{else if attack.flags.obsidian.dc.enabled}}
+							{{#if flags.obsidian.hit.enabled}}
+								{{numberFormat flags.obsidian.hit.value decimals=0 sign=true}}
+							{{else if flags.obsidian.dc.enabled}}
 								<div class="obsidian-table-sub-text obsidian-table-save">
-									{{i18n-join 'OBSIDIAN.AbilityAbbr-' attack.flags.obsidian.dc.target}}
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' flags.obsidian.dc.target}}
 								</div>
-								<div class="obsidian-table-number-md">{{attack.flags.obsidian.dc.value}}</div>
+								<div class="obsidian-table-number-md">{{flags.obsidian.dc.value}}</div>
 							{{else}}
 								<span class="obsidian-na">&mdash;</span>
 							{{/if}}
@@ -70,29 +70,28 @@
 					</div>
 					<div class="obsidian-col-damage">
 						<div class="obsidian-table-dmg">
-							{{#each (which-damage attack) as |dmg|}}
+							{{#each (which-damage this)}}
 								<div class="obsidian-dmg-component">
-									{{dmg.display}}
-									<div class="obsidian-icon-sm obsidian-icon-{{dmg.type}}"
-									     title="{{i18n-join 'OBSIDIAN.Damage-' dmg.type}}"></div>
+									{{display}}
+									<div class="obsidian-icon-sm obsidian-icon-{{type}}"
+									     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
 								</div>
 							{{/each}}
 						</div>
 					</div>
 					<div class="obsidian-col-notes">
-						{{#each attack.flags.obsidian.tags as |tag|}}
+						{{#each flags.obsidian.tags}}
 							<div class="obsidian-table-note-text">
-								{{~#if tag.custom~}}
-									{{~tag.label~}}
-									{{~else~}}
+								{{~#if custom~}}
+									{{~label~}}
+								{{~else~}}
 									{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
 								{{~/if~}}
 							</div>
 						{{/each}}
 					</div>
 					<div class="obsidian-col-icon">
-						<a title="{{localize 'OBSIDIAN.EditAttack'}}" class="obsidian-edit"
-						   data-attack-id="{{id}}">
+						<a title="{{localize 'OBSIDIAN.EditWeapon'}}" class="obsidian-edit item-edit">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>

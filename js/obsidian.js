@@ -86,8 +86,6 @@ class Obsidian extends ActorSheet5eCharacter {
 				.render(true));
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
-		html.find('[data-attack-id]').click(evt =>
-			new ObsidianAttackDialog(this, evt.currentTarget.dataset.attackId).render(true));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
@@ -232,7 +230,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onAttackToggle (evt) {
 		evt.preventDefault();
-		const attackID = evt.currentTarget.dataset.itemId;
+		const attackID = Number(evt.currentTarget.dataset.itemId);
 		const attack = this.actor.getOwnedItem(attackID);
 		const tags = attack.data.flags.obsidian.tags;
 		const current = attack.data.flags.obsidian.mode;

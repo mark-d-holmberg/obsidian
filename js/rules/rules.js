@@ -1,7 +1,7 @@
 Obsidian.Rules = {};
 Obsidian.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
-Obsidian.Rules.ATTACK_TAGS = [
+Obsidian.Rules.WEAPON_TAGS = [
 	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
 	'lance', 'net', 'thrown', 'twohanded', 'versatile', 'custom'
 ];

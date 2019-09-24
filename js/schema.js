@@ -1,8 +1,5 @@
 Obsidian.SCHEMA = {
 	obsidian: {
-		attacks: {
-			custom: []
-		},
 		attributes: {
 			ac: {
 				ability1: 'dex',
@@ -27,9 +24,6 @@ Obsidian.SCHEMA = {
 			gender: null,
 			subrace: null,
 			milestone: false
-		},
-		features : {
-			custom: []
 		},
 		saves: {
 			bonus: 0
@@ -69,4 +63,14 @@ Obsidian.SPELL_SCHEMA = {
 	hit: {enabled: false, stat: ''},
 	dc: {enabled: false, bonus: 8, prof: 1, ability: 'spell'},
 	source: {type: 'custom'}
+};
+
+Obsidian.WEAPON_SCHEMA = {
+	type: 'melee',
+	mode: 'melee',
+	damage: [],
+	versatile: [],
+	tags: {},
+	hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
+	dc: {enabled: false}
 };

@@ -23,7 +23,7 @@
 				{{#select stat}}
 					{{#if spell}}<option value="spell">{{localize 'OBSIDIAN.Spell'}}</option>{{/if}}
 					{{#each ObsidianRules.ABILITIES}}
-						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Ability-' @key}}</option>
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
