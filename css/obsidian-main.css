@@ -98,10 +98,18 @@
 	padding-left: 2px;
 	display: flex;
 	justify-content: space-between;
+	align-items: flex-end;
 }
 
 .obsidian-tab-contents h3 i {
 	margin-left: 5px;
+}
+
+.obsidian-tab-contents h3 a {
+	color: var(--text-regular);
+	font-size: 10px;
+	font-weight: bold;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 
 .obsidian-thead,
@@ -756,4 +764,31 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	font-size: 14px;
 	color: var(--text-regular);
+}
+
+.obsidian #context-menu {
+	max-width: 100%;
+	font-family: Roboto, sans-serif;
+	font-size: 13px;
+	color: var(--text-regular);
+	border: 1px dotted var(--mid);
+	border-top: none;
+	background: var(--bg);
+	border-radius: 0;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
+}
+
+.obsidian #context-menu li.context-item {
+	line-height: 1;
+	padding: 5px;
+	border-bottom: 1px solid var(--mid);
+	cursor: pointer;
+}
+
+.obsidian #context-menu li.context-item:last-child {
+	border: none;
+}
+
+.obsidian #context-menu li.context-item i {
+	color: var(--text-secondary);
 }

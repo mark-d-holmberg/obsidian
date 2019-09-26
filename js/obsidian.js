@@ -102,6 +102,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		});
 
 		this._activateDialogs(html);
+		this._contextMenu(html);
 		Obsidian._resizeMain(html);
 
 		if (this.settings.scrollTop !== undefined) {
@@ -189,6 +190,30 @@ class Obsidian extends ActorSheet5eCharacter {
 		if (this.settings.height !== undefined) {
 			this.position.height = this.settings.height;
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_contextMenu (html) {
+		new ContextMenu(html, '.obsidian-tr.item', [
+			{
+				name: game.i18n.localize('OBSIDIAN.Edit'),
+				icon: '<i class="fas fa-edit"></i>',
+				callback: this._editItem.bind(this)
+			}
+		]);
+	}
+
+	/**
+	 * @private
+	 * @param el {JQuery}
+	 */
+	_editItem (el) {
+		const id = Number(el.data('item-id'));
+		const Item = CONFIG.Item.entityClass;
+		const item = new Item(this.actor.items.find(i => i.id === id), {actor: this.actor});
+		item.sheet.render(true);
 	}
 
 	/**

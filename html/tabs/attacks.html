@@ -2,7 +2,7 @@
 	<h3>
 		{{localize 'OBSIDIAN.Attacks'}}
 		<a title="{{localize 'OBSIDIAN.ManageAttacks'}}" class="obsidian-edit" data-dialog="Attacks">
-			<i class="fas fa-edit"></i>
+			{{localize 'OBSIDIAN.ManageAttacks'}}
 		</a>
 	</h3>
 	<div class="obsidian-table">
@@ -14,7 +14,6 @@
 				<div class="obsidian-col-hit">{{localize 'OBSIDIAN.HitDC'}}</div>
 				<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
 				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
-				<div class="obsidian-col-icon"></div>
 			{{else}}
 				<div class="obsidian-col-empty">{{localize 'OBSIDIAN.Empty'}}</div>
 			{{/if}}
@@ -89,11 +88,6 @@
 								{{~/if~}}
 							</div>
 						{{/each}}
-					</div>
-					<div class="obsidian-col-icon">
-						<a title="{{localize 'OBSIDIAN.EditWeapon'}}" class="obsidian-edit item-edit">
-							<i class="fas fa-edit"></i>
-						</a>
 					</div>
 				</div>
 			{{/each}}

@@ -29,7 +29,6 @@
 					<div class="obsidian-col-dc">{{localize 'OBSIDIAN.HitDC'}}</div>
 					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
-					<div class="obsidian-col-icon"></div>
 				</div>
 				<div class="obsidian-tbody">
 					{{#with (lookup ../entity.spellbook this)}}
@@ -100,11 +99,6 @@
 								{{#each flags.obsidian.notes}}
 									<div class="obsidian-table-note-text">{{this}}</div>
 								{{/each}}
-							</div>
-							<div class="obsidian-col-icon">
-								<a title="{{localize 'OBSIDIAN.EditSpell'}}" class="obsidian-edit item-edit">
-									<i class="fas fa-edit"></i>
-								</a>
 							</div>
 						</div>
 					{{/each}}
