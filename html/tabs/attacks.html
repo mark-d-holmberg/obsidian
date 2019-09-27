@@ -82,6 +82,9 @@
 						{{#if flags.obsidian.charges.enabled}}
 							<div class="obsidian-table-note-text">{{{flags.obsidian.charges.display}}}</div>
 						{{/if}}
+						{{#each flags.obsidian.special}}
+							<div class="obsidian-table-note-text">{{{display}}}</div>
+						{{/each}}
 						{{#each flags.obsidian.tags}}
 							<div class="obsidian-table-note-text">
 								{{~#if custom~}}

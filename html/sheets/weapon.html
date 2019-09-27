@@ -57,6 +57,32 @@
 				prop='versatile'}}
 	</fieldset>
 	<fieldset>
+		<legend>{{localize 'OBSIDIAN.SpecialProperties'}}</legend>
+		{{#each item.flags.obsidian.special as |row id|}}
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+				<div style="width: 350px;">
+					<input type="text" class="obsidian-input-compact obsidian-input-lg" value="{{row.name}}"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}"
+					       name="flags.obsidian.special.{{id}}.name">
+					<label class="obsidian-inline">
+						<input type="text" value="{{row.uses.max}}" placeholder="0" data-dtype="Number"
+						       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+						       name="flags.obsidian.special.{{id}}.uses.max">
+						<span>{{localize 'OBSIDIAN.Uses'}}</span>
+					</label>
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-special">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+		<div class="obsidian-form-row obsidian-btn-row" style="justify-content: flex-end;">
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-special">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+		</div>
+	</fieldset>
+	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
 		{{#each item.flags.obsidian.tags}}
 			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">

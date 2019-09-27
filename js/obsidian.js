@@ -363,8 +363,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const feat = this.actor.items[featIndex];
-		const max = feat.flags.obsidian[prop].max;
-		let used = max - feat.flags.obsidian[prop].remaining;
+		const max = getProperty(feat.flags.obsidian, prop).max;
+		let used = max - getProperty(feat.flags.obsidian, prop).remaining;
 
 		if (n > used) {
 			used++;

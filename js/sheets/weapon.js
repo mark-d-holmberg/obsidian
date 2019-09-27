@@ -28,6 +28,8 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
 		html.find('.obsidian-add-tag').click(this._onAddTag.bind(this));
 		html.find('.obsidian-rm-tag').click(this._onRemoveTag.bind(this));
+		html.find('.obsidian-add-special').click(this._onAddSpecial.bind(this));
+		html.find('.obsidian-rm-special').click(this._onRemoveSpecial.bind(this));
 		ObsidianDialog.recalculateHeight(html, {richText: true});
 	}
 
@@ -90,6 +92,26 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
+	_onAddSpecial (evt) {
+		evt.preventDefault();
+		const formData = this._formData;
+		const newSpecial = {name: '', uses: {max: 0}};
+		let special = this.item.data.flags.obsidian.special;
+
+		if (special === undefined) {
+			formData['flags.obsidian.special'] = [newSpecial];
+		} else {
+			special = duplicate(special);
+			formData[`flags.obsidian.special.${special.length}`] = newSpecial;
+		}
+
+		this.item.update(formData);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
 	async _onAddTag (evt) {
 		evt.preventDefault();
 		const tags = this.item.data.flags.obsidian.tags;
@@ -128,6 +150,19 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 		});
 
 		this._updateDisplay();
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onRemoveSpecial (evt) {
+		evt.preventDefault();
+		await this.item.update(this._formData);
+		this.item.update({
+			'flags.obsidian.special':
+				ObsidianDialog.removeRow(this.item.data.flags.obsidian.special, evt)
+		});
 	}
 
 	/**

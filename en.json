@@ -348,5 +348,6 @@
 	"OBSIDIAN.Recharges": "Recharges",
 	"OBSIDIAN.Recharge-never": "Never",
 	"OBSIDIAN.Recharge-dawn": "Dawn",
-	"OBSIDIAN.Recharge-dusk": "Dusk"
+	"OBSIDIAN.Recharge-dusk": "Dusk",
+	"OBSIDIAN.SpecialProperties": "Special Properties"
 }

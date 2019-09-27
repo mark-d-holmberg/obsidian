@@ -126,6 +126,25 @@ Obsidian.Rules.Prepare = {
 						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
 			}
 
+			for (let j = 0; j < getProperty(flags, 'special.length') || 0; j++) {
+				const special = flags.special[j];
+				if (special.uses.remaining === undefined
+					|| special.uses.remaining > special.uses.max)
+				{
+					special.uses.remaining = special.uses.max;
+				}
+
+				if (special.uses.remaining < 0) {
+					special.uses.remaining = 0;
+				}
+
+				special.display =
+					`${special.name}: `
+					+ ObsidianActor.usesFormat(
+						weapon.id, i, special.uses.max, special.uses.remaining, 6,
+						`special.${j}.uses`);
+			}
+
 			if (['melee', 'unarmed'].includes(flags.type)) {
 				flags.reach = 5;
 				if (flags.tags.reach) {
