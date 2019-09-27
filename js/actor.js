@@ -46,6 +46,11 @@ class ObsidianActor extends Actor5e {
 			langs: flags.traits.profs.custom.langs
 		};
 
+		actorData.obsidian.magicalItems =
+			actorData.items.filter(item =>
+				(item.type === 'weapon' || item.type === 'equipment')
+				&& getProperty(item, 'flags.obsidian.magical'));
+
 		Obsidian.Rules.Prepare.skills(actorData, data, flags);
 		Obsidian.Rules.Prepare.tools(actorData, data, flags);
 		Obsidian.Rules.Prepare.saves(actorData, data, flags);
@@ -149,6 +154,37 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
+	static usesFormat (id, idx, max, remaining, threshold = 10) {
+		if (max === undefined || max < 0) {
+			return '';
+		}
+
+		let used = max - remaining;
+		if (used < 0) {
+			used = 0;
+		}
+
+		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}">`;
+		if (max <= threshold) {
+			for (let i = 0; i < max; i++) {
+				out += `
+					<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
+					     data-n="${i + 1}"></div>
+				`;
+			}
+		} else {
+			out += `
+				<input type="number" data-name="items.${idx}.flags.obsidian.uses.remaining"
+				       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
+				<span class="obsidian-binary-operator">&sol;</span>
+				<span class="obsidian-feature-max">${max}</span>
+			`;
+		}
+
+		out += '</div>';
+		return out;
+	}
+
 	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
 		const spells = this.items.filter(item => item.type === 'spell');
@@ -175,6 +211,23 @@ class ObsidianActor extends Actor5e {
 		}
 
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
+	}
+
+	async updateEquipment () {
+		const magicalItems =
+			this.items.filter(item =>
+				(item.type === 'weapon' || item.type === 'equipment')
+				&& getProperty(item, 'flags.obsidian.magical'));
+
+		const itemMap = new Map(magicalItems.map(item => [item.id, item]));
+		const spells = this.items.filter(item => item.type === 'spell');
+
+		for (const spell of spells) {
+			const flags = spell.flags.obsidian;
+			if (flags.source === 'item' && !itemMap.has(flags.source.item)) {
+				await this.deleteOwnedItem(spell.id);
+			}
+		}
 	}
 
 	async updateFeatures (update) {

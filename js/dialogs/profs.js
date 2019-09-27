@@ -42,7 +42,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 	 */
 	async _onRemoveProficiency (evt) {
 		evt.preventDefault();
-		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const id = parseInt(row.data('item-id'));
 		const cat = row.data('cat');
 		const profs = duplicate(this.parent.actor.data.flags.obsidian.traits.profs.custom[cat]);
@@ -60,7 +60,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 		const profs = {};
 		this.element.find('input').each((i, el) => {
 			const jqel = $(el);
-			const row = jqel.parents('.obsidian-form-row');
+			const row = jqel.closest('.obsidian-form-row');
 			const cat = row.data('cat');
 
 			if (profs[cat] === undefined) {

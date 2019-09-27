@@ -144,11 +144,11 @@ class ObsidianDialog extends BaseEntitySheet {
 		html.find(selector)
 			.each((i, el) => total += $(el).outerHeight(true));
 
-		const content = html.parents('.window-content');
+		const content = html.closest('.window-content');
 		html.height(total);
 
 		const diff = total - content.height();
-		const win = content.parents('.obsidian-window');
+		const win = content.closest('.obsidian-window');
 		win.height(win.height() + diff + (richText ? 20 : 0));
 	}
 
@@ -174,7 +174,7 @@ class ObsidianDialog extends BaseEntitySheet {
 	}
 
 	static removeRow (data, evt) {
-		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const id = Number(row.data('item-id'));
 		const newData = [];
 

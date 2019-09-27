@@ -39,10 +39,10 @@
 		</button>
 	</div>
 	<ul class="obsidian-tab-bar" data-group="spells">
-		<li class="obsidian-sub-tab item" data-tab="all">{{localize 'OBSIDIAN.All'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="spell-all">{{localize 'OBSIDIAN.All'}}</li>
 		{{#each (range 0 9)}}
 			{{#if (has-spells ../entity this)}}
-				<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="{{this}}">
+				<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="spell-{{this}}">
 					{{spellLevelFormat this}}
 				</li>
 			{{/if}}

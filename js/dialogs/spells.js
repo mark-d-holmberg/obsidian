@@ -184,7 +184,7 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	 */
 	_getFilterFromEvent (evt) {
 		const target = $(evt.currentTarget);
-		const filterBlock = target.parents('.obsidian-spell-filter');
+		const filterBlock = target.closest('.obsidian-spell-filter');
 		const filterID = this._filterIDFromElement(filterBlock);
 		let filter = this._filters[filterID];
 
@@ -201,7 +201,7 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	async _onSpellAction (evt) {
-		const row = $(evt.currentTarget).parents('details');
+		const row = $(evt.currentTarget).closest('details');
 		const id = Number(row.data('item-id'));
 		const list = row.data('spell-list');
 		const owned = list === '';

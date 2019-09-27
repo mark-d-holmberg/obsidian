@@ -37,9 +37,10 @@ class ObsidianAttacksDialog extends ObsidianDialog {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	async _onRemove (evt) {
-		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const id = Number(row.data('item-id'));
 		await this.parent.actor.deleteOwnedItem(id);
+		await this.parent.actor.updateEquipment();
 		this.render(false);
 	}
 
