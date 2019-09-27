@@ -154,7 +154,7 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	static usesFormat (id, idx, max, remaining, threshold = 10) {
+	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses') {
 		if (max === undefined || max < 0) {
 			return '';
 		}
@@ -164,7 +164,7 @@ class ObsidianActor extends Actor5e {
 			used = 0;
 		}
 
-		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}">`;
+		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}" data-prop="${prop}">`;
 		if (max <= threshold) {
 			for (let i = 0; i < max; i++) {
 				out += `
@@ -174,7 +174,7 @@ class ObsidianActor extends Actor5e {
 			}
 		} else {
 			out += `
-				<input type="number" data-name="items.${idx}.flags.obsidian.uses.remaining"
+				<input type="number" data-name="items.${idx}.flags.obsidian.${prop}.remaining"
 				       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 				<span class="obsidian-binary-operator">&sol;</span>
 				<span class="obsidian-feature-max">${max}</span>

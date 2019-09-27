@@ -87,18 +87,43 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
+	prepareCharges: function (charges) {
+		if (charges.remaining === undefined || charges.remaining > charges.max) {
+			charges.remaining = charges.max;
+		}
+
+		if (charges.remaining < 0) {
+			charges.remaining = 0;
+		}
+	},
+
 	weapons: function (actorData) {
 		const data = actorData.data;
-		actorData.obsidian.weapons = actorData.items.filter(item => item.type === 'weapon');
+		actorData.obsidian.weapons = [];
 
-		for (const weapon of Object.values(actorData.obsidian.weapons)) {
+		for (let i = 0; i < actorData.items.length; i++) {
+			if (actorData.items[i].type !== 'weapon') {
+				continue;
+			}
+
+			const weapon = actorData.items[i];
 			const flags = weapon.flags.obsidian;
+			actorData.obsidian.weapons.push(weapon);
+
 			if (flags.hit.enabled) {
 				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);
 			}
 
 			if (flags.dc.enabled) {
 				Obsidian.Rules.Prepare.calculateSave(flags.dc, data);
+			}
+
+			if (flags.charges && flags.charges.enabled) {
+				Obsidian.Rules.Prepare.prepareCharges(flags.charges, data);
+				flags.charges.display =
+					`${game.i18n.localize('OBSIDIAN.Charges')}: `
+					+ ObsidianActor.usesFormat(
+						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
 			}
 
 			if (['melee', 'unarmed'].includes(flags.type)) {

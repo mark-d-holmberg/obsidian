@@ -70,7 +70,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 			}
 
 			flags.notes.push(
-				'Uses: '
+				`${game.i18n.localize('OBSIDIAN.Uses')}: `
 				+ ObsidianActor.usesFormat(spell.id, i, flags.uses.max, flags.uses.remaining, 6));
 		}
 

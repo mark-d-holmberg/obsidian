@@ -352,7 +352,9 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onUseClicked (evt) {
 		const target = $(evt.currentTarget);
-		const featID = target.parent().data('feat-id');
+		const parent = target.parent();
+		const featID = parent.data('feat-id');
+		const prop = parent.data('prop');
 		const n = Number(target.data('n'));
 		const featIndex = this.actor.items.findIndex(feat => feat.id === featID);
 
@@ -361,8 +363,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const feat = this.actor.items[featIndex];
-		const max = feat.flags.obsidian.uses.max;
-		let used = max - feat.flags.obsidian.uses.remaining;
+		const max = feat.flags.obsidian[prop].max;
+		let used = max - feat.flags.obsidian[prop].remaining;
 
 		if (n > used) {
 			used++;
@@ -371,7 +373,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		update[`items.${featIndex}.flags.obsidian.uses.remaining`] = max - used;
+		update[`items.${featIndex}.flags.obsidian.${prop}.remaining`] = max - used;
 		this.actor.update(update);
 	}
 
@@ -635,6 +637,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',
 		'public/modules/obsidian/html/components/spell-list.html',
-		'public/modules/obsidian/html/components/uses.html'
+		'public/modules/obsidian/html/components/uses.html',
+		'public/modules/obsidian/html/components/charges.html'
 	]);
 });

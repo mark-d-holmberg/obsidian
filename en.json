@@ -343,5 +343,10 @@
 	"OBSIDIAN.Edit": "Edit",
 	"OBSIDIAN.Item": "Item",
 	"OBSIDIAN.Unlimited": "Unlimited",
-	"OBSIDIAN.Limited": "Limited"
+	"OBSIDIAN.Limited": "Limited",
+	"OBSIDIAN.Charges": "Charges",
+	"OBSIDIAN.Recharges": "Recharges",
+	"OBSIDIAN.Recharge-never": "Never",
+	"OBSIDIAN.Recharge-dawn": "Dawn",
+	"OBSIDIAN.Recharge-dusk": "Dusk"
 }
