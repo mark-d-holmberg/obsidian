@@ -1,4 +1,4 @@
-<form class="obsidian" autocomplete="off">
+<form class="obsidian" autocomplete="off" data-obsidian-name="weapon">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -82,4 +82,9 @@
 			</button>
 		</div>
 	</fieldset>
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
+	<div class="obsidian-rich-text">
+		{{editor content=item.data.description.value button=false editable=editable
+		         target='data.descriptions.value'}}
+	</div>
 </form>
