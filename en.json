@@ -340,5 +340,8 @@
 	"OBSIDIAN.Learn": "Learn",
 	"OBSIDIAN.Spellbook": "Spellbook",
 	"OBSIDIAN.Cantrips": "Cantrips",
-	"OBSIDIAN.Edit": "Edit"
+	"OBSIDIAN.Edit": "Edit",
+	"OBSIDIAN.Item": "Item",
+	"OBSIDIAN.Unlimited": "Unlimited",
+	"OBSIDIAN.Limited": "Limited"
 }

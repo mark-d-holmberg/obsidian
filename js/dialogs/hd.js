@@ -49,7 +49,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 	async _onRemoveHD (evt) {
 		evt.preventDefault();
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
-		const row = $(evt.currentTarget).parents('.obsidian-form-row');
+		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const hdVal = row.find('select').val();
 		const removedHD = hd[hdVal];
 

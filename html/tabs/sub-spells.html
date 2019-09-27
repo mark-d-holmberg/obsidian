@@ -1,4 +1,4 @@
-<div class="obsidian-tab-contents tab" data-group="spells" data-tab="{{level}}">
+<div class="obsidian-tab-contents tab" data-group="spells" data-tab="spell-{{level}}">
 	{{#each (range 0 9)}}
 		{{#if (expr '||' (expr '&&' (expr '===' 'all' ../level) (has-spells ../entity this)) (expr '===' ../level this))}}
 			<h3>
@@ -97,7 +97,7 @@
 							</div>
 							<div class="obsidian-col-spell-notes">
 								{{#each flags.obsidian.notes}}
-									<div class="obsidian-table-note-text">{{this}}</div>
+									<div class="obsidian-table-note-text">{{{this}}}</div>
 								{{/each}}
 							</div>
 						</div>

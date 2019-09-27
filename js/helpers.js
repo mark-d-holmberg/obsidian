@@ -201,34 +201,7 @@ Handlebars.registerHelper('format-uses', function (items, feature) {
 		}
 	}
 
-	if (max === undefined || max < 0) {
-		return '';
-	}
-
-	let used = max - remaining;
-	if (used < 0) {
-		used = 0;
-	}
-
-	let out = `<div class="obsidian-feature-uses" data-feat-id="${id}">`;
-	if (max < 11) {
-		for (let i = 0; i < max; i++) {
-			out += `
-				<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
-				     data-n="${i + 1}"></div>
-			`;
-		}
-	} else {
-		out += `
-			<input type="number" name="items.${idx}.flags.obsidian.uses.remaining"
-			       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
-			<span class="obsidian-binary-operator">&sol;</span>
-			<span class="obsidian-feature-max">${max}</span>
-		`;
-	}
-
-	out += '</div>';
-	return new Handlebars.SafeString(out);
+	return new Handlebars.SafeString(ObsidianActor.usesFormat(id, idx, max, remaining));
 });
 
 Handlebars.registerHelper('get-property', function (data, key) {

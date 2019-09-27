@@ -29,6 +29,7 @@
 						{{#select item.flags.obsidian.source.type}}
 							<option value="class">{{localize 'OBSIDIAN.Class'}}</option>
 							<option value="feat">{{localize 'OBSIDIAN.Feature'}}</option>
+							<option value="item">{{localize 'OBSIDIAN.Item'}}</option>
 							<option value="custom">{{localize 'OBSIDIAN.Custom'}}</option>
 						{{/select}}
 					</select>
@@ -44,6 +45,14 @@
 				        data-dtype="Number">
 					{{#select item.flags.obsidian.source.feat}}
 						{{#each actor.data.feats}}
+							<option value="{{id}}">{{name}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.source.item" data-show="item" data-selector-parent="source"
+				        data-dtype="Number">
+					{{#select item.flags.obsidian.source.item}}
+						{{#each actor.data.obsidian.magicalItems}}
 							<option value="{{id}}">{{name}}</option>
 						{{/each}}
 					{{/select}}
@@ -130,6 +139,10 @@
 			</div>
 		</div>
 	</fieldset>
+	{{#if actor}}
+		{{> public/modules/obsidian/html/components/uses.html item.flags.obsidian.uses spell=true
+				ObsidianRules=ObsidianRules}}
+	{{/if}}
 	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit spell=true
 			actor=actor ObsidianRules=ObsidianRules}}
 	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc spell=true actor=actor

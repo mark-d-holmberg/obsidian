@@ -93,7 +93,7 @@ class ObsidianItemSheet extends ItemSheet {
 	 */
 	async _onAddDamage (evt) {
 		evt.preventDefault();
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
+		const prop = $(evt.currentTarget).closest('fieldset').data('prop');
 		const damage = getProperty(this.item.data.flags.obsidian, prop);
 		const newDamage = {ndice: 1, die: 4, stat: 'str', bonus: 0, type: ''};
 		const formData = this._formData;
@@ -108,7 +108,7 @@ class ObsidianItemSheet extends ItemSheet {
 	async _onRemoveDamage (evt) {
 		evt.preventDefault();
 		await this.item.update(this._formData);
-		const prop = $(evt.currentTarget).parents('fieldset').data('prop');
+		const prop = $(evt.currentTarget).closest('fieldset').data('prop');
 		const damage = getProperty(this.item.data.flags.obsidian, prop);
 		this.item.update({[`flags.obsidian.${prop}`]: ObsidianDialog.removeRow(damage, evt)});
 	}

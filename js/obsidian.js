@@ -57,6 +57,7 @@ class Obsidian extends ActorSheet5eCharacter {
 				callback: clicked => {
 					this.tabs[group] = clicked.data('tab');
 					Obsidian._resizeTabs(html);
+					Obsidian._activateInputs(html);
 				}
 			});
 		});
@@ -77,12 +78,12 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-skill-mod').click(evt =>
 			new ObsidianSkillDialog(
 				this,
-				$(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id'))
+				$(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id'))
 				.render(true));
 		html.find('.obsidian-save-mod').click(evt =>
 			new ObsidianSaveDialog(
 				this,
-				$(evt.currentTarget).parents('.obsidian-save-item').data('value'))
+				$(evt.currentTarget).closest('.obsidian-save-item').data('value'))
 				.render(true));
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
@@ -104,6 +105,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		this._activateDialogs(html);
 		this._contextMenu(html);
 		Obsidian._resizeMain(html);
+		Obsidian._activateInputs(html);
 
 		if (this.settings.scrollTop !== undefined) {
 			this.form.scrollTop = this.settings.scrollTop;
@@ -140,7 +142,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param modal {boolean}
 	 */
 	setModal (modal) {
-		const win = $(this.form).parents('.obsidian-window');
+		const win = $(this.form).closest('.obsidian-window');
 		if (modal) {
 			win.addClass('obsidian-background');
 		} else {
@@ -175,6 +177,21 @@ class Obsidian extends ActorSheet5eCharacter {
 			} else {
 				const dialog = eval(`Obsidian${options.dialog}Dialog.prototype.constructor`);
 				new dialog(this, options).render(true);
+			}
+		});
+	}
+
+	/**
+	 * @private
+	 * @param {HTML} html
+	 */
+	static _activateInputs (html) {
+		html.find('input[data-name]').each((i, el) => {
+			const parent = $(el).closest('.tab');
+			if (parent.hasClass('active')) {
+				el.name = el.dataset.name;
+			} else {
+				el.name = '';
 			}
 		});
 	}
@@ -516,7 +533,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setSaveProficiency (evt) {
-		const save = $(evt.currentTarget).parents('.obsidian-save-item').data('value');
+		const save = $(evt.currentTarget).closest('.obsidian-save-item').data('value');
 		let state = this.actor.data.data.abilities[save].proficient;
 
 		if (state === undefined || state === 0) {
@@ -535,7 +552,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setSkillProficiency (evt) {
-		let id = $(evt.currentTarget).parents('.obsidian-skill-item').data('skill-id');
+		let id = $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id');
 		let skillKey;
 
 		if (id.includes('.')) {
@@ -595,7 +612,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			this.position.width += 400;
 		}
 
-		$(this.form).parents('.obsidian-window').width(this.position.width);
+		$(this.form).closest('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
@@ -617,6 +634,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',
-		'public/modules/obsidian/html/components/spell-list.html'
+		'public/modules/obsidian/html/components/spell-list.html',
+		'public/modules/obsidian/html/components/uses.html'
 	]);
 });

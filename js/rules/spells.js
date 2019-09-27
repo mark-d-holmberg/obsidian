@@ -1,8 +1,13 @@
 Obsidian.Rules.Prepare.spells = function (actorData) {
-	for (const spell of Object.values(actorData.items.filter(item => item.type === 'spell'))) {
+	for (let i = 0; i < actorData.items.length; i++) {
+		if (actorData.items[i].type !== 'spell') {
+			continue;
+		}
+
+		const spell = actorData.items[i];
 		const flags = spell.flags.obsidian;
-		flags.notes = [];
 		let cls;
+		flags.notes = [];
 
 		if (flags.time.n === undefined || flags.time.n === '') {
 			flags.time.n = 1;
@@ -17,6 +22,8 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		} else if (flags.source.type === 'class') {
 			cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.class);
 			flags.source.display = cls.label;
+		} else if (flags.source.type === 'item') {
+			flags.source.display = actorData.items.find(x => x.id === flags.source.item).name;
 		}
 
 		flags.components.display =
@@ -42,6 +49,29 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
 			Obsidian.Rules.Prepare.calculateHit(flags.hit, actorData.data, cls);
+		}
+
+		if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
+			flags.uses.max = flags.uses.bonus || 0;
+			if (flags.uses.ability !== undefined && flags.uses.ability !== '') {
+				if (flags.uses.ability === 'spell') {
+					flags.uses.max += cls ? cls.spellcasting.mod : 0;
+				} else {
+					flags.uses.max += actorData.abilities[flags.uses.ability].mod;
+				}
+			}
+
+			if (flags.uses.remaining === undefined || flags.uses.remaining > flags.uses.max) {
+				flags.uses.remaining = flags.uses.max;
+			}
+
+			if (flags.uses.remaining < 0) {
+				flags.uses.remaining = 0;
+			}
+
+			flags.notes.push(
+				'Uses: '
+				+ ObsidianActor.usesFormat(spell.id, i, flags.uses.max, flags.uses.remaining, 6));
 		}
 
 		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);
