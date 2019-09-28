@@ -21,9 +21,9 @@
 		</div>
 		<ul class="obsidian-tab-bar">
 			{{#each (range 0 9)}}
-				{{#if (notEmpty (filter ../spells 'data.level.value' this))}}
+				{{#if (not-empty (filter ../spells 'data.level.value' this))}}
 					<li class="obsidian-sub-tab obsidian-spell-level-tab" data-value="{{this}}">
-						{{spellLevelFormat this}}
+						{{spell-level-format this}}
 					</li>
 				{{/if}}
 			{{/each}}
@@ -50,7 +50,7 @@
 						     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
 					{{/if}}
 					<div class="obsidian-table-sub-text">
-						({{spellLevelFormat spell.data.level.value cantrip=true}})
+						({{spell-level-format spell.data.level.value cantrip=true}})
 					</div>
 				</div>
 				<button type="button" class="{{#if (has-spell-with-name ../active spell)}}obsidian-btn-active{{/if}}
@@ -76,9 +76,9 @@
 					<h3>
 						{{#if (expr '===' spell.data.level.value 0)}}
 							{{i18n-join 'OBSIDIAN.SpellSchool-' spell.data.school.value}}
-							{{spellLevelFormat spell.data.level.value cantrip=true}}
+							{{spell-level-format spell.data.level.value cantrip=true}}
 						{{else}}
-							{{spellLevelFormat spell.data.level.value level=true}}
+							{{spell-level-format spell.data.level.value level=true}}
 							{{i18n-join 'OBSIDIAN.SpellSchool-' spell.data.school.value}}
 						{{/if}}
 					</h3>

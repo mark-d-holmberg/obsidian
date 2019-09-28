@@ -1,8 +1,8 @@
 <div class="obsidian-tab-contents tab" data-group="spells" data-tab="spell-{{level}}">
 	{{#each (range 0 9)}}
-		{{#if (expr '||' (expr '&&' (expr '===' 'all' ../level) (has-spells ../entity this)) (expr '===' ../level this))}}
+		{{#if (has-spell-of-level ../entity ../level this)}}
 			<h3>
-				{{spellLevelFormat this cantrip=true level=true}}
+				{{spell-level-format this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
 					{{#if (expr '===' ../data.spells.pact.level this)}}
 						<div class="obsidian-spells-pact">
@@ -31,14 +31,23 @@
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 				</div>
 				<div class="obsidian-tbody">
-					{{#with (lookup ../entity.spellbook this)}}
-					{{#each spells}}
+					{{#each (filter-spells ../entity.spellbook ../level this)}}
 						<div class="obsidian-tr item" data-item-id="{{id}}" data-name="{{name}}">
 							<div class="obsidian-col-icon">
 								<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
 							</div>
 							<div class="obsidian-col-spell">
-								<div class="obsidian-table-text rollable">{{name}}</div>
+									<div class="obsidian-table-text rollable">
+										{{name}}
+										{{#if data.concentration.value}}
+											<div class="obsidian-icon-flag obsidian-icon-concentration"
+											     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
+										{{/if}}
+										{{#if data.ritual.value}}
+											<div class="obsidian-icon-flag obsidian-icon-ritual"
+											     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
+										{{/if}}
+									</div>
 								<div class="obsidian-table-sub-text">
 									{{flags.obsidian.source.display}}
 									{{#if flags.obsidian.components.display}}
@@ -102,7 +111,6 @@
 							</div>
 						</div>
 					{{/each}}
-					{{/with}}
 				</div>
 			</div>
 		{{/if}}

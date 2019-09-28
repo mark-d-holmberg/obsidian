@@ -8,7 +8,7 @@
 				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
 	{{#each entity.flags.obsidian.classes}}
-		{{#if (notEmpty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
+		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
 			<h2>{{label}}</h2>
 			{{#if (expr '===' preparation 'prep')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}

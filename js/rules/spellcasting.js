@@ -1,4 +1,5 @@
-Obsidian.Rules.Prepare.spellcasting = function (data, flags) {
+Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
+	const data = actorData.data;
 	const mods = [];
 	const attacks = [];
 	const saves = [];
@@ -139,4 +140,6 @@ Obsidian.Rules.Prepare.spellcasting = function (data, flags) {
 			data.spells.pact.uses = data.spells.pact.slots;
 		}
 	}
+
+	actorData.obsidian.spellbook = {concentration: [], rituals: []};
 };

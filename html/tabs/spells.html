@@ -43,10 +43,24 @@
 		{{#each (range 0 9)}}
 			{{#if (has-spells ../entity this)}}
 				<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="spell-{{this}}">
-					{{spellLevelFormat this}}
+					{{spell-level-format this}}
 				</li>
 			{{/if}}
 		{{/each}}
+		{{#if (not-empty entity.obsidian.spellbook.concentration)}}
+			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
+			    data-tab="spell-concentration">
+				<div class="obsidian-icon-flag obsidian-icon-concentration"
+				     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
+			</li>
+		{{/if}}
+		{{#if (not-empty entity.obsidian.spellbook.rituals)}}
+			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
+			    data-tab="spell-ritual">
+				<div class="obsidian-icon-flag obsidian-icon-ritual"
+				     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
+			</li>
+		{{/if}}
 	</ul>
 	{{> public/modules/obsidian/html/tabs/sub-spells.html level='all'}}
 	{{#each (range 0 9)}}
@@ -54,4 +68,10 @@
 			{{> public/modules/obsidian/html/tabs/sub-spells.html ../this level=@key}}
 		{{/if}}
 	{{/each}}
+	{{#if (not-empty entity.obsidian.spellbook.concentration)}}
+		{{> public/modules/obsidian/html/tabs/sub-spells.html level='concentration'}}
+	{{/if}}
+	{{#if (not-empty entity.obsidian.spellbook.rituals)}}
+		{{> public/modules/obsidian/html/tabs/sub-spells.html level='ritual'}}
+	{{/if}}
 </div>

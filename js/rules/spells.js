@@ -119,11 +119,18 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 			if (spell.data.ritual.value) {
 				flags.visible =
-					(cls.rituals === 'prep' && flags.prepared)
-					|| (cls.rituals === 'book' && flags.book);
+					(cls.rituals === 'prep' && flags.prepared) || cls.rituals === 'book';
+
+				if (flags.visible) {
+					actorData.obsidian.spellbook.rituals.push(spell);
+				}
 			}
 		} else {
 			flags.visible = true;
+		}
+
+		if (flags.visible && spell.data.concentration.value) {
+			actorData.obsidian.spellbook.concentration.push(spell);
 		}
 	}
 };

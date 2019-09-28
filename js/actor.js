@@ -54,7 +54,7 @@ class ObsidianActor extends Actor5e {
 		Obsidian.Rules.Prepare.skills(actorData, data, flags);
 		Obsidian.Rules.Prepare.tools(actorData, data, flags);
 		Obsidian.Rules.Prepare.saves(actorData, data, flags);
-		Obsidian.Rules.Prepare.spellcasting(data, flags);
+		Obsidian.Rules.Prepare.spellcasting(actorData, flags);
 		Obsidian.Rules.Prepare.weapons(actorData);
 		Obsidian.Rules.Prepare.features(actorData);
 		Obsidian.Rules.Prepare.spells(actorData);
@@ -152,6 +152,14 @@ class ObsidianActor extends Actor5e {
 		};
 
 		walk(duplicate(Obsidian.SCHEMA), flags);
+	}
+
+	static hasSpells (actor, level) {
+		const spell = actor.data.spells[`spell${level}`];
+		const spellbook = actor.spellbook[level];
+		return (spellbook
+			&& spellbook.spells.filter(spell => spell.flags.obsidian.visible).length > 0)
+			|| (level > 0 && Number(spell.max));
 	}
 
 	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses') {

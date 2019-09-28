@@ -212,7 +212,7 @@
 						</div>
 					</div>
 				</div>
-				{{#if (notEmpty entity.flags.obsidian.attributes.hd)}}
+				{{#if (not-empty entity.flags.obsidian.attributes.hd)}}
 					<div class="obsidian-char-column">
 						<div class="obsidian-char-box-container">
 							<div class="obsidian-char-box-text rollable">{{localize 'OBSIDIAN.HD'}}</div>
@@ -364,7 +364,7 @@
 							</div>
 						{{/with}}
 						{{/each}}
-						{{#if (nonZero entity.flags.obsidian.attributes.senses 'radius')}}
+						{{#if (non-zero entity.flags.obsidian.attributes.senses 'radius')}}
 						<div class="obsidian-horizontal-list">
 							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
 								{{#if (expr '>' sense.radius 0)}}

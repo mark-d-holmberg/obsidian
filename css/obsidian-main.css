@@ -579,6 +579,20 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	min-width: 34px;
 }
 
+.obsidian-spell-level-tab.obsidian-icon-tab {
+	min-width: 24px;
+	padding: 4px 0 4px 4px;
+}
+
+.obsidian-icon-tab > div {
+	filter: var(--img-secondary);
+}
+
+.obsidian-icon-tab:hover > div,
+.obsidian-icon-tab.active > div {
+	filter: none;
+}
+
 .obsidian-spell-level-tab.obsidian-active {
 	border: 1px solid var(--highlight);
 	background: var(--highlight);
@@ -701,7 +715,7 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	display: inline-block;
 }
 
-.obsidian-spell-list .obsidian-col-spell .obsidian-icon-flag {
+.obsidian-col-spell .obsidian-icon-flag {
 	display: inline-block;
 }
 

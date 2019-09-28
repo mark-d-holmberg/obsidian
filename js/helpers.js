@@ -137,6 +137,14 @@ Handlebars.registerHelper('filter', function (...args) {
 	});
 });
 
+Handlebars.registerHelper('filter-spells', function (spells, filter, level) {
+	if (filter !== 'concentration' && filter !== 'ritual') {
+		return spells[level].spells;
+	}
+
+	return spells[level].spells.filter(spell => spell.data[filter].value);
+});
+
 Handlebars.registerHelper('format-slots', function (data, level) {
 	if (data === undefined) {
 		return '';
@@ -208,6 +216,16 @@ Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });
 
+Handlebars.registerHelper('has-spell-of-level', function (actor, filter, level) {
+	return (filter === 'all' && ObsidianActor.hasSpells(actor, level))
+		|| (filter === 'concentration'
+			&& actor.obsidian.spellbook.concentration.some(spell =>
+				spell.data.level.value === level))
+		|| (filter === 'ritual'
+			&& actor.obsidian.spellbook.rituals.some(spell => spell.data.level.value === level))
+		|| filter === level;
+});
+
 Handlebars.registerHelper('has-spell-with-name', function (haystack, needle) {
 	if (haystack === undefined || needle === undefined) {
 		return false;
@@ -217,11 +235,7 @@ Handlebars.registerHelper('has-spell-with-name', function (haystack, needle) {
 });
 
 Handlebars.registerHelper('has-spells', function (actor, level) {
-	const spell = actor.data.spells[`spell${level}`];
-	const spellbook = actor.spellbook[level];
-	return (spellbook
-		&& spellbook.spells.filter(spell => spell.flags.obsidian.visible).length > 0)
-		|| (level > 0 && Number(spell.max));
+	return ObsidianActor.hasSpells(actor, level);
 });
 
 Handlebars.registerHelper('i18n-join', function (...args) {
@@ -249,7 +263,7 @@ Handlebars.registerHelper('lc', function (arg) {
 	return arg.toLocaleLowerCase();
 });
 
-Handlebars.registerHelper('nonZero', function (obj, key) {
+Handlebars.registerHelper('non-zero', function (obj, key) {
 	for (const p in obj) {
 		if (obj[p][key] > 0) {
 			return true;
@@ -259,7 +273,7 @@ Handlebars.registerHelper('nonZero', function (obj, key) {
 	return false;
 });
 
-Handlebars.registerHelper('notEmpty', function (obj) {
+Handlebars.registerHelper('not-empty', function (obj) {
 	return obj != null && Object.keys(obj).length > 0;
 });
 
@@ -276,7 +290,7 @@ Handlebars.registerHelper('range', function (start, end) {
 	return [...Array(end - start + 1).keys()].map(i => i + start);
 });
 
-Handlebars.registerHelper('spellLevelFormat', function (level, options) {
+Handlebars.registerHelper('spell-level-format', function (level, options) {
 	level = Number(level);
 	if (level < 1) {
 		return options.hash.cantrip ? game.i18n.localize('OBSIDIAN.Cantrip') : 0;
@@ -301,7 +315,7 @@ Handlebars.registerHelper('spellLevelFormat', function (level, options) {
 	return out;
 });
 
-Handlebars.registerHelper('startsWith', function (haystack, needle) {
+Handlebars.registerHelper('starts-with', function (haystack, needle) {
 	return haystack.startsWith(needle);
 });
 
