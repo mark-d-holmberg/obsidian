@@ -137,14 +137,6 @@ Handlebars.registerHelper('filter', function (...args) {
 	});
 });
 
-Handlebars.registerHelper('filter-spells', function (spells, filter, level) {
-	if (filter !== 'concentration' && filter !== 'ritual') {
-		return spells[level].spells;
-	}
-
-	return spells[level].spells.filter(spell => spell.data[filter].value);
-});
-
 Handlebars.registerHelper('format-slots', function (data, level) {
 	if (data === undefined) {
 		return '';
@@ -216,16 +208,6 @@ Handlebars.registerHelper('get-property', function (data, key) {
 	return getProperty(data, key);
 });
 
-Handlebars.registerHelper('has-spell-of-level', function (actor, filter, level) {
-	return (filter === 'all' && ObsidianActor.hasSpells(actor, level))
-		|| (filter === 'concentration'
-			&& actor.obsidian.spellbook.concentration.some(spell =>
-				spell.data.level.value === level))
-		|| (filter === 'ritual'
-			&& actor.obsidian.spellbook.rituals.some(spell => spell.data.level.value === level))
-		|| filter === level;
-});
-
 Handlebars.registerHelper('has-spell-with-name', function (haystack, needle) {
 	if (haystack === undefined || needle === undefined) {
 		return false;
@@ -235,7 +217,11 @@ Handlebars.registerHelper('has-spell-with-name', function (haystack, needle) {
 });
 
 Handlebars.registerHelper('has-spells', function (actor, level) {
-	return ObsidianActor.hasSpells(actor, level);
+	const spell = actor.data.spells[`spell${level}`];
+	const spellbook = actor.spellbook[level];
+	return (spellbook
+		&& spellbook.spells.filter(spell => spell.flags.obsidian.visible).length > 0)
+		|| (level > 0 && Number(spell.max));
 });
 
 Handlebars.registerHelper('i18n-join', function (...args) {

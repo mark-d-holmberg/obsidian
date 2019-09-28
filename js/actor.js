@@ -154,14 +154,6 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	static hasSpells (actor, level) {
-		const spell = actor.data.spells[`spell${level}`];
-		const spellbook = actor.spellbook[level];
-		return (spellbook
-			&& spellbook.spells.filter(spell => spell.flags.obsidian.visible).length > 0)
-			|| (level > 0 && Number(spell.max));
-	}
-
 	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses') {
 		if (max === undefined || max < 0) {
 			return '';
@@ -182,7 +174,7 @@ class ObsidianActor extends Actor5e {
 			}
 		} else {
 			out += `
-				<input type="number" data-name="items.${idx}.flags.obsidian.${prop}.remaining"
+				<input type="number" name="items.${idx}.flags.obsidian.${prop}.remaining"
 				       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 				<span class="obsidian-binary-operator">&sol;</span>
 				<span class="obsidian-feature-max">${max}</span>

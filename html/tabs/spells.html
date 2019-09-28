@@ -62,16 +62,5 @@
 			</li>
 		{{/if}}
 	</ul>
-	{{> public/modules/obsidian/html/tabs/sub-spells.html level='all'}}
-	{{#each (range 0 9)}}
-		{{#if (has-spells ../entity this)}}
-			{{> public/modules/obsidian/html/tabs/sub-spells.html ../this level=@key}}
-		{{/if}}
-	{{/each}}
-	{{#if (not-empty entity.obsidian.spellbook.concentration)}}
-		{{> public/modules/obsidian/html/tabs/sub-spells.html level='concentration'}}
-	{{/if}}
-	{{#if (not-empty entity.obsidian.spellbook.rituals)}}
-		{{> public/modules/obsidian/html/tabs/sub-spells.html level='ritual'}}
-	{{/if}}
+	{{> public/modules/obsidian/html/tabs/sub-spells.html}}
 </div>

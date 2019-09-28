@@ -56,8 +56,11 @@ class Obsidian extends ActorSheet5eCharacter {
 				initial: active,
 				callback: clicked => {
 					this.tabs[group] = clicked.data('tab');
+					if (group === 'spells') {
+						this._filterSpells();
+					}
+
 					Obsidian._resizeTabs(html);
-					Obsidian._activateInputs(html);
 				}
 			});
 		});
@@ -94,18 +97,17 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
-		html.find('.obsidian-input-search').keyup(this._filterSpellName.bind(this));
+		html.find('.obsidian-input-search').keyup(this._filterSpells.bind(this));
 		html.find('.obsidian-clear-search').click(evt => {
 			const target = $(evt.currentTarget);
 			const search = target.siblings('.obsidian-input-search');
 			search.val('');
-			this._filterSpellName({currentTarget: search[0]});
+			this._filterSpells();
 		});
 
 		this._activateDialogs(html);
 		this._contextMenu(html);
 		Obsidian._resizeMain(html);
-		Obsidian._activateInputs(html);
 
 		if (this.settings.scrollTop !== undefined) {
 			this.form.scrollTop = this.settings.scrollTop;
@@ -183,21 +185,6 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {HTML} html
-	 */
-	static _activateInputs (html) {
-		html.find('input[data-name]').each((i, el) => {
-			const parent = $(el).closest('.tab');
-			if (parent.hasClass('active')) {
-				el.name = el.dataset.name;
-			} else {
-				el.name = '';
-			}
-		});
-	}
-
-	/**
-	 * @private
 	 */
 	_applySettings () {
 		if (this.settings.width !== undefined) {
@@ -236,17 +223,36 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_filterSpellName (evt) {
-		const target = $(evt.currentTarget);
-		const needle = target.val();
-		this.element.find('[data-group="spells"] .obsidian-tr.item').each((_, el) => {
+	_filterSpells () {
+		const spellTab = this.element.find('[data-group="main-tabs"][data-tab="spells"]');
+		const name = spellTab.find('.obsidian-input-search').val();
+		const filter = spellTab.find('ul[data-group="spells"] li.active').data('tab').substring(6);
+
+		spellTab.find('.obsidian-spell-table > h3, .obsidian-spell-table > .obsidian-table')
+			.addClass('obsidian-hidden');
+
+		spellTab.find('.obsidian-spell-table .obsidian-tr.item').each((_, el) => {
 			const jqel = $(el);
 			jqel.removeClass('obsidian-hidden');
 
-			if (needle.length > 0 && !el.dataset.name.toLowerCase().includes(needle)) {
+			const nameMatch = name.length < 1 || el.dataset.name.toLowerCase().includes(name);
+			const categoryMatch =
+				filter === 'all'
+				|| filter === el.dataset.level
+				|| (filter === 'concentration' && el.dataset.concentration === 'true')
+				|| (filter === 'ritual' && el.dataset.ritual === 'true');
+
+			if (!categoryMatch || !nameMatch) {
 				jqel.addClass('obsidian-hidden');
 			}
 		});
+
+		spellTab.find('.obsidian-spell-table .obsidian-tr.item:not(.obsidian-hidden)')
+			.closest('.obsidian-table').each((i, el) => {
+				const jqel = $(el);
+				jqel.removeClass('obsidian-hidden');
+				jqel.prev().removeClass('obsidian-hidden');
+			});
 	}
 
 	_injectHTML (html) {
