@@ -23,6 +23,18 @@ class ObsidianViewDialog extends ObsidianDialog {
 		return this.item.name;
 	}
 
+	/**
+	 * @param {JQuery} html
+	 * @returns undefined
+	 */
+	activateListeners (html) {
+		super.activateListeners(html);
+		html.find('.obsidian-feature-use').click(async evt => {
+			await this.parent._onUseClicked.bind(this.parent)(evt);
+			this.render(false);
+		});
+	}
+
 	getData () {
 		const data = super.getData();
 		data.item = this.item;

@@ -318,6 +318,7 @@
 	font-size: 12px;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
 	width: 30px;
+	padding: 0;
 }
 
 .obsidian-table-note-text .obsidian-feature-max {
@@ -730,23 +731,27 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	line-height: 1;
 }
 
-.obsidian-spell-card {
+.obsidian-spell-card,
+.obsidian-weapon-card {
 	padding: 10px;
 	border: 4px solid var(--mid);
 	margin-bottom: 15px;
 }
 
-.obsidian-form-bare .obsidian-spell-card {
+.obsidian-form-bare .obsidian-spell-card,
+.obsidian-form-bare .obsidian-weapon-card {
 	margin:  0;
 }
 
-.obsidian-spell-card-header {
+.obsidian-spell-card-header,
+.obsidian-weapon-card-header {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-spell-card-header h3 {
+.obsidian-spell-card-header h3,
+.obsidian-weapon-card-header h3 {
 	margin: 0 0 10px 0;
 	font-family: Roboto, sans-serif;
 	font-size: 13px;
@@ -755,25 +760,29 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-spell-card-header-row {
+.obsidian-spell-card-header-row,
+.obsidian-weapon-card-header-row {
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
 	margin-bottom: 4px;
 }
 
-.obsidian-spell-card-header-row:last-child {
+.obsidian-spell-card-header-row:last-child,
+.obsidian-weapon-card-header-row:last-child {
 	margin-bottom: 0;
 }
 
-.obsidian-spell-card-header-key {
+.obsidian-spell-card-header-key,
+.obsidian-weapon-card-header-key {
 	font-weight: bold;
 	font-size: 13px;
 	font-family: Roboto, sans-serif;
 	margin-right: 5px;
 }
 
-.obsidian-spell-card-header-value {
+.obsidian-spell-card-header-value,
+.obsidian-weapon-card-header-value {
 	font-size: 13px;
 	font-family: Roboto, sans-serif;
 	flex: 1;
@@ -789,7 +798,8 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-family: Roboto, sans-serif;
 }
 
-.obsidian .obsidian-spell-card input {
+.obsidian .obsidian-spell-card input,
+.obsidian .obsidian-weapon-card input {
 	width: 40px;
 	font-family: Roboto, sans-serif;
 	font-size: 13px;
@@ -799,23 +809,36 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	height: 15px;
 }
 
-.obsidian .obsidian-spell-card .obsidian-binary-operator {
+.obsidian .obsidian-spell-card .obsidian-binary-operator,
+.obsidian .obsidian-weapon-card .obsidian-binary-operator {
 	font-size: 13px;
 }
 
-.obsidian .obsidian-spell-card .obsidian-feature-max {
+.obsidian .obsidian-spell-card .obsidian-feature-max,
+.obsidian .obsidian-weapon-card .obsidian-feature-max {
 	font-size: 13px;
 }
 
-.obsidian-spell-card-body {
+.obsidian-spell-card-body,
+.obsidian-weapon-card-body {
 	font-size: 13px;
 }
 
-.obsidian-spell-card-body p {
+.obsidian-spell-card-body p,
+.obsidian-weapon-card-body p {
 	text-align: justify;
 }
 
-.obsidian-spell-card-body p:last-child {
+.obsidian-spell-card-body p:last-child,
+.obsidian-weapon-card-body p:last-child {
+	margin-bottom: 0;
+}
+
+.obsidian-weapon-card-sub-header {
+	margin-bottom: 10px;
+}
+
+.obsidian-weapon-card-sub-header:last-child {
 	margin-bottom: 0;
 }
 

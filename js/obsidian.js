@@ -384,7 +384,7 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		const update = {};
 		update[`items.${featIndex}.flags.obsidian.${prop}.remaining`] = max - used;
-		this.actor.update(update);
+		return this.actor.update(update);
 	}
 
 	/**

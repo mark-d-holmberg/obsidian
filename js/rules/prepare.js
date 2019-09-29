@@ -121,8 +121,7 @@ Obsidian.Rules.Prepare = {
 			if (flags.charges && flags.charges.enabled) {
 				Obsidian.Rules.Prepare.prepareCharges(flags.charges, data);
 				flags.charges.display =
-					`${game.i18n.localize('OBSIDIAN.Charges')}: `
-					+ ObsidianActor.usesFormat(
+					ObsidianActor.usesFormat(
 						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
 			}
 
@@ -139,8 +138,7 @@ Obsidian.Rules.Prepare = {
 				}
 
 				special.display =
-					`${special.name}: `
-					+ ObsidianActor.usesFormat(
+					ObsidianActor.usesFormat(
 						weapon.id, i, special.uses.max, special.uses.remaining, 6,
 						`special.${j}.uses`);
 			}

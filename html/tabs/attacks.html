@@ -80,10 +80,12 @@
 					</div>
 					<div class="obsidian-col-notes">
 						{{#if flags.obsidian.charges.enabled}}
-							<div class="obsidian-table-note-text">{{{flags.obsidian.charges.display}}}</div>
+							<div class="obsidian-table-note-text">
+								{{localize 'OBSIDIAN.Charges'}}: {{{flags.obsidian.charges.display}}}
+							</div>
 						{{/if}}
 						{{#each flags.obsidian.special}}
-							<div class="obsidian-table-note-text">{{{display}}}</div>
+							<div class="obsidian-table-note-text">{{name}}: {{{display}}}</div>
 						{{/each}}
 						{{#each flags.obsidian.tags}}
 							<div class="obsidian-table-note-text">
