@@ -15,6 +15,7 @@ class ObsidianDialog extends BaseEntitySheet {
 		options.submitOnClose = true;
 		options.submitOnUnfocus = true;
 		options.width = 400;
+		options.modal = true;
 		return options;
 	}
 
@@ -100,7 +101,7 @@ class ObsidianDialog extends BaseEntitySheet {
 	}
 
 	async close () {
-		if (this.parent.setModal) {
+		if (this.parent.setModal && this.options.modal) {
 			this.parent.setModal(false);
 		}
 
@@ -112,7 +113,7 @@ class ObsidianDialog extends BaseEntitySheet {
 	}
 
 	render (force = false, options = {}) {
-		if (this.parent.setModal) {
+		if (this.parent.setModal && this.options.modal) {
 			this.parent.setModal(true);
 		}
 

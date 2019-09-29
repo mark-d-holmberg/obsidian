@@ -205,6 +205,10 @@ class Obsidian extends ActorSheet5eCharacter {
 				name: game.i18n.localize('OBSIDIAN.Edit'),
 				icon: '<i class="fas fa-edit"></i>',
 				callback: this._editItem.bind(this)
+			}, {
+				name: game.i18n.localize('OBSIDIAN.View'),
+				icon: '<i class="fas fa-eye"></i>',
+				callback: this._viewItem.bind(this)
 			}
 		]);
 	}
@@ -624,6 +628,15 @@ class Obsidian extends ActorSheet5eCharacter {
 		this.settings.width = this.position.width;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
+
+	/**
+	 * @private
+	 * @param el {JQuery}
+	 */
+	_viewItem (el) {
+		const id = Number(el.data('item-id'));
+		new ObsidianViewDialog(id, this).render(true);
+	}
 }
 
 Actors.registerSheet('dnd5e', Obsidian, {
@@ -644,6 +657,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/hit.html',
 		'public/modules/obsidian/html/components/spell-list.html',
 		'public/modules/obsidian/html/components/uses.html',
-		'public/modules/obsidian/html/components/charges.html'
+		'public/modules/obsidian/html/components/charges.html',
+		'public/modules/obsidian/html/components/spell-card.html'
 	]);
 });

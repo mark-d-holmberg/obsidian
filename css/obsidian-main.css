@@ -736,6 +736,10 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	margin-bottom: 15px;
 }
 
+.obsidian-form-bare .obsidian-spell-card {
+	margin:  0;
+}
+
 .obsidian-spell-card-header {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
@@ -785,6 +789,24 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-family: Roboto, sans-serif;
 }
 
+.obsidian .obsidian-spell-card input {
+	width: 40px;
+	font-family: Roboto, sans-serif;
+	font-size: 13px;
+	border: none;
+	display: inline-block;
+	margin: 0;
+	height: 15px;
+}
+
+.obsidian .obsidian-spell-card .obsidian-binary-operator {
+	font-size: 13px;
+}
+
+.obsidian .obsidian-spell-card .obsidian-feature-max {
+	font-size: 13px;
+}
+
 .obsidian-spell-card-body {
 	font-size: 13px;
 }
@@ -828,12 +850,7 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 .obsidian #context-menu li.context-item {
 	line-height: 1;
 	padding: 5px;
-	border-bottom: 1px solid var(--mid);
 	cursor: pointer;
-}
-
-.obsidian #context-menu li.context-item:last-child {
-	border: none;
 }
 
 .obsidian #context-menu li.context-item i {

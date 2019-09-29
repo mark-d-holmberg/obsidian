@@ -1,0 +1,65 @@
+<div class="obsidian-spell-card">
+	<div class="obsidian-spell-card-header">
+		<h3>
+			{{#if (expr '===' data.level.value 0)}}
+				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
+				{{spell-level-format data.level.value cantrip=true}}
+			{{else}}
+				{{spell-level-format data.level.value level=true}}
+				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
+			{{/if}}
+		</h3>
+		<div class="obsidian-spell-card-header-row">
+			<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.CastTime'}}:</div>
+			<div class="obsidian-spell-card-header-value">
+				{{flags.obsidian.time.n}}
+				{{lc (i18n-join 'OBSIDIAN.CastTime-' flags.obsidian.time.type)}}
+				{{~#if (expr '===' flags.obsidian.time.type 'react')~}}
+					, {{flags.obsidian.time.react}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-spell-card-header-row">
+			<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Range'}}:</div>
+			<div class="obsidian-spell-card-header-value">
+				{{#if (expr '||'
+						      (expr '===' flags.obsidian.range.type 'short')
+						      (expr '===' flags.obsidian.range.type 'long'))}}
+					{{flags.obsidian.range.n}}
+					<span class="obsidian-table-unit">
+						{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
+					</span>
+				{{else}}
+					{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-spell-card-header-row">
+			<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Components'}}:</div>
+			<div class="obsidian-spell-card-header-value">
+				{{flags.obsidian.components.display}}
+				{{#if flags.obsidian.components.m}}
+					<span class="obsidian-table-sub-text">({{data.materials.value}})</span>
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-spell-card-header-row">
+			<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Duration'}}:</div>
+			<div class="obsidian-spell-card-header-value">
+				{{#if data.concentration.value}}
+					{{localize 'OBSIDIAN.Concentration'}},
+					{{localize 'OBSIDIAN.UpTo'}} {{format-spell-duration this}}
+				{{else}}
+					{{format-spell-duration this}}
+				{{/if}}
+			</div>
+		</div>
+		{{#if (expr '&&' view flags.obsidian.uses.enabled)}}
+			<div class="obsidian-spell-card-header-row">
+				<div class="obsidian-spell-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
+				<div class="obsidian-spell-card-header-value">{{{flags.obsidian.uses.display}}}</div>
+			</div>
+		{{/if}}
+	</div>
+	<div class="obsidian-spell-card-body">{{{data.description.value}}}</div>
+</div>

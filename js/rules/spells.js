@@ -69,9 +69,10 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 				flags.uses.remaining = 0;
 			}
 
-			flags.notes.push(
-				`${game.i18n.localize('OBSIDIAN.Uses')}: `
-				+ ObsidianActor.usesFormat(spell.id, i, flags.uses.max, flags.uses.remaining, 6));
+			flags.uses.display =
+				ObsidianActor.usesFormat(spell.id, i, flags.uses.max, flags.uses.remaining, 6);
+
+			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
 		}
 
 		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);
