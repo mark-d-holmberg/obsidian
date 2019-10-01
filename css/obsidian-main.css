@@ -151,7 +151,9 @@
 }
 
 .obsidian-col-range,
-.obsidian-col-hit {
+.obsidian-col-hit,
+.obsidian-col-cost,
+.obsidian-col-category {
 	width: 50px;
 }
 
@@ -185,12 +187,21 @@
 	width: 135px;
 }
 
-.obsidian-col-time {
+.obsidian-col-inv-item {
+	width: 150px;
+}
+
+.obsidian-col-time,
+.obsidian-col-qty {
 	width: 35px;
 }
 
 .obsidian-col-dc {
 	width: 45px;
+}
+
+.obsidian-col-weight {
+	width: 40px;
 }
 
 .obsidian-table {
@@ -455,14 +466,31 @@
 	font-weight: normal;
 }
 
-.obsidian-char-spell-header {
+.obsidian-char-spell-header,
+.obsidian-char-inv-header {
 	display: flex;
 	padding-bottom: 10px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid var(--mid);
-	justify-content: center;
 	width: 100%;
+}
+
+.obsidian-char-spell-header {
+	justify-content: center;
 	cursor: pointer;
+}
+
+.obsidian-char-inv-header {
+	justify-content: space-between;
+	align-items: center;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.obsidian-char-inv-header .obsidian-table-unit {
+	text-transform: none;
 }
 
 .obsidian-char-spell-header > div {
@@ -493,7 +521,45 @@
 	text-transform: uppercase;
 }
 
-.obsidian-char-spell-search {
+.obsidian-char-inv-header-weight {
+	text-align: left;
+}
+
+.obsidian-char-inv-header-weight > div:first-child > span:first-child {
+	font-family: Roboto, sans-serif;
+	font-weight: normal;
+	margin-left: 5px;
+}
+
+.obsidian-char-inv-header-weight > div:last-child {
+	font-size: 10px;
+	color: var(--text-subtle);
+}
+
+.obsidian-char-inv-header-currency {
+	color: var(--text-subtle);
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-char-inv-header-currency-item {
+	font-size: 14px;
+	display: inline-flex;
+	margin-right: 10px;
+	color: var(--text-regular);
+	align-items: center;
+}
+
+.obsidian-char-inv-header-currency-item:first-child {
+	margin-left: 10px;
+}
+
+.obsidian-char-inv-header-currency-item i {
+	margin-right: 3px;
+}
+
+.obsidian-char-spell-search,
+.obsidian-char-inv-search {
 	margin-bottom: 12px;
 	display: flex;
 	align-items: center;
@@ -506,6 +572,10 @@
 
 .sheet .obsidian-input-search-container {
 	margin-right: 8px;
+}
+
+.sheet .obsidian-input-search-container:last-child {
+	margin-right: 0;
 }
 
 form.obsidian input.obsidian-input-search,

@@ -1,0 +1,18 @@
+{{#each this}}
+	<div class="obsidian-tr item" data-item-id="{{id}}">
+		<div class="obsidian-col-icon"></div>
+		<div class="obsidian-col-inv-item">
+			<div class="obsidian-table-text">{{name}}</div>
+		</div>
+		<div class="obsidian-col-weight">
+			<div class="obsidian-table-number-md">
+				{{data.weight.value}}
+				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+			</div>
+		</div>
+		<div class="obsidian-col-qty"></div>
+		<div class="obsidian-col-cost"></div>
+		<div class="obsidian-col-category"></div>
+		<div class="obsidian-col-notes"></div>
+	</div>
+{{/each}}

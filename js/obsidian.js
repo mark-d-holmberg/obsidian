@@ -97,8 +97,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
-		html.find('.obsidian-input-search').keyup(this._filterSpells.bind(this));
-		html.find('.obsidian-clear-search').click(evt => {
+		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
+		html.find('.obsidian-clear-spell-name').click(evt => {
 			const target = $(evt.currentTarget);
 			const search = target.siblings('.obsidian-input-search');
 			search.val('');
@@ -652,12 +652,14 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/sub-actions.html',
 		'public/modules/obsidian/html/tabs/spells.html',
 		'public/modules/obsidian/html/tabs/sub-spells.html',
+		'public/modules/obsidian/html/tabs/equipment.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',
 		'public/modules/obsidian/html/components/spell-list.html',
 		'public/modules/obsidian/html/components/uses.html',
 		'public/modules/obsidian/html/components/charges.html',
-		'public/modules/obsidian/html/components/spell-card.html'
+		'public/modules/obsidian/html/components/spell-card.html',
+		'public/modules/obsidian/html/components/inventory.html'
 	]);
 });

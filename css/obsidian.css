@@ -605,6 +605,10 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-bottom: 6px;
 }
 
+.obsidian label.obsidian-inline .obsidian-icon {
+	display: inline-block;
+}
+
 .obsidian .obsidian-mixed-form-row label.obsidian-inline,
 .obsidian .obsidian-stacked-row label.obsidian-inline {
 	margin-bottom: 0;

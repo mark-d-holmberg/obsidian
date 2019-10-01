@@ -267,6 +267,10 @@ Handlebars.registerHelper('num', function (n) {
 	return Number(n);
 });
 
+Handlebars.registerHelper('number-format', function (n) {
+	return Intl.NumberFormat().format(n);
+});
+
 Handlebars.registerHelper('range', function (start, end) {
 	if (end === undefined) {
 		end = start;

@@ -70,6 +70,7 @@
 	"OBSIDIAN.Speed-fly": "Flying",
 	"OBSIDIAN.Speed-swim": "Swimming",
 	"OBSIDIAN.FeetAbbr": "ft.",
+	"OBSIDIAN.PoundsAbbr": "lb.",
 	"OBSIDIAN.Sense-dark": "Darkvision",
 	"OBSIDIAN.Sense-blind": "Blindsight",
 	"OBSIDIAN.Sense-tremor": "Tremorsense",
@@ -350,5 +351,19 @@
 	"OBSIDIAN.Recharge-dawn": "Dawn",
 	"OBSIDIAN.Recharge-dusk": "Dusk",
 	"OBSIDIAN.SpecialProperties": "Special Properties",
-	"OBSIDIAN.View": "View"
+	"OBSIDIAN.View": "View",
+	"OBSIDIAN.OverCapacity": "Over Carrying Capacity",
+	"OBSIDIAN.Unencumbered": "Unencumbered",
+	"OBSIDIAN.WeightCarried": "Weight Carried",
+	"OBSIDIAN.Currency": "Currency",
+	"OBSIDIAN.ManageCurrency": "Manage Currency",
+	"OBSIDIAN.AddRemove": "Add/Remove",
+	"OBSIDIAN.Search": "Search",
+	"OBSIDIAN.Magical": "Magical",
+	"OBSIDIAN.Consumables": "Consumables",
+	"OBSIDIAN.Inventory": "Inventory",
+	"OBSIDIAN.Weight": "Weight",
+	"OBSIDIAN.QuantityAbbr": "Qty",
+	"OBSIDIAN.Cost": "Cost",
+	"OBSIDIAN.Category": "Category"
 }

@@ -55,8 +55,9 @@ class ObsidianActor extends Actor5e {
 		Obsidian.Rules.Prepare.tools(actorData, data, flags);
 		Obsidian.Rules.Prepare.saves(actorData, data, flags);
 		Obsidian.Rules.Prepare.spellcasting(actorData, flags);
-		Obsidian.Rules.Prepare.weapons(actorData);
 		Obsidian.Rules.Prepare.features(actorData);
+		Obsidian.Rules.Prepare.inventory(actorData);
+		Obsidian.Rules.Prepare.weapons(actorData);
 		Obsidian.Rules.Prepare.spells(actorData);
 
 		return actorData;

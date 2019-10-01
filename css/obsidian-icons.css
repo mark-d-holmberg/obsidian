@@ -100,6 +100,26 @@
 	background-image: url('../img/ritual.svg');
 }
 
+.obsidian-icon-cp {
+	background-image: url('../img/copper.png');
+}
+
+.obsidian-icon-sp {
+	background-image: url('../img/silver.png');
+}
+
+.obsidian-icon-ep {
+	background-image: url('../img/electrum.png');
+}
+
+.obsidian-icon-gp {
+	background-image: url('../img/gold.png');
+}
+
+.obsidian-icon-pp {
+	background-image: url('../img/platinum.png');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

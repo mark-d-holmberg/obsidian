@@ -1,0 +1,80 @@
+<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="equipment">
+	<div class="obsidian-char-inv-header">
+		<div class="obsidian-char-inv-header-weight">
+			<div>
+				{{localize 'OBSIDIAN.WeightCarried'}}:
+				<span>{{numberFormat entity.obsidian.inventory.weight decimals=2}}</span>
+				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+			</div>
+			<div{{#if entity.obsidian.inventory.encumbered}} class="obsidian-negative"{{/if}}>
+				{{#if entity.obsidian.inventory.encumbered}}
+					{{localize 'OBSIDIAN.OverCapacity'}}
+				{{else}}
+					{{localize 'OBSIDIAN.Unencumbered'}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-char-inv-header-currency" data-dialog="Currency">
+			{{localize 'OBSIDIAN.Currency'}}:
+			{{#each data.currency}}
+				<div class="obsidian-char-inv-header-currency-item">
+					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></i>
+					{{number-format value}}
+				</div>
+			{{/each}}
+		</div>
+	</div>
+	<div class="obsidian-char-inv-search">
+		<div class="obsidian-input-search-container">
+			<input type="text" class="obsidian-input-search obsidian-search-inv-name"
+			       placeholder="{{localize 'OBSIDIAN.Search'}}...">
+			<i class="fas fa-search"></i>
+			<span class="obsidian-clear-search obsidian-clear-inv-name">&times;</span>
+		</div>
+	</div>
+	<ul class="obsidian-tab-bar" data-group="equipment">
+		<li class="obsidian-sub-tab item" data-tab="equipment-all">{{localize 'OBSIDIAN.All'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-magical">
+			{{localize 'OBSIDIAN.Magical'}}
+		</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-weapons">
+			{{localize 'OBSIDIAN.Weapons'}}
+		</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-armour">
+			{{localize 'OBSIDIAN.Armour'}}
+		</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-consumable">
+			{{localize 'OBSIDIAN.Consumables'}}
+		</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-other">{{localize 'OBSIDIAN.Other'}}</li>
+	</ul>
+	<div class="obsidian-tab-contents obsidian-inv-table tab">
+		<h3>{{localize 'OBSIDIAN.Inventory'}}</h3>
+		<div class="obsidian-table">
+			<div class="obsidian-thead">
+				<div class="obsidian-col-icon"></div>
+				<div class="obsidian-col-inv-item">{{localize 'OBSIDIAN.Name'}}</div>
+				<div class="obsidian-col-weight">{{localize 'OBSIDIAN.Weight'}}</div>
+				<div class="obsidian-col-qty">{{localize 'OBSIDIAN.QuantityAbbr'}}</div>
+				<div class="obsidian-col-cost">
+					{{localize 'OBSIDIAN.Cost'}}
+					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
+				</div>
+				<div class="obsidian-col-category">{{localize 'OBSIDIAN.Category'}}</div>
+				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+			</div>
+			<div class="obsidian-tbody">
+				{{> public/modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
+				{{#each entity.obsidian.inventory.containers}}
+					<details>
+						<summary>
+							<h3>{{name}}</h3>
+							<i class="fas fa-angle-down"></i>
+						</summary>
+						{{> public/modules/obsidian/html/components/inventory.html contents}}
+					</details>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+</div>

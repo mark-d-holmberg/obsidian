@@ -6,12 +6,14 @@ All source code (`*.html`, `*.css`, `*.js`, `*.json`, `*.d.ts`) is made availabl
 
 The fonts Roboto and Roboto Condensed found in the `fonts` directory are used and redistributed under the terms of the [Apache License v2](http://www.apache.org/licenses/LICENSE-2.0).
 
-The images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
+The SVG images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
 
 * [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`
 * [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `concentration.svg`
 * [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`
 * [Willdabeast](http://wjbstories.blogspot.com/): `ritual.svg`
+
+The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 The symbols for the schools of magic are © Wizards of the Coast and were assembled into the font file `fonts/SchoolsOfMagic.otf` by [Pjotr Frank](https://www.dmsguild.com/product/217275/Symbols-to-Represent-the-8-Schools-of-Magic).

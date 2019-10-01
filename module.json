@@ -11,9 +11,9 @@
 		"js/dialogs/char-header.js", "js/dialogs/xp.js", "js/dialogs/hd.js", "js/dialogs/skill.js",
 		"js/dialogs/skills.js", "js/dialogs/save.js", "js/dialogs/senses.js", "js/dialogs/profs.js",
 		"js/dialogs/attacks.js", "js/dialogs/features.js", "js/dialogs/spells.js",
-		"js/dialogs/view.js", "js/sheets/item-sheet.js", "js/sheets/spell.js",
-		"js/sheets/feature.js", "js/sheets/weapon.js", "js/rules/prepare.js",
-		"js/rules/spellcasting.js", "js/rules/spells.js"
+		"js/dialogs/view.js", "js/dialogs/currency.js","js/sheets/item-sheet.js",
+		"js/sheets/spell.js", "js/sheets/feature.js", "js/sheets/weapon.js", "js/rules/prepare.js",
+		"js/rules/spellcasting.js", "js/rules/spells.js", "js/rules/inventory.js"
 	],
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
