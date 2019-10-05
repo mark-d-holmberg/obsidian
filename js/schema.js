@@ -53,6 +53,10 @@ Obsidian.SCHEMA = {
 	}
 };
 
+Obsidian.EQUIP_TYPES = [
+	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracer', 'gauntlet', 'boots', 'cloak'
+];
+
 Obsidian.SPELL_SCHEMA = {
 	damage: [],
 	upcast: {enabled: false, damage: []},

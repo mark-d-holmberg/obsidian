@@ -26,6 +26,13 @@
 			"module": "obsidian",
 			"path": "packs/spells.db",
 			"entity": "Item"
+		}, {
+			"name": "equipment",
+			"label": "Equipment",
+			"system": "dnd5e",
+			"module": "obsidian",
+			"path": "packs/equipment.db",
+			"entity": "Item"
 		}
 	],
 	"url": "https://bitbucket.org/Fyorl/obsidian",

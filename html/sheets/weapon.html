@@ -1,10 +1,17 @@
 <form class="obsidian" autocomplete="off" data-obsidian-name="weapon">
 	<fieldset>
-		<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
+		<legend>{{localize 'OBSIDIAN.Weapon'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div class="obsidian-fullwidth">
 				<input class="obsidian-input-compact obsidian-input-lg" type="text"
 				       name="name" placeholder="{{localize 'OBSIDIAN.Attack'}}" value="{{item.name}}">
+				<select name="flags.obsidian.category">
+					{{#select item.flags.obsidian.category}}
+						{{#each ObsidianRules.WEAPON_CATEGORIES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.WeaponCat-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
 				<select name="flags.obsidian.type" class="obsidian-attack-type">
 					{{#select item.flags.obsidian.type}}
 						{{#each ObsidianRules.ATTACK_TYPES}}
@@ -12,11 +19,28 @@
 						{{/each}}
 					{{/select}}
 				</select>
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline obsidian-stacked-row">
+			<div class="obsidian-fullwidth">
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 					       name="flags.obsidian.magic" placeholder="0" data-dtype="Number"
 					       value="{{item.flags.obsidian.magic}}">
-					<span>{{localize 'OBSIDIAN.Magic'}}</span>
+					<span>{{localize 'OBSIDIAN.MagicBonus'}}</span>
+				</label>
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="data.weight.value" data-dtype="Number" placeholder="0"
+					       value="{{item.data.weight.value}}">
+					<span>{{localize 'OBSIDIAN.Weight'}}</span>
+				</label>
+				<label class="obsidian-inline obsidian-label-icon">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="data.price.value" data-dtype="Number" placeholder="0"
+					       value="{{item.data.price.value}}">
+					<span>{{localize 'OBSIDIAN.Cost'}}</span>
+					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
 				</label>
 			</div>
 		</div>

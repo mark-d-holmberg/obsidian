@@ -124,6 +124,10 @@
 	padding: 5px 0;
 }
 
+.obsidian-thead .obsidian-col-notes {
+	font-size: 11px;
+}
+
 .obsidian-tr {
 	font-weight: normal;
 	align-items: center;
@@ -142,6 +146,10 @@
 	width: 27px;
 }
 
+.obsidian-col-action {
+	width: 40px;
+}
+
 .obsidian-col-icon a {
 	font-size: 14px;
 }
@@ -153,8 +161,16 @@
 .obsidian-col-range,
 .obsidian-col-hit,
 .obsidian-col-cost,
-.obsidian-col-category {
+.obsidian-col-type {
 	width: 50px;
+}
+
+.obsidian-col-cost {
+	display: flex;
+}
+
+.obsidian-col-cost i {
+	margin-top: -3px;
 }
 
 .obsidian-col-damage {
@@ -173,7 +189,7 @@
 	overflow-y: hidden;
 }
 
-.obsidian-col-spell-notes .obdiain-table-note-text {
+.obsidian-col-spell-notes .obsidian-table-note-text {
 	font-size: 10px;
 }
 
@@ -790,7 +806,8 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	display: inline-block;
 }
 
-.obsidian .obsidian-spell-list .obsidian-btn-outline {
+.obsidian .obsidian-spell-list .obsidian-btn-outline,
+.obsidian .obsidian-equip-action.obsidian-btn-outline {
 	width: 47px;
 	height: 22px;
 	display: flex;
@@ -799,6 +816,10 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-size: 8px;
 	text-transform: uppercase;
 	line-height: 1;
+}
+
+.obsidian .obsidian-equip-action.obsidian-btn-outline {
+	width: 35px;
 }
 
 .obsidian-spell-card,

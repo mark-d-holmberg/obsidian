@@ -76,6 +76,7 @@
 	"OBSIDIAN.Sense-tremor": "Tremorsense",
 	"OBSIDIAN.Sense-true": "Truesight",
 	"OBSIDIAN.Armour": "Armour",
+	"OBSIDIAN.Weapon": "Weapon",
 	"OBSIDIAN.Weapons": "Weapons",
 	"OBSIDIAN.Languages": "Languages",
 	"OBSIDIAN.Conditions": "Conditions",
@@ -180,7 +181,7 @@
 	"OBSIDIAN.AttackType-unarmed": "Unarmed",
 	"OBSIDIAN.AttackType-unerring": "Unerring",
 	"OBSIDIAN.Crit": "Crit",
-	"OBSIDIAN.Magic": "Magic",
+	"OBSIDIAN.MagicBonus": "Magic Bonus",
 	"OBSIDIAN.ToHit": "To Hit",
 	"OBSIDIAN.Damage-blg": "Bludgeoning",
 	"OBSIDIAN.Damage-prc": "Piercing",
@@ -365,5 +366,10 @@
 	"OBSIDIAN.Weight": "Weight",
 	"OBSIDIAN.QuantityAbbr": "Qty",
 	"OBSIDIAN.Cost": "Cost",
-	"OBSIDIAN.Category": "Category"
+	"OBSIDIAN.Type": "Type",
+	"OBSIDIAN.WeaponCat-simple": "Simple",
+	"OBSIDIAN.WeaponCat-martial": "Martial",
+	"OBSIDIAN.Equip": "Equip",
+	"OBSIDIAN.Unequip": "Unequip",
+	"OBSIDIAN.Consume": "Consume"
 }

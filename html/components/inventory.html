@@ -1,18 +1,73 @@
 {{#each this}}
 	<div class="obsidian-tr item" data-item-id="{{id}}">
-		<div class="obsidian-col-icon"></div>
+		<div class="obsidian-col-action">
+			{{#if flags.obsidian.equippable}}
+				<button type="button" class="{{#if data.equipped.value}}obsidian-btn-active{{/if}}
+				        obsidian-btn-outline obsidian-equip-action">
+					{{#if data.equipped.value}}
+						{{localize 'OBSIDIAN.Unequip'}}
+					{{else}}
+						{{localize 'OBSIDIAN.Equip'}}
+					{{/if}}
+				</button>
+			{{else if flags.obsidian.consumable}}
+				<button type="button" class="obsidian-btn-outline obsidian-equip-action">
+					{{localize 'OBSIDIAN.Consume'}}
+				</button>
+			{{else}}
+				&mdash;
+			{{/if}}
+		</div>
 		<div class="obsidian-col-inv-item">
 			<div class="obsidian-table-text">{{name}}</div>
+			<div class="obsidian-table-sub-text">
+				{{#if (expr '===' type 'weapon')}}
+					{{#if (expr '===' flags.obsidian.type 'melee')}}
+						{{localize 'OBSIDIAN.MeleeWeapon'}}
+					{{else if (expr '===' flags.obsidian.type 'ranged')}}
+						{{localize 'OBSIDIAN.RangedWeapon'}}
+					{{/if}}
+				{{/if}}
+			</div>
 		</div>
 		<div class="obsidian-col-weight">
 			<div class="obsidian-table-number-md">
-				{{data.weight.value}}
-				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+				{{#if data.weight.value}}
+					{{data.weight.value}}
+					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+				{{else}}
+					&mdash;
+				{{/if}}
 			</div>
 		</div>
-		<div class="obsidian-col-qty"></div>
-		<div class="obsidian-col-cost"></div>
-		<div class="obsidian-col-category"></div>
-		<div class="obsidian-col-notes"></div>
+		<div class="obsidian-col-qty">
+			<div class="obsidian-table-number-md">{{data.quantity.value}}</div>
+		</div>
+		<div class="obsidian-col-cost">
+			<div class="obsidian-table-number-md">
+				{{#if data.price.value}}
+					{{data.price.value}}
+				{{else}}
+					&mdash;
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-col-type"></div>
+		<div class="obsidian-col-notes">
+			{{#if (expr '===' type 'weapon')}}
+				<div class="obsidian-table-note-text">
+					{{i18n-join 'OBSIDIAN.WeaponCat-' flags.obsidian.category}}
+				</div>
+				{{#each flags.obsidian.tags}}
+					<div class="obsidian-table-note-text">
+						{{~#if custom~}}
+							{{~label~}}
+						{{~else~}}
+							{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
+						{{/if}}
+					</div>
+				{{/each}}
+			{{/if}}
+		</div>
 	</div>
 {{/each}}

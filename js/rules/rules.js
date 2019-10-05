@@ -163,3 +163,5 @@ Obsidian.Rules.SPELL_SLOT_TABLE = [
 	[4, 3, 3, 3, 3, 2, 1, 1, 1],
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
+
+Obsidian.Rules.WEAPON_CATEGORIES = ['simple', 'martial'];

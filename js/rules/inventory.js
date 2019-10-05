@@ -8,7 +8,7 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 	};
 
 	const inventory = actorData.obsidian.inventory;
-	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack']);
+	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool']);
 	const map = new Map();
 
 	for (const item of actorData.items) {
@@ -17,7 +17,10 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 			continue;
 		}
 
-		inventory.items.push(item);
+		if (item.type !== 'weapon' || item.flags.obsidian.type !== 'unarmed') {
+			inventory.items.push(item);
+		}
+
 		if (item.type === 'backpack') {
 			item.flags.obsidian.contents = [];
 			inventory.containers.push(item);
@@ -34,5 +37,8 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		} else {
 			inventory.root.push(item);
 		}
+
+		flags.equippable = item.type === 'weapon' || Obsidian.EQUIP_TYPES.includes(flags.subtype);
+		flags.consumable = item.type === 'consumable';
 	}
 };

@@ -64,7 +64,9 @@ class ObsidianActor extends Actor5e {
 	}
 
 	linkClasses (item) {
-		if (!item.flags || !item.flags.obsidian || item.flags.obsidian.source.type !== 'class') {
+		if (!item.flags || !item.flags.obsidian || !item.flags.obsidian.source
+			|| item.flags.obsidian.source.type !== 'class')
+		{
 			return;
 		}
 

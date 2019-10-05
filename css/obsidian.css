@@ -647,8 +647,20 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian .obsidian-form-row label.obsidian-inline > input[type=text]:last-child,
 .obsidian .obsidian-form-row label.obsidian-inline > select:last-child,
-.obsidian .obsidian-form-row label.obsidian-inline > span:last-child {
+.obsidian .obsidian-form-row label.obsidian-inline > span:last-child,
+.obsidian-label-icon span {
 	margin-left: 6px;
+}
+
+.obsidian-label-icon {
+	position: relative;
+	padding-right: 20px;
+}
+
+.obsidian-label-icon .obsidian-icon {
+	position: absolute;
+	right: 0;
+	bottom: 6px;
 }
 
 .obsidian .obsidian-form-row.obsidian-align-labels label.obsidian-inline > span:last-child {
