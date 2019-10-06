@@ -159,13 +159,16 @@
 }
 
 .obsidian-col-range,
-.obsidian-col-hit,
-.obsidian-col-cost,
-.obsidian-col-type {
+.obsidian-col-hit {
 	width: 50px;
 }
 
+.obsidian-col-type {
+	width: 30px;
+}
+
 .obsidian-col-cost {
+	width: 55px;
 	display: flex;
 }
 
@@ -969,4 +972,12 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 
 .obsidian #context-menu li.context-item i {
 	color: var(--text-secondary);
+}
+
+.dnd5e.sheet form.obsidian .obsidian-table-input {
+	font-size: 14px;
+	font-family: Roboto, sans-serif;
+	font-weight: bold;
+	color: var(--text-regular);
+	height: auto;
 }

@@ -371,5 +371,19 @@
 	"OBSIDIAN.WeaponCat-martial": "Martial",
 	"OBSIDIAN.Equip": "Equip",
 	"OBSIDIAN.Unequip": "Unequip",
-	"OBSIDIAN.Consume": "Consume"
+	"OBSIDIAN.Consume": "Consume",
+	"OBSIDIAN.AddCustom": "Add Custom",
+	"OBSIDIAN.ItemType-amulet": "Amulet",
+	"OBSIDIAN.ItemType-armour": "Armour",
+	"OBSIDIAN.ItemType-belt": "Belt",
+	"OBSIDIAN.ItemType-boots": "Boots",
+	"OBSIDIAN.ItemType-bracers": "Bracers",
+	"OBSIDIAN.ItemType-cloak": "Cloak",
+	"OBSIDIAN.ItemType-consumable": "Consumable",
+	"OBSIDIAN.ItemType-gauntlet": "Gauntlet",
+	"OBSIDIAN.ItemType-gear": "Adventuring Gear",
+	"OBSIDIAN.ItemType-helm": "Helm",
+	"OBSIDIAN.ItemType-ring": "Ring",
+	"OBSIDIAN.ItemType-tool": "Tool",
+	"OBSIDIAN.ItemType-weapon": "Weapon"
 }

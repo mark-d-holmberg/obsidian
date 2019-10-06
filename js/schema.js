@@ -54,7 +54,7 @@ Obsidian.SCHEMA = {
 };
 
 Obsidian.EQUIP_TYPES = [
-	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracer', 'gauntlet', 'boots', 'cloak'
+	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracer', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
 Obsidian.SPELL_SCHEMA = {

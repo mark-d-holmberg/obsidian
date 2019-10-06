@@ -41,18 +41,33 @@
 			</div>
 		</div>
 		<div class="obsidian-col-qty">
-			<div class="obsidian-table-number-md">{{data.quantity.value}}</div>
+			<input type="text" class="obsidian-table-input" name="items.{{idx}}.data.quantity.value"
+			       data-dtype="Number" placeholder="1" value="{{data.quantity.value}}">
 		</div>
 		<div class="obsidian-col-cost">
 			<div class="obsidian-table-number-md">
 				{{#if data.price.value}}
-					{{data.price.value}}
+					{{number-format data.price.value}}
 				{{else}}
 					&mdash;
 				{{/if}}
 			</div>
 		</div>
-		<div class="obsidian-col-type"></div>
+		<div class="obsidian-col-type">
+			<div class="obsidian-icon obsidian-icon-
+				{{~#if (expr '===' type 'equipment')~}}
+					{{~flags.obsidian.subtype~}}
+				{{~else~}}
+					{{~type~}}
+				{{~/if~}}
+			" title="
+				{{~#if (expr '===' type 'equipment')~}}
+					{{i18n-join 'OBSIDIAN.ItemType-' flags.obsidian.subtype}}
+				{{~else~}}
+					{{i18n-join 'OBSIDIAN.ItemType-' type}}
+				{{~/if~}}
+			"></div>
+		</div>
 		<div class="obsidian-col-notes">
 			{{#if (expr '===' type 'weapon')}}
 				<div class="obsidian-table-note-text">

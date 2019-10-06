@@ -120,6 +120,58 @@
 	background-image: url('../img/platinum.png');
 }
 
+.obsidian-icon-amulet {
+	background-image: url('../img/amulet.svg');
+}
+
+.obsidian-icon-armour {
+	background-image: url('../img/armour.svg');
+}
+
+.obsidian-icon-belt {
+	background-image: url('../img/belt.svg');
+}
+
+.obsidian-icon-boots {
+	background-image: url('../img/boots.svg');
+}
+
+.obsidian-icon-bracers {
+	background-image: url('../img/bracers.svg');
+}
+
+.obsidian-icon-cloak {
+	background-image: url('../img/cloak.svg');
+}
+
+.obsidian-icon-consumable {
+	background-image: url('../img/consumable.svg');
+}
+
+.obsidian-icon-gauntlet {
+	background-image: url('../img/gauntlet.svg');
+}
+
+.obsidian-icon-helm {
+	background-image: url('../img/helm.svg');
+}
+
+.obsidian-icon-ring {
+	background-image: url('../img/ring.svg');
+}
+
+.obsidian-icon-tool {
+	background-image: url('../img/tool.svg');
+}
+
+.obsidian-icon-weapon {
+	background-image: url('../img/weapon.svg');
+}
+
+.obsidian-icon-gear {
+	background-image: url('../img/gear.svg');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

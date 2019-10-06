@@ -11,8 +11,11 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool']);
 	const map = new Map();
 
-	for (const item of actorData.items) {
+	for (let i = 0; i < actorData.items.length; i++) {
+		const item = actorData.items[i];
+		item.idx = i;
 		map.set(item.id, item);
+
 		if (!itemTypes.has(item.type)) {
 			continue;
 		}
