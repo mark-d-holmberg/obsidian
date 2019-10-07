@@ -57,6 +57,8 @@ Obsidian.EQUIP_TYPES = [
 	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracer', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
+Obsidian.CONTAINER_SCHEMA = {};
+
 Obsidian.SPELL_SCHEMA = {
 	damage: [],
 	upcast: {enabled: false, damage: []},
