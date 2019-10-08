@@ -1,1 +1,61 @@
-
+<form class="obsidian" autocomplete="off" data-obsidian-name="container">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Container'}}</legend>
+		<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
+			<div class="obsidian-fullwidth">
+				<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
+				       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+					       name="data.weight.value" data-dtype="Number" placeholder="0"
+					       value="{{item.data.weight.value}}">
+					<span>{{localize 'OBSIDIAN.Weight'}}</span>
+				</label>
+				<label class="obsidian-inline obsidian-label-icon">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
+					       name="data.price.value" data-dtype="Number" placeholder="0"
+					       value="{{item.data.price.value}}">
+					<span>{{localize 'OBSIDIAN.Cost'}}</span>
+					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
+				</label>
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-checkbox-row">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+					       name="flags.obsidian.capacity" data-dtype="Number" placeholder="0"
+					       value="{{item.flags.obsidian.capacity}}">
+					<span>{{localize 'OBSIDIAN.Capacity'}}</span>
+				</label>
+				{{fancy-checkbox 'flags.obsidian.weightless' content='OBSIDIAN.WeightlessContents'
+				                 checked=item.flags.obsidian.weightless}}
+			</div>
+		</div>
+	</fieldset>
+	{{#if actor}}
+		<fieldset>
+			<legend>{{localize 'OBSIDIAN.Currency'}}</legend>
+			{{#each ObsidianRules.CURRENCY}}
+				<div class="obsidian-form-row obsidian-inline">
+					<div class="obsidian-fullwidth">
+						<label class="obsidian-inline">
+							<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{this}}"></div>
+							<input type="text" name="flags.obsidian.currency.{{this}}" data-dtype="Number"
+							       class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
+							       placeholder="0" value="{{lookup ../item.flags.obsidian.currency this}}">
+						</label>
+						<input type="text" class="obsidian-input-compact obsidian-add-remove"
+						       data-key="{{this}}" placeholder="{{localize 'OBSIDIAN.AddRemove'}}"
+						       style="width: 200px;">
+					</div>
+				</div>
+			{{/each}}
+		</fieldset>
+	{{/if}}
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
+	<div class="obsidian-rich-text">
+		{{editor content=item.data.description.value button=false editable=editable
+		         target='data.description.value'}}
+	</div>
+</form>

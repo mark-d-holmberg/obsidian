@@ -8,7 +8,7 @@ class ObsidianContainerSheet extends ObsidianItemSheet {
 
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.width = 400;
+		options.width = 460;
 		options.template = 'public/modules/obsidian/html/sheets/container.html';
 		return options;
 	}
@@ -19,7 +19,7 @@ class ObsidianContainerSheet extends ObsidianItemSheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		ObsidianDialog.recalculateHeight(html, {richText: true});
+		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
 	}
 
 	static enrichFlags (data) {

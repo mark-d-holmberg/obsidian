@@ -11,6 +11,7 @@ Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];
 
+Obsidian.Rules.CURRENCY = ['pp', 'gp', 'ep', 'sp', 'cp'];
 Obsidian.Rules.DAMAGE_DICE = [4, 6, 8, 10, 12];
 Obsidian.Rules.DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn'

@@ -114,7 +114,6 @@
 	"OBSIDIAN.BonusActions": "Bonus Actions",
 	"OBSIDIAN.Reactions": "Reactions",
 	"OBSIDIAN.Other": "Other",
-	"OBSIDIAN.ManageAttacks": "Manage Attacks",
 	"OBSIDIAN.Attack": "Attack",
 	"OBSIDIAN.Range": "Range",
 	"OBSIDIAN.HitDC": "Hit / DC",
@@ -385,5 +384,9 @@
 	"OBSIDIAN.ItemType-helm": "Helm",
 	"OBSIDIAN.ItemType-ring": "Ring",
 	"OBSIDIAN.ItemType-tool": "Tool",
-	"OBSIDIAN.ItemType-weapon": "Weapon"
+	"OBSIDIAN.ItemType-weapon": "Weapon",
+	"OBSIDIAN.Container": "Container",
+	"OBSIDIAN.Capacity": "Capacity",
+	"OBSIDIAN.WeightlessContents": "Weightless Contents",
+	"OBSIDIAN.Delete": "Delete"
 }

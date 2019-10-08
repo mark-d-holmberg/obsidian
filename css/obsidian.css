@@ -1072,6 +1072,10 @@ legend .fancy-checkbox {
 	width: 40px !important;
 }
 
+.obsidian-input-num-lg {
+	width: 60px !important;
+}
+
 .obsidian-passive-item {
 	display: flex;
 	border-bottom: 1px solid var(--mid);
@@ -1123,4 +1127,8 @@ legend .fancy-checkbox {
 
 [data-pack='dnd5e.spells'] {
 	display: none !important;
+}
+
+.obsidian-sidebar .obsidian-char-box-stacked {
+	margin-top: 15px;
 }

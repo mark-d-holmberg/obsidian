@@ -71,9 +71,14 @@
 			<div class="obsidian-tbody">
 				{{> public/modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
 				{{#each entity.obsidian.inventory.containers}}
-					<details>
-						<summary>
+					<details{{#if flags.obsidian.open}} open{{/if}}>
+						<summary class="
+						{{~#if (expr '>' flags.obsidian.carriedWeight flags.obsidian.capacity)~}}
+							obsidian-negative
+						{{~/if}} obsidian-inv-container" data-item-id="{{id}}">
 							<h3>{{name}}</h3>
+							<div class="obsidian-details-sub-text">&bull; {{flags.obsidian.carriedWeight}}</div>
+							<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
 							<i class="fas fa-angle-down"></i>
 						</summary>
 						{{> public/modules/obsidian/html/components/inventory.html contents}}

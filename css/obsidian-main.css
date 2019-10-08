@@ -759,6 +759,30 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	font-weight: bold;
 }
 
+.obsidian-table summary {
+	display: flex;
+	align-items: baseline;
+}
+
+.obsidian-table summary > h3 {
+	text-transform: none;
+	color: var(--text-regular);
+	border: none;
+	line-height: 1;
+}
+
+.obsidian-table summary > .obsidian-details-sub-text {
+	font-size: 13px;
+	font-family: Roboto, sans-serif;
+	color: var(--text-regular);
+	font-weight: normal;
+	margin-left: 4px;
+}
+
+.obsidian-table summary > .obsidian-table-sub-text {
+	margin-left: 4px;
+}
+
 .obsidian summary > i {
 	position: absolute;
 	top: 10px;

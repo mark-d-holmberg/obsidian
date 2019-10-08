@@ -14,14 +14,13 @@ class ObsidianCurrencyDialog extends ObsidianDialog {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		html.find('.obsidian-add-remove').keypress(this._onAddRemove);
+		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
 	}
 
 	/**
-	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onAddRemove (evt) {
+	static onAddRemove (evt) {
 		if (evt.key !== 'Enter') {
 			return;
 		}

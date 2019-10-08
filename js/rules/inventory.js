@@ -25,6 +25,7 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		}
 
 		if (item.type === 'backpack') {
+			item.flags.obsidian.carriedWeight = 0;
 			item.flags.obsidian.contents = [];
 			inventory.containers.push(item);
 		}
@@ -32,13 +33,19 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 
 	for (const item of inventory.items) {
 		const flags = item.flags.obsidian;
+		const totalWeight = item.data.weight.value * (item.data.quantity.value || 1);
+
 		if (flags.parent) {
 			const container = map.get(flags.parent);
 			if (container) {
 				container.flags.obsidian.contents.push(item);
+				container.flags.obsidian.carriedWeight += totalWeight;
 			}
 		} else {
-			inventory.root.push(item);
+			inventory.weight += totalWeight;
+			if (item.type !== 'backpack') {
+				inventory.root.push(item);
+			}
 		}
 
 		flags.equippable = item.type === 'weapon' || Obsidian.EQUIP_TYPES.includes(flags.subtype);

@@ -90,6 +90,7 @@ class Obsidian extends ActorSheet5eCharacter {
 				.render(true));
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
+		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
@@ -104,6 +105,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			search.val('');
 			this._filterSpells();
 		});
+		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 
 		this._activateDialogs(html);
 		this._contextMenu(html);
@@ -200,17 +202,35 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	_contextMenu (html) {
-		new ContextMenu(html, '.obsidian-tr.item', [
-			{
-				name: game.i18n.localize('OBSIDIAN.Edit'),
-				icon: '<i class="fas fa-edit"></i>',
-				callback: this._editItem.bind(this)
-			}, {
-				name: game.i18n.localize('OBSIDIAN.View'),
-				icon: '<i class="fas fa-eye"></i>',
-				callback: this._viewItem.bind(this)
-			}
-		]);
+		const del = {
+			name: game.i18n.localize('OBSIDIAN.Delete'),
+			icon: '<i class="fas fa-trash"></i>',
+			callback: this._deleteItem.bind(this)
+		};
+
+		const edit = {
+			name: game.i18n.localize('OBSIDIAN.Edit'),
+			icon: '<i class="fas fa-edit"></i>',
+			callback: this._editItem.bind(this)
+		};
+
+		const view = {
+			name: game.i18n.localize('OBSIDIAN.View'),
+			icon: '<i class="fas fa-eye"></i>',
+			callback: this._viewItem.bind(this)
+		};
+
+		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr)', [edit, view, del]);
+		new ContextMenu(html, '.obsidian-inv-container', [edit, view, del]);
+		new ContextMenu(html, '.obsidian-spell-tr.item', [edit, view]);
+	}
+
+	/**
+	 * @private
+	 * @param el {JQuery}
+	 */
+	_deleteItem (el) {
+		this.actor.deleteOwnedItem(Number(el.data('item-id')));
 	}
 
 	/**
@@ -274,6 +294,20 @@ class Obsidian extends ActorSheet5eCharacter {
 		$('body').append(html);
 		this._element = html;
 		html.hide().fadeIn(200, Obsidian._resizeMain.bind(this, html));
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onAddAttack (evt) {
+		evt.preventDefault();
+		this.actor.createOwnedItem({
+			type: 'weapon',
+			name: game.i18n.localize('OBSIDIAN.NewAttack')
+		}, {
+			displaySheet: true
+		});
 	}
 
 	/**
@@ -456,6 +490,22 @@ class Obsidian extends ActorSheet5eCharacter {
 				activeTab[0].scrollTop = this.scroll.tab;
 			}
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_saveContainerState (evt) {
+		const target = evt.currentTarget;
+		const id = Number(target.dataset.itemId);
+
+		// Doesn't seem to be a way to do this without re-rendering the sheet,
+		// which is unfortunate as this could easily just be passively saved.
+
+		// The click event fires before the open state is toggled so we invert
+		// it here to represent what the state will be right after this event.
+		this.actor.updateOwnedItem({id: id, flags: {obsidian: {open: !target.parentNode.open}}});
 	}
 
 	/**
