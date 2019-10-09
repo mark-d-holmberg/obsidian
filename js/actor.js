@@ -188,6 +188,10 @@ class ObsidianActor extends Actor5e {
 		return out;
 	}
 
+	getItemParent (item) {
+		return this.items.find(other => other.id === item.flags.obsidian.parent);
+	}
+
 	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
 		const spells = this.items.filter(item => item.type === 'spell');

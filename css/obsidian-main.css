@@ -132,14 +132,15 @@
 	font-weight: normal;
 	align-items: center;
 	border-bottom: 1px dotted var(--mid);
-	padding-bottom: 8px;
-	margin-bottom: 8px;
+	padding: 8px 0;
+}
+
+.obsidian-tr:first-child {
+	padding-top: 0;
 }
 
 .obsidian-tr:last-child {
 	border: none;
-	padding: 0;
-	margin: 0;
 }
 
 .obsidian-col-icon {
@@ -771,6 +772,10 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	line-height: 1;
 }
 
+.obsidian-table .obsidian-negative h3 {
+	color: var(--negative);
+}
+
 .obsidian-table summary > .obsidian-details-sub-text {
 	font-size: 13px;
 	font-family: Roboto, sans-serif;
@@ -779,8 +784,16 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	margin-left: 4px;
 }
 
+.obsidian-table .obsidian-negative .obsidian-details-sub-text {
+	color: var(--negative);
+}
+
 .obsidian-table summary > .obsidian-table-sub-text {
 	margin-left: 4px;
+}
+
+.obsidian-table .obsidian-negative .obsidian-table-sub-text {
+	color: var(--negative);
 }
 
 .obsidian summary > i {
@@ -789,6 +802,10 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	right: 10px;
 	font-size: 16px;
 	color: var(--text-subtle);
+}
+
+.obsidian-table details:not([open]) + details {
+	margin-top: 8px;
 }
 
 .obsidian .obsidian-spell-list summary > i {
@@ -1004,4 +1021,17 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-weight: bold;
 	color: var(--text-regular);
 	height: auto;
+}
+
+.obsidian-drag-indicator {
+	display: none;
+	justify-content: space-between;
+	font-size: 16px;
+	color: var(--text-bright);
+	position: fixed;
+	pointer-events: none;
+}
+
+.obsidian-inv-container.obsidian-container-drop {
+	background-color: var(--dark);
 }

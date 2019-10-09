@@ -1,5 +1,5 @@
 {{#each this}}
-	<div class="obsidian-tr item" data-item-id="{{id}}">
+	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true">
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
 				<button type="button" class="{{#if data.equipped.value}}obsidian-btn-active{{/if}}

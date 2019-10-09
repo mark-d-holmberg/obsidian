@@ -21,6 +21,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		this.scroll = {};
 		this.settings = settings;
 		this.tabs = {};
+		this.details = new Map();
 	}
 
 	get template () {
@@ -64,6 +65,17 @@ class Obsidian extends ActorSheet5eCharacter {
 				}
 			});
 		});
+
+		html.on('dragend', () => {
+			this.details.forEach((open, el) => el.open = open);
+			if (this.element) {
+				this.element.find('.obsidian-drag-indicator').css('display', 'none');
+				this.element.find('.obsidian-inv-container').removeClass('obsidian-container-drop');
+			}
+		});
+
+		html.find('summary[draggable]').each((i, el) =>
+			el.addEventListener('dragstart', this._onDragItemStart.bind(this), false));
 
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
@@ -247,6 +259,23 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
+	_findActiveTab () {
+		if (!this.element) {
+			return [];
+		}
+
+		const activeContainer = this.element.find('.obsidian-tab-container.active');
+		let activeTab = activeContainer.find('.obsidian-tab-contents.active');
+		if (activeTab.length < 1) {
+			activeTab = activeContainer.find('.obsidian-tab-contents');
+		}
+
+		return activeTab;
+	}
+
+	/**
+	 * @private
+	 */
 	_filterSpells () {
 		const spellTab = this.element.find('[data-group="main-tabs"][data-tab="spells"]');
 		const name = spellTab.find('.obsidian-input-search').val();
@@ -337,6 +366,24 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		attack.update({'flags.obsidian.mode': mode});
+	}
+
+	_onDragItemStart (event) {
+		const target = event.currentTarget;
+		if (target.tagName === 'SUMMARY') {
+			$(target).parents('.obsidian-tbody').children('details').each((i, el) => {
+				this.details.set(el, el.open);
+				el.open = false;
+			});
+		}
+
+		return Obsidian.Reorder.dragStart(event);
+	}
+
+	_onDragOver (event) { return Obsidian.Reorder.dragOver(event); }
+
+	_onDrop (event) {
+		return Obsidian.Reorder.drop(this.actor.items, event, evt => super._onDrop(evt));
 	}
 
 	/**
@@ -484,11 +531,9 @@ class Obsidian extends ActorSheet5eCharacter {
 			this.form.scrollTop = this.scroll.main;
 		}
 
-		if (this.element) {
-			const activeTab = this.element.find('.obsidian-tab-contents.active');
-			if (activeTab.length > 0) {
-				activeTab[0].scrollTop = this.scroll.tab;
-			}
+		const activeTab = this._findActiveTab();
+		if (activeTab.length > 0) {
+			activeTab[0].scrollTop = this.scroll.tab;
 		}
 	}
 
@@ -516,11 +561,9 @@ class Obsidian extends ActorSheet5eCharacter {
 			this.scroll.main = this.form.scrollTop;
 		}
 
-		if (this.element) {
-			const activeTab = this.element.find('.obsidian-tab-contents.active');
-			if (activeTab.length > 0) {
-				this.scroll.tab = activeTab[0].scrollTop;
-			}
+		const activeTab = this._findActiveTab();
+		if (activeTab.length > 0) {
+			this.scroll.tab = activeTab[0].scrollTop;
 		}
 	}
 

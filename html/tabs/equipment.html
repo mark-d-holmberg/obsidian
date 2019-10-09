@@ -49,6 +49,10 @@
 		<li class="obsidian-sub-tab item" data-tab="equipment-other">{{localize 'OBSIDIAN.Other'}}</li>
 	</ul>
 	<div class="obsidian-tab-contents obsidian-inv-table tab">
+		<div class="obsidian-drag-indicator">
+			<i class="fas fa-angle-right"></i>
+			<i class="fas fa-angle-left"></i>
+		</div>
 		<h3>
 			{{localize 'OBSIDIAN.Inventory'}}
 			<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-add-custom-item">
@@ -72,7 +76,7 @@
 				{{> public/modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
 				{{#each entity.obsidian.inventory.containers}}
 					<details{{#if flags.obsidian.open}} open{{/if}}>
-						<summary class="
+						<summary draggable="true" data-reorderable="true" class="
 						{{~#if (expr '>' flags.obsidian.carriedWeight flags.obsidian.capacity)~}}
 							obsidian-negative
 						{{~/if}} obsidian-inv-container" data-item-id="{{id}}">

@@ -25,6 +25,12 @@ Obsidian.SCHEMA = {
 			subrace: null,
 			milestone: false
 		},
+		order: {
+			equipment: {
+				root: [],
+				containers: []
+			}
+		},
 		saves: {
 			bonus: 0
 		},

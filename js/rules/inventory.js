@@ -3,10 +3,10 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		weight: 0,
 		encumbered: false,
 		items: [],
-		containers: [],
-		root: []
 	};
 
+	const rootOrder = new Set(actorData.flags.obsidian.order.equipment.root);
+	const containerOrder = new Set(actorData.flags.obsidian.order.equipment.containers);
 	const inventory = actorData.obsidian.inventory;
 	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool']);
 	const map = new Map();
@@ -26,8 +26,15 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 
 		if (item.type === 'backpack') {
 			item.flags.obsidian.carriedWeight = 0;
-			item.flags.obsidian.contents = [];
-			inventory.containers.push(item);
+
+			if (!item.flags.obsidian.order) {
+				item.flags.obsidian.order = [];
+			}
+
+			item.obsidian = {order: new Set(item.flags.obsidian.order)};
+			if (!containerOrder.has(item.id)) {
+				actorData.flags.obsidian.order.equipment.containers.push(item.id);
+			}
 		}
 	}
 
@@ -35,20 +42,28 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		const flags = item.flags.obsidian;
 		const totalWeight = item.data.weight.value * (item.data.quantity.value || 1);
 
-		if (flags.parent) {
-			const container = map.get(flags.parent);
-			if (container) {
-				container.flags.obsidian.contents.push(item);
-				container.flags.obsidian.carriedWeight += totalWeight;
+		if (flags.parent == null) {
+			inventory.weight += totalWeight;
+			if (item.type !== 'backpack' && !rootOrder.has(item.id)) {
+				actorData.flags.obsidian.order.equipment.root.push(item.id);
 			}
 		} else {
-			inventory.weight += totalWeight;
-			if (item.type !== 'backpack') {
-				inventory.root.push(item);
+			const container = map.get(flags.parent);
+			if (container) {
+				container.flags.obsidian.carriedWeight += totalWeight;
+				if (!container.obsidian.order.has(item.id)) {
+					container.flags.obsidian.order.push(item.id);
+				}
 			}
 		}
 
 		flags.equippable = item.type === 'weapon' || Obsidian.EQUIP_TYPES.includes(flags.subtype);
 		flags.consumable = item.type === 'consumable';
 	}
+
+	const link = list => list.map(id => map.get(id)).filter(item => item !== undefined);
+	inventory.root = link(actorData.flags.obsidian.order.equipment.root);
+	inventory.containers = link(actorData.flags.obsidian.order.equipment.containers);
+	inventory.containers.forEach(container =>
+		container.flags.obsidian.contents = link(container.flags.obsidian.order))
 };
