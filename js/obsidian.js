@@ -241,8 +241,11 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param el {JQuery}
 	 */
-	_deleteItem (el) {
-		this.actor.deleteOwnedItem(Number(el.data('item-id')));
+	async _deleteItem (el) {
+		const id = Number(el.data('item-id'));
+		const item = this.actor.items.find(item => item.id === id);
+		await this.actor.deleteOwnedItem(id);
+		this.actor.updateEquipment(item);
 	}
 
 	/**
@@ -383,7 +386,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	_onDragOver (event) { return Obsidian.Reorder.dragOver(event); }
 
 	_onDrop (event) {
-		return Obsidian.Reorder.drop(this.actor.items, event, evt => super._onDrop(evt));
+		return Obsidian.Reorder.drop(this.actor, event, evt => super._onDrop(evt));
 	}
 
 	/**

@@ -1,13 +1,4 @@
 Obsidian.Reorder = {
-	addToContainer: function (actor, item, container, update) {
-		Obsidian.Reorder.removeFromOldContainer(actor, item, 'root', update);
-		container.flags.obsidian.order.push(item.id);
-		item.flags.obsidian.parent = container.id;
-		update[`items.${container.idx}.flags.obsidian.order`] =
-			duplicate(container.flags.obsidian.order);
-		update[`items.${item.idx}.flags.obsidian.parent`] = container.id;
-	},
-
 	dragStart: function (event) {
 		const target = event.currentTarget;
 		if (target.dataset && target.dataset.reorderable === 'true') {
@@ -81,8 +72,13 @@ Obsidian.Reorder = {
 
 		const target = row ? row : container;
 		const srcID = Number(id.split('/')[1]);
-		const src = items.find(item => item.id === srcID);
 		const destID = Number(target.dataset.itemId);
+
+		if (srcID === destID) {
+			return false;
+		}
+
+		const src = items.find(item => item.id === srcID);
 		const dest = items.find(item => item.id === destID);
 
 		if (!src || !dest) {
@@ -90,14 +86,8 @@ Obsidian.Reorder = {
 		}
 
 		const update = {};
-		if (dest.type === 'backpack') {
-			Obsidian.Reorder.addToContainer(actor, src, dest, update);
-			return false;
-		}
-
 		const half = Obsidian.Reorder.whichHalf(event, target);
 		Obsidian.Reorder.insert(actor, src, dest, half === 'bottom' ? 'after' : 'before', update);
-		update[`flags.obsidian.order.equipment`] = duplicate(actor.flags.obsidian.order.equipment);
 		actor.update(update);
 		return false;
 	},
@@ -123,59 +113,54 @@ Obsidian.Reorder = {
 		return [row, container, contents];
 	},
 
-	insert: function (actor, item, sibling, where, update) {
-		const bucket = item.type === 'backpack' ? 'containers' : 'root';
-		Obsidian.Reorder.removeFromOldContainer(actor, item, bucket, update);
+	insert: function (actor, src, dest, where, update) {
+		const data = actor.data;
+		const root = data.flags.obsidian.order.equipment.root;
+		const containers = data.flags.obsidian.order.equipment.containers;
+		const srcParent = actor.getItemParent(src);
+		const destParent = actor.getItemParent(dest);
+		let fromOrder = srcParent == null ? root : srcParent.flags.obsidian.order;
+		let toOrder = destParent == null ? root : destParent.flags.obsidian.order;
 
-		let parent = sibling.flags.obsidian.parent;
-		let order;
-
-		if (parent == null) {
-			order = actor.flags.obsidian.order[bucket];
-		} else {
-			parent = actor.getItemParent(sibling);
-			order = parent.flags.obsidian.order;
+		if (src.type === 'backpack') {
+			fromOrder = containers;
+			toOrder = containers;
+		} else if (dest.type === 'backpack') {
+			toOrder = dest.flags.obsidian.order;
 		}
 
-		let idx = order.indexOf(sibling.id);
-		item.flags.obsidian.parent = parent == null ? null : parent.id;
-		update[`items.${item.idx}.flags.obsidian.parent`] = item.flags.obsidian.parent;
+		const oldPos = fromOrder.indexOf(src.id);
+		let newPos = toOrder.indexOf(dest.id);
 
-		if (idx < 0) {
-			order.push(item.id);
-		} else {
-			if (where === 'before') {
-				idx--;
-			}
-
-			if (idx < 0) {
-				order.unshift(item.id);
-			} else {
-				order.splice(idx, 0, item.id);
-			}
+		if (where === 'after' && toOrder !== fromOrder) {
+			newPos++;
 		}
 
-		if (parent != null) {
-			update[`items.${parent.idx}.flags.obsidian.order`] = duplicate(order);
-		}
-	},
-
-	removeFromOldContainer: function (actor, item, bucket, update) {
-		let parent = item.flags.obsidian.parent;
-		let order;
-
-		if (parent == null) {
-			order = actor.flags.obsidian.order.equipment[bucket];
-		} else {
-			parent = actor.getItemParent(item);
-			order = parent.flags.obsidian.order;
+		if (src.type !== 'backpack' && dest.type === 'backpack') {
+			newPos = toOrder.length;
 		}
 
-		const idx = order.indexOf(item.id);
-		order.splice(idx, 1);
+		if (newPos < 0) {
+			newPos = 0;
+		}
 
-		if (parent != null) {
-			update[`items.${parent.idx}.flags.obsidian.order`] = duplicate(order);
+		fromOrder.splice(oldPos, 1);
+		toOrder.splice(newPos, 0, src.id);
+
+		update[`flags.obsidian.order.equipment`] = duplicate(data.flags.obsidian.order.equipment);
+		update[`items.${src.idx}.flags.obsidian.parent`] =
+			src.type !== 'backpack' && dest.type === 'backpack'
+				? dest.id
+				: dest.flags.obsidian.parent === undefined ? null : dest.flags.obsidian.parent;
+
+		if (srcParent != null) {
+			update[`items.${srcParent.idx}.flags.obsidian.order`] = duplicate(fromOrder);
+		}
+
+		if (src.type !== 'backpack' && dest.type === 'backpack') {
+			update[`items.${dest.idx}.flags.obsidian.order`] = duplicate(toOrder);
+		} else if (destParent != null) {
+			update[`items.${destParent.idx}.flags.obsidian.order`] = duplicate(toOrder);
 		}
 	},
 

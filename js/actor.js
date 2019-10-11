@@ -220,7 +220,37 @@ class ObsidianActor extends Actor5e {
 		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
 	}
 
-	async updateEquipment () {
+	async updateEquipment (deleted) {
+		if (deleted) {
+			const update = {};
+			const parent = this.items.find(item => item.id === deleted.flags.obsidian.parent);
+
+			if (deleted.type === 'backpack') {
+				deleted.flags.obsidian.contents.forEach(item => {
+					update[`items.${item.idx}.flags.obsidian.parent`] = null;
+					this.data.flags.obsidian.order.equipment.root.push(item.id);
+				});
+
+				update['flags.obsidian.order.equipment.root'] =
+					duplicate(this.data.flags.obsidian.order.equipment.root);
+			}
+
+			if (parent == null) {
+				const bucket = deleted.type === 'backpack' ? 'containers' : 'root';
+				const idx = this.data.flags.obsidian.order.equipment[bucket].indexOf(deleted.id);
+				this.data.flags.obsidian.order.equipment[bucket].splice(idx, 1);
+				update[`flags.obsidian.order.equipment.${bucket}`] =
+					duplicate(this.data.flags.obsidian.order.equipment[bucket]);
+			} else {
+				const idx = parent.flags.obsidian.order.indexOf(deleted.id);
+				parent.flags.obsidian.order.splice(idx, 1);
+				update[`items.${parent.idx}.flags.obsidian.order`] =
+					duplicate(parent.flags.obsidian.order);
+			}
+
+			await this.update(update);
+		}
+
 		const magicalItems =
 			this.items.filter(item =>
 				(item.type === 'weapon' || item.type === 'equipment')
