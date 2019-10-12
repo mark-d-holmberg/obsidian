@@ -1,0 +1,55 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<div class="obsidian-char-inv-header">
+		<div class="obsidian-char-inv-header-weight">
+			<div>
+				{{localize 'OBSIDIAN.WeightCarried'}}:
+				<span>{{numberFormat item.flags.obsidian.carriedWeight decimals=2}}</span>
+				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+			</div>
+			<div{{#if (expr '>' item.flags.obsidian.weightCarried item.flags.obsidian.capacity)}}
+				class="obsidian-negative"{{/if}}>
+				{{#if (expr '>' item.flags.obsidian.weightCarried item.flags.obsidian.capacity)}}
+					{{localize 'OBSIDIAN.OverCapacity'}}
+				{{else}}
+					{{localize 'OBSIDIAN.WithinCapacity'}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-char-inv-header-currency" data-sheet="true">
+			{{localize 'OBSIDIAN.Currency'}}:
+			{{#each item.flags.obsidian.currency}}
+				<div class="obsidian-char-inv-header-currency-item">
+					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></i>
+					{{number-format this}}
+				</div>
+			{{/each}}
+		</div>
+	</div>
+	<div class="obsidian-tab-contents obsidian-inv-table">
+		<div class="obsidian-drag-indicator">
+			<i class="fas fa-angle-right"></i>
+			<i class="fas fa-angle-left"></i>
+		</div>
+		<div class="obsidian-table">
+			<div class="obsidian-thead">
+				{{#if (not-empty item.flags.obsidian.contents)}}
+					<div class="obsidian-col-action"></div>
+					<div class="obsidian-col-inv-item">{{localize 'OBSIDIAN.Name'}}</div>
+					<div class="obsidian-col-weight">{{localize 'OBSIDIAN.Weight'}}</div>
+					<div class="obsidian-col-qty">{{localize 'OBSIDIAN.QuantityAbbr'}}</div>
+					<div class="obsidian-col-cost">
+						{{localize 'OBSIDIAN.Cost'}}
+						<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
+					</div>
+					<div class="obsidian-col-type">{{localize 'OBSIDIAN.Type'}}</div>
+					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+				{{else}}
+					<div class="obsidian-col-empty">{{localize 'OBSIDIAN.Empty'}}</div>
+				{{/if}}
+			</div>
+			<div class="obsidian-tbody">
+				{{> public/modules/obsidian/html/components/inventory.html item.flags.obsidian.contents}}
+			</div>
+		</div>
+	</div>
+</form>

@@ -80,9 +80,23 @@
 						{{~#if (expr '>' flags.obsidian.carriedWeight flags.obsidian.capacity)~}}
 							obsidian-negative
 						{{~/if}} obsidian-inv-container" data-item-id="{{id}}">
-							<h3>{{name}}</h3>
-							<div class="obsidian-details-sub-text">&bull; {{flags.obsidian.carriedWeight}}</div>
-							<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
+							<div>
+								<h3>{{name}}</h3>
+								<div class="obsidian-details-sub-text">
+									&bull; {{numberFormat flags.obsidian.carriedWeight decimals=2}}
+								</div>
+								<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
+							</div>
+							<div>
+								{{#each flags.obsidian.currency}}
+								{{#if this}}
+									<div class="obsidian-char-inv-header-currency-item">
+										<i class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></i>
+										{{number-format this}}
+									</div>
+								{{/if}}
+								{{/each}}
+							</div>
 							<i class="fas fa-angle-down"></i>
 						</summary>
 						{{> public/modules/obsidian/html/components/inventory.html flags.obsidian.contents}}

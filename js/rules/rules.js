@@ -7,6 +7,7 @@ Obsidian.Rules.WEAPON_TAGS = [
 ];
 
 Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
+Obsidian.Rules.COIN_WEIGHT = 0.02;
 Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];

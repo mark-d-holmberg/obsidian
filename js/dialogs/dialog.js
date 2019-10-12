@@ -1,10 +1,12 @@
 class ObsidianDialog extends BaseEntitySheet {
-	constructor (parent, options) {
+	constructor (parent, options = {register: false}) {
 		super(parent.object, options);
 		this.parent = parent;
 
-		// Deregister the sheet as this is just a modal dialog.
-		delete this.entity.apps[this.appId];
+		if (!options.register) {
+			// Deregister the sheet as this is just a modal dialog.
+			delete this.entity.apps[this.appId];
+		}
 	}
 
 	static get defaultOptions () {
@@ -127,7 +129,7 @@ class ObsidianDialog extends BaseEntitySheet {
 		this.parent._updateObject(event, formData);
 	}
 
-	static recalculateHeight (html, {fieldset, bareLabels, richText} = {}) {
+	static recalculateHeight (html, {fieldset, bareLabels, richText, topLevel} = {}) {
 		let total = 0;
 		let selector = '.obsidian-form-row, label.obsidian-label-lg';
 		if (bareLabels) {
@@ -140,6 +142,10 @@ class ObsidianDialog extends BaseEntitySheet {
 
 		if (richText) {
 			selector = 'fieldset, form > label, .obsidian-rich-text';
+		}
+
+		if (topLevel) {
+			selector = '> div';
 		}
 
 		html.find(selector)
