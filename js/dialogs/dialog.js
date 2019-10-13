@@ -41,18 +41,43 @@ class ObsidianDialog extends BaseEntitySheet {
 	}
 
 	static initialiseComponents (html) {
+		const updateSelections = parent => {
+			const selector = parent.data('selector');
+			const val = parent.val();
+			html.find(`[data-selector-parent="${selector}"]`).each((i, el) => {
+				const jqel = $(el);
+				const show = el.dataset.show && el.dataset.show.split(',').map(s => s.trimStart());
+				const hide = el.dataset.hide && el.dataset.hide.split(',').map(s => s.trimStart());
+
+				if (parent.attr('type') === 'checkbox') {
+					if (parent.prop('checked')) {
+						jqel.removeClass('obsidian-hidden');
+					} else {
+						jqel.addClass('obsidian-hidden');
+					}
+				} else {
+					if ((show && show.includes(val)) || (hide && !hide.includes(val))) {
+						jqel.removeClass('obsidian-hidden');
+					} else {
+						jqel.addClass('obsidian-hidden');
+					}
+				}
+			});
+		};
+
 		html.find('.fancy-checkbox').click(evt => {
 			const target = $(evt.currentTarget);
 			const selected = !target.hasClass('selected');
 			const parent = target.parent();
 
 			if (target.data('bound')) {
-				const bound =  html.find(`input[name="${target.data('bound')}"]`)[0];
-				if (bound.disabled) {
+				const bound =  html.find(`input[name="${target.data('bound')}"]`);
+				if (bound.prop('disabled')) {
 					return;
 				}
 
-				bound.checked = selected;
+				bound.prop('checked', selected);
+				updateSelections(bound);
 			}
 
 			selected ? target.addClass('selected') : target.removeClass('selected');
@@ -63,9 +88,12 @@ class ObsidianDialog extends BaseEntitySheet {
 		}).each((i, el) => {
 			const jqel = $(el);
 			if (jqel.data('bound')) {
-				if (html.find(`input[name="${jqel.data('bound')}"]`)[0].checked) {
+				const bound =  html.find(`input[name="${jqel.data('bound')}"]`);
+				if (bound.prop('checked')) {
 					jqel.addClass('selected');
 				}
+
+				updateSelections(bound);
 			}
 
 			const parent = jqel.parent();
@@ -74,23 +102,7 @@ class ObsidianDialog extends BaseEntitySheet {
 			}
 		});
 
-		const updateSelections = parent => {
-			const selector = parent.data('selector');
-			const val = parent.val();
-			html.find(`[data-selector-parent="${selector}"]`).each((i, el) => {
-				const jqel = $(el);
-				const show = el.dataset.show && el.dataset.show.split(',').map(s => s.trimStart());
-				const hide = el.dataset.hide && el.dataset.hide.split(',').map(s => s.trimStart());
-
-				if ((show && show.includes(val)) || (hide && !hide.includes(val))) {
-					jqel.removeClass('obsidian-hidden');
-				} else {
-					jqel.addClass('obsidian-hidden');
-				}
-			});
-		};
-
-		html.find('[data-selector]')
+		html.find('select[data-selector]')
 			.change(evt => {
 				updateSelections($(evt.currentTarget));
 				const recalculate = evt.currentTarget.dataset.recalculate;

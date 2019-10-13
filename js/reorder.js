@@ -132,7 +132,13 @@ Obsidian.Reorder = {
 		const oldPos = fromOrder.indexOf(src.id);
 		let newPos = toOrder.indexOf(dest.id);
 
-		if (where === 'after' && toOrder !== fromOrder) {
+		if (fromOrder === toOrder) {
+			if (oldPos < newPos && where === 'before') {
+				newPos--;
+			} else if (oldPos > newPos && where === 'after') {
+				newPos++;
+			}
+		} else if (where === 'after') {
 			newPos++;
 		}
 
@@ -144,8 +150,10 @@ Obsidian.Reorder = {
 			newPos = 0;
 		}
 
-		fromOrder.splice(oldPos, 1);
-		toOrder.splice(newPos, 0, src.id);
+		if (fromOrder !== toOrder || oldPos !== newPos) {
+			fromOrder.splice(oldPos, 1);
+			toOrder.splice(newPos, 0, src.id);
+		}
 
 		update[`flags.obsidian.order.equipment`] = duplicate(data.flags.obsidian.order.equipment);
 		update[`items.${src.idx}.flags.obsidian.parent`] =

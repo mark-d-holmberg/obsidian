@@ -63,7 +63,9 @@ class ObsidianViewDialog extends ObsidianDialog {
 			item.sheet.render(true);
 		});
 
-		ObsidianDialog.recalculateHeight(html, {topLevel: true});
+		if (this.item.type === 'backpack') {
+			ObsidianDialog.recalculateHeight(html, {topLevel: true});
+		}
 	}
 
 	getData () {

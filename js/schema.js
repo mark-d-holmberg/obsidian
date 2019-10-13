@@ -60,10 +60,11 @@ Obsidian.SCHEMA = {
 };
 
 Obsidian.EQUIP_TYPES = [
-	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracer', 'gauntlet', 'boots', 'cloak', 'gear'
+	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
 Obsidian.CONTAINER_SCHEMA = {currency: {}};
+Obsidian.EQUIPMENT_SCHEMA = {subtype: 'gear'};
 
 Obsidian.SPELL_SCHEMA = {
 	damage: [],

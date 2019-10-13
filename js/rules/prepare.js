@@ -97,6 +97,87 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
+	armour: function (actorData) {
+		const data = actorData.data;
+		actorData.obsidian.armour =
+			actorData.items.filter(item =>
+				item.type === 'equipment' && item.flags.obsidian.subtype === 'armour');
+
+		let bestArmour;
+		let shield;
+
+		for (const armour of actorData.obsidian.armour) {
+			const flags = armour.flags.obsidian;
+			flags.notes = [];
+			flags.baseAC = armour.data.armor.value;
+
+			if (flags.magic !== undefined && flags.magic !== '') {
+				flags.baseAC += Number(flags.magic);
+			}
+
+			if (armour.data.armorType.value === 'shield') {
+				if (armour.data.equipped.value) {
+					shield = armour;
+				}
+
+				flags.notes.push(
+					`${flags.baseAC < 0 ? '-' : '+'}${flags.baseAC} `
+					+ game.i18n.localize('OBSIDIAN.ACAbbr'));
+			} else {
+				if (armour.data.equipped.value
+					&& (!bestArmour || bestArmour.flags.obsidian.baseAC < flags.baseAC))
+				{
+					bestArmour = armour;
+				}
+
+				flags.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${flags.baseAC}`);
+				if (armour.data.strength.value !== undefined && armour.data.strength.value !== '') {
+					flags.notes.push(
+						`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} `
+						+ armour.data.strength.value);
+				}
+
+				if (armour.data.stealth.value) {
+					flags.notes.push(
+						game.i18n.localize('OBSIDIAN.Skill-ste')
+						+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
+						+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
+							+ '<div class="obsidian-css-icon-shape"></div>'
+							+ '<div class="obsidian-css-icon-label">'
+								+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
+							+ '</div>'
+						+ '</div>');
+				}
+			}
+		}
+
+		const acOverride = actorData.flags.obsidian.attributes.ac.override;
+		if (acOverride === undefined || acOverride === '') {
+			if (bestArmour) {
+				data.attributes.ac.min =
+					bestArmour.flags.obsidian.baseAC
+					+ actorData.flags.obsidian.attributes.ac.mod
+					+ bestArmour.flags.obsidian.magic;
+
+				if (bestArmour.flags.obsidian.addDex) {
+					let maxDex = bestArmour.flags.obsidian.maxDex;
+					if (maxDex === undefined || maxDex === '') {
+						maxDex = Infinity;
+					} else {
+						maxDex = Number(maxDex);
+					}
+
+					data.attributes.ac.min += Math.min(data.abilities.dex.mod, maxDex);
+				}
+			}
+
+			if (shield) {
+				data.attributes.ac.min +=
+					shield.flags.obsidian.baseAC + shield.flags.obsidian.magic;
+			}
+		}
+	},
+
 	weapons: function (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.weapons = [];
@@ -108,7 +189,10 @@ Obsidian.Rules.Prepare = {
 
 			const weapon = actorData.items[i];
 			const flags = weapon.flags.obsidian;
-			actorData.obsidian.weapons.push(weapon);
+
+			if (weapon.data.equipped.value || flags.type === 'unarmed') {
+				actorData.obsidian.weapons.push(weapon);
+			}
 
 			if (flags.hit.enabled) {
 				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);

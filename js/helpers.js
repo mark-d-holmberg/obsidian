@@ -112,7 +112,8 @@ Handlebars.registerHelper('fancy-checkbox', function (...args) {
 			<div class="checkbox-content">${game.i18n.localize(options.hash.content)}</div>
 		</div>
 		<input type="checkbox" name="${prop}" class="obsidian-hidden"
-		       ${options.hash.checked ? 'checked' : ''}>
+		       ${options.hash.checked ? 'checked' : ''}
+		       ${options.hash.selector ? `data-selector="${options.hash.selector}"` : ''}>
 	`);
 });
 

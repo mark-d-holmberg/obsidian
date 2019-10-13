@@ -1058,3 +1058,7 @@ form.obsidian .obsidian-table-input:hover {
 .obsidian-inv-container.obsidian-container-drop {
 	background-color: var(--dark);
 }
+
+input[type=checkbox].obsidian-hidden + label.obsidian-inline {
+	margin-left: 20px;
+}

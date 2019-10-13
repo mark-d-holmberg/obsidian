@@ -27,6 +27,10 @@
 					{{else if (expr '===' flags.obsidian.type 'ranged')}}
 						{{localize 'OBSIDIAN.RangedWeapon'}}
 					{{/if}}
+				{{else if (expr '===' type 'equipment')}}
+					{{#if (expr '===' flags.obsidian.subtype 'armour')}}
+						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armorType.value}}
+					{{/if}}
 				{{/if}}
 			</div>
 		</div>
@@ -80,6 +84,12 @@
 						{{~else~}}
 							{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
 						{{/if}}
+					</div>
+				{{/each}}
+			{{else if (expr '===' type 'equipment')}}
+				{{#each flags.obsidian.notes}}
+					<div class="obsidian-table-note-text">
+						{{{this}}}
 					</div>
 				{{/each}}
 			{{/if}}

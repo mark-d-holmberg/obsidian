@@ -3,10 +3,11 @@ Obsidian.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
 Obsidian.Rules.WEAPON_TAGS = [
 	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
-	'lance', 'net', 'thrown', 'twohanded', 'versatile', 'custom'
+	'lance', 'net', 'offhand', 'thrown', 'twohanded', 'versatile', 'custom'
 ];
 
 Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
+Obsidian.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 Obsidian.Rules.COIN_WEIGHT = 0.02;
 Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'

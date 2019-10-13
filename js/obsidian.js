@@ -118,6 +118,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			this._filterSpells();
 		});
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
+		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 
 		this._activateDialogs(html);
 		this._contextMenu(html);
@@ -146,6 +147,10 @@ class Obsidian extends ActorSheet5eCharacter {
 	async maximize () {
 		await super.maximize();
 		Obsidian._resizeMain(this.element);
+	}
+
+	static notDefinedOrEmpty (obj) {
+		return obj === undefined || obj === '';
 	}
 
 	render (force = false, options = {}) {
@@ -374,7 +379,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	_onDragItemStart (event) {
 		const target = event.currentTarget;
 		if (target.tagName === 'SUMMARY') {
-			$(target).parents('.obsidian-tbody').children('details').each((i, el) => {
+			$(target).closest('.obsidian-tbody').children('details').each((i, el) => {
 				this.details.set(el, el.open);
 				el.open = false;
 			});
@@ -387,6 +392,16 @@ class Obsidian extends ActorSheet5eCharacter {
 
 	_onDrop (event) {
 		return Obsidian.Reorder.drop(this.actor, event, evt => super._onDrop(evt));
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onEquip (evt) {
+		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
+		const item = this.actor.items.find(item => item.id === id);
+		this.actor.updateOwnedItem({id: id, 'data.equipped.value': !item.data.equipped.value});
 	}
 
 	/**
