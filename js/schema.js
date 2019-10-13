@@ -63,6 +63,7 @@ Obsidian.EQUIP_TYPES = [
 	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
+Obsidian.CONSUMABLE_SCHEMA = {damage: [], hit: {enabled: false, stat: ''}, dc: {enabled: false}};
 Obsidian.CONTAINER_SCHEMA = {currency: {}};
 Obsidian.EQUIPMENT_SCHEMA = {subtype: 'gear'};
 

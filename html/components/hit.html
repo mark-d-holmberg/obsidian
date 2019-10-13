@@ -4,12 +4,14 @@
 	</legend>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
-		{{#if spell}}
+		{{#if (expr '||' spell consumable)}}
 			<select name="flags.obsidian.hit.attack">
 				{{#select attack}}
 					<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
 					<option value="ranged">{{localize 'OBSIDIAN.AttackType-ranged'}}</option>
-					<option value="unerring">{{localize 'OBSIDIAN.AttackType-unerring'}}</option>
+					{{#if spell}}
+						<option value="unerring">{{localize 'OBSIDIAN.AttackType-unerring'}}</option>
+					{{/if}}
 				{{/select}}
 			</select>
 			<label class="obsidian-inline">

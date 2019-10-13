@@ -13,8 +13,8 @@
 		"js/dialogs/features.js", "js/dialogs/spells.js", "js/dialogs/view.js",
 		"js/dialogs/currency.js", "js/sheets/item-sheet.js", "js/sheets/spell.js",
 		"js/sheets/feature.js", "js/sheets/weapon.js", "js/sheets/container.js",
-		"js/sheets/equipment.js", "js/rules/prepare.js", "js/rules/spellcasting.js",
-		"js/rules/spells.js", "js/rules/inventory.js"
+		"js/sheets/equipment.js", "js/sheets/consumable.js", "js/rules/prepare.js",
+		"js/rules/spellcasting.js", "js/rules/spells.js", "js/rules/inventory.js"
 	],
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"

@@ -1,0 +1,27 @@
+<form class="obsidian" autocomplete="off" data-obsidian-name="consumable">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Consumable'}}</legend>
+		<div class="obsidian-form-row">
+			<select name="flags.obsidian.subtype">
+				{{#select item.flags.obsidian.subtype}}
+					{{#each ObsidianRules.CONSUMABLE_TYPES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumableType-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</fieldset>
+	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit
+			ObsidianRules=ObsidianRules consumable=true}}
+	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc
+			ObsidianRules=ObsidianRules}}
+	<fieldset data-prop="damage">
+		<legend>{{localize 'OBSIDIAN.DamageHeal'}}</legend>
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+				prop='damage' consumable=true}}
+	</fieldset>
+	<div class="obsidian-rich-text">
+		{{editor content=item.data.description.value button=false editable=false
+		         target='data.description.value'}}
+	</div>
+</form>

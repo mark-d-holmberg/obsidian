@@ -879,27 +879,23 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	width: 35px;
 }
 
-.obsidian-spell-card,
-.obsidian-weapon-card {
+.obsidian-item-card {
 	padding: 10px;
 	border: 4px solid var(--mid);
 	margin-bottom: 15px;
 }
 
-.obsidian-form-bare .obsidian-spell-card,
-.obsidian-form-bare .obsidian-weapon-card {
+.obsidian-form-bare .obsidian-item-card {
 	margin:  0;
 }
 
-.obsidian-spell-card-header,
-.obsidian-weapon-card-header {
+.obsidian-item-card-header {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-spell-card-header h3,
-.obsidian-weapon-card-header h3 {
+.obsidian-item-card-header h3 {
 	margin: 0 0 10px 0;
 	font-family: Roboto, sans-serif;
 	font-size: 13px;
@@ -908,46 +904,41 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	border-bottom: 1px solid var(--mid);
 }
 
-.obsidian-spell-card-header-row,
-.obsidian-weapon-card-header-row {
+.obsidian-item-card-header-row {
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
 	margin-bottom: 4px;
 }
 
-.obsidian-spell-card-header-row:last-child,
-.obsidian-weapon-card-header-row:last-child {
+.obsidian-item-card-header-row:last-child {
 	margin-bottom: 0;
 }
 
-.obsidian-spell-card-header-key,
-.obsidian-weapon-card-header-key {
+.obsidian-item-card-header-key {
 	font-weight: bold;
 	font-size: 13px;
 	font-family: Roboto, sans-serif;
 	margin-right: 5px;
 }
 
-.obsidian-spell-card-header-value,
-.obsidian-weapon-card-header-value {
+.obsidian-item-card-header-value {
 	font-size: 13px;
 	font-family: Roboto, sans-serif;
 	flex: 1;
 }
 
-.obsidian-spell-card-header-value .obsidian-table-unit {
+.obsidian-item-card-header-value .obsidian-table-unit {
 	font-size: 10px;
 	color: var(--text-subtle);
 }
 
-.obsidian-spell-card-header-value .obsidian-table-sub-text {
+.obsidian-item-card-header-value .obsidian-table-sub-text {
 	font-size: 12px;
 	font-family: Roboto, sans-serif;
 }
 
-.obsidian .obsidian-spell-card input,
-.obsidian .obsidian-weapon-card input {
+.obsidian .obsidian-item-card input {
 	width: 40px;
 	font-family: Roboto, sans-serif;
 	font-size: 13px;
@@ -957,36 +948,31 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	height: 15px;
 }
 
-.obsidian .obsidian-spell-card .obsidian-binary-operator,
-.obsidian .obsidian-weapon-card .obsidian-binary-operator {
+.obsidian .obsidian-item-card .obsidian-binary-operator {
 	font-size: 13px;
 }
 
-.obsidian .obsidian-spell-card .obsidian-feature-max,
-.obsidian .obsidian-weapon-card .obsidian-feature-max {
+.obsidian .obsidian-item-card .obsidian-feature-max {
 	font-size: 13px;
 }
 
-.obsidian-spell-card-body,
-.obsidian-weapon-card-body {
+.obsidian-item-card-body {
 	font-size: 13px;
 }
 
-.obsidian-spell-card-body p,
-.obsidian-weapon-card-body p {
+.obsidian-item-card-body p {
 	text-align: justify;
 }
 
-.obsidian-spell-card-body p:last-child,
-.obsidian-weapon-card-body p:last-child {
+.obsidian-item-card-body p:last-child {
 	margin-bottom: 0;
 }
 
-.obsidian-weapon-card-sub-header {
+.obsidian-item-card-sub-header {
 	margin-bottom: 10px;
 }
 
-.obsidian-weapon-card-sub-header:last-child {
+.obsidian-item-card-sub-header:last-child {
 	margin-bottom: 0;
 }
 

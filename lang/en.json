@@ -405,5 +405,8 @@
 	"OBSIDIAN.Maximum": "Maximum",
 	"OBSIDIAN.MinStr": "Min Strength",
 	"OBSIDIAN.StealthDisadvantage": "Stealth Disadvantage",
-	"OBSIDIAN.AddDexMod": "Add Dex Mod"
+	"OBSIDIAN.AddDexMod": "Add Dex Mod",
+	"OBSIDIAN.ConsumableType-ammo": "Ammunition",
+	"OBSIDIAN.ConsumableType-potion": "Potion",
+	"OBSIDIAN.Consumable": "Consumable"
 }

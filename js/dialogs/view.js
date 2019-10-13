@@ -24,6 +24,8 @@ class ObsidianViewDialog extends ObsidianDialog {
 			return 'public/modules/obsidian/html/dialogs/spell-view.html';
 		} else if (this.item.type === 'backpack') {
 			return 'public/modules/obsidian/html/dialogs/container-view.html';
+		} else if (this.item.type === 'equipment') {
+			return 'public/modules/obsidian/html/dialogs/equipment-view.html';
 		}
 	}
 

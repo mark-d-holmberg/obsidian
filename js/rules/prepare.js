@@ -104,7 +104,7 @@ Obsidian.Rules.Prepare = {
 				item.type === 'equipment' && item.flags.obsidian.subtype === 'armour');
 
 		let bestArmour;
-		let shield;
+		let bestShield;
 
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
@@ -116,8 +116,10 @@ Obsidian.Rules.Prepare = {
 			}
 
 			if (armour.data.armorType.value === 'shield') {
-				if (armour.data.equipped.value) {
-					shield = armour;
+				if (armour.data.equipped.value
+					&& (!bestShield || bestShield.flags.obsidian.baseAC < flags.baseAC))
+				{
+					bestShield = armour;
 				}
 
 				flags.notes.push(
@@ -171,9 +173,9 @@ Obsidian.Rules.Prepare = {
 				}
 			}
 
-			if (shield) {
+			if (bestShield) {
 				data.attributes.ac.min +=
-					shield.flags.obsidian.baseAC + shield.flags.obsidian.magic;
+					bestShield.flags.obsidian.baseAC + bestShield.flags.obsidian.magic;
 			}
 		}
 	},
