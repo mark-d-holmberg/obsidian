@@ -13,8 +13,8 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 
 	for (let i = 0; i < actorData.items.length; i++) {
 		const item = actorData.items[i];
-		item.idx = i;
 		map.set(item.id, item);
+		item.idx = i;
 
 		if (!itemTypes.has(item.type)) {
 			continue;
@@ -67,8 +67,10 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 			}
 		}
 
-		flags.equippable = item.type === 'weapon' || Obsidian.EQUIP_TYPES.includes(flags.subtype);
 		flags.consumable = item.type === 'consumable';
+		flags.equippable =
+			item.type === 'weapon'
+			|| (item.type === 'equipment' && Obsidian.EQUIP_TYPES.includes(flags.subtype));
 	}
 
 	const link = list => list.map(id => map.get(id)).filter(item => item !== undefined);

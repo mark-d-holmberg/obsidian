@@ -5,7 +5,7 @@
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 		{{#if (expr '||' spell consumable)}}
-			<select name="flags.obsidian.hit.attack">
+			<select name="flags.obsidian.hit.attack" data-selector="attack-type">
 				{{#select attack}}
 					<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
 					<option value="ranged">{{localize 'OBSIDIAN.AttackType-ranged'}}</option>
@@ -14,11 +14,13 @@
 					{{/if}}
 				{{/select}}
 			</select>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="flags.obsidian.hit.n" placeholder="1" value="{{n}}">
-				<span>{{localize 'OBSIDIAN.Count'}}</span>
-			</label>
+			{{#if spell}}
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="flags.obsidian.hit.n" placeholder="1" value="{{n}}">
+					<span>{{localize 'OBSIDIAN.Count'}}</span>
+				</label>
+			{{/if}}
 		{{/if}}
 		{{#if (expr '||' (expr '!' spell) (expr '&&' spell actor))}}
 			<select name="flags.obsidian.hit.stat">

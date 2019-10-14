@@ -1,0 +1,22 @@
+{{#if flags.obsidian.charges.enabled}}
+	<div class="obsidian-table-note-text">
+		{{localize 'OBSIDIAN.Charges'}}: {{{flags.obsidian.charges.display}}}
+	</div>
+{{/if}}
+{{#each flags.obsidian.special}}
+	<div class="obsidian-table-note-text">{{name}}: {{{display}}}</div>
+{{/each}}
+{{#if category}}
+	<div class="obsidian-table-note-text">
+		{{i18n-join 'OBSIDIAN.WeaponCat-' flags.obsidian.category}}
+	</div>
+{{/if}}
+{{#each flags.obsidian.tags}}
+	<div class="obsidian-table-note-text">
+		{{~#if custom~}}
+			{{~label~}}
+		{{~else~}}
+			{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
+		{{~/if~}}
+	</div>
+{{/each}}

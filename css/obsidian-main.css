@@ -1048,3 +1048,21 @@ form.obsidian .obsidian-table-input:hover {
 input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	margin-left: 20px;
 }
+
+.obsidian-icon-value {
+	display: inline-flex;
+	align-items: center;
+}
+
+.obsidian-icon-value:after {
+	content: ', ';
+	margin: 0 2px;
+}
+
+.obsidian-icon-value:last-child:after {
+	content: '';
+}
+
+.obsidian-icon-value i {
+	display: block;
+}

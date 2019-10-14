@@ -30,6 +30,32 @@
 					<div class="obsidian-item-card-header-value">{{{display}}}</div>
 				</div>
 			{{/each}}
+			<div class="obsidian-item-card-header-row">
+				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Damage'}}:</div>
+				<div class="obsidian-item-card-header-value">
+					{{#each item.flags.obsidian.dmgPair}}
+						<div class="obsidian-icon-value">
+							{{fst}} {{#if snd}}({{snd}}){{/if}}
+							<div class="obsidian-icon-sm obsidian-icon-{{type}}"
+							     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+						</div>
+					{{/each}}
+				</div>
+			</div>
+			<div class="obsidian-item-card-header-row">
+				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Weight'}}:</div>
+				<div class="obsidian-item-card-header-value">
+					{{item.data.weight.value}}
+					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+				</div>
+			</div>
+			<div class="obsidian-item-card-header-row">
+				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Cost'}}:</div>
+				<div class="obsidian-item-card-header-value obsidian-icon-value">
+					{{number-format item.data.price.value}}
+					<i class="obsidian-icon-sm obsidian-icon-gp"></i>
+				</div>
+			</div>
 		</div>
 		<div class="obsidian-item-card-body">{{{item.data.description.value}}}</div>
 	</div>

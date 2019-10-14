@@ -52,26 +52,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		}
 
 		if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
-			flags.uses.max = flags.uses.bonus || 0;
-			if (flags.uses.ability !== undefined && flags.uses.ability !== '') {
-				if (flags.uses.ability === 'spell') {
-					flags.uses.max += cls ? cls.spellcasting.mod : 0;
-				} else {
-					flags.uses.max += actorData.abilities[flags.uses.ability].mod;
-				}
-			}
-
-			if (flags.uses.remaining === undefined || flags.uses.remaining > flags.uses.max) {
-				flags.uses.remaining = flags.uses.max;
-			}
-
-			if (flags.uses.remaining < 0) {
-				flags.uses.remaining = 0;
-			}
-
-			flags.uses.display =
-				ObsidianActor.usesFormat(spell.id, i, flags.uses.max, flags.uses.remaining, 6);
-
+			Obsidian.Rules.Prepare.calculateUses(spell.id, i, actorData.data, cls, flags.uses);
 			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
 		}
 

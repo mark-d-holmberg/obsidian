@@ -9,7 +9,7 @@ Obsidian.Rules.WEAPON_TAGS = [
 Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
 Obsidian.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 Obsidian.Rules.COIN_WEIGHT = 0.02;
-Obsidian.Rules.CONSUMABLE_TYPES = ['ammo', 'potion'];
+Obsidian.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
 Obsidian.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];

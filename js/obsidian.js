@@ -771,6 +771,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/uses.html',
 		'public/modules/obsidian/html/components/charges.html',
 		'public/modules/obsidian/html/components/spell-card.html',
-		'public/modules/obsidian/html/components/inventory.html'
+		'public/modules/obsidian/html/components/inventory.html',
+		'public/modules/obsidian/html/components/weapon-notes.html'
 	]);
 });

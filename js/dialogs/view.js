@@ -18,15 +18,7 @@ class ObsidianViewDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		if (this.item.type === 'weapon') {
-			return 'public/modules/obsidian/html/dialogs/weapon-view.html';
-		} else if (this.item.type === 'spell') {
-			return 'public/modules/obsidian/html/dialogs/spell-view.html';
-		} else if (this.item.type === 'backpack') {
-			return 'public/modules/obsidian/html/dialogs/container-view.html';
-		} else if (this.item.type === 'equipment') {
-			return 'public/modules/obsidian/html/dialogs/equipment-view.html';
-		}
+		return `public/modules/obsidian/html/dialogs/${this.item.type}-view.html`;
 	}
 
 	get title () {

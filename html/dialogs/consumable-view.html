@@ -1,0 +1,18 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<div class="obsidian-item-card">
+		<div class="obsidian-item-card-header">
+			<h3>{{item.name}}</h3>
+			<div class="obsidian-item-card-sub-header">
+				{{#if item.flags.obsidian.uses.enabled}}
+					<div class="obsidian-item-card-header-row">
+						<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
+						<div class="obsidian-item-card-header-value">
+							{{{item.flags.obsidian.uses.display}}}
+						</div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+		<div class="obsidian-item-card-body">{{{item.data.description.value}}}</div>
+	</div>
+</form>

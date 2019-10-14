@@ -87,6 +87,28 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
+	calculateUses: function (id, idx, data, cls, uses) {
+		uses.max = uses.bonus || 0;
+		if (!Obsidian.notDefinedOrEmpty(uses.ability)) {
+			if (uses.ability === 'spell') {
+				uses.max += cls ? cls.spellcasting.mod : 0;
+			} else {
+				uses.max += data.abilities[uses.ability].mod;
+			}
+		}
+
+		if (uses.remaining === undefined || uses.remaining > uses.max) {
+			uses.remaining = uses.max;
+		}
+
+		if (uses.remaining < 0) {
+			uses.remaining = 0;
+		}
+
+		uses.display =
+			ObsidianActor.usesFormat(id, idx, uses.max, uses.remaining, 6);
+	},
+
 	prepareCharges: function (charges) {
 		if (charges.remaining === undefined || charges.remaining > charges.max) {
 			charges.remaining = charges.max;
@@ -180,6 +202,22 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
+	consumables: function (actorData) {
+		const data = actorData.data;
+		actorData.obsidian.consumables = actorData.items.filter(item => item.type === 'consumable');
+
+		for (const consumable of actorData.obsidian.consumables) {
+			const flags = consumable.flags.obsidian;
+			flags.notes = [];
+
+			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
+				Obsidian.Rules.Prepare.calculateUses(
+					consumable.id, consumable.idx, data, null, flags.uses);
+				flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
+			}
+		}
+	},
+
 	weapons: function (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.weapons = [];
@@ -237,6 +275,13 @@ Obsidian.Rules.Prepare = {
 			}
 
 			Obsidian.Rules.Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
+			flags.dmgPair = flags.damage.map((dmg, i) => {
+				return {
+					fst: ObsidianActor.damageFormat(dmg, false),
+					snd: ObsidianActor.damageFormat(flags.versatile[i], false),
+					type: dmg.type
+				};
+			});
 
 			flags.attackType = 'OBSIDIAN.MeleeWeapon';
 			if (flags.mode === 'ranged') {

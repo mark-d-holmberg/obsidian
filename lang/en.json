@@ -375,7 +375,7 @@
 	"OBSIDIAN.WeaponCat-martial": "Martial",
 	"OBSIDIAN.Equip": "Equip",
 	"OBSIDIAN.Unequip": "Unequip",
-	"OBSIDIAN.Consume": "Consume",
+	"OBSIDIAN.Use": "Use",
 	"OBSIDIAN.AddCustom": "Add Custom",
 	"OBSIDIAN.ItemType-amulet": "Amulet",
 	"OBSIDIAN.ItemType-armour": "Armour",
@@ -408,5 +408,6 @@
 	"OBSIDIAN.AddDexMod": "Add Dex Mod",
 	"OBSIDIAN.ConsumableType-ammo": "Ammunition",
 	"OBSIDIAN.ConsumableType-potion": "Potion",
+	"OBSIDIAN.ConsumableType-gear": "Adventuring Gear",
 	"OBSIDIAN.Consumable": "Consumable"
 }

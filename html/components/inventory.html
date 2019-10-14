@@ -12,7 +12,7 @@
 				</button>
 			{{else if flags.obsidian.consumable}}
 				<button type="button" class="obsidian-btn-outline obsidian-equip-action">
-					{{localize 'OBSIDIAN.Consume'}}
+					{{localize 'OBSIDIAN.Use'}}
 				</button>
 			{{else}}
 				&mdash;
@@ -31,6 +31,8 @@
 					{{#if (expr '===' flags.obsidian.subtype 'armour')}}
 						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armorType.value}}
 					{{/if}}
+				{{else if (expr '===' type 'consumable')}}
+					{{i18n-join 'OBSIDIAN.ConsumableType-' flags.obsidian.subtype}}
 				{{/if}}
 			</div>
 		</div>
@@ -74,19 +76,8 @@
 		</div>
 		<div class="obsidian-col-notes">
 			{{#if (expr '===' type 'weapon')}}
-				<div class="obsidian-table-note-text">
-					{{i18n-join 'OBSIDIAN.WeaponCat-' flags.obsidian.category}}
-				</div>
-				{{#each flags.obsidian.tags}}
-					<div class="obsidian-table-note-text">
-						{{~#if custom~}}
-							{{~label~}}
-						{{~else~}}
-							{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
-						{{/if}}
-					</div>
-				{{/each}}
-			{{else if (expr '===' type 'equipment')}}
+				{{> public/modules/obsidian/html/components/weapon-notes.html category=true}}
+			{{else if (expr '||' (expr '===' type 'equipment') (expr '===' type 'consumable'))}}
 				{{#each flags.obsidian.notes}}
 					<div class="obsidian-table-note-text">
 						{{{this}}}
