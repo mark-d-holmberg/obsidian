@@ -2,7 +2,7 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-feature', init => {
-			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
+			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form)));
 		});
 	}
 
@@ -16,7 +16,7 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		ObsidianDialog.recalculateHeight(html, {richText: true});
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	static enrichFlags (data) {

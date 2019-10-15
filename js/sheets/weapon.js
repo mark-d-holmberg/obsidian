@@ -2,7 +2,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-weapon', init => {
-			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
+			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form)));
 		});
 	}
 
@@ -27,7 +27,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 		html.find('.obsidian-rm-tag').click(this._onRemoveTag.bind(this));
 		html.find('.obsidian-add-special').click(this._onAddSpecial.bind(this));
 		html.find('.obsidian-rm-special').click(this._onRemoveSpecial.bind(this));
-		ObsidianDialog.recalculateHeight(html, {richText: true});
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	static enrichFlags (data) {
@@ -197,7 +197,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 			versatile.addClass('obsidian-hidden');
 		}
 
-		ObsidianDialog.recalculateHeight(this.element.find('form'), {richText: true});
+		ObsidianDialog.recalculateHeight(this.element.find('form'));
 	}
 
 	/**

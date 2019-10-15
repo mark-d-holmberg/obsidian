@@ -79,8 +79,7 @@
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div>
 				{{#if actor}}
-				<select name="flags.obsidian.uses.type" data-selector="uses-type"
-				        data-recalculate="richText">
+				<select name="flags.obsidian.uses.type" data-selector="uses-type" data-recalculate="true">
 					{{#select item.flags.obsidian.uses.type}}
 						<option value="formula">{{localize 'OBSIDIAN.Formula'}}</option>
 						<option value="shared">{{localize 'OBSIDIAN.Shared'}}</option>

@@ -2,7 +2,7 @@ class ObsidianContainerSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-container', init => {
-			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
+			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form)));
 		});
 	}
 

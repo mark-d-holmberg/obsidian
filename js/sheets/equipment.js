@@ -2,7 +2,7 @@ class ObsidianEquipmentSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-equipment', init => {
-			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
+			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form)));
 		})
 	}
 

@@ -107,9 +107,7 @@ class ObsidianDialog extends BaseEntitySheet {
 				updateSelections($(evt.currentTarget));
 				const recalculate = evt.currentTarget.dataset.recalculate;
 				if (recalculate) {
-					const options = {};
-					options[recalculate] = true;
-					ObsidianDialog.recalculateHeight($(this.form), options);
+					ObsidianDialog.recalculateHeight($(this.form));
 				}
 			}).each((i, el) => updateSelections($(el)));
 	}
@@ -128,9 +126,7 @@ class ObsidianDialog extends BaseEntitySheet {
 
 	async maximize () {
 		await super.maximize();
-		if (this.sizeSelector !== false) {
-			ObsidianDialog.recalculateHeight($(this.form), this.sizeSelector);
-		}
+		ObsidianDialog.recalculateHeight($(this.form));
 	}
 
 	render (force = false, options = {}) {
@@ -148,26 +144,12 @@ class ObsidianDialog extends BaseEntitySheet {
 		this.parent._updateObject(event, formData);
 	}
 
-	static recalculateHeight (html, {fieldset, bareLabels, richText, topLevel} = {}) {
+	static recalculateHeight (html) {
 		let total = 0;
-		let selector = '.obsidian-form-row, label.obsidian-label-lg';
-		if (bareLabels) {
-			selector += ', label > input';
-		}
-
-		if (fieldset) {
-			selector = 'fieldset';
-		}
-
-		if (richText) {
-			selector = 'fieldset, form > label, .obsidian-rich-text';
-		}
-
-		if (topLevel) {
-			selector = '> div';
-		}
-
-		html.find(selector)
+		const labels = html.children('label:not(.obsidian-inline)');
+		const richText = html.children('.obsidian-rich-text').length > 0;
+		html.children('div, fieldset, label.obsidian-inline')
+			.add(labels.children('input'))
 			.each((i, el) => total += $(el).outerHeight(true));
 
 		const content = html.closest('.window-content');

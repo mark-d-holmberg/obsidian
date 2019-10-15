@@ -18,11 +18,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-prof').click(this._onAddProficiency.bind(this));
 		html.find('.obsidian-rm-prof').click(this._onRemoveProficiency.bind(this));
-		ObsidianDialog.recalculateHeight(html, {bareLabels: true});
-	}
-
-	get sizeSelector () {
-		return {bareLabels: true};
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	/**

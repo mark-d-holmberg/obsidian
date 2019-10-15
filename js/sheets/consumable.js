@@ -2,7 +2,7 @@ class ObsidianConsumableSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-consumable', init => {
-			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form), {richText: true}));
+			init.then(ObsidianDialog.recalculateHeight.bind(this, $(this.form)));
 		});
 	}
 
@@ -21,7 +21,7 @@ class ObsidianConsumableSheet extends ObsidianItemSheet {
 		super.activateListeners(html);
 		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
-		ObsidianDialog.recalculateHeight(html, {richText: true});
+		ObsidianDialog.recalculateHeight(html);
 	}
 
 	static enrichFlags (data) {
