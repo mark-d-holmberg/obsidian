@@ -1,7 +1,7 @@
 class ObsidianSkillsDialog extends ObsidianArrayDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.width = 420;
+		options.width = 440;
 		return options;
 	}
 

@@ -197,7 +197,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 			versatile.addClass('obsidian-hidden');
 		}
 
-		ObsidianDialog.recalculateHeight(this.element.find('form'), {fieldset: true});
+		ObsidianDialog.recalculateHeight(this.element.find('form'), {richText: true});
 	}
 
 	/**

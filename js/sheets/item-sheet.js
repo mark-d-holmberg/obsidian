@@ -36,6 +36,11 @@ class ObsidianItemSheet extends ItemSheet {
 		return data;
 	}
 
+	async maximize () {
+		await super.maximize();
+		ObsidianDialog.recalculateHeight($(this.form), {richText: true});
+	}
+
 	async close () {
 		await super.close();
 		if (this.actor && this.actor.apps) {

@@ -17,6 +17,14 @@ class ObsidianViewDialog extends ObsidianDialog {
 		return options;
 	}
 
+	get sizeSelector () {
+		if (this.item.type === 'backpack') {
+			return {topLevel: true};
+		} else {
+			return false;
+		}
+	}
+
 	get template () {
 		return `public/modules/obsidian/html/dialogs/${this.item.type}-view.html`;
 	}

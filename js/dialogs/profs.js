@@ -21,6 +21,10 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html, {bareLabels: true});
 	}
 
+	get sizeSelector () {
+		return {bareLabels: true};
+	}
+
 	/**
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt

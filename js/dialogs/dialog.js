@@ -126,6 +126,13 @@ class ObsidianDialog extends BaseEntitySheet {
 		return this.parent.getData();
 	}
 
+	async maximize () {
+		await super.maximize();
+		if (this.sizeSelector !== false) {
+			ObsidianDialog.recalculateHeight($(this.form), this.sizeSelector);
+		}
+	}
+
 	render (force = false, options = {}) {
 		if (this.parent.setModal && this.options.modal) {
 			this.parent.setModal(true);
