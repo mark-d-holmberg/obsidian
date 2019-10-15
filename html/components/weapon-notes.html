@@ -16,7 +16,11 @@
 		{{~#if custom~}}
 			{{~label~}}
 		{{~else~}}
-			{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
+			{{~#if (expr '===' @key 'ammunition')~}}
+				{{{../flags.obsidian.ammo.display}}}
+			{{~else~}}
+				{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
+			{{~/if~}}
 		{{~/if~}}
 	</div>
 {{/each}}

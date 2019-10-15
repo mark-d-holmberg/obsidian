@@ -205,6 +205,7 @@ Obsidian.Rules.Prepare = {
 	consumables: function (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.consumables = actorData.items.filter(item => item.type === 'consumable');
+		actorData.obsidian.ammo = [];
 
 		for (const consumable of actorData.obsidian.consumables) {
 			const flags = consumable.flags.obsidian;
@@ -214,6 +215,10 @@ Obsidian.Rules.Prepare = {
 				Obsidian.Rules.Prepare.calculateUses(
 					consumable.id, consumable.idx, data, null, flags.uses);
 				flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
+			}
+
+			if (flags.subtype === 'ammo') {
+				actorData.obsidian.ammo.push(consumable);
 			}
 		}
 	},
@@ -246,7 +251,8 @@ Obsidian.Rules.Prepare = {
 				Obsidian.Rules.Prepare.prepareCharges(flags.charges, data);
 				flags.charges.display =
 					ObsidianActor.usesFormat(
-						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
+						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges',
+						true);
 			}
 
 			for (let j = 0; j < getProperty(flags, 'special.length') || 0; j++) {
@@ -264,7 +270,7 @@ Obsidian.Rules.Prepare = {
 				special.display =
 					ObsidianActor.usesFormat(
 						weapon.id, i, special.uses.max, special.uses.remaining, 6,
-						`special.${j}.uses`);
+						`special.${j}.uses`, true);
 			}
 
 			if (['melee', 'unarmed'].includes(flags.type)) {
@@ -292,6 +298,23 @@ Obsidian.Rules.Prepare = {
 				}
 			} else if (flags.mode === 'unarmed') {
 				flags.attackType = 'OBSIDIAN.MeleeAttack';
+			}
+
+			if (flags.tags.ammunition) {
+				if (!flags.ammo) {
+					flags.ammo = {};
+				}
+
+				flags.ammo.display =
+					`<select data-name="items.${i}.flags.obsidian.ammo.id">
+						<option value="" ${Obsidian.notDefinedOrEmpty(flags.ammo.id) ? 'selected' : ''}>
+							${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
+						</option>
+						${actorData.obsidian.ammo.map(ammo =>
+							`<option value="${ammo.id}" ${ammo.id === flags.ammo.id ? 'selected': ''}>
+								${ammo.name}
+							</option>`)}
+					</select>`;
 			}
 		}
 	},

@@ -57,10 +57,10 @@ class ObsidianActor extends Actor5e {
 		Obsidian.Rules.Prepare.spellcasting(actorData, flags);
 		Obsidian.Rules.Prepare.features(actorData);
 		Obsidian.Rules.Prepare.inventory(actorData);
+		Obsidian.Rules.Prepare.consumables(actorData);
 		Obsidian.Rules.Prepare.weapons(actorData);
 		Obsidian.Rules.Prepare.armour(actorData);
 		Obsidian.Rules.Prepare.spells(actorData);
-		Obsidian.Rules.Prepare.consumables(actorData);
 
 		return actorData;
 	}
@@ -163,7 +163,7 @@ class ObsidianActor extends Actor5e {
 		walk(duplicate(Obsidian.SCHEMA), flags);
 	}
 
-	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses') {
+	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses', multiple = false) {
 		if (max === undefined || max < 0) {
 			return '';
 		}
@@ -183,7 +183,8 @@ class ObsidianActor extends Actor5e {
 			}
 		} else {
 			out += `
-				<input type="number" name="items.${idx}.flags.obsidian.${prop}.remaining"
+				<input type="number"
+				       ${multiple ? 'data-' : ''}name="items.${idx}.flags.obsidian.${prop}.remaining"
 				       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
 				<span class="obsidian-binary-operator">&sol;</span>
 				<span class="obsidian-feature-max">${max}</span>

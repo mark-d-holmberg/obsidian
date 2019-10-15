@@ -62,6 +62,7 @@ class Obsidian extends ActorSheet5eCharacter {
 					}
 
 					Obsidian._resizeTabs(html);
+					Obsidian._activateComponents(html);
 				}
 			});
 		});
@@ -119,10 +120,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		});
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
-
+		
 		this._activateDialogs(html);
 		this._contextMenu(html);
 		Obsidian._resizeMain(html);
+		Obsidian._activateComponents(html);
 
 		if (this.settings.scrollTop !== undefined) {
 			this.form.scrollTop = this.settings.scrollTop;
@@ -175,6 +177,16 @@ class Obsidian extends ActorSheet5eCharacter {
 		return ([1e7]+-1e3+-4e3+-8e3+-1e11)
 			.replace(/[018]/g, c =>
 				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+	}
+
+	/**
+	 * @private
+	 */
+	static _activateComponents (html) {
+		html.find('input[data-name], select[data-name]').attr('name', '');
+		html.find('.obsidian-tab-container.active input[data-name], '
+			+ '.obsidian-tab-container.active select[data-name]')
+			.each((i, el) => el.setAttribute('name', el.dataset.name));
 	}
 
 	/**

@@ -3,6 +3,8 @@
 		<legend>{{localize 'OBSIDIAN.Consumable'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div class="obsidian-fullwidth">
+				<input type="text" class="obsidian-input-compact" name="name"
+				       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
 				<select name="flags.obsidian.subtype">
 					{{#select item.flags.obsidian.subtype}}
 						{{#each ObsidianRules.CONSUMABLE_TYPES}}
