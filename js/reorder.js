@@ -96,18 +96,24 @@ Obsidian.Reorder = {
 		let row;
 		let container;
 		let contents;
+		let current = event.target;
 
-		for (const el of event.path) {
-			if (el.className) {
-				if (el.className.includes('obsidian-tr')) {
-					row = el;
-				} else if (el.className.includes('obsidian-inv-container')) {
-					container = el;
-				} else if (el.className.includes('obsidian-tab-contents')) {
-					contents = el;
-					break;
-				}
+		while (current.nodeType !== Node.DOCUMENT_NODE) {
+			if (current.nodeType !== Node.ELEMENT_NODE) {
+				current = current.parentNode;
+				continue;
 			}
+
+			if (current.className.includes('obsidian-tr')) {
+				row = current;
+			} else if (current.className.includes('obsidian-inv-container')) {
+				container = current;
+			} else if (current.className.includes('obsidian-tab-contents')) {
+				contents = current;
+				break;
+			}
+
+			current = current.parentNode;
 		}
 
 		return [row, container, contents];
