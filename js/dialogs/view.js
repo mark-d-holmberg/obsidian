@@ -44,7 +44,7 @@ class ObsidianViewDialog extends ObsidianDialog {
 		});
 
 		this.form.ondragover = Obsidian.Reorder.dragOver;
-		this.form.ondrop = () => Obsidian.Reorder.drop(this.parent.actor, event, () => {});
+		this.form.ondrop = () => Obsidian.Reorder.drop(this.parent.actor, event);
 
 		html.find('.obsidian-feature-use').click(async evt => {
 			await this.parent._onUseClicked.bind(this.parent)(evt);

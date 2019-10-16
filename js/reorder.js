@@ -1,12 +1,10 @@
 Obsidian.Reorder = {
 	dragStart: function (event) {
-		const target = event.currentTarget;
+		const target = event.target;
 		if (target.dataset && target.dataset.reorderable === 'true') {
 			event.dataTransfer.setData(`item-id/${target.dataset.itemId}`, null);
 			if (target.tagName === 'SUMMARY') {
 				event.dataTransfer.setData('source/container', null);
-			} else {
-				event.dataTransfer.setData('source/item', null);
 			}
 		} else {
 			event.stopPropagation();
@@ -18,14 +16,11 @@ Obsidian.Reorder = {
 	dragOver: function (event) {
 		event.preventDefault();
 		let src = event.dataTransfer.types.find(type => type.startsWith('source/'));
-
-		if (!src) {
-			return false;
+		if (src) {
+			src = src.split('/')[1];
 		}
 
-		src = src.split('/')[1];
 		let [row, container, contents] = Obsidian.Reorder.detectElementBeneath(event);
-
 		if (!contents) {
 			return false;
 		}
@@ -34,7 +29,7 @@ Obsidian.Reorder = {
 		contents.find('.obsidian-inv-container').removeClass('obsidian-container-drop');
 		const indicator = contents.children('.obsidian-drag-indicator');
 
-		if ((src === 'item' && row) || (src === 'container' && container)) {
+		if ((!src && row) || (src === 'container' && container)) {
 			const rect = row ? row.getBoundingClientRect() : container.getBoundingClientRect();
 			let top = rect.y;
 
@@ -56,13 +51,39 @@ Obsidian.Reorder = {
 		return false;
 	},
 
-	drop: function (actor, event, fallthrough) {
+	drop: async function (actor, event) {
 		event.preventDefault();
 		const items = actor.items;
-		const id = event.dataTransfer.types.find(type => type.startsWith('item-id'));
+		const idData = event.dataTransfer.types.find(type => type.startsWith('item-id'));
 
-		if (!id) {
-			return fallthrough(event);
+		let srcID;
+		let data;
+
+		try {
+			data = JSON.parse(event.dataTransfer.getData('text/plain'));
+		} catch (ignored) {}
+
+		if (data && data.id) {
+			srcID = data.id;
+		} else if (idData) {
+			srcID = Number(idData.split('/')[1]);
+		}
+
+		let src;
+		if (!srcID && !data) {
+			return false;
+		}
+
+		if (data) {
+			if (data.data && data.actorId !== undefined && data.actorId !== actor.id) {
+				// Transfer from another actor.
+				// TODO: Delete from old actor.
+				src = (await actor.createOwnedItem(data.data)).data;
+			} else if (data.pack) {
+				src = (await actor.importItemFromCollection(data.pack, data.id)).data;
+			} else if (!idData) {
+				src = (await actor.createOwnedItem(game.items.get(data.id).data)).data;
+			}
 		}
 
 		const [row, container] = Obsidian.Reorder.detectElementBeneath(event);
@@ -71,23 +92,28 @@ Obsidian.Reorder = {
 		}
 
 		const target = row ? row : container;
-		const srcID = Number(id.split('/')[1]);
-		const destID = Number(target.dataset.itemId);
-
-		if (srcID === destID) {
-			return false;
-		}
-
-		const src = items.find(item => item.id === srcID);
-		const dest = items.find(item => item.id === destID);
-
-		if (!src || !dest) {
-			return false;
-		}
-
-		const update = {};
 		const half = Obsidian.Reorder.whichHalf(event, target);
-		Obsidian.Reorder.insert(actor, src, dest, half === 'bottom' ? 'after' : 'before', update);
+		const where = half === 'bottom' ? 'after' : 'before';
+		const destID = Number(target.dataset.itemId);
+		const dest = items.find(item => item.id === destID);
+		const update = {};
+
+		if (!dest) {
+			return false;
+		}
+
+		if (!data) {
+			if (srcID === destID) {
+				return false;
+			} else {
+				src = items.find(item => item.id === srcID);
+				if (!src) {
+					return false;
+				}
+			}
+		}
+
+		Obsidian.Reorder.insert(actor, src, dest, where, update);
 		actor.update(update);
 		return false;
 	},
@@ -161,7 +187,7 @@ Obsidian.Reorder = {
 			toOrder.splice(newPos, 0, src.id);
 		}
 
-		update[`flags.obsidian.order.equipment`] = duplicate(data.flags.obsidian.order.equipment);
+		update['flags.obsidian.order.equipment'] = duplicate(data.flags.obsidian.order.equipment);
 		update[`items.${src.idx}.flags.obsidian.parent`] =
 			src.type !== 'backpack' && dest.type === 'backpack'
 				? dest.id

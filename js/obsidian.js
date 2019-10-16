@@ -120,7 +120,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		});
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
-		
+
 		this._activateDialogs(html);
 		this._contextMenu(html);
 		Obsidian._resizeMain(html);
@@ -401,10 +401,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	_onDragOver (event) { return Obsidian.Reorder.dragOver(event); }
-
-	_onDrop (event) {
-		return Obsidian.Reorder.drop(this.actor, event, evt => super._onDrop(evt));
-	}
+	_onDrop (event) { return Obsidian.Reorder.drop(this.actor, event); }
 
 	/**
 	 * @private
