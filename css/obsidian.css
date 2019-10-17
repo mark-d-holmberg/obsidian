@@ -220,8 +220,13 @@
 	border: none;
 }
 
-.obsidian-edit {
+.obsidian-edit,
+.obsidian-delete {
 	color: var(--text-secondary);
+}
+
+.obsidian-delete.obsidian-alert {
+	color: var(--negative);
 }
 
 .obsidian-sidebar {

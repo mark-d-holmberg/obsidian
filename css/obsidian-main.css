@@ -255,9 +255,14 @@
 	font-family: Roboto, sans-serif;
 }
 
+.obsidian-table-number-sm,
 .obsidian-table-number-md,
 .obsidian-table-number-lg {
 	font-weight: bold;
+}
+
+.obsidian-table-number-sm {
+	font-size: 12px;
 }
 
 .obsidian-table-number-md {

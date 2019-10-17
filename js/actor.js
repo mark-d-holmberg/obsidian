@@ -275,10 +275,7 @@ class ObsidianActor extends Actor5e {
 	}
 
 	async updateFeatures (update) {
-		const features =
-			this.items.filter(item =>
-				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
-
+		const features = this.items.filter(item => item.type === 'feat' && item.flags.obsidian);
 		const featMap = new Map(features.map(feat => [feat.id, feat]));
 
 		for (let i = 0; i < this.items.length; i++) {

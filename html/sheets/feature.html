@@ -71,6 +71,8 @@
 			</div>
 		</div>
 	</fieldset>
+	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit feature=true
+			ObsidianRules=ObsidianRules}}
 	<fieldset {{disabled (expr '!' item.flags.obsidian.uses.enabled)}}>
 		<legend>
 			{{fancy-checkbox 'flags.obsidian.uses.enabled' content='OBSIDIAN.Uses'
@@ -162,6 +164,11 @@
 	</fieldset>
 	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc
 			ObsidianRules=ObsidianRules}}
+	<fieldset data-prop="damage">
+		<legend>{{localize 'OBSIDIAN.DamageHeal'}}</legend>
+		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+				prop='damage' feature=true}}
+	</fieldset>
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 	<div class="obsidian-rich-text">
 		{{editor content=item.data.description.value button=false editable=editable

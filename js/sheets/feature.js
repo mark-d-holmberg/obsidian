@@ -6,8 +6,11 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 		});
 	}
 
-	get template () {
-		return 'public/modules/obsidian/html/sheets/feature.html';
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		options.width = 560;
+		options.template = 'public/modules/obsidian/html/sheets/feature.html';
+		return options;
 	}
 
 	/**
@@ -16,6 +19,8 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
+		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
+		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
 		ObsidianDialog.recalculateHeight(html);
 	}
 
@@ -27,7 +32,9 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 					action: 'action',
 					source: {},
 					uses: {enabled: false},
-					dc: {enabled: false}
+					dc: {enabled: false},
+					hit: {enabled: false},
+					damage: []
 				}, data.flags.obsidian);
 		}
 	}

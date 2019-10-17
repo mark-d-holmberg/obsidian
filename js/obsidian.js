@@ -59,6 +59,8 @@ class Obsidian extends ActorSheet5eCharacter {
 					this.tabs[group] = clicked.data('tab');
 					if (group === 'spells') {
 						this._filterSpells();
+					} else if (group === 'equipment') {
+						this._filterEquipment();
 					}
 
 					Obsidian._resizeTabs(html);
@@ -104,6 +106,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
+		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('.obsidian-char-box[contenteditable]')
 			.focusout(this._onUnfocusContentEditable.bind(this));
@@ -112,14 +115,14 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
-		html.find('.obsidian-clear-spell-name').click(evt => {
-			const target = $(evt.currentTarget);
-			const search = target.siblings('.obsidian-input-search');
-			search.val('');
-			this._filterSpells();
-		});
+		html.find('.obsidian-search-inv-name').keyup(this._filterEquipment.bind(this));
+		html.find('.obsidian-clear-inv-name')
+			.click(Obsidian._clearSearch.bind(this, this._filterEquipment));
+		html.find('.obsidian-clear-spell-name')
+			.click(Obsidian._clearSearch.bind(this, this._filterSpells));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
+		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 
 		this._activateDialogs(html);
 		this._contextMenu(html);
@@ -136,6 +139,13 @@ class Obsidian extends ActorSheet5eCharacter {
 				activeTab[0].scrollTop = this.settings.subScroll;
 			}
 		}
+	}
+
+	static _clearSearch (filter, evt) {
+		const target = $(evt.currentTarget);
+		const search = target.siblings('.obsidian-input-search');
+		search.val('');
+		filter();
 	}
 
 	getData () {
@@ -296,6 +306,32 @@ class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
+	_filterEquipment () {
+		const invTab = this.element.find('[data-group="main-tabs"][data-tab="equipment"]');
+		const name = invTab.find('.obsidian-input-search').val();
+		const filter =
+			invTab.find('ul[data-group="equipment"] li.active').data('tab').substring(10);
+
+		invTab.find('.obsidian-tr.item').each((_, el) => {
+			const jqel = $(el);
+			jqel.removeClass('obsidian-hidden');
+
+			const nameMatch = name.length < 1 || el.dataset.name.toLowerCase().includes(name);
+			const categoryMatch =
+				filter === 'all'
+				|| el.dataset[`filter${filter.capitalise()}`] === 'true'
+				|| (filter === 'other'
+					&& !Object.keys(el.dataset).some(key => key.startsWith('filter')));
+
+			if (!categoryMatch || !nameMatch) {
+				jqel.addClass('obsidian-hidden');
+			}
+		});
+	}
+
+	/**
+	 * @private
+	 */
 	_filterSpells () {
 		const spellTab = this.element.find('[data-group="main-tabs"][data-tab="spells"]');
 		const name = spellTab.find('.obsidian-input-search').val();
@@ -363,6 +399,24 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
+	_onAddFeature (evt) {
+		evt.preventDefault();
+		this.actor.createOwnedItem({
+			type: 'feat',
+			name: game.i18n.localize('OBSIDIAN.NewFeature'),
+			flags: {
+				obsidian: {
+					active: evt.currentTarget.dataset.active,
+					action: evt.currentTarget.dataset.action
+				}
+			}
+		}, {displaySheet: true});
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
 	_onAttackToggle (evt) {
 		evt.preventDefault();
 		const attackID = Number(evt.currentTarget.dataset.itemId);
@@ -386,6 +440,26 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		attack.update({'flags.obsidian.mode': mode});
+	}
+
+	/**
+	 * @private
+	 */
+	async _onDeleteFeature (evt) {
+		const target = $(evt.currentTarget);
+		if (!target.hasClass('obsidian-alert')) {
+			target.addClass('obsidian-alert');
+			return;
+		}
+
+		const update = {};
+		const id = Number(target.closest('.item').data('item-id'));
+		await this.actor.deleteOwnedItem(id);
+		await this.actor.updateFeatures(update);
+
+		if (Object.keys(update) > 0) {
+			this.actor.update(update);
+		}
 	}
 
 	_onDragItemStart (event) {
@@ -773,6 +847,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/spells.html',
 		'public/modules/obsidian/html/tabs/sub-spells.html',
 		'public/modules/obsidian/html/tabs/equipment.html',
+		'public/modules/obsidian/html/tabs/features.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',
@@ -783,4 +858,14 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/components/inventory.html',
 		'public/modules/obsidian/html/components/weapon-notes.html'
 	]);
+});
+
+// Click anywhere to clear the 'delete prompt' on delete icons.
+document.addEventListener('click', evt => {
+	if (!evt.target.parentNode || evt.target.parentNode.nodeType !== Node.ELEMENT_NODE
+		|| (!evt.target.className.startsWith('obsidian-delete')
+			&& !evt.target.parentNode.className.startsWith('obsidian-delete')))
+	{
+		$('.obsidian-delete.obsidian-alert').removeClass('obsidian-alert');
+	}
 });

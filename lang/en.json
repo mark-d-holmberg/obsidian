@@ -409,5 +409,8 @@
 	"OBSIDIAN.ConsumableType-ammo": "Ammunition",
 	"OBSIDIAN.ConsumableType-potion": "Potion",
 	"OBSIDIAN.ConsumableType-gear": "Adventuring Gear",
-	"OBSIDIAN.Consumable": "Consumable"
+	"OBSIDIAN.Consumable": "Consumable",
+	"OBSIDIAN.ClassFeatures": "Class Features",
+	"OBSIDIAN.RacialTraits": "Racial Traits",
+	"OBSIDIAN.Feats": "Feats"
 }

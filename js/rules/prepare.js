@@ -362,6 +362,12 @@ Obsidian.Rules.Prepare = {
 			if (flags.dc.enabled) {
 				Obsidian.Rules.Prepare.calculateSave(flags.dc, data);
 			}
+
+			if (flags.hit.enabled) {
+				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);
+			}
+
+			Obsidian.Rules.Prepare.calculateDamage(data, null, flags.damage);
 		}
 	},
 

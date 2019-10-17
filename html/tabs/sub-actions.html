@@ -1,9 +1,9 @@
 <div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="{{group}}">
 	<h3>
 		{{localize title}}
-		<a title="{{localize 'OBSIDIAN.ManageFeatures'}}" class="obsidian-edit"
-		   data-dialog="Features" data-active="{{active}}" data-action="{{action}}">
-			{{localize 'OBSIDIAN.ManageFeatures'}}
+		<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-edit obsidian-add-feat"
+		   data-active="{{active}}" data-action="{{action}}">
+			{{localize 'OBSIDIAN.AddCustom'}}
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
@@ -24,6 +24,9 @@
 						{{/if}}
 						<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
 							<i class="fas fa-edit"></i>
+						</a>
+						<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+							<i class="fas fa-trash"></i>
 						</a>
 					</div>
 					{{format-uses ../entity.items feat}}

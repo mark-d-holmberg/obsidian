@@ -1,5 +1,10 @@
 {{#each this}}
-	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true">
+	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true" data-name="{{name}}"
+	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
+	     {{#if (expr '===' type 'weapon')}}data-filter-weapon="true" {{/if}}
+	     {{#if (expr '===' flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
+	     {{#if (expr '===' type 'consumable')}}data-filter-consumable="true"{{/if}}
+	>
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
 				<button type="button" class="{{#if data.equipped.value}}obsidian-btn-active{{/if}}
@@ -37,7 +42,7 @@
 			</div>
 		</div>
 		<div class="obsidian-col-weight">
-			<div class="obsidian-table-number-md">
+			<div class="obsidian-table-number-{{num-size data.weight.value}}">
 				{{#if data.weight.value}}
 					{{data.weight.value}}
 					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
@@ -51,7 +56,7 @@
 			       data-dtype="Number" placeholder="1" value="{{data.quantity.value}}">
 		</div>
 		<div class="obsidian-col-cost">
-			<div class="obsidian-table-number-md">
+			<div class="obsidian-table-number-{{num-size data.price.value}}">
 				{{#if data.price.value}}
 					{{number-format data.price.value}}
 				{{else}}

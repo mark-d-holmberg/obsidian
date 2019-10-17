@@ -182,10 +182,7 @@ Handlebars.registerHelper('format-uses', function (items, feature) {
 		return '';
 	}
 
-	const features =
-		items.filter(item =>
-			item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
-
+	const features = items.filter(item => item.type === 'feat' && item.flags.obsidian);
 	const map = new Map(features.map(feat => [feat.id, feat]));
 	let id = feature.id;
 	let idx = items.findIndex(feat => feat.id === id);
@@ -266,6 +263,14 @@ Handlebars.registerHelper('not-empty', function (obj) {
 
 Handlebars.registerHelper('num', function (n) {
 	return Number(n);
+});
+
+Handlebars.registerHelper('num-size', function (n) {
+	if (n !== undefined && `${n}`.length > 2) {
+		return 'sm';
+	}
+
+	return 'md';
 });
 
 Handlebars.registerHelper('number-format', function (n) {

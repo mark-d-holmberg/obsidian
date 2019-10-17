@@ -4,7 +4,7 @@
 	</legend>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
-		{{#if (expr '||' spell consumable)}}
+		{{#if (expr '||' spell consumable feature)}}
 			<select name="flags.obsidian.hit.attack" data-selector="attack-type">
 				{{#select attack}}
 					<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
