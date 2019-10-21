@@ -1,0 +1,38 @@
+<div class="obsidian-tab-contents tab" data-group="feats-tabs" data-tab="{{group}}">
+	<h3>
+		{{localize title}}
+		<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-edit obsidian-add-feat"
+		   data-active="{{active}}" data-source="{{group}}">
+			{{localize 'OBSIDIAN.AddCustom'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-list">
+		{{#each (filter entity.feats 'flags.obsidian.active' active 'flags.obsidian.source.type' group) as |feat|}}
+			<div class="obsidian-feature item" data-item-id="{{feat.id}}">
+				<div class="obsidian-feature-header">
+					<div>
+						<h4>{{feat.name}}</h4>
+						{{#if feat.flags.obsidian.uses.enabled}}
+							<div class="obsidian-feature-recharge">
+								&bull;
+								{{#if (expr '===' feat.flags.obsidian.uses.recharge 'short')}}
+									{{localize 'OBSIDIAN.ShortRest'}}
+								{{else}}
+									{{localize 'OBSIDIAN.LongRest'}}
+								{{/if}}
+							</div>
+						{{/if}}
+						<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
+							<i class="fas fa-edit"></i>
+						</a>
+						<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+					{{format-uses ../entity.items feat}}
+				</div>
+				<div class="obsidian-feature-body">{{{feat.data.description.value}}}</div>
+			</div>
+		{{/each}}
+	</div>
+</div>

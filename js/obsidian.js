@@ -401,15 +401,32 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onAddFeature (evt) {
 		evt.preventDefault();
+		const flags = {
+			obsidian: {
+				active: evt.currentTarget.dataset.active,
+				action: evt.currentTarget.dataset.action
+			}
+		};
+
+		if (evt.currentTarget.dataset.source) {
+			flags.obsidian.source = {type: evt.currentTarget.dataset.source};
+			if (flags.obsidian.source.type === 'feat') {
+				flags.obsidian.source.level = 1;
+			}
+
+			if (flags.obsidian.source.type === 'class') {
+				if (this.actor.data.flags.obsidian.classes.length > 0) {
+					flags.obsidian.source.class = this.actor.data.flags.obsidian.classes[0].name;
+				} else {
+					flags.obsidian.source.type = 'other';
+				}
+			}
+		}
+
 		this.actor.createOwnedItem({
 			type: 'feat',
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
-			flags: {
-				obsidian: {
-					active: evt.currentTarget.dataset.active,
-					action: evt.currentTarget.dataset.action
-				}
-			}
+			flags: flags
 		}, {displaySheet: true});
 	}
 
@@ -848,6 +865,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/sub-spells.html',
 		'public/modules/obsidian/html/tabs/equipment.html',
 		'public/modules/obsidian/html/tabs/features.html',
+		'public/modules/obsidian/html/tabs/sub-features.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',
