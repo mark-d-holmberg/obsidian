@@ -26,6 +26,11 @@
 	--img-regular: brightness(0) saturate(100%) invert(84%) sepia(23%) saturate(68%) hue-rotate(186deg) brightness(102%) contrast(81%);
 }
 
+.dnd5e.actor.obsidian-window {
+	min-width: 880px;
+	min-height: 625px;
+}
+
 .obsidian button {
 	border-radius: 3px;
 	font-family: 'Roboto Condensed', Roboto, sans-serif;
@@ -244,6 +249,11 @@
 	max-width: 400px;
 	padding-bottom: var(--vertical-space);
 	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian.locked img.obsidian-profile-img {
+	padding-bottom: 0;
+	border: none;
 }
 
 .obsidian-collapsed .obsidian-profile-img,

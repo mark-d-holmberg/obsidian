@@ -1,5 +1,11 @@
 class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
+		if (!game.user.isGM && object.limited) {
+			options.width = 880;
+			options.height = 625;
+			options.resizable = false;
+		}
+
 		super(object, options);
 		game.settings.register('obsidian', this.object.data._id, {
 			name: 'Obsidian settings',
@@ -25,7 +31,8 @@ class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/obsidian.html';
+		return 'public/modules/obsidian/html/'
+			+ (!game.user.isGM && this.actor.limited ? 'limited.html' : 'obsidian.html');
 	}
 
 	static get defaultOptions () {
@@ -45,9 +52,12 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		console.debug(this.actor);
+		if (!game.user.isGM && this.actor.limited) {
+			return;
+		}
 
 		this._setCollapsed(this.settings.portraitCollapsed);
+		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 
 		html.find('.obsidian-tab-bar').each((i, el) => {
 			const bar = $(el);
@@ -69,6 +79,22 @@ class Obsidian extends ActorSheet5eCharacter {
 			});
 		});
 
+		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
+		html.find('.obsidian-search-inv-name').keyup(this._filterEquipment.bind(this));
+		html.find('.obsidian-clear-inv-name')
+			.click(Obsidian._clearSearch.bind(this, this._filterEquipment));
+		html.find('.obsidian-clear-spell-name')
+			.click(Obsidian._clearSearch.bind(this, this._filterSpells));
+
+		this._contextMenu(html);
+		Obsidian._resizeMain(html);
+
+		if (!this.options.editable) {
+			return;
+		}
+
+		console.debug(this.actor);
+
 		html.on('dragend', () => {
 			this.details.forEach((open, el) => el.open = open);
 			if (this.element) {
@@ -79,8 +105,6 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		html.find('summary[draggable]').each((i, el) =>
 			el.addEventListener('dragstart', this._onDragItemStart.bind(this), false));
-
-		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration.value'));
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
@@ -114,19 +138,11 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
-		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
-		html.find('.obsidian-search-inv-name').keyup(this._filterEquipment.bind(this));
-		html.find('.obsidian-clear-inv-name')
-			.click(Obsidian._clearSearch.bind(this, this._filterEquipment));
-		html.find('.obsidian-clear-spell-name')
-			.click(Obsidian._clearSearch.bind(this, this._filterSpells));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 
 		this._activateDialogs(html);
-		this._contextMenu(html);
-		Obsidian._resizeMain(html);
 		Obsidian._activateComponents(html);
 
 		if (this.settings.scrollTop !== undefined) {
@@ -259,9 +275,20 @@ class Obsidian extends ActorSheet5eCharacter {
 			callback: this._viewItem.bind(this)
 		};
 
-		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr)', [edit, view, del]);
-		new ContextMenu(html, '.obsidian-inv-container', [edit, view, del]);
-		new ContextMenu(html, '.obsidian-spell-tr.item', [edit, view]);
+		let menu;
+		let noDelMenu;
+
+		if (this.options.editable) {
+			menu = [edit, view, del];
+			noDelMenu = [edit, view];
+		} else {
+			menu = [view];
+			noDelMenu = [view];
+		}
+
+		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr)', menu);
+		new ContextMenu(html, '.obsidian-inv-container', menu);
+		new ContextMenu(html, '.obsidian-spell-tr.item', noDelMenu);
 	}
 
 	/**
