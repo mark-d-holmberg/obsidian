@@ -1,0 +1,113 @@
+<div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
+     data-tab="notes">
+	<h3>
+		{{localize 'OBSIDIAN.Characteristics'}}
+		<a title="{{localize 'OBSIDIAN.ManageCharacteristics'}}" data-template="characteristics.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="420"
+		   data-title="{{localize 'OBSIDIAN.ManageCharacteristics'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-characteristics-grid">
+		<div class="obsidian-char-grid-row">
+			<div class="obsidian-char-grid-col"
+			     title="{{i18n-join 'OBSIDIAN.Alignment-' data.details.alignment.value}}">
+				<h4>{{localize 'OBSIDIAN.Alignment'}}</h4>
+				{{i18n-join 'OBSIDIAN.Alignment-' data.details.alignment.value}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.gender}}">
+				<h4>{{localize 'OBSIDIAN.Gender'}}</h4>
+				{{entity.flags.obsidian.details.gender}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.eyes}}">
+				<h4>{{localize 'OBSIDIAN.Eyes'}}</h4>
+				{{entity.flags.obsidian.details.eyes}}
+			</div>
+			<div class="obsidian-char-grid-col"
+			     title="{{i18n-join 'OBSIDIAN.Size-' entity.flags.obsidian.details.size}}">
+				<h4>{{localize 'OBSIDIAN.Size'}}</h4>
+				{{i18n-join 'OBSIDIAN.Size-' entity.flags.obsidian.details.size}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.height}}">
+				<h4>{{localize 'OBSIDIAN.Height'}}</h4>
+				{{entity.flags.obsidian.details.height}}
+			</div>
+		</div>
+		<div class="obsidian-char-grid-row">
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.faith}}">
+				<h4>{{localize 'OBSIDIAN.Faith'}}</h4>
+				{{entity.flags.obsidian.details.faith}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.hair}}">
+				<h4>{{localize 'OBSIDIAN.Hair'}}</h4>
+				{{entity.flags.obsidian.details.hair}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.skin}}">
+				<h4>{{localize 'OBSIDIAN.Skin'}}</h4>
+				{{entity.flags.obsidian.details.skin}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.age}}">
+				<h4>{{localize 'OBSIDIAN.Age'}}</h4>
+				{{entity.flags.obsidian.details.age}}
+			</div>
+			<div class="obsidian-char-grid-col" title="{{entity.flags.obsidian.details.weight}}">
+				<h4>{{localize 'OBSIDIAN.Weight'}}</h4>
+				{{entity.flags.obsidian.details.weight}}
+			</div>
+		</div>
+	</div>
+	<h3>
+		{{localize 'OBSIDIAN.Appearance'}}
+		<a title="{{localize 'OBSIDIAN.EditAppearance'}}" data-template="appearance.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditAppearance'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{entity.flags.obsidian.details.appearance}}}</div>
+	<h3>
+		{{localize 'OBSIDIAN.Backstory'}}
+		<a title="{{localize 'OBSIDIAN.EditBackstory'}}" data-template="backstory.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditBackstory'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{data.details.biography.value}}}</div>
+	<h3>
+		{{localize 'OBSIDIAN.Organisations'}}
+		<a title="{{localize 'OBSIDIAN.EditOrganisations'}}" data-template="organisations.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditOrganisations'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{entity.flags.obsidian.details.organisations}}}</div>
+	<h3>
+		{{localize 'OBSIDIAN.Allies'}}
+		<a title="{{localize 'OBSIDIAN.EditAllies'}}" data-template="allies.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditAllies'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{entity.flags.obsidian.details.allies}}}</div>
+	<h3>
+		{{localize 'OBSIDIAN.Enemies'}}
+		<a title="{{localize 'OBSIDIAN.EditEnemies'}}" data-template="enemies.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditEnemies'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{entity.flags.obsidian.details.enemies}}}</div>
+	<h3>
+		{{localize 'OBSIDIAN.Other'}}
+		<a title="{{localize 'OBSIDIAN.EditOther'}}" data-template="other.html"
+		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
+		   data-title="{{localize 'OBSIDIAN.EditOther'}}">
+			{{localize 'OBSIDIAN.Edit'}}
+		</a>
+	</h3>
+	<div class="obsidian-feature-body">{{{entity.flags.obsidian.details.other}}}</div>
+</div>

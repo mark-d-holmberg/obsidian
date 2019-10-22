@@ -270,7 +270,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	async _deleteItem (el) {
 		const id = Number(el.data('item-id'));
-		const item = this.actor.items.find(item => item.id === id);
+		const item = this.actor.data.items.find(item => item.id === id);
 		await this.actor.deleteOwnedItem(id);
 		this.actor.updateEquipment(item);
 	}
@@ -280,9 +280,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 * @param el {JQuery}
 	 */
 	_editItem (el) {
-		const id = Number(el.data('item-id'));
-		const Item = CONFIG.Item.entityClass;
-		const item = new Item(this.actor.items.find(i => i.id === id), {actor: this.actor});
+		const item = this.actor.getOwnedItem(el.data('item-id'));
 		item.sheet.render(true);
 	}
 
@@ -500,7 +498,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onEquip (evt) {
 		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
-		const item = this.actor.items.find(item => item.id === id);
+		const item = this.actor.data.items.find(item => item.id === id);
 		this.actor.updateOwnedItem({id: id, 'data.equipped.value': !item.data.equipped.value});
 	}
 
@@ -565,13 +563,13 @@ class Obsidian extends ActorSheet5eCharacter {
 		const featID = parent.data('feat-id');
 		const prop = parent.data('prop');
 		const n = Number(target.data('n'));
-		const featIndex = this.actor.items.findIndex(feat => feat.id === featID);
+		const featIndex = this.actor.data.items.findIndex(feat => feat.id === featID);
 
 		if (featIndex < 0) {
 			return;
 		}
 
-		const feat = this.actor.items[featIndex];
+		const feat = this.actor.data.items[featIndex];
 		const max = getProperty(feat.flags.obsidian, prop).max;
 		let used = max - getProperty(feat.flags.obsidian, prop).remaining;
 
@@ -866,6 +864,7 @@ Hooks.once('init', () => {
 		'public/modules/obsidian/html/tabs/equipment.html',
 		'public/modules/obsidian/html/tabs/features.html',
 		'public/modules/obsidian/html/tabs/sub-features.html',
+		'public/modules/obsidian/html/tabs/notes.html',
 		'public/modules/obsidian/html/components/damage.html',
 		'public/modules/obsidian/html/components/dc.html',
 		'public/modules/obsidian/html/components/hit.html',

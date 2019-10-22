@@ -1,6 +1,6 @@
 class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
-		const item = parent.actor.items.find(item => item.id === itemID);
+		const item = parent.actor.data.items.find(item => item.id === itemID);
 		if (item.type === 'backpack') {
 			options.width = 578;
 			options.register = true;

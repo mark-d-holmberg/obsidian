@@ -6,6 +6,7 @@ Obsidian.Rules.WEAPON_TAGS = [
 	'lance', 'net', 'offhand', 'thrown', 'twohanded', 'versatile', 'custom'
 ];
 
+Obsidian.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
 Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
 Obsidian.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 Obsidian.Rules.COIN_WEIGHT = 0.02;
@@ -104,6 +105,7 @@ Obsidian.Rules.PROFICIENCY_LEVELS = {
 
 Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
 Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
+Obsidian.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];
 Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
 Obsidian.Rules.SPELL_COMPONENT_MAP = {v: 'Verbal', s: 'Somatic', m: 'Material', r: 'Royalty'};
 Obsidian.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour', 'special'];

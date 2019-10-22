@@ -53,7 +53,7 @@ Obsidian.Reorder = {
 
 	drop: async function (actor, event) {
 		event.preventDefault();
-		const items = actor.items;
+		const items = actor.data.items;
 		const idData = event.dataTransfer.types.find(type => type.startsWith('item-id'));
 
 		let srcID;

@@ -1079,3 +1079,43 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	border: none;
 	padding: 0;
 }
+
+.obsidian-char-grid-row {
+	display: flex;
+	justify-content: space-between;
+	font-family: Roboto, sans-serif;
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+.obsidian-char-grid-col {
+	width: 20%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: normal;
+}
+
+.obsidian-char-grid-col:first-child {
+	width: 25%;
+}
+
+.obsidian-char-grid-col:last-child {
+	width: 15%;
+}
+
+.obsidian-char-grid-col h4 {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 11px;
+	margin-bottom: 0;
+}
+
+.obsidian-dialog-2-col {
+	width: 100%;
+	display: flex;
+}
+
+.obsidian .obsidian-form-row .obsidian-dialog-2-col input {
+	max-width: none;
+}

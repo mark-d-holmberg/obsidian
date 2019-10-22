@@ -196,14 +196,14 @@ class ObsidianActor extends Actor5e {
 	}
 
 	getItemParent (item) {
-		return this.items.find(other => other.id === item.flags.obsidian.parent);
+		return this.data.items.find(other => other.id === item.flags.obsidian.parent);
 	}
 
 	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
-		const spells = this.items.filter(item => item.type === 'spell');
+		const spells = this.data.items.filter(item => item.type === 'spell');
 		const features =
-			this.items.filter(item =>
+			this.data.items.filter(item =>
 				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
 
 		for (const feature of features) {
@@ -230,7 +230,7 @@ class ObsidianActor extends Actor5e {
 	async updateEquipment (deleted) {
 		if (deleted) {
 			const update = {};
-			const parent = this.items.find(item => item.id === deleted.flags.obsidian.parent);
+			const parent = this.data.items.find(item => item.id === deleted.flags.obsidian.parent);
 
 			if (deleted.type === 'backpack') {
 				deleted.flags.obsidian.contents.forEach(item => {
@@ -259,12 +259,12 @@ class ObsidianActor extends Actor5e {
 		}
 
 		const magicalItems =
-			this.items.filter(item =>
+			this.data.items.filter(item =>
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
 		const itemMap = new Map(magicalItems.map(item => [item.id, item]));
-		const spells = this.items.filter(item => item.type === 'spell');
+		const spells = this.data.items.filter(item => item.type === 'spell');
 
 		for (const spell of spells) {
 			const flags = spell.flags.obsidian;
@@ -275,11 +275,12 @@ class ObsidianActor extends Actor5e {
 	}
 
 	async updateFeatures (update) {
-		const features = this.items.filter(item => item.type === 'feat' && item.flags.obsidian);
+		const features =
+			this.data.items.filter(item => item.type === 'feat' && item.flags.obsidian);
 		const featMap = new Map(features.map(feat => [feat.id, feat]));
 
-		for (let i = 0; i < this.items.length; i++) {
-			const item = this.items[i];
+		for (let i = 0; i < this.data.items.length; i++) {
+			const item = this.data.items[i];
 			if (item.type === 'spell') {
 				const flags = item.flags.obsidian;
 				if (flags.source && flags.source.type === 'feat'
