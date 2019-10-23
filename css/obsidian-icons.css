@@ -226,7 +226,6 @@
 	position: absolute;
 	font-family: Roboto, sans-serif;
 	font-size: 16px;
-	color: var(--text-regular);
 	top: 0;
 	left: 0;
 	display: flex;
@@ -234,11 +233,25 @@
 	align-items: center;
 }
 
+.obsidian-css-icon-positive .obsidian-css-icon-label {
+	color: var(--bg);
+}
+
+.obsidian-css-icon-negative .obsidian-css-icon-label {
+	color: var(--text-regular);
+}
+
 .obsidian-css-icon-hexagon,
 .obsidian-css-icon-hexagon .obsidian-css-icon-shape,
 .obsidian-css-icon-hexagon .obsidian-css-icon-label {
 	width: 20px;
 	height: 12px;
+}
+
+.obsidian-css-icon-diamond,
+.obsidian-css-icon-diamond .obsidian-css-icon-label {
+	width: 20px;
+	height: 19px;
 }
 
 .obsidian-css-icon-shape {
@@ -271,11 +284,30 @@
 	border-top: 5px solid transparent;
 }
 
-.obsidian-css-icon-positive {
+.obsidian-css-icon-diamond .obsidian-css-icon-shape {
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid transparent;
+	height: 0;
+	width: 10px;
+	box-sizing: content-box;
+}
+
+.obsidian-css-icon-diamond .obsidian-css-icon-shape:after {
+	top: 5px;
+	left: -5px;
+	width: 0;
+	height: 0;
+	border-top: 14px solid transparent;
+	border-right: 10px solid transparent;
+	border-left: 10px solid transparent;
+}
+
+.obsidian-css-icon-positive.obsidian-css-icon-hexagon {
 	background: var(--positive);
 }
 
-.obsidian-css-icon-negative {
+.obsidian-css-icon-negative.obsidian-css-icon-hexagon {
 	background: var(--negative);
 }
 
@@ -292,5 +324,21 @@
 }
 
 .obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
+	border-top-color: var(--negative);
+}
+
+.obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape {
+	border-bottom-color: var(--positive);
+}
+
+.obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
+	border-top-color: var(--positive);
+}
+
+.obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape {
+	border-bottom-color: var(--negative);
+}
+
+.obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
 	border-top-color: var(--negative);
 }

@@ -246,9 +246,53 @@
 					</div>
 				{{/if}}
 				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container">
+					<div class="obsidian-char-box-container" data-dialog="Defenses">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
-						<div class="obsidian-char-box obsidian-list-box obsidian-defenses"></div>
+						<div class="obsidian-char-box obsidian-list-box obsidian-defenses">
+						  {{#if (not-empty entity.flags.obsidian.defenses.vuln)}}
+							  <div class="obsidian-list-box-row">
+								  <div class="obsidian-css-icon obsidian-css-icon-sm
+								       obsidian-css-icon-negative obsidian-css-icon-diamond">
+								    <div class="obsidian-css-icon-shape"></div>
+								    <div class="obsidian-css-icon-label">
+									    {{localize 'OBSIDIAN.VulnerabilityAbbr'}}
+								    </div>
+								  </div>
+
+								  {{#each entity.flags.obsidian.defenses.vuln}}
+									  <span>{{this}}</span>
+								  {{/each}}
+							  </div>
+						  {{/if}}
+						  {{#if (not-empty entity.flags.obsidian.defenses.res)}}
+							  <div class="obsidian-list-box-row">
+								  <div class="obsidian-css-icon obsidian-css-icon-sm
+								       obsidian-css-icon-positive obsidian-css-icon-diamond">
+								    <div class="obsidian-css-icon-shape"></div>
+								    <div class="obsidian-css-icon-label">
+								      {{localize 'OBSIDIAN.ResistanceAbbr'}}
+								    </div>
+								  </div>
+								  {{#each entity.flags.obsidian.defenses.res}}
+									  <span>{{this}}</span>
+								  {{/each}}
+							  </div>
+						  {{/if}}
+						  {{#if (not-empty entity.flags.obsidian.defenses.imm)}}
+							  <div class="obsidian-list-box-row">
+								  <div class="obsidian-css-icon obsidian-css-icon-sm
+								       obsidian-css-icon-positive obsidian-css-icon-diamond">
+								    <div class="obsidian-css-icon-shape"></div>
+								    <div class="obsidian-css-icon-label">
+								      {{localize 'OBSIDIAN.ImmunityAbbr'}}
+								    </div>
+								  </div>
+								  {{#each entity.flags.obsidian.defenses.imm}}
+									  <span>{{this}}</span>
+								  {{/each}}
+							  </div>
+						  {{/if}}
+						</div>
 					</div>
 				</div>
 			</div>

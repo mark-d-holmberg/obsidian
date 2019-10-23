@@ -51,6 +51,7 @@ class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
+		Obsidian.Rules.Prepare.defenses(flags);
 		Obsidian.Rules.Prepare.skills(actorData, data, flags);
 		Obsidian.Rules.Prepare.tools(actorData, data, flags);
 		Obsidian.Rules.Prepare.saves(actorData, data, flags);

@@ -223,6 +223,25 @@ Obsidian.Rules.Prepare = {
 		}
 	},
 
+	defenses: function (flags) {
+		flags.defenses.res = [];
+		flags.defenses.imm =
+			flags.defenses.conditions.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`));
+		flags.defenses.vuln = [];
+
+		for (const def of flags.defenses.damage) {
+			flags.defenses[def.level].push(game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`));
+		}
+
+		if (flags.defenses.disease) {
+			flags.defenses.imm.push(game.i18n.localize('OBSIDIAN.Disease'));
+		}
+
+		if (flags.defenses.sleep) {
+			flags.defenses.imm.push(game.i18n.localize('OBSIDIAN.NonMagicalSleep'));
+		}
+	},
+
 	weapons: function (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.weapons = [];

@@ -448,5 +448,17 @@
 	"OBSIDIAN.Size-medium": "Medium",
 	"OBSIDIAN.Size-large": "Large",
 	"OBSIDIAN.Size-huge": "Huge",
-	"OBSIDIAN.Size-gargantuan": "Gargantuan"
+	"OBSIDIAN.Size-gargantuan": "Gargantuan",
+	"OBSIDIAN.ManageDefenses": "Manage Defenses",
+	"OBSIDIAN.DefenseLevel-res": "Resistance",
+	"OBSIDIAN.DefenseLevel-imm": "Immunity",
+	"OBSIDIAN.DefenseLevel-vuln": "Vulnerability",
+	"OBSIDIAN.ImmuneDisease": "Immune to disease",
+	"OBSIDIAN.ImmuneSleep": "Immune to nonmagical sleep",
+	"OBSIDIAN.ConditionImmunities": "Condition Immunities",
+	"OBSIDIAN.ResistanceAbbr": "R",
+	"OBSIDIAN.ImmunityAbbr": "I",
+	"OBSIDIAN.VulnerabilityAbbr": "V",
+	"OBSIDIAN.Disease": "Disease",
+	"OBSIDIAN.NonMagicalSleep": "Nonmagical Sleep"
 }

@@ -20,6 +20,12 @@ Obsidian.SCHEMA = {
 			speed: {}
 		},
 		classes: [],
+		defenses: {
+			damage: [],
+			conditions: [],
+			disease: false,
+			sleep: false
+		},
 		details: {
 			gender: null,
 			subrace: null,

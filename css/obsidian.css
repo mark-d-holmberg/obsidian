@@ -408,6 +408,29 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	width: 150px;
 }
 
+.obsidian-list-box-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.obsidian-list-box-row span {
+	font-weight: normal;
+	font-family: Roboto, sans-serif;
+	font-size: 13px;
+	line-height: 1.2;
+}
+
+.obsidian-list-box-row span:after {
+	content: ',';
+	margin-right: 3px;
+}
+
+.obsidian-list-box-row span:last-child:after {
+	content: '';
+	margin: 0;
+}
+
 .obsidian-char-hp {
 	padding: 10px 16px;
 }
@@ -1146,4 +1169,12 @@ legend .fancy-checkbox {
 
 .obsidian-sidebar .obsidian-char-box-stacked {
 	margin-top: 15px;
+}
+
+.obsidian-defenses {
+	padding: 8px 6px;
+}
+
+.obsidian-defenses .obsidian-css-icon {
+	margin-right: 4px;
 }

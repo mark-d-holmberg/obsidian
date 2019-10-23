@@ -81,6 +81,7 @@ Obsidian.Rules.CLASS_RITUALS = {
 	wiz: 'book'
 };
 
+Obsidian.Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
 Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
 Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];

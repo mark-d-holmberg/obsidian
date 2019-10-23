@@ -1,0 +1,62 @@
+<form class="obsidian" autocomplete="off">
+  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+    <div class="obsidian-checkbox-row">
+      {{fancy-checkbox 'flags.obsidian.defenses.disease' content='OBSIDIAN.ImmuneDisease'
+                       checked=entity.flags.obsidian.defenses.disease}}
+      {{fancy-checkbox 'flags.obsidian.defenses.sleep' content='OBSIDIAN.ImmuneSleep'
+                       checked=entity.flags.obsidian.defenses.sleep}}
+    </div>
+  </div>
+  <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
+    {{localize 'OBSIDIAN.Damage'}}
+    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-dmg">
+      {{localize 'OBSIDIAN.Add'}}
+    </button>
+  </label>
+  {{#each entity.flags.obsidian.defenses.damage as |def id|}}
+	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+	    <div>
+	      <select name="flags.obsidian.defenses.damage.{{id}}.level">
+	        {{#select def.level}}
+	            {{#each ../ObsidianRules.DEFENSE_LEVELS}}
+			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
+		        {{/each}}
+	        {{/select}}
+	      </select>
+	      <select name="flags.obsidian.defenses.damage.{{id}}.dmg">
+	        {{#select def.dmg}}
+		        {{#each ../ObsidianRules.DAMAGE_TYPES}}
+			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
+		        {{/each}}
+		        <option value="hlg">{{localize 'OBSIDIAN.Healing'}}</option>
+	        {{/select}}
+	      </select>
+	    </div>
+	    <button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-dmg">
+	      {{localize 'OBSIDIAN.Remove'}}
+	    </button>
+	  </div>
+  {{/each}}
+  <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
+    {{localize 'OBSIDIAN.ConditionImmunities'}}
+    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-cond">
+      {{localize 'OBSIDIAN.Add'}}
+    </button>
+  </label>
+  {{#each entity.flags.obsidian.defenses.conditions as |def id|}}
+	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+	    <div>
+	      <select name="flags.obsidian.defenses.conditions.{{id}}">
+	        {{#select def}}
+		        {{#each ../ObsidianRules.CONDITIONS}}
+			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
+		        {{/each}}
+	        {{/select}}
+	      </select>
+	    </div>
+	    <button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-cond">
+	      {{localize 'OBSIDIAN.Remove'}}
+	    </button>
+	  </div>
+  {{/each}}
+</form>
