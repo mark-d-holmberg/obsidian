@@ -452,6 +452,11 @@
 	min-height: 200px;
 }
 
+.obsidian .tox .tox-toolbar-overlord,
+.obsidian .tox .tox-toolbar__primary {
+	background: none;
+}
+
 .obsidian .tox .tox-tbtn,
 .obsidian .tox .tox-tbtn__select-label {
 	color: var(--text-secondary);

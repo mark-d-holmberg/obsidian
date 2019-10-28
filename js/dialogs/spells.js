@@ -50,7 +50,7 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
 
 		for (const spell of Object.values(
-			data.actor.data.items.filter(item => item.type === 'spell')))
+			data.actor.items.filter(item => item.type === 'spell')))
 		{
 			const flags = spell.flags.obsidian;
 			if (!flags || flags.source.type !== 'class') {
