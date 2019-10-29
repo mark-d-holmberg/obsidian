@@ -28,7 +28,12 @@ class ObsidianHDDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 		const existingHD = Object.keys(hd);
-		const availableHD = Obsidian.Rules.HD.filter(x => !existingHD.includes(String(x)));
+		const availableHD =
+			Obsidian.Rules.HD.filter(x => {
+				const s = String(x);
+				return !existingHD.includes(s)
+					|| (hd[s].max < 1 && Obsidian.notDefinedOrEmpty(hd[s].override));
+			});
 
 		if (availableHD.length > 0) {
 			const newHD = availableHD[0];
@@ -54,11 +59,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 		const removedHD = hd[hdVal];
 
 		if (removedHD !== undefined) {
-			delete removedHD.override;
-			if (removedHD.max === 0) {
-				delete hd[hdVal];
-			}
-
+			removedHD.override = '';
 			await this.parent.actor.update({'flags.obsidian.attributes.hd': hd});
 			this.render(false);
 		}
@@ -68,23 +69,21 @@ class ObsidianHDDialog extends ObsidianDialog {
 	 * @private
 	 */
 	_updateObject (event, formData) {
-		const total = {};
+		const overrides = {};
 		this.element.find('select').each((i, el) => {
 			const jqel = $(el);
 			const hd = jqel.val();
-			const add = parseInt(jqel.next().val());
+			const override = jqel.next().val();
 
-			if (!isNaN(add)) {
-				if (total[hd] === undefined) {
-					total[hd] = add;
-				} else {
-					total[hd] += add;
-				}
+			if (overrides[hd] === undefined) {
+				overrides[hd] = override;
+			} else {
+				overrides[hd] = Number(overrides[hd]) + Number(override);
 			}
 		});
 
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
-		for (const [key, val] of Object.entries(total)) {
+		for (const [key, val] of Object.entries(overrides)) {
 			if (hd[key] === undefined) {
 				hd[key] = {
 					max: 0,
@@ -96,13 +95,6 @@ class ObsidianHDDialog extends ObsidianDialog {
 			}
 		}
 
-		for (const key of Object.keys(hd)) {
-			if (total[key] === undefined && hd[key].max === 0) {
-				delete hd[key];
-			}
-		}
-
-		formData = {'flags.obsidian.attributes.hd': hd};
-		super._updateObject(event, formData);
+		super._updateObject(event, {'flags.obsidian.attributes.hd': hd});
 	}
 }

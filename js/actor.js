@@ -320,10 +320,7 @@ class ObsidianActor extends Actor5e {
 			const diff = (totals[hd] || 0) - val.max;
 			updated.max = totals[hd] || 0;
 			updated.value = val.value + diff;
-
-			if (updated.max > 0 || updated.override !== undefined) {
-				newHD[hd] = updated;
-			}
+			newHD[hd] = updated;
 		}
 
 		for (const [hd, val] of Object.entries(totals)) {

@@ -31,6 +31,10 @@ Handlebars.registerHelper('defined', function (arg) {
 	return arg !== undefined;
 });
 
+Handlebars.registerHelper('defined-and-not-empty', function (arg) {
+	return !Obsidian.notDefinedOrEmpty(arg);
+});
+
 Handlebars.registerHelper('disabled', function (arg) {
 	return arg ? '' : 'disabled';
 });

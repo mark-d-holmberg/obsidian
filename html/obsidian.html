@@ -219,19 +219,20 @@
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
 									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
+										{{#if (expr '||' (expr '>' hd.max 0) (defined-and-not-empty hd.override))}}
 										<div class="obsidian-bisect">
 											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
 											       class="obsidian-input-num" value="{{hd.value}}" data-dtype="Number">
 											/
 											<div class="obsidian-ptr obsidian-resource-box-max
-											{{#if (defined hd.override)~}}
+											{{#if (defined-and-not-empty hd.override)~}}
 												{{#if (expr '>' hd.override hd.max)~}}
 													obsidian-positive
 												{{else if (expr '<' hd.override hd.max)~}}
 													obsidian-negative
 												{{~/if}}
 											{{~/if}}" data-dialog="HD">
-												{{#if (defined hd.override)}}
+												{{#if (defined-and-not-empty hd.override)}}
 													{{hd.override}}
 												{{else}}
 													{{hd.max}}
@@ -239,6 +240,7 @@
 											</div>
 											<div class="obsidian-resource-box-subtle">d{{id}}</div>
 										</div>
+										{{/if}}
 									{{/each}}
 								</div>
 							</div>
