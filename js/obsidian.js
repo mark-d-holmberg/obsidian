@@ -132,8 +132,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
-		html.find('.obsidian-char-box[contenteditable]')
-			.focusout(this._onUnfocusContentEditable.bind(this));
 		html.find('[data-feat-id] .obsidian-feature-use').click(this._onUseClicked.bind(this));
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
@@ -564,20 +562,6 @@ class Obsidian extends ActorSheet5eCharacter {
 		const update = {};
 		update[`data.spells.${spellKey}.${spellLevel === 'pact' ? 'uses' : 'value'}`] = uses;
 		this.actor.update(update);
-	}
-
-	/**
-	 * @private
-	 */
-	_onUnfocusContentEditable () {
-		setTimeout(() => {
-			if (!$(':focus').length) {
-				const update = {};
-				this.element.find('.obsidian-char-box[contenteditable]')
-					.each((i, el) => update[el.dataset.prop] = el.innerHTML);
-				this.actor.update(update);
-			}
-		}, 25);
 	}
 
 	/**
