@@ -33,7 +33,7 @@
 
 .obsidian button {
 	border-radius: 3px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	cursor: pointer;
 	color: var(--text-regular);
 }
@@ -93,7 +93,7 @@
 }
 
 .obsidian select {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	background: transparent;
 	color: var(--text-regular);
 	border-radius: 0;
@@ -104,7 +104,7 @@
 }
 
 .obsidian select.obsidian-select-operator {
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 }
 
 .obsidian :disabled select,
@@ -184,7 +184,7 @@
 	background: var(--bg);
 	color: var(--text-regular);
 	padding: 20px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 }
 
@@ -378,7 +378,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian-char-box-text {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: bold;
@@ -400,7 +400,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	padding: 4px 8px;
 	font-size: 14px;
 	color: var(--text-secondary);
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian-list-box {
@@ -416,7 +416,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-list-box-row span {
 	font-weight: normal;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-size: 13px;
 	line-height: 1.2;
 }
@@ -509,7 +509,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .dnd5e.sheet form input[type=number].obsidian-input-sheet {
 	display: inline-block;
 	width: 40px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	color: var(--text-subtle);
 	font-size: 14px;
 	text-align: center;
@@ -592,12 +592,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin: 0;
 	border-radius: 0;
 	text-align: center;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	line-height: 1;
 }
 
 .obsidian label {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	color: var(--text-secondary);
 	font-size: 12px;
 	text-transform: uppercase;
@@ -616,7 +616,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	border: 0 solid var(--mid);
 	border-bottom-width: 1px;
 	border-radius: 0;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian > input:last-child {
@@ -807,7 +807,7 @@ legend .fancy-checkbox {
 .checkbox-content {
 	display: inline-block;
 	margin-left: .75em;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: bold;
@@ -972,7 +972,7 @@ legend .fancy-checkbox {
 
 .obsidian-skill-name,
 .obsidian-save-name {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 14px;
 	padding: 5px 0;
 	flex: 1;
@@ -1013,7 +1013,7 @@ legend .fancy-checkbox {
 	display: flex;
 	cursor: pointer;
 	font-size: 14px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-weight: normal;
 	color: var(--text-secondary);
 }
@@ -1054,7 +1054,7 @@ legend .fancy-checkbox {
 	color: var(--text-secondary);
 	font-size: 14px;
 	text-align: center;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-weight: normal;
 }
 

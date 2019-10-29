@@ -904,6 +904,19 @@ Hooks.once('init', () => {
 	]);
 });
 
+Hooks.once('ready', () => {
+	let fontSheet = 'font';
+	if (game.i18n.lang === 'ja') {
+		fontSheet = 'ja';
+	}
+
+	const link = document.createElement('link');
+	link.type = 'text/css';
+	link.rel = 'stylesheet';
+	link.href = `modules/obsidian/css/${fontSheet}.css`;
+	document.getElementsByTagName('head')[0].appendChild(link);
+});
+
 // Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {
 	if (!evt.target.parentNode || evt.target.parentNode.nodeType !== Node.ELEMENT_NODE

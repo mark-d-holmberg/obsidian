@@ -60,3 +60,17 @@
 	font-weight: 400;
 	src: url('../fonts/SchoolsOfMagic.otf') format('opentype');
 }
+
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../fonts/NotoSansJP-Regular.otf') format('opentype');
+}
+
+@font-face {
+	font-family: 'Noto Sans JP';
+	font-style: normal;
+	font-weight: 700;
+	src: url('../fonts/NotoSansJP-Bold.otf') format('opentype');
+}

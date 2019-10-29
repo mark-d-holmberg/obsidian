@@ -25,7 +25,7 @@
 
 .obsidian-tab,
 .obsidian-sub-tab {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-weight: bold;
 	font-size: 14px;
 	color: var(--text-secondary);
@@ -89,7 +89,7 @@
 
 .obsidian-tab-contents h3 {
 	text-transform: uppercase;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 13px;
 	font-weight: bold;
 	color: var(--text-secondary);
@@ -109,7 +109,7 @@
 	color: var(--text-regular);
 	font-size: 10px;
 	font-weight: bold;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian-thead,
@@ -120,7 +120,7 @@
 .obsidian-thead {
 	text-transform: uppercase;
 	font-size: 11px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	padding: 5px 0;
 	font-weight: bold;
 }
@@ -232,7 +232,7 @@
 .obsidian-table-text,
 .obsidian-table-sub-text,
 .obsidian-table-note-text {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian-table-text {
@@ -252,7 +252,7 @@
 .obsidian-table-save {
 	font-weight: bold;
 	text-transform: uppercase;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 }
 
 .obsidian-table-number-sm,
@@ -296,7 +296,7 @@
 
 .obsidian legend,
 .obsidian legend .checkbox-content {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 16px;
 	color: var(--text-secondary);
 	padding: 0 8px;
@@ -328,7 +328,7 @@
 .obsidian-table-note-text:after {
 	font-size: 12px;
 	color: var(--text-subtle);
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian-table-note-text:after {
@@ -353,7 +353,7 @@
 
 .dnd5e.sheet form .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet {
 	font-size: 12px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	width: 30px;
 	padding: 0;
 }
@@ -361,7 +361,7 @@
 .obsidian-table-note-text .obsidian-feature-max {
 	font-size: 12px;
 	min-width: 30px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 }
 
 .obsidian-table-note-text .obsidian-binary-operator {
@@ -387,7 +387,7 @@
 .obsidian-feature-header {
 	font-size: 13px;
 	line-height: 1.2;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	display: flex;
 	height: 15px;
 	justify-content: space-between;
@@ -409,7 +409,7 @@
 
 .obsidian-feature-body {
 	font-size: 12px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-weight: normal;
 	text-align: justify;
 }
@@ -442,7 +442,7 @@
 	font-size: 14px;
 	min-width: 40px;
 	text-align: center;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	display: inline-block;
 }
 
@@ -464,7 +464,7 @@
 }
 
 .obsidian .tox .tox-tbtn__select-label {
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 14px;
 }
 
@@ -514,7 +514,7 @@
 .obsidian-char-inv-header {
 	justify-content: space-between;
 	align-items: center;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 13px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -528,7 +528,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-weight: bold;
 	margin-right: 15px;
 }
@@ -557,7 +557,7 @@
 }
 
 .obsidian-char-inv-header-weight > div:first-child > span:first-child {
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-weight: normal;
 	margin-left: 5px;
 }
@@ -619,7 +619,7 @@ form.obsidian input.obsidian-input-search,
 	padding: 6px 34px;
 	font-size: 13px;
 	line-height: 1.4;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	transition: border-color ease-in-out .15s;
 	box-shadow: none;
 	text-align: left;
@@ -801,7 +801,7 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 
 .obsidian-table summary > div > .obsidian-details-sub-text {
 	font-size: 13px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	color: var(--text-regular);
 	font-weight: normal;
 	margin-left: 4px;
@@ -859,13 +859,13 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	font-style: italic;
 	font-size: 13px;
 	font-weight: normal;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	display: inline-block;
 }
 
 .obsidian-spell-list .obsidian-col-spell .obsidian-table-sub-text {
 	font-size: 13px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	display: inline-block;
 }
 
@@ -907,7 +907,7 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 
 .obsidian-item-card-header h3 {
 	margin: 0 0 10px 0;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-size: 13px;
 	font-style: italic;
 	padding: 0 0 10px 0;
@@ -928,13 +928,13 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 .obsidian-item-card-header-key {
 	font-weight: bold;
 	font-size: 13px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	margin-right: 5px;
 }
 
 .obsidian-item-card-header-value {
 	font-size: 13px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	flex: 1;
 }
 
@@ -945,12 +945,12 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 
 .obsidian-item-card-header-value .obsidian-table-sub-text {
 	font-size: 12px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 }
 
 .obsidian .obsidian-item-card input {
 	width: 40px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-size: 13px;
 	border: none;
 	display: inline-block;
@@ -987,7 +987,7 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 }
 
 .dialog .obsidian h2 {
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-weight: bold;
 	font-size: 14px;
 	text-transform: uppercase;
@@ -997,14 +997,14 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 
 .obsidian-spell-totals {
 	padding: 5px;
-	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-family: var(--font-condensed);
 	font-size: 14px;
 	color: var(--text-regular);
 }
 
 .obsidian #context-menu {
 	max-width: 100%;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-size: 13px;
 	color: var(--text-regular);
 	border: 1px dotted var(--mid);
@@ -1027,7 +1027,7 @@ form.obsidian .obsidian-spell-filter input.obsidian-input-search {
 .dnd5e.sheet form.obsidian .obsidian-table-input,
 form.obsidian .obsidian-table-input {
 	font-size: 14px;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-weight: bold;
 	color: var(--text-regular);
 	height: auto;
@@ -1088,7 +1088,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-char-grid-row {
 	display: flex;
 	justify-content: space-between;
-	font-family: Roboto, sans-serif;
+	font-family: var(--font);
 	font-size: 13px;
 	margin-bottom: 10px;
 }

@@ -6,6 +6,8 @@ All source code (`*.html`, `*.css`, `*.js`, `*.json`, `*.d.ts`) is made availabl
 
 The fonts Roboto and Roboto Condensed found in the `fonts` directory are used and redistributed under the terms of the [Apache License v2](http://www.apache.org/licenses/LICENSE-2.0).
 
+The font Noto Sans JP found in the `fonts` directory is used and redistributed under the terms of the [OFL 1.1](https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web).
+
 The SVG images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
 
 * [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`
