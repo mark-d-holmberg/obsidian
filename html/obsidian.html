@@ -63,17 +63,17 @@
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
-								{{~#if (expr '>=' data.details.xp.value data.details.xp.max)~}}
+								{{~#if (geq data.details.xp.value data.details.xp.max)~}}
 									100
 								{{~else~}}
 									{{~data.details.xp.pct~}}
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{#if (expr '>=' data.details.level.value ObsidianRules.MAX_LEVEL)}}
+							{{#if (geq data.details.level.value ObsidianRules.MAX_LEVEL)}}
 								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
 							{{else}}
-								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{expr '+' data.details.level.value 1}}
+								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add data.details.level.value 1}}
 							{{/if}}
 						</span>
 					</div>
@@ -104,7 +104,7 @@
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Inspiration'}}</div>
 						<div class="obsidian-char-box obsidian-inspiration obsidian-ptr">
-							<i class="fas fa-sun {{#if (expr '!' data.attributes.inspiration.value)~}}
+							<i class="fas fa-sun {{#if (not data.attributes.inspiration.value)~}}
 								obsidian-hidden
 							{{~/if}}"></i>
 						</div>
@@ -150,7 +150,7 @@
 						</div>
 					</div>
 					<button type="button" class="
-					        {{#if (expr '===' entity.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
+					        {{#if (eq entity.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
 					        obsidian-global-advantage">
 						{{localize 'OBSIDIAN.Roll-adv'}}
@@ -165,7 +165,7 @@
 						</div>
 					</div>
 					<button type="button" class="
-					        {{#if (expr '===' entity.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
+					        {{#if (eq entity.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
 					        obsidian-global-disadvantage">
 						{{localize 'OBSIDIAN.Roll-dis'}}
@@ -198,9 +198,9 @@
 								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
 								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
-								{{#if (expr '>' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+								{{#if (gt data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
 									obsidian-positive
-								{{else if (expr '<' data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+								{{else if (lt data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
 									obsidian-negative
 								{{~/if}} obsidian-simple-dialog" data-title="{{localize 'OBSIDIAN.EditMaxHP'}}"
 								     data-width="250" data-template="hp.html">
@@ -208,7 +208,8 @@
 								</div>
 							</div>
 							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
-							       class="obsidian-input-num" placeholder="tmp" data-dtype="Number">
+							       class="obsidian-input-num" placeholder="{{localize 'OBSIDIAN.TempAbbrUC'}}"
+							       data-dtype="Number">
 						</div>
 					</div>
 				</div>
@@ -219,16 +220,16 @@
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
 									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
-										{{#if (expr '||' (expr '>' hd.max 0) (defined-and-not-empty hd.override))}}
+										{{#if (or (gt hd.max 0) (defined-and-not-empty hd.override))}}
 										<div class="obsidian-bisect">
 											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
 											       class="obsidian-input-num" value="{{hd.value}}" data-dtype="Number">
 											/
 											<div class="obsidian-ptr obsidian-resource-box-max
 											{{#if (defined-and-not-empty hd.override)~}}
-												{{#if (expr '>' hd.override hd.max)~}}
+												{{#if (gt hd.override hd.max)~}}
 													obsidian-positive
-												{{else if (expr '<' hd.override hd.max)~}}
+												{{else if (lt hd.override hd.max)~}}
 													obsidian-negative
 												{{~/if}}
 											{{~/if}}" data-dialog="HD">
@@ -313,13 +314,13 @@
 					<div class="obsidian-char-box obsidian-skills-box">
 						{{#each entity.obsidian.skills as |skill id|}}
 							<div class="obsidian-skill-item" data-skill-id="{{id}}">
-								<div class="obsidian-prof obsidian-ptr {{#if (expr '===' 0.5 skill.value)~}}
+								<div class="obsidian-prof obsidian-ptr {{#if (eq 0.5 skill.value)~}}
 									obsidian-half-proficient
-								{{~else if (expr '===' 1 skill.value)~}}
+								{{~else if (eq 1 skill.value)~}}
 									obsidian-proficient
-								{{~else if (expr '===' 2 skill.value)~}}
+								{{~else if (eq 2 skill.value)~}}
 									obsidian-expertise
-								{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 skill.value))~}}
+								{{~else if (and ../entity.flags.obsidian.skills.joat (eq 0 skill.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -363,13 +364,13 @@
 						{{#each entity.flags.obsidian.skills.tools as |tool id|}}
 							<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
 								<div class="
-								{{~#if (expr '===' 0.5 tool.value)~}}
+								{{~#if (eq 0.5 tool.value)~}}
 									obsidian-half-proficient
-								{{~else if (expr '===' 1 tool.value)~}}
+								{{~else if (eq 1 tool.value)~}}
 									obsidian-proficient
-								{{~else if (expr '===' 2 tool.value)~}}
+								{{~else if (eq 2 tool.value)~}}
 									obsidian-expertise
-								{{~else if (expr '&&' ../entity.flags.obsidian.skills.joat (expr '===' 0 tool.value))~}}
+								{{~else if (and ../entity.flags.obsidian.skills.joat (eq 0 tool.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -413,7 +414,7 @@
 						{{#if (non-zero entity.flags.obsidian.attributes.senses 'radius')}}
 						<div class="obsidian-horizontal-list">
 							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
-								{{#if (expr '>' sense.radius 0)}}
+								{{#if (gt sense.radius 0)}}
 									<span>
 										{{i18n-join 'OBSIDIAN.Sense-' id}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
 									</span>
@@ -482,7 +483,7 @@
 								obsidian-radio-selected
 							{{~/if}} obsidian-radio-label" data-value="{{this}}">
 								<div class="
-								{{~#if (expr '===' 'invisible' this)~}}
+								{{~#if (eq 'invisible' this)~}}
 									obsidian-radio-positive
 								{{~else~}}
 									obsidian-radio-negative
@@ -494,7 +495,7 @@
 						{{/each}}
 						</div>
 						<div class="
-						{{~#if (expr '>' data.attributes.exhaustion.value 0)~}}
+						{{~#if (gt data.attributes.exhaustion.value 0)~}}
 							obsidian-meatballs-active
 						{{~/if}} obsidian-meatballs-title">
 							{{localize 'OBSIDIAN.Exhaustion'}}
@@ -502,7 +503,7 @@
 						<div class="obsidian-meatballs obsidian-exhaustion">
 							{{#each (range 1 6) as |level|}}
 								<div class="
-								{{~#if (expr '<=' level ../data.attributes.exhaustion.value)~}}
+								{{~#if (leq level ../data.attributes.exhaustion.value)~}}
 									obsidian-radio-selected
 								{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{level}}">
 									<span></span>
@@ -522,9 +523,9 @@
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
 						{{#each data.abilities as |ability id|}}
-							<div {{#if (expr '===' id 'dex')}}
+							<div {{#if (eq id 'dex')}}
 								style="grid-row-start: 2;"
-							{{else if (expr '===' id 'con')}}
+							{{else if (eq id 'con')}}
 								style="grid-row-start: 3;"
 							{{/if}} class="obsidian-save-item" data-value="{{id}}">
 								<div class="
@@ -560,7 +561,7 @@
 								<div class="obsidian-meatballs obsidian-death-successes">
 									{{#each (range 1 3) as |n|}}
 										<div class="
-										{{~#if (expr '<=' n ../data.attributes.death.success)~}}
+										{{~#if (leq n ../data.attributes.death.success)~}}
 											obsidian-radio-selected
 										{{~/if}} obsidian-radio obsidian-radio-positive" data-value="{{n}}">
 											<span></span>
@@ -573,7 +574,7 @@
 								<div class="obsidian-meatballs obsidian-death-failures">
 									{{#each (range 1 3) as |n|}}
 										<div class="
-										{{~#if (expr '<=' n ../data.attributes.death.failure)~}}
+										{{~#if (leq n ../data.attributes.death.failure)~}}
 											obsidian-radio-selected
 										{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{n}}">
 											<span></span>

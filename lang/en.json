@@ -36,6 +36,7 @@
 	"OBSIDIAN.Ability-wis": "Wisdom",
 	"OBSIDIAN.Ability-cha": "Charisma",
 	"OBSIDIAN.HP": "Hit Points",
+	"OBSIDIAN.TempAbbrUC": "TMP",
 	"OBSIDIAN.EditMaxHP": "Edit Max HP",
 	"OBSIDIAN.HD": "Hit Dice",
 	"OBSIDIAN.Defenses": "Defenses",

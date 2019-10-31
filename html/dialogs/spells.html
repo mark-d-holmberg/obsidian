@@ -10,7 +10,7 @@
 	{{#each entity.flags.obsidian.classes}}
 		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
 			<h2>{{label}}</h2>
-			{{#if (expr '===' preparation 'prep')}}
+			{{#if (eq preparation 'prep')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>
@@ -33,7 +33,7 @@
 								filter=false spells=prepared btnCantrip='OBSIDIAN.Remove'}}
 					</details>
 				{{/with}}
-			{{else if (expr '===' preparation 'known')}}
+			{{else if (eq preparation 'known')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>
@@ -54,7 +54,7 @@
 								btnClass='obsidian-rm-spell' filter=false spells=known}}
 					</details>
 				{{/with}}
-			{{else if (expr '===' preparation 'book')}}
+			{{else if (eq preparation 'book')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>

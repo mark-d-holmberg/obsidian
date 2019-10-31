@@ -33,7 +33,7 @@
 					{{#each ../ObsidianRules.DAMAGE_TYPES}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 					{{/each}}
-					{{#if (expr '||' ../spell ../consumable ../feature)}}
+					{{#if (or ../spell ../consumable ../feature)}}
 						<option value="hlg">{{localize 'OBSIDIAN.Healing'}}</option>
 					{{/if}}
 				{{/select}}

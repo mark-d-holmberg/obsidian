@@ -16,7 +16,7 @@
 		{{~#if custom~}}
 			{{~label~}}
 		{{~else~}}
-			{{~#if (expr '===' @key 'ammunition')~}}
+			{{~#if (eq @key 'ammunition')~}}
 				{{{../flags.obsidian.ammo.display}}}
 			{{~else~}}
 				{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}

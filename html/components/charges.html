@@ -1,4 +1,4 @@
-<fieldset {{disabled (expr '!' enabled)}}>
+<fieldset {{disabled (not enabled)}}>
 	<legend>
 		{{fancy-checkbox 'flags.obsidian.charges.enabled' content='OBSIDIAN.Charges' checked=enabled}}
 	</legend>

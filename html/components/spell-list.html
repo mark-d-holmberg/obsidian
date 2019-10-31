@@ -1,4 +1,4 @@
-{{#if (expr '||' maxCantrips (expr '||' maxKnown maxPrepared))}}
+{{#if (or maxCantrips maxKnown maxPrepared)}}
 	<div class="obsidian-spell-totals">
 		{{#if maxCantrips}}
 			<div>{{localize 'OBSIDIAN.Cantrips'}}: {{totalCantrips}}&sol;{{maxCantrips}}</div>
@@ -56,13 +56,13 @@
 				<button type="button" class="{{#if (has-spell-with-name ../active spell)}}obsidian-btn-active{{/if}}
 				        obsidian-btn-outline obsidian-spell-action">
 					{{#if (has-spell-with-name ../active spell)}}
-						{{#if (expr '||' spell.data.level.value (expr '!' ../btnCantripActive))}}
+						{{#if (or spell.data.level.value (not ../btnCantripActive))}}
 							{{localize ../btnActive}}
 						{{else}}
 							{{localize ../btnCantripActive}}
 						{{/if}}
 					{{else}}
-						{{#if (expr '||' spell.data.level.value (expr '!' ../btnCantrip))}}
+						{{#if (or spell.data.level.value (not ../btnCantrip))}}
 							{{localize ../btn}}
 						{{else}}
 							{{localize ../btnCantrip}}

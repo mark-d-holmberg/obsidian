@@ -77,7 +77,7 @@
 				{{#each entity.obsidian.inventory.containers}}
 					<details{{#if flags.obsidian.open}} open{{/if}}>
 						<summary draggable="true" data-reorderable="true" class="
-						{{~#if (expr '>' flags.obsidian.carriedWeight flags.obsidian.capacity)~}}
+						{{~#if (gt flags.obsidian.carriedWeight flags.obsidian.capacity)~}}
 							obsidian-negative
 						{{~/if}} obsidian-inv-container" data-item-id="{{id}}">
 							<div>

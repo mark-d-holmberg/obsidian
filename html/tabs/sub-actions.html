@@ -15,7 +15,7 @@
 						{{#if feat.flags.obsidian.uses.enabled}}
 							<div class="obsidian-feature-recharge">
 								&bull;
-								{{#if (expr '===' feat.flags.obsidian.uses.recharge 'short')}}
+								{{#if (eq feat.flags.obsidian.uses.recharge 'short')}}
 									{{localize 'OBSIDIAN.ShortRest'}}
 								{{else}}
 									{{localize 'OBSIDIAN.LongRest'}}

@@ -1,9 +1,9 @@
 {{#each this}}
 	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true" data-name="{{name}}"
 	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
-	     {{#if (expr '===' type 'weapon')}}data-filter-weapon="true" {{/if}}
-	     {{#if (expr '===' flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
-	     {{#if (expr '===' type 'consumable')}}data-filter-consumable="true"{{/if}}
+	     {{#if (eq type 'weapon')}}data-filter-weapon="true" {{/if}}
+	     {{#if (eq flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
+	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}
 	>
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
@@ -26,17 +26,17 @@
 		<div class="obsidian-col-inv-item">
 			<div class="obsidian-table-text">{{name}}</div>
 			<div class="obsidian-table-sub-text">
-				{{#if (expr '===' type 'weapon')}}
-					{{#if (expr '===' flags.obsidian.type 'melee')}}
+				{{#if (eq type 'weapon')}}
+					{{#if (eq flags.obsidian.type 'melee')}}
 						{{localize 'OBSIDIAN.MeleeWeapon'}}
-					{{else if (expr '===' flags.obsidian.type 'ranged')}}
+					{{else if (eq flags.obsidian.type 'ranged')}}
 						{{localize 'OBSIDIAN.RangedWeapon'}}
 					{{/if}}
-				{{else if (expr '===' type 'equipment')}}
-					{{#if (expr '===' flags.obsidian.subtype 'armour')}}
+				{{else if (eq type 'equipment')}}
+					{{#if (eq flags.obsidian.subtype 'armour')}}
 						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armorType.value}}
 					{{/if}}
-				{{else if (expr '===' type 'consumable')}}
+				{{else if (eq type 'consumable')}}
 					{{i18n-join 'OBSIDIAN.ConsumableType-' flags.obsidian.subtype}}
 				{{/if}}
 			</div>
@@ -66,13 +66,13 @@
 		</div>
 		<div class="obsidian-col-type">
 			<div class="obsidian-icon obsidian-icon-
-				{{~#if (expr '===' type 'equipment')~}}
+				{{~#if (eq type 'equipment')~}}
 					{{~flags.obsidian.subtype~}}
 				{{~else~}}
 					{{~type~}}
 				{{~/if~}}
 			" title="
-				{{~#if (expr '===' type 'equipment')~}}
+				{{~#if (eq type 'equipment')~}}
 					{{i18n-join 'OBSIDIAN.ItemType-' flags.obsidian.subtype}}
 				{{~else~}}
 					{{i18n-join 'OBSIDIAN.ItemType-' type}}
@@ -80,9 +80,9 @@
 			"></div>
 		</div>
 		<div class="obsidian-col-notes">
-			{{#if (expr '===' type 'weapon')}}
+			{{#if (eq type 'weapon')}}
 				{{> public/modules/obsidian/html/components/weapon-notes.html category=true}}
-			{{else if (expr '||' (expr '===' type 'equipment') (expr '===' type 'consumable'))}}
+			{{else if (or (eq type 'equipment') (eq type 'consumable'))}}
 				{{#each flags.obsidian.notes}}
 					<div class="obsidian-table-note-text">
 						{{{this}}}

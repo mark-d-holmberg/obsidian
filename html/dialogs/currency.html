@@ -6,7 +6,7 @@
 					<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></div>
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
 					       name="data.currency.{{@key}}.value" data-dtype="Number" placeholder="0"
-					       value="{{get-property ../data.currency (expr '+' @key '.value')}}">
+					       value="{{get-property ../data.currency (add @key '.value')}}">
 				</label>
 				<input type="text" class="obsidian-input-compact obsidian-add-remove" data-key="{{@key}}"
 				       placeholder="{{localize 'OBSIDIAN.AddRemove'}}" style="width: 200px;">

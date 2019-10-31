@@ -45,7 +45,7 @@
 			</div>
 		</div>
 		<div class="
-			{{#unless (expr '||' item.flags.obsidian.tags.thrown (expr '===' item.flags.obsidian.type 'ranged'))~}}
+			{{#unless (or item.flags.obsidian.tags.thrown (eq item.flags.obsidian.type 'ranged'))~}}
 				obsidian-hidden
 			{{~/unless}} obsidian-form-row obsidian-range-row obsidian-inline obsidian-stacked-row">
 			<div>
@@ -73,7 +73,7 @@
 		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage'}}
 	</fieldset>
-	<fieldset class="{{#if (expr '!' item.flags.obsidian.tags.versatile)}}
+	<fieldset class="{{#if (not item.flags.obsidian.tags.versatile)}}
 		obsidian-hidden
 	{{/if}} obsidian-versatile-block" data-prop="versatile">
 		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
@@ -119,7 +119,7 @@
 						{{/select}}
 					</select>
 					<input type="text" placeholder="{{localize 'OBSIDIAN.Tag'}}"
-					       class="{{#if (expr '!' custom)}}obsidian-hidden{{/if}} obsidian-input-compact
+					       class="{{#unless custom}}obsidian-hidden{{/unless}} obsidian-input-compact
 					       obsidian-input-lg" value="{{label}}">
 				</div>
 				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tag"

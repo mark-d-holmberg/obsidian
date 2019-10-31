@@ -152,7 +152,7 @@
 		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage' spell=true}}
 	</fieldset>
-	<fieldset data-prop="upcast.damage" {{disabled (expr '!' item.flags.obsidian.upcast.enabled)}}>
+	<fieldset data-prop="upcast.damage" {{disabled (not item.flags.obsidian.upcast.enabled)}}>
 		<legend>
 			{{fancy-checkbox 'flags.obsidian.upcast.enabled' content='OBSIDIAN.AtHigherLevels'
 			                 checked=item.flags.obsidian.upcast.enabled}}

@@ -1,10 +1,10 @@
-<fieldset {{disabled (expr '!' enabled)}}>
+<fieldset {{disabled (not enabled)}}>
 	<legend>
 		{{fancy-checkbox 'flags.obsidian.hit.enabled' content='OBSIDIAN.Hit' checked=enabled}}
 	</legend>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
-		{{#if (expr '||' spell consumable feature)}}
+		{{#if (or spell consumable feature)}}
 			<select name="flags.obsidian.hit.attack" data-selector="attack-type">
 				{{#select attack}}
 					<option value="melee">{{localize 'OBSIDIAN.AttackType-melee'}}</option>
@@ -22,7 +22,7 @@
 				</label>
 			{{/if}}
 		{{/if}}
-		{{#if (expr '||' (expr '!' spell) (expr '&&' spell actor))}}
+		{{#if (or (not spell) (and spell actor))}}
 			<select name="flags.obsidian.hit.stat">
 				{{#select stat}}
 					{{#if spell}}<option value="spell">{{localize 'OBSIDIAN.Spell'}}</option>{{/if}}

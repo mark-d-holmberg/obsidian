@@ -1,7 +1,7 @@
 <div class="obsidian-item-card">
 	<div class="obsidian-item-card-header">
 		<h3>
-			{{#if (expr '===' data.level.value 0)}}
+			{{#if (eq data.level.value 0)}}
 				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
 				{{spell-level-format data.level.value cantrip=true}}
 			{{else}}
@@ -14,7 +14,7 @@
 			<div class="obsidian-item-card-header-value">
 				{{flags.obsidian.time.n}}
 				{{lc (i18n-join 'OBSIDIAN.CastTime-' flags.obsidian.time.type)}}
-				{{~#if (expr '===' flags.obsidian.time.type 'react')~}}
+				{{~#if (eq flags.obsidian.time.type 'react')~}}
 					, {{flags.obsidian.time.react}}
 				{{/if}}
 			</div>
@@ -22,9 +22,7 @@
 		<div class="obsidian-item-card-header-row">
 			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Range'}}:</div>
 			<div class="obsidian-item-card-header-value">
-				{{#if (expr '||'
-						      (expr '===' flags.obsidian.range.type 'short')
-						      (expr '===' flags.obsidian.range.type 'long'))}}
+				{{#if (or (eq flags.obsidian.range.type 'short') (eq flags.obsidian.range.type 'long'))}}
 					{{flags.obsidian.range.n}}
 					<span class="obsidian-table-unit">
 						{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
@@ -54,7 +52,7 @@
 				{{/if}}
 			</div>
 		</div>
-		{{#if (expr '&&' view flags.obsidian.uses.enabled)}}
+		{{#if (and view flags.obsidian.uses.enabled)}}
 			<div class="obsidian-item-card-header-row">
 				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
 				<div class="obsidian-item-card-header-value">{{{flags.obsidian.uses.display}}}</div>

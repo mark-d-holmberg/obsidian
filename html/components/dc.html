@@ -1,8 +1,8 @@
-<fieldset {{disabled (expr '!' enabled)}}>
+<fieldset {{disabled (not enabled)}}>
 	<legend>
 		{{fancy-checkbox 'flags.obsidian.dc.enabled' content='OBSIDIAN.DC' checked=enabled}}
 	</legend>
-	{{#if (expr '||' (expr '!' spell) (expr '&&' spell actor))}}
+	{{#if (or (not spell) (and spell actor))}}
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">
 			<input type="text" name="flags.obsidian.dc.bonus" placeholder="8" value="{{bonus}}"

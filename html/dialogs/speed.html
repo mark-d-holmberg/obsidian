@@ -23,7 +23,7 @@
 					       {{~/with~}}">
 					<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
 				</label>
-				{{#if (expr '===' id 'fly')}}
+				{{#if (eq id 'fly')}}
 					{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
 					                 checked=../entity.flags.obsidian.attributes.speed.fly.hover}}
 				{{/if}}

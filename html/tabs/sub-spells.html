@@ -4,14 +4,14 @@
 			<h3>
 				{{spell-level-format this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
-					{{#if (expr '===' ../data.spells.pact.level this)}}
+					{{#if (eq ../data.spells.pact.level this)}}
 						<div class="obsidian-spells-pact">
 							{{format-slots ../data.spells.pact 'pact'}}
 							<span>{{localize 'OBSIDIAN.Pact'}}</span>
 						</div>
 					{{/if}}
-					{{#with (lookup ../data.spells (expr '+' 'spell' this))}}
-					{{#if (expr '>' max 0)}}
+					{{#with (lookup ../data.spells (add 'spell' this))}}
+					{{#if (gt max 0)}}
 						<div class="obsidian-spells-slots">
 							{{format-slots this ../this}}
 							<span>{{localize 'OBSIDIAN.Slots'}}</span>
@@ -60,16 +60,14 @@
 							</div>
 							<div class="obsidian-col-time">
 								<div class="obsidian-table-text">
-									{{~#unless (expr '===' flags.obsidian.time.type 'special')~}}
+									{{~#unless (eq flags.obsidian.time.type 'special')~}}
 										{{~flags.obsidian.time.n~}}
 									{{~/unless~}}
 									{{~i18n-join 'OBSIDIAN.CastTimeAbbr-' flags.obsidian.time.type~}}
 								</div>
 							</div>
 							<div class="obsidian-col-range">
-								{{#if (expr '||'
-									(expr '===' flags.obsidian.range.type 'short')
-						      (expr '===' flags.obsidian.range.type 'long'))}}
+								{{#if (or (eq flags.obsidian.range.type 'short') (eq flags.obsidian.range.type 'long'))}}
 									<div class="obsidian-table-number-md">
 										{{flags.obsidian.range.n}}
 										<span class="obsidian-table-unit">

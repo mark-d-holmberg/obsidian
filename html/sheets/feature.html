@@ -62,7 +62,7 @@
 				       placeholder="{{localize 'OBSIDIAN.Source'}}" data-show="other"
 				       class="obsidian-input-compact obsidian-input-lg"
 				       value="{{item.flags.obsidian.source.other}}">
-				{{#if (expr '===' item.flags.obsidian.source.type 'class')}}
+				{{#if (eq item.flags.obsidian.source.type 'class')}}
 				<input type="text" name="flags.obsidian.source.custom" data-selector-parent="class"
 				       placeholder="{{localize 'OBSIDIAN.Class'}}" data-show="custom"
 				       class="obsidian-input-compact obsidian-input-lg"
@@ -73,7 +73,7 @@
 	</fieldset>
 	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit feature=true
 			ObsidianRules=ObsidianRules}}
-	<fieldset {{disabled (expr '!' item.flags.obsidian.uses.enabled)}}>
+	<fieldset {{disabled (not item.flags.obsidian.uses.enabled)}}>
 		<legend>
 			{{fancy-checkbox 'flags.obsidian.uses.enabled' content='OBSIDIAN.Uses'
 			                 checked=item.flags.obsidian.uses.enabled}}

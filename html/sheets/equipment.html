@@ -32,7 +32,7 @@
 			</div>
 		</div>
 	</fieldset>
-	<fieldset {{disabled (expr '!' item.flags.obsidian.armour)}}>
+	<fieldset {{disabled (not item.flags.obsidian.armour)}}>
 		<legend>
 			{{fancy-checkbox 'flags.obsidian.armour' content='OBSIDIAN.ItemType-armour'
 			                 checked=item.flags.obsidian.armour}}

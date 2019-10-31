@@ -36,7 +36,7 @@
 				<input class="obsidian-input-compact" type="text"
 				       placeholder="{{localize 'OBSIDIAN.Subclass'}}"
 				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"
-				       style="{{#if (expr '===' 'custom' class.name)}}width: 65px;{{/if}}">
+				       style="{{#if (eq 'custom' class.name)}}width: 65px;{{/if}}">
 				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
 				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}"
 				       data-dtype="Number">

@@ -34,7 +34,7 @@
 						<div class="obsidian-table-sub-text">{{localize flags.obsidian.attackType}}</div>
 					</div>
 					<div class="obsidian-col-range">
-						{{#if (expr '===' flags.obsidian.mode 'ranged')}}
+						{{#if (eq flags.obsidian.mode 'ranged')}}
 							<div class="obsidian-table-number-md">
 								<div>
 									{{flags.obsidian.range1}}
