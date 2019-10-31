@@ -646,7 +646,8 @@ class Obsidian extends ActorSheet5eCharacter {
 				}
 			}
 
-			jqel.css('height', `${total - innerTotal - 30}px`);
+			const offset = game.i18n.lang === 'ja' ? 29 : -30;
+			jqel.css('height', `${total - innerTotal + offset}px`);
 		});
 	}
 

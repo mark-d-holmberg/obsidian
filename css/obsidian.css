@@ -388,12 +388,13 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-char-box {
 	border: 4px solid var(--mid);
-	padding: 8px 0;
+	padding: 12px 0 8px 0;
 	font-size: 18px;
 	font-weight: bold;
 	text-align: center;
 	min-width: 58px;
 	min-height: 46px;
+	line-height: 1rem;
 }
 
 .obsidian-resource-box {
@@ -556,7 +557,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-inspiration {
 	color: var(--highlight);
-	padding: 2px 0;
+	padding: 5px 0 0 0;
 	font-size: 28px;
 }
 
@@ -717,7 +718,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .obsidian-form-row {
 	display: flex;
 	justify-content: space-between;
-	align-items: baseline;
+	align-items: center;
 }
 
 .obsidian-form-row:last-child {

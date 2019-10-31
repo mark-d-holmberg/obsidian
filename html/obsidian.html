@@ -472,8 +472,10 @@
 				<div class="obsidian-char-box-container obsidian-conditions-box"
 				     style="grid-row: 1 / span 2; grid-column: 2;">
 					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Conditions'}}</div>
-					<div class="obsidian-char-box obsidian-char-box-lg">
-						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
+					<div class="obsidian-char-box obsidian-char-box-lg"
+					     {{#unless (is-fullwidth-font)}}style="min-height: 200px;"{{/unless}}>
+						<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions"
+						     style="min-height: 128px; margin-bottom: 12px;">
 						{{#each ObsidianRules.CONDITIONS}}
 							<div class="
 							{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
@@ -550,7 +552,8 @@
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
-					<div class="obsidian-char-box obsidian-char-box-lg">
+					<div class="obsidian-char-box obsidian-char-box-lg"
+					     {{#unless (is-fullwidth-font)}}style="padding: 12px 0;"{{/unless}}>
 						<div class="obsidian-grid-2-col">
 							<div class="obsidian-vertical-bisect">
 								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Successes'}}</div>

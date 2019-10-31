@@ -9,6 +9,7 @@
 	min-height: 660px;
 	padding: 12px 8px;
 	overflow: hidden;
+	line-height: normal;
 }
 
 .obsidian-tab-bar {

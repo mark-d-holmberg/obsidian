@@ -247,6 +247,10 @@ Handlebars.registerHelper('is-custom-tag', function (key, val) {
 	return val.custom ? 'custom' : key;
 });
 
+Handlebars.registerHelper('is-fullwidth-font', function () {
+	return game.i18n.lang === 'ja';
+});
+
 Handlebars.registerHelper('lc', function (arg) {
 	return arg.toLocaleLowerCase();
 });
