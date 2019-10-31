@@ -133,8 +133,8 @@ class ObsidianActor extends Actor5e {
 		}
 
 		if (dmg.mod !== 0 && mod) {
-			if (dmg.ndice > 0) {
-				out += dmg.mod > 0 ? '+' : '-';
+			if (dmg.ndice > 0 && dmg.mod > 0) {
+				out += '+';
 			}
 
 			out += dmg.mod;
