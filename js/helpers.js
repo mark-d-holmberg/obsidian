@@ -140,15 +140,15 @@ Handlebars.registerHelper('format-uses', function (items, feature) {
 	const features = items.filter(item => item.type === 'feat' && item.flags.obsidian);
 	const map = new Map(features.map(feat => [feat.id, feat]));
 	let id = feature.id;
-	let idx = items.findIndex(feat => feat.id === id);
+	let idx = feature.idx;
 	let max = uses.max;
 	let remaining = uses.remaining;
 
 	if (uses.type === 'shared') {
-		const shared = items.findIndex(feat => feat.id === uses.shared);
-		if (shared > -1) {
-			id = items[shared].id;
-			idx = shared;
+		const shared = items.find(feat => feat.id === uses.shared);
+		if (shared) {
+			id = shared.id;
+			idx = shared.idx;
 			max = map.get(id).flags.obsidian.uses.max;
 			remaining = map.get(id).flags.obsidian.uses.remaining;
 		}

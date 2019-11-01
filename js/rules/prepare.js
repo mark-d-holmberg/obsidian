@@ -270,8 +270,7 @@ Obsidian.Rules.Prepare = {
 				Obsidian.Rules.Prepare.prepareCharges(flags.charges, data);
 				flags.charges.display =
 					ObsidianActor.usesFormat(
-						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges',
-						true);
+						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
 			}
 
 			for (let j = 0; j < getProperty(flags, 'special.length') || 0; j++) {
@@ -289,7 +288,7 @@ Obsidian.Rules.Prepare = {
 				special.display =
 					ObsidianActor.usesFormat(
 						weapon.id, i, special.uses.max, special.uses.remaining, 6,
-						`special.${j}.uses`, true);
+						`special.${j}.uses`);
 			}
 
 			if (['melee', 'unarmed'].includes(flags.type)) {
@@ -412,7 +411,7 @@ Obsidian.Rules.Prepare = {
 			if (!custom && flags.skills[id] === undefined) {
 				flags.skills[id] = duplicate(skill);
 			} else if (!custom) {
-				flags.skills[id] = mergeObject(flags.skills[id], skill);
+				flags.skills[id] = mergeObject(skill, flags.skills[id]);
 			}
 
 			if (!custom) {
