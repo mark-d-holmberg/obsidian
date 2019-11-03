@@ -3,6 +3,7 @@
 	color: #cfd2da;
 	font-family: Roboto, sans-serif;
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
 }
 
 #tinymce::-webkit-scrollbar {

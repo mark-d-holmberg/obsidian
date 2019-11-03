@@ -124,19 +124,24 @@
 	pointer-events: none;
 }
 
-.obsidian-window.dialog .window-content {
+.obsidian-window.dialog .window-content,
+.obsidian-compendium .directory-list {
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
 }
 
-.obsidian-window.dialog .window-content::-webkit-scrollbar {
+.obsidian-window.dialog .window-content::-webkit-scrollbar,
+.obsidian-compendium .directory-list::-webkit-scrollbar {
 	height: 6px;
 }
 
-.obsidian-window.dialog .window-content::-webkit-scrollbar-track {
+.obsidian-window.dialog .window-content::-webkit-scrollbar-track,
+.obsidian-compendium .directory-list::-webkit-scrollbar-track {
 	box-shadow: none;
 }
 
-.obsidian-window.dialog .window-content::-webkit-scrollbar-thumb {
+.obsidian-window.dialog .window-content::-webkit-scrollbar-thumb,
+.obsidian-compendium .directory-list::-webkit-scrollbar-thumb {
 	border: none;
 	background: rgba(0, 0, 0, .75);
 }
@@ -186,6 +191,7 @@
 	padding: 20px;
 	font-family: var(--font);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
 }
 
 .obsidian::-webkit-scrollbar {
@@ -1178,4 +1184,46 @@ legend .fancy-checkbox {
 
 .obsidian-defenses .obsidian-css-icon {
 	margin-right: 4px;
+}
+
+#compendium li.compendium-pack {
+	display: flex;
+	justify-content: space-between;
+}
+
+#compendium li.compendium-pack h4.pack-title {
+	margin-bottom: 3px;
+}
+
+#compendium li.compendium-pack .entity-type {
+	display: none;
+}
+
+#compendium li.compendium-pack footer.compendium-footer {
+	text-transform: uppercase;
+	color: var(--text-secondary);
+}
+
+.obsidian-compendium .window-content {
+	background: var(--bg);
+	font-family: var(--font);
+	font-size: 13px;
+	color: var(--text-bright);
+}
+
+.obsidian-compendium .directory-list .directory-item {
+	line-height: normal;
+	border-bottom: 1px solid var(--mid);
+	align-items: center;
+}
+
+.obsidian-compendium .sidebar-tab .directory-list .directory-item img {
+	width: 24px;
+	height: 24px;
+	flex: 0 0 24px;
+}
+
+.obsidian-compendium .directory-item a {
+	display: block;
+	padding: 8px 0;
 }

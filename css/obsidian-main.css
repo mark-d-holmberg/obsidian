@@ -69,6 +69,7 @@
 	text-align: left;
 	height: 100%;
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
 }
 
 .obsidian-tab-contents::-webkit-scrollbar {
@@ -602,6 +603,10 @@
 	position: relative;
 }
 
+.obsidian-compendium .header-search {
+	position: relative;
+}
+
 .sheet .obsidian-input-search-container {
 	margin-right: 8px;
 }
@@ -611,7 +616,8 @@
 }
 
 form.obsidian input.obsidian-input-search,
-.dnd5e.sheet form.obsidian input.obsidian-input-search {
+.dnd5e.sheet form.obsidian input.obsidian-input-search,
+.obsidian-compendium .sidebar-tab .directory-header .header-search input {
 	color: var(--text-bright);
 	background-color: var(--mid);
 	border: 1px solid var(--border-subtle);
@@ -626,18 +632,25 @@ form.obsidian input.obsidian-input-search,
 	text-align: left;
 }
 
+.obsidian-compendium .sidebar-tab .directory-header .header-search input {
+	width: calc(100% - 3px);
+	margin-bottom: 10px;
+}
+
 form.obsidian input.obsidian-input-search:hover,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:hover {
 	box-shadow: none;
 }
 
 form.obsidian .obsidian-input-search::placeholder,
-.dnd5e.sheet form.obsidian .obsidian-input-search::placeholder {
+.dnd5e.sheet form.obsidian .obsidian-input-search::placeholder,
+.obsidian-compendium .sidebar-tab .directory-header .header-search input::placeholder {
 	color: var(--text-placeholder);
 }
 
 form.obsidian input.obsidian-input-search:focus,
-.dnd5e.sheet form.obsidian input.obsidian-input-search:focus {
+.dnd5e.sheet form.obsidian input.obsidian-input-search:focus,
+.obsidian-compendium .sidebar-tab .directory-header .header-search input:focus {
 	color: var(--text-inverse);
 	background-color: var(--light);
 	border-color: var(--light);
@@ -647,12 +660,16 @@ form.obsidian input.obsidian-input-search:focus,
 form.obsidian input.obsidian-input-search:focus + i,
 form.obsidian input.obsidian-input-search:focus + i + span,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i,
-.dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span {
+.dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span,
+.obsidian-compendium .header-search input:focus + i,
+.obsidian-compendium .header-search input:focus + i + span {
 	color: var(--text-inverse);
 }
 
 .obsidian-input-search-container > i,
-.obsidian-input-search-container > span {
+.obsidian-input-search-container > span,
+.obsidian-compendium .header-search > i,
+.obsidian-compendium .header-search > span {
 	display: flex;
 	width: 34px;
 	height: 34px;
@@ -663,13 +680,15 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 	color: var(--text-placeholder);
 }
 
-.obsidian-input-search-container > i {
-	top: 2px;
-	left: 0;
+.obsidian-input-search-container > i,
+.obsidian-compendium .header-search > i {
+	top: 3px;
+	left: 2px;
 }
 
-.obsidian-input-search-container > span {
-	top: 0;
+.obsidian-input-search-container > span,
+.obsidian-compendium .header-search > span {
+	top: 3px;
 	right: 0;
 	cursor: pointer;
 }
