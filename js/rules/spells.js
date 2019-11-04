@@ -53,7 +53,10 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 		if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
 			Obsidian.Rules.Prepare.calculateUses(spell.id, i, actorData.data, cls, flags.uses);
-			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
+			flags.notes.push(
+				'<div class="obsidian-table-note-flex">'
+					+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
+				+ '</div>');
 		}
 
 		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);

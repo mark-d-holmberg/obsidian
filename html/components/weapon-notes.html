@@ -1,6 +1,7 @@
 {{#if flags.obsidian.charges.enabled}}
 	<div class="obsidian-table-note-text">
-		{{localize 'OBSIDIAN.Charges'}}: {{{flags.obsidian.charges.display}}}
+		<div class="obsidian-table-note-flex">
+			{{~localize 'OBSIDIAN.Charges'}}: {{{flags.obsidian.charges.display}}}</div>
 	</div>
 {{/if}}
 {{#each flags.obsidian.special}}
@@ -8,7 +9,7 @@
 {{/each}}
 {{#if category}}
 	<div class="obsidian-table-note-text">
-		{{i18n-join 'OBSIDIAN.WeaponCat-' flags.obsidian.category}}
+		{{~i18n-join 'OBSIDIAN.WeaponCat-' flags.obsidian.category~}}
 	</div>
 {{/if}}
 {{#each flags.obsidian.tags}}

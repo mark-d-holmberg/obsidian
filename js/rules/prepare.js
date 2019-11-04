@@ -163,12 +163,14 @@ Obsidian.Rules.Prepare = {
 
 				if (armour.data.stealth.value) {
 					flags.notes.push(
-						game.i18n.localize('OBSIDIAN.Skill-ste')
-						+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
-						+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
-							+ '<div class="obsidian-css-icon-shape"></div>'
-							+ '<div class="obsidian-css-icon-label">'
-								+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
+						'<div class="obsidian-table-note-flex">'
+							+ game.i18n.localize('OBSIDIAN.Skill-ste')
+							+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
+							+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
+								+ '<div class="obsidian-css-icon-shape"></div>'
+								+ '<div class="obsidian-css-icon-label">'
+									+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
+								+ '</div>'
 							+ '</div>'
 						+ '</div>');
 				}
@@ -214,7 +216,10 @@ Obsidian.Rules.Prepare = {
 			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
 				Obsidian.Rules.Prepare.calculateUses(
 					consumable.id, consumable.idx, data, null, flags.uses);
-				flags.notes.push(`${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`);
+				flags.notes.push(
+					'<div class="obsidian-table-note-flex">'
+						+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
+					+ '</div>');
 			}
 
 			if (flags.subtype === 'ammo') {

@@ -322,6 +322,10 @@
 }
 
 .obsidian-table-note-text {
+	display: inline;
+}
+
+.obsidian-table-note-flex {
 	display: inline-flex;
 	align-items: center;
 }
