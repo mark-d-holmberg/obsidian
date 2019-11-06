@@ -26,7 +26,7 @@ class ObsidianActor extends Actor5e {
 			data.attributes.init.mod += Math.floor(data.attributes.prof.value / 2);
 		}
 
-		if (flags.attributes.init.override !== undefined && flags.attributes.init.override !== '') {
+		if (!Obsidian.notDefinedOrEmpty(flags.attributes.init.override)) {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
 		}
 

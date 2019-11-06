@@ -1207,6 +1207,10 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	text-align: center;
 }
 
+.obsidian-msg-roll-box.obsidian-grey {
+	color: var(--text-subtle);
+}
+
 .obsidian-msg-value {
 	position: relative;
 	flex: 1;
@@ -1214,12 +1218,13 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-msg-tooltip {
 	position: absolute;
-	bottom: 100%;
 	font-size: 11px;
 	display: none;
 	background: var(--dark);
 	padding: 5px 8px;
 	z-index: 999;
+	color: var(--text-regular);
+	font-family: var(--font);
 }
 
 .obsidian-msg-tooltip:after {
@@ -1235,6 +1240,24 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	border-left: 4px solid transparent;
 }
 
-.obsidian-msg-roll-box:hover + .obsidian-msg-tooltip {
-	display: block;
+.obsidian-msg-title {
+	border-bottom: 1px solid var(--mid);
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+.obsidian-msg-title .obsidian-msg-title-parens {
+	text-transform: none;
+}
+
+.obsidian-msg-title > div:first-child {
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align: center;
+}
+
+.obsidian-msg-sub-title {
+	text-align: center;
+	font-size: 11px;
+	color: var(--text-subtle);
 }

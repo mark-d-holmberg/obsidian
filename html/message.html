@@ -13,16 +13,27 @@
 			<span class="whisper-to">{{localize 'CHAT.To'}}: {{whisperTo}}</span>
 		{{/if}}
 	</header>
-	{{#if (eq message.flags.obsidian.type 'hd')}}
-		<section>
-			<div class="obsidian-msg-row">
-				<div class="obsidian-msg-key">{{localize 'OBSIDIAN.HD'}}:</div>
-				<div class="obsidian-msg-value">
-					<div class="obsidian-msg-roll-box">{{message.flags.obsidian.total}}</div>
-					<div class="obsidian-msg-tooltip">{{{message.flags.obsidian.breakdown}}}</div>
-				</div>
+	<section class="obsidian-msg-title">
+		<div>
+			{{message.flags.obsidian.title}}
+			{{#if message.flags.obsidian.parens}}
+				<span class="obsidian-msg-title-parens">({{message.flags.obsidian.parens}})</span>
+			{{/if}}
+		</div>
+		{{#if message.flags.obsidian.subtitle}}
+			<div class="obsidian-msg-sub-title">{{message.flags.obsidian.subtitle}}</div>
+		{{/if}}
+	</section>
+	<section>
+		<div class="obsidian-msg-row">
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-value">
+				{{#each message.flags.obsidian.results}}
+					<div class="obsidian-msg-roll-box {{#if grey}}obsidian-grey{{/if}}">{{total}}</div>
+					<div class="obsidian-msg-tooltip">{{breakdown}}</div>
+				{{/each}}
 			</div>
-		</section>
-	{{/if}}
+		</div>
+	</section>
 </li>
 {{/if}}

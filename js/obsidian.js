@@ -138,6 +138,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
+		html.find('[data-roll]').click(evt => Obsidian.Rolls.fromClick(this.actor, evt));
 
 		this._activateDialogs(html);
 

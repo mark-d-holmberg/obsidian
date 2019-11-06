@@ -462,5 +462,8 @@
 	"OBSIDIAN.VulnerabilityAbbr": "V",
 	"OBSIDIAN.Disease": "Disease",
 	"OBSIDIAN.NonMagicalSleep": "Nonmagical Sleep",
-	"OBSIDIAN.RollHD": "Roll Hit Dice"
+	"OBSIDIAN.RollHD": "Roll Hit Dice",
+	"OBSIDIAN.AbilityCheck": "Ability Check",
+	"OBSIDIAN.Mod": "Mod",
+	"OBSIDIAN.ProfAbbr": "Prof"
 }

@@ -6,6 +6,14 @@ String.prototype.capitalise = function () {
 	return this[0].toLocaleUpperCase() + this.substring(1);
 };
 
+Number.prototype.sgn = function () {
+	return this < 0 ? `${this}` : `+${this}`;
+};
+
+Number.prototype.sgnex = function () {
+	return this < 0 ? ` - ${this * -1}` : ` + ${this}`;
+};
+
 Handlebars.registerHelper('badge', function (badge) {
 	const advantage = badge === 'adv';
 	const colour = `obsidian-css-icon-${advantage ? 'positive' : 'negative'}`;
