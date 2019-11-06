@@ -11,7 +11,7 @@
 			<div class="obsidian-feature item" data-item-id="{{feat.id}}">
 				<div class="obsidian-feature-header">
 					<div>
-						<h4>{{feat.name}}</h4>
+						<h4 class="rollable" data-roll="feat" data-feat="{{feat.id}}">{{feat.name}}</h4>
 						{{#if feat.flags.obsidian.uses.enabled}}
 							<div class="obsidian-feature-recharge">
 								&bull;

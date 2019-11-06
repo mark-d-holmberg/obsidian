@@ -142,7 +142,9 @@
 				</div>
 				<div class="obsidian-char-column" style="padding-right: 2px;">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text rollable">{{localize 'OBSIDIAN.Initiative'}}</div>
+						<div class="obsidian-char-box-text rollable" data-roll="abl" data-abl="init">
+							{{localize 'OBSIDIAN.Initiative'}}
+						</div>
 						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageInitiative'}}" data-width="250"
 						     data-template="init.html">
@@ -177,7 +179,8 @@
 			<div class="obsidian-char-abilities">
 				{{#each data.abilities as |ability id|}}
 				<div class="obsidian-char-ability">
-					<div class="obsidian-char-ability-name rollable obsidian-condensed">
+					<div class="obsidian-char-ability-name rollable obsidian-condensed" data-roll="abl"
+					     data-abl="{{id}}">
 						{{i18n-join 'OBSIDIAN.AbilityAbbr-' id}}
 					</div>
 					<div class="obsidian-char-ability-mod">
@@ -216,7 +219,9 @@
 				{{#if (not-empty entity.flags.obsidian.attributes.hd)}}
 					<div class="obsidian-char-column">
 						<div class="obsidian-char-box-container">
-							<div class="obsidian-char-box-text rollable">{{localize 'OBSIDIAN.HD'}}</div>
+							<div class="obsidian-char-box-text rollable" data-dialog="RollHD">
+								{{localize 'OBSIDIAN.HD'}}
+							</div>
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
 									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
@@ -336,7 +341,7 @@
 										{{/each}}
 									{{/select}}
 								</select>
-								<div class="obsidian-skill-name rollable">
+								<div class="obsidian-skill-name rollable" data-roll="skl" data-skl="{{id}}">
 									{{#if skill.custom}}
 										{{skill.label}}
 									{{else}}
@@ -386,7 +391,9 @@
 										{{/each}}
 									{{/select}}
 								</select>
-								<div class="obsidian-skill-name rollable">{{tool.label}}</div>
+								<div class="obsidian-skill-name rollable" data-roll="tool" data-tool="{{id}}">
+									{{tool.label}}
+								</div>
 								<div class="obsidian-skill-mod obsidian-ptr">
 									{{numberFormat tool.mod decimals=0 sign=true}}
 								</div>
@@ -534,7 +541,7 @@
 								{{~/if}} obsidian-radio obsidian-ptr">
 									<span></span>
 								</div>
-								<div class="obsidian-save-name rollable">
+								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}">
 									{{i18n-join 'OBSIDIAN.Ability-' id}}
 								</div>
 								<div class="obsidian-save-mod obsidian-ptr">
@@ -546,7 +553,9 @@
 				</div>
 				<div class="obsidian-char-box-container">
 					<div class="obsidian-char-box-text" style="padding: 5px 0 3px 0;">
-						<span class="rollable">{{localize 'OBSIDIAN.DeathSaves'}}</span>
+						<span class="rollable" data-roll="save" data-save="death">
+							{{localize 'OBSIDIAN.DeathSaves'}}
+						</span>
 						<a title="{{localize 'OBSIDIAN.ManageDeathSaves'}}"
 						   class="obsidian-edit obsidian-simple-dialog" data-template="death-saves.html"
 						   data-title="{{localize 'OBSIDIAN.ManageDeathSaves'}}" data-width="250">

@@ -1148,3 +1148,93 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian .obsidian-form-row .obsidian-dialog-2-col input {
 	max-width: none;
 }
+
+#chat-log .obsidian-msg {
+	border: 2px solid transparent;
+	background: var(--bg);
+	color: var(--text-regular);
+	font-family: var(--font);
+	font-size: 13px;
+	position: relative;
+}
+
+.obsidian-msg header {
+	border-bottom: 1px solid var(--mid);
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+.obsidian-msg header h4 {
+	text-transform: uppercase;
+	color: var(--text-secondary);
+	margin-bottom: 0;
+}
+
+.obsidian-msg header .message-metadata {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	font-size: 11px;
+}
+
+.obsidian-msg header time {
+	color: var(--text-subtle);
+}
+
+.obsidian-msg header .whisper-to {
+	font-size: 11px;
+	color: var(--text-subtle);
+}
+
+.obsidian-msg-row {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.obsidian-msg-key {
+	margin-right: 5px;
+}
+
+.obsidian-msg-roll-box {
+	border: 2px solid var(--mid);
+	color: var(--text-bright);
+	cursor: help;
+	padding: 4px 5px;
+	font-weight: bold;
+	display: inline-block;
+	min-width: 30px;
+	text-align: center;
+}
+
+.obsidian-msg-value {
+	position: relative;
+	flex: 1;
+}
+
+.obsidian-msg-tooltip {
+	position: absolute;
+	bottom: 100%;
+	font-size: 11px;
+	display: none;
+	background: var(--dark);
+	padding: 5px 8px;
+	z-index: 999;
+}
+
+.obsidian-msg-tooltip:after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 5px;
+	margin-left: -4px;
+	width: 0;
+	height: 0;
+	border-top: 4px solid var(--dark);
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+}
+
+.obsidian-msg-roll-box:hover + .obsidian-msg-tooltip {
+	display: block;
+}

@@ -1,0 +1,28 @@
+{{#if visible}}
+<li class="message flexcol obsidian-msg" data-message-id="{{message._id}}">
+	<header>
+		<h4>{{alias}}</h4>
+		<span class="message-metadata">
+			<time class="message-timestamp">{{timeSince message.timestamp}}</time>
+			{{#if user.isGM}}
+				<a class="button message-delete"><i class="fas fa-trash"></i></a>
+			{{/if}}
+		</span>
+
+		{{#if isWhisper}}
+			<span class="whisper-to">{{localize 'CHAT.To'}}: {{whisperTo}}</span>
+		{{/if}}
+	</header>
+	{{#if (eq message.flags.obsidian.type 'hd')}}
+		<section>
+			<div class="obsidian-msg-row">
+				<div class="obsidian-msg-key">{{localize 'OBSIDIAN.HD'}}:</div>
+				<div class="obsidian-msg-value">
+					<div class="obsidian-msg-roll-box">{{message.flags.obsidian.total}}</div>
+					<div class="obsidian-msg-tooltip">{{{message.flags.obsidian.breakdown}}}</div>
+				</div>
+			</div>
+		</section>
+	{{/if}}
+</li>
+{{/if}}

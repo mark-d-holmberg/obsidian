@@ -461,5 +461,6 @@
 	"OBSIDIAN.ImmunityAbbr": "I",
 	"OBSIDIAN.VulnerabilityAbbr": "V",
 	"OBSIDIAN.Disease": "Disease",
-	"OBSIDIAN.NonMagicalSleep": "Nonmagical Sleep"
+	"OBSIDIAN.NonMagicalSleep": "Nonmagical Sleep",
+	"OBSIDIAN.RollHD": "Roll Hit Dice"
 }
