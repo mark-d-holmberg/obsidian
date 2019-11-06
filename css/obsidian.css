@@ -219,11 +219,13 @@
 	font-family: var(--font-condensed);
 }
 
-.obsidian .obsidian-positive {
+.obsidian .obsidian-positive,
+.obsidian-msg .obsidian-positive {
 	color: var(--positive);
 }
 
-.obsidian .obsidian-negative {
+.obsidian .obsidian-negative,
+.obsidian-msg .obsidian-negative {
 	color: var(--negative);
 }
 

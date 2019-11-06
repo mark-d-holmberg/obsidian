@@ -1,38 +1,18 @@
 Obsidian.Rolls = {
-	abilityCheck: function (actor, ability, skill, extraAdv = [], extraMods = []) {
-		const data = actor.data.data;
-		const flags = actor.data.flags.obsidian;
-		const roll = new Die(20).roll(2);
-		const adv = Obsidian.Rules.determineAdvantage(flags.sheet.roll, ...extraAdv);
+	abilityCheck: function (actor, ability, skill, adv = [], extraMods = []) {
 		const mods = [
-			{mod: data.abilities[ability].mod, name: game.i18n.localize('OBSIDIAN.Mod')},
+			{mod: actor.data.data.abilities[ability].mod, name: game.i18n.localize('OBSIDIAN.Mod')},
 			...extraMods
 		];
 
-		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
-		const results = roll.results.map(r => {
-			return {
-				total: r + total,
-				breakdown:
-					r + mods.filter(mod => mod.mod)
-						.map(mod => `${mod.mod.sgnex()} [${mod.name}]`)
-						.join('')
-			};
+		return Obsidian.Rolls.d20Roll(actor, {
+			type: 'abl',
+			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
+			parens: skill,
+			subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
+			adv: adv,
+			mods: mods
 		});
-
-		Obsidian.Rolls.annotateAdvantage(adv, results);
-
-		return {
-			flags: {
-				obsidian: {
-					type: 'abl',
-					title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
-					parens: skill,
-					subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
-					results: results
-				}
-			}
-		}
 	},
 
 	annotateAdvantage: function (adv, results) {
@@ -60,8 +40,123 @@ Obsidian.Rolls = {
 		}
 	},
 
+	annotateCrits: function (pos, neg, results) {
+		for (const result of results) {
+			if (result.roll >= pos) {
+				result.positive = true;
+			} else if (result.roll <= neg) {
+				result.negative = true;
+			}
+		}
+	},
+
 	attackRoll: function (actor, item) {
 
+	},
+
+	d20Roll: function (actor, {type, title, parens, subtitle, adv = [], mods = []}) {
+		const roll = new Die(20).roll(2);
+		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
+		const results = roll.results.map(r => {
+			return {
+				roll: r,
+				total: r + total,
+				breakdown:
+					r + mods.filter(mod => mod.mod)
+						.map(mod => `${mod.mod.sgnex()} [${mod.name}]`)
+						.join('')
+			}
+		});
+
+		Obsidian.Rolls.annotateCrits(20, 1, results);
+		Obsidian.Rolls.annotateAdvantage(
+			Obsidian.Rules.determineAdvantage(actor.data.flags.obsidian.sheet.roll, ...adv),
+			results);
+
+		return {
+			flags: {
+				obsidian: {
+					type: type,
+					title: title,
+					parens: parens,
+					subtitle: subtitle,
+					results: results
+				}
+			}
+		}
+	},
+
+	death: function (actor) {
+		const data = actor.data.data;
+		const flags = actor.data.flags.obsidian;
+		const advantageComponents = [flags.saves.roll, flags.attributes.death.roll];
+		const mods = [{
+			mod: (flags.saves.bonus || 0) + (flags.attributes.death.bonus || 0),
+			name: game.i18n.localize('OBSIDIAN.Bonus')
+		}];
+
+		const roll = Obsidian.Rolls.d20Roll(actor, {
+			type: 'save',
+			title: game.i18n.localize('OBSIDIAN.DeathSave'),
+			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
+			adv: advantageComponents,
+			mods: mods
+		});
+
+		const adv =
+			Obsidian.Rules.determineAdvantage(
+				flags.sheet.roll, flags.saves.roll, flags.attributes.death.roll);
+
+		// If no advantage or disadvantage, take the first roll, otherwise find
+		// the highest or lowest roll, respectively.
+		const result =
+			adv === 0
+				? roll.flags.obsidian.results[0]
+				: adv > 0
+					? roll.flags.obsidian.results.reduce((acc, r) => r.total > acc.total ? r : acc)
+					: roll.flags.obsidian.results.reduce((acc, r) => r.total < acc.total ? r : acc);
+
+		const success = result.total >= flags.attributes.death.threshold;
+		const key = success ? 'success' : 'failure';
+		let tally = data.attributes.death[key] + 1;
+
+		if (result.roll === 1) {
+			tally++;
+		}
+
+		if (tally > 3) {
+			tally = 3;
+		}
+
+		roll.flags.obsidian.addendum = {success: success};
+		roll.flags.obsidian.addendum.label =
+			game.i18n.localize(`OBSIDIAN.${success ? 'Success' : 'Failure'}`);
+
+		if (tally > 2) {
+			if (success) {
+				roll.flags.obsidian.addendum.label = game.i18n.localize('OBSIDIAN.Stable');
+			} else {
+				roll.flags.obsidian.addendum.label = game.i18n.localize('OBSIDIAN.Deceased');
+			}
+		}
+
+		if (result.roll === 20) {
+			let hp = data.attributes.hp.value;
+			if (hp < 1) {
+				hp = 1;
+			}
+
+			actor.update({
+				'data.attributes.death.success': 0,
+				'data.attributes.death.failure': 0,
+				'data.attributes.hp.value': hp,
+				'flags.obsidian.attributes.conditions.unconscious': false
+			});
+		} else {
+			actor.update({[`data.attributes.death.${key}`]: tally});
+		}
+
+		return roll;
 	},
 
 	feature: function (actor, feat) {
@@ -97,7 +192,11 @@ Obsidian.Rolls = {
 				return;
 			}
 
-			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.savingThrow(actor, dataset.save));
+			if (dataset.save === 'death') {
+				Obsidian.Rolls.toChat(actor, Obsidian.Rolls.death(actor));
+			} else {
+				Obsidian.Rolls.toChat(actor, Obsidian.Rolls.savingThrow(actor, dataset.save));
+			}
 		} else if (roll === 'abl') {
 			if (!dataset.abl) {
 				return;
@@ -202,37 +301,57 @@ Obsidian.Rolls = {
 		}
 	},
 
-	overriddenRoll: function (actor, type, title, subtitle, extraAdv = [], override) {
-		override = Number(override);
-		const flags = actor.data.flags.obsidian;
-		const roll = new Die(20).roll(2);
-		const adv =
-			Obsidian.Rules.determineAdvantage(flags.sheet.roll, ...extraAdv);
-		const mods = [{mod: override, name: game.i18n.localize('OBSIDIAN.Override')}];
-
-		const results = roll.results.map(r => {
-			return {
-				total: r + override,
-				breakdown: `${r}${mods.map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join('')}`
-			};
+	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
+		return Obsidian.Rolls.d20Roll(actor, {
+			type: type,
+			title: title,
+			subtitle: subtitle,
+			adv: adv,
+			mods: [{mod: Number(override), name: game.i18n.localize('OBSIDIAN.Override')}]
 		});
-
-		Obsidian.Rolls.annotateAdvantage(adv, results);
-
-		return {
-			flags: {
-				obsidian: {
-					type: type,
-					title: title,
-					subtitle: subtitle,
-					results: results
-				}
-			}
-		}
 	},
 
 	savingThrow: function (actor, save) {
+		const data = actor.data.data;
+		const flags = actor.data.flags.obsidian;
+		const saveData = flags.saves[save];
+		const adv = [flags.saves.roll];
 
+		if (saveData) {
+			adv.push(saveData.roll);
+		}
+
+		if (!saveData || Obsidian.notDefinedOrEmpty(saveData.override)) {
+			const saveBonus = saveData ? (saveData.bonus || 0) : 0;
+			const mods = [
+				{
+					mod: data.abilities[save].mod,
+					name: game.i18n.localize('OBSIDIAN.Mod')
+				}, {
+					mod: (flags.saves.bonus || 0) + saveBonus,
+					name: game.i18n.localize('OBSIDIAN.Bonus')
+				}, {
+					mod: data.attributes.prof.value * data.abilities[save].proficient,
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				}
+			];
+
+			return Obsidian.Rolls.d20Roll(actor, {
+				type: 'save',
+				title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
+				subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
+				adv: adv,
+				mods: mods
+			});
+		} else {
+			return Obsidian.Rolls.overriddenRoll(
+				actor,
+				'save',
+				game.i18n.localize(`OBSIDIAN.Ability-${save}`),
+				game.i18n.localize('OBSIDIAN.SavingThrow'),
+				adv,
+				saveData.override);
+		}
 	},
 
 	skillCheck: function (actor, skill, id) {

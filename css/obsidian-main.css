@@ -1261,3 +1261,16 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 11px;
 	color: var(--text-subtle);
 }
+
+.obsidian-msg-addendum {
+	border-top: 1px solid var(--mid);
+	padding-top: 5px;
+	margin-top: 5px;
+}
+
+.obsidian-msg-addendum > div {
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
+}

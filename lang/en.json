@@ -465,5 +465,11 @@
 	"OBSIDIAN.RollHD": "Roll Hit Dice",
 	"OBSIDIAN.AbilityCheck": "Ability Check",
 	"OBSIDIAN.Mod": "Mod",
-	"OBSIDIAN.ProfAbbr": "Prof"
+	"OBSIDIAN.ProfAbbr": "Prof",
+	"OBSIDIAN.SavingThrow": "Saving Throw",
+	"OBSIDIAN.DeathSave": "Death Save",
+	"OBSIDIAN.Success": "Success",
+	"OBSIDIAN.Failure": "Failure",
+	"OBSIDIAN.Deceased": "Deceased",
+	"OBSIDIAN.Stable": "Stable"
 }

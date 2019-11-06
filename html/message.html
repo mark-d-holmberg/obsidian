@@ -29,11 +29,24 @@
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
 			<div class="obsidian-msg-value">
 				{{#each message.flags.obsidian.results}}
-					<div class="obsidian-msg-roll-box {{#if grey}}obsidian-grey{{/if}}">{{total}}</div>
+					<div class="
+					     {{#if positive}}obsidian-positive{{/if}}
+					     {{#if negative}}obsidian-negative{{/if}}
+					     {{#if grey}}obsidian-grey{{/if}}
+					     obsidian-msg-roll-box">
+						{{total}}
+					</div>
 					<div class="obsidian-msg-tooltip">{{breakdown}}</div>
 				{{/each}}
 			</div>
 		</div>
 	</section>
+	{{#if message.flags.obsidian.addendum}}
+	<section class="obsidian-msg-addendum">
+		<div class="obsidian-{{#if message.flags.obsidian.addendum.success}}positive{{else}}negative{{/if}}">
+			{{message.flags.obsidian.addendum.label}}
+		</div>
+	</section>
+	{{/if}}
 </li>
 {{/if}}
