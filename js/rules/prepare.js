@@ -28,28 +28,32 @@ Obsidian.Rules.determineAdvantage = function (...mods) {
 Obsidian.Rules.Prepare = {
 	calculateSave: function (dc, data, cls) {
 		let bonus = 8;
-		if (dc.bonus !== undefined && dc.bonus !== '') {
+		if (!Obsidian.notDefinedOrEmpty(dc.bonus)) {
 			bonus = Number(dc.bonus);
 		}
 
 		dc.value = bonus + dc.prof * data.attributes.prof.value;
 
-		if (dc.ability !== undefined && dc.ability !== '') {
+		if (!Obsidian.notDefinedOrEmpty(dc.ability)) {
 			if (dc.ability === 'spell') {
+				dc.spellMod = cls ? cls.spellcasting.mod : 0;
 				dc.value += cls ? cls.spellcasting.mod : 0;
 			} else {
 				dc.value += data.abilities[dc.ability].mod;
 			}
 		}
 
-		if (dc.fixed !== undefined && dc.fixed !== '') {
+		if (!Obsidian.notDefinedOrEmpty(dc.fixed)) {
 			dc.value = Number(dc.fixed);
 		}
 	},
 
 	calculateHit: function (hit, data, cls) {
 		hit.value = hit.bonus || 0;
+		hit.spellMod = 0;
+
 		if (cls && hit.stat === 'spell') {
+			hit.spellMod = cls.spellcasting.mod;
 			hit.value += cls.spellcasting.mod;
 		} else if (hit.stat !== 'spell') {
 			hit.value += data.abilities[hit.stat].mod;
@@ -59,7 +63,7 @@ Obsidian.Rules.Prepare = {
 			hit.value += data.attributes.prof.value;
 		}
 
-		if (hit.crit === undefined || hit.crit === '') {
+		if (Obsidian.notDefinedOrEmpty(hit.crit)) {
 			hit.crit = 20;
 		} else {
 			hit.crit = parseInt(hit.crit);
@@ -71,6 +75,7 @@ Obsidian.Rules.Prepare = {
 			dmg.mod = dmg.bonus || 0;
 			if (dmg.stat && dmg.stat.length > 0) {
 				if (dmg.stat === 'spell') {
+					dmg.spellMod = cls ? cls.spellcasting.mod : 0;
 					dmg.mod += cls ? cls.spellcasting.mod : 0;
 				} else {
 					dmg.mod += data.abilities[dmg.stat].mod;

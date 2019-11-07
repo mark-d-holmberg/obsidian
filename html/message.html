@@ -24,6 +24,7 @@
 			<div class="obsidian-msg-sub-title">{{message.flags.obsidian.subtitle}}</div>
 		{{/if}}
 	</section>
+	{{#unless (eq message.flags.obsidian.type 'dmg')}}
 	<section>
 		<div class="obsidian-msg-row">
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
@@ -41,6 +42,39 @@
 			</div>
 		</div>
 	</section>
+	{{/unless}}
+	{{#if message.flags.obsidian.save}}
+	<section class="obsidian-msg-save">
+		<div>
+			<div class="obsidian-msg-save-dc">
+				{{localize 'OBSIDIAN.DC'}}
+				<div class="obsidian-msg-roll-box">{{message.flags.obsidian.save.dc}}</div>
+				<div class="obsidian-msg-tooltip">{{message.flags.obsidian.save.breakdown}}</div>
+				{{message.flags.obsidian.save.target}} {{localize 'OBSIDIAN.Save'}}
+			</div>
+			<div class="obsidian-msg-save-effect">{{message.flags.obsidian.save.effect}}</div>
+		</div>
+	</section>
+	{{/if}}
+	{{#if (and (defined message.flags.obsidian.dmgBtn) (or user.isGM (eq user.id author.id)))}}
+	<section class="obsidian-msg-btn-row">
+		<button type="button" class="obsidian-btn-outline" data-roll="dmg"
+		        data-actor="{{message.speaker.actor}}" data-item="{{message.flags.obsidian.dmgBtn}}">
+			<i class="fas fa-dice-d20"></i>
+			{{localize 'OBSIDIAN.Damage'}}
+		</button>
+	</section>
+	{{/if}}
+	{{#if message.flags.obsidian.damage}}
+	<section class="obsidian-msg-dmg">
+		<div class="obsidian-grid-2-col">
+			{{> public/modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
+					title='OBSIDIAN.Hit'}}
+			{{> public/modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
+					title='OBSIDIAN.Crit'}}
+		</div>
+	</section>
+	{{/if}}
 	{{#if message.flags.obsidian.addendum}}
 	<section class="obsidian-msg-addendum">
 		<div class="obsidian-{{#if message.flags.obsidian.addendum.success}}positive{{else}}negative{{/if}}">

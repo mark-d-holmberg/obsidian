@@ -1,0 +1,18 @@
+<div class="obsidian-vertical-bisect">
+	<div class="obsidian-msg-dmg-title">{{localize title}}</div>
+	{{#each results}}
+	<div class="obsidian-msg-row">
+		<div class="obsidian-msg-roll-box">{{total}}</div>
+		<div class="obsidian-msg-tooltip">{{breakdown}}</div>
+		{{#if type}}
+			<div class="obsidian-icon-sm obsidian-icon-{{type}}"
+			     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+		{{/if}}
+	</div>
+	{{/each}}
+	<div class="obsidian-msg-row">
+		<div class="obsidian-msg-roll-box obsidian-msg-wide-box" title="{{localize 'OBSIDIAN.Total'}}">
+			{{total}}
+		</div>
+	</div>
+</div>

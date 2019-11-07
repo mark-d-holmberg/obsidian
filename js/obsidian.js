@@ -130,6 +130,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
+		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('[data-feat-id] .obsidian-feature-use').click(this._onUseClicked.bind(this));
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
@@ -440,6 +441,35 @@ class Obsidian extends ActorSheet5eCharacter {
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			flags: flags
 		}, {displaySheet: true});
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	async _onAddItem (evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+
+		const name = game.i18n.localize('OBSIDIAN.Item');
+		const dlg = await renderTemplate('templates/sidebar/entity-create.html', {
+			upper: name,
+			lower: name.toLocaleLowerCase(),
+			types: ['weapon', 'equipment', 'consumable', 'backpack']
+		});
+
+		new Dialog({
+			title: game.i18n.localize('OBSIDIAN.NewCustomItem'),
+			content: dlg,
+			buttons: {
+				create: {
+					icon: '<i class="fas fa-check"></i>',
+					label: game.i18n.localize('OBSIDIAN.CreateItem'),
+					callback: dlg => this.actor.createOwnedItem(validateForm(dlg[0].children[0]))
+				}
+			},
+			default: 'create'
+		}).render(true);
 	}
 
 	/**

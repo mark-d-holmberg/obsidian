@@ -21,6 +21,14 @@
 					<span>{{localize 'OBSIDIAN.Count'}}</span>
 				</label>
 			{{/if}}
+			{{#if feature}}
+				<select name="flags.obsidian.hit.type">
+					{{#select type}}
+						<option value="weapon">{{localize 'OBSIDIAN.Weapon'}}</option>
+						<option value="spell">{{localize 'OBSIDIAN.Spell'}}</option>
+					{{/select}}
+				</select>
+			{{/if}}
 		{{/if}}
 		{{#if (or (not spell) (and spell actor))}}
 			<select name="flags.obsidian.hit.stat">

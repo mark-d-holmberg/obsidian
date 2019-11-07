@@ -35,7 +35,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 				.join(', ');
 
 		if (flags.hit.enabled) {
-			if (flags.hit.n === undefined || flags.hit.n === '') {
+			if (Obsidian.notDefinedOrEmpty(flags.hit.n)) {
 				flags.hit.n = 1;
 			} else {
 				flags.hit.n = Number(flags.hit.n);

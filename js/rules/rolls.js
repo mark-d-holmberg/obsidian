@@ -1,11 +1,11 @@
 Obsidian.Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], extraMods = []) {
-		const mods = [
-			{mod: actor.data.data.abilities[ability].mod, name: game.i18n.localize('OBSIDIAN.Mod')},
-			...extraMods
-		];
+		const mods = [{
+			mod: actor.data.data.abilities[ability].mod,
+			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
+		}, ...extraMods];
 
-		return Obsidian.Rolls.d20Roll(actor, {
+		return Obsidian.Rolls.simpleRoll(actor, {
 			type: 'abl',
 			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
 			parens: skill,
@@ -51,39 +51,105 @@ Obsidian.Rolls = {
 	},
 
 	attackRoll: function (actor, item) {
+		const data = actor.data.data;
+		const itemFlags = item.flags.obsidian;
 
+		let save;
+		let results;
+		let subtitle;
+
+		if (itemFlags.hit && itemFlags.hit.enabled) {
+			const mods = [];
+			if (itemFlags.magic) {
+				mods.push({mod: itemFlags.magic, name: game.i18n.localize('OBSIDIAN.Magic')});
+			}
+
+			results = Obsidian.Rolls.toHitRoll(actor, itemFlags.hit, mods);
+			subtitle =
+				itemFlags.type === 'ranged' || itemFlags.mode === 'ranged'
+					? 'RangedWeaponAttack'
+					: 'MeleeWeaponAttack';
+		}
+
+		if (itemFlags.dc && itemFlags.dc.enabled) {
+			save = {
+				effect: itemFlags.dc.effect,
+				target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${itemFlags.dc.target}`)
+			};
+
+			if (Obsidian.notDefinedOrEmpty(itemFlags.dc.fixed)) {
+				let bonus = 8;
+				if (!Obsidian.notDefinedOrEmpty(itemFlags.dc.bonus)) {
+					bonus = Number(itemFlags.dc.bonus);
+				}
+
+				const mods = [{
+					mod: itemFlags.dc.prof * data.attributes.prof.value,
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				}];
+
+				if (!Obsidian.notDefinedOrEmpty(itemFlags.dc.ability)) {
+					mods.push({
+						mod: data.abilities[itemFlags.dc.ability].mod,
+						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${itemFlags.dc.ability}`)
+					});
+				}
+
+				save.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
+				save.breakdown = bonus + Obsidian.Rolls.compileBreakdown(mods);
+			} else {
+				save.dc = Number(itemFlags.dc.fixed);
+				save.breakdown = `${save.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
+			}
+		}
+
+		return {
+			flags: {
+				obsidian: {
+					type: 'atk',
+					title: item.name,
+					subtitle: game.i18n.localize(`OBSIDIAN.${subtitle}`),
+					results: results,
+					save: save,
+					dmgBtn: item.id
+				}
+			}
+		};
 	},
 
-	d20Roll: function (actor, {type, title, parens, subtitle, adv = [], mods = []}) {
+	compileBreakdown: mods =>
+		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
+
+	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
 		const roll = new Die(20).roll(2);
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
 		const results = roll.results.map(r => {
 			return {
 				roll: r,
 				total: r + total,
-				breakdown:
-					r + mods.filter(mod => mod.mod)
-						.map(mod => `${mod.mod.sgnex()} [${mod.name}]`)
-						.join('')
+				breakdown: r + Obsidian.Rolls.compileBreakdown(mods)
 			}
 		});
 
-		Obsidian.Rolls.annotateCrits(20, 1, results);
+		Obsidian.Rolls.annotateCrits(crit, fail, results);
 		Obsidian.Rolls.annotateAdvantage(
 			Obsidian.Rules.determineAdvantage(actor.data.flags.obsidian.sheet.roll, ...adv),
 			results);
 
+		return results;
+	},
+
+	damage: function (actor, item) {
 		return {
 			flags: {
 				obsidian: {
-					type: type,
-					title: title,
-					parens: parens,
-					subtitle: subtitle,
-					results: results
+					type: 'dmg',
+					title: item.name,
+					damage: Obsidian.Rolls.rollDamage(actor, item, {crit: false}),
+					crit: Obsidian.Rolls.rollDamage(actor, item, {crit: true})
 				}
 			}
-		}
+		};
 	},
 
 	death: function (actor) {
@@ -95,7 +161,7 @@ Obsidian.Rolls = {
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
-		const roll = Obsidian.Rolls.d20Roll(actor, {
+		const roll = Obsidian.Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
@@ -170,6 +236,18 @@ Obsidian.Rolls = {
 
 		const dataset = evt.currentTarget.dataset;
 		if (!dataset.roll) {
+			return;
+		}
+
+		if (!actor) {
+			if (!dataset.actor) {
+				return;
+			}
+
+			actor = game.actors.get(dataset.actor);
+		}
+
+		if (!actor) {
 			return;
 		}
 
@@ -255,6 +333,19 @@ Obsidian.Rolls = {
 			}
 
 			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.spell(actor, spell));
+		} else if (roll === 'dmg') {
+			if (dataset.item === undefined) {
+				return;
+			}
+
+			const id = Number(dataset.item);
+			const item = actor.data.items.find(item => item.id === id);
+
+			if (!item) {
+				return;
+			}
+
+			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.damage(actor, item));
 		}
 	},
 
@@ -302,13 +393,74 @@ Obsidian.Rolls = {
 	},
 
 	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
-		return Obsidian.Rolls.d20Roll(actor, {
+		return Obsidian.Rolls.simpleRoll(actor, {
 			type: type,
 			title: title,
 			subtitle: subtitle,
 			adv: adv,
 			mods: [{mod: Number(override), name: game.i18n.localize('OBSIDIAN.Override')}]
 		});
+	},
+
+	rollDamage: function (actor, item, {crit = false}) {
+		const data = actor.data.data;
+		const itemFlags = item.flags.obsidian;
+		const damage =
+			item.type === 'weapon' && itemFlags.mode === 'versatile'
+				? itemFlags.versatile
+				: itemFlags.damage;
+
+		let mods = [];
+		const rolls = damage.map(dmg => {
+			let ndice = dmg.ndice;
+			if (crit && dmg.ncrit) {
+				// We hard-code bonus crit dice rules here. It seems any
+				// feature that allows for extra dice on a crit specifies one
+				// damage die only so, if a user specified more than one crit
+				// die, we double the dice once, then add only one additional
+				// die for each crit dice value above 1.
+				ndice += ndice + dmg.ncrit - 1;
+			}
+
+			return new Die(dmg.die).roll(ndice);
+		});
+
+		mods = damage.map(dmg => {
+			const subMods = [{mod: dmg.bonus, name: game.i18n.localize('OBSIDIAN.Bonus')}];
+			if (!Obsidian.notDefinedOrEmpty(dmg.stat)) {
+				if (dmg.stat === 'spell') {
+					subMods.push({
+						mod: dmg.spellMod,
+						name: game.i18n.localize('OBSIDIAN.Spell')
+					});
+				} else {
+					subMods.push({
+						mod: data.abilities[dmg.stat].mod,
+						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${dmg.stat}`)
+					});
+				}
+			}
+
+			return subMods;
+		});
+
+		return {
+			total: rolls.reduce((acc, r) => acc + r.total, 0)
+				+ mods.flat().reduce((acc, mod) => acc + mod.mod, 0),
+			results: rolls.map((r, i) => {
+				const dmg = damage[i];
+				const subMods = mods[i];
+				const total = subMods.reduce((acc, mod) => acc + mod.mod, 0);
+
+				return {
+					type: dmg.type,
+					total: r.total + total,
+					breakdown:
+						`${r.rolls.length}d${dmg.die}${Obsidian.Rolls.compileBreakdown(subMods)} = `
+						+ `(${r.results.join('+')})${total.sgnex()}`
+				}
+			})
+		}
 	},
 
 	savingThrow: function (actor, save) {
@@ -326,7 +478,7 @@ Obsidian.Rolls = {
 			const mods = [
 				{
 					mod: data.abilities[save].mod,
-					name: game.i18n.localize('OBSIDIAN.Mod')
+					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save}`)
 				}, {
 					mod: (flags.saves.bonus || 0) + saveBonus,
 					name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -336,7 +488,7 @@ Obsidian.Rolls = {
 				}
 			];
 
-			return Obsidian.Rolls.d20Roll(actor, {
+			return Obsidian.Rolls.simpleRoll(actor, {
 				type: 'save',
 				title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 				subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
@@ -351,6 +503,20 @@ Obsidian.Rolls = {
 				game.i18n.localize('OBSIDIAN.SavingThrow'),
 				adv,
 				saveData.override);
+		}
+	},
+
+	simpleRoll: function (actor, {type, title, parens, subtitle, adv = [], mods = []}) {
+		return {
+			flags: {
+				obsidian: {
+					type: type,
+					title: title,
+					parens: parens,
+					subtitle: subtitle,
+					results: Obsidian.Rolls.d20Roll(actor, adv, mods)
+				}
+			}
 		}
 	},
 
@@ -417,6 +583,32 @@ Obsidian.Rolls = {
 		for (const msg of msgs) {
 			await ChatMessage.create(mergeObject(chatData, msg));
 		}
+	},
+
+	toHitRoll: function (actor, hit, extraMods = []) {
+		const data = actor.data.data;
+		const mods = [
+			{mod: hit.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')},
+			...extraMods
+		];
+
+		if (hit.stat === 'spell') {
+			mods.push({mod: hit.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
+		} else {
+			mods.push({
+				mod: data.abilities[hit.stat].mod,
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${hit.stat}`)
+			});
+		}
+
+		if (hit.proficient) {
+			mods.push({
+				mod: data.attributes.prof.value,
+				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+			});
+		}
+
+		return Obsidian.Rolls.d20Roll(actor, [], mods, hit.crit);
 	}
 };
 
@@ -445,6 +637,7 @@ ChatMessage.prototype.render = (function () {
 					&& this.data.whisper.contains(game.user.data._id))
 		};
 
+		await loadTemplates(['public/modules/obsidian/html/components/damage-format.html']);
 		let html = await renderTemplate('public/modules/obsidian/html/message.html', messageData);
 		html = $(html);
 
@@ -468,6 +661,7 @@ ChatMessage.prototype.render = (function () {
 			}
 		});
 
+		html.find('[data-roll]').click(evt => Obsidian.Rolls.fromClick(null, evt));
 		return html;
 	};
 })();

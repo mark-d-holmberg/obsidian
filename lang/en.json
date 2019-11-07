@@ -471,5 +471,11 @@
 	"OBSIDIAN.Success": "Success",
 	"OBSIDIAN.Failure": "Failure",
 	"OBSIDIAN.Deceased": "Deceased",
-	"OBSIDIAN.Stable": "Stable"
+	"OBSIDIAN.Stable": "Stable",
+	"OBSIDIAN.MeleeWeaponAttack": "Melee Weapon Attack",
+	"OBSIDIAN.RangedWeaponAttack": "Ranged Weapon Attack",
+	"OBSIDIAN.Save": "Save",
+	"OBSIDIAN.NewCustomItem": "New Custom Item",
+	"OBSIDIAN.CreateItem": "Create Item",
+	"OBSIDIAN.Total": "Total"
 }
