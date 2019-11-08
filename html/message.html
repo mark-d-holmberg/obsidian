@@ -24,7 +24,7 @@
 			<div class="obsidian-msg-sub-title">{{message.flags.obsidian.subtitle}}</div>
 		{{/if}}
 	</section>
-	{{#unless (eq message.flags.obsidian.type 'dmg')}}
+	{{#if message.flags.obsidian.results}}
 	<section>
 		<div class="obsidian-msg-row">
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
@@ -42,7 +42,7 @@
 			</div>
 		</div>
 	</section>
-	{{/unless}}
+	{{/if}}
 	{{#if message.flags.obsidian.save}}
 	<section class="obsidian-msg-save">
 		<div>
@@ -81,6 +81,12 @@
 			{{message.flags.obsidian.addendum.label}}
 		</div>
 	</section>
+	{{/if}}
+	{{#if message.flags.obsidian.details}}
+	<details {{#if message.flags.obsidian.open}}open{{/if}}>
+		<summary>{{localize 'OBSIDIAN.Details'}}</summary>
+		{{{message.flags.obsidian.details}}}
+	</details>
 	{{/if}}
 </li>
 {{/if}}

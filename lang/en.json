@@ -477,5 +477,6 @@
 	"OBSIDIAN.Save": "Save",
 	"OBSIDIAN.NewCustomItem": "New Custom Item",
 	"OBSIDIAN.CreateItem": "Create Item",
-	"OBSIDIAN.Total": "Total"
+	"OBSIDIAN.Total": "Total",
+	"OBSIDIAN.Details": "Details"
 }

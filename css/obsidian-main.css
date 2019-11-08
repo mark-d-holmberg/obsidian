@@ -1340,3 +1340,14 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-msg-row:last-child {
 	margin: 0;
 }
+
+.obsidian-msg details {
+	text-align: justify;
+	font-size: 11px;
+}
+
+.obsidian-msg details summary {
+	outline: none;
+	font-size: 12px;
+	color: var(--text-subtle);
+}
