@@ -396,6 +396,7 @@ Obsidian.Rules.Prepare = {
 			}
 
 			Obsidian.Rules.Prepare.calculateDamage(data, null, flags.damage);
+			flags.display = Obsidian.Parse.parse(actorData, feat.data.description.value);
 		}
 	},
 
