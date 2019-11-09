@@ -140,6 +140,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 		html.find('[data-roll]').click(evt => Obsidian.Rolls.fromClick(this.actor, evt));
+		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 
 		this._activateDialogs(html);
 
@@ -499,6 +500,38 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		attack.update({'flags.obsidian.mode': mode});
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onCastSpell (evt) {
+		if (!evt.currentTarget.dataset || !evt.currentTarget.dataset.spl) {
+			return;
+		}
+
+		const id = Number(evt.currentTarget.dataset.spl);
+		const spell = this.actor.data.items.find(item => item.id === id);
+
+		if (!spell) {
+			return;
+		}
+
+		const hasUses = spell.flags.obsidian.uses && spell.flags.obsidian.uses.enabled;
+		if (spell.data.level.value < 1 || hasUses) {
+			if (hasUses && spell.flags.obsidian.uses.limit === 'limited') {
+				spell.update({
+					'flags.obsidian.uses.remaining': spell.flags.obsidian.uses.remaining - 1
+				});
+			}
+
+			evt.currentTarget.dataset.roll = 'spl';
+			evt.currentTarget.dataset.level = spell.data.level.value;
+			Obsidian.Rolls.fromClick(this.actor, evt);
+		} else {
+			new ObsidianSpellSlotDialog(this, spell).render(true);
+		}
 	}
 
 	/**

@@ -60,8 +60,9 @@ Obsidian.Rolls = {
 				mods.push({mod: itemFlags.magic, name: game.i18n.localize('OBSIDIAN.Magic')});
 			}
 
-			results.results = Obsidian.Rolls.toHitRoll(actor, itemFlags.hit, mods);
+			results.results = [Obsidian.Rolls.toHitRoll(actor, itemFlags.hit, mods)];
 			results.dmgBtn = item.id;
+			results.dmgCount = 1;
 			results.subtitle =
 				game.i18n.localize(
 					itemFlags.type === 'ranged' || itemFlags.mode === 'ranged'
@@ -101,10 +102,17 @@ Obsidian.Rolls = {
 			}];
 
 			if (!Obsidian.notDefinedOrEmpty(flags.dc.ability)) {
-				mods.push({
-					mod: data.abilities[flags.dc.ability].mod,
-					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.dc.ability}`)
-				});
+				if (flags.dc.ability === 'spell') {
+					mods.push({
+						mod: flags.dc.spellMod,
+						name: game.i18n.localize('OBSIDIAN.Spell')
+					});
+				} else {
+					mods.push({
+						mod: data.abilities[flags.dc.ability].mod,
+						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.dc.ability}`)
+					});
+				}
 			}
 
 			save.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
@@ -113,6 +121,8 @@ Obsidian.Rolls = {
 			save.dc = Number(flags.dc.fixed);
 			save.breakdown = `${save.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
 		}
+
+		return save;
 	},
 
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
@@ -134,17 +144,32 @@ Obsidian.Rolls = {
 		return results;
 	},
 
-	damage: function (actor, item) {
-		return {
-			flags: {
-				obsidian: {
-					type: 'dmg',
-					title: item.name,
-					damage: Obsidian.Rolls.rollDamage(actor, item, {crit: false}),
-					crit: Obsidian.Rolls.rollDamage(actor, item, {crit: true})
+	damage: function (actor, item, count, upcast) {
+		if (isNaN(upcast)) {
+			upcast = undefined;
+		}
+
+		if (count === undefined || isNaN(count)) {
+			count = 1;
+		}
+
+		const msgs = [];
+		for (let i = 0; i < count; i++) {
+			msgs.push({
+				flags: {
+					obsidian: {
+						type: 'dmg',
+						title: item.name,
+						damage:
+							Obsidian.Rolls.rollDamage(actor, item, {crit: false, upcast: upcast}),
+						crit:
+							Obsidian.Rolls.rollDamage(actor, item, {crit: true, upcast: upcast})
+					}
 				}
-			}
-		};
+			});
+		}
+
+		return msgs;
 	},
 
 	death: function (actor) {
@@ -170,12 +195,13 @@ Obsidian.Rolls = {
 
 		// If no advantage or disadvantage, take the first roll, otherwise find
 		// the highest or lowest roll, respectively.
+		const firstRoll = roll.flags.obsidian.results[0];
 		const result =
 			adv === 0
-				? roll.flags.obsidian.results[0]
+				? firstRoll[0]
 				: adv > 0
-					? roll.flags.obsidian.results.reduce((acc, r) => r.total > acc.total ? r : acc)
-					: roll.flags.obsidian.results.reduce((acc, r) => r.total < acc.total ? r : acc);
+					? firstRoll.reduce((acc, r) => r.total > acc.total ? r : acc)
+					: firstRoll.reduce((acc, r) => r.total < acc.total ? r : acc);
 
 		const success = result.total >= flags.attributes.death.threshold;
 		const key = success ? 'success' : 'failure';
@@ -230,7 +256,7 @@ Obsidian.Rolls = {
 		};
 
 		if (itemFlags.hit && itemFlags.hit.enabled) {
-			results.results = Obsidian.Rolls.toHitRoll(actor, itemFlags.hit);
+			results.results = [Obsidian.Rolls.toHitRoll(actor, itemFlags.hit)];
 			results.dmgBtn = feat.id;
 		} else if (itemFlags.damage.length > 0) {
 			results.damage = Obsidian.Rolls.rollDamage(actor, feat, {crit: false});
@@ -336,7 +362,7 @@ Obsidian.Rolls = {
 
 			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.feature(actor, feat));
 		} else if (roll === 'spl') {
-			if (dataset.spl === undefined) {
+			if (dataset.spl === undefined || dataset.level === undefined) {
 				return;
 			}
 
@@ -347,7 +373,8 @@ Obsidian.Rolls = {
 				return;
 			}
 
-			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.spell(actor, spell));
+			Obsidian.Rolls.toChat(
+				actor, ...Obsidian.Rolls.spell(actor, spell, Number(dataset.level)));
 		} else if (roll === 'dmg') {
 			if (dataset.item === undefined) {
 				return;
@@ -360,7 +387,10 @@ Obsidian.Rolls = {
 				return;
 			}
 
-			Obsidian.Rolls.toChat(actor, Obsidian.Rolls.damage(actor, item));
+			Obsidian.Rolls.toChat(
+				actor,
+				...Obsidian.Rolls.damage(
+					actor, item, Number(dataset.count), Number(dataset.upcast)));
 		}
 	},
 
@@ -371,13 +401,13 @@ Obsidian.Rolls = {
 				obsidian: {
 					type: 'hd',
 					title: game.i18n.localize('OBSIDIAN.HD'),
-					results: [{
+					results: [[{
 						total: results.reduce((acc, die) => acc + die.total, 0) + conBonus,
 						breakdown:
 							`${rolls.map(([n, d]) => `${n}d${d}`).join('+')}${conBonus.sgn()} = `
 							+ results.map(die => `(${die.results.join('+')})`).join(' + ')
 							+ conBonus.sgnex()
-					}]
+					}]]
 				}
 			}
 		});
@@ -417,13 +447,24 @@ Obsidian.Rolls = {
 		});
 	},
 
-	rollDamage: function (actor, item, {crit = false}) {
+	rollDamage: function (actor, item, {crit = false, upcast = 0}) {
 		const data = actor.data.data;
 		const itemFlags = item.flags.obsidian;
-		const damage =
+		let damage =
 			item.type === 'weapon' && itemFlags.mode === 'versatile'
 				? itemFlags.versatile
 				: itemFlags.damage;
+
+		if (upcast > 0
+			&& itemFlags.upcast
+			&& itemFlags.upcast.enabled
+			&& itemFlags.upcast.damage.length > 0)
+		{
+			damage = damage.concat(itemFlags.upcast.damage.map(dmg => {
+				dmg.ndice = Math.floor(dmg.ndice * upcast);
+				return dmg;
+			}));
+		}
 
 		let mods = [];
 		const rolls = damage.map(dmg => {
@@ -550,7 +591,7 @@ Obsidian.Rolls = {
 					title: title,
 					parens: parens,
 					subtitle: subtitle,
-					results: Obsidian.Rolls.d20Roll(actor, adv, mods)
+					results: [Obsidian.Rolls.d20Roll(actor, adv, mods)]
 				}
 			}
 		}
@@ -596,8 +637,84 @@ Obsidian.Rolls = {
 		}
 	},
 
-	spell: function (actor, spell) {
+	spell: function (actor, spell, level) {
+		const itemFlags = spell.flags.obsidian;
+		const results = {
+			type: 'spl',
+			title: spell.name,
+			details: spell,
+			open: (!itemFlags.hit || !itemFlags.hit.enabled) && itemFlags.damage.length < 1
+		};
 
+		let upcastAmount = 0;
+		if (level > 0
+			&& level > spell.data.level.value
+			&& itemFlags.upcast
+			&& itemFlags.upcast.enabled)
+		{
+			upcastAmount = level - spell.data.level.value;
+		}
+
+		if (itemFlags.hit && itemFlags.hit.enabled && itemFlags.hit.attack !== 'unerring') {
+			let count = itemFlags.hit.count || 1;
+			if (upcastAmount > 0) {
+				count += Math.floor(itemFlags.upcast.natk * (upcastAmount / itemFlags.upcast.nlvl));
+			}
+
+			results.results = [];
+			for (let i = 0; i < count; i++) {
+				results.results.push(Obsidian.Rolls.toHitRoll(actor, itemFlags.hit));
+			}
+
+			results.dmgBtn = spell.id;
+			results.dmgCount = count;
+			results.dmgUpcast = upcastAmount;
+			results.subtitle =
+				game.i18n.localize(
+					itemFlags.hit.attack === 'melee'
+						? 'OBSIDIAN.MeleeSpellAttack'
+						: 'OBSIDIAN.RangedSpellAttack');
+		}
+
+		if (itemFlags.dc && itemFlags.dc.enabled) {
+			results.save = Obsidian.Rolls.compileSave(actor, itemFlags);
+		}
+
+		const msgs = [{flags: {obsidian: results}}];
+		const hasDamage = itemFlags.damage.length > 0;
+		const noAttackRoll = !itemFlags.hit || !itemFlags.hit.enabled;
+		const unerringAttack =
+			itemFlags.hit && itemFlags.hit.enabled && itemFlags.hit.attack === 'unerring';
+
+		if (hasDamage && (noAttackRoll || unerringAttack)) {
+			let count = 1;
+			if (unerringAttack) {
+				count = itemFlags.hit.count || 1;
+				if (upcastAmount > 0) {
+					count +=
+						Math.floor(itemFlags.upcast.natk * (upcastAmount / itemFlags.upcast.nlvl));
+				}
+			}
+
+			for (let i = 0; i < count; i++) {
+				msgs.push({
+					flags: {
+						obsidian: {
+							type: 'dmg',
+							title: spell.name,
+							damage:
+								Obsidian.Rolls.rollDamage(
+									actor, spell, {crit: false, upcast: upcastAmount}),
+							crit:
+								Obsidian.Rolls.rollDamage(
+									actor, spell, {crit: true, upcast: upcastAmount})
+						}
+					}
+				});
+			}
+		}
+
+		return msgs;
 	},
 
 	toChat: async function (actor, ...msgs) {
@@ -617,7 +734,7 @@ Obsidian.Rolls = {
 		}
 
 		for (const msg of msgs) {
-			await ChatMessage.create(mergeObject(chatData, msg));
+			await ChatMessage.create(mergeObject(duplicate(chatData), msg));
 		}
 	},
 

@@ -8,6 +8,9 @@
 				{{spell-level-format data.level.value level=true}}
 				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
 			{{/if}}
+			{{#if data.ritual.value}}
+				({{localize 'OBSIDIAN.RitualLC'}})
+			{{/if}}
 		</h3>
 		<div class="obsidian-item-card-header-row">
 			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.CastTime'}}:</div>

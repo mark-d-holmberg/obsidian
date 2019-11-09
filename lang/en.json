@@ -478,5 +478,9 @@
 	"OBSIDIAN.NewCustomItem": "New Custom Item",
 	"OBSIDIAN.CreateItem": "Create Item",
 	"OBSIDIAN.Total": "Total",
-	"OBSIDIAN.Details": "Details"
+	"OBSIDIAN.Details": "Details",
+	"OBSIDIAN.CastAtWhichLevel": "Cast at which level?",
+	"OBSIDIAN.MeleeSpellAttack": "Melee Spell Attack",
+	"OBSIDIAN.RangedSpellAttack": "Ranged Spell Attack",
+	"OBSIDIAN.RitualLC": "ritual"
 }

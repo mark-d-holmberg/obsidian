@@ -1,0 +1,27 @@
+<form class="obsidian obsidian-form-bare obsidian-spell-slot" autocomplete="off">
+	{{#if spell.data.ritual.value}}
+	<div class="obsidian-spell-slot-row">
+		<div class="rollable" data-roll="spl" data-spl="{{spell.id}}" data-level="ritual">
+			{{localize 'OBSIDIAN.Ritual'}}
+		</div>
+	</div>
+	{{/if}}
+	{{#each (range spell.data.level.value 9)}}
+	<div class="obsidian-spell-slot-row">
+		<div class="rollable" data-roll="spl" data-spl="{{../spell.id}}" data-level="{{this}}">
+			{{spell-level-format this}} {{localize 'OBSIDIAN.Level'}}
+		</div>
+		<div>
+			{{#with (lookup ../data.spells (add 'spell' this))}}
+				{{format-slots this ../this}}
+			{{/with}}
+		</div>
+	</div>
+	{{/each}}
+	<div class="obsidian-spell-slot-row">
+		<div class="rollable" data-roll="spl" data-spl="{{spell.id}}" data-level="pact">
+			{{localize 'OBSIDIAN.Pact'}}
+		</div>
+		<div>{{format-slots data.spells.pact 'pact'}}</div>
+	</div>
+</form>

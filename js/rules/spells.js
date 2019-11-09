@@ -59,6 +59,14 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 				+ '</div>');
 		}
 
+		if (flags.upcast && flags.upcast.enabled) {
+			if (Obsidian.notDefinedOrEmpty(flags.upcast.nlvl)) {
+				flags.upcast.nlvl = 1;
+			} else {
+				flags.upcast.nlvl = Number(flags.upcast.nlvl);
+			}
+		}
+
 		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);
 		Obsidian.Rules.Prepare.calculateDamage(actorData.data, cls, flags.damage);
 
