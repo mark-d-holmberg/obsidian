@@ -258,6 +258,7 @@ Obsidian.Rolls = {
 		if (itemFlags.hit && itemFlags.hit.enabled) {
 			results.results = [Obsidian.Rolls.toHitRoll(actor, itemFlags.hit)];
 			results.dmgBtn = feat.id;
+			results.dmgCount = 1;
 		} else if (itemFlags.damage.length > 0) {
 			results.damage = Obsidian.Rolls.rollDamage(actor, feat, {crit: false});
 			results.crit = Obsidian.Rolls.rollDamage(actor, feat, {crit: true});
