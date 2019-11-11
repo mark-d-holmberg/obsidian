@@ -8,15 +8,15 @@
 	"scripts": [
 		"js/helpers.js", "js/helpers-expr.js","js/patch.js", "js/obsidian.js", "js/rules/rules.js",
 		"js/schema.js", "js/data.js", "js/actor.js", "js/reorder.js", "js/compendia.js",
-		"js/parse.js", "js/dialogs/dialog.js", "js/dialogs/array.js", "js/dialogs/char-header.js",
-		"js/dialogs/xp.js", "js/dialogs/hd.js", "js/dialogs/skill.js", "js/dialogs/skills.js",
-		"js/dialogs/save.js", "js/dialogs/senses.js", "js/dialogs/profs.js", "js/dialogs/spells.js",
-		"js/dialogs/view.js", "js/dialogs/currency.js", "js/dialogs/defenses.js",
-		"js/dialogs/roll-hd.js", "js/dialogs/spell-slot.js", "js/sheets/item-sheet.js",
-		"js/sheets/spell.js", "js/sheets/feature.js", "js/sheets/weapon.js",
-		"js/sheets/container.js", "js/sheets/equipment.js", "js/sheets/consumable.js",
-		"js/rules/prepare.js", "js/rules/spellcasting.js", "js/rules/spells.js",
-		"js/rules/inventory.js", "js/rules/rolls.js"
+		"js/parse.js", "js/message.js", "js/dialogs/dialog.js", "js/dialogs/array.js",
+		"js/dialogs/char-header.js", "js/dialogs/xp.js", "js/dialogs/hd.js", "js/dialogs/skill.js",
+		"js/dialogs/skills.js", "js/dialogs/save.js", "js/dialogs/senses.js", "js/dialogs/profs.js",
+		"js/dialogs/spells.js", "js/dialogs/view.js", "js/dialogs/currency.js",
+		"js/dialogs/defenses.js", "js/dialogs/roll-hd.js", "js/dialogs/spell-slot.js",
+		"js/sheets/item-sheet.js", "js/sheets/spell.js", "js/sheets/feature.js",
+		"js/sheets/weapon.js", "js/sheets/container.js", "js/sheets/equipment.js",
+		"js/sheets/consumable.js", "js/rules/prepare.js", "js/rules/spellcasting.js",
+		"js/rules/spells.js", "js/rules/inventory.js", "js/rules/rolls.js"
 	],
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
