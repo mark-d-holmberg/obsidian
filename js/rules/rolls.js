@@ -460,6 +460,27 @@ Obsidian.Rolls = {
 		});
 	},
 
+	recharge: function (item) {
+		const charges = item.flags.obsidian.charges;
+		const roll = new Die(charges.die).roll(charges.ndice);
+
+		return {
+			flags: {
+				obsidian: {
+					type: 'item',
+					title: item.name,
+					subtitle: game.i18n.localize('OBSIDIAN.Recharge'),
+					results: [[{
+						total: roll.results.reduce((acc, val) => acc + val, 0) + charges.bonus,
+						breakdown:
+							`${charges.ndice}d${charges.die}${charges.bonus.sgnex()} = `
+							+ `(${roll.results.join('+')})${charges.bonus.sgnex()}`
+					}]]
+				}
+			}
+		};
+	},
+
 	rollDamage: function (actor, item, {crit = false, upcast = 0}) {
 		const data = actor.data.data;
 		const itemFlags = item.flags.obsidian;

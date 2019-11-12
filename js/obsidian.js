@@ -141,6 +141,8 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 		html.find('[data-roll]').click(evt => Obsidian.Rolls.fromClick(this.actor, evt));
 		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
+		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
+		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
 
 		this._activateDialogs(html);
 

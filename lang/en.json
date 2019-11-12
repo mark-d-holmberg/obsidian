@@ -482,5 +482,6 @@
 	"OBSIDIAN.CastAtWhichLevel": "Cast at which level?",
 	"OBSIDIAN.MeleeSpellAttack": "Melee Spell Attack",
 	"OBSIDIAN.RangedSpellAttack": "Ranged Spell Attack",
-	"OBSIDIAN.RitualLC": "ritual"
+	"OBSIDIAN.RitualLC": "ritual",
+	"OBSIDIAN.Recharge": "Recharge"
 }

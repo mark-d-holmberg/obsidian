@@ -199,6 +199,96 @@ class ObsidianActor extends Actor5e {
 		return this.data.items.find(other => other.id === item.flags.obsidian.parent);
 	}
 
+	async shortRest () {
+		if (this.data.data.spells.pact) {
+			await this.update({'data.spells.pact.uses': 0});
+		}
+
+		const items = [];
+		const feats = this.data.items.filter(item => item.type === 'feat');
+
+		for (const feat of feats) {
+			const flags = feat.flags.obsidian;
+			if (flags.uses && flags.uses.enabled && flags.uses.recharge === 'short') {
+				items.push({
+					id: feat.id,
+					flags: {obsidian: {uses: {remaining: flags.uses.max}}}
+				});
+			}
+		}
+
+		if (items.length > 0) {
+			return this.updateManyOwnedItem(items);
+		}
+
+		return Promise.resolve();
+	}
+
+	async longRest () {
+		await this.shortRest();
+		const data = this.data.data;
+		const flags = this.data.flags.obsidian;
+		const update = {};
+
+		update['data.attributes.hp.value'] = data.attributes.hp.maxAdjusted;
+
+		for (const [die, hd] of Object.entries(flags.attributes.hd)) {
+			if (hd.max > 0) {
+				update[`flags.obsidian.attributes.hd.${die}.value`] =
+					hd.value + Math.floor(hd.max / 2);
+			}
+		}
+
+		for (const level of Object.keys(data.spells)) {
+			if (level.startsWith('spell')) {
+				update[`data.spells.${level}.value`] = 0;
+			}
+		}
+
+		await this.update(update);
+		const items = [];
+
+		for (const item of this.data.items) {
+			const itemFlags = item.flags.obsidian;
+			if (item.type === 'feat'
+				&& itemFlags.uses
+				&& itemFlags.uses.enabled
+				&& itemFlags.uses.recharge === 'long')
+			{
+				items.push({
+					id: item.id,
+					flags: {obsidian: {uses: {remaining: itemFlags.uses.max}}}
+				});
+			}
+
+			if (item.type === 'weapon' && itemFlags.charges && itemFlags.charges.enabled) {
+				if (itemFlags.charges.rechargeType === 'formula') {
+					const recharge = Obsidian.Rolls.recharge(item);
+					let remaining =
+						itemFlags.charges.remaining + recharge.flags.obsidian.results[0][0].total;
+
+					if (remaining > itemFlags.charges.max) {
+						remaining = itemFlags.charges.max;
+					}
+
+					Obsidian.Rolls.toChat(this, recharge);
+					items.push({id: item.id, flags: {obsidian: {charges: {remaining: remaining}}}});
+				} else {
+					items.push({
+						id: item.id,
+						flags: {obsidian: {charges: {remaining: itemFlags.charges.max}}}
+					});
+				}
+			}
+		}
+
+		if (items.length > 0) {
+			return this.updateManyOwnedItem(items);
+		}
+
+		return Promise.resolve();
+	}
+
 	async updateClasses (before, after, update) {
 		const clsMap = new Map(after.map(cls => [cls.id, cls]));
 		const spells = this.data.items.filter(item => item.type === 'spell');
