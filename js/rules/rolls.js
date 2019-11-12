@@ -77,6 +77,18 @@ Obsidian.Rolls = {
 			results.save = Obsidian.Rolls.compileSave(actor, itemFlags);
 		}
 
+		if (itemFlags.tags.ammunition
+			&& itemFlags.ammo
+			&& !Obsidian.notDefinedOrEmpty(itemFlags.ammo.id))
+		{
+			const ammoID = Number(itemFlags.ammo.id);
+			const ammo = actor.items.find(item => item.data.id === ammoID);
+
+			if (ammo && ammo.data.data.quantity.value > 0) {
+				ammo.update({'data.quantity.value': ammo.data.data.quantity.value - 1});
+			}
+		}
+
 		return {flags: {obsidian: results}};
 	},
 
