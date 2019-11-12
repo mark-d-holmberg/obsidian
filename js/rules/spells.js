@@ -44,7 +44,8 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 			flags.hit.count = flags.hit.n;
 			if (spell.data.level.value < 1) {
 				flags.hit.count +=
-					Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1;
+					flags.upcast.natk *
+					(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
 			}
 
 			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
@@ -65,6 +66,19 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 			} else {
 				flags.upcast.nlvl = Number(flags.upcast.nlvl);
 			}
+		}
+
+		if (spell.data.level.value < 1) {
+			flags.cantrip = {
+				damage: flags.upcast.damage.map(dmg => {
+					const scaled = duplicate(dmg);
+					scaled.ndice *=
+						(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
+					return scaled;
+				})
+			};
+
+			Obsidian.Rules.Prepare.calculateDamage(actorData.data, cls, flags.cantrip.damage);
 		}
 
 		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);

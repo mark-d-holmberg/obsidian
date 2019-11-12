@@ -483,5 +483,6 @@
 	"OBSIDIAN.MeleeSpellAttack": "Melee Spell Attack",
 	"OBSIDIAN.RangedSpellAttack": "Ranged Spell Attack",
 	"OBSIDIAN.RitualLC": "ritual",
-	"OBSIDIAN.Recharge": "Recharge"
+	"OBSIDIAN.Recharge": "Recharge",
+	"OBSIDIAN.CantripScaling": "Cantrip Scaling"
 }

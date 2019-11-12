@@ -152,10 +152,14 @@
 		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage' spell=true}}
 	</fieldset>
-	<fieldset data-prop="upcast.damage" {{disabled (not item.flags.obsidian.upcast.enabled)}}>
+	<fieldset data-prop="upcast.damage" {{disabled (or (lt item.data.level.value 1) (not item.flags.obsidian.upcast.enabled))}}>
 		<legend>
-			{{fancy-checkbox 'flags.obsidian.upcast.enabled' content='OBSIDIAN.AtHigherLevels'
-			                 checked=item.flags.obsidian.upcast.enabled}}
+			{{#if (gt item.data.level.value 0)}}
+				{{fancy-checkbox 'flags.obsidian.upcast.enabled' content='OBSIDIAN.AtHigherLevels'
+				                 checked=item.flags.obsidian.upcast.enabled}}
+			{{else}}
+				{{localize 'OBSIDIAN.CantripScaling'}}
+			{{/if}}
 		</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div class="obsidian-fullwidth">
@@ -165,6 +169,7 @@
 					       value="{{item.flags.obsidian.upcast.natk}}">
 					<span>{{localize 'OBSIDIAN.Attacks'}}</span>
 				</label>
+				{{#if (gt item.data.level.value 0)}}
 				<span class="obsidian-binary-operator">&sol;</span>
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
@@ -172,6 +177,7 @@
 					       value="{{item.flags.obsidian.upcast.nlvl}}">
 					<span>{{localize 'OBSIDIAN.Level'}}</span>
 				</label>
+				{{/if}}
 			</div>
 		</div>
 		<label class="obsidian-label-lg obsidian-stacked-row obsidian-inline">

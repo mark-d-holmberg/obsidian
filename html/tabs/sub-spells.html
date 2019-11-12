@@ -103,6 +103,13 @@
 											     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
 										</div>
 									{{/each}}
+									{{#each flags.obsidian.cantrip.damage}}
+										<div class="obsidian-dmg-component">
+											{{display}}
+											<div class="obsidian-icon-sm obsidian-icon-{{type}}"
+											     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+										</div>
+									{{/each}}
 								</div>
 							</div>
 							<div class="obsidian-col-spell-notes">

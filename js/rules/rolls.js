@@ -500,6 +500,10 @@ Obsidian.Rolls = {
 			}));
 		}
 
+		if (itemFlags.cantrip) {
+			damage = damage.concat(itemFlags.cantrip.damage);
+		}
+
 		let mods = [];
 		const rolls = damage.map(dmg => {
 			if (!dmg.ndice) {

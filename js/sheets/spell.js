@@ -24,6 +24,7 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 		super.activateListeners(html);
 		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
+		html.find('[name="data.level.value"]').focusout(this._onSubmit.bind(this));
 		ObsidianDialog.recalculateHeight(html);
 	}
 
