@@ -18,6 +18,7 @@ class ObsidianDialog extends BaseEntitySheet {
 		options.submitOnUnfocus = true;
 		options.width = 400;
 		options.modal = true;
+		options.pinnable = false;
 		return options;
 	}
 

@@ -67,4 +67,16 @@ class ObsidianViewDialog extends ObsidianDialog {
 		data.item = this.item;
 		return data;
 	}
+
+	/**
+	 * @private
+	 */
+	async _renderOuter (options) {
+		const html = await super._renderOuter(options);
+		const pin = $('<a class="obsidian-pin"><i class="fas fa-thumbtack"></i></a>');
+		const close = html.find('a.close');
+		close.html('<i class="fas fa-times"></i>');
+		pin.insertBefore(close);
+		return html;
+	}
 }
