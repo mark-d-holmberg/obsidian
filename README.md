@@ -1,6 +1,18 @@
 # Obsidian
 A [Foundry VTT](http://foundryvtt.com/) module that provides a dark theme character sheet for 5th edition D&D, incorporating concepts from [D&D Beyond](https://dndbeyond.com) and [Shaped](https://github.com/mlenser/roll20-character-sheets/tree/master/5eShaped).
 
+## Bug Reports
+If you discover an issue with the sheet, please report it in the [issue tracker](https://bitbucket.org/Fyorl/obsidian/issues) and ensure you include the following information:
+
+1. The steps you took to encounter the issue.
+2. What you expected to happen.
+3. What actually happened.
+4. Whether you encountered the issue in the foundry client or in a web browser, or both (and which browser and OS, if applicable).
+
+In addition to the above information, it can be useful if you are able to do the following, too:
+1. Press F12 to bring up the console and copy and paste any error messages you find there into the bug report.
+2. Zip up your `actors.db` file and attach it to the report. It can be found in your foundry installation directory under `resources/app/public/worlds/yourworld/data/actors.db`.
+
 ## License
 All source code (`*.html`, `*.css`, `*.js`, `*.json`, `*.d.ts`) is made available under the terms of the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html). A copy of this license is available in the `LICENSE` file.
 
