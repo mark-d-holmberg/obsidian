@@ -6,6 +6,11 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 		const spell = actorData.items[i];
 		const flags = spell.flags.obsidian;
+
+		if (!flags) {
+			continue;
+		}
+
 		let cls;
 		flags.notes = [];
 

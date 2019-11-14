@@ -135,6 +135,10 @@ Obsidian.Rules.Prepare = {
 
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
+			if (!flags) {
+				continue;
+			}
+
 			flags.notes = [];
 			flags.baseAC = armour.data.armor.value;
 
@@ -216,6 +220,10 @@ Obsidian.Rules.Prepare = {
 
 		for (const consumable of actorData.obsidian.consumables) {
 			const flags = consumable.flags.obsidian;
+			if (!flags) {
+				continue;
+			}
+
 			flags.notes = [];
 
 			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
@@ -263,6 +271,10 @@ Obsidian.Rules.Prepare = {
 
 			const weapon = actorData.items[i];
 			const flags = weapon.flags.obsidian;
+
+			if (!flags) {
+				continue;
+			}
 
 			if (weapon.data.equipped.value || flags.type === 'unarmed') {
 				actorData.obsidian.weapons.push(weapon);
@@ -356,6 +368,10 @@ Obsidian.Rules.Prepare = {
 		const data = actorData.data;
 		for (const feat of actorData.items.filter(item => item.type === 'feat')) {
 			const flags = feat.flags.obsidian;
+			if (!flags) {
+				continue;
+			}
+
 			if (flags.uses.enabled) {
 				const op = ops[flags.uses.operator];
 				if (flags.uses.key === 'abl') {

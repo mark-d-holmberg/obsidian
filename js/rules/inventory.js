@@ -16,7 +16,7 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		map.set(item.id, item);
 		item.idx = i;
 
-		if (!itemTypes.has(item.type)) {
+		if (!itemTypes.has(item.type) || !item.flags.obsidian) {
 			continue;
 		}
 
@@ -46,6 +46,10 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 
 	for (const item of inventory.items) {
 		const flags = item.flags.obsidian;
+		if (!flags) {
+			continue;
+		}
+
 		const totalWeight = item.data.weight.value * (item.data.quantity.value || 1);
 
 		if (flags.parent == null) {
