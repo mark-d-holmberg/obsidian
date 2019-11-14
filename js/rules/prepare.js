@@ -128,17 +128,15 @@ Obsidian.Rules.Prepare = {
 		const data = actorData.data;
 		actorData.obsidian.armour =
 			actorData.items.filter(item =>
-				item.type === 'equipment' && item.flags.obsidian.subtype === 'armour');
+				item.type === 'equipment'
+				&& item.flags.obsidian
+				&& item.flags.obsidian.subtype === 'armour');
 
 		let bestArmour;
 		let bestShield;
 
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
-			if (!flags) {
-				continue;
-			}
-
 			flags.notes = [];
 			flags.baseAC = armour.data.armor.value;
 
@@ -215,15 +213,12 @@ Obsidian.Rules.Prepare = {
 
 	consumables: function (actorData) {
 		const data = actorData.data;
-		actorData.obsidian.consumables = actorData.items.filter(item => item.type === 'consumable');
+		actorData.obsidian.consumables =
+			actorData.items.filter(item => item.type === 'consumable' && item.flags.obsidian);
 		actorData.obsidian.ammo = [];
 
 		for (const consumable of actorData.obsidian.consumables) {
 			const flags = consumable.flags.obsidian;
-			if (!flags) {
-				continue;
-			}
-
 			flags.notes = [];
 
 			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
