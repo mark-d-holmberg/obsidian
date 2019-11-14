@@ -1,6 +1,10 @@
 class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
+		if (actorData.type === 'npc') {
+			return actorData;
+		}
+
 		ObsidianActor._enrichFlags(actorData.flags);
 
 		const data = actorData.data;
