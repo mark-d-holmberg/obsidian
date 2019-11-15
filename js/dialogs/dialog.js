@@ -36,8 +36,10 @@ class ObsidianDialog extends BaseEntitySheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
-		html.find('select').off('change').change(this._onSubmit.bind(this));
+		if (this.options.submitOnUnfocus) {
+			html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
+			html.find('select').off('change').change(this._onSubmit.bind(this));
+		}
 		ObsidianDialog.initialiseComponents(html);
 	}
 
@@ -159,27 +161,6 @@ class ObsidianDialog extends BaseEntitySheet {
 		const diff = total - content.height();
 		const win = content.closest('.obsidian-window');
 		win.height(win.height() + diff + (richText ? 20 : 0));
-	}
-
-	static reconstructArray (formData, newData, keySubstr) {
-		const ar = [];
-		for (const [key, val] of Object.entries(formData)) {
-			if (key.startsWith(keySubstr)) {
-				let [index, property] = key.substring(keySubstr.length + 1).split('.');
-				index = parseInt(index);
-
-				if (ar[index] === undefined) {
-					ar[index] = {};
-				}
-
-				ar[index][property] = val;
-			} else {
-				newData[key] = val;
-			}
-		}
-
-		newData[keySubstr] = ar;
-		return ar;
 	}
 
 	static removeRow (data, evt) {

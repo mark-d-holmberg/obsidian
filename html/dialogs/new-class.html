@@ -1,0 +1,20 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	<div class="form-group">
+		<label>{{localize 'OBSIDIAN.Class'}}</label>
+		<select name="cls" data-selector="cls">
+			{{#each ObsidianRules.CLASSES}}
+				<option value="{{this}}">{{i18n-join 'OBSIDIAN.Class-' this}}</option>
+			{{/each}}
+		</select>
+	</div>
+	<div class="form-group" data-selector-parent="cls" data-show="custom">
+		<label>{{localize 'OBSIDIAN.CustomName'}}</label>
+		<input type="text" name="custom" class="obsidian-input-lg">
+	</div>
+	<div class="obsidian-btn-row">
+		<button type="button" class="obsidian-btn-outline">
+			<i class="fas fa-check"></i>
+			{{localize 'OBSIDIAN.Add'}}
+		</button>
+	</div>
+</form>

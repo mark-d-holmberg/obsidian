@@ -69,6 +69,10 @@ Obsidian.EQUIP_TYPES = [
 	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
+Obsidian.CLASS_SCHEMA = {
+	spellcasting: {}
+};
+
 Obsidian.CONSUMABLE_SCHEMA = {
 	damage: [],
 	hit: {enabled: false, stat: ''},

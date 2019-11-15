@@ -18,11 +18,16 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-class').click(this._onAddClass.bind(this));
 		html.find('.obsidian-rm-class').click(this._onRemoveClass.bind(this));
-		html.find('select:first-child').change(ObsidianHeaderDetailsDialog._onChangeClass);
-
-		// render doesn't correctly recalculate height when adding and removing
-		// form rows.
 		ObsidianDialog.recalculateHeight(html);
+	}
+
+	setModal (modal) {
+		const win = $(this.form).closest('.obsidian-window');
+		if (modal) {
+			win.addClass('obsidian-background');
+		} else {
+			win.removeClass('obsidian-background');
+		}
 	}
 
 	/**
@@ -30,43 +35,15 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onAddClass (evt) {
 		evt.preventDefault();
-		const classes = duplicate(this.parent.actor.getFlag('obsidian', 'classes'));
-		const firstClass = Object.keys(Obsidian.Rules.CLASS_HIT_DICE)[0];
-
-		classes.push({
-			id: Obsidian.uuid(),
-			name: firstClass,
-			levels: 1,
-			hd: Obsidian.Rules.CLASS_HIT_DICE[firstClass]
-		});
-
-		const hd = this.parent.actor.updateHD(classes);
-		await this.parent.actor.update({
-			'flags.obsidian.classes': classes,
-			'flags.obsidian.attributes.hd': hd
-		});
-
-		this.render(false);
+		evt.stopPropagation();
+		new ObsidianNewClassDialog(this, {callback: this._onNewClass.bind(this)}).render(true);
 	}
 
 	/**
 	 * @private
 	 */
-	static _onChangeClass (evt) {
-		const el = $(evt.currentTarget);
-		const siblings = el.siblings();
-		const cls = el.val();
-		const subclass = siblings[1];
-		const hd = siblings[3];
+	async _onNewClass (dlg) {
 
-		if (cls === 'custom') {
-			subclass.style.width = '65px';
-			return;
-		} else {
-			subclass.style.width = '';
-		}
-
-		hd.selectedIndex = Obsidian.Rules.HD.indexOf(Obsidian.Rules.CLASS_HIT_DICE[cls]);
 	}
 
 	/**
@@ -80,16 +57,5 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		await this.parent.actor.updateClasses(classes, newClasses, update);
 		await this.parent.actor.update(update);
 		this.render(false);
-	}
-
-	/**
-	 * @private
-	 */
-	async _updateObject (event, formData) {
-		const existing = this.parent.actor.getFlag('obsidian', 'classes');
-		const classes =
-			ObsidianDialog.reconstructArray(formData, {}, 'flags.obsidian.classes');
-		await this.parent.actor.updateClasses(existing, classes, formData);
-		super._updateObject(event, formData);
 	}
 }

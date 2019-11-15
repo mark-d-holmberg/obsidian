@@ -1232,3 +1232,14 @@ legend .fancy-checkbox {
 	display: block;
 	padding: 8px 0;
 }
+
+.obsidian .form-group label {
+	font-family: var(--font-condensed);
+	font-size: 16px;
+	text-transform: none;
+	font-weight: normal;
+}
+
+.obsidian .form-group .obsidian-input-lg {
+	margin-bottom: 4px;
+}

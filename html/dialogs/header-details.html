@@ -19,38 +19,21 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.classes as |class id|}}
-		<input type="hidden" name="flags.obsidian.classes.{{id}}.id" value="{{class.id}}">
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
-			<div>
-				<select name="flags.obsidian.classes.{{id}}.name" data-selector="class.{{id}}">
-					{{#select class.name}}
-						{{#each ../ObsidianRules.CLASSES}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Class-' this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<input class="obsidian-input-compact" type="text" style="width: 65px;" data-show="custom"
-				       name="flags.obsidian.classes.{{id}}.custom" value="{{class.custom}}"
-				       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="class.{{id}}">
-				<input class="obsidian-input-compact" type="text"
-				       placeholder="{{localize 'OBSIDIAN.Subclass'}}"
-				       name="flags.obsidian.classes.{{id}}.subclass" value="{{class.subclass}}"
-				       style="{{#if (eq 'custom' class.name)}}width: 65px;{{/if}}">
-				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
-				       name="flags.obsidian.classes.{{id}}.levels" value="{{class.levels}}"
-				       data-dtype="Number">
-				<select name="flags.obsidian.classes.{{id}}.hd" data-dtype="Number">
-					{{#select class.hd}}
-						{{#each ../ObsidianRules.HD}}
-							<option value="{{this}}">d{{this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
+	{{#each entity.obsidian.classes}}
+		<div class="obsidian-class-row" data-item-id="{{id}}">
+			<div class="obsidian-class-col-edit">
+				<a class="obsidian-edit" title="{{localize 'OBSIDIAN.EditClass'}}">
+					<i class="fas fa-edit"></i>
+				</a>
 			</div>
-			<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
-				{{localize 'OBSIDIAN.Remove'}}
-			</button>
+			<div class="obsidian-class-col-name">{{flags.obsidian.displayName}}</div>
+			<div class="obsidian-class-col-level">{{data.levels.value}}</div>
+			<div class="obsidian-class-col-hd">d{{flags.obsidian.hd}}</div>
+			<div class="obsidian-class-col-rm">
+				<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
 		</div>
 	{{/each}}
 </form>

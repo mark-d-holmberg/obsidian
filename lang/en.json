@@ -484,5 +484,8 @@
 	"OBSIDIAN.RangedSpellAttack": "Ranged Spell Attack",
 	"OBSIDIAN.RitualLC": "ritual",
 	"OBSIDIAN.Recharge": "Recharge",
-	"OBSIDIAN.CantripScaling": "Cantrip Scaling"
+	"OBSIDIAN.CantripScaling": "Cantrip Scaling",
+	"OBSIDIAN.EditClass": "Edit Class",
+	"OBSIDIAN.AddClass": "Add Class",
+	"OBSIDIAN.CustomName": "Custom Name"
 }
