@@ -1,3 +1,65 @@
 <form class="obsidian" autocomplete="off">
-
+	<fieldset>
+		<legend>{{item.flags.obsidian.label}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				{{#if (eq item.name 'custom')}}
+				<input type="text" class="obsidian-input-compact" name="flags.obsidian.custom"
+				       value="{{item.flags.obsidian.custom}}">
+				{{/if}}
+				<input type="text" class="obsidian-input-compact" name="data.subclass.value"
+				       placeholder="{{localize 'OBSIDIAN.Subclass'}}" value="{{item.data.subclass.value}}">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" name="data.levels.value" value="{{item.data.levels.value}}">
+					<span>{{localize 'OBSIDIAN.Level'}}</span>
+				</label>
+				<label class="obsidian-inline">
+					<select name="flags.obsidian.hd">
+						{{#select item.flags.obsidian.hd}}
+							{{#each ObsidianRules.HD}}
+								<option value="{{this}}">d{{this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset {{disabled (not item.flags.obsidian.spellcasting.enabled)}}>
+		<legend>
+			{{fancy-checkbox 'flags.obsidian.spellcasting.enabled' content='OBSIDIAN.Spellcasting'
+                       checked=item.flags.obsidian.spellcasting.enabled}}
+		</legend>
+		<div class="obsidian-form-row">
+			<select name="flags.obsidian.spellcasting.spell">
+				{{#select item.flags.obsidian.spellcasting.spell}}
+					{{#each ObsidianRules.ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="flags.obsidian.spellcasting.progression">
+				{{#select item.flags.obsidian.spellcasting.progression}}
+					{{#each ObsidianRules.SPELL_PROGRESSION}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellProg-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="flags.obsidian.spellcasting.preparation">
+				{{#select item.flags.obsidian.spellcasting.preparation}}
+					{{#each ObsidianRules.SPELL_PREP}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellPrep-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="flags.obsidian.spellcasting.rituals">
+				{{#select item.flags.obsidian.spellcasting.rituals}}
+					{{#each ObsidianRules.SPELL_RITUALS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.RitualCast-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</fieldset>
 </form>

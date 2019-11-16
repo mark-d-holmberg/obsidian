@@ -21,6 +21,32 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html);
 	}
 
+	static determineHD (cls) {
+		if (cls === 'custom') {
+			return 6;
+		}
+
+		return Obsidian.Rules.CLASS_HIT_DICE[cls];
+	}
+
+	static determineSpellcasting (cls) {
+		if (cls === 'custom') {
+			return {};
+		}
+
+		if (Obsidian.Rules.NON_CASTERS.includes(cls)) {
+			return {enabled: false};
+		}
+
+		return {
+			enabled: true,
+			spell: Obsidian.Rules.CLASS_SPELL_MODS[cls],
+			progression: Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls],
+			preparation: Obsidian.Rules.CLASS_SPELL_PREP[cls],
+			rituals: Obsidian.Rules.CLASS_RITUALS[cls]
+		};
+	}
+
 	setModal (modal) {
 		const win = $(this.form).closest('.obsidian-window');
 		if (modal) {
@@ -42,8 +68,20 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	async _onNewClass (dlg) {
+	async _onNewClass (cls) {
+		const item = {
+			name: cls.name,
+			type: 'class',
+			data: {levels: {value: 1}},
+			flags: {obsidian: {}}
+		};
 
+		if (cls.name === 'custom') {
+			item.flags.obsidian.custom = cls.custom;
+		}
+
+		await this.parent.actor.createOwnedItem(item, {displaySheet: false});
+		this.render(false);
 	}
 
 	/**
@@ -51,11 +89,27 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
-		const classes = this.parent.actor.getFlag('obsidian', 'classes');
-		const newClasses = ObsidianDialog.removeRow(classes, evt);
-		const update = {'flags.obsidian.classes': newClasses};
-		await this.parent.actor.updateClasses(classes, newClasses, update);
-		await this.parent.actor.update(update);
+		const itemID = Number($(evt.currentTarget).closest('.obsidian-class-row').data('item-id'));
+		await this.parent.actor.deleteOwnedItem(itemID);
 		this.render(false);
+	}
+
+	async _updateObject (event, formData) {
+		const data = Array.from(this.element.find('[data-item-id]')).map(el => {
+			const inputs = $(el).find('input');
+			return {
+				id: Number(el.dataset.itemId),
+				data: {
+					levels: {value: Number(inputs[1].value)},
+					subclass: {value: inputs[0].value}
+				},
+			};
+		});
+
+		await this.parent.actor.updateManyOwnedItem(data);
+		return this.parent.actor.update({
+			'flags.obsidian.attributes.hd':
+				this.parent.actor.updateHD(this.parent.actor.data.obsidian.classes)
+		});
 	}
 }

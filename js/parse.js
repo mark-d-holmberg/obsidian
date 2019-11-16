@@ -126,17 +126,24 @@ Obsidian.Parse = {
 		prop = prop.substring(1);
 
 		if (lookup === flags && prop.startsWith('classes.')) {
-			const classes = flags.classes;
+			const classes = actorData.obsidian.classes;
 			const components = prop.split('.');
 			let cls = classes.find(c => c.name === components[1]);
 
 			if (!cls) {
-				cls = classes.find(c =>
-					c.custom.toLocaleLowerCase() === components[1].toLocaleLowerCase());
+				cls = classes.filter(c => c.flags.obsidian && c.flags.obsidian.custom).find(c =>
+					c.flags.obsidian.custom.toLocaleLowerCase()
+					=== components[1].toLocaleLowerCase());
 			}
 
 			if (cls) {
-				return getProperty(cls, components.slice(2).join('.'));
+				const prop = components.slice(2).join('.');
+				let val = getProperty(cls.data, prop);
+				if (val === undefined) {
+					val = getProperty(cls.flags.obsidian, prop);
+				}
+
+				return val;
 			}
 		} else {
 			return getProperty(lookup, prop);

@@ -26,8 +26,16 @@
 					<i class="fas fa-edit"></i>
 				</a>
 			</div>
-			<div class="obsidian-class-col-name">{{flags.obsidian.displayName}}</div>
-			<div class="obsidian-class-col-level">{{data.levels.value}}</div>
+			<div class="obsidian-class-col-name">{{flags.obsidian.label}}</div>
+			<div class="obsidian-class-col-subclass">
+				<input class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Subclass'}}"
+				       name="items.{{idx}}.data.subclass.value" value="{{data.subclass.value}}" type="text">
+			</div>
+			<div class="obsidian-class-col-level">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="items.{{idx}}.data.levels.value" value="{{data.levels.value}}"
+				       data-dtype="Number">
+			</div>
 			<div class="obsidian-class-col-hd">d{{flags.obsidian.hd}}</div>
 			<div class="obsidian-class-col-rm">
 				<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">

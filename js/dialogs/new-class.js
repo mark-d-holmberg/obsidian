@@ -16,6 +16,19 @@ class ObsidianNewClassDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('select').change(() => ObsidianDialog.recalculateHeight(html));
+		html.find('button').click(this._onSubmit.bind(this));
 		ObsidianDialog.recalculateHeight(html);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onSubmit (evt) {
+		this.options.callback({
+			name: this.element.find('select').val(),
+			custom: this.element.find('input').val()
+		});
+		this.close();
 	}
 }

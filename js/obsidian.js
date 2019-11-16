@@ -426,13 +426,9 @@ class Obsidian extends ActorSheet5eCharacter {
 
 		if (evt.currentTarget.dataset.source) {
 			flags.obsidian.source = {type: evt.currentTarget.dataset.source};
-			if (flags.obsidian.source.type === 'feat') {
-				flags.obsidian.source.level = 1;
-			}
-
 			if (flags.obsidian.source.type === 'class') {
-				if (this.actor.data.flags.obsidian.classes.length > 0) {
-					flags.obsidian.source.class = this.actor.data.flags.obsidian.classes[0].name;
+				if (this.actor.data.obsidian.classes.length > 0) {
+					flags.obsidian.source.class = this.actor.flags.obsidian.classes[0].name;
 				} else {
 					flags.obsidian.source.type = 'other';
 				}

@@ -25,8 +25,11 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		} else if (flags.source.type === 'custom') {
 			flags.source.display = flags.source.custom;
 		} else if (flags.source.type === 'class') {
-			cls = actorData.flags.obsidian.classes.find(x => x.id === flags.source.class);
-			flags.source.display = cls.label;
+			cls = actorData.obsidian.classes.find(cls =>
+				cls.flags.obsidian.uuid === flags.source.class);
+			if (cls) {
+				flags.source.display = cls.flags.obsidian.label;
+			}
 		} else if (flags.source.type === 'item') {
 			flags.source.display = actorData.items.find(x => x.id === flags.source.item).name;
 		}
@@ -49,7 +52,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 			flags.hit.count = flags.hit.n;
 			if (spell.data.level.value < 1) {
 				flags.hit.count +=
-					flags.upcast.natk *
+					(flags.upcast.natk || 0) *
 					(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
 			}
 
@@ -102,22 +105,23 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		}
 
 		if (cls) {
+			const spellcasting = cls.flags.obsidian.spellcasting;
 			if (spell.data.level.value === 0) {
 				flags.known = true;
 				flags.visible = true;
-			} else if (cls.preparation === 'known') {
+			} else if (spellcasting.preparation === 'known') {
 				if (flags.known === undefined) {
 					flags.known = true;
 				}
 
 				flags.visible = flags.known;
-			} else if (cls.preparation === 'prep') {
+			} else if (spellcasting.preparation === 'prep') {
 				if (flags.prepared === undefined) {
 					flags.prepared = true;
 				}
 
 				flags.visible = flags.prepared;
-			} else if (cls.preparation === 'book') {
+			} else if (spellcasting.preparation === 'book') {
 				if (flags.book === undefined) {
 					flags.book = true;
 				}
@@ -131,7 +135,8 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 			if (spell.data.ritual.value) {
 				flags.visible =
-					(cls.rituals === 'prep' && flags.prepared) || cls.rituals === 'book';
+					(spellcasting.rituals === 'prep' && flags.prepared)
+					|| spellcasting.rituals === 'book';
 
 				if (flags.visible) {
 					actorData.obsidian.spellbook.rituals.push(spell);

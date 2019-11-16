@@ -765,7 +765,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-bottom: 3px;
 }
 
-.obsidian .obsidian-form-row input.obsidian-input-num {
+.obsidian .obsidian-form-row input.obsidian-input-num,
+.obsidian .obsidian-class-row input.obsidian-input-num {
 	text-align: center;
 }
 

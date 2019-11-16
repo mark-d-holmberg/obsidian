@@ -10,71 +10,76 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 	let totalCasters = 0;
 
 	flags.attributes.spellcasting = {mods: mods, attacks: attacks, saves: saves};
-	for (const cls of flags.classes) {
-		if (cls.spell === undefined) {
-			cls.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
+	for (const cls of actorData.obsidian.classes) {
+		if (!cls.flags.obsidian) {
+			continue;
 		}
 
-		if (cls.spell !== undefined && cls.spell !== '') {
-			const val = data.abilities[cls.spell].mod;
-			cls.spellcasting = {
-				mod: val,
-				attack: val + data.attributes.prof.value,
-				save: val + data.attributes.prof.value + 8
-			};
+		const spellcasting = cls.flags.obsidian.spellcasting;
+		const levels = cls.data.levels.value;
 
-			if (!existing[cls.spell]) {
-				mods.push(cls.spellcasting.mod);
-				attacks.push(cls.spellcasting.attack);
-				saves.push(cls.spellcasting.save);
-				existing[cls.spell] = true;
+		if (spellcasting.spell === undefined) {
+			spellcasting.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
+		}
+
+		if (spellcasting.spell !== undefined && spellcasting.spell !== '') {
+			const val = data.abilities[spellcasting.spell].mod;
+			spellcasting.mod = val;
+			spellcasting.attack = val + data.attributes.prof.value;
+			spellcasting.save = val + data.attributes.prof.value + 8;
+
+			if (!existing[spellcasting.spell]) {
+				mods.push(spellcasting.mod);
+				attacks.push(spellcasting.attack);
+				saves.push(spellcasting.save);
+				existing[spellcasting.spell] = true;
 			}
 		}
 
-		if (cls.progression === undefined) {
-			cls.progression = Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls.name];
+		if (spellcasting.progression === undefined) {
+			spellcasting.progression = Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls.name];
 		}
 
-		if (cls.progression !== undefined && cls.progression !== '') {
-			if (cls.progression !== 'pact') {
+		if (spellcasting.progression !== undefined && spellcasting.progression !== '') {
+			if (spellcasting.progression !== 'pact') {
 				totalCasters++;
 			}
 
-			switch (cls.progression) {
-				case 'third': slotLevel += Math.floor(cls.levels / 3); nonFullCasters++; break;
-				case 'half': slotLevel += Math.floor(cls.levels / 2); nonFullCasters++; break;
-				case 'full': slotLevel += cls.levels; break;
-				case 'artificer': slotLevel += Math.ceil(cls.levels / 2); break;
-				case 'pact': pactLevel += cls.levels; break;
+			switch (spellcasting.progression) {
+				case 'third': slotLevel += Math.floor(levels / 3); nonFullCasters++; break;
+				case 'half': slotLevel += Math.floor(levels / 2); nonFullCasters++; break;
+				case 'full': slotLevel += levels; break;
+				case 'artificer': slotLevel += Math.ceil(levels / 2); break;
+				case 'pact': pactLevel += levels; break;
 			}
 		}
 
-		if (cls.preparation === undefined) {
-			cls.preparation = Obsidian.Rules.CLASS_SPELL_PREP[cls.name];
+		if (spellcasting.preparation === undefined) {
+			spellcasting.preparation = Obsidian.Rules.CLASS_SPELL_PREP[cls.name];
 		}
 
-		if (cls.rituals === undefined) {
-			cls.rituals = Obsidian.Rules.CLASS_RITUALS[cls.name];
+		if (spellcasting.rituals === undefined) {
+			spellcasting.rituals = Obsidian.Rules.CLASS_RITUALS[cls.name];
 		}
 
 		const spellsKnown = Obsidian.Rules.SPELLS_KNOWN_TABLE[cls.name];
 		if (spellsKnown !== undefined) {
-			cls.maxKnown = spellsKnown.known[cls.levels - 1];
-			cls.maxCantrips = spellsKnown.cantrips[cls.levels - 1];
-			if (cls.maxCantrips === undefined) {
-				cls.maxCantrips = spellsKnown.cantrips[spellsKnown.cantrips.length - 1];
+			spellcasting.maxKnown = spellsKnown.known[levels - 1];
+			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
+			if (spellcasting.maxCantrips === undefined) {
+				spellcasting.maxCantrips = spellsKnown.cantrips[spellsKnown.cantrips.length - 1];
 			}
 		}
 
-		if (cls.preparation === 'prep') {
-			cls.maxPrepared = data.abilities[cls.spell].mod;
-			switch (cls.progression) {
-				case 'third': cls.maxPrepared += Math.floor(cls.levels / 3); break;
-				case 'half': case 'artificer': cls.maxPrepared += Math.floor(cls.levels / 2); break;
-				case 'full': cls.maxPrepared += cls.levels; break;
+		if (spellcasting.preparation === 'prep') {
+			spellcasting.maxPrepared = data.abilities[spellcasting.spell].mod;
+			switch (spellcasting.progression) {
+				case 'third': spellcasting.maxPrepared += Math.floor(levels / 3); break;
+				case 'half': case 'artificer': spellcasting.maxPrepared += Math.floor(levels / 2); break;
+				case 'full': spellcasting.maxPrepared += levels; break;
 			}
 
-			cls.maxPrepared = Math.max(1, cls.maxPrepared);
+			spellcasting.maxPrepared = Math.max(1, spellcasting.maxPrepared);
 		}
 	}
 

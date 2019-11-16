@@ -36,8 +36,8 @@ Obsidian.Rules.Prepare = {
 
 		if (!Obsidian.notDefinedOrEmpty(dc.ability)) {
 			if (dc.ability === 'spell') {
-				dc.spellMod = cls ? cls.spellcasting.mod : 0;
-				dc.value += cls ? cls.spellcasting.mod : 0;
+				dc.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
+				dc.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 			} else {
 				dc.value += data.abilities[dc.ability].mod;
 			}
@@ -53,8 +53,8 @@ Obsidian.Rules.Prepare = {
 		hit.spellMod = 0;
 
 		if (cls && hit.stat === 'spell') {
-			hit.spellMod = cls.spellcasting.mod;
-			hit.value += cls.spellcasting.mod;
+			hit.spellMod = cls.flags.obsidian.spellcasting.mod;
+			hit.value += cls.flags.obsidian.spellcasting.mod;
 		} else if (hit.stat !== 'spell') {
 			hit.value += data.abilities[hit.stat].mod;
 		}
@@ -75,8 +75,8 @@ Obsidian.Rules.Prepare = {
 			dmg.mod = dmg.bonus || 0;
 			if (dmg.stat && dmg.stat.length > 0) {
 				if (dmg.stat === 'spell') {
-					dmg.spellMod = cls ? cls.spellcasting.mod : 0;
-					dmg.mod += cls ? cls.spellcasting.mod : 0;
+					dmg.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
+					dmg.mod += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 				} else {
 					dmg.mod += data.abilities[dmg.stat].mod;
 				}
@@ -96,7 +96,7 @@ Obsidian.Rules.Prepare = {
 		uses.max = uses.bonus || 0;
 		if (!Obsidian.notDefinedOrEmpty(uses.ability)) {
 			if (uses.ability === 'spell') {
-				uses.max += cls ? cls.spellcasting.mod : 0;
+				uses.max += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 			} else {
 				uses.max += data.abilities[uses.ability].mod;
 			}
@@ -375,10 +375,11 @@ Obsidian.Rules.Prepare = {
 					flags.uses.max = op(flags.uses.bonus, data.details.level.value);
 				} else if (flags.uses.key === 'cls') {
 					const cls =
-						actorData.flags.obsidian.classes.find(cls => cls.id === flags.uses.class);
+						actorData.obsidian.classes.find(cls =>
+							cls.flags.obsidian.uuid === flags.uses.class);
 
 					if (cls) {
-						flags.uses.max = op(flags.uses.bonus, cls.levels);
+						flags.uses.max = op(flags.uses.bonus, cls.data.levels.value);
 					}
 				}
 

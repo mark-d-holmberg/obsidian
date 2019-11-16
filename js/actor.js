@@ -11,16 +11,24 @@ class ObsidianActor extends Actor5e {
 		const flags = actorData.flags.obsidian;
 		actorData.obsidian = {};
 
-		actorData.obsidian.classFormat = ObsidianActor._classFormat(flags.classes);
+		actorData.obsidian.classes = actorData.items.filter(item => item.type === 'class');
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
 		data.details.level.value = 0;
-		for (const cls of Object.values(flags.classes)) {
-			cls.label =
-				cls.name === 'custom' ? cls.name : game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
-			data.details.level.value += cls.levels;
+		for (const cls of Object.values(actorData.obsidian.classes)) {
+			if (!cls.flags.obsidian) {
+				continue;
+			}
+
+			cls.flags.obsidian.label =
+				cls.name === 'custom'
+					? cls.flags.obsidian.custom
+					: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
+			cls.data.levels.value = Number(cls.data.levels.value);
+			data.details.level.value += cls.data.levels.value;
 		}
 
+		actorData.obsidian.classFormat = ObsidianActor._classFormat(actorData.obsidian.classes);
 		data.attributes.prof.value = Math.floor((data.details.level.value + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
@@ -70,6 +78,30 @@ class ObsidianActor extends Actor5e {
 		return actorData;
 	}
 
+	async createOwnedItem (itemData, options) {
+		await super.createOwnedItem(itemData, options);
+		if (itemData.type === 'class') {
+			const update = {};
+			await this.updateClasses(update);
+			if (Object.keys(update).length > 0) {
+				this.update(update);
+			}
+		}
+	}
+
+	async deleteOwnedItem (itemId, options = {}) {
+		const item = this.data.items.find(itm => itm.id === itemId);
+		const isClass = item.type === 'class';
+		await super.deleteOwnedItem(itemId, options);
+		if (isClass) {
+			const update = {};
+			await this.updateClasses(update);
+			if (Object.keys(update).length > 0) {
+				this.update(update);
+			}
+		}
+	}
+
 	linkClasses (item) {
 		if (!item.flags || !item.flags.obsidian || !item.flags.obsidian.source
 			|| item.flags.obsidian.source.type !== 'class')
@@ -79,24 +111,24 @@ class ObsidianActor extends Actor5e {
 
 		if (item.flags.obsidian.source.class === 'custom') {
 			const needle = item.flags.obsidian.source.custom.toLowerCase();
-			const cls = this.data.flags.obsidian.classes.find(cls =>
-				cls.name === 'custom' && cls.custom.toLowerCase() === needle);
+			const cls = this.data.obsidian.classes.find(cls =>
+				cls.name === 'custom' && cls.flags.obsidian.custom.toLowerCase() === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
 				item.flags.obsidian.source.other = item.flags.obsidian.source.custom;
 			} else {
-				item.flags.obsidian.source.class = cls.id;
+				item.flags.obsidian.source.class = cls.flags.obsidian.uuid;
 			}
 		} else {
 			const needle = item.flags.obsidian.source.class;
-			const cls = this.data.flags.obsidian.classes.find(cls => cls.name === needle);
+			const cls = this.data.obsidian.classes.find(cls => cls.name === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
 				item.flags.obsidian.source.other = game.i18n.localize(`OBSIDIAN.Class-${needle}`);
 			} else {
-				item.flags.obsidian.source.class = cls.id;
+				item.flags.obsidian.source.class = cls.flags.obsidian.uuid;
 			}
 		}
 	}
@@ -109,19 +141,14 @@ class ObsidianActor extends Actor5e {
 			return game.i18n.localize('OBSIDIAN.Class');
 		}
 
-		return classes.sort((a, b) => b.levels - a.levels).map(cls => {
-			let result = '';
-			if (cls.subclass) {
-				result += `${cls.subclass} `;
+		return classes.sort((a, b) => b.data.levels.value - a.data.levels.value).map(cls => {
+			if (!cls.flags.obsidian) {
+				return '';
 			}
 
-			if (cls.name === 'custom') {
-				result += `${cls.custom} `;
-			} else {
-				result += `${game.i18n.localize(`OBSIDIAN.Class-${cls.name}`)} `;
-			}
-
-			return result + cls.levels;
+			return (cls.data.subclass.value && cls.data.subclass.value.length
+					? `${cls.data.subclass.value} ` : '')
+				+ `${cls.flags.obsidian.label} ${cls.data.levels.value}`;
 		}).join(' / ');
 	}
 
@@ -293,8 +320,9 @@ class ObsidianActor extends Actor5e {
 		return Promise.resolve();
 	}
 
-	async updateClasses (before, after, update) {
-		const clsMap = new Map(after.map(cls => [cls.id, cls]));
+	async updateClasses (update) {
+		const clsMap =
+			new Map(this.data.obsidian.classes.map(cls => [cls.flags.obsidian.uuid, cls]));
 		const spells = this.data.items.filter(item => item.type === 'spell');
 		const features =
 			this.data.items.filter(item =>
@@ -318,7 +346,7 @@ class ObsidianActor extends Actor5e {
 			}
 		}
 
-		update['flags.obsidian.attributes.hd'] = this.updateHD(after);
+		update['flags.obsidian.attributes.hd'] = this.updateHD(this.data.obsidian.classes);
 	}
 
 	async updateEquipment (deleted) {
@@ -401,11 +429,11 @@ class ObsidianActor extends Actor5e {
 		const totals = {};
 
 		for (const cls of classes) {
-			if (totals[cls.hd] === undefined) {
-				totals[cls.hd] = 0;
+			if (totals[cls.flags.obsidian.hd] === undefined) {
+				totals[cls.flags.obsidian.hd] = 0;
 			}
 
-			totals[cls.hd] += cls.levels;
+			totals[cls.flags.obsidian.hd] += cls.data.levels.value;
 		}
 
 		for (const [hd, val] of Object.entries(existing)) {

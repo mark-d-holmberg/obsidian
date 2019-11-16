@@ -38,11 +38,11 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 		data.ObsidianData = Obsidian.Data;
 
 		const classByID =
-			new Map(data.actor.flags.obsidian.classes.map(cls => {
-				cls.totalCantrips = 0;
-				cls.totalPrepared = 0;
-				cls.totalKnown = 0;
-				return [cls.id, cls];
+			new Map(data.actor.obsidian.classes.filter(cls => cls.flags.obsidian).map(cls => {
+				cls.flags.obsidian.spellcasting.totalCantrips = 0;
+				cls.flags.obsidian.spellcasting.totalPrepared = 0;
+				cls.flags.obsidian.spellcasting.totalKnown = 0;
+				return [cls.flags.obsidian.uuid, cls];
 			}));
 
 		data.actor.obsidian.spells = {custom: []};
@@ -64,12 +64,13 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 				continue;
 			}
 
+			const spellcasting = cls.flags.obsidian.spellcasting;
 			if (spell.data.level.value === 0) {
-				cls.totalCantrips++;
+				spellcasting.totalCantrips++;
 			} else if (flags.known) {
-				cls.totalKnown++;
+				spellcasting.totalKnown++;
 			} else if (flags.prepared) {
-				cls.totalPrepared++;
+				spellcasting.totalPrepared++;
 			}
 
 			if (data.actor.obsidian.spells[cls.name]) {
@@ -78,11 +79,11 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 					clsSpells.known.push(spell);
 					clsSpells.prepared.push(spell);
 					clsSpells.book.push(spell);
-				} else if (cls.preparation === 'known' && flags.known) {
+				} else if (spellcasting.preparation === 'known' && flags.known) {
 					clsSpells.known.push(spell);
-				} else if (cls.preparation === 'prep' && flags.prepared) {
+				} else if (spellcasting.preparation === 'prep' && flags.prepared) {
 					clsSpells.prepared.push(spell);
-				} else if (cls.preparation === 'book') {
+				} else if (spellcasting.preparation === 'book') {
 					if (flags.book) {
 						clsSpells.book.push(spell);
 					}
@@ -223,11 +224,13 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 		if (owned) {
 			if (flags.source.type === 'class') {
 				const cls =
-					this.parent.actor.data.flags.obsidian.classes.find(cls =>
-						cls.id === flags.source.class);
+					this.parent.actor.data.obsidian.classes.find(cls =>
+						cls.flags.obsidian.uuid === flags.source.class);
 
 				if (cls) {
-					if (spell.data.level.value === 0 || cls.preparation !== 'book') {
+					if (spell.data.level.value === 0
+						|| cls.flags.obsidian.spellcasting.preparation !== 'book')
+					{
 						await this.parent.actor.deleteOwnedItem(id);
 					} else {
 						flags.prepared = !flags.prepared;

@@ -692,9 +692,13 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 
 .obsidian-input-search-container > span,
 .obsidian-compendium .header-search > span {
-	top: 3px;
+	top: 1px;
 	right: 0;
 	cursor: pointer;
+}
+
+.obsidian-compendium .header-search > span {
+	top: 3px;
 }
 
 .obsidian-char-spell-search > button.obsidian-btn-sm.obsidian-btn-sheet {
@@ -1392,4 +1396,44 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-msg .obsidian-item-card-body {
 	font-size: 11px;
+}
+
+.obsidian-class-row {
+	display: flex;
+	align-items: center;
+}
+
+.obsidian .obsidian-class-row input {
+	margin-bottom: 0;
+}
+
+.obsidian-class-col-edit {
+	width: 30px;
+	font-size: 13px;
+}
+
+.obsidian-class-col-name {
+	flex: 1;
+	color: var(--text-subtle);
+}
+
+.obsidian-class-col-subclass {
+	width: 120px;
+	padding-right: 10px;
+}
+
+.obsidian-class-col-level {
+	width: 40px;
+}
+
+.obsidian-class-col-hd {
+	width: 40px;
+	color: var(--text-secondary);
+	font-size: 13px;
+}
+
+.obsidian-class-col-rm {
+	width: 40px;
+	justify-self: flex-end;
+	margin-right: 4px;
 }

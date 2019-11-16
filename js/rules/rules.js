@@ -90,6 +90,7 @@ Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
 Obsidian.Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
 Obsidian.Rules.ITEM_RECHARGE = ['never', 'dawn', 'dusk'];
 Obsidian.Rules.MAX_LEVEL = 20;
+Obsidian.Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
 
 Obsidian.Rules.PLUS_PROF = {
 	0.5: 'half',

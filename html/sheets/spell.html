@@ -36,8 +36,8 @@
 				</label>
 				<select name="flags.obsidian.source.class" data-show="class" data-selector-parent="source">
 					{{#select item.flags.obsidian.source.class}}
-						{{#each actor.data.flags.obsidian.classes}}
-							<option value="{{id}}">{{label}}</option>
+						{{#each actor.data.obsidian.classes}}
+							<option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
 						{{/each}}
 					{{/select}}
 				</select>

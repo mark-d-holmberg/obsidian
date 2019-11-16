@@ -7,10 +7,10 @@
 		{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Remove'
 				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
-	{{#each entity.flags.obsidian.classes}}
+	{{#each entity.obsidian.classes}}
 		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
 			<h2>{{label}}</h2>
-			{{#if (eq preparation 'prep')}}
+			{{#if (eq flags.obsidian.spellcasting.preparation 'prep')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>
@@ -20,8 +20,10 @@
 						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
 								btnActive='OBSIDIAN.Prepared' filter=true active=prepared spellList=../name
 								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name)
-								totalCantrips=../totalCantrips maxCantrips=../maxCantrips
-								totalPrepared=../totalPrepared maxPrepared=../maxPrepared
+								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
+								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
+								totalPrepared=../flags.obsidian.spellcasting.totalPrepared
+								maxPrepared=../flags.obsidian.spellcasting.maxPrepared
 								btnCantrip='OBSIDIAN.Learn' btnCantripActive='OBSIDIAN.Remove'}}
 					</details>
 					<details>
@@ -33,7 +35,7 @@
 								filter=false spells=prepared btnCantrip='OBSIDIAN.Remove'}}
 					</details>
 				{{/with}}
-			{{else if (eq preparation 'known')}}
+			{{else if (eq flags.obsidian.spellcasting.preparation 'known')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>
@@ -41,9 +43,12 @@
 							<i class="fas fa-angle-down"></i>
 						</summary>
 						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
-								btnActive='OBSIDIAN.Remove' filter=true active=known totalKnown=../totalKnown
+								btnActive='OBSIDIAN.Remove' filter=true active=known
+								totalKnown=../flags.obsidian.spellcasting.totalKnown
 								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name) spellList=../name
-								totalCantrips=../totalCantrips maxCantrips=../maxCantrips maxKnown=../maxKnown}}
+								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
+								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
+								maxKnown=../flags.obsidian.spellcasting.maxKnown}}
 					</details>
 					<details>
 						<summary>
@@ -54,7 +59,7 @@
 								btnClass='obsidian-rm-spell' filter=false spells=known}}
 					</details>
 				{{/with}}
-			{{else if (eq preparation 'book')}}
+			{{else if (eq flags.obsidian.spellcasting.preparation 'book')}}
 				{{#with (lookup ../entity.obsidian.spells name)}}
 					<details>
 						<summary>
@@ -64,7 +69,8 @@
 						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
 								btnActive='OBSIDIAN.Remove' filter=true spellList=../name active=book
 								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../name)
-								totalCantrips=../totalCantrips maxCantrips=../maxCantrips}}
+								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
+								maxCantrips=../flags.obsidian.spellcasting.maxCantrips}}
 					</details>
 					<details>
 						<summary>
@@ -81,8 +87,10 @@
 						</summary>
 						{{> public/modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
 								btnActive='OBSIDIAN.Prepared' filter=true spells=book active=prepared
-								totalCantrips=../totalCantrips maxCantrips=../maxCantrips
-								totalPrepared=../totalPrepared maxPrepared=../maxPrepared
+								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
+								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
+								totalPrepared=../flags.obsidian.spellcasting.totalPrepared
+								maxPrepared=../flags.obsidian.spellcasting.maxPrepared
 								btnCantripActive='OBSIDIAN.Remove'}}
 					</details>
 				{{/with}}

@@ -38,8 +38,8 @@
 				        data-selector="class">
 					{{#select item.flags.obsidian.source.class}}
 						{{#if actor}}
-							{{#each actor.data.flags.obsidian.classes}}
-								<option value="{{this.id}}">{{this.label}}</option>
+							{{#each actor.data.obsidian.classes}}
+								<option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
 							{{/each}}
 						{{else}}
 							{{#each ObsidianRules.CLASSES}}
@@ -48,16 +48,6 @@
 						{{/if}}
 					{{/select}}
 				</select>
-				{{#if actor}}
-				<select name="flags.obsidian.source.level" data-dtype="Number" data-show="feat"
-				        data-selector-parent="action">
-					{{#select item.flags.obsidian.source.level}}
-						{{#each (range 1 actor.data.data.details.level.value)}}
-							<option value="{{this}}">{{this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				{{/if}}
 				<input type="text" name="flags.obsidian.source.other" data-selector-parent="action"
 				       placeholder="{{localize 'OBSIDIAN.Source'}}" data-show="other"
 				       class="obsidian-input-compact obsidian-input-lg"
@@ -136,8 +126,8 @@
 				{{#if actor}}
 				<select name="flags.obsidian.uses.class" data-show="cls" data-selector-parent="uses-key">
 					{{#select item.flags.obsidian.uses.class}}
-						{{#each actor.data.flags.obsidian.classes}}
-							<option value="{{id}}">{{label}}</option>
+						{{#each actor.data.obsidian.classes}}
+							<option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
