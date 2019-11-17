@@ -130,6 +130,9 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 		await this.parent.actor.updateManyOwnedItem(data);
 		return this.parent.actor.update({
+			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
+			'data.details.race.value': formData['data.details.race.value'],
+			'flags.obsidian.details.subrace': formData['flags.obsidian.details.subrace'],
 			'flags.obsidian.attributes.hd':
 				this.parent.actor.updateHD(this.parent.actor.data.obsidian.classes)
 		});
