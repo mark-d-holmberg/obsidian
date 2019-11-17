@@ -36,6 +36,11 @@ class ObsidianClassSheet extends ObsidianItemSheet {
 				ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
 		}
 	}
+
+	async close () {
+		await super.close();
+		Hooks.callAll('obsidian-classSheetClosed');
+	}
 }
 
 Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});

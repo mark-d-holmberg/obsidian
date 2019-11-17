@@ -1,4 +1,9 @@
 class ObsidianHeaderDetailsDialog extends ObsidianDialog {
+	constructor (...args) {
+		super(...args);
+		this._hookID = Hooks.on('obsidian-classSheetClosed', () => this.render(false));
+	}
+
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 420;
@@ -18,7 +23,13 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		super.activateListeners(html);
 		html.find('.obsidian-add-class').click(this._onAddClass.bind(this));
 		html.find('.obsidian-rm-class').click(this._onRemoveClass.bind(this));
+		html.find('.obsidian-edit').click(this._editItem.bind(this));
 		ObsidianDialog.recalculateHeight(html);
+	}
+
+	async close () {
+		Hooks.off('obsidian-classSheetClosed', this._hookID);
+		return super.close();
 	}
 
 	static determineHD (cls) {
@@ -54,6 +65,17 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		} else {
 			win.removeClass('obsidian-background');
 		}
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_editItem (evt) {
+		const item =
+			this.parent.actor.getOwnedItem(
+				$(evt.currentTarget).closest('[data-item-id]').data('item-id'));
+		item.sheet.render(true);
 	}
 
 	/**
