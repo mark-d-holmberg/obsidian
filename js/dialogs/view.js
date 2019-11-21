@@ -70,7 +70,11 @@ class ObsidianViewDialog extends ObsidianDialog {
 
 	async minimize () {
 		await super.minimize();
-		this.element.find('.obsidian-pin, .obsidian-roll, .obsidian-titlebar-uses').show();
+		this.element
+			.css('width', 300)
+			.find('.obsidian-pin, .obsidian-roll, .obsidian-titlebar-uses')
+			.show();
+
 	}
 
 	/**
@@ -133,6 +137,12 @@ class ObsidianViewDialog extends ObsidianDialog {
 				flags: {obsidian: {uses: {remaining: n}}}
 			});
 			this.render(false);
+		});
+
+		remaining.keyup(evt => {
+			if (evt.key === 'Enter') {
+				remaining.blur();
+			}
 		});
 
 		return uses;

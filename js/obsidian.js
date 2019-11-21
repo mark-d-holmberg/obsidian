@@ -647,13 +647,12 @@ class Obsidian extends ActorSheet5eCharacter {
 		const featID = parent.data('feat-id');
 		const prop = parent.data('prop');
 		const n = Number(target.data('n'));
-		const featIndex = this.actor.data.items.findIndex(feat => feat.id === featID);
 
-		if (featIndex < 0) {
+		const feat = this.actor.data.items.find(feat => feat.id === featID);
+		if (!feat) {
 			return;
 		}
 
-		const feat = this.actor.data.items[featIndex];
 		const max = getProperty(feat.flags.obsidian, prop).max;
 		let used = max - getProperty(feat.flags.obsidian, prop).remaining;
 
@@ -663,9 +662,10 @@ class Obsidian extends ActorSheet5eCharacter {
 			used--;
 		}
 
-		const update = {};
-		update[`items.${featIndex}.flags.obsidian.${prop}.remaining`] = max - used;
-		return this.actor.update(update);
+		return this.actor.updateOwnedItem({
+			id: featID,
+			flags: {obsidian: {[`${prop}`]: {remaining: max - used}}}
+		});
 	}
 
 	/**
