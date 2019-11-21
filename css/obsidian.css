@@ -237,7 +237,8 @@
 }
 
 .obsidian-edit,
-.obsidian-delete {
+.obsidian-delete,
+.obsidian-view {
 	color: var(--text-secondary);
 }
 

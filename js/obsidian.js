@@ -143,6 +143,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
+		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
 
 		this._activateDialogs(html);
 

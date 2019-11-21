@@ -488,5 +488,6 @@
 	"OBSIDIAN.EditClass": "Edit Class",
 	"OBSIDIAN.AddClass": "Add Class",
 	"OBSIDIAN.CustomName": "Custom Name",
-	"OBSIDIAN.HitDie": "Hit Die"
+	"OBSIDIAN.HitDie": "Hit Die",
+	"OBSIDIAN.ViewFeature": "View Feature"
 }

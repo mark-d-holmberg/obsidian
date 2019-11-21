@@ -361,10 +361,26 @@ Obsidian.Rules.Prepare = {
 		};
 
 		const data = actorData.data;
-		for (const feat of actorData.items.filter(item => item.type === 'feat')) {
+
+		for (let i = 0; i < actorData.items.length; i++) {
+			if (actorData.items[i].type !== 'feat') {
+				continue;
+			}
+
+			const feat = actorData.items[i];
 			const flags = feat.flags.obsidian;
+
 			if (!flags) {
 				continue;
+			}
+
+			if (flags.source.type === 'class') {
+				const cls = actorData.obsidian.classes.find(cls =>
+					cls.flags.obsidian.uuid === flags.source.class);
+
+				if (cls) {
+					flags.source.className = cls.flags.obsidian.label;
+				}
 			}
 
 			if (flags.uses.enabled) {
@@ -397,6 +413,9 @@ Obsidian.Rules.Prepare = {
 				} else if (flags.uses.remaining < 0) {
 					flags.uses.remaining = 0;
 				}
+
+				flags.uses.display =
+					ObsidianActor.usesFormat(feat.id, i, flags.uses.max, flags.uses.remaining);
 			}
 
 			if (flags.dc.enabled) {
