@@ -68,6 +68,11 @@ class ObsidianViewDialog extends ObsidianDialog {
 		return data;
 	}
 
+	async minimize () {
+		await super.minimize();
+		this.element.find('.obsidian-pin, .obsidian-roll, .obsidian-titlebar-uses').show();
+	}
+
 	/**
 	 * @private
 	 */
@@ -77,6 +82,59 @@ class ObsidianViewDialog extends ObsidianDialog {
 		const close = html.find('a.close');
 		close.html('<i class="fas fa-times"></i>');
 		pin.insertBefore(close);
+
+		let rollType = null;
+		switch (this.item.type) {
+			case 'weapon': rollType = 'atk'; break;
+			case 'feat': rollType = 'feat'; break;
+			case 'spell': rollType = 'spl'; break;
+		}
+
+		if (rollType) {
+			const roll =
+				$('<a class="obsidian-roll"><i class="fas fa-dice-d20"></i></a>')
+					.insertBefore(pin);
+
+			if (this.item.type === 'spell') {
+				roll.click(this.parent.actor.sheet._onCastSpell.bind(this.parent.actor.sheet));
+			} else {
+				roll.click(evt => Obsidian.Rolls.fromClick(this.parent.actor, evt));
+			}
+
+			roll[0].dataset.roll = rollType;
+			roll[0].dataset[rollType] = this.item.id;
+
+			if (this.item.type === 'feat' && this.item.flags.obsidian.uses.enabled) {
+				this._renderUses().insertBefore(roll);
+			}
+		}
+
 		return html;
+	}
+
+	/**
+	 * @private
+	 * @return {JQuery}
+	 */
+	_renderUses () {
+		const uses = $('<div class="obsidian-titlebar-uses"></div>');
+		const remaining =
+			$('<input type="text" data-dtype="Number">')
+				.val(this.item.flags.obsidian.uses.remaining);
+
+		uses.append(remaining)
+			.append($('<span>&sol;</span>'))
+			.append($(`<strong>${this.item.flags.obsidian.uses.max}</strong>`));
+
+		remaining.focusout(async () => {
+			const n = Number(remaining.val());
+			await this.parent.actor.updateOwnedItem({
+				id: this.item.id,
+				flags: {obsidian: {uses: {remaining: n}}}
+			});
+			this.render(false);
+		});
+
+		return uses;
 	}
 }

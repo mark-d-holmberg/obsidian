@@ -5,7 +5,7 @@
 			<div class="obsidian-item-card-sub-header">
 				<div class="obsidian-table-note-text">
 					{{~#if (eq item.flags.obsidian.source.type 'race')~}}
-						{{~data.race.value~}}
+						{{~data.details.race.value~}}
 					{{~else if (eq item.flags.obsidian.source.type 'feat')~}}
 						{{~localize 'OBSIDIAN.Feat'~}}
 					{{~else if (eq item.flags.obsidian.source.type 'other')~}}

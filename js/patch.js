@@ -95,3 +95,16 @@ Entity.prototype.update = async function (data, options = {}) {
 		postHook: `update${name}`
 	});
 };
+
+Draggable.prototype._onDragMouseDown = (function () {
+	const cached = Draggable.prototype._onDragMouseDown;
+	return function (evt) {
+		if (evt && evt.target && evt.target.tagName === 'INPUT' && evt.target.parentNode
+			&& evt.target.parentNode.className === 'obsidian-titlebar-uses')
+		{
+			return;
+		}
+
+		cached.apply(this, arguments);
+	};
+})();
