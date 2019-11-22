@@ -662,10 +662,14 @@ class Obsidian extends ActorSheet5eCharacter {
 			used--;
 		}
 
-		return this.actor.updateOwnedItem({
-			id: featID,
-			flags: {obsidian: {[`${prop}`]: {remaining: max - used}}}
-		});
+		const update = {id: featID, [`flags.obsidian.${prop}.remaining`]: max - used};
+		const expanded = obs_updateArrays(feat, update);
+
+		if (Object.keys(expanded).length > 0) {
+			return this.actor.updateOwnedItem(expanded);
+		}
+
+		return this.actor.updateOwnedItem(update);
 	}
 
 	/**

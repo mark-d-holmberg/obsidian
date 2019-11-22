@@ -8,6 +8,16 @@ class ObsidianViewDialog extends ObsidianDialog {
 
 		super(parent, options);
 		this.item = item;
+		this._hook = Hooks.on('updateOwnedItem', (item, actorID, data) => {
+			if (actorID === this.parent.actor.id && data.id === this.item.id) {
+				const remaining = this.element.find('.obsidian-titlebar-uses input');
+				if (remaining.length > 0) {
+					remaining.val(data.flags.obsidian.uses.remaining);
+				}
+
+				this.render(false);
+			}
+		});
 	}
 
 	static get defaultOptions () {
@@ -60,6 +70,14 @@ class ObsidianViewDialog extends ObsidianDialog {
 		if (this.item.type === 'backpack') {
 			ObsidianDialog.recalculateHeight(html);
 		}
+	}
+
+	async close () {
+		if (this._hook != null) {
+			Hooks.off('updateOwnedItem', this._hook);
+		}
+
+		return super.close();
 	}
 
 	getData () {
