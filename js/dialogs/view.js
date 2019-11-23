@@ -18,6 +18,22 @@ class ObsidianViewDialog extends ObsidianDialog {
 				this.render(false);
 			}
 		});
+
+		const allPins = game.settings.get('obsidian', 'pins');
+		const actorPins = allPins[this.parent.actor.id];
+
+		if (actorPins) {
+			const state = actorPins.find(state => state.itemID === itemID);
+			if (state) {
+				this._pinned = state.pinned;
+			} else {
+				actorPins.push({itemID: itemID, pinned: false});
+				game.settings.set('obsidian', 'pins', allPins);
+			}
+		} else {
+			allPins[this.parent.actor.id] = [{itemID: itemID, pinned: false}];
+			game.settings.set('obsidian', 'pins', allPins);
+		}
 	}
 
 	static get defaultOptions () {
@@ -89,7 +105,7 @@ class ObsidianViewDialog extends ObsidianDialog {
 	async minimize () {
 		await super.minimize();
 		this.element
-			.css('width', 300)
+			.css('width', 250)
 			.find('.obsidian-pin, .obsidian-roll, .obsidian-titlebar-uses')
 			.show();
 
@@ -104,6 +120,30 @@ class ObsidianViewDialog extends ObsidianDialog {
 		const close = html.find('a.close');
 		close.html('<i class="fas fa-times"></i>');
 		pin.insertBefore(close);
+
+		if (this._pinned) {
+			pin.css('color', 'red');
+		}
+
+		pin.click(() => {
+			this._pinned = !this._pinned;
+			const pins = game.settings.get('obsidian', 'pins');
+			const state =
+				pins[this.parent.actor.id].find(state => state.itemID === this.item.id);
+
+			if (state) {
+				state.pinned = this._pinned;
+				state.x = this.position.left;
+				state.y = this.position.top;
+				game.settings.set('obsidian', 'pins', pins);
+			}
+
+			if (this._pinned) {
+				pin.css('color', 'red');
+			} else {
+				pin.css('color', pin.next().css('color'));
+			}
+		});
 
 		let rollType = null;
 		switch (this.item.type) {
@@ -166,3 +206,57 @@ class ObsidianViewDialog extends ObsidianDialog {
 		return uses;
 	}
 }
+
+Hooks.on('ready', () => {
+	game.settings.register('obsidian', 'pins', {
+		name: 'pins',
+		default: {},
+		scope: 'client'
+	});
+
+	const pins = game.settings.get('obsidian', 'pins');
+	Object.entries(pins).forEach(([actorID, pinned]) => {
+		if (!pinned.length) {
+			return;
+		}
+
+		const actor = game.actors.get(actorID);
+		if (!actor) {
+			return;
+		}
+
+		const sheet = actor.sheet;
+		if (!sheet) {
+			return;
+		}
+
+		pinned.filter(state => state.pinned).forEach(async (state) => {
+			const dialog = new ObsidianViewDialog(state.itemID, sheet);
+			await dialog._render(true);
+			dialog.minimize();
+			dialog.setPosition({top: state.y, left: state.x});
+		});
+	})
+});
+
+Draggable.prototype._onDragMouseUp = (function () {
+	const cached = Draggable.prototype._onDragMouseUp;
+	return function () {
+		cached.apply(this, arguments);
+		if (!this.app || this.app.constructor.name !== 'ObsidianViewDialog') {
+			return;
+		}
+
+		const pins = game.settings.get('obsidian', 'pins');
+		const pinned = pins[this.app.parent.actor.id];
+
+		if (pinned) {
+			const state = pinned.find(state => state.itemID === this.app.item.id);
+			if (state) {
+				state.x = this.app.position.left;
+				state.y = this.app.position.top;
+				game.settings.set('obsidian', 'pins', pins);
+			}
+		}
+	};
+})();

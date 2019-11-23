@@ -669,7 +669,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			return this.actor.updateOwnedItem(expanded);
 		}
 
-		return this.actor.updateOwnedItem(update);
+		return this.actor.updateOwnedItem(expandObject(update));
 	}
 
 	/**
