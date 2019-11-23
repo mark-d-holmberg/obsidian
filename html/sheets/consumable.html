@@ -28,15 +28,15 @@
 			</div>
 		</div>
 	</fieldset>
-	{{> public/modules/obsidian/html/components/uses.html item.flags.obsidian.uses
+	{{> modules/obsidian/html/components/uses.html item.flags.obsidian.uses
 			ObsidianRules=ObsidianRules}}
-	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit
+	{{> modules/obsidian/html/components/hit.html item.flags.obsidian.hit
 			ObsidianRules=ObsidianRules consumable=true}}
-	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc
+	{{> modules/obsidian/html/components/dc.html item.flags.obsidian.dc
 			ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">
 		<legend>{{localize 'OBSIDIAN.DamageHeal'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage' consumable=true}}
 	</fieldset>
 	<div class="obsidian-rich-text">

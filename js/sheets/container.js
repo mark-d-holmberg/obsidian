@@ -9,7 +9,7 @@ class ObsidianContainerSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 460;
-		options.template = 'public/modules/obsidian/html/sheets/container.html';
+		options.template = 'modules/obsidian/html/sheets/container.html';
 		return options;
 	}
 

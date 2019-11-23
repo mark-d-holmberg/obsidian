@@ -140,16 +140,16 @@
 		</div>
 	</fieldset>
 	{{#if actor}}
-		{{> public/modules/obsidian/html/components/uses.html item.flags.obsidian.uses spell=true
+		{{> modules/obsidian/html/components/uses.html item.flags.obsidian.uses spell=true
 				ObsidianRules=ObsidianRules}}
 	{{/if}}
-	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit spell=true
+	{{> modules/obsidian/html/components/hit.html item.flags.obsidian.hit spell=true
 			actor=actor ObsidianRules=ObsidianRules}}
-	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc spell=true actor=actor
+	{{> modules/obsidian/html/components/dc.html item.flags.obsidian.dc spell=true actor=actor
 			ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">
 		<legend>{{localize 'OBSIDIAN.DamageHeal'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage' spell=true}}
 	</fieldset>
 	<fieldset data-prop="upcast.damage" {{disabled (or (lt item.data.level.value 1) (not item.flags.obsidian.upcast.enabled))}}>
@@ -183,7 +183,7 @@
 		<label class="obsidian-label-lg obsidian-stacked-row obsidian-inline">
 			{{localize 'OBSIDIAN.DamageLevel'}}
 		</label>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.upcast.damage
+		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.upcast.damage
 				prop='upcast.damage' spell=true}}
 	</fieldset>
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>

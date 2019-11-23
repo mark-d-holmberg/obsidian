@@ -3,7 +3,7 @@ class ObsidianCurrencyDialog extends ObsidianDialog {
 		const options = super.defaultOptions;
 		options.width = 300;
 		options.title = game.i18n.localize('OBSIDIAN.ManageCurrency');
-		options.template = 'public/modules/obsidian/html/dialogs/currency.html';
+		options.template = 'modules/obsidian/html/dialogs/currency.html';
 		return options;
 	}
 

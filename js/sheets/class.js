@@ -1,7 +1,7 @@
 class ObsidianClassSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.template = 'public/modules/obsidian/html/sheets/class.html';
+		options.template = 'modules/obsidian/html/sheets/class.html';
 		return options;
 	}
 

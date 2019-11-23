@@ -73,7 +73,7 @@
 				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 			</div>
 			<div class="obsidian-tbody">
-				{{> public/modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
+				{{> modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
 				{{#each entity.obsidian.inventory.containers}}
 					<details{{#if flags.obsidian.open}} open{{/if}}>
 						<summary draggable="true" data-reorderable="true" class="
@@ -99,7 +99,7 @@
 							</div>
 							<i class="fas fa-angle-down"></i>
 						</summary>
-						{{> public/modules/obsidian/html/components/inventory.html flags.obsidian.contents}}
+						{{> modules/obsidian/html/components/inventory.html flags.obsidian.contents}}
 					</details>
 				{{/each}}
 			</div>

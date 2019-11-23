@@ -62,22 +62,22 @@
 			</div>
 		</div>
 	</fieldset>
-	{{> public/modules/obsidian/html/components/hit.html item.flags.obsidian.hit
+	{{> modules/obsidian/html/components/hit.html item.flags.obsidian.hit
 			ObsidianRules=ObsidianRules}}
-	{{> public/modules/obsidian/html/components/dc.html item.flags.obsidian.dc
+	{{> modules/obsidian/html/components/dc.html item.flags.obsidian.dc
 			ObsidianRules=ObsidianRules}}
-	{{> public/modules/obsidian/html/components/charges.html item.flags.obsidian.charges
+	{{> modules/obsidian/html/components/charges.html item.flags.obsidian.charges
 			ObsidianRules=ObsidianRules}}
 	<fieldset data-prop="damage">
 		<legend>{{localize 'OBSIDIAN.Damage'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
+		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage'}}
 	</fieldset>
 	<fieldset class="{{#if (not item.flags.obsidian.tags.versatile)}}
 		obsidian-hidden
 	{{/if}} obsidian-versatile-block" data-prop="versatile">
 		<legend>{{localize 'OBSIDIAN.VersatileDamage'}}</legend>
-		{{> public/modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.versatile
+		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.versatile
 				prop='versatile'}}
 	</fieldset>
 	<fieldset>

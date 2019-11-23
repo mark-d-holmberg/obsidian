@@ -25,8 +25,8 @@ ChatMessage.prototype.render = (function () {
 				&& this.data.whisper.contains(game.user.data._id))
 		};
 
-		await loadTemplates(['public/modules/obsidian/html/components/damage-format.html']);
-		let html = await renderTemplate('public/modules/obsidian/html/message.html', messageData);
+		await loadTemplates(['modules/obsidian/html/components/damage-format.html']);
+		let html = await renderTemplate('modules/obsidian/html/message.html', messageData);
 		html = $(html);
 
 		html.find('.obsidian-msg-roll-box').hover(evt => {

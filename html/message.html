@@ -72,9 +72,9 @@
 	{{#if message.flags.obsidian.damage}}
 	<section class="obsidian-msg-dmg">
 		<div class="obsidian-grid-2-col">
-			{{> public/modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
+			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
 					title='OBSIDIAN.Hit'}}
-			{{> public/modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
+			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
 					title='OBSIDIAN.Crit'}}
 		</div>
 	</section>
@@ -90,7 +90,7 @@
 	<details {{#if message.flags.obsidian.open}}open{{/if}}>
 		<summary>{{localize 'OBSIDIAN.Details'}}</summary>
 		{{#if (eq message.flags.obsidian.type 'spl')}}
-			{{> public/modules/obsidian/html/components/spell-card.html message.flags.obsidian.details
+			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.details
 					view=false}}
 		{{else}}
 			{{{message.flags.obsidian.details}}}

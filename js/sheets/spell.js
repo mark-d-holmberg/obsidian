@@ -13,7 +13,7 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/sheets/spell.html';
+		return 'modules/obsidian/html/sheets/spell.html';
 	}
 
 	/**

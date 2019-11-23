@@ -5,7 +5,7 @@ class ObsidianRollHDDialog extends ObsidianDialog {
 		options.submitOnUnfocus = false;
 		options.width = 150;
 		options.title = game.i18n.localize('OBSIDIAN.RollHD');
-		options.template = 'public/modules/obsidian/html/dialogs/roll-hd.html';
+		options.template = 'modules/obsidian/html/dialogs/roll-hd.html';
 		return options;
 	}
 

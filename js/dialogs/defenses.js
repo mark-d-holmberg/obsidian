@@ -3,7 +3,7 @@ class ObsidianDefensesDialog extends ObsidianDialog {
 		const options = super.defaultOptions;
 		options.width = 400;
 		options.title = game.i18n.localize('OBSIDIAN.ManageDefenses');
-		options.template = 'public/modules/obsidian/html/dialogs/defenses.html';
+		options.template = 'modules/obsidian/html/dialogs/defenses.html';
 		return options;
 	}
 

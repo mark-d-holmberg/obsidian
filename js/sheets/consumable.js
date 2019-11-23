@@ -9,7 +9,7 @@ class ObsidianConsumableSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 560;
-		options.template = 'public/modules/obsidian/html/sheets/consumable.html';
+		options.template = 'modules/obsidian/html/sheets/consumable.html';
 		return options;
 	}
 

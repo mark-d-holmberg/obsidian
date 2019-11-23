@@ -12,7 +12,7 @@ If you discover an issue with the sheet, please report it in the [issue tracker]
 In addition to the above information, it can be useful if you are able to do the following, too:
 
 1. Press F12 to bring up the console and copy and paste any error messages you find there into the bug report.
-2. Zip up your `actors.db` file and attach it to the report. It can be found in your foundry installation directory under `resources/app/public/worlds/yourworld/data/actors.db`.
+2. Zip up your `actors.db` file and attach it to the report. It can be found in your foundry data directory under `Data/worlds/yourworld/data/actors.db`.
 
 ## License
 All source code (`*.html`, `*.css`, `*.js`, `*.json`, `*.d.ts`) is made available under the terms of the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html). A copy of this license is available in the `LICENSE` file.

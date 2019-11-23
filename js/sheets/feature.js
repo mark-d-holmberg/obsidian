@@ -9,7 +9,7 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 560;
-		options.template = 'public/modules/obsidian/html/sheets/feature.html';
+		options.template = 'modules/obsidian/html/sheets/feature.html';
 		return options;
 	}
 

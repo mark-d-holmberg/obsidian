@@ -8,7 +8,7 @@ class ObsidianSpellSlotDialog extends ObsidianDialog {
 		const options = super.defaultOptions;
 		options.width = 400;
 		options.title = game.i18n.localize('OBSIDIAN.CastAtWhichLevel');
-		options.template = 'public/modules/obsidian/html/dialogs/spell-slot.html';
+		options.template = 'modules/obsidian/html/dialogs/spell-slot.html';
 		return options;
 	}
 

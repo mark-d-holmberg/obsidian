@@ -10,7 +10,7 @@ class ObsidianSaveDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/save.html';
+		return 'modules/obsidian/html/dialogs/save.html';
 	}
 
 	getData () {

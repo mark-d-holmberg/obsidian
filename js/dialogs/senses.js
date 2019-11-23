@@ -7,7 +7,7 @@ class ObsidianSensesDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/senses.html';
+		return 'modules/obsidian/html/dialogs/senses.html';
 	}
 
 	/**

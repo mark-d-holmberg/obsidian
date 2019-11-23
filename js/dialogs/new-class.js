@@ -2,7 +2,7 @@ class ObsidianNewClassDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.title = game.i18n.localize('OBSIDIAN.AddClass');
-		options.template = 'public/modules/obsidian/html/dialogs/new-class.html';
+		options.template = 'modules/obsidian/html/dialogs/new-class.html';
 		options.submitOnClose = false;
 		options.submitOnUnfocus = false;
 		options.closeOnSubmit = true;

@@ -9,7 +9,7 @@ class ObsidianEquipmentSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 480;
-		options.template = 'public/modules/obsidian/html/sheets/equipment.html';
+		options.template = 'modules/obsidian/html/sheets/equipment.html';
 		return options;
 	}
 

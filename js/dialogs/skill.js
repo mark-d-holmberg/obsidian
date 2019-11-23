@@ -13,7 +13,7 @@ class ObsidianSkillDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/skill.html';
+		return 'modules/obsidian/html/dialogs/skill.html';
 	}
 
 	getData () {

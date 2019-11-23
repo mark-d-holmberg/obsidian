@@ -13,7 +13,7 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/spells.html';
+		return 'modules/obsidian/html/dialogs/spells.html';
 	}
 
 	/**

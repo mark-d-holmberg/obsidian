@@ -31,7 +31,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/'
+		return 'modules/obsidian/html/'
 			+ (!game.user.isGM && this.actor.limited ? 'limited.html' : 'obsidian.html');
 	}
 
@@ -220,7 +220,7 @@ class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			if (options.template !== undefined) {
-				options.template = 'public/modules/obsidian/html/dialogs/' + options.template;
+				options.template = 'modules/obsidian/html/dialogs/' + options.template;
 			}
 
 			if (options.dialog === undefined) {
@@ -944,25 +944,25 @@ Actors.registerSheet('dnd5e', Obsidian, {
 
 Hooks.once('init', () => {
 	loadTemplates([
-		'public/modules/obsidian/html/obsidian.html',
-		'public/modules/obsidian/html/tabs/actions.html',
-		'public/modules/obsidian/html/tabs/attacks.html',
-		'public/modules/obsidian/html/tabs/sub-actions.html',
-		'public/modules/obsidian/html/tabs/spells.html',
-		'public/modules/obsidian/html/tabs/sub-spells.html',
-		'public/modules/obsidian/html/tabs/equipment.html',
-		'public/modules/obsidian/html/tabs/features.html',
-		'public/modules/obsidian/html/tabs/sub-features.html',
-		'public/modules/obsidian/html/tabs/notes.html',
-		'public/modules/obsidian/html/components/damage.html',
-		'public/modules/obsidian/html/components/dc.html',
-		'public/modules/obsidian/html/components/hit.html',
-		'public/modules/obsidian/html/components/spell-list.html',
-		'public/modules/obsidian/html/components/uses.html',
-		'public/modules/obsidian/html/components/charges.html',
-		'public/modules/obsidian/html/components/spell-card.html',
-		'public/modules/obsidian/html/components/inventory.html',
-		'public/modules/obsidian/html/components/weapon-notes.html'
+		'modules/obsidian/html/obsidian.html',
+		'modules/obsidian/html/tabs/actions.html',
+		'modules/obsidian/html/tabs/attacks.html',
+		'modules/obsidian/html/tabs/sub-actions.html',
+		'modules/obsidian/html/tabs/spells.html',
+		'modules/obsidian/html/tabs/sub-spells.html',
+		'modules/obsidian/html/tabs/equipment.html',
+		'modules/obsidian/html/tabs/features.html',
+		'modules/obsidian/html/tabs/sub-features.html',
+		'modules/obsidian/html/tabs/notes.html',
+		'modules/obsidian/html/components/damage.html',
+		'modules/obsidian/html/components/dc.html',
+		'modules/obsidian/html/components/hit.html',
+		'modules/obsidian/html/components/spell-list.html',
+		'modules/obsidian/html/components/uses.html',
+		'modules/obsidian/html/components/charges.html',
+		'modules/obsidian/html/components/spell-card.html',
+		'modules/obsidian/html/components/inventory.html',
+		'modules/obsidian/html/components/weapon-notes.html'
 	]);
 });
 

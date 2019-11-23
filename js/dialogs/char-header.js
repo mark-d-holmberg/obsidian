@@ -12,7 +12,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/header-details.html';
+		return 'modules/obsidian/html/dialogs/header-details.html';
 	}
 
 	/**

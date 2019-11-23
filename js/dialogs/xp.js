@@ -7,7 +7,7 @@ class ObsidianXPDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/xp.html';
+		return 'modules/obsidian/html/dialogs/xp.html';
 	}
 
 	/**

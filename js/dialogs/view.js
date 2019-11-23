@@ -44,7 +44,7 @@ class ObsidianViewDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return `public/modules/obsidian/html/dialogs/${this.item.type}-view.html`;
+		return `modules/obsidian/html/dialogs/${this.item.type}-view.html`;
 	}
 
 	get title () {

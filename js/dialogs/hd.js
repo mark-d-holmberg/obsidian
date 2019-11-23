@@ -7,7 +7,7 @@ class ObsidianHDDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/hd.html';
+		return 'modules/obsidian/html/dialogs/hd.html';
 	}
 
 	/**

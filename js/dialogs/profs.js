@@ -7,7 +7,7 @@ class ObsidianProficienciesDialog extends ObsidianDialog {
 	}
 
 	get template () {
-		return 'public/modules/obsidian/html/dialogs/profs.html';
+		return 'modules/obsidian/html/dialogs/profs.html';
 	}
 
 	/**
