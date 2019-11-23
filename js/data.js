@@ -1,6 +1,8 @@
-Obsidian.Data = {};
-Obsidian.spellComparator = (a, b) => {
-	const diff = a.data.level.value - b.data.level.value;
+import {OBSIDIAN} from './rules/rules.js';
+
+OBSIDIAN.Data = {};
+OBSIDIAN.spellComparator = (a, b) => {
+	const diff = a.data.level - b.data.level;
 	if (diff === 0) {
 		return a.name.localeCompare(b.name);
 	}
@@ -8,7 +10,7 @@ Obsidian.spellComparator = (a, b) => {
 	return diff;
 };
 
-Hooks.once('ready', () => {
+export function loadSpellData () {
 	const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 	fetch('modules/obsidian/data/spell-partitions.json')
 		.then(response => {
@@ -19,18 +21,18 @@ Hooks.once('ready', () => {
 			console.error(`Failed to fetch spell-partitions.json: ${response.status}`);
 		})
 		.then(json => {
-			Obsidian.Data.SPELL_PARTITIONS = json;
+			OBSIDIAN.Data.SPELL_PARTITIONS = json;
 			return game.packs.find(pack => pack.collection === 'obsidian.spells').getContent();
 		})
 		.then(entries => {
 			const bySlug =
 				new Map(entries.map(entry => [toSlug(entry.name), entry.data]));
 
-			Obsidian.Data.SPELLS_BY_CLASS = {};
-			Object.entries(Obsidian.Data.SPELL_PARTITIONS.classes).forEach(([cls, slugs]) =>
-				Obsidian.Data.SPELLS_BY_CLASS[cls] =
+			OBSIDIAN.Data.SPELLS_BY_CLASS = {};
+			Object.entries(OBSIDIAN.Data.SPELL_PARTITIONS.classes).forEach(([cls, slugs]) =>
+				OBSIDIAN.Data.SPELLS_BY_CLASS[cls] =
 					slugs.map(slug => bySlug.get(slug))
 						.filter(spell => spell !== undefined)
-						.sort(Obsidian.spellComparator));
+						.sort(OBSIDIAN.spellComparator));
 		});
-});
+}

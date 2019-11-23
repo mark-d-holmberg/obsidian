@@ -1,4 +1,6 @@
-class ObsidianSensesDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianSensesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;

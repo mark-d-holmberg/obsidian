@@ -1,4 +1,6 @@
-class ObsidianSkillsDialog extends ObsidianArrayDialog {
+import {ObsidianArrayDialog} from './array.js';
+
+export class ObsidianSkillsDialog extends ObsidianArrayDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 440;

@@ -1,4 +1,8 @@
-class ObsidianConsumableSheet extends ObsidianItemSheet {
+import {ObsidianDialog} from '../dialogs/dialog.js';
+import {ObsidianItemSheet} from './item-sheet.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianConsumableSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-consumable', init => {
@@ -31,12 +35,8 @@ class ObsidianConsumableSheet extends ObsidianItemSheet {
 			}
 
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(Obsidian.CONSUMABLE_SCHEMA);
+				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Consumable);
 			}
 		}
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianConsumableSheet, {types: ['consumable'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianConsumableSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianConsumableSheet.enrichFlags(data));

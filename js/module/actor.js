@@ -1,4 +1,11 @@
-class ObsidianActor extends Actor5e {
+import {Actor5e} from '../../../../systems/dnd5e/module/actor/entity.js';
+import {OBSIDIAN} from '../rules/rules.js';
+import {Prepare} from '../rules/prepare.js';
+import {prepareInventory} from '../rules/inventory.js';
+import {prepareSpells} from '../rules/spells.js';
+import {prepareSpellcasting} from '../rules/spellcasting.js';
+
+export class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
 		actorData = super.prepareData(actorData);
 		if (actorData.type === 'npc') {
@@ -24,21 +31,21 @@ class ObsidianActor extends Actor5e {
 				cls.name === 'custom'
 					? cls.flags.obsidian.custom
 					: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
-			cls.data.levels.value = Number(cls.data.levels.value);
-			data.details.level.value += cls.data.levels.value;
+			cls.data.levels = Number(cls.data.levels);
+			data.details.level.value += cls.data.levels;
 		}
 
 		actorData.obsidian.classFormat = ObsidianActor._classFormat(actorData.obsidian.classes);
-		data.attributes.prof.value = Math.floor((data.details.level.value + 7) / 4);
+		data.attributes.prof = Math.floor((data.details.level + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
-			+ data.attributes.init.value;
+			+ data.attributes.init;
 
 		if (flags.skills.joat) {
-			data.attributes.init.mod += Math.floor(data.attributes.prof.value / 2);
+			data.attributes.init.mod += Math.floor(data.attributes.prof / 2);
 		}
 
-		if (!Obsidian.notDefinedOrEmpty(flags.attributes.init.override)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			data.attributes.init.mod = Number(flags.attributes.init.override);
 		}
 
@@ -63,17 +70,17 @@ class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
-		Obsidian.Rules.Prepare.defenses(flags);
-		Obsidian.Rules.Prepare.skills(actorData, data, flags);
-		Obsidian.Rules.Prepare.tools(actorData, data, flags);
-		Obsidian.Rules.Prepare.saves(actorData, data, flags);
-		Obsidian.Rules.Prepare.spellcasting(actorData, flags);
-		Obsidian.Rules.Prepare.features(actorData);
-		Obsidian.Rules.Prepare.inventory(actorData);
-		Obsidian.Rules.Prepare.consumables(actorData);
-		Obsidian.Rules.Prepare.weapons(actorData);
-		Obsidian.Rules.Prepare.armour(actorData);
-		Obsidian.Rules.Prepare.spells(actorData);
+		Prepare.defenses(flags);
+		Prepare.skills(actorData, data, flags);
+		Prepare.tools(actorData, data, flags);
+		Prepare.saves(actorData, data, flags);
+		prepareSpellcasting(actorData, flags);
+		Prepare.features(actorData);
+		prepareInventory(actorData);
+		Prepare.consumables(actorData);
+		Prepare.weapons(actorData);
+		Prepare.armour(actorData);
+		prepareSpells(actorData);
 
 		return actorData;
 	}
@@ -141,41 +148,15 @@ class ObsidianActor extends Actor5e {
 			return game.i18n.localize('OBSIDIAN.Class');
 		}
 
-		return classes.sort((a, b) => b.data.levels.value - a.data.levels.value).map(cls => {
+		return classes.sort((a, b) => b.data.levels - a.data.levels).map(cls => {
 			if (!cls.flags.obsidian) {
 				return '';
 			}
 
-			return (cls.data.subclass.value && cls.data.subclass.value.length
-					? `${cls.data.subclass.value} ` : '')
-				+ `${cls.flags.obsidian.label} ${cls.data.levels.value}`;
+			return (cls.data.subclass && cls.data.subclass.length
+					? `${cls.data.subclass} ` : '')
+				+ `${cls.flags.obsidian.label} ${cls.data.levels}`;
 		}).join(' / ');
-	}
-
-	static damageFormat (dmg, mod = true) {
-		if (dmg === undefined) {
-			return;
-		}
-
-		let out = '';
-
-		if (dmg.ndice > 0) {
-			out += `${dmg.ndice}d${dmg.die}`;
-		}
-
-		if (dmg.mod !== 0 && mod) {
-			if (dmg.ndice > 0 && dmg.mod > 0) {
-				out += '+';
-			}
-
-			out += dmg.mod;
-		}
-
-		if (out.length < 1) {
-			out = '0';
-		}
-
-		return out;
 	}
 
 	/**
@@ -192,38 +173,7 @@ class ObsidianActor extends Actor5e {
 			}
 		};
 
-		walk(duplicate(Obsidian.SCHEMA), flags);
-	}
-
-	static usesFormat (id, idx, max, remaining, threshold = 10, prop = 'uses') {
-		if (max === undefined || max < 0) {
-			return '';
-		}
-
-		let used = max - remaining;
-		if (used < 0) {
-			used = 0;
-		}
-
-		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}" data-prop="${prop}">`;
-		if (max <= threshold) {
-			for (let i = 0; i < max; i++) {
-				out += `
-					<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
-					     data-n="${i + 1}"></div>
-				`;
-			}
-		} else {
-			out += `
-				<input type="number" data-name="items.${idx}.flags.obsidian.${prop}.remaining"
-				       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
-				<span class="obsidian-binary-operator">&sol;</span>
-				<span class="obsidian-feature-max">${max}</span>
-			`;
-		}
-
-		out += '</div>';
-		return out;
+		walk(duplicate(OBSIDIAN.Schema.Actor), flags);
 	}
 
 	getItemParent (item) {
@@ -261,7 +211,7 @@ class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		const update = {};
 
-		update['data.attributes.hp.value'] = data.attributes.hp.maxAdjusted;
+		update['data.attributes.hp'] = data.attributes.hp.maxAdjusted;
 
 		for (const [die, hd] of Object.entries(flags.attributes.hd)) {
 			if (hd.max > 0) {
@@ -272,7 +222,7 @@ class ObsidianActor extends Actor5e {
 
 		for (const level of Object.keys(data.spells)) {
 			if (level.startsWith('spell')) {
-				update[`data.spells.${level}.value`] = 0;
+				update[`data.spells.${level}`] = 0;
 			}
 		}
 
@@ -294,7 +244,7 @@ class ObsidianActor extends Actor5e {
 
 			if (item.type === 'weapon' && itemFlags.charges && itemFlags.charges.enabled) {
 				if (itemFlags.charges.rechargeType === 'formula') {
-					const recharge = Obsidian.Rolls.recharge(item);
+					const recharge = OBSIDIAN.Rolls.recharge(item);
 					let remaining =
 						itemFlags.charges.remaining + recharge.flags.obsidian.results[0][0].total;
 
@@ -302,7 +252,7 @@ class ObsidianActor extends Actor5e {
 						remaining = itemFlags.charges.max;
 					}
 
-					Obsidian.Rolls.toChat(this, recharge);
+					OBSIDIAN.Rolls.toChat(this, recharge);
 					items.push({id: item.id, flags: {obsidian: {charges: {remaining: remaining}}}});
 				} else {
 					items.push({
@@ -456,5 +406,3 @@ class ObsidianActor extends Actor5e {
 		return newHD;
 	}
 }
-
-CONFIG.Actor.entityClass = ObsidianActor;

@@ -1,4 +1,8 @@
-class ObsidianEquipmentSheet extends ObsidianItemSheet {
+import {ObsidianItemSheet} from './item-sheet.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianEquipmentSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-equipment', init => {
@@ -20,18 +24,14 @@ class ObsidianEquipmentSheet extends ObsidianItemSheet {
 			}
 
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(Obsidian.EQUIPMENT_SCHEMA);
+				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Equipment);
 			}
 		}
 	}
 
 	getData () {
 		const data = super.getData();
-		data.subtypes = Obsidian.EQUIP_TYPES;
+		data.subtypes = OBSIDIAN.Schema.EquipTypes;
 		return data;
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianEquipmentSheet, {types: ['equipment'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianEquipmentSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianEquipmentSheet.enrichFlags(data));

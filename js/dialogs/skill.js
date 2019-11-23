@@ -1,4 +1,6 @@
-class ObsidianSkillDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianSkillDialog extends ObsidianDialog {
 	constructor (parent, skillID) {
 		const skill = getProperty(parent.actor.data.flags.obsidian.skills, skillID);
 		super(parent, {

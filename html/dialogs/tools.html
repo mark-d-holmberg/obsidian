@@ -8,8 +8,8 @@
 	{{#each entity.flags.obsidian.skills.tools as |tool id|}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
-				<select name="flags.obsidian.skills.tools.{{id}}.value" data-dtype="Number">
-					{{#select tool.value}}
+				<select name="flags.obsidian.skills.tools.{{id}}" data-dtype="Number">
+					{{#select tool}}
 						{{#each ../ObsidianRules.PROFICIENCY_LEVELS}}
 							<option value="{{@key}}">
 								{{i18n-join 'OBSIDIAN.Proficiency-' this}}

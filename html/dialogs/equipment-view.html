@@ -5,7 +5,7 @@
 			<div class="obsidian-item-card-sub-header">
 				{{#if (eq item.flags.obsidian.subtype 'armour')}}
 					<div class="obsidian-table-note-text">
-						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' item.data.armorType.value}}
+						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' item.data.armorType}}
 					</div>
 				{{/if}}
 				{{#each item.flags.obsidian.notes}}
@@ -15,14 +15,14 @@
 			<div class="obsidian-item-card-header-row">
 				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Weight'}}:</div>
 				<div class="obsidian-item-card-header-value">
-					{{item.data.weight.value}}
+					{{item.data.weight}}
 					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 				</div>
 			</div>
 			<div class="obsidian-item-card-header-row">
 				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Cost'}}:</div>
 				<div class="obsidian-item-card-header-value obsidian-icon-value">
-					{{number-format item.data.price.value}}
+					{{number-format item.data.price}}
 					<i class="obsidian-icon-sm obsidian-icon-gp"></i>
 				</div>
 			</div>

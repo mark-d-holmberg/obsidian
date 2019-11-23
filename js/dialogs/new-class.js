@@ -1,4 +1,6 @@
-class ObsidianNewClassDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianNewClassDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.title = game.i18n.localize('OBSIDIAN.AddClass');

@@ -1,4 +1,8 @@
-class ObsidianFeatureSheet extends ObsidianItemSheet {
+import {ObsidianItemSheet} from './item-sheet.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianFeatureSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-feature', init => {
@@ -26,23 +30,7 @@ class ObsidianFeatureSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'feat') {
-			data.flags.obsidian =
-				mergeObject({
-					active: 'active',
-					action: 'action',
-					source: {},
-					uses: {enabled: false},
-					dc: {enabled: false},
-					hit: {enabled: false},
-					damage: []
-				}, data.flags.obsidian);
+			data.flags.obsidian = mergeObject(OBSIDIAN.Schema.Feature, data.flags.obsidian);
 		}
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianFeatureSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => {
-	ObsidianFeatureSheet.enrichFlags(data);
-	actor.linkClasses(data);
-});

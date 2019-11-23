@@ -1,4 +1,6 @@
-class ObsidianProficienciesDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianProficienciesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;

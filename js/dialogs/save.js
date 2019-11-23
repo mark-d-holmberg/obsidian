@@ -1,4 +1,6 @@
-class ObsidianSaveDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianSaveDialog extends ObsidianDialog {
 	constructor (parent, saveID) {
 		super(parent, {
 			title: `${game.i18n.localize('OBSIDIAN.ManageSave')}: `

@@ -21,7 +21,7 @@
 		</div>
 		<ul class="obsidian-tab-bar">
 			{{#each (range 0 9)}}
-				{{#if (not-empty (filter ../spells 'data.level.value' this))}}
+				{{#if (not-empty (filter ../spells 'data.level' this))}}
 					<li class="obsidian-sub-tab obsidian-spell-level-tab" data-value="{{this}}">
 						{{spell-level-format this}}
 					</li>
@@ -34,35 +34,35 @@
 	{{#each spells as |spell id|}}
 		<details data-item-id="{{#if spell._id}}{{id}}{{else}}{{spell.id}}{{/if}}"
 		         data-spell-list="{{../spellList}}" data-name="{{spell.name}}"
-		         data-level="{{spell.data.level.value}}">
+		         data-level="{{spell.data.level}}">
 			<summary>
 				<div class="obsidian-col-icon">
-					<i class="obsidian-spell-school obsidian-spell-school-{{spell.data.school.value}}"></i>
+					<i class="obsidian-spell-school obsidian-spell-school-{{spell.data.school}}"></i>
 				</div>
 				<div class="obsidian-col-spell">
 					<div class="obsidian-table-text">{{spell.name}}</div>
-					{{#if spell.data.concentration.value}}
+					{{#if spell.data.concentration}}
 						<div class="obsidian-icon-flag obsidian-icon-concentration"
 						     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
 					{{/if}}
-					{{#if spell.data.ritual.value}}
+					{{#if spell.data.ritual}}
 						<div class="obsidian-icon-flag obsidian-icon-ritual"
 						     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
 					{{/if}}
 					<div class="obsidian-table-sub-text">
-						({{spell-level-format spell.data.level.value cantrip=true}})
+						({{spell-level-format spell.data.level cantrip=true}})
 					</div>
 				</div>
 				<button type="button" class="{{#if (has-spell-with-name ../active spell)}}obsidian-btn-active{{/if}}
 				        obsidian-btn-outline obsidian-spell-action">
 					{{#if (has-spell-with-name ../active spell)}}
-						{{#if (or spell.data.level.value (not ../btnCantripActive))}}
+						{{#if (or spell.data.level (not ../btnCantripActive))}}
 							{{localize ../btnActive}}
 						{{else}}
 							{{localize ../btnCantripActive}}
 						{{/if}}
 					{{else}}
-						{{#if (or spell.data.level.value (not ../btnCantrip))}}
+						{{#if (or spell.data.level (not ../btnCantrip))}}
 							{{localize ../btn}}
 						{{else}}
 							{{localize ../btnCantrip}}

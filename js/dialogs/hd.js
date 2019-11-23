@@ -1,4 +1,7 @@
-class ObsidianHDDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianHDDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 250;
@@ -29,10 +32,10 @@ class ObsidianHDDialog extends ObsidianDialog {
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 		const existingHD = Object.keys(hd);
 		const availableHD =
-			Obsidian.Rules.HD.filter(x => {
+			OBSIDIAN.Rules.HD.filter(x => {
 				const s = String(x);
 				return !existingHD.includes(s)
-					|| (hd[s].max < 1 && Obsidian.notDefinedOrEmpty(hd[s].override));
+					|| (hd[s].max < 1 && OBSIDIAN.notDefinedOrEmpty(hd[s].override));
 			});
 
 		if (availableHD.length > 0) {

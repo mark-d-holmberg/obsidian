@@ -1,4 +1,7 @@
-Obsidian.Rules.Prepare.spells = function (actorData) {
+import {OBSIDIAN} from './rules.js';
+import {Prepare} from './prepare.js';
+
+export function prepareSpells (actorData) {
 	for (let i = 0; i < actorData.items.length; i++) {
 		if (actorData.items[i].type !== 'spell') {
 			continue;
@@ -37,31 +40,31 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		flags.components.display =
 			Object.entries(flags.components)
 				.filter(([, val]) => val)
-				.map(([key,]) => Obsidian.Rules.SPELL_COMPONENT_MAP[key])
+				.map(([key,]) => OBSIDIAN.Rules.SPELL_COMPONENT_MAP[key])
 				.filter(s => s !== undefined)
 				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 				.join(', ');
 
 		if (flags.hit.enabled) {
-			if (Obsidian.notDefinedOrEmpty(flags.hit.n)) {
+			if (OBSIDIAN.notDefinedOrEmpty(flags.hit.n)) {
 				flags.hit.n = 1;
 			} else {
 				flags.hit.n = Number(flags.hit.n);
 			}
 
 			flags.hit.count = flags.hit.n;
-			if (spell.data.level.value < 1) {
+			if (spell.data.level < 1) {
 				flags.hit.count +=
 					(flags.upcast.natk || 0) *
 					(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
 			}
 
 			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
-			Obsidian.Rules.Prepare.calculateHit(flags.hit, actorData.data, cls);
+			Prepare.calculateHit(flags.hit, actorData.data, cls);
 		}
 
 		if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
-			Obsidian.Rules.Prepare.calculateUses(spell.id, i, actorData.data, cls, flags.uses);
+			Prepare.calculateUses(spell.id, i, actorData.data, cls, flags.uses);
 			flags.notes.push(
 				'<div class="obsidian-table-note-flex">'
 					+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
@@ -69,14 +72,14 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 		}
 
 		if (flags.upcast && flags.upcast.enabled) {
-			if (Obsidian.notDefinedOrEmpty(flags.upcast.nlvl)) {
+			if (OBSIDIAN.notDefinedOrEmpty(flags.upcast.nlvl)) {
 				flags.upcast.nlvl = 1;
 			} else {
 				flags.upcast.nlvl = Number(flags.upcast.nlvl);
 			}
 		}
 
-		if (spell.data.level.value < 1) {
+		if (spell.data.level < 1) {
 			flags.cantrip = {
 				damage: flags.upcast.damage.map(dmg => {
 					const scaled = duplicate(dmg);
@@ -86,16 +89,16 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 				})
 			};
 
-			Obsidian.Rules.Prepare.calculateDamage(actorData.data, cls, flags.cantrip.damage);
+			Prepare.calculateDamage(actorData.data, cls, flags.cantrip.damage);
 		}
 
-		Obsidian.Rules.Prepare.calculateSave(flags.dc, actorData.data, cls);
-		Obsidian.Rules.Prepare.calculateDamage(actorData.data, cls, flags.damage);
+		Prepare.calculateSave(flags.dc, actorData.data, cls);
+		Prepare.calculateDamage(actorData.data, cls, flags.damage);
 
-		if (flags.components.m && spell.data.materials.value.length > 0) {
+		if (flags.components.m && spell.data.materials.length > 0) {
 			flags.notes.push(
 				`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: `
-				+ spell.data.materials.value);
+				+ spell.data.materials);
 		}
 
 		if (flags.time.type === 'react' && flags.time.react.length > 0) {
@@ -106,7 +109,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 
 		if (cls) {
 			const spellcasting = cls.flags.obsidian.spellcasting;
-			if (spell.data.level.value === 0) {
+			if (spell.data.level === 0) {
 				flags.known = true;
 				flags.visible = true;
 			} else if (spellcasting.preparation === 'known') {
@@ -133,7 +136,7 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 				flags.visible = flags.book && flags.prepared;
 			}
 
-			if (spell.data.ritual.value) {
+			if (spell.data.ritual) {
 				flags.visible =
 					(spellcasting.rituals === 'prep' && flags.prepared)
 					|| spellcasting.rituals === 'book';
@@ -146,8 +149,8 @@ Obsidian.Rules.Prepare.spells = function (actorData) {
 			flags.visible = true;
 		}
 
-		if (flags.visible && spell.data.concentration.value) {
+		if (flags.visible && spell.data.concentration) {
 			actorData.obsidian.spellbook.concentration.push(spell);
 		}
 	}
-};
+}

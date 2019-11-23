@@ -1,4 +1,6 @@
-Obsidian.Rules.Prepare.inventory = function (actorData) {
+import {OBSIDIAN} from './rules.js';
+
+export function prepareInventory (actorData) {
 	actorData.obsidian.inventory = {
 		weight: 0,
 		encumbered: false,
@@ -30,7 +32,7 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 				item.flags.obsidian.carriedWeight +=
 					Object.values(item.flags.obsidian.currency)
 						.reduce((acc, currency) => acc + currency, 0)
-					* Obsidian.Rules.COIN_WEIGHT;
+					* OBSIDIAN.Rules.COIN_WEIGHT;
 			}
 
 			if (!item.flags.obsidian.order) {
@@ -50,7 +52,7 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 			continue;
 		}
 
-		const totalWeight = item.data.weight.value * (item.data.quantity.value || 1);
+		const totalWeight = item.data.weight * (item.data.quantity || 1);
 
 		if (flags.parent == null) {
 			inventory.weight += totalWeight;
@@ -74,15 +76,15 @@ Obsidian.Rules.Prepare.inventory = function (actorData) {
 		flags.consumable = item.type === 'consumable';
 		flags.equippable =
 			item.type === 'weapon'
-			|| (item.type === 'equipment' && Obsidian.EQUIP_TYPES.includes(flags.subtype));
+			|| (item.type === 'equipment' && OBSIDIAN.Schema.Equipment.includes(flags.subtype));
 	}
 
 	const link = list => list.map(id => map.get(id)).filter(item => item !== undefined);
 	inventory.weight +=
-		Object.values(actorData.data.currency).reduce((acc, currency) => acc + currency.value, 0)
-		* Obsidian.Rules.COIN_WEIGHT;
+		Object.values(actorData.data.currency).reduce((acc, currency) => acc + currency, 0)
+		* OBSIDIAN.Rules.COIN_WEIGHT;
 	inventory.root = link(actorData.flags.obsidian.order.equipment.root);
 	inventory.containers = link(actorData.flags.obsidian.order.equipment.containers);
 	inventory.containers.forEach(container =>
 		container.flags.obsidian.contents = link(container.flags.obsidian.order))
-};
+}

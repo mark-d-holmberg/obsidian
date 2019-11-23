@@ -18,14 +18,14 @@
 			<div class="obsidian-fullwidth">
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-					       name="data.weight.value" data-dtype="Number" placeholder="0"
-					       value="{{item.data.weight.value}}">
+					       name="data.weight" data-dtype="Number" placeholder="0"
+					       value="{{item.data.weight}}">
 					<span>{{localize 'OBSIDIAN.Weight'}}</span>
 				</label>
 				<label class="obsidian-inline obsidian-label-icon">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
-					       name="data.price.value" data-dtype="Number" placeholder="0"
-					       value="{{item.data.price.value}}">
+					       name="data.price" data-dtype="Number" placeholder="0"
+					       value="{{item.data.price}}">
 					<span>{{localize 'OBSIDIAN.Cost'}}</span>
 					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
 				</label>
@@ -39,8 +39,8 @@
 		</legend>
 		<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
 			<div class="obsidian-fullwidth obsidian-checkbox-row">
-				<select name="data.armorType.value">
-					{{#select item.data.armorType.value}}
+				<select name="data.armorType">
+					{{#select item.data.armorType}}
 						{{#each ObsidianRules.ARMOUR_TYPES}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.ArmourType-' this}}</option>
 						{{/each}}
@@ -48,7 +48,7 @@
 				</select>
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="data.armor.value" value="{{item.data.armor.value}}" placeholder="0"
+					       name="data.armor" value="{{item.data.armor}}" placeholder="0"
 					       data-dtype="Number">
 					<span>{{localize 'OBSIDIAN.ACAbbr'}}</span>
 				</label>
@@ -65,11 +65,11 @@
 			<div class="obsidian-checkbox-row">
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="data.strength.value" value="{{item.data.strength.value}}">
+					       name="data.strength" value="{{item.data.strength}}">
 					<span>{{localize 'OBSIDIAN.MinStr'}}</span>
 				</label>
-				{{fancy-checkbox 'data.stealth.value' content='OBSIDIAN.StealthDisadvantage'
-				                 checked=item.data.stealth.value}}
+				{{fancy-checkbox 'data.stealth' content='OBSIDIAN.StealthDisadvantage'
+				                 checked=item.data.stealth}}
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 					       name="flags.obsidian.magic" value="{{item.flags.obsidian.magic}}"
@@ -81,7 +81,7 @@
 	</fieldset>
 	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 	<div class="obsidian-rich-text">
-		{{editor content=item.data.description.value button=false editable=editable
-		         target='data.description.value'}}
+		{{editor content=item.data.description button=false editable=editable
+		         target='data.description'}}
 	</div>
 </form>

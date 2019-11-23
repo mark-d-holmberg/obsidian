@@ -1,4 +1,6 @@
-Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
+import {OBSIDIAN} from './rules.js';
+
+export function prepareSpellcasting (actorData, flags) {
 	const data = actorData.data;
 	const mods = [];
 	const attacks = [];
@@ -19,7 +21,7 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 		const levels = cls.data.levels.value;
 
 		if (spellcasting.spell === undefined) {
-			spellcasting.spell = Obsidian.Rules.CLASS_SPELL_MODS[cls.name];
+			spellcasting.spell = OBSIDIAN.Rules.CLASS_SPELL_MODS[cls.name];
 		}
 
 		if (spellcasting.spell !== undefined && spellcasting.spell !== '') {
@@ -37,7 +39,7 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 		}
 
 		if (spellcasting.progression === undefined) {
-			spellcasting.progression = Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls.name];
+			spellcasting.progression = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[cls.name];
 		}
 
 		if (spellcasting.progression !== undefined && spellcasting.progression !== '') {
@@ -55,14 +57,14 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 		}
 
 		if (spellcasting.preparation === undefined) {
-			spellcasting.preparation = Obsidian.Rules.CLASS_SPELL_PREP[cls.name];
+			spellcasting.preparation = OBSIDIAN.Rules.CLASS_SPELL_PREP[cls.name];
 		}
 
 		if (spellcasting.rituals === undefined) {
-			spellcasting.rituals = Obsidian.Rules.CLASS_RITUALS[cls.name];
+			spellcasting.rituals = OBSIDIAN.Rules.CLASS_RITUALS[cls.name];
 		}
 
-		const spellsKnown = Obsidian.Rules.SPELLS_KNOWN_TABLE[cls.name];
+		const spellsKnown = OBSIDIAN.Rules.SPELLS_KNOWN_TABLE[cls.name];
 		if (spellsKnown !== undefined) {
 			spellcasting.maxKnown = spellsKnown.known[levels - 1];
 			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
@@ -89,7 +91,7 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 			slotLevel++;
 		}
 
-		const slots = Obsidian.Rules.SPELL_SLOT_TABLE[slotLevel - 1];
+		const slots = OBSIDIAN.Rules.SPELL_SLOT_TABLE[slotLevel - 1];
 		slots.forEach((n, i) => {
 			const spell = data.spells[`spell${i + 1}`];
 			spell.max = n;
@@ -147,4 +149,4 @@ Obsidian.Rules.Prepare.spellcasting = function (actorData, flags) {
 	}
 
 	actorData.obsidian.spellbook = {concentration: [], rituals: []};
-};
+}

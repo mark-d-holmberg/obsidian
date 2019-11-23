@@ -1,4 +1,6 @@
-class ObsidianArrayDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianArrayDialog extends ObsidianDialog {
 	/**
 	 * @param {JQuery} html
 	 * @return undefined

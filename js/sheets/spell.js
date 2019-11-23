@@ -1,4 +1,8 @@
-class ObsidianSpellSheet extends ObsidianItemSheet {
+import {ObsidianItemSheet} from './item-sheet.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianSpellSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-spell', init => {
@@ -24,7 +28,7 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 		super.activateListeners(html);
 		html.find('.obsidian-add-damage').click(this._onAddDamage.bind(this));
 		html.find('.obsidian-rm-damage').click(this._onRemoveDamage.bind(this));
-		html.find('[name="data.level.value"]').focusout(this._onSubmit.bind(this));
+		html.find('[name="data.level"]').focusout(this._onSubmit.bind(this));
 		ObsidianDialog.recalculateHeight(html);
 	}
 
@@ -35,12 +39,8 @@ class ObsidianSpellSheet extends ObsidianItemSheet {
 			}
 
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(Obsidian.SPELL_SCHEMA);
+				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Spell);
 			}
 		}
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianSpellSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianSpellSheet.enrichFlags(data));

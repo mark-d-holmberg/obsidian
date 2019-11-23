@@ -1,8 +1,8 @@
 <form class="obsidian" autocomplete="off">
 	<div class="obsidian-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">
-			<select name="data.details.alignment.value">
-				{{#select data.details.alignment.value}}
+			<select name="data.details.alignment">
+				{{#select data.details.alignment}}
 					{{#each ObsidianRules.ALIGNMENTS}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Alignment-' this}}</option>
 					{{/each}}

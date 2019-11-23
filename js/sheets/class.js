@@ -1,4 +1,8 @@
-class ObsidianClassSheet extends ObsidianItemSheet {
+import {ObsidianItemSheet} from './item-sheet.js';
+import {Obsidian} from '../module/obsidian.js';
+import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
+
+export class ObsidianClassSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.template = 'modules/obsidian/html/sheets/class.html';
@@ -42,7 +46,3 @@ class ObsidianClassSheet extends ObsidianItemSheet {
 		Hooks.callAll('obsidian-classSheetClosed');
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianClassSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianClassSheet.enrichFlags(data));

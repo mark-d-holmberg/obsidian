@@ -1,4 +1,7 @@
-class ObsidianRollHDDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianRollHDDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.submitOnClose = false;
@@ -32,12 +35,12 @@ class ObsidianRollHDDialog extends ObsidianDialog {
 				}).filter(([n, _]) => n > 0);
 
 		const conBonus = this.parent.actor.data.data.abilities.con.mod * totalDice;
-		const results = Obsidian.Rolls.hd(this.parent.actor, rolls, conBonus);
+		const results = OBSIDIAN.Rolls.hd(this.parent.actor, rolls, conBonus);
 		const total = results.reduce((acc, die) => acc + die.total, 0);
 		const hp = this.parent.actor.data.data.attributes.hp;
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 
-		let newHP = hp.value + total + conBonus;
+		let newHP = hp + total + conBonus;
 		if (newHP > hp.max) {
 			newHP = hp.max;
 		}
@@ -52,7 +55,7 @@ class ObsidianRollHDDialog extends ObsidianDialog {
 		});
 
 		this.parent.actor.update({
-			'data.attributes.hp.value': newHP,
+			'data.attributes.hp': newHP,
 			'flags.obsidian.attributes.hd': hd
 		});
 

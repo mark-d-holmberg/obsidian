@@ -1,4 +1,7 @@
-class ObsidianSpellSlotDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianSpellSlotDialog extends ObsidianDialog {
 	constructor (parent, spell) {
 		super(parent);
 		this.spell = spell;
@@ -48,7 +51,7 @@ class ObsidianSpellSlotDialog extends ObsidianDialog {
 		}
 
 		evt.currentTarget.dataset.level = level;
-		Obsidian.Rolls.fromClick(this.parent.actor, evt);
+		OBSIDIAN.Rolls.fromClick(this.parent.actor, evt);
 		this.close();
 	}
 }

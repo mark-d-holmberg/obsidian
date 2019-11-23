@@ -1,4 +1,9 @@
-class ObsidianContainerSheet extends ObsidianItemSheet {
+import {ObsidianItemSheet} from './item-sheet.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianContainerSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-container', init => {
@@ -29,12 +34,8 @@ class ObsidianContainerSheet extends ObsidianItemSheet {
 			}
 
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(Obsidian.CONTAINER_SCHEMA);
+				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Container);
 			}
 		}
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianContainerSheet, {types: ['backpack'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianContainerSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianContainerSheet.enrichFlags(data));

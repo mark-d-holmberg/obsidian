@@ -1,4 +1,6 @@
-Obsidian.SCHEMA = {
+export const Schema = {};
+
+Schema.Actor = {
 	obsidian: {
 		attributes: {
 			ac: {
@@ -64,21 +66,31 @@ Obsidian.SCHEMA = {
 	}
 };
 
-Obsidian.EQUIP_TYPES = [
+Schema.EquipTypes = [
 	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear'
 ];
 
-Obsidian.CONSUMABLE_SCHEMA = {
+Schema.Consumable = {
 	damage: [],
 	hit: {enabled: false, stat: ''},
 	dc: {enabled: false},
 	uses: {enabled: false, limit: 'limited', ability: '', bonus: 0}
 };
 
-Obsidian.CONTAINER_SCHEMA = {currency: {}};
-Obsidian.EQUIPMENT_SCHEMA = {subtype: 'gear'};
+Schema.Container = {currency: {}};
+Schema.Equipment = {subtype: 'gear'};
 
-Obsidian.SPELL_SCHEMA = {
+Schema.Feature = {
+	active: 'active',
+	action: 'action',
+	source: {},
+	uses: {enabled: false},
+	dc: {enabled: false},
+	hit: {enabled: false},
+	damage: []
+};
+
+Schema.Spell = {
 	damage: [],
 	upcast: {enabled: false, damage: []},
 	time: {},
@@ -90,7 +102,7 @@ Obsidian.SPELL_SCHEMA = {
 	source: {type: 'custom'}
 };
 
-Obsidian.WEAPON_SCHEMA = {
+Schema.Weapon = {
 	type: 'melee',
 	mode: 'melee',
 	damage: [],

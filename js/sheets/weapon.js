@@ -1,4 +1,8 @@
-class ObsidianWeaponSheet extends ObsidianItemSheet {
+import {OBSIDIAN} from '../rules/rules.js';
+import {ObsidianItemSheet} from './item-sheet.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+
+export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		Hooks.once('MCEInit-weapon', init => {
@@ -37,7 +41,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 			}
 
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(Obsidian.WEAPON_SCHEMA);
+				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Weapon);
 			}
 		}
 	}
@@ -114,7 +118,7 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 		const tags = this.item.data.flags.obsidian.tags;
 
 		let available = null;
-		for (const tag of Obsidian.Rules.WEAPON_TAGS) {
+		for (const tag of OBSIDIAN.Rules.WEAPON_TAGS) {
 			if (tags[tag] === undefined) {
 				available = tag;
 				break;
@@ -210,7 +214,3 @@ class ObsidianWeaponSheet extends ObsidianItemSheet {
 		this.item.update(formData);
 	}
 }
-
-Items.registerSheet('dnd5e', ObsidianWeaponSheet, {types: ['weapon'], makeDefault: true});
-Hooks.on('preCreateItem', (constructor, data) => ObsidianWeaponSheet.enrichFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => ObsidianWeaponSheet.enrichFlags(data));

@@ -1,3 +1,6 @@
+import {OBSIDIAN} from './rules.js';
+import {Parse} from '../module/parse.js';
+
 /**
  * Determines whether a given roll has advantage, disadvantage, or neither,
  * depending on all the modifiers applied to the roll.
@@ -5,8 +8,7 @@
  * @return {number} Returns 1 for advantage, -1 for disadvantage, and 0 for
  *                  neither.
  */
-
-Obsidian.Rules.determineAdvantage = function (...mods) {
+export function determineAdvantage (...mods) {
 	let hasAdvantage = mods.some(mod => mod === 'adv');
 	let hasDisadvantage = mods.some(mod => mod === 'dis');
 
@@ -23,18 +25,18 @@ Obsidian.Rules.determineAdvantage = function (...mods) {
 	}
 
 	return 0;
-};
+}
 
-Obsidian.Rules.Prepare = {
+export const Prepare = {
 	calculateSave: function (dc, data, cls) {
 		let bonus = 8;
-		if (!Obsidian.notDefinedOrEmpty(dc.bonus)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(dc.bonus)) {
 			bonus = Number(dc.bonus);
 		}
 
-		dc.value = bonus + dc.prof * data.attributes.prof.value;
+		dc.value = bonus + dc.prof * data.attributes.prof;
 
-		if (!Obsidian.notDefinedOrEmpty(dc.ability)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(dc.ability)) {
 			if (dc.ability === 'spell') {
 				dc.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
 				dc.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
@@ -43,7 +45,7 @@ Obsidian.Rules.Prepare = {
 			}
 		}
 
-		if (!Obsidian.notDefinedOrEmpty(dc.fixed)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(dc.fixed)) {
 			dc.value = Number(dc.fixed);
 		}
 	},
@@ -60,10 +62,10 @@ Obsidian.Rules.Prepare = {
 		}
 
 		if (hit.proficient || hit.stat === 'spell') {
-			hit.value += data.attributes.prof.value;
+			hit.value += data.attributes.prof;
 		}
 
-		if (Obsidian.notDefinedOrEmpty(hit.crit)) {
+		if (OBSIDIAN.notDefinedOrEmpty(hit.crit)) {
 			hit.crit = 20;
 		} else {
 			hit.crit = parseInt(hit.crit);
@@ -88,13 +90,13 @@ Obsidian.Rules.Prepare = {
 				dmg.ncrit = Number(dmg.ncrit);
 			}
 
-			dmg.display = ObsidianActor.damageFormat(dmg);
+			dmg.display = Prepare.damageFormat(dmg);
 		}
 	},
 
 	calculateUses: function (id, idx, data, cls, uses) {
 		uses.max = uses.bonus || 0;
-		if (!Obsidian.notDefinedOrEmpty(uses.ability)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(uses.ability)) {
 			if (uses.ability === 'spell') {
 				uses.max += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 			} else {
@@ -110,8 +112,33 @@ Obsidian.Rules.Prepare = {
 			uses.remaining = 0;
 		}
 
-		uses.display =
-			ObsidianActor.usesFormat(id, idx, uses.max, uses.remaining, 6);
+		uses.display = Prepare.usesFormat(id, idx, uses.max, uses.remaining, 6);
+	},
+
+	damageFormat: function (dmg, mod = true) {
+		if (dmg === undefined) {
+			return;
+		}
+
+		let out = '';
+
+		if (dmg.ndice > 0) {
+			out += `${dmg.ndice}d${dmg.die}`;
+		}
+
+		if (dmg.mod !== 0 && mod) {
+			if (dmg.ndice > 0 && dmg.mod > 0) {
+				out += '+';
+			}
+
+			out += dmg.mod;
+		}
+
+		if (out.length < 1) {
+			out = '0';
+		}
+
+		return out;
 	},
 
 	prepareCharges: function (charges) {
@@ -138,14 +165,14 @@ Obsidian.Rules.Prepare = {
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
 			flags.notes = [];
-			flags.baseAC = armour.data.armor.value;
+			flags.baseAC = armour.data.armor;
 
 			if (flags.magic !== undefined && flags.magic !== '') {
 				flags.baseAC += Number(flags.magic);
 			}
 
-			if (armour.data.armorType.value === 'shield') {
-				if (armour.data.equipped.value
+			if (armour.data.armorType === 'shield') {
+				if (armour.data.equipped
 					&& (!bestShield || bestShield.flags.obsidian.baseAC < flags.baseAC))
 				{
 					bestShield = armour;
@@ -155,20 +182,20 @@ Obsidian.Rules.Prepare = {
 					`${flags.baseAC < 0 ? '-' : '+'}${flags.baseAC} `
 					+ game.i18n.localize('OBSIDIAN.ACAbbr'));
 			} else {
-				if (armour.data.equipped.value
+				if (armour.data.equipped
 					&& (!bestArmour || bestArmour.flags.obsidian.baseAC < flags.baseAC))
 				{
 					bestArmour = armour;
 				}
 
 				flags.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${flags.baseAC}`);
-				if (armour.data.strength.value !== undefined && armour.data.strength.value !== '') {
+				if (armour.data.strength !== undefined && armour.data.strength !== '') {
 					flags.notes.push(
 						`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} `
-						+ armour.data.strength.value);
+						+ armour.data.strength);
 				}
 
-				if (armour.data.stealth.value) {
+				if (armour.data.stealth) {
 					flags.notes.push(
 						'<div class="obsidian-table-note-flex">'
 							+ game.i18n.localize('OBSIDIAN.Skill-ste')
@@ -222,8 +249,7 @@ Obsidian.Rules.Prepare = {
 			flags.notes = [];
 
 			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
-				Obsidian.Rules.Prepare.calculateUses(
-					consumable.id, consumable.idx, data, null, flags.uses);
+				Prepare.calculateUses(consumable.id, consumable.idx, data, null, flags.uses);
 				flags.notes.push(
 					'<div class="obsidian-table-note-flex">'
 						+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
@@ -271,22 +297,22 @@ Obsidian.Rules.Prepare = {
 				continue;
 			}
 
-			if (weapon.data.equipped.value || flags.type === 'unarmed') {
+			if (weapon.data.equipped || flags.type === 'unarmed') {
 				actorData.obsidian.weapons.push(weapon);
 			}
 
 			if (flags.hit.enabled) {
-				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);
+				Prepare.calculateHit(flags.hit, data);
 			}
 
 			if (flags.dc.enabled) {
-				Obsidian.Rules.Prepare.calculateSave(flags.dc, data);
+				Prepare.calculateSave(flags.dc, data);
 			}
 
 			if (flags.charges && flags.charges.enabled) {
-				Obsidian.Rules.Prepare.prepareCharges(flags.charges, data);
+				Prepare.prepareCharges(flags.charges, data);
 				flags.charges.display =
-					ObsidianActor.usesFormat(
+					Prepare.usesFormat(
 						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
 			}
 
@@ -303,7 +329,7 @@ Obsidian.Rules.Prepare = {
 				}
 
 				special.display =
-					ObsidianActor.usesFormat(
+					Prepare.usesFormat(
 						weapon.id, i, special.uses.max, special.uses.remaining, 6,
 						`special.${j}.uses`);
 			}
@@ -315,11 +341,11 @@ Obsidian.Rules.Prepare = {
 				}
 			}
 
-			Obsidian.Rules.Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
+			Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
 			flags.dmgPair = flags.damage.map((dmg, i) => {
 				return {
-					fst: ObsidianActor.damageFormat(dmg, false),
-					snd: ObsidianActor.damageFormat(flags.versatile[i], false),
+					fst: Prepare.damageFormat(dmg, false),
+					snd: Prepare.damageFormat(flags.versatile[i], false),
 					type: dmg.type
 				};
 			});
@@ -342,7 +368,7 @@ Obsidian.Rules.Prepare = {
 
 				flags.ammo.display =
 					`<select data-name="items.${i}.flags.obsidian.ammo.id">
-						<option value="" ${Obsidian.notDefinedOrEmpty(flags.ammo.id) ? 'selected' : ''}>
+						<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo.id) ? 'selected' : ''}>
 							${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
 						</option>
 						${actorData.obsidian.ammo.map(ammo =>
@@ -395,7 +421,7 @@ Obsidian.Rules.Prepare = {
 							cls.flags.obsidian.uuid === flags.uses.class);
 
 					if (cls) {
-						flags.uses.max = op(flags.uses.bonus, cls.data.levels.value);
+						flags.uses.max = op(flags.uses.bonus, cls.data.levels);
 					}
 				}
 
@@ -415,19 +441,19 @@ Obsidian.Rules.Prepare = {
 				}
 
 				flags.uses.display =
-					ObsidianActor.usesFormat(feat.id, i, flags.uses.max, flags.uses.remaining);
+					Prepare.usesFormat(feat.id, i, flags.uses.max, flags.uses.remaining);
 			}
 
 			if (flags.dc.enabled) {
-				Obsidian.Rules.Prepare.calculateSave(flags.dc, data);
+				Prepare.calculateSave(flags.dc, data);
 			}
 
 			if (flags.hit.enabled) {
-				Obsidian.Rules.Prepare.calculateHit(flags.hit, data);
+				Prepare.calculateHit(flags.hit, data);
 			}
 
-			Obsidian.Rules.Prepare.calculateDamage(data, null, flags.damage);
-			flags.display = Obsidian.Parse.parse(actorData, feat.data.description.value);
+			Prepare.calculateDamage(data, null, flags.damage);
+			flags.display = Parse.parse(actorData, feat.data.description.value);
 		}
 	},
 
@@ -465,12 +491,12 @@ Obsidian.Rules.Prepare = {
 
 			skill.mod =
 				data.abilities[skill.ability].mod
-				+ Math.floor(skill.value * data.attributes.prof.value)
+				+ Math.floor(skill * data.attributes.prof)
 				+ flags.skills.bonus
 				+ (skill.bonus || 0);
 
-			if (flags.skills.joat && skill.value === 0) {
-				skill.mod += Math.floor(data.attributes.prof.value / 2);
+			if (flags.skills.joat && skill === 0) {
+				skill.mod += Math.floor(data.attributes.prof / 2);
 			}
 
 			if (skill.override !== undefined && skill.override !== '') {
@@ -478,7 +504,7 @@ Obsidian.Rules.Prepare = {
 			}
 
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
-			skill.passive += 5 * Obsidian.Rules.determineAdvantage(skill.roll, flags.skills.roll);
+			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll);
 		}
 	},
 
@@ -493,11 +519,42 @@ Obsidian.Rules.Prepare = {
 				data.abilities[tool.ability].mod
 				+ tool.bonus
 				+ flags.skills.bonus
-				+ Math.floor(tool.value * data.attributes.prof.value);
+				+ Math.floor(tool * data.attributes.prof);
 
-			if (flags.skills.joat && tool.value === 0) {
-				tool.mod += Math.floor(data.attributes.prof.value / 2);
+			if (flags.skills.joat && tool === 0) {
+				tool.mod += Math.floor(data.attributes.prof / 2);
 			}
 		}
+	},
+
+	usesFormat: function (id, idx, max, remaining, threshold = 10, prop = 'uses') {
+		if (max === undefined || max < 0) {
+			return '';
+		}
+
+		let used = max - remaining;
+		if (used < 0) {
+			used = 0;
+		}
+
+		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}" data-prop="${prop}">`;
+		if (max <= threshold) {
+			for (let i = 0; i < max; i++) {
+				out += `
+						<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
+						     data-n="${i + 1}"></div>
+					`;
+			}
+		} else {
+			out += `
+					<input type="number" data-name="items.${idx}.flags.obsidian.${prop}.remaining"
+					       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
+					<span class="obsidian-binary-operator">&sol;</span>
+					<span class="obsidian-feature-max">${max}</span>
+				`;
+		}
+
+		out += '</div>';
+		return out;
 	}
 };

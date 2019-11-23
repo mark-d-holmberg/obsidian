@@ -1,4 +1,4 @@
-Obsidian.Parse = {
+export const Parse = {
 	eval: function (expr, actorData) {
 		const ast = [];
 		let buf = '';
@@ -35,7 +35,7 @@ Obsidian.Parse = {
 
 			if (c === ')' || c === ' ') {
 				if (inVar) {
-					buf = Obsidian.Parse.lookup(buf, actorData);
+					buf = Parse.lookup(buf, actorData);
 					inVar = false;
 				}
 
@@ -72,7 +72,7 @@ Obsidian.Parse = {
 		}
 
 		if (inVar) {
-			buf = Obsidian.Parse.lookup(buf, actorData);
+			buf = Parse.lookup(buf, actorData);
 		}
 
 		push();
@@ -84,7 +84,7 @@ Obsidian.Parse = {
 			}
 
 			if (isNaN(Number(fst)) && !Array.isArray(fst)) {
-				return Obsidian.Parse.fns[fst](...terms.slice(1).map(arg => evaluate(arg)));
+				return Parse.fns[fst](...terms.slice(1).map(arg => evaluate(arg)));
 			}
 
 			let total = 0;
@@ -104,7 +104,7 @@ Obsidian.Parse = {
 				if (op === null) {
 					total = val;
 				} else {
-					total = Obsidian.Parse.ops[op](total, val);
+					total = Parse.ops[op](total, val);
 				}
 			});
 
@@ -159,8 +159,6 @@ Obsidian.Parse = {
 
 	regex: /\[\[([^\]]+)]]/g,
 	parse: function (actorData, text) {
-		return text.replace(
-			Obsidian.Parse.regex,
-			(match, expr) => Obsidian.Parse.eval(expr, actorData));
+		return text.replace(Parse.regex, (match, expr) => Parse.eval(expr, actorData));
 	}
 };

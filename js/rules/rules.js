@@ -1,32 +1,37 @@
-Obsidian.Rules = {};
-Obsidian.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+import {Schema} from '../module/schema.js';
 
-Obsidian.Rules.WEAPON_TAGS = [
+export const OBSIDIAN = {};
+
+OBSIDIAN.Schema = Schema;
+OBSIDIAN.Rules = {};
+OBSIDIAN.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+OBSIDIAN.Rules.WEAPON_TAGS = [
 	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
 	'lance', 'net', 'offhand', 'thrown', 'twohanded', 'versatile', 'custom'
 ];
 
-Obsidian.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
-Obsidian.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
-Obsidian.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
-Obsidian.Rules.COIN_WEIGHT = 0.02;
-Obsidian.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
-Obsidian.Rules.CLASSES = [
+OBSIDIAN.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
+OBSIDIAN.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
+OBSIDIAN.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
+OBSIDIAN.Rules.COIN_WEIGHT = 0.02;
+OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
+OBSIDIAN.Rules.CLASSES = [
 	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
 ];
 
-Obsidian.Rules.CURRENCY = ['pp', 'gp', 'ep', 'sp', 'cp'];
-Obsidian.Rules.DAMAGE_DICE = [4, 6, 8, 10, 12];
-Obsidian.Rules.DAMAGE_TYPES = [
+OBSIDIAN.Rules.CURRENCY = ['pp', 'gp', 'ep', 'sp', 'cp'];
+OBSIDIAN.Rules.DAMAGE_DICE = [4, 6, 8, 10, 12];
+OBSIDIAN.Rules.DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn'
 ];
 
-Obsidian.Rules.CONDITIONS = [
+OBSIDIAN.Rules.CONDITIONS = [
 	'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible',
 	'paralysed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'
 ];
 
-Obsidian.Rules.CLASS_HIT_DICE = {
+OBSIDIAN.Rules.CLASS_HIT_DICE = {
 	brb: 12,
 	brd: 8,
 	clr: 8,
@@ -41,7 +46,7 @@ Obsidian.Rules.CLASS_HIT_DICE = {
 	wiz: 6
 };
 
-Obsidian.Rules.CLASS_SPELL_MODS = {
+OBSIDIAN.Rules.CLASS_SPELL_MODS = {
 	brd: 'cha',
 	clr: 'wis',
 	drd: 'wis',
@@ -52,7 +57,7 @@ Obsidian.Rules.CLASS_SPELL_MODS = {
 	wiz: 'int'
 };
 
-Obsidian.Rules.CLASS_SPELL_PROGRESSION = {
+OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION = {
 	brd: 'full',
 	clr: 'full',
 	drd: 'full',
@@ -63,7 +68,7 @@ Obsidian.Rules.CLASS_SPELL_PROGRESSION = {
 	wiz: 'full'
 };
 
-Obsidian.Rules.CLASS_SPELL_PREP = {
+OBSIDIAN.Rules.CLASS_SPELL_PREP = {
 	brd: 'known',
 	clr: 'prep',
 	drd: 'prep',
@@ -74,51 +79,51 @@ Obsidian.Rules.CLASS_SPELL_PREP = {
 	wiz: 'book'
 };
 
-Obsidian.Rules.CLASS_RITUALS = {
+OBSIDIAN.Rules.CLASS_RITUALS = {
 	brd: 'prep',
 	clr: 'prep',
 	drd: 'prep',
 	wiz: 'book'
 };
 
-Obsidian.Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
-Obsidian.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
-Obsidian.Rules.FEAT_ACTIVE = ['active', 'passive'];
-Obsidian.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
-Obsidian.Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
-Obsidian.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
-Obsidian.Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
-Obsidian.Rules.ITEM_RECHARGE = ['never', 'dawn', 'dusk'];
-Obsidian.Rules.MAX_LEVEL = 20;
-Obsidian.Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
+OBSIDIAN.Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
+OBSIDIAN.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
+OBSIDIAN.Rules.FEAT_ACTIVE = ['active', 'passive'];
+OBSIDIAN.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
+OBSIDIAN.Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
+OBSIDIAN.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
+OBSIDIAN.Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
+OBSIDIAN.Rules.ITEM_RECHARGE = ['never', 'dawn', 'dusk'];
+OBSIDIAN.Rules.MAX_LEVEL = 20;
+OBSIDIAN.Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
 
-Obsidian.Rules.PLUS_PROF = {
+OBSIDIAN.Rules.PLUS_PROF = {
 	0.5: 'half',
 	1: 'prof',
 	2: 'expert'
 };
 
-Obsidian.Rules.PROFICIENCY_LEVELS = {
+OBSIDIAN.Rules.PROFICIENCY_LEVELS = {
 	0: 'none',
 	0.5: 'half',
 	1: 'prof',
 	2: 'expert'
 };
 
-Obsidian.Rules.ROLL = ['reg', 'adv', 'dis'];
-Obsidian.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
-Obsidian.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];
-Obsidian.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
-Obsidian.Rules.SPELL_COMPONENT_MAP = {v: 'Verbal', s: 'Somatic', m: 'Material', r: 'Royalty'};
-Obsidian.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour', 'special'];
-Obsidian.Rules.SPELL_DURATIONS = ['instant', 'dispel', 'special', 'round', 'min', 'hour', 'day'];
-Obsidian.Rules.SPELL_RANGES = ['self', 'touch', 'short', 'long'];
-Obsidian.Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
-Obsidian.Rules.SPELL_PREP = ['known', 'prep', 'book'];
-Obsidian.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
-Obsidian.Rules.SPELL_RITUALS = ['prep', 'book'];
+OBSIDIAN.Rules.ROLL = ['reg', 'adv', 'dis'];
+OBSIDIAN.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
+OBSIDIAN.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];
+OBSIDIAN.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
+OBSIDIAN.Rules.SPELL_COMPONENT_MAP = {v: 'Verbal', s: 'Somatic', m: 'Material', r: 'Royalty'};
+OBSIDIAN.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour', 'special'];
+OBSIDIAN.Rules.SPELL_DURATIONS = ['instant', 'dispel', 'special', 'round', 'min', 'hour', 'day'];
+OBSIDIAN.Rules.SPELL_RANGES = ['self', 'touch', 'short', 'long'];
+OBSIDIAN.Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
+OBSIDIAN.Rules.SPELL_PREP = ['known', 'prep', 'book'];
+OBSIDIAN.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
+OBSIDIAN.Rules.SPELL_RITUALS = ['prep', 'book'];
 
-Obsidian.Rules.SPELLS_KNOWN_TABLE = {
+OBSIDIAN.Rules.SPELLS_KNOWN_TABLE = {
 	brd: {
 		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
 		known: [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22]
@@ -149,7 +154,7 @@ Obsidian.Rules.SPELLS_KNOWN_TABLE = {
 	}
 };
 
-Obsidian.Rules.SPELL_SLOT_TABLE = [
+OBSIDIAN.Rules.SPELL_SLOT_TABLE = [
 	[2],
 	[3],
 	[4, 2],
@@ -172,4 +177,4 @@ Obsidian.Rules.SPELL_SLOT_TABLE = [
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
 
-Obsidian.Rules.WEAPON_CATEGORIES = ['simple', 'martial'];
+OBSIDIAN.Rules.WEAPON_CATEGORIES = ['simple', 'martial'];

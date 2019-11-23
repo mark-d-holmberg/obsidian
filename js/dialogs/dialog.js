@@ -1,4 +1,4 @@
-class ObsidianDialog extends BaseEntitySheet {
+export class ObsidianDialog extends BaseEntitySheet {
 	constructor (parent, options = {register: false}) {
 		super(parent.object, options);
 		this.parent = parent;

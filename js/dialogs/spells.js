@@ -1,4 +1,7 @@
-class ObsidianSpellsDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianSpellsDialog extends ObsidianDialog {
 	constructor (...args) {
 		super(...args);
 		this._filters = [];
@@ -46,7 +49,7 @@ class ObsidianSpellsDialog extends ObsidianDialog {
 			}));
 
 		data.actor.obsidian.spells = {custom: []};
-		Object.keys(Obsidian.Rules.CLASS_SPELL_MODS)
+		Object.keys(OBSIDIAN.Rules.CLASS_SPELL_MODS)
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
 
 		for (const spell of Object.values(

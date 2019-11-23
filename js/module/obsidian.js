@@ -1,4 +1,36 @@
-class Obsidian extends ActorSheet5eCharacter {
+import {OBSIDIAN} from '../rules/rules.js';
+import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
+import {ObsidianSaveDialog} from '../dialogs/save.js';
+import {ObsidianSkillDialog} from '../dialogs/skill.js';
+import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
+import {ObsidianSpellsDialog} from '../dialogs/spells.js';
+import {ObsidianViewDialog} from '../dialogs/view.js';
+
+// These are all used in eval() for dynamic dialog creation.
+// noinspection ES6UnusedImports
+import {ObsidianArrayDialog} from '../dialogs/array.js';
+// noinspection ES6UnusedImports
+import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
+// noinspection ES6UnusedImports
+import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
+// noinspection ES6UnusedImports
+import {ObsidianDefensesDialog} from '../dialogs/defenses.js';
+// noinspection ES6UnusedImports
+import {ObsidianHDDialog} from '../dialogs/hd.js';
+// noinspection ES6UnusedImports
+import {ObsidianNewClassDialog} from '../dialogs/new-class.js';
+// noinspection ES6UnusedImports
+import {ObsidianProficienciesDialog} from '../dialogs/profs.js';
+// noinspection ES6UnusedImports
+import {ObsidianRollHDDialog} from '../dialogs/roll-hd.js';
+// noinspection ES6UnusedImports
+import {ObsidianSensesDialog} from '../dialogs/senses.js';
+// noinspection ES6UnusedImports
+import {ObsidianSkillsDialog} from '../dialogs/skills.js';
+// noinspection ES6UnusedImports
+import {ObsidianXPDialog} from '../dialogs/xp.js';
+
+export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
 		if (!game.user.isGM && object.limited) {
 			options.width = 880;
@@ -105,12 +137,12 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('summary[draggable]').each((i, el) =>
 			el.addEventListener('dragstart', this._onDragItemStart.bind(this), false));
 		html.find('.obsidian-inspiration')
-			.click(this._toggleControl.bind(this, 'data.attributes.inspiration.value'));
+			.click(this._toggleControl.bind(this, 'data.attributes.inspiration'));
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
 		html.find('.obsidian-conditions .obsidian-radio-label')
 			.click(this._setCondition.bind(this));
 		html.find('.obsidian-exhaustion .obsidian-radio').click(
-			this._setAttributeLevel.bind(this, 'data.attributes.exhaustion.value'));
+			this._setAttributeLevel.bind(this, 'data.attributes.exhaustion'));
 		html.find('.obsidian-death-successes .obsidian-radio').click(
 			this._setAttributeLevel.bind(this, 'data.attributes.death.success'));
 		html.find('.obsidian-death-failures .obsidian-radio').click(
@@ -139,7 +171,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
-		html.find('[data-roll]').click(evt => Obsidian.Rolls.fromClick(this.actor, evt));
+		html.find('[data-roll]').click(evt => OBSIDIAN.Rolls.fromClick(this.actor, evt));
 		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
@@ -169,7 +201,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	getData () {
 		this.actor.data = this.actor.prepareData(this.actor.data);
 		const data = super.getData();
-		data.ObsidianRules = Obsidian.Rules;
+		data.ObsidianRules = OBSIDIAN.Rules;
 		console.debug(data);
 		return data;
 	}
@@ -177,10 +209,6 @@ class Obsidian extends ActorSheet5eCharacter {
 	async maximize () {
 		await super.maximize();
 		Obsidian._resizeMain(this.element);
-	}
-
-	static notDefinedOrEmpty (obj) {
-		return obj === undefined || obj === '';
 	}
 
 	render (force = false, options = {}) {
@@ -518,7 +546,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const hasUses = spell.flags.obsidian.uses && spell.flags.obsidian.uses.enabled;
-		if (spell.data.level.value < 1 || hasUses) {
+		if (spell.data.level < 1 || hasUses) {
 			if (hasUses && spell.flags.obsidian.uses.limit === 'limited') {
 				spell.update({
 					'flags.obsidian.uses.remaining': spell.flags.obsidian.uses.remaining - 1
@@ -526,8 +554,8 @@ class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			evt.currentTarget.dataset.roll = 'spl';
-			evt.currentTarget.dataset.level = spell.data.level.value;
-			Obsidian.Rolls.fromClick(this.actor, evt);
+			evt.currentTarget.dataset.level = spell.data.level;
+			OBSIDIAN.Rolls.fromClick(this.actor, evt);
 		} else {
 			new ObsidianSpellSlotDialog(this, spell).render(true);
 		}
@@ -562,11 +590,11 @@ class Obsidian extends ActorSheet5eCharacter {
 			});
 		}
 
-		return Obsidian.Reorder.dragStart(event);
+		return OBSIDIAN.Reorder.dragStart(event);
 	}
 
-	_onDragOver (event) { return Obsidian.Reorder.dragOver(event); }
-	_onDrop (event) { return Obsidian.Reorder.drop(this.actor, event); }
+	_onDragOver (event) { return OBSIDIAN.Reorder.dragOver(event); }
+	_onDrop (event) { return OBSIDIAN.Reorder.drop(this.actor, event); }
 
 	/**
 	 * @private
@@ -575,7 +603,7 @@ class Obsidian extends ActorSheet5eCharacter {
 	_onEquip (evt) {
 		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
 		const item = this.actor.data.items.find(item => item.id === id);
-		this.actor.updateOwnedItem({id: id, 'data.equipped.value': !item.data.equipped.value});
+		this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
 	}
 
 	/**
@@ -628,7 +656,7 @@ class Obsidian extends ActorSheet5eCharacter {
 				const property = components.slice(2).join('.');
 				const update = {id: item.id};
 				update[property] = event.currentTarget.value;
-				const expanded = obs_updateArrays(item, update);
+				const expanded = OBSIDIAN.updateArrays(item, update);
 				return this.actor.updateOwnedItem(
 					Object.keys(expanded).length > 0 ? expanded : update);
 			}
@@ -663,7 +691,7 @@ class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {id: featID, [`flags.obsidian.${prop}.remaining`]: max - used};
-		const expanded = obs_updateArrays(feat, update);
+		const expanded = OBSIDIAN.updateArrays(feat, update);
 
 		if (Object.keys(expanded).length > 0) {
 			return this.actor.updateOwnedItem(expanded);
@@ -877,19 +905,19 @@ class Obsidian extends ActorSheet5eCharacter {
 				: this.actor.data.data.skills[id];
 
 		let newValue = 0;
-		if (skill.value === 0) {
+		if (skill === 0) {
 			newValue = 1;
-		} else if (skill.value === 1) {
+		} else if (skill === 1) {
 			newValue = 2;
 		}
 
 		const update = {};
 		if (skillKey) {
 			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[skillKey]);
-			newSkills[id].value = newValue;
+			newSkills[id] = newValue;
 			update[`flags.obsidian.skills.${skillKey}`] = newSkills;
 		} else {
-			update[`data.skills.${id}.value`] = newValue;
+			update[`data.skills.${id}`] = newValue;
 		}
 
 		this.actor.update(update);
@@ -936,55 +964,3 @@ class Obsidian extends ActorSheet5eCharacter {
 		new ObsidianViewDialog(id, this).render(true);
 	}
 }
-
-Actors.registerSheet('dnd5e', Obsidian, {
-	types: ['character'],
-	makeDefault: true
-});
-
-Hooks.once('init', () => {
-	loadTemplates([
-		'modules/obsidian/html/obsidian.html',
-		'modules/obsidian/html/tabs/actions.html',
-		'modules/obsidian/html/tabs/attacks.html',
-		'modules/obsidian/html/tabs/sub-actions.html',
-		'modules/obsidian/html/tabs/spells.html',
-		'modules/obsidian/html/tabs/sub-spells.html',
-		'modules/obsidian/html/tabs/equipment.html',
-		'modules/obsidian/html/tabs/features.html',
-		'modules/obsidian/html/tabs/sub-features.html',
-		'modules/obsidian/html/tabs/notes.html',
-		'modules/obsidian/html/components/damage.html',
-		'modules/obsidian/html/components/dc.html',
-		'modules/obsidian/html/components/hit.html',
-		'modules/obsidian/html/components/spell-list.html',
-		'modules/obsidian/html/components/uses.html',
-		'modules/obsidian/html/components/charges.html',
-		'modules/obsidian/html/components/spell-card.html',
-		'modules/obsidian/html/components/inventory.html',
-		'modules/obsidian/html/components/weapon-notes.html'
-	]);
-});
-
-Hooks.once('ready', () => {
-	let fontSheet = 'font';
-	if (game.i18n.lang === 'ja') {
-		fontSheet = 'ja';
-	}
-
-	const link = document.createElement('link');
-	link.type = 'text/css';
-	link.rel = 'stylesheet';
-	link.href = `modules/obsidian/css/${fontSheet}.css`;
-	document.getElementsByTagName('head')[0].appendChild(link);
-});
-
-// Click anywhere to clear the 'delete prompt' on delete icons.
-document.addEventListener('click', evt => {
-	if (!evt.target.parentNode || evt.target.parentNode.nodeType !== Node.ELEMENT_NODE
-		|| (!evt.target.className.startsWith('obsidian-delete')
-			&& !evt.target.parentNode.className.startsWith('obsidian-delete')))
-	{
-		$('.obsidian-delete.obsidian-alert').removeClass('obsidian-alert');
-	}
-});

@@ -4,26 +4,26 @@
 		     alt="{{actor.name}}" data-edit="img">
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
 			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.PersonalityTraits'}}</div>
-			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.trait.value">
-				{{{data.details.trait.value}}}
+			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.trait">
+				{{{data.details.trait}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
 			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Ideals'}}</div>
-			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.ideal.value">
-				{{{data.details.ideal.value}}}
+			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.ideal">
+				{{{data.details.ideal}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
 			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Bonds'}}</div>
-			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.bond.value">
-				{{{data.details.bond.value}}}
+			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.bond">
+				{{{data.details.bond}}}
 			</div>
 		</div>
 		<div class="obsidian-char-box-container obsidian-char-box-stacked">
 			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Flaws'}}</div>
-			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.flaw.value">
-				{{{data.details.flaw.value}}}
+			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.flaw">
+				{{{data.details.flaw}}}
 			</div>
 		</div>
 		<div class="obsidian-collapser-container obsidian-ptr">
@@ -44,8 +44,8 @@
 						<span class="obsidian-joined">{{entity.flags.obsidian.details.subrace}}</span>
 					{{/if}}
 					<span>
-						{{#if data.details.race.value}}
-							{{data.details.race.value}}
+						{{#if data.details.race}}
+							{{data.details.race}}
 						{{else}}
 							{{localize 'OBSIDIAN.Race'}}
 						{{/if}}
@@ -59,7 +59,7 @@
 				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level.value}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -70,7 +70,7 @@
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{#if (geq data.details.level.value ObsidianRules.MAX_LEVEL)}}
+							{{#if (geq data.details.level ObsidianRules.MAX_LEVEL)}}
 								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
 							{{else}}
 								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add data.details.level.value 1}}
@@ -91,7 +91,7 @@
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Proficiency'}}</div>
 						<div class="obsidian-char-box">
-							{{numberFormat data.attributes.prof.value decimals=0 sign=true}}
+							{{numberFormat data.attributes.prof decimals=0 sign=true}}
 						</div>
 					</div>
 					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet
@@ -104,7 +104,7 @@
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Inspiration'}}</div>
 						<div class="obsidian-char-box obsidian-inspiration obsidian-ptr">
-							<i class="fas fa-sun {{#if (not data.attributes.inspiration.value)~}}
+							<i class="fas fa-sun {{#if (not data.attributes.inspiration)~}}
 								obsidian-hidden
 							{{~/if}}"></i>
 						</div>
@@ -132,7 +132,7 @@
 										{{#if spd.override}}
 											{{spd.override}}
 										{{else}}
-											{{spd.value}}
+											{{spd}}
 										{{/if}}
 									{{/with}}
 								{{/if}}
@@ -186,7 +186,7 @@
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
-					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
+					<input name="data.abilities.{{id}}" type="text" value="{{ability}}"
 					       placeholder="10" class="obsidian-char-ability-score" data-dtype="Number">
 				</div>
 				{{/each}}
@@ -197,7 +197,7 @@
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.HP'}}</div>
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
-								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
+								<input type="text" name="data.attributes.hp" class="obsidian-input-num"
 								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
 								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max

@@ -1,4 +1,7 @@
-class ObsidianItemSheet extends ItemSheet {
+import {OBSIDIAN} from '../rules/rules.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
+
+export class ObsidianItemSheet extends ItemSheet {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 520;
@@ -27,7 +30,7 @@ class ObsidianItemSheet extends ItemSheet {
 	getData () {
 		const data = super.getData();
 		data.actor = this.actor;
-		data.ObsidianRules = Obsidian.Rules;
+		data.ObsidianRules = OBSIDIAN.Rules;
 
 		if (data.actor) {
 			data.actor.data.feats = data.actor.data.items.filter(item => item.type === 'feat');

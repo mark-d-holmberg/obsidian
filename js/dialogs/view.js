@@ -1,4 +1,7 @@
-class ObsidianViewDialog extends ObsidianDialog {
+import {ObsidianDialog} from './dialog.js';
+import {OBSIDIAN} from '../rules/rules.js';
+
+export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
 		const item = parent.actor.data.items.find(item => item.id === itemID);
 		if (item.type === 'backpack') {
@@ -66,11 +69,11 @@ class ObsidianViewDialog extends ObsidianDialog {
 
 		html.find('.obsidian-tr').each((i, row) => {
 			row.setAttribute('draggable', 'true');
-			row.addEventListener('dragstart', Obsidian.Reorder.dragStart, false);
+			row.addEventListener('dragstart', OBSIDIAN.Reorder.dragStart, false);
 		});
 
-		this.form.ondragover = Obsidian.Reorder.dragOver;
-		this.form.ondrop = () => Obsidian.Reorder.drop(this.parent.actor, event);
+		this.form.ondragover = OBSIDIAN.Reorder.dragOver;
+		this.form.ondrop = () => OBSIDIAN.Reorder.drop(this.parent.actor, event);
 
 		html.find('.obsidian-feature-use').click(async evt => {
 			await this.parent._onUseClicked.bind(this.parent)(evt);
@@ -158,9 +161,9 @@ class ObsidianViewDialog extends ObsidianDialog {
 					.insertBefore(pin);
 
 			if (this.item.type === 'spell') {
-				roll.click(this.parent.actor.sheet._onCastSpell.bind(this.parent.actor.sheet));
+				roll.click(this.parent._onCastSpell.bind(this.parent));
 			} else {
-				roll.click(evt => Obsidian.Rolls.fromClick(this.parent.actor, evt));
+				roll.click(evt => OBSIDIAN.Rolls.fromClick(this.parent.actor, evt));
 			}
 
 			roll[0].dataset.roll = rollType;
@@ -207,7 +210,7 @@ class ObsidianViewDialog extends ObsidianDialog {
 	}
 }
 
-Hooks.on('ready', () => {
+export function restoreViewPins () {
 	game.settings.register('obsidian', 'pins', {
 		name: 'pins',
 		default: {},
@@ -236,27 +239,29 @@ Hooks.on('ready', () => {
 			dialog.minimize();
 			dialog.setPosition({top: state.y, left: state.x});
 		});
-	})
-});
+	});
+}
 
-Draggable.prototype._onDragMouseUp = (function () {
-	const cached = Draggable.prototype._onDragMouseUp;
-	return function () {
-		cached.apply(this, arguments);
-		if (!this.app || this.app.constructor.name !== 'ObsidianViewDialog') {
-			return;
-		}
-
-		const pins = game.settings.get('obsidian', 'pins');
-		const pinned = pins[this.app.parent.actor.id];
-
-		if (pinned) {
-			const state = pinned.find(state => state.itemID === this.app.item.id);
-			if (state) {
-				state.x = this.app.position.left;
-				state.y = this.app.position.top;
-				game.settings.set('obsidian', 'pins', pins);
+export function patchDraggable_onDragMouseUp () {
+	Draggable.prototype._onDragMouseUp = (function () {
+		const cached = Draggable.prototype._onDragMouseUp;
+		return function () {
+			cached.apply(this, arguments);
+			if (!this.app || this.app.constructor.name !== 'ObsidianViewDialog') {
+				return;
 			}
-		}
-	};
-})();
+
+			const pins = game.settings.get('obsidian', 'pins');
+			const pinned = pins[this.app.parent.actor.id];
+
+			if (pinned) {
+				const state = pinned.find(state => state.itemID === this.app.item.id);
+				if (state) {
+					state.x = this.app.position.left;
+					state.y = this.app.position.top;
+					game.settings.set('obsidian', 'pins', pins);
+				}
+			}
+		};
+	})();
+}

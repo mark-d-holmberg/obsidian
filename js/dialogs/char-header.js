@@ -1,4 +1,7 @@
-class ObsidianHeaderDetailsDialog extends ObsidianDialog {
+import {OBSIDIAN} from '../rules/rules.js';
+import {ObsidianDialog} from './dialog.js';
+
+export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	constructor (...args) {
 		super(...args);
 		this._hookID = Hooks.on('obsidian-classSheetClosed', () => this.render(false));
@@ -37,7 +40,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			return 6;
 		}
 
-		return Obsidian.Rules.CLASS_HIT_DICE[cls];
+		return OBSIDIAN.Rules.CLASS_HIT_DICE[cls];
 	}
 
 	static determineSpellcasting (cls) {
@@ -45,16 +48,16 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			return {};
 		}
 
-		if (Obsidian.Rules.NON_CASTERS.includes(cls)) {
+		if (OBSIDIAN.Rules.NON_CASTERS.includes(cls)) {
 			return {enabled: false};
 		}
 
 		return {
 			enabled: true,
-			spell: Obsidian.Rules.CLASS_SPELL_MODS[cls],
-			progression: Obsidian.Rules.CLASS_SPELL_PROGRESSION[cls],
-			preparation: Obsidian.Rules.CLASS_SPELL_PREP[cls],
-			rituals: Obsidian.Rules.CLASS_RITUALS[cls]
+			spell: OBSIDIAN.Rules.CLASS_SPELL_MODS[cls],
+			progression: OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[cls],
+			preparation: OBSIDIAN.Rules.CLASS_SPELL_PREP[cls],
+			rituals: OBSIDIAN.Rules.CLASS_RITUALS[cls]
 		};
 	}
 
@@ -131,7 +134,7 @@ class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		await this.parent.actor.updateManyOwnedItem(data);
 		return this.parent.actor.update({
 			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
-			'data.details.race.value': formData['data.details.race.value'],
+			'data.details.race': formData['data.details.race'],
 			'flags.obsidian.details.subrace': formData['flags.obsidian.details.subrace'],
 			'flags.obsidian.attributes.hd':
 				this.parent.actor.updateHD(this.parent.actor.data.obsidian.classes)
