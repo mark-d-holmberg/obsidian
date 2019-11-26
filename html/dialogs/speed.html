@@ -2,7 +2,7 @@
 	<div class="obsidian-form-row">
 		<label class="obsidian-inline">
 			<select name="flags.obsidian.attributes.speedDisplay">
-				{{#select entity.flags.obsidian.attributes.speedDisplay}}
+				{{#select actor.flags.obsidian.attributes.speedDisplay}}
 					{{#each ObsidianRules.SPEEDS as |id|}}
 						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
 					{{/each}}
@@ -18,14 +18,14 @@
 					<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md" type="text"
 					       name="flags.obsidian.attributes.speed.{{id}}.override" data-dtype="Number"
 					       value="
-					       {{~#with (lookup ../entity.flags.obsidian.attributes.speed id) as |spd|~}}
+					       {{~#with (lookup ../actor.flags.obsidian.attributes.speed id) as |spd|~}}
 					        {{~spd.override~}}
 					       {{~/with~}}">
 					<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
 				</label>
 				{{#if (eq id 'fly')}}
 					{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
-					                 checked=../entity.flags.obsidian.attributes.speed.fly.hover}}
+					                 checked=../actor.flags.obsidian.attributes.speed.fly.hover}}
 				{{/if}}
 			</div>
 		</div>

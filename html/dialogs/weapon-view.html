@@ -7,13 +7,13 @@
 					{{~i18n-join 'OBSIDIAN.WeaponCat-' item.flags.obsidian.category~}}
 				</div>
 				{{#each item.flags.obsidian.tags}}
-					<div class="obsidian-table-note-text">
-						{{~#if custom~}}
-							{{~label~}}
-						{{~else~}}
-							{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}
-						{{~/if~}}
-					</div>
+					{{~#if (eq @key 'custom')~}}
+						{{#each this}}
+							<div class="obsidian-table-note-text">{{this}}</div>
+						{{/each}}
+					{{~else if this~}}
+						<div class="obsidian-table-note-text">{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}</div>
+					{{~/if~}}
 				{{/each}}
 			</div>
 			{{#if item.flags.obsidian.charges.enabled}}

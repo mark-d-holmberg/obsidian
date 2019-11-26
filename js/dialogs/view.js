@@ -1,17 +1,28 @@
 import {ObsidianDialog} from './dialog.js';
 import {OBSIDIAN} from '../rules/rules.js';
+import {Reorder} from '../module/reorder.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
 		const item = parent.actor.data.items.find(item => item.id === itemID);
 		if (item.type === 'backpack') {
 			options.width = 578;
-			options.register = true;
 		}
 
 		super(parent, options);
 		this.item = item;
-		this._hook = Hooks.on('updateOwnedItem', (item, actorID, data) => {
+
+		this._actorHook = Hooks.on('updateActor', actor => {
+			if (this.parent.actor.id === actor.id) {
+				const updatedItem = actor.data.items.find(item => item.id === this.item.id);
+				if (updatedItem) {
+					this.item = updatedItem;
+					this.render(false);
+				}
+			}
+		});
+
+		this._itemHook = Hooks.on('updateOwnedItem', (item, actorID, data) => {
 			if (actorID === this.parent.actor.id && data.id === this.item.id) {
 				const remaining = this.element.find('.obsidian-titlebar-uses input');
 				if (remaining.length > 0) {
@@ -67,13 +78,11 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			}
 		});
 
-		html.find('.obsidian-tr').each((i, row) => {
-			row.setAttribute('draggable', 'true');
-			row.addEventListener('dragstart', OBSIDIAN.Reorder.dragStart, false);
-		});
+		html.find('[draggable]').each((i, row) =>
+			row.addEventListener('dragstart', Reorder.dragStart, false));
 
-		this.form.ondragover = OBSIDIAN.Reorder.dragOver;
-		this.form.ondrop = () => OBSIDIAN.Reorder.drop(this.parent.actor, event);
+		this.form.ondragover = Reorder.dragOver;
+		this.form.ondrop = () => Reorder.drop(this.parent.actor, event);
 
 		html.find('.obsidian-feature-use').click(async evt => {
 			await this.parent._onUseClicked.bind(this.parent)(evt);
@@ -92,8 +101,12 @@ export class ObsidianViewDialog extends ObsidianDialog {
 	}
 
 	async close () {
-		if (this._hook != null) {
-			Hooks.off('updateOwnedItem', this._hook);
+		if (this._actorHook != null) {
+			Hooks.off('updateActor', this._actorHook);
+		}
+
+		if (this._itemHook != null) {
+			Hooks.off('updateOwnedItem', this._itemHook);
 		}
 
 		return super.close();

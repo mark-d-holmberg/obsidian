@@ -37,11 +37,11 @@
 				       placeholder="{{localize OBSIDIAN.CharacterName}}"
 				       class="obsidian-char-charname obsidian-condensed">
 				<div class="obsidian-char-header-minor obsidian-condensed">
-					{{#if entity.flags.obsidian.details.gender}}
-						<span>{{entity.flags.obsidian.details.gender}}</span>
+					{{#if actor.flags.obsidian.details.gender}}
+						<span>{{actor.flags.obsidian.details.gender}}</span>
 					{{/if}}
-					{{#if entity.flags.obsidian.details.subrace}}
-						<span class="obsidian-joined">{{entity.flags.obsidian.details.subrace}}</span>
+					{{#if actor.flags.obsidian.details.subrace}}
+						<span class="obsidian-joined">{{actor.flags.obsidian.details.subrace}}</span>
 					{{/if}}
 					<span>
 						{{#if data.details.race}}
@@ -50,7 +50,7 @@
 							{{localize 'OBSIDIAN.Race'}}
 						{{/if}}
 					</span>
-					<span>{{entity.obsidian.classFormat}}</span>
+					<span>{{actor.obsidian.classFormat}}</span>
 					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
 					   data-dialog="HeaderDetails">
 						<i class="fas fa-edit"></i>
@@ -59,7 +59,7 @@
 				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level.value}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -78,7 +78,7 @@
 						</span>
 					</div>
 					<div class="obsidian-char-xp-data">
-						{{#if entity.flags.obsidian.details.milestone}}
+						{{#if actor.flags.obsidian.details.milestone}}
 							{{localize 'OBSIDIAN.Milestone'}}
 						{{else}}
 							{{data.details.xp.value}} / {{data.details.xp.max}} {{localize 'OBSIDIAN.XP'}}
@@ -118,15 +118,15 @@
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Speed'}}</div>
-						{{#if entity.flags.obsidian.attributes.speedDisplay}}
+						{{#if actor.flags.obsidian.attributes.speedDisplay}}
 							<div class="obsidian-char-box-text" style="color: var(--text-subtle);">
-								{{i18n-join 'OBSIDIAN.Speed-' entity.flags.obsidian.attributes.speedDisplay}}
+								{{i18n-join 'OBSIDIAN.Speed-' actor.flags.obsidian.attributes.speedDisplay}}
 							</div>
 						{{/if}}
 						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250"
 						     data-template="speed.html">
-							{{#with entity.flags.obsidian.attributes as |attr|}}
+							{{#with actor.flags.obsidian.attributes as |attr|}}
 								{{#if attr.speedDisplay}}
 									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
 										{{#if spd.override}}
@@ -152,7 +152,7 @@
 						</div>
 					</div>
 					<button type="button" class="
-					        {{#if (eq entity.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
 					        obsidian-global-advantage">
 						{{localize 'OBSIDIAN.Roll-adv'}}
@@ -167,7 +167,7 @@
 						</div>
 					</div>
 					<button type="button" class="
-					        {{#if (eq entity.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
 					        obsidian-global-disadvantage">
 						{{localize 'OBSIDIAN.Roll-dis'}}
@@ -186,7 +186,7 @@
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
-					<input name="data.abilities.{{id}}" type="text" value="{{ability}}"
+					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
 					       placeholder="10" class="obsidian-char-ability-score" data-dtype="Number">
 				</div>
 				{{/each}}
@@ -197,7 +197,7 @@
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.HP'}}</div>
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
-								<input type="text" name="data.attributes.hp" class="obsidian-input-num"
+								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
 								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
 								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
@@ -216,7 +216,7 @@
 						</div>
 					</div>
 				</div>
-				{{#if (not-empty entity.flags.obsidian.attributes.hd)}}
+				{{#if (not-empty actor.flags.obsidian.attributes.hd)}}
 					<div class="obsidian-char-column">
 						<div class="obsidian-char-box-container">
 							<div class="obsidian-char-box-text rollable" data-dialog="RollHD">
@@ -224,7 +224,7 @@
 							</div>
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
-									{{#each entity.flags.obsidian.attributes.hd as |hd id|}}
+									{{#each actor.flags.obsidian.attributes.hd as |hd id|}}
 										{{#if (or (gt hd.max 0) (defined-and-not-empty hd.override))}}
 										<div class="obsidian-bisect">
 											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
@@ -257,7 +257,7 @@
 					<div class="obsidian-char-box-container" data-dialog="Defenses">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses">
-						  {{#if (not-empty entity.flags.obsidian.defenses.vuln)}}
+						  {{#if (not-empty actor.flags.obsidian.defenses.vuln)}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-negative obsidian-css-icon-diamond">
@@ -267,12 +267,12 @@
 								    </div>
 								  </div>
 
-								  {{#each entity.flags.obsidian.defenses.vuln}}
+								  {{#each actor.flags.obsidian.defenses.vuln}}
 									  <span>{{this}}</span>
 								  {{/each}}
 							  </div>
 						  {{/if}}
-						  {{#if (not-empty entity.flags.obsidian.defenses.res)}}
+						  {{#if (not-empty actor.flags.obsidian.defenses.res)}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond">
@@ -281,12 +281,12 @@
 								      {{localize 'OBSIDIAN.ResistanceAbbr'}}
 								    </div>
 								  </div>
-								  {{#each entity.flags.obsidian.defenses.res}}
+								  {{#each actor.flags.obsidian.defenses.res}}
 									  <span>{{this}}</span>
 								  {{/each}}
 							  </div>
 						  {{/if}}
-						  {{#if (not-empty entity.flags.obsidian.defenses.imm)}}
+						  {{#if (not-empty actor.flags.obsidian.defenses.imm)}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond">
@@ -295,7 +295,7 @@
 								      {{localize 'OBSIDIAN.ImmunityAbbr'}}
 								    </div>
 								  </div>
-								  {{#each entity.flags.obsidian.defenses.imm}}
+								  {{#each actor.flags.obsidian.defenses.imm}}
 									  <span>{{this}}</span>
 								  {{/each}}
 							  </div>
@@ -317,7 +317,7 @@
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each entity.obsidian.skills as |skill id|}}
+						{{#each actor.obsidian.skills as |skill id|}}
 							<div class="obsidian-skill-item" data-skill-id="{{id}}">
 								<div class="obsidian-prof obsidian-ptr {{#if (eq 0.5 skill.value)~}}
 									obsidian-half-proficient
@@ -325,7 +325,7 @@
 									obsidian-proficient
 								{{~else if (eq 2 skill.value)~}}
 									obsidian-expertise
-								{{~else if (and ../entity.flags.obsidian.skills.joat (eq 0 skill.value))~}}
+								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 skill.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -366,7 +366,7 @@
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each entity.flags.obsidian.skills.tools as |tool id|}}
+						{{#each actor.flags.obsidian.skills.tools as |tool id|}}
 							<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
 								<div class="
 								{{~#if (eq 0.5 tool.value)~}}
@@ -375,7 +375,7 @@
 									obsidian-proficient
 								{{~else if (eq 2 tool.value)~}}
 									obsidian-expertise
-								{{~else if (and ../entity.flags.obsidian.skills.joat (eq 0 tool.value))~}}
+								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 tool.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -410,17 +410,17 @@
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each entity.flags.obsidian.skills.passives}}
-						{{#with (get-property ../entity.flags.obsidian.skills this)}}
+						{{#each actor.flags.obsidian.skills.passives}}
+						{{#with (get-property ../actor.flags.obsidian.skills this)}}
 							<div class="obsidian-passive-item">
 								<div class="obsidian-skill-name">{{localize 'OBSIDIAN.Passive'}} {{label}}</div>
 								<div class="obsidian-skill-passive">{{passive}}</div>
 							</div>
 						{{/with}}
 						{{/each}}
-						{{#if (non-zero entity.flags.obsidian.attributes.senses 'radius')}}
+						{{#if (non-zero actor.flags.obsidian.attributes.senses 'radius')}}
 						<div class="obsidian-horizontal-list">
-							{{#each entity.flags.obsidian.attributes.senses as |sense id|}}
+							{{#each actor.flags.obsidian.attributes.senses as |sense id|}}
 								{{#if (gt sense.radius 0)}}
 									<span>
 										{{i18n-join 'OBSIDIAN.Sense-' id}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
@@ -445,7 +445,7 @@
 								{{localize 'OBSIDIAN.Armour'}}
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each entity.obsidian.profs.armour}}
+								{{#each actor.obsidian.profs.armour}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -455,7 +455,7 @@
 								{{localize 'OBSIDIAN.Weapons'}}
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each entity.obsidian.profs.weapons}}
+								{{#each actor.obsidian.profs.weapons}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -468,7 +468,7 @@
 								{{#each data.traits.languages.value}}
 									<span>{{this}}</span>
 								{{/each}}
-								{{#each entity.obsidian.profs.langs}}
+								{{#each actor.obsidian.profs.langs}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -486,7 +486,7 @@
 						     style="min-height: 128px; margin-bottom: 12px;">
 						{{#each ObsidianRules.CONDITIONS}}
 							<div class="
-							{{~#if (lookup ../entity.flags.obsidian.attributes.conditions this)~}}
+							{{~#if (lookup ../actor.flags.obsidian.attributes.conditions this)~}}
 								obsidian-radio-selected
 							{{~/if}} obsidian-radio-label" data-value="{{this}}">
 								<div class="

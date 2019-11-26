@@ -2,9 +2,9 @@
   <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
     <div class="obsidian-checkbox-row">
       {{fancy-checkbox 'flags.obsidian.defenses.disease' content='OBSIDIAN.ImmuneDisease'
-                       checked=entity.flags.obsidian.defenses.disease}}
+                       checked=actor.flags.obsidian.defenses.disease}}
       {{fancy-checkbox 'flags.obsidian.defenses.sleep' content='OBSIDIAN.ImmuneSleep'
-                       checked=entity.flags.obsidian.defenses.sleep}}
+                       checked=actor.flags.obsidian.defenses.sleep}}
     </div>
   </div>
   <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
@@ -13,7 +13,7 @@
       {{localize 'OBSIDIAN.Add'}}
     </button>
   </label>
-  {{#each entity.flags.obsidian.defenses.damage as |def id|}}
+  {{#each actor.flags.obsidian.defenses.damage as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>
 	      <select name="flags.obsidian.defenses.damage.{{id}}.level">
@@ -43,7 +43,7 @@
       {{localize 'OBSIDIAN.Add'}}
     </button>
   </label>
-  {{#each entity.flags.obsidian.defenses.conditions as |def id|}}
+  {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>
 	      <select name="flags.obsidian.defenses.conditions.{{id}}">

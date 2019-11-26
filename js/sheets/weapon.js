@@ -71,16 +71,16 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	_collectTags () {
-		const tags = {};
+		const tags = duplicate(this.item.data.flags.obsidian.tags);
+		Object.keys(tags).forEach(tag => tags[tag] = false);
+		tags.custom = [];
+
 		this.element.find('.obsidian-attack-tag').each((i, el) => {
 			const jqel = $(el);
 			const tag = jqel.val();
 
 			if (tag === 'custom') {
-				tags[`custom-${Object.keys(tags).length}`] = {
-					label: jqel.next().val(),
-					custom: true
-				};
+				tags.custom.push(jqel.next().val());
 			} else {
 				tags[tag] = true;
 			}
@@ -96,17 +96,15 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	_onAddSpecial (evt) {
 		evt.preventDefault();
 		const formData = this._formData;
-		const newSpecial = {name: '', uses: {max: 0}};
 		let special = this.item.data.flags.obsidian.special;
 
 		if (special === undefined) {
-			formData['flags.obsidian.special'] = [newSpecial];
-		} else {
-			special = duplicate(special);
-			formData[`flags.obsidian.special.${special.length}`] = newSpecial;
+			special = [];
 		}
 
-		this.item.update(formData);
+		special.push({name: '', uses: {max: 0}});
+		formData['flags.obsidian.special'] = special;
+		this._updateObject(evt, formData);
 	}
 
 	/**
@@ -119,7 +117,7 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 
 		let available = null;
 		for (const tag of OBSIDIAN.Rules.WEAPON_TAGS) {
-			if (tags[tag] === undefined) {
+			if (!tags[tag]) {
 				available = tag;
 				break;
 			}
@@ -127,13 +125,13 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 
 		const formData = this._formData;
 		if (available === null || available === 'custom') {
-			const tagID = `custom-${Object.keys(tags).length}`;
-			formData[`flags.obsidian.tags.${tagID}`] = {label: '', custom: true};
+			formData[`flags.obsidian.tags.custom.${tags.custom.length}`] = '';
 		} else {
 			formData[`flags.obsidian.tags.${available}`] = true;
 		}
 
-		this.item.update(formData);
+		const expanded = OBSIDIAN.updateArrays(this.item.data, formData);
+		this.item.update(expanded);
 	}
 
 	/**
@@ -159,7 +157,7 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	 */
 	async _onRemoveSpecial (evt) {
 		evt.preventDefault();
-		await this.item.update(this._formData);
+		await this._updateObject(evt, this._formData);
 		this.item.update({
 			'flags.obsidian.special':
 				ObsidianDialog.removeRow(this.item.data.flags.obsidian.special, evt)
@@ -173,11 +171,19 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	async _onRemoveTag (evt) {
 		evt.preventDefault();
 		const formData = this._formData;
-		const tag = $(evt.currentTarget).data('key');
+		const tag = evt.currentTarget.dataset.key;
 		const tags = duplicate(this.item.data.flags.obsidian.tags);
-		delete tags[tag];
+
+		if (tag === 'custom') {
+			const idx = Number(evt.currentTarget.dataset.idx);
+			tags.custom.splice(idx, 1);
+		} else {
+			tags[tag] = false;
+		}
+
 		formData['flags.obsidian.tags'] = tags;
-		this.item.update(formData);
+		const expanded = OBSIDIAN.updateArrays(this.item.data, formData);
+		this.item.update(expanded);
 	}
 
 	/**
@@ -211,6 +217,6 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 		const tags = this._collectTags();
 		formData['flags.obsidian.tags'] = tags;
 		formData['flags.obsidian.mode'] = this._adjustMode(formData, tags);
-		this.item.update(formData);
+		super._updateObject(event, formData);
 	}
 }

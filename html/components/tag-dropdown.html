@@ -1,0 +1,18 @@
+<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+	<div style="width: 300px;">
+		<select class="obsidian-attack-tag">
+			{{#select tag}}
+				{{#each ObsidianRules.WEAPON_TAGS}}
+					<option value="{{this}}">{{{i18n-join 'OBSIDIAN.AtkTag-' this}}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
+		<input type="text" placeholder="{{localize 'OBSIDIAN.Tag'}}"
+		       class="{{#unless (eq tag 'custom')}}obsidian-hidden{{/unless}} obsidian-input-compact
+					       obsidian-input-lg" value="{{custom}}">
+	</div>
+	<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tag"
+	        data-key="{{tag}}" data-idx="{{@index}}">
+		{{localize 'OBSIDIAN.Remove'}}
+	</button>
+</div>

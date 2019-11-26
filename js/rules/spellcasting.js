@@ -18,7 +18,7 @@ export function prepareSpellcasting (actorData, flags) {
 		}
 
 		const spellcasting = cls.flags.obsidian.spellcasting;
-		const levels = cls.data.levels.value;
+		const levels = cls.data.levels;
 
 		if (spellcasting.spell === undefined) {
 			spellcasting.spell = OBSIDIAN.Rules.CLASS_SPELL_MODS[cls.name];

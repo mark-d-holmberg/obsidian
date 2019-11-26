@@ -5,8 +5,8 @@
 			<div class="obsidian-checkbox-row obsidian-fullwidth">
 				<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
 				       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
-				<select name="data.school.value">
-					{{#select data.school.value}}
+				<select name="data.school">
+					{{#select data.school}}
 						{{#each ObsidianRules.SPELL_SCHOOLS}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellSchool-' this}}</option>
 						{{/each}}
@@ -15,9 +15,10 @@
 				<label class="obsidian-inline">
 					{{localize 'OBSIDIAN.Level'}}
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       value="{{data.level.value}}" name="data.level.value" data-dtype="Number">
+					       value="{{data.level}}" name="data.level" data-dtype="Number">
 				</label>
-				{{fancy-checkbox 'data.ritual.value' content='OBSIDIAN.Ritual' checked=data.ritual.value}}
+				{{fancy-checkbox 'data.components.ritual' content='OBSIDIAN.Ritual'
+				                 checked=data.components.ritual}}
 			</div>
 		</div>
 		{{#if actor}}
@@ -118,8 +119,8 @@
 						{{/each}}
 					{{/select}}
 				</select>
-				{{fancy-checkbox 'data.concentration.value' content='OBSIDIAN.Concentration'
-				                 checked=data.concentration.value selectorParent='duration'
+				{{fancy-checkbox 'data.components.concentration' content='OBSIDIAN.Concentration'
+				                 checked=data.components.concentration selectorParent='duration'
 				                 show='round, min, hour, day'}}
 			</div>
 		</div>
@@ -152,9 +153,9 @@
 		{{> modules/obsidian/html/components/damage.html dmgs=item.flags.obsidian.damage
 				prop='damage' spell=true}}
 	</fieldset>
-	<fieldset data-prop="upcast.damage" {{disabled (or (lt item.data.level.value 1) (not item.flags.obsidian.upcast.enabled))}}>
+	<fieldset data-prop="upcast.damage" {{disabled (or (lt item.data.level 1) (not item.flags.obsidian.upcast.enabled))}}>
 		<legend>
-			{{#if (gt item.data.level.value 0)}}
+			{{#if (gt item.data.level 0)}}
 				{{fancy-checkbox 'flags.obsidian.upcast.enabled' content='OBSIDIAN.AtHigherLevels'
 				                 checked=item.flags.obsidian.upcast.enabled}}
 			{{else}}
@@ -169,7 +170,7 @@
 					       value="{{item.flags.obsidian.upcast.natk}}">
 					<span>{{localize 'OBSIDIAN.Attacks'}}</span>
 				</label>
-				{{#if (gt item.data.level.value 0)}}
+				{{#if (gt item.data.level 0)}}
 				<span class="obsidian-binary-operator">&sol;</span>
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"

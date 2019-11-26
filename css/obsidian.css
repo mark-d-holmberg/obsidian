@@ -632,6 +632,10 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-family: var(--font-condensed);
 }
 
+.obsidian .obsidian-resource-box input {
+	margin-bottom: 0;
+}
+
 .obsidian > input:last-child {
 	margin-bottom: 0;
 }
@@ -982,6 +986,7 @@ legend .fancy-checkbox {
 	background: transparent;
 	font-size: 12px;
 	border: none;
+	flex: none;
 }
 
 .obsidian-skill-name,

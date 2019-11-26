@@ -1,6 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
-
-OBSIDIAN.Reorder = {
+export const Reorder = {
 	dragStart: function (event) {
 		const target = event.target;
 		if (target.dataset && target.dataset.reorderable === 'true') {
@@ -22,7 +20,7 @@ OBSIDIAN.Reorder = {
 			src = src.split('/')[1];
 		}
 
-		let [row, container, contents] = OBSIDIAN.Reorder.detectElementBeneath(event);
+		let [row, container, contents] = Reorder.detectElementBeneath(event);
 		if (!contents) {
 			return false;
 		}
@@ -35,7 +33,7 @@ OBSIDIAN.Reorder = {
 			const rect = row ? row.getBoundingClientRect() : container.getBoundingClientRect();
 			let top = rect.y;
 
-			if (OBSIDIAN.Reorder.whichHalf(event, rect) === 'bottom') {
+			if (Reorder.whichHalf(event, rect) === 'bottom') {
 				top += rect.height;
 			}
 
@@ -88,13 +86,13 @@ OBSIDIAN.Reorder = {
 			}
 		}
 
-		const [row, container] = OBSIDIAN.Reorder.detectElementBeneath(event);
+		const [row, container] = Reorder.detectElementBeneath(event);
 		if (!row && !container) {
 			return false;
 		}
 
 		const target = row ? row : container;
-		const half = OBSIDIAN.Reorder.whichHalf(event, target);
+		const half = Reorder.whichHalf(event, target);
 		const where = half === 'bottom' ? 'after' : 'before';
 		const destID = Number(target.dataset.itemId);
 		const dest = items.find(item => item.id === destID);
@@ -115,7 +113,7 @@ OBSIDIAN.Reorder = {
 			}
 		}
 
-		OBSIDIAN.Reorder.insert(actor, src, dest, where, update);
+		Reorder.insert(actor, src, dest, where, update);
 		actor.update(update);
 		return false;
 	},

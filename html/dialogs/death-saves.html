@@ -6,16 +6,16 @@
 			<span class="obsidian-binary-operator">&plus;</span>
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       name="flags.obsidian.attributes.death.bonus" data-dtype="Number" placeholder="0"
-			       value="{{entity.flags.obsidian.attributes.death.bonus}}">
+			       value="{{actor.flags.obsidian.attributes.death.bonus}}">
 			<span class="obsidian-binary-operator">&gt;&equals;</span>
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       name="flags.obsidian.attributes.death.threshold" data-dtype="Number"
-			       value="{{entity.flags.obsidian.attributes.death.threshold}}" placeholder="0">
+			       value="{{actor.flags.obsidian.attributes.death.threshold}}" placeholder="0">
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row">
 		<select name="flags.obsidian.attributes.death.roll">
-			{{#select entity.flags.obsidian.attributes.death.roll}}
+			{{#select actor.flags.obsidian.attributes.death.roll}}
 				{{#each ObsidianRules.ROLL}}
 					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
 				{{/each}}

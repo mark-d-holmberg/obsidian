@@ -42,7 +42,7 @@ export class ObsidianSpellSlotDialog extends ObsidianDialog {
 		if (isPact) {
 			level = this.parent.actor.data.data.spells.pact.level;
 		} else if (isRitual) {
-			level = this.spell.data.level.value;
+			level = this.spell.data.level;
 		}
 
 		if (!isRitual) {

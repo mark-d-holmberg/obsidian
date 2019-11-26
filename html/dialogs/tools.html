@@ -5,7 +5,7 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.skills.tools as |tool id|}}
+	{{#each actor.flags.obsidian.skills.tools as |tool id|}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.skills.tools.{{id}}" data-dtype="Number">

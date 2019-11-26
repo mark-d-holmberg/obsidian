@@ -165,13 +165,13 @@ export const Prepare = {
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
 			flags.notes = [];
-			flags.baseAC = armour.data.armor;
+			flags.baseAC = armour.data.armor.value;
 
 			if (flags.magic !== undefined && flags.magic !== '') {
 				flags.baseAC += Number(flags.magic);
 			}
 
-			if (armour.data.armorType === 'shield') {
+			if (armour.data.armor.type === 'shield') {
 				if (armour.data.equipped
 					&& (!bestShield || bestShield.flags.obsidian.baseAC < flags.baseAC))
 				{
@@ -491,11 +491,11 @@ export const Prepare = {
 
 			skill.mod =
 				data.abilities[skill.ability].mod
-				+ Math.floor(skill * data.attributes.prof)
+				+ Math.floor(skill.value * data.attributes.prof)
 				+ flags.skills.bonus
 				+ (skill.bonus || 0);
 
-			if (flags.skills.joat && skill === 0) {
+			if (flags.skills.joat && skill.value === 0) {
 				skill.mod += Math.floor(data.attributes.prof / 2);
 			}
 
@@ -519,9 +519,9 @@ export const Prepare = {
 				data.abilities[tool.ability].mod
 				+ tool.bonus
 				+ flags.skills.bonus
-				+ Math.floor(tool * data.attributes.prof);
+				+ Math.floor(tool.value * data.attributes.prof);
 
-			if (flags.skills.joat && tool === 0) {
+			if (flags.skills.joat && tool.value === 0) {
 				tool.mod += Math.floor(data.attributes.prof / 2);
 			}
 		}

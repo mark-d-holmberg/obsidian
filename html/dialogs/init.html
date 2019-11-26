@@ -3,7 +3,7 @@
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div>
 			<select name="flags.obsidian.attributes.init.ability">
-				{{#select entity.flags.obsidian.attributes.init.ability}}
+				{{#select actor.flags.obsidian.attributes.init.ability}}
 					{{#each data.abilities as |ability id|}}
 						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
@@ -20,11 +20,11 @@
 			<label class="obsidian-inline">
 				<input type="text" name="flags.obsidian.attributes.init.override"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       value="{{entity.flags.obsidian.attributes.init.override}}">
+				       value="{{actor.flags.obsidian.attributes.init.override}}">
 				<span>{{localize 'OBSIDIAN.Override'}}</span>
 			</label>
 			<select name="flags.obsidian.attributes.init.roll">
-				{{#select entity.flags.obsidian.attributes.init.roll}}
+				{{#select actor.flags.obsidian.attributes.init.roll}}
 					{{#each ObsidianRules.ROLL}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
 					{{/each}}

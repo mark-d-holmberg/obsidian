@@ -1,15 +1,15 @@
 {{#each this}}
 	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true" data-name="{{name}}"
+	     draggable="true"
 	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
 	     {{#if (eq type 'weapon')}}data-filter-weapon="true" {{/if}}
 	     {{#if (eq flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
-	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}
-	>
+	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}>
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
-				<button type="button" class="{{#if data.equipped.value}}obsidian-btn-active{{/if}}
+				<button type="button" class="{{#if data.equipped}}obsidian-btn-active{{/if}}
 				        obsidian-btn-outline obsidian-equip-action">
-					{{#if data.equipped.value}}
+					{{#if data.equipped}}
 						{{localize 'OBSIDIAN.Unequip'}}
 					{{else}}
 						{{localize 'OBSIDIAN.Equip'}}
@@ -34,7 +34,7 @@
 					{{/if}}
 				{{else if (eq type 'equipment')}}
 					{{#if (eq flags.obsidian.subtype 'armour')}}
-						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armorType.value}}
+						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armor.type}}
 					{{/if}}
 				{{else if (eq type 'consumable')}}
 					{{i18n-join 'OBSIDIAN.ConsumableType-' flags.obsidian.subtype}}
@@ -42,9 +42,9 @@
 			</div>
 		</div>
 		<div class="obsidian-col-weight">
-			<div class="obsidian-table-number-{{num-size data.weight.value}}">
-				{{#if data.weight.value}}
-					{{data.weight.value}}
+			<div class="obsidian-table-number-{{num-size data.weight}}">
+				{{#if data.weight}}
+					{{data.weight}}
 					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 				{{else}}
 					&mdash;
@@ -52,13 +52,13 @@
 			</div>
 		</div>
 		<div class="obsidian-col-qty">
-			<input type="text" class="obsidian-table-input" data-name="items.{{idx}}.data.quantity.value"
-			       data-dtype="Number" placeholder="1" value="{{data.quantity.value}}">
+			<input type="text" class="obsidian-table-input" data-name="items.{{idx}}.data.quantity"
+			       data-dtype="Number" placeholder="1" value="{{data.quantity}}">
 		</div>
 		<div class="obsidian-col-cost">
-			<div class="obsidian-table-number-{{num-size data.price.value}}">
-				{{#if data.price.value}}
-					{{number-format data.price.value}}
+			<div class="obsidian-table-number-{{num-size data.price}}">
+				{{#if data.price}}
+					{{number-format data.price}}
 				{{else}}
 					&mdash;
 				{{/if}}

@@ -37,7 +37,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 		const conBonus = this.parent.actor.data.data.abilities.con.mod * totalDice;
 		const results = OBSIDIAN.Rolls.hd(this.parent.actor, rolls, conBonus);
 		const total = results.reduce((acc, die) => acc + die.total, 0);
-		const hp = this.parent.actor.data.data.attributes.hp;
+		const hp = this.parent.actor.data.data.attributes.hp.value;
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 
 		let newHP = hp + total + conBonus;
@@ -55,7 +55,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 		});
 
 		this.parent.actor.update({
-			'data.attributes.hp': newHP,
+			'data.attributes.hp.value': newHP,
 			'flags.obsidian.attributes.hd': hd
 		});
 

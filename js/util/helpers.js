@@ -23,6 +23,8 @@ export function registerHandlebarHelpers () {
 		return ar.length;
 	});
 
+	Handlebars.registerHelper('debug', console.debug);
+
 	Handlebars.registerHelper('defined', function (arg) {
 		return arg !== undefined;
 	});
@@ -199,10 +201,6 @@ export function registerHandlebarHelpers () {
 		const type = attack.flags.obsidian.type;
 		const tags = attack.flags.obsidian.tags;
 		return (type === 'melee' && tags.thrown) || tags.versatile;
-	});
-
-	Handlebars.registerHelper('is-custom-tag', function (key, val) {
-		return val.custom ? 'custom' : key;
 	});
 
 	Handlebars.registerHelper('is-fullwidth-font', function () {

@@ -103,10 +103,10 @@ export class ObsidianItemSheet extends ItemSheet {
 		evt.preventDefault();
 		const prop = $(evt.currentTarget).closest('fieldset').data('prop');
 		const damage = getProperty(this.item.data.flags.obsidian, prop);
-		const newDamage = {ndice: 1, die: 4, stat: 'str', bonus: 0, type: ''};
+		damage.push({ndice: 1, die: 4, stat: 'str', bonus: 0, type: ''});
 		const formData = this._formData;
-		formData[`flags.obsidian.${prop}.${damage.length}`] = newDamage;
-		this.item.update(formData);
+		formData[`flags.obsidian.${prop}`] = damage;
+		this._updateObject(evt, formData);
 	}
 
 	/**
@@ -115,9 +115,21 @@ export class ObsidianItemSheet extends ItemSheet {
 	 */
 	async _onRemoveDamage (evt) {
 		evt.preventDefault();
-		await this.item.update(this._formData);
+		await this._updateObject(evt, this._formData);
 		const prop = $(evt.currentTarget).closest('fieldset').data('prop');
 		const damage = getProperty(this.item.data.flags.obsidian, prop);
 		this.item.update({[`flags.obsidian.${prop}`]: ObsidianDialog.removeRow(damage, evt)});
+	}
+
+	/**
+	 * @private
+	 */
+	_updateObject (event, formData) {
+		const expanded = OBSIDIAN.updateArrays(this.item.data, formData);
+		if (Object.keys(expanded).length > 0) {
+			super._updateObject(event, expanded);
+		} else {
+			super._updateObject(event, formData);
+		}
 	}
 }

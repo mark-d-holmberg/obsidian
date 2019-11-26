@@ -2,7 +2,7 @@
 	<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
 		<div>
 			<select name="flags.obsidian.skills.roll">
-				{{#select entity.flags.obsidian.skills.roll}}
+				{{#select actor.flags.obsidian.skills.roll}}
 					{{#each ObsidianRules.ROLL}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
 					{{/each}}
@@ -10,7 +10,7 @@
 			</select>
 			<label class="obsidian-inline">
 				<input type="text" placeholder="0" name="flags.obsidian.skills.bonus"
-				       value="{{entity.flags.obsidian.skills.bonus}}" data-dtype="Number"
+				       value="{{actor.flags.obsidian.skills.bonus}}" data-dtype="Number"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 				<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 			</label>
@@ -18,7 +18,7 @@
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row" style="margin-left: 2px;">
 		{{fancy-checkbox 'flags.obsidian.skills.joat' content='OBSIDIAN.JackOfAllTrades'
-		                 checked=entity.flags.obsidian.skills.joat}}
+		                 checked=actor.flags.obsidian.skills.joat}}
 	</div>
 	<label class="obsidian-inline obsidian-label-lg">
 		{{localize 'OBSIDIAN.CustomSkills'}}
@@ -26,7 +26,7 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.skills.custom as |skill id|}}
+	{{#each actor.flags.obsidian.skills.custom as |skill id|}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">

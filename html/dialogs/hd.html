@@ -5,7 +5,7 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.flags.obsidian.attributes.hd as |hd die|}}
+	{{#each actor.flags.obsidian.attributes.hd as |hd die|}}
 		{{#if (or (gt hd.max 0) (defined-and-not-empty hd.override))}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div>

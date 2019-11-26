@@ -31,22 +31,23 @@
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 				</div>
 				<div class="obsidian-tbody">
-					{{#with (lookup ../entity.spellbook this)}}
+					{{#with (lookup ../actor.spellbook this)}}
 					{{#each spells}}
 						<div class="obsidian-tr obsidian-spell-tr item" data-item-id="{{id}}"
-						     data-level="{{data.level.value}}" data-concentration="{{data.concentration.value}}"
-						     data-ritual="{{data.ritual.value}}" data-name="{{name}}">
+						     data-level="{{data.level.value}}" data-name="{{name}}"
+						     data-concentration="{{data.components.concentration}}"
+						     data-ritual="{{data.components.ritual}}">
 							<div class="obsidian-col-icon">
-								<i class="obsidian-spell-school obsidian-spell-school-{{data.school.value}}"></i>
+								<i class="obsidian-spell-school obsidian-spell-school-{{data.school}}"></i>
 							</div>
 							<div class="obsidian-col-spell">
 									<div class="obsidian-table-text rollable obsidian-cast-spell" data-spl="{{id}}">
 										{{name}}
-										{{#if data.concentration.value}}
+										{{#if data.components.concentration}}
 											<div class="obsidian-icon-flag obsidian-icon-concentration"
 											     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
 										{{/if}}
-										{{#if data.ritual.value}}
+										{{#if data.components.ritual}}
 											<div class="obsidian-icon-flag obsidian-icon-ritual"
 											     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
 										{{/if}}

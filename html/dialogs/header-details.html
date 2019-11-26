@@ -2,7 +2,7 @@
 	<label>
 		<input name="flags.obsidian.details.gender" type="text"
 		       placeholder="{{localize 'OBSIDIAN.Gender'}}"
-		       value="{{entity.flags.obsidian.details.gender}}">
+		       value="{{actor.flags.obsidian.details.gender}}">
 	</label>
 	<label>
 		<input name="data.details.race" type="text" value="{{data.details.race}}"
@@ -11,7 +11,7 @@
 	<label>
 		<input name="flags.obsidian.details.subrace" type="text"
 		       placeholder="{{localize 'OBSIDIAN.Subrace'}}"
-		       value="{{entity.flags.obsidian.details.subrace}}">
+		       value="{{actor.flags.obsidian.details.subrace}}">
 	</label>
 	<label class="obsidian-inline obsidian-label-lg">
 		{{localize 'OBSIDIAN.Classes'}}
@@ -19,7 +19,7 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each entity.obsidian.classes}}
+	{{#each actor.obsidian.classes}}
 		<div class="obsidian-class-row" data-item-id="{{id}}">
 			<div class="obsidian-class-col-edit">
 				<a class="obsidian-edit" title="{{localize 'OBSIDIAN.EditClass'}}">

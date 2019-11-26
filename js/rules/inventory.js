@@ -67,7 +67,7 @@ export function prepareInventory (actorData) {
 					inventory.weight += totalWeight;
 				}
 
-				if (!container.obsidian.order.has(item.id)) {
+				if (container.obsidian && !container.obsidian.order.has(item.id)) {
 					container.flags.obsidian.order.push(item.id);
 				}
 			}
@@ -76,7 +76,7 @@ export function prepareInventory (actorData) {
 		flags.consumable = item.type === 'consumable';
 		flags.equippable =
 			item.type === 'weapon'
-			|| (item.type === 'equipment' && OBSIDIAN.Schema.Equipment.includes(flags.subtype));
+			|| (item.type === 'equipment' && OBSIDIAN.Schema.EquipTypes.includes(flags.subtype));
 	}
 
 	const link = list => list.map(id => map.get(id)).filter(item => item !== undefined);

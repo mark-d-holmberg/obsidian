@@ -3,7 +3,7 @@
 	     data-title="{{localize 'OBSIDIAN.ManageSpellcasting'}}" data-width="620">
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each entity.flags.obsidian.attributes.spellcasting.mods}}
+				{{#each actor.flags.obsidian.attributes.spellcasting.mods}}
 					<span>{{numberFormat this decimals=0 sign=true}}</span>
 				{{/each}}
 			</div>
@@ -11,7 +11,7 @@
 		</div>
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each entity.flags.obsidian.attributes.spellcasting.attacks}}
+				{{#each actor.flags.obsidian.attributes.spellcasting.attacks}}
 					<span>{{numberFormat this decimals=0 sign=true}}</span>
 				{{/each}}
 			</div>
@@ -19,7 +19,7 @@
 		</div>
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each entity.flags.obsidian.attributes.spellcasting.saves}}
+				{{#each actor.flags.obsidian.attributes.spellcasting.saves}}
 					<span>{{this}}</span>
 				{{/each}}
 			</div>
@@ -47,14 +47,14 @@
 				</li>
 			{{/if}}
 		{{/each}}
-		{{#if (not-empty entity.obsidian.spellbook.concentration)}}
+		{{#if (not-empty actor.obsidian.spellbook.concentration)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-concentration">
 				<div class="obsidian-icon-flag obsidian-icon-concentration"
 				     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
 			</li>
 		{{/if}}
-		{{#if (not-empty entity.obsidian.spellbook.rituals)}}
+		{{#if (not-empty actor.obsidian.spellbook.rituals)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-ritual">
 				<div class="obsidian-icon-flag obsidian-icon-ritual"

@@ -3,11 +3,11 @@
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div>
 			<input type="text" name="flags.obsidian.attributes.ac.base" data-dtype="Number"
-			       value="{{entity.flags.obsidian.attributes.ac.base}}" placeholder="10"
+			       value="{{actor.flags.obsidian.attributes.ac.base}}" placeholder="10"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 			<span class="obsidian-binary-operator">&plus;</span>
 			<select name="flags.obsidian.attributes.ac.ability1">
-				{{#select entity.flags.obsidian.attributes.ac.ability1}}
+				{{#select actor.flags.obsidian.attributes.ac.ability1}}
 					{{#each data.abilities as |ability id|}}
 						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
@@ -16,7 +16,7 @@
 			<span class="obsidian-binary-operator">&plus;</span>
 			<select name="flags.obsidian.attributes.ac.ability2">
 				<option value="">&mdash;</option>
-				{{#select entity.flags.obsidian.attributes.ac.ability2}}
+				{{#select actor.flags.obsidian.attributes.ac.ability2}}
 					{{#each data.abilities as |ability id|}}
 						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
 					{{/each}}
@@ -24,7 +24,7 @@
 			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
 			<input type="text" name="flags.obsidian.attributes.ac.mod" data-dtype="Number"
-			       value="{{entity.flags.obsidian.attributes.ac.mod}}" placeholder="0"
+			       value="{{actor.flags.obsidian.attributes.ac.mod}}" placeholder="0"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 		<label class="obsidian-inline">
 			<input type="text" name="flags.obsidian.attributes.ac.override"
 			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       value="{{entity.flags.obsidian.attributes.ac.override}}">
+			       value="{{actor.flags.obsidian.attributes.ac.override}}">
 			<span>{{localize 'OBSIDIAN.Override'}}</span>
 		</label>
 	</div>

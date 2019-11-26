@@ -1,17 +1,17 @@
 <form class="obsidian" autocomplete="off">
 	<details>
 		<summary>
-			<h3>{{localize 'OBSIDIAN.CustomSpells'}} ({{count entity.obsidian.spells.custom}})</h3>
+			<h3>{{localize 'OBSIDIAN.CustomSpells'}} ({{count actor.obsidian.spells.custom}})</h3>
 			<i class="fas fa-angle-down"></i>
 		</summary>
 		{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Remove'
-				spells=entity.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
+				spells=actor.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
-	{{#each entity.obsidian.classes}}
+	{{#each actor.obsidian.classes}}
 		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
 			<h2>{{label}}</h2>
 			{{#if (eq flags.obsidian.spellcasting.preparation 'prep')}}
-				{{#with (lookup ../entity.obsidian.spells name)}}
+				{{#with (lookup ../actor.obsidian.spells name)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.KnownSpells'}}</h3>
@@ -36,7 +36,7 @@
 					</details>
 				{{/with}}
 			{{else if (eq flags.obsidian.spellcasting.preparation 'known')}}
-				{{#with (lookup ../entity.obsidian.spells name)}}
+				{{#with (lookup ../actor.obsidian.spells name)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>
@@ -60,7 +60,7 @@
 					</details>
 				{{/with}}
 			{{else if (eq flags.obsidian.spellcasting.preparation 'book')}}
-				{{#with (lookup ../entity.obsidian.spells name)}}
+				{{#with (lookup ../actor.obsidian.spells name)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>

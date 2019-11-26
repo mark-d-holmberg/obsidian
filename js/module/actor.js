@@ -36,7 +36,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		actorData.obsidian.classFormat = ObsidianActor._classFormat(actorData.obsidian.classes);
-		data.attributes.prof = Math.floor((data.details.level + 7) / 4);
+		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ data.attributes.init;
@@ -211,7 +211,7 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		const update = {};
 
-		update['data.attributes.hp'] = data.attributes.hp.maxAdjusted;
+		update['data.attributes.hp.value'] = data.attributes.hp.maxAdjusted;
 
 		for (const [die, hd] of Object.entries(flags.attributes.hd)) {
 			if (hd.max > 0) {
@@ -383,7 +383,7 @@ export class ObsidianActor extends Actor5e {
 				totals[cls.flags.obsidian.hd] = 0;
 			}
 
-			totals[cls.flags.obsidian.hd] += cls.data.levels.value;
+			totals[cls.flags.obsidian.hd] += cls.data.levels;
 		}
 
 		for (const [hd, val] of Object.entries(existing)) {

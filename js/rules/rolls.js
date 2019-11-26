@@ -242,7 +242,7 @@ OBSIDIAN.Rolls = {
 		}
 
 		if (result.roll === 20) {
-			let hp = data.attributes.hp;
+			let hp = data.attributes.hp.value;
 			if (hp < 1) {
 				hp = 1;
 			}
@@ -250,7 +250,7 @@ OBSIDIAN.Rolls = {
 			actor.update({
 				'data.attributes.death.success': 0,
 				'data.attributes.death.failure': 0,
-				'data.attributes.hp': hp,
+				'data.attributes.hp.value': hp,
 				'flags.obsidian.attributes.conditions.unconscious': false
 			});
 		} else {

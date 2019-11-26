@@ -1,5 +1,7 @@
 import {OBSIDIAN} from '../rules/rules.js';
+import {Reorder} from './reorder.js';
 import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
+import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
@@ -117,6 +119,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-clear-spell-name')
 			.click(Obsidian._clearSearch.bind(this, this._filterSpells));
 
+		this._filterSpells();
+		this._filterEquipment();
 		this._contextMenu(html);
 		Obsidian._resizeMain(html);
 
@@ -134,7 +138,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		});
 
-		html.find('summary[draggable]').each((i, el) =>
+		html.find('[draggable]').each((i, el) =>
 			el.addEventListener('dragstart', this._onDragItemStart.bind(this), false));
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration'));
@@ -590,11 +594,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 			});
 		}
 
-		return OBSIDIAN.Reorder.dragStart(event);
+		return Reorder.dragStart(event);
 	}
 
-	_onDragOver (event) { return OBSIDIAN.Reorder.dragOver(event); }
-	_onDrop (event) { return OBSIDIAN.Reorder.drop(this.actor, event); }
+	_onDragOver (event) { return Reorder.dragOver(event); }
+	_onDrop (event) { return Reorder.drop(this.actor, event); }
 
 	/**
 	 * @private
@@ -905,19 +909,19 @@ export class Obsidian extends ActorSheet5eCharacter {
 				: this.actor.data.data.skills[id];
 
 		let newValue = 0;
-		if (skill === 0) {
+		if (skill.value === 0) {
 			newValue = 1;
-		} else if (skill === 1) {
+		} else if (skill.value === 1) {
 			newValue = 2;
 		}
 
 		const update = {};
 		if (skillKey) {
 			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[skillKey]);
-			newSkills[id] = newValue;
+			newSkills[id].value = newValue;
 			update[`flags.obsidian.skills.${skillKey}`] = newSkills;
 		} else {
-			update[`data.skills.${id}`] = newValue;
+			update[`data.skills.${id}.value`] = newValue;
 		}
 
 		this.actor.update(update);
@@ -961,6 +965,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_viewItem (el) {
 		const id = Number(el.data('item-id'));
-		new ObsidianViewDialog(id, this).render(true);
+		const existing =
+			Object.values(this.actor.apps).find(app =>
+				app.constructor === ObsidianViewDialog && app.item.id === id);
+
+		if (existing) {
+			existing.render(true);
+		} else {
+			new ObsidianViewDialog(id, this).render(true);
+		}
 	}
 }

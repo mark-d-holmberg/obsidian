@@ -68,7 +68,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 
 			const spellcasting = cls.flags.obsidian.spellcasting;
-			if (spell.data.level.value === 0) {
+			if (spell.data.level === 0) {
 				spellcasting.totalCantrips++;
 			} else if (flags.known) {
 				spellcasting.totalKnown++;
@@ -78,7 +78,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 			if (data.actor.obsidian.spells[cls.name]) {
 				const clsSpells = data.actor.obsidian.spells[cls.name];
-				if (spell.data.level.value === 0) {
+				if (spell.data.level === 0) {
 					clsSpells.known.push(spell);
 					clsSpells.prepared.push(spell);
 					clsSpells.book.push(spell);
@@ -102,9 +102,9 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 		Object.values(data.actor.obsidian.spells).forEach(entry => {
 			if (Array.isArray(entry)) {
-				entry.sort(Obsidian.spellComparator);
+				entry.sort(OBSIDIAN.spellComparator);
 			} else {
-				Object.values(entry).forEach(list => list.sort(Obsidian.spellComparator));
+				Object.values(entry).forEach(list => list.sort(OBSIDIAN.spellComparator));
 			}
 		});
 
@@ -231,7 +231,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 						cls.flags.obsidian.uuid === flags.source.class);
 
 				if (cls) {
-					if (spell.data.level.value === 0
+					if (spell.data.level === 0
 						|| cls.flags.obsidian.spellcasting.preparation !== 'book')
 					{
 						await this.parent.actor.deleteOwnedItem(id);

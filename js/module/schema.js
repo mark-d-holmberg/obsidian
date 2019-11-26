@@ -107,7 +107,7 @@ Schema.Weapon = {
 	mode: 'melee',
 	damage: [],
 	versatile: [],
-	tags: {},
+	tags: {custom: []},
 	hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
 	dc: {enabled: false}
 };

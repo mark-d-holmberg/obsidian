@@ -39,8 +39,8 @@
 		</legend>
 		<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
 			<div class="obsidian-fullwidth obsidian-checkbox-row">
-				<select name="data.armorType">
-					{{#select item.data.armorType}}
+				<select name="data.armor.type">
+					{{#select item.data.armor.type}}
 						{{#each ObsidianRules.ARMOUR_TYPES}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.ArmourType-' this}}</option>
 						{{/each}}
@@ -48,7 +48,7 @@
 				</select>
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="data.armor" value="{{item.data.armor}}" placeholder="0"
+					       name="data.armor.value" value="{{item.data.armor.value}}" placeholder="0"
 					       data-dtype="Number">
 					<span>{{localize 'OBSIDIAN.ACAbbr'}}</span>
 				</label>

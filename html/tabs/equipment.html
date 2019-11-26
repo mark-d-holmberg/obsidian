@@ -3,11 +3,11 @@
 		<div class="obsidian-char-inv-header-weight">
 			<div>
 				{{localize 'OBSIDIAN.WeightCarried'}}:
-				<span>{{numberFormat entity.obsidian.inventory.weight decimals=2}}</span>
+				<span>{{numberFormat actor.obsidian.inventory.weight decimals=2}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
-			<div{{#if entity.obsidian.inventory.encumbered}} class="obsidian-negative"{{/if}}>
-				{{#if entity.obsidian.inventory.encumbered}}
+			<div{{#if actor.obsidian.inventory.encumbered}} class="obsidian-negative"{{/if}}>
+				{{#if actor.obsidian.inventory.encumbered}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
 				{{else}}
 					{{localize 'OBSIDIAN.Unencumbered'}}
@@ -19,7 +19,7 @@
 			{{#each data.currency}}
 				<div class="obsidian-char-inv-header-currency-item">
 					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></i>
-					{{number-format value}}
+					{{number-format this}}
 				</div>
 			{{/each}}
 		</div>
@@ -73,8 +73,8 @@
 				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 			</div>
 			<div class="obsidian-tbody">
-				{{> modules/obsidian/html/components/inventory.html entity.obsidian.inventory.root}}
-				{{#each entity.obsidian.inventory.containers}}
+				{{> modules/obsidian/html/components/inventory.html actor.obsidian.inventory.root}}
+				{{#each actor.obsidian.inventory.containers}}
 					<details{{#if flags.obsidian.open}} open{{/if}}>
 						<summary draggable="true" data-reorderable="true" class="
 						{{~#if (gt flags.obsidian.carriedWeight flags.obsidian.capacity)~}}

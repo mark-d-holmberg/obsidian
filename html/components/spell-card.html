@@ -1,14 +1,14 @@
 <div class="obsidian-item-card">
 	<div class="obsidian-item-card-header">
 		<h3>
-			{{#if (eq data.level.value 0)}}
-				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
-				{{spell-level-format data.level.value cantrip=true}}
+			{{#if (eq data.level 0)}}
+				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school}}
+				{{spell-level-format data.level cantrip=true}}
 			{{else}}
-				{{spell-level-format data.level.value level=true}}
-				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school.value}}
+				{{spell-level-format data.level level=true}}
+				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school}}
 			{{/if}}
-			{{#if data.ritual.value}}
+			{{#if data.components.ritual}}
 				({{localize 'OBSIDIAN.RitualLC'}})
 			{{/if}}
 		</h3>
@@ -47,7 +47,7 @@
 		<div class="obsidian-item-card-header-row">
 			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Duration'}}:</div>
 			<div class="obsidian-item-card-header-value">
-				{{#if data.concentration.value}}
+				{{#if data.components.concentration}}
 					{{localize 'OBSIDIAN.Concentration'}},
 					{{localize 'OBSIDIAN.UpTo'}} {{format-spell-duration this}}
 				{{else}}

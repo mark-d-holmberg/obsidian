@@ -17,7 +17,7 @@ import {ObsidianWeaponSheet} from './sheets/weapon.js';
 
 runPatches();
 
-Hooks.once('init', async function () {
+OBSIDIAN._init = async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
@@ -34,9 +34,15 @@ Hooks.once('init', async function () {
 	registerHandlebarHelpers();
 	await preloadPartials();
 	await preloadTemplates();
+};
+
+OBSIDIAN._initialising = null;
+
+Hooks.once('init', function () {
+	OBSIDIAN._initialising = OBSIDIAN._init();
 });
 
-Hooks.once('ready', function () {
+Hooks.once('ready', async function () {
 	let fontSheet = 'font';
 	if (game.i18n.lang === 'ja') {
 		fontSheet = 'ja';
@@ -49,6 +55,8 @@ Hooks.once('ready', function () {
 	document.getElementsByTagName('head')[0].appendChild(link);
 
 	loadSpellData();
+
+	await OBSIDIAN._initialising;
 	restoreViewPins();
 });
 

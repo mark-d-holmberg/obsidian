@@ -7,7 +7,7 @@
 	</h3>
 	<div class="obsidian-table">
 		<div class="obsidian-thead">
-			{{#if (not-empty entity.obsidian.weapons)}}
+			{{#if (not-empty actor.obsidian.weapons)}}
 				<div class="obsidian-col-icon"></div>
 				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
 				<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
@@ -19,7 +19,7 @@
 			{{/if}}
 		</div>
 		<div class="obsidian-tbody">
-			{{#each entity.obsidian.weapons}}
+			{{#each actor.obsidian.weapons}}
 				<div class="obsidian-tr item" data-item-id="{{id}}" data-name="{{name}}">
 					<div class="obsidian-col-icon">
 						<div class="
