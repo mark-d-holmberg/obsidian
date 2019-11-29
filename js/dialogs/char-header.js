@@ -97,7 +97,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const item = {
 			name: cls.name,
 			type: 'class',
-			data: {levels: {value: 1}},
+			data: {levels: 1},
 			flags: {obsidian: {}}
 		};
 
@@ -125,8 +125,8 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			return {
 				id: Number(el.dataset.itemId),
 				data: {
-					levels: {value: Number(inputs[1].value)},
-					subclass: {value: inputs[0].value}
+					levels: Number(inputs[1].value),
+					subclass: inputs[0].value
 				},
 			};
 		});

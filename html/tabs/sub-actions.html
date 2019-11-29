@@ -7,7 +7,7 @@
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each (filter actor.feats 'flags.obsidian.active' active 'flags.obsidian.action' action) as |feat|}}
+		{{#each (filter actor.obsidian.feats 'flags.obsidian.active' active 'flags.obsidian.action' action) as |feat|}}
 			<div class="obsidian-feature item" data-item-id="{{feat.id}}">
 				<div class="obsidian-feature-header">
 					<div>

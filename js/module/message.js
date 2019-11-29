@@ -1,6 +1,7 @@
 // Is monkey-patching better than extending ChatMessage and changing the
 // entityClass? ¯\_(ツ)_/¯
 import {OBSIDIAN} from '../rules/rules.js';
+import {Rolls} from '../rules/rolls.js';
 
 export function patchChatMessage () {
 	ChatMessage.prototype.render = (function () {
@@ -52,7 +53,7 @@ export function patchChatMessage () {
 				}
 			});
 
-			html.find('[data-roll]').click(evt => OBSIDIAN.Rolls.fromClick(null, evt));
+			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));
 			return html;
 		};
 	})();

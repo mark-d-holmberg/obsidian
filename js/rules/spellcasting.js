@@ -27,8 +27,8 @@ export function prepareSpellcasting (actorData, flags) {
 		if (spellcasting.spell !== undefined && spellcasting.spell !== '') {
 			const val = data.abilities[spellcasting.spell].mod;
 			spellcasting.mod = val;
-			spellcasting.attack = val + data.attributes.prof.value;
-			spellcasting.save = val + data.attributes.prof.value + 8;
+			spellcasting.attack = val + data.attributes.prof;
+			spellcasting.save = val + data.attributes.prof + 8;
 
 			if (!existing[spellcasting.spell]) {
 				mods.push(spellcasting.mod);

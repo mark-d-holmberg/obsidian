@@ -41,7 +41,7 @@
 	<ul class="obsidian-tab-bar" data-group="spells">
 		<li class="obsidian-sub-tab item" data-tab="spell-all">{{localize 'OBSIDIAN.All'}}</li>
 		{{#each (range 0 9)}}
-			{{#if (has-spells ../entity this)}}
+			{{#if (has-spells ../actor ../spellbook this)}}
 				<li class="obsidian-sub-tab item obsidian-spell-level-tab" data-tab="spell-{{this}}">
 					{{spell-level-format this}}
 				</li>

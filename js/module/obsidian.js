@@ -31,6 +31,7 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
+import {Rolls} from '../rules/rolls.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -175,7 +176,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
-		html.find('[data-roll]').click(evt => OBSIDIAN.Rolls.fromClick(this.actor, evt));
+		html.find('[data-roll]').click(evt => Rolls.fromClick(this.actor, evt));
 		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
@@ -559,7 +560,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 			evt.currentTarget.dataset.roll = 'spl';
 			evt.currentTarget.dataset.level = spell.data.level;
-			OBSIDIAN.Rolls.fromClick(this.actor, evt);
+			Rolls.fromClick(this.actor, evt);
 		} else {
 			new ObsidianSpellSlotDialog(this, spell).render(true);
 		}
@@ -607,7 +608,41 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_onEquip (evt) {
 		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
 		const item = this.actor.data.items.find(item => item.id === id);
-		this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
+
+		if (!item || !item.flags.obsidian) {
+			return;
+		}
+
+		if (item.flags.obsidian.equippable) {
+			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
+		} else if (item.flags.obsidian.consumable) {
+			if (item.flags.obsidian.uses && item.flags.obsidian.uses.enabled) {
+				let quantity = item.data.quantity;
+				let remaining = item.flags.obsidian.uses.remaining - 1;
+
+				if (remaining < 1) {
+					quantity--;
+					if (quantity <= 0) {
+						quantity = 0;
+					} else {
+						remaining = item.flags.obsidian.uses.max;
+					}
+				}
+
+				this.actor.updateOwnedItem({
+					id: id,
+					'data.quantity': quantity,
+					'flags.obsidian.uses.remaining': remaining
+				});
+			} else {
+				const quantity = item.data.quantity - 1;
+				if (quantity >= 0) {
+					this.actor.updateOwnedItem({id: id, 'data.quantity': quantity});
+				}
+			}
+		}
+
+		Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
 	}
 
 	/**

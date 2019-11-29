@@ -4,6 +4,7 @@ import {Prepare} from '../rules/prepare.js';
 import {prepareInventory} from '../rules/inventory.js';
 import {prepareSpells} from '../rules/spells.js';
 import {prepareSpellcasting} from '../rules/spellcasting.js';
+import {Rolls} from '../rules/rolls.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
@@ -39,7 +40,7 @@ export class ObsidianActor extends Actor5e {
 		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
-			+ data.attributes.init;
+			+ data.attributes.init.value;
 
 		if (flags.skills.joat) {
 			data.attributes.init.mod += Math.floor(data.attributes.prof / 2);
@@ -244,7 +245,7 @@ export class ObsidianActor extends Actor5e {
 
 			if (item.type === 'weapon' && itemFlags.charges && itemFlags.charges.enabled) {
 				if (itemFlags.charges.rechargeType === 'formula') {
-					const recharge = OBSIDIAN.Rolls.recharge(item);
+					const recharge = Rolls.recharge(item);
 					let remaining =
 						itemFlags.charges.remaining + recharge.flags.obsidian.results[0][0].total;
 
@@ -252,7 +253,7 @@ export class ObsidianActor extends Actor5e {
 						remaining = itemFlags.charges.max;
 					}
 
-					OBSIDIAN.Rolls.toChat(this, recharge);
+					Rolls.toChat(this, recharge);
 					items.push({id: item.id, flags: {obsidian: {charges: {remaining: remaining}}}});
 				} else {
 					items.push({

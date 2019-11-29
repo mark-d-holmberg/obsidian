@@ -634,6 +634,7 @@ form.obsidian input.obsidian-input-search,
 	transition: border-color ease-in-out .15s;
 	box-shadow: none;
 	text-align: left;
+	margin-bottom: 0;
 }
 
 .obsidian-compendium .sidebar-tab .directory-header .header-search input {

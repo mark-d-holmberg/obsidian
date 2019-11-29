@@ -502,7 +502,7 @@
 						{{/each}}
 						</div>
 						<div class="
-						{{~#if (gt data.attributes.exhaustion.value 0)~}}
+						{{~#if (gt data.attributes.exhaustion 0)~}}
 							obsidian-meatballs-active
 						{{~/if}} obsidian-meatballs-title">
 							{{localize 'OBSIDIAN.Exhaustion'}}
@@ -510,7 +510,7 @@
 						<div class="obsidian-meatballs obsidian-exhaustion">
 							{{#each (range 1 6) as |level|}}
 								<div class="
-								{{~#if (leq level ../data.attributes.exhaustion.value)~}}
+								{{~#if (leq level ../data.attributes.exhaustion)~}}
 									obsidian-radio-selected
 								{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{level}}">
 									<span></span>

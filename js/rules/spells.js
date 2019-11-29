@@ -136,7 +136,7 @@ export function prepareSpells (actorData) {
 				flags.visible = flags.book && flags.prepared;
 			}
 
-			if (spell.data.ritual) {
+			if (spell.data.components.ritual) {
 				flags.visible =
 					(spellcasting.rituals === 'prep' && flags.prepared)
 					|| spellcasting.rituals === 'book';

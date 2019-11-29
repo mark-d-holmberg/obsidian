@@ -259,6 +259,16 @@ export const Prepare = {
 			if (flags.subtype === 'ammo') {
 				actorData.obsidian.ammo.push(consumable);
 			}
+
+			if (flags.hit.enabled) {
+				Prepare.calculateHit(flags.hit, data);
+			}
+
+			if (flags.dc.enabled) {
+				Prepare.calculateSave(flags.dc, data);
+			}
+
+			Prepare.calculateDamage(data, null, flags.damage);
 		}
 	},
 
@@ -387,6 +397,7 @@ export const Prepare = {
 		};
 
 		const data = actorData.data;
+		actorData.obsidian.feats = [];
 
 		for (let i = 0; i < actorData.items.length; i++) {
 			if (actorData.items[i].type !== 'feat') {
@@ -395,6 +406,7 @@ export const Prepare = {
 
 			const feat = actorData.items[i];
 			const flags = feat.flags.obsidian;
+			actorData.obsidian.feats.push(feat);
 
 			if (!flags) {
 				continue;

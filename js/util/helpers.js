@@ -101,7 +101,7 @@ export function registerHandlebarHelpers () {
 		}
 
 		const slots = data.max == null ? data.slots : data.max;
-		const uses = data.value == null ? data.uses : data;
+		const uses = data.value == null ? data.uses : data.value;
 
 		if (slots == null || typeof slots !== 'number' || uses == null || typeof uses !== 'number')
 		{
@@ -173,15 +173,14 @@ export function registerHandlebarHelpers () {
 		return haystack.findIndex(spell => spell.name === needle.name) > -1;
 	});
 
-	Handlebars.registerHelper('has-spells', function (actor, level) {
+	Handlebars.registerHelper('has-spells', function (actor, spellbook, level) {
 		if (!actor) {
 			return;
 		}
 
 		const spell = actor.data.spells[`spell${level}`];
-		const spellbook = actor.spellbook[level];
-		return (spellbook
-			&& spellbook.spells.filter(spell =>
+		return (spellbook[level]
+			&& spellbook[level].spells.filter(spell =>
 				spell.flags.obsidian && spell.flags.obsidian.visible).length > 0)
 			|| (level > 0 && Number(spell.max));
 	});

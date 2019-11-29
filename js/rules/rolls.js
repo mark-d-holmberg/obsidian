@@ -1,14 +1,14 @@
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 
-OBSIDIAN.Rolls = {
+export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], extraMods = []) {
 		const mods = [{
 			mod: actor.data.data.abilities[ability].mod,
 			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
 		}, ...extraMods];
 
-		return OBSIDIAN.Rolls.simpleRoll(actor, {
+		return Rolls.simpleRoll(actor, {
 			type: 'abl',
 			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
 			parens: skill,
@@ -63,7 +63,7 @@ OBSIDIAN.Rolls = {
 				mods.push({mod: itemFlags.magic, name: game.i18n.localize('OBSIDIAN.Magic')});
 			}
 
-			results.results = [OBSIDIAN.Rolls.toHitRoll(actor, itemFlags.hit, mods)];
+			results.results = [Rolls.toHitRoll(actor, itemFlags.hit, mods)];
 			results.dmgBtn = item.id;
 			results.dmgCount = 1;
 			results.subtitle =
@@ -72,12 +72,12 @@ OBSIDIAN.Rolls = {
 						? 'OBSIDIAN.RangedWeaponAttack'
 						: 'OBSIDIAN.MeleeWeaponAttack');
 		} else {
-			results.damage = OBSIDIAN.Rolls.rollDamage(actor, item, {crit: false});
-			results.crit = OBSIDIAN.Rolls.rollDamage(actor, item, {crit: true});
+			results.damage = Rolls.rollDamage(actor, item, {crit: false});
+			results.crit = Rolls.rollDamage(actor, item, {crit: true});
 		}
 
 		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = OBSIDIAN.Rolls.compileSave(actor, itemFlags);
+			results.save = Rolls.compileSave(actor, itemFlags);
 		}
 
 		if (itemFlags.tags.ammunition
@@ -131,7 +131,7 @@ OBSIDIAN.Rolls = {
 			}
 
 			save.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
-			save.breakdown = bonus + OBSIDIAN.Rolls.compileBreakdown(mods);
+			save.breakdown = bonus + Rolls.compileBreakdown(mods);
 		} else {
 			save.dc = Number(flags.dc.fixed);
 			save.breakdown = `${save.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
@@ -147,12 +147,12 @@ OBSIDIAN.Rolls = {
 			return {
 				roll: r,
 				total: r + total,
-				breakdown: r + OBSIDIAN.Rolls.compileBreakdown(mods)
+				breakdown: r + Rolls.compileBreakdown(mods)
 			}
 		});
 
-		OBSIDIAN.Rolls.annotateCrits(crit, fail, results);
-		OBSIDIAN.Rolls.annotateAdvantage(
+		Rolls.annotateCrits(crit, fail, results);
+		Rolls.annotateAdvantage(
 			determineAdvantage(actor.data.flags.obsidian.sheet.roll, ...adv),
 			results);
 
@@ -176,9 +176,9 @@ OBSIDIAN.Rolls = {
 						type: 'dmg',
 						title: item.name,
 						damage:
-							OBSIDIAN.Rolls.rollDamage(actor, item, {crit: false, upcast: upcast}),
+							Rolls.rollDamage(actor, item, {crit: false, upcast: upcast}),
 						crit:
-							OBSIDIAN.Rolls.rollDamage(actor, item, {crit: true, upcast: upcast})
+							Rolls.rollDamage(actor, item, {crit: true, upcast: upcast})
 					}
 				}
 			});
@@ -196,7 +196,7 @@ OBSIDIAN.Rolls = {
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
-		const roll = OBSIDIAN.Rolls.simpleRoll(actor, {
+		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
@@ -265,21 +265,21 @@ OBSIDIAN.Rolls = {
 		const results = {
 			type: 'feat',
 			title: feat.name,
-			details: itemFlags.display,
+			details: itemFlags.display || feat.data.description.value,
 			open: (!itemFlags.hit || !itemFlags.hit.enabled) && itemFlags.damage.length < 1
 		};
 
 		if (itemFlags.hit && itemFlags.hit.enabled) {
-			results.results = [OBSIDIAN.Rolls.toHitRoll(actor, itemFlags.hit)];
+			results.results = [Rolls.toHitRoll(actor, itemFlags.hit)];
 			results.dmgBtn = feat.id;
 			results.dmgCount = 1;
 		} else if (itemFlags.damage.length > 0) {
-			results.damage = OBSIDIAN.Rolls.rollDamage(actor, feat, {crit: false});
-			results.crit = OBSIDIAN.Rolls.rollDamage(actor, feat, {crit: true});
+			results.damage = Rolls.rollDamage(actor, feat, {crit: false});
+			results.crit = Rolls.rollDamage(actor, feat, {crit: true});
 		}
 
 		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = OBSIDIAN.Rolls.compileSave(actor, itemFlags);
+			results.save = Rolls.compileSave(actor, itemFlags);
 		}
 
 		return {flags: {obsidian: results}};
@@ -320,16 +320,16 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.attackRoll(actor, atk));
+			Rolls.toChat(actor, Rolls.attackRoll(actor, atk));
 		} else if (roll === 'save') {
 			if (!dataset.save) {
 				return;
 			}
 
 			if (dataset.save === 'death') {
-				OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.death(actor));
+				Rolls.toChat(actor, Rolls.death(actor));
 			} else {
-				OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.savingThrow(actor, dataset.save));
+				Rolls.toChat(actor, Rolls.savingThrow(actor, dataset.save));
 			}
 		} else if (roll === 'abl') {
 			if (!dataset.abl) {
@@ -337,9 +337,9 @@ OBSIDIAN.Rolls = {
 			}
 
 			if (dataset.abl === 'init') {
-				OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.initiative(actor));
+				Rolls.toChat(actor, Rolls.initiative(actor));
 			} else {
-				OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.abilityCheck(actor, dataset.abl));
+				Rolls.toChat(actor, Rolls.abilityCheck(actor, dataset.abl));
 			}
 		} else if (roll === 'skl') {
 			if (!dataset.skl) {
@@ -351,7 +351,7 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.skillCheck(actor, skill, dataset.skl));
+			Rolls.toChat(actor, Rolls.skillCheck(actor, skill, dataset.skl));
 		} else if (roll === 'tool') {
 			if (dataset.tool === undefined) {
 				return;
@@ -362,7 +362,7 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.skillCheck(actor, tool));
+			Rolls.toChat(actor, Rolls.skillCheck(actor, tool));
 		} else if (roll === 'feat') {
 			if (dataset.feat === undefined) {
 				return;
@@ -375,7 +375,7 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(actor, OBSIDIAN.Rolls.feature(actor, feat));
+			Rolls.toChat(actor, Rolls.feature(actor, feat));
 		} else if (roll === 'spl') {
 			if (dataset.spl === undefined || dataset.level === undefined) {
 				return;
@@ -388,8 +388,8 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(
-				actor, ...OBSIDIAN.Rolls.spell(actor, spell, Number(dataset.level)));
+			Rolls.toChat(
+				actor, ...Rolls.spell(actor, spell, Number(dataset.level)));
 		} else if (roll === 'dmg') {
 			if (dataset.item === undefined) {
 				return;
@@ -402,16 +402,16 @@ OBSIDIAN.Rolls = {
 				return;
 			}
 
-			OBSIDIAN.Rolls.toChat(
+			Rolls.toChat(
 				actor,
-				...OBSIDIAN.Rolls.damage(
+				...Rolls.damage(
 					actor, item, Number(dataset.count), Number(dataset.upcast)));
 		}
 	},
 
 	hd: function (actor, rolls, conBonus) {
 		const results = rolls.map(([n, d]) => new Die(d).roll(n));
-		OBSIDIAN.Rolls.toChat(actor, {
+		Rolls.toChat(actor, {
 			flags: {
 				obsidian: {
 					type: 'hd',
@@ -435,14 +435,14 @@ OBSIDIAN.Rolls = {
 		const flags = actor.data.flags.obsidian;
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
-			return OBSIDIAN.Rolls.abilityCheck(
+			return Rolls.abilityCheck(
 				actor,
 				flags.attributes.init.ability,
 				game.i18n.localize('OBSIDIAN.Initiative'),
 				[flags.attributes.init.roll],
-				[{mod: data.attributes.init, name: game.i18n.localize('OBSIDIAN.Bonus')}]);
+				[{mod: data.attributes.init.value, name: game.i18n.localize('OBSIDIAN.Bonus')}]);
 		} else {
-			return OBSIDIAN.Rolls.overriddenRoll(
+			return Rolls.overriddenRoll(
 				actor,
 				'abl',
 				game.i18n.localize('OBSIDIAN.Initiative'),
@@ -453,7 +453,7 @@ OBSIDIAN.Rolls = {
 	},
 
 	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
-		return OBSIDIAN.Rolls.simpleRoll(actor, {
+		return Rolls.simpleRoll(actor, {
 			type: type,
 			title: title,
 			subtitle: subtitle,
@@ -564,11 +564,11 @@ OBSIDIAN.Rolls = {
 				if (r) {
 					total += r.total;
 					breakdown =
-						`${r.rolls.length}d${dmg.die}${OBSIDIAN.Rolls.compileBreakdown(subMods)} = `
+						`${r.rolls.length}d${dmg.die}${Rolls.compileBreakdown(subMods)} = `
 						+ `(${r.results.join('+')})${subTotal.sgnex()}`;
 				} else {
 					breakdown =
-						`${OBSIDIAN.Rolls.compileBreakdown(subMods)} = ${total}`.substring(3);
+						`${Rolls.compileBreakdown(subMods)} = ${total}`.substring(3);
 				}
 
 				return {
@@ -605,7 +605,7 @@ OBSIDIAN.Rolls = {
 				}
 			];
 
-			return OBSIDIAN.Rolls.simpleRoll(actor, {
+			return Rolls.simpleRoll(actor, {
 				type: 'save',
 				title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 				subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
@@ -613,7 +613,7 @@ OBSIDIAN.Rolls = {
 				mods: mods
 			});
 		} else {
-			return OBSIDIAN.Rolls.overriddenRoll(
+			return Rolls.overriddenRoll(
 				actor,
 				'save',
 				game.i18n.localize(`OBSIDIAN.Ability-${save}`),
@@ -631,7 +631,7 @@ OBSIDIAN.Rolls = {
 					title: title,
 					parens: parens,
 					subtitle: subtitle,
-					results: [OBSIDIAN.Rolls.d20Roll(actor, adv, mods)]
+					results: [Rolls.d20Roll(actor, adv, mods)]
 				}
 			}
 		}
@@ -660,14 +660,14 @@ OBSIDIAN.Rolls = {
 				});
 			}
 
-			return OBSIDIAN.Rolls.abilityCheck(
+			return Rolls.abilityCheck(
 				actor,
 				skill.ability,
 				skillName,
 				[flags.skills.roll, skill.roll],
 				mods);
 		} else {
-			return OBSIDIAN.Rolls.overriddenRoll(
+			return Rolls.overriddenRoll(
 				actor,
 				'abl',
 				skillName,
@@ -703,7 +703,7 @@ OBSIDIAN.Rolls = {
 
 			results.results = [];
 			for (let i = 0; i < count; i++) {
-				results.results.push(OBSIDIAN.Rolls.toHitRoll(actor, itemFlags.hit));
+				results.results.push(Rolls.toHitRoll(actor, itemFlags.hit));
 			}
 
 			results.dmgBtn = spell.id;
@@ -717,7 +717,7 @@ OBSIDIAN.Rolls = {
 		}
 
 		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = OBSIDIAN.Rolls.compileSave(actor, itemFlags);
+			results.save = Rolls.compileSave(actor, itemFlags);
 		}
 
 		const msgs = [{flags: {obsidian: results}}];
@@ -743,10 +743,10 @@ OBSIDIAN.Rolls = {
 							type: 'dmg',
 							title: spell.name,
 							damage:
-								OBSIDIAN.Rolls.rollDamage(
+								Rolls.rollDamage(
 									actor, spell, {crit: false, upcast: upcastAmount}),
 							crit:
-								OBSIDIAN.Rolls.rollDamage(
+								Rolls.rollDamage(
 									actor, spell, {crit: true, upcast: upcastAmount})
 						}
 					}
@@ -801,6 +801,6 @@ OBSIDIAN.Rolls = {
 			});
 		}
 
-		return OBSIDIAN.Rolls.d20Roll(actor, [], mods, hit.crit);
+		return Rolls.d20Roll(actor, [], mods, hit.crit);
 	}
 };

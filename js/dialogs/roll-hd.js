@@ -1,5 +1,5 @@
 import {ObsidianDialog} from './dialog.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {Rolls} from '../rules/rolls.js';
 
 export class ObsidianRollHDDialog extends ObsidianDialog {
 	static get defaultOptions () {
@@ -35,7 +35,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 				}).filter(([n, _]) => n > 0);
 
 		const conBonus = this.parent.actor.data.data.abilities.con.mod * totalDice;
-		const results = OBSIDIAN.Rolls.hd(this.parent.actor, rolls, conBonus);
+		const results = Rolls.hd(this.parent.actor, rolls, conBonus);
 		const total = results.reduce((acc, die) => acc + die.total, 0);
 		const hp = this.parent.actor.data.data.attributes.hp.value;
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);

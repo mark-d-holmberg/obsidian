@@ -1,6 +1,6 @@
 import {ObsidianDialog} from './dialog.js';
-import {OBSIDIAN} from '../rules/rules.js';
 import {Reorder} from '../module/reorder.js';
+import {Rolls} from '../rules/rolls.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
@@ -176,7 +176,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			if (this.item.type === 'spell') {
 				roll.click(this.parent._onCastSpell.bind(this.parent));
 			} else {
-				roll.click(evt => OBSIDIAN.Rolls.fromClick(this.parent.actor, evt));
+				roll.click(evt => Rolls.fromClick(this.parent.actor, evt));
 			}
 
 			roll[0].dataset.roll = rollType;

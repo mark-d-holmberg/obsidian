@@ -38,7 +38,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.ObsidianData = Obsidian.Data;
+		data.ObsidianData = OBSIDIAN.Data;
 
 		const classByID =
 			new Map(data.actor.obsidian.classes.filter(cls => cls.flags.obsidian).map(cls => {
@@ -216,7 +216,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		if (owned) {
 			spell = this.parent.actor.data.items.find(item => item.id === id);
 		} else {
-			spell = Obsidian.Data.SPELLS_BY_CLASS[list][id];
+			spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list][id];
 		}
 
 		if (spell === undefined) {

@@ -1,16 +1,16 @@
 <div class="obsidian-tab-contents obsidian-spell-table tab">
 	{{#each (range 0 9)}}
-		{{#if (has-spells ../entity this)}}
+		{{#if (has-spells ../actor ../spellbook this)}}
 			<h3>
 				{{spell-level-format this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
-					{{#if (eq ../data.spells.pact.level this)}}
+					{{#if (eq ../actor.data.spells.pact.level this)}}
 						<div class="obsidian-spells-pact">
-							{{format-slots ../data.spells.pact 'pact'}}
+							{{format-slots ../actor.data.spells.pact 'pact'}}
 							<span>{{localize 'OBSIDIAN.Pact'}}</span>
 						</div>
 					{{/if}}
-					{{#with (lookup ../data.spells (add 'spell' this))}}
+					{{#with (lookup ../actor.data.spells (add 'spell' this))}}
 					{{#if (gt max 0)}}
 						<div class="obsidian-spells-slots">
 							{{format-slots this ../this}}
@@ -31,7 +31,7 @@
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 				</div>
 				<div class="obsidian-tbody">
-					{{#with (lookup ../actor.spellbook this)}}
+					{{#with (lookup ../spellbook this)}}
 					{{#each spells}}
 						<div class="obsidian-tr obsidian-spell-tr item" data-item-id="{{id}}"
 						     data-level="{{data.level.value}}" data-name="{{name}}"
