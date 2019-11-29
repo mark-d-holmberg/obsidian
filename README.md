@@ -1,6 +1,8 @@
 # Obsidian
 A [Foundry VTT](http://foundryvtt.com/) module that provides a dark theme character sheet for 5th edition D&D, incorporating concepts from [D&D Beyond](https://dndbeyond.com) and [Shaped](https://github.com/mlenser/roll20-character-sheets/tree/master/5eShaped).
 
+![example screenshot](https://bitbucket.org/Fyorl/obsidian/raw/master/example.jpg)
+
 ## Bug Reports
 If you discover an issue with the sheet, please report it in the [issue tracker](https://bitbucket.org/Fyorl/obsidian/issues) and ensure you include the following information:
 
