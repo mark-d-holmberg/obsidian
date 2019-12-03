@@ -173,6 +173,14 @@
 	background-image: url('../img/gear.svg');
 }
 
+.obsidian-icon-effect {
+	background-image: url('../img/effect.svg');
+}
+
+.obsidian-icon-demolish {
+	background-image: url('../img/demolish.svg');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

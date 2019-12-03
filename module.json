@@ -8,7 +8,8 @@
 	"systems": ["dnd5e"],
 	"esmodules": ["js/main.js"],
 	"styles": [
-		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css"
+		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css",
+		"css/obsidian-effects.css"
 	],
 	"packs": [
 		{

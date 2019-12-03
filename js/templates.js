@@ -9,7 +9,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/spell-card.html',
 		'modules/obsidian/html/components/inventory.html',
 		'modules/obsidian/html/components/weapon-notes.html',
-		'modules/obsidian/html/components/tag-dropdown.html'
+		'modules/obsidian/html/components/tag-dropdown.html',
+		'modules/obsidian/html/components/physical.html'
 	]);
 };
 
@@ -24,6 +25,7 @@ export const preloadTemplates = function () {
 		'modules/obsidian/html/tabs/equipment.html',
 		'modules/obsidian/html/tabs/features.html',
 		'modules/obsidian/html/tabs/sub-features.html',
-		'modules/obsidian/html/tabs/notes.html'
+		'modules/obsidian/html/tabs/notes.html',
+		'modules/obsidian/html/tabs/effects.html'
 	]);
 };

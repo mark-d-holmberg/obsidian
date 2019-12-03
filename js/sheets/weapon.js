@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
+import {Schema} from '../module/schema.js';
 
 export class ObsidianWeaponSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -36,9 +37,7 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'weapon') {
-			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Weapon);
-			}
+			data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
 		}
 	}
 

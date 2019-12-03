@@ -1,0 +1,25 @@
+<form class="obsidian obsidian-2-pane-container" autocomplete="off">
+	<section class="obsidian-2-pane">
+		<section class="obsidian-left-pane">
+			{{> modules/obsidian/html/components/physical.html}}
+			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
+			<div class="obsidian-rich-text">
+				{{editor content=item.data.description.value button=false editable=editable
+				         target='data.description.value'}}
+			</div>
+		</section>
+		<section class="obsidian-right-pane">
+			{{#each item.flags.obsidian.effects}}
+				<div class="obsidian-effect" data-uuid="{{uuid}}"></div>
+			{{/each}}
+		</section>
+	</section>
+	<ul class="obsidian-effects-tab-list">
+		<li class="obsidian-effects-tab obsidian-icon-effect obsidian-add-effect">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddEffect'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>
+		</li>
+	</ul>
+</form>

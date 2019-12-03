@@ -1,6 +1,6 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {Schema} from '../module/schema.js';
 
 export class ObsidianFeatureSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -30,7 +30,7 @@ export class ObsidianFeatureSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'feat') {
-			data.flags.obsidian = mergeObject(OBSIDIAN.Schema.Feature, data.flags.obsidian);
+			data.flags.obsidian = mergeObject(Schema.Feature, data.flags.obsidian);
 		}
 	}
 }

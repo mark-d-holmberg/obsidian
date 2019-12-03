@@ -391,6 +391,9 @@
 	"OBSIDIAN.ItemType-ring": "Ring",
 	"OBSIDIAN.ItemType-tool": "Tool",
 	"OBSIDIAN.ItemType-weapon": "Weapon",
+	"OBSIDIAN.ItemType-equipment": "Equipment",
+	"OBSIDIAN.ItemType-loot": "Loot",
+	"OBSIDIAN.ItemType-backpack": "Container",
 	"OBSIDIAN.Container": "Container",
 	"OBSIDIAN.Capacity": "Capacity",
 	"OBSIDIAN.WeightlessContents": "Weightless Contents",
@@ -490,6 +493,8 @@
 	"OBSIDIAN.CustomName": "Custom Name",
 	"OBSIDIAN.HitDie": "Hit Die",
 	"OBSIDIAN.ViewFeature": "View Feature",
+	"OBSIDIAN.AddEffect": "Add Effect",
+	"OBSIDIAN.DeleteSelected": "Delete Selected",
 	"OBSIDIAN.Magic": "Magic",
 	"OBSIDIAN.NewSpell": "New Spell"
 }

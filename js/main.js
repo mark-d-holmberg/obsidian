@@ -14,10 +14,11 @@ import {ObsidianEquipmentSheet} from './sheets/equipment.js';
 import {ObsidianFeatureSheet} from './sheets/feature.js';
 import {ObsidianSpellSheet} from './sheets/spell.js';
 import {ObsidianWeaponSheet} from './sheets/weapon.js';
+import {ObsidianEffectSheet} from './sheets/effect.js';
 
 runPatches();
 
-OBSIDIAN._init = async function () {
+const _init = async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
@@ -27,6 +28,7 @@ OBSIDIAN._init = async function () {
 	Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianWeaponSheet, {types: ['weapon'], makeDefault: true});
+	Items.registerSheet('dnd5e', ObsidianEffectSheet, {types: ['weapon'], makeDefault: true});
 
 	// We need to set the game config first, before doing any async work
 	// otherwise we yield execution and the game continues to initialise.
@@ -36,10 +38,10 @@ OBSIDIAN._init = async function () {
 	await preloadTemplates();
 };
 
-OBSIDIAN._initialising = null;
+let _initialising = null;
 
 Hooks.once('init', function () {
-	OBSIDIAN._initialising = OBSIDIAN._init();
+	_initialising = _init();
 });
 
 Hooks.once('ready', async function () {
@@ -56,7 +58,7 @@ Hooks.once('ready', async function () {
 
 	loadSpellData();
 
-	await OBSIDIAN._initialising;
+	await _initialising;
 	restoreViewPins();
 });
 
@@ -103,6 +105,12 @@ Hooks.on('preCreateOwnedItem', (actor, id, data) => {
 
 OBSIDIAN.notDefinedOrEmpty = function (obj) {
 	return obj === undefined || obj === '';
+};
+
+OBSIDIAN.uuid = function () {
+	return ([1e7]+-1e3+-4e3+-8e3+-1e11)
+		.replace(/[018]/g, c =>
+			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
 };
 
 // Click anywhere to clear the 'delete prompt' on delete icons.

@@ -1,6 +1,6 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {Schema} from '../module/schema.js';
 
 export class ObsidianSpellSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -35,7 +35,7 @@ export class ObsidianSpellSheet extends ObsidianItemSheet {
 	static enrichFlags (data) {
 		if (data.type === 'spell') {
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Spell);
+				data.flags.obsidian = duplicate(Schema.Spell);
 			}
 		}
 	}

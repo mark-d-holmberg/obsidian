@@ -1,6 +1,6 @@
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianItemSheet} from './item-sheet.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {Schema} from '../module/schema.js';
 
 export class ObsidianConsumableSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -31,7 +31,7 @@ export class ObsidianConsumableSheet extends ObsidianItemSheet {
 	static enrichFlags (data) {
 		if (data.type === 'consumable') {
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Consumable);
+				data.flags.obsidian = duplicate(Schema.Consumable);
 			}
 		}
 	}

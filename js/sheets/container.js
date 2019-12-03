@@ -1,7 +1,7 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {Schema} from '../module/schema.js';
 
 export class ObsidianContainerSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -30,7 +30,7 @@ export class ObsidianContainerSheet extends ObsidianItemSheet {
 	static enrichFlags (data) {
 		if (data.type === 'backpack') {
 			if (!data.flags.obsidian) {
-				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Container);
+				data.flags.obsidian = duplicate(Schema.Container);
 			}
 		}
 	}
