@@ -9,14 +9,28 @@
 			</div>
 		</section>
 		<section class="obsidian-right-pane">
-			{{#each item.flags.obsidian.effects}}
-				<div class="obsidian-effect" data-uuid="{{uuid}}"></div>
+			{{#each item.flags.obsidian.effects as |effect effectIndex|}}
+				<div class="obsidian-effect" data-uuid="{{effect.uuid}}">
+					<input type="text" class="obsidian-effect-name" value="{{effect.name}}"
+					       name="flags.obsidian.effects.{{effectIndex}}.name"
+					       placeholder="{{localize 'OBSIDIAN.EffectName'}}">
+					{{#each components}}
+						{{#if (eq type 'resource')}}
+							{{> modules/obsidian/html/components/effects/resource.html
+									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)
+									ObsidianRules=@root.ObsidianRules}}
+						{{/if}}
+					{{/each}}
+				</div>
 			{{/each}}
 		</section>
 	</section>
 	<ul class="obsidian-effects-tab-list">
 		<li class="obsidian-effects-tab obsidian-icon-effect obsidian-add-effect">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddEffect'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-resource obsidian-add-resource obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddResource'}}</div>
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>

@@ -93,7 +93,7 @@ OBSIDIAN.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
 OBSIDIAN.Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
 OBSIDIAN.Rules.HD = [2, 4, 6, 8, 10, 12, 20];
 OBSIDIAN.Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
-OBSIDIAN.Rules.ITEM_RECHARGE = ['never', 'dawn', 'dusk'];
+OBSIDIAN.Rules.ITEM_RECHARGE = ['long', 'short', 'dawn', 'dusk', 'never'];
 OBSIDIAN.Rules.MAX_LEVEL = 20;
 OBSIDIAN.Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
 
@@ -110,6 +110,7 @@ OBSIDIAN.Rules.PROFICIENCY_LEVELS = {
 	2: 'expert'
 };
 
+OBSIDIAN.Rules.RESOURCE_USES = ['fixed', 'formula'];
 OBSIDIAN.Rules.ROLL = ['reg', 'adv', 'dis'];
 OBSIDIAN.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 OBSIDIAN.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];

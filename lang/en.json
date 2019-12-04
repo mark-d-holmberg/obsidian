@@ -355,6 +355,8 @@
 	"OBSIDIAN.Recharge-never": "Never",
 	"OBSIDIAN.Recharge-dawn": "Dawn",
 	"OBSIDIAN.Recharge-dusk": "Dusk",
+	"OBSIDIAN.Recharge-long": "Long Rest",
+	"OBSIDIAN.Recharge-short": "Short Rest",
 	"OBSIDIAN.SpecialProperties": "Special Properties",
 	"OBSIDIAN.View": "View",
 	"OBSIDIAN.OverCapacity": "Over Carrying Capacity",
@@ -494,7 +496,13 @@
 	"OBSIDIAN.HitDie": "Hit Die",
 	"OBSIDIAN.ViewFeature": "View Feature",
 	"OBSIDIAN.AddEffect": "Add Effect",
+	"OBSIDIAN.AddResource": "Add Resource",
 	"OBSIDIAN.DeleteSelected": "Delete Selected",
+	"OBSIDIAN.EffectName": "Effect Name",
+	"OBSIDIAN.NewEffect": "New Effect",
+	"OBSIDIAN.Resource": "Resource",
+	"OBSIDIAN.ResourceUses-fixed": "Fixed",
+	"OBSIDIAN.ResourceUses-formula": "Formula",
 	"OBSIDIAN.Magic": "Magic",
 	"OBSIDIAN.NewSpell": "New Spell"
 }

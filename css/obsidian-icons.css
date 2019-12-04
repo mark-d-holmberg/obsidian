@@ -181,6 +181,10 @@
 	background-image: url('../img/demolish.svg');
 }
 
+.obsidian-icon-resource {
+	background-image: url('../img/resource.svg');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

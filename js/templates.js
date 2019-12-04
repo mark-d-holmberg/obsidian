@@ -10,7 +10,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/inventory.html',
 		'modules/obsidian/html/components/weapon-notes.html',
 		'modules/obsidian/html/components/tag-dropdown.html',
-		'modules/obsidian/html/components/physical.html'
+		'modules/obsidian/html/components/physical.html',
+		'modules/obsidian/html/components/effects/resource.html'
 	]);
 };
 

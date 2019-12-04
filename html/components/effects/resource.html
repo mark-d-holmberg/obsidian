@@ -1,0 +1,72 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.Resource'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" name="{{prefix}}.name"
+			       value="{{name}}">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Recharges'}}
+				<select name="{{prefix}}.recharge">
+					{{#select recharge}}
+						{{#each ObsidianRules.ITEM_RECHARGE}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Recharge-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<select name="{{prefix}}.uses" data-selector="{{prefix}}.uses">
+				{{#select uses}}
+					{{#each ObsidianRules.RESOURCE_USES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.ResourceUses-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-selector-parent="{{prefix}}.uses" data-show="fixed" name="{{prefix}}.fixed"
+			       value="{{fixed}}" data-dtype="Number" placeholder="0">
+			<label class="obsidian-inline" data-selector-parent="{{prefix}}.uses" data-show="formula">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="{{prefix}}.min" value="{{min}}" data-dtype="Number" placeholder="0">
+				<span>{{localize 'OBSIDIAN.Minimum'}}</span>
+			</label>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-show="formula" data-selector-parent="{{prefix}}.uses">
+		<div class="obsidian-fullwidth">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       name="{{prefix}}.bonus" value="{{bonus}}" data-dtype="Number" placeholder="0">
+			<select class="obsidian-select-operator" name="{{prefix}}.operator">
+				{{#select operator}}
+					<option value="plus">&plus;</option>
+					<option value="mult">&times;</option>
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.key" data-selector="{{prefix}}.key">
+				{{#select key}}
+					{{#each ObsidianRules.FEAT_USES_KEYS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.UsesKey-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.key" data-show="abl">
+				{{#select ability}}
+					{{#each ObsidianRules.ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.key" data-show="cls">
+				{{#select class}}
+					{{#each @root.actor.data.obsidian.classes}}
+						<option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</div>
+</fieldset>
