@@ -9,6 +9,10 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 		return options;
 	}
 
+	get title () {
+		return this.item.data.flags.obsidian.label;
+	}
+
 	static enrichFlags (data) {
 		if (data.type === 'class') {
 			if (!data.flags) {

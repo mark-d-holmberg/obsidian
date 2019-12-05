@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {ObsidianDialog} from './dialog.js';
+import {ObsidianNewClassDialog} from './new-class.js';
 
 export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	constructor (...args) {
