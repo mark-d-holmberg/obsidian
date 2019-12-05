@@ -1267,3 +1267,17 @@ legend .fancy-checkbox {
 .obsidian-titlebar-uses span {
 	margin-right: 4px;
 }
+
+.obsidian-max {
+	width: 100%;
+}
+
+.obsidian-checkbox-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.obsidian-checkbox-grid .fancy-checkbox {
+	flex-basis: 25%;
+}

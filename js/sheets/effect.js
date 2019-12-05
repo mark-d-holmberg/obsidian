@@ -2,7 +2,9 @@ import {ObsidianItemSheet} from './item-sheet.js';
 import {Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../rules/rules.js';
 
-const effectSelectMenu = '.obsidian-rm-effect, .obsidian-add-resource';
+const effectSelectMenu =
+	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
+	+ ' .obsidian-add-save';
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -29,6 +31,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-effect').click(this._onAddEffect.bind(this));
 		html.find('.obsidian-add-resource')
 			.click(this._onAddComponent.bind(this, Effect.newResource));
+		html.find('.obsidian-add-attack').click(this._onAddComponent.bind(this, Effect.newAttack));
+		html.find('.obsidian-add-damage').click(this._onAddComponent.bind(this, Effect.newDamage));
+		html.find('.obsidian-add-save').click(this._onAddComponent.bind(this, Effect.newSave));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
@@ -36,6 +41,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			evt.stopPropagation();
 			this._onComponentSelected(evt.currentTarget.parentNode.dataset.uuid);
 		});
+
+		html.find('.fancy-checkbox').click(this._onCheckBoxClicked.bind(this));
 
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
@@ -56,23 +63,31 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		super.close();
 	}
 
-	get effects () {
-		const formData = this._formData;
+	get _formData () {
+		const formData = super._formData;
 		const expanded = OBSIDIAN.updateArrays(this.item.data, formData);
-		return expanded['flags.obsidian.effects'];
+
+		if (Object.keys(expanded).length > 0) {
+			return expanded;
+		}
+
+		return formData;
 	}
 
 	/**
 	 * @private
 	 */
 	async _onAddEffect () {
-		let effects = this.effects;
+		const formData = this._formData;
+		let effects = formData['flags.obsidian.effects'];
+
 		if (!effects) {
 			effects = [];
+			formData['flags.obsidian.effects'] = effects;
 		}
 
 		effects.push(Effect.create());
-		this.item.update({'flags.obsidian.effects': effects});
+		this.item.update(formData);
 	}
 
 	/**
@@ -83,14 +98,16 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
-		const effects = this.effects;
+		const formData = this._formData;
+		const effects = formData['flags.obsidian.effects'];
 		const effect = effects.find(effect => effect.uuid === this._selectedEffect);
+
 		if (!effect) {
 			return;
 		}
 
 		effect.components.push(generator());
-		this.item.update({'flags.obsidian.effects': effects});
+		this.item.update(formData);
 	}
 
 	/**
@@ -103,6 +120,27 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			this._selectedComponent = null;
 			$('.obsidian-effect, .obsidian-effect fieldset').removeClass('obsidian-selected');
 			$(effectSelectMenu).addClass('obsidian-hidden');
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onCheckBoxClicked () {
+		if (this.item.type !== 'weapon') {
+			return;
+		}
+
+		const range = this.element.find('.obsidian-range-row');
+		if (!range.length) {
+			return;
+		}
+
+		const thrown = this.element.find('input[name="flags.obsidian.tags.thrown"]');
+		if (thrown.length && thrown.prop('checked')) {
+			range.removeClass('obsidian-hidden');
+		} else if (this.item.data.flags.obsidian.type !== 'ranged') {
+			range.addClass('obsidian-hidden');
 		}
 	}
 
@@ -137,7 +175,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
-		const effects = this.effects;
+		const formData = this._formData;
+		const effects = formData['flags.obsidian.effects'];
+
 		if (!effects) {
 			return;
 		}
@@ -167,6 +207,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			effect.components.splice(idx, 1);
 		}
 
-		this.item.update({'flags.obsidian.effects': effects});
+		this.item.update(formData);
 	}
 }

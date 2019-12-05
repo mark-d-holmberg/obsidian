@@ -7,12 +7,12 @@ OBSIDIAN.Rules = {};
 OBSIDIAN.Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
 OBSIDIAN.Rules.WEAPON_TAGS = [
-	'ma', 'adamantine', 'silver', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'reach',
-	'lance', 'net', 'offhand', 'thrown', 'twohanded', 'versatile', 'custom'
+	'adamantine', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'lance', 'ma', 'net',
+	'offhand', 'reach', 'silver', 'thrown', 'twohanded', 'versatile'
 ];
 
 OBSIDIAN.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
-OBSIDIAN.Rules.ATTACK_TYPES = ['melee', 'ranged', 'unarmed'];
+OBSIDIAN.Rules.ATTACK_TYPES = ['melee', 'ranged'];
 OBSIDIAN.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 OBSIDIAN.Rules.COIN_WEIGHT = 0.02;
 OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
@@ -87,6 +87,12 @@ OBSIDIAN.Rules.CLASS_RITUALS = {
 };
 
 OBSIDIAN.Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
+OBSIDIAN.Rules.EFFECT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'spell'];
+OBSIDIAN.Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
+OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
+	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn', 'hlg'
+];
+
 OBSIDIAN.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 OBSIDIAN.Rules.FEAT_ACTIVE = ['active', 'passive'];
 OBSIDIAN.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
@@ -178,4 +184,4 @@ OBSIDIAN.Rules.SPELL_SLOT_TABLE = [
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
 
-OBSIDIAN.Rules.WEAPON_CATEGORIES = ['simple', 'martial'];
+OBSIDIAN.Rules.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed'];

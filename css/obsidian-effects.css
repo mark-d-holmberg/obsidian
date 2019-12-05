@@ -42,7 +42,7 @@
 }
 
 .obsidian-effects-tab:hover {
-	width: 140px;
+	width: 150px;
 }
 
 .obsidian-effects-tab.obsidian-rm-effect {
@@ -73,6 +73,10 @@
 
 .obsidian-effect fieldset.obsidian-selected {
 	border-color: var(--select);
+}
+
+.obsidian-effect legend {
+	cursor: pointer;
 }
 
 .obsidian input[type=text].obsidian-effect-name {

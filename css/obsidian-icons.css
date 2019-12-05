@@ -185,6 +185,14 @@
 	background-image: url('../img/resource.svg');
 }
 
+.obsidian-icon-damage {
+	background-image: url('../img/damage.svg');
+}
+
+.obsidian-icon-save {
+	background-image: url('../img/save.svg');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

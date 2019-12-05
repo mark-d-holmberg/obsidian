@@ -1,7 +1,9 @@
-<form class="obsidian obsidian-2-pane-container" autocomplete="off">
+<form class="obsidian obsidian-2-pane-container" autocomplete="off" data-obsidian-name="effect">
 	<section class="obsidian-2-pane">
 		<section class="obsidian-left-pane">
-			{{> modules/obsidian/html/components/physical.html}}
+			{{#if (eq item.type 'weapon')}}
+				{{> modules/obsidian/html/components/weapon.html}}
+			{{/if}}
 			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 			<div class="obsidian-rich-text">
 				{{editor content=item.data.description.value button=false editable=editable
@@ -17,8 +19,16 @@
 					{{#each components}}
 						{{#if (eq type 'resource')}}
 							{{> modules/obsidian/html/components/effects/resource.html
-									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)
-									ObsidianRules=@root.ObsidianRules}}
+									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'attack')}}
+							{{> modules/obsidian/html/components/effects/attack.html
+									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'damage')}}
+							{{> modules/obsidian/html/components/effects/damage.html
+							    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'save')}}
+							{{> modules/obsidian/html/components/effects/save.html
+							    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 						{{/if}}
 					{{/each}}
 				</div>
@@ -31,6 +41,15 @@
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-resource obsidian-add-resource obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddResource'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-melee obsidian-add-attack obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddAttack'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-damage obsidian-add-damage obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DamageHeal'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-save obsidian-add-save obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddSave'}}</div>
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>

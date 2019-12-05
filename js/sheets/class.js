@@ -1,5 +1,6 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
+import {OBSIDIAN} from '../rules/rules.js';
 
 export class ObsidianClassSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
