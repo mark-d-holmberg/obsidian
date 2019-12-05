@@ -28,8 +28,8 @@
 		}
 	],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
-	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/1.0.2/module.json",
-	"download": "https://bitbucket.org/Fyorl/obsidian/get/1.0.2.zip",
+	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
+	"download": "https://bitbucket.org/Fyorl/obsidian/get/master.zip",
 	"languages": [
 		{
 			"lang": "en",
