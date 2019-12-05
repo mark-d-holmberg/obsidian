@@ -640,9 +640,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 					this.actor.updateOwnedItem({id: id, 'data.quantity': quantity});
 				}
 			}
-		}
 
-		Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
+			Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
+		}
 	}
 
 	/**
