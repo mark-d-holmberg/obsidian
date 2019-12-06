@@ -7,10 +7,8 @@
 					{{~i18n-join 'OBSIDIAN.WeaponCat-' item.flags.obsidian.category~}}
 				</div>
 				{{#each item.flags.obsidian.tags}}
-					{{~#if (eq @key 'custom')~}}
-						{{#each this}}
-							<div class="obsidian-table-note-text">{{this}}</div>
-						{{/each}}
+					{{~#if (and this (eq @key 'custom'))~}}
+						<div class="obsidian-table-note-text">{{this}}</div>
 					{{~else if this~}}
 						<div class="obsidian-table-note-text">{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}</div>
 					{{~/if~}}
@@ -33,15 +31,29 @@
 			<div class="obsidian-item-card-header-row">
 				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Damage'}}:</div>
 				<div class="obsidian-item-card-header-value">
-					{{#each item.flags.obsidian.dmgPair}}
+					{{#each item.obsidian.damage}}
 						<div class="obsidian-icon-value">
-							{{fst}} {{#if snd}}({{snd}}){{/if}}
-							<div class="obsidian-icon-sm obsidian-icon-{{type}}"
-							     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+							{{display}}
+							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
+							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
 						</div>
 					{{/each}}
 				</div>
 			</div>
+			{{#if item.flags.obsidian.tags.versatile}}
+			<div class="obsidian-item-card-header-row">
+				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Versatile'}}</div>
+				<div class="obsidian-item-card-header-value">
+					{{#each item.obsidian.versatile}}
+						<div class="obsidian-icon-value">
+							{{display}}
+							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
+							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+						</div>
+					{{/each}}
+				</div>
+			</div>
+			{{/if}}
 			<div class="obsidian-item-card-header-row">
 				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Weight'}}:</div>
 				<div class="obsidian-item-card-header-value">

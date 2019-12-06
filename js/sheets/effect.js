@@ -118,8 +118,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		if (closest == null) {
 			this._selectedEffect = null;
 			this._selectedComponent = null;
-			$('.obsidian-effect, .obsidian-effect fieldset').removeClass('obsidian-selected');
-			$(effectSelectMenu).addClass('obsidian-hidden');
+			this.element.find('.obsidian-effect, .obsidian-effect fieldset')
+				.removeClass('obsidian-selected');
+			this.element.find(effectSelectMenu).addClass('obsidian-hidden');
 		}
 	}
 

@@ -7,7 +7,7 @@
 	</h3>
 	<div class="obsidian-table">
 		<div class="obsidian-thead">
-			{{#if (not-empty actor.obsidian.weapons)}}
+			{{#if (not-empty actor.obsidian.attacks)}}
 				<div class="obsidian-col-icon"></div>
 				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
 				<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
@@ -19,7 +19,7 @@
 			{{/if}}
 		</div>
 		<div class="obsidian-tbody">
-			{{#each actor.obsidian.weapons}}
+			{{#each actor.obsidian.attacks}}
 				<div class="obsidian-tr item" data-item-id="{{id}}" data-name="{{name}}">
 					<div class="obsidian-col-icon">
 						<div class="
@@ -57,13 +57,8 @@
 					</div>
 					<div class="obsidian-col-hit">
 						<div class="obsidian-table-number-lg">
-							{{#if flags.obsidian.hit.enabled}}
-								{{numberFormat flags.obsidian.hit.value decimals=0 sign=true}}
-							{{else if flags.obsidian.dc.enabled}}
-								<div class="obsidian-table-sub-text obsidian-table-save">
-									{{i18n-join 'OBSIDIAN.AbilityAbbr-' flags.obsidian.dc.target}}
-								</div>
-								<div class="obsidian-table-number-md">{{flags.obsidian.dc.value}}</div>
+							{{#if obsidian.bestAttack}}
+								{{numberFormat obsidian.bestAttack.value decimals=0 sign=true}}
 							{{else}}
 								<span class="obsidian-na">&mdash;</span>
 							{{/if}}
@@ -74,8 +69,8 @@
 							{{#each (which-damage this)}}
 								<div class="obsidian-dmg-component">
 									{{display}}
-									<div class="obsidian-icon-sm obsidian-icon-{{type}}"
-									     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+									<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
+									     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
 								</div>
 							{{/each}}
 						</div>

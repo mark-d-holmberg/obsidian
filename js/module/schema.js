@@ -103,11 +103,8 @@ Schema.Spell = {
 };
 
 Schema.Weapon = {
+	category: 'simple',
 	type: 'melee',
 	mode: 'melee',
-	damage: [],
-	versatile: [],
-	tags: {custom: []},
-	hit: {enabled: true, stat: 'str', bonus: 0, proficient: true, crit: 20},
-	dc: {enabled: false}
+	tags: {}
 };

@@ -13,15 +13,11 @@
 	</div>
 {{/if}}
 {{#each flags.obsidian.tags}}
-	{{~#if (eq @key 'custom')~}}
-		{{#each this}}
-			<div class="obsidian-table-note-text">{{this}}</div>
-		{{/each}}
-	{{~else~}}
-		{{~#if (and this (eq @key 'ammunition'))~}}
-			<div class="obsidian-table-note-text">{{{../flags.obsidian.ammo.display}}}</div>
-		{{~else if this~}}
-			<div class="obsidian-table-note-text">{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}</div>
-		{{~/if~}}
+	{{~#if (and this (eq @key 'ammunition'))~}}
+		<div class="obsidian-table-note-text">{{{../flags.obsidian.ammo.display}}}</div>
+	{{~else if (and this (eq @key 'custom'))~}}
+		<div class="obsidian-table-note-text">{{this}}</div>
+	{{~else if this~}}
+		<div class="obsidian-table-note-text">{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}</div>
 	{{~/if~}}
 {{/each}}

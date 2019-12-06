@@ -298,7 +298,7 @@ export function registerHandlebarHelpers () {
 
 	Handlebars.registerHelper('which-damage', function (attack) {
 		return attack.flags.obsidian.mode === 'versatile'
-			? attack.flags.obsidian.versatile
-			: attack.flags.obsidian.damage;
+			? attack.obsidian.versatile
+			: attack.obsidian.damage;
 	});
 }

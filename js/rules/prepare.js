@@ -54,16 +54,17 @@ export const Prepare = {
 		hit.value = hit.bonus || 0;
 		hit.spellMod = 0;
 
+		const ability = hit.ability || hit.stat;
 		if (!OBSIDIAN.notDefinedOrEmpty(hit.stat)) {
-			if (hit.stat === 'spell') {
+			if (ability === 'spell') {
 				hit.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
 				hit.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 			} else {
-				hit.value += data.abilities[hit.stat].mod;
+				hit.value += data.abilities[ability].mod;
 			}
 		}
 
-		if (hit.proficient || hit.stat === 'spell') {
+		if (hit.proficient || ability === 'spell') {
 			hit.value += data.attributes.prof;
 		}
 
@@ -80,13 +81,15 @@ export const Prepare = {
 				continue;
 			}
 
-			dmg.mod = (dmg.bonus || 0) + (dmg.magic || 0);
-			if (dmg.stat && dmg.stat.length > 0) {
-				if (dmg.stat === 'spell') {
+			const ability = dmg.ability || dmg.stat;
+			dmg.mod = dmg.bonus || 0;
+
+			if (ability && ability.length > 0) {
+				if (ability === 'spell') {
 					dmg.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
 					dmg.mod += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 				} else {
-					dmg.mod += data.abilities[dmg.stat].mod;
+					dmg.mod += data.abilities[ability].mod;
 				}
 			}
 
@@ -145,16 +148,6 @@ export const Prepare = {
 		}
 
 		return out;
-	},
-
-	prepareCharges: function (charges) {
-		if (charges.remaining === undefined || charges.remaining > charges.max) {
-			charges.remaining = charges.max;
-		}
-
-		if (charges.remaining < 0) {
-			charges.remaining = 0;
-		}
 	},
 
 	armour: function (actorData) {
@@ -298,9 +291,6 @@ export const Prepare = {
 	},
 
 	weapons: function (actorData) {
-		const data = actorData.data;
-		actorData.obsidian.weapons = [];
-
 		for (let i = 0; i < actorData.items.length; i++) {
 			if (actorData.items[i].type !== 'weapon') {
 				continue;
@@ -313,74 +303,27 @@ export const Prepare = {
 				continue;
 			}
 
-			if (weapon.data.equipped || flags.type === 'unarmed') {
-				actorData.obsidian.weapons.push(weapon);
-			}
-
-			if (flags.hit.enabled) {
-				Prepare.calculateHit(flags.hit, data);
-				if (!OBSIDIAN.notDefinedOrEmpty(flags.magic)) {
-					flags.hit.value += Number(flags.magic);
-				}
-			}
-
-			if (flags.dc.enabled) {
-				Prepare.calculateSave(flags.dc, data);
-			}
-
-			if (flags.charges && flags.charges.enabled) {
-				Prepare.prepareCharges(flags.charges, data);
-				flags.charges.display =
-					Prepare.usesFormat(
-						weapon.id, i, flags.charges.max, flags.charges.remaining, 6, 'charges');
-			}
-
-			for (let j = 0; j < getProperty(flags, 'special.length') || 0; j++) {
-				const special = flags.special[j];
-				if (special.uses.remaining === undefined
-					|| special.uses.remaining > special.uses.max)
-				{
-					special.uses.remaining = special.uses.max;
-				}
-
-				if (special.uses.remaining < 0) {
-					special.uses.remaining = 0;
-				}
-
-				special.display =
-					Prepare.usesFormat(
-						weapon.id, i, special.uses.max, special.uses.remaining, 6,
-						`special.${j}.uses`);
-			}
-
-			if (['melee', 'unarmed'].includes(flags.type)) {
+			if (flags.type === 'melee') {
 				flags.reach = 5;
 				if (flags.tags.reach) {
 					flags.reach +=5;
 				}
 			}
 
-			if (!OBSIDIAN.notDefinedOrEmpty(flags.magic)) {
-				if (flags.damage.length) {
-					flags.damage[0].magic = Number(flags.magic);
-				}
-
-				if (flags.versatile.length) {
-					flags.versatile[0].magic = Number(flags.magic);
+			flags.attackType = 'OBSIDIAN.MeleeWeapon';
+			if (flags.category === 'unarmed') {
+				flags.mode = 'unarmed';
+			} else if (flags.type === 'ranged') {
+				flags.mode = 'ranged';
+			} else {
+				if (!flags.mode ||
+					(flags.mode === 'versatile' && !flags.tags.versatile)
+					|| (flags.mode === 'ranged' && !flags.tags.thrown))
+				{
+					flags.mode = 'melee'
 				}
 			}
 
-			Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
-
-			flags.dmgPair = flags.damage.map((dmg, i) => {
-				return {
-					fst: Prepare.damageFormat(dmg, false),
-					snd: Prepare.damageFormat(flags.versatile[i], false),
-					type: dmg.type
-				};
-			});
-
-			flags.attackType = 'OBSIDIAN.MeleeWeapon';
 			if (flags.mode === 'ranged') {
 				if (flags.type === 'melee') {
 					flags.attackType = 'OBSIDIAN.RangedAttack';

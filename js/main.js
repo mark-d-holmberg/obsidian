@@ -13,8 +13,8 @@ import {ObsidianContainerSheet} from './sheets/container.js';
 import {ObsidianEquipmentSheet} from './sheets/equipment.js';
 import {ObsidianFeatureSheet} from './sheets/feature.js';
 import {ObsidianSpellSheet} from './sheets/spell.js';
-import {ObsidianWeaponSheet} from './sheets/weapon.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
+import {Schema} from './module/schema.js';
 
 runPatches();
 
@@ -27,7 +27,6 @@ const _init = async function () {
 	Items.registerSheet('dnd5e', ObsidianEquipmentSheet, {types: ['equipment'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianWeaponSheet, {types: ['weapon'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {types: ['weapon'], makeDefault: true});
 
 	// We need to set the game config first, before doing any async work
@@ -90,9 +89,10 @@ function enrichItemFlags (data) {
 	ObsidianEquipmentSheet.enrichFlags(data);
 	ObsidianFeatureSheet.enrichFlags(data);
 	ObsidianSpellSheet.enrichFlags(data);
-	ObsidianWeaponSheet.enrichFlags(data);
 
-	if (data.type === 'loot' || data.type === 'tool') {
+	if (data.type === 'weapon') {
+		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
+	} else if (data.type === 'loot' || data.type === 'tool') {
 		data.flags.obsidian = {};
 	}
 }

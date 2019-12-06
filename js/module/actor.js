@@ -6,6 +6,7 @@ import {prepareSpells} from '../rules/spells.js';
 import {prepareSpellcasting} from '../rules/spellcasting.js';
 import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
+import {prepareEffects} from '../rules/effects.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -92,8 +93,8 @@ export class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
-		actorData.obsidian.effects =
-			actorData.items.filter(item => item.flags.obsidian && item.flags.obsidian.effects);
+		this.data.obsidian.effects =
+			this.data.items.filter(item => item.flags.obsidian && item.flags.obsidian.effects);
 
 		Prepare.defenses(flags);
 		Prepare.skills(this.data, data, flags);
@@ -106,6 +107,11 @@ export class ObsidianActor extends Actor5e {
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
+
+		this.data.obsidian.attacks = [];
+		for (const item of this.data.items) {
+			prepareEffects(this.data, item);
+		}
 
 		return this.data;
 	}

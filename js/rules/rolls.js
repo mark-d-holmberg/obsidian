@@ -57,13 +57,9 @@ export const Rolls = {
 		const itemFlags = item.flags.obsidian;
 		const results = {type: 'atk', title: item.name};
 
-		if (itemFlags.hit && itemFlags.hit.enabled) {
+		if (item.obsidian.bestAttack) {
 			const mods = [];
-			if (itemFlags.magic) {
-				mods.push({mod: itemFlags.magic, name: game.i18n.localize('OBSIDIAN.Magic')});
-			}
-
-			results.results = [Rolls.toHitRoll(actor, itemFlags.hit, mods)];
+			results.results = [Rolls.toHitRoll(actor, item.obsidian.bestAttack, mods)];
 			results.dmgBtn = item.id;
 			results.dmgCount = 1;
 			results.subtitle =
@@ -74,10 +70,6 @@ export const Rolls = {
 		} else {
 			results.damage = Rolls.rollDamage(actor, item, {crit: false});
 			results.crit = Rolls.rollDamage(actor, item, {crit: true});
-		}
-
-		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = Rolls.compileSave(actor, itemFlags);
 		}
 
 		if (itemFlags.tags.ammunition
@@ -488,8 +480,12 @@ export const Rolls = {
 		const itemFlags = item.flags.obsidian;
 		let damage =
 			item.type === 'weapon' && itemFlags.mode === 'versatile'
-				? itemFlags.versatile
-				: itemFlags.damage;
+				? item.obsidian.versatile
+				: item.obsidian.damage;
+
+		if (item.type !== 'weapon') {
+			damage = itemFlags.damage;
+		}
 
 		if (upcast > 0
 			&& itemFlags.upcast
@@ -513,13 +509,13 @@ export const Rolls = {
 			}
 
 			let ndice = dmg.ndice;
-			if (crit && dmg.ncrit) {
+			if (crit) {
 				// We hard-code bonus crit dice rules here. It seems any
 				// feature that allows for extra dice on a crit specifies one
 				// damage die only so, if a user specified more than one crit
 				// die, we double the dice once, then add only one additional
 				// die for each crit dice value above 1.
-				ndice += ndice + dmg.ncrit - 1;
+				ndice += ndice + (dmg.ncrit || 0) - 1;
 			}
 
 			return new Die(dmg.die).roll(ndice);
@@ -527,16 +523,18 @@ export const Rolls = {
 
 		mods = damage.map(dmg => {
 			const subMods = [{mod: dmg.bonus, name: game.i18n.localize('OBSIDIAN.Bonus')}];
-			if (!OBSIDIAN.notDefinedOrEmpty(dmg.stat)) {
-				if (dmg.stat === 'spell') {
+			const ability = dmg.ability || dmg.stat;
+
+			if (!OBSIDIAN.notDefinedOrEmpty(ability)) {
+				if (ability === 'spell') {
 					subMods.push({
 						mod: dmg.spellMod,
 						name: game.i18n.localize('OBSIDIAN.Spell')
 					});
 				} else {
 					subMods.push({
-						mod: data.abilities[dmg.stat].mod,
-						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${dmg.stat}`)
+						mod: data.abilities[ability].mod,
+						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
 					});
 				}
 			}
@@ -561,6 +559,7 @@ export const Rolls = {
 					return 0;
 				}, 0)
 				+ mods.flat().reduce((acc, mod) => acc + mod.mod, 0),
+
 			results: damage.map((dmg, i) => {
 				const r = rolls[i];
 				const subMods = mods[i];
@@ -579,7 +578,7 @@ export const Rolls = {
 				}
 
 				return {
-					type: dmg.type,
+					type: dmg.type === 'damage' ? dmg.damage : dmg.type,
 					total: total,
 					breakdown: breakdown
 				};
@@ -793,12 +792,13 @@ export const Rolls = {
 			...extraMods
 		];
 
-		if (hit.stat === 'spell') {
+		const ability = hit.ability || hit.stat;
+		if (ability === 'spell') {
 			mods.push({mod: hit.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
 		} else {
 			mods.push({
-				mod: data.abilities[hit.stat].mod,
-				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${hit.stat}`)
+				mod: data.abilities[ability].mod,
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
 			});
 		}
 
