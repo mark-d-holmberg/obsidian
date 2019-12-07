@@ -59,6 +59,11 @@
 						<div class="obsidian-table-number-lg">
 							{{#if obsidian.bestAttack}}
 								{{numberFormat obsidian.bestAttack.value decimals=0 sign=true}}
+							{{else if obsidian.bestSave}}
+								<div class="obsidian-table-sub-text obsidian-table-save">
+									{{i18n-join 'OBSIDIAN.AbilityAbbr-' obsidian.bestSave.target}}
+								</div>
+								<div class="obsidian-table-number-md">{{obsidian.bestSave.value}}</div>
 							{{else}}
 								<span class="obsidian-na">&mdash;</span>
 							{{/if}}

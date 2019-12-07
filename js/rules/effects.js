@@ -15,6 +15,7 @@ export function prepareEffects (actorData, item) {
 
 	item.obsidian = {
 		attacks: [],
+		saves: [],
 		damage: [],
 		versatile: []
 	};
@@ -30,6 +31,9 @@ export function prepareEffects (actorData, item) {
 				} else {
 					item.obsidian.damage.push(component);
 				}
+			} else if (component.type === 'save') {
+				Prepare.calculateSave(component, data);
+				item.obsidian.saves.push(component);
 			}
 		}
 	}
@@ -40,5 +44,10 @@ export function prepareEffects (actorData, item) {
 		actorData.obsidian.attacks.push(item);
 		item.obsidian.bestAttack =
 			item.obsidian.attacks.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
+	}
+
+	if (item.obsidian.saves.length) {
+		item.obsidian.bestSave =
+			item.obsidian.saves.reduce((acc, save) => save.value > acc.value ? save : acc);
 	}
 }

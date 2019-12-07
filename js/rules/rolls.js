@@ -57,9 +57,9 @@ export const Rolls = {
 		const itemFlags = item.flags.obsidian;
 		const results = {type: 'atk', title: item.name};
 
-		if (item.obsidian.bestAttack) {
+		if (item.obsidian.attacks.length) {
 			const mods = [];
-			results.results = [Rolls.toHitRoll(actor, item.obsidian.bestAttack, mods)];
+			results.results = item.obsidian.attacks.map(atk => Rolls.toHitRoll(actor, atk, mods));
 			results.dmgBtn = item.id;
 			results.dmgCount = 1;
 			results.subtitle =
@@ -70,6 +70,10 @@ export const Rolls = {
 		} else {
 			results.damage = Rolls.rollDamage(actor, item, {crit: false});
 			results.crit = Rolls.rollDamage(actor, item, {crit: true});
+		}
+
+		if (item.obsidian.bestSave) {
+			results.save = Rolls.compileSave(actor, item.obsidian.bestSave);
 		}
 
 		if (itemFlags.tags.ammunition
@@ -90,46 +94,46 @@ export const Rolls = {
 	compileBreakdown: mods =>
 		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
 
-	compileSave: function (actor, flags) {
+	compileSave: function (actor, save) {
 		const data = actor.data.data;
-		const save = {
-			effect: flags.dc.effect,
-			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.dc.target}`)
+		const result = {
+			effect: save.effect,
+			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.target}`)
 		};
 
-		if (OBSIDIAN.notDefinedOrEmpty(flags.dc.fixed)) {
+		if (OBSIDIAN.notDefinedOrEmpty(save.fixed)) {
 			let bonus = 8;
-			if (!OBSIDIAN.notDefinedOrEmpty(flags.dc.bonus)) {
-				bonus = Number(flags.dc.bonus);
+			if (!OBSIDIAN.notDefinedOrEmpty(save.bonus)) {
+				bonus = Number(save.bonus);
 			}
 
 			const mods = [{
-				mod: flags.dc.prof * data.attributes.prof,
+				mod: save.prof * data.attributes.prof,
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
 			}];
 
-			if (!OBSIDIAN.notDefinedOrEmpty(flags.dc.ability)) {
-				if (flags.dc.ability === 'spell') {
+			if (!OBSIDIAN.notDefinedOrEmpty(save.ability)) {
+				if (save.ability === 'spell') {
 					mods.push({
-						mod: flags.dc.spellMod,
+						mod: save.spellMod,
 						name: game.i18n.localize('OBSIDIAN.Spell')
 					});
 				} else {
 					mods.push({
-						mod: data.abilities[flags.dc.ability].mod,
-						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.dc.ability}`)
+						mod: data.abilities[save.ability].mod,
+						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.ability}`)
 					});
 				}
 			}
 
-			save.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
-			save.breakdown = bonus + Rolls.compileBreakdown(mods);
+			result.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
+			result.breakdown = bonus + Rolls.compileBreakdown(mods);
 		} else {
-			save.dc = Number(flags.dc.fixed);
-			save.breakdown = `${save.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
+			result.dc = Number(save.fixed);
+			result.breakdown = `${result.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
 		}
 
-		return save;
+		return result;
 	},
 
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
@@ -271,7 +275,7 @@ export const Rolls = {
 		}
 
 		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = Rolls.compileSave(actor, itemFlags);
+			results.save = Rolls.compileSave(actor, itemFlags.dc);
 		}
 
 		return {flags: {obsidian: results}};
@@ -481,11 +485,9 @@ export const Rolls = {
 		let damage =
 			item.type === 'weapon' && itemFlags.mode === 'versatile'
 				? item.obsidian.versatile
-				: item.obsidian.damage;
-
-		if (item.type !== 'weapon') {
-			damage = itemFlags.damage;
-		}
+				: item.type === 'weapon'
+					? item.obsidian.damage
+					: itemFlags.damage;
 
 		if (upcast > 0
 			&& itemFlags.upcast
@@ -726,7 +728,7 @@ export const Rolls = {
 		}
 
 		if (itemFlags.dc && itemFlags.dc.enabled) {
-			results.save = Rolls.compileSave(actor, itemFlags);
+			results.save = Rolls.compileSave(actor, itemFlags.dc);
 		}
 
 		const msgs = [{flags: {obsidian: results}}];
