@@ -78,6 +78,10 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 });
 
 function enrichItemFlags (data) {
+	if (!data.flags) {
+		data.flags = {};
+	}
+
 	ObsidianClassSheet.enrichFlags(data);
 	ObsidianConsumableSheet.enrichFlags(data);
 	ObsidianContainerSheet.enrichFlags(data);

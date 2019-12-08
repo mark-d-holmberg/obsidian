@@ -36,10 +36,6 @@ export class ObsidianWeaponSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'weapon') {
-			if (!data.flags) {
-				data.flags = {};
-			}
-
 			if (!data.flags.obsidian) {
 				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Weapon);
 			}

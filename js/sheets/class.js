@@ -15,10 +15,6 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'class') {
-			if (!data.flags) {
-				data.flags = {};
-			}
-
 			if (!data.flags.obsidian) {
 				data.flags.obsidian = {};
 			}

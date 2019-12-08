@@ -30,10 +30,6 @@ export class ObsidianConsumableSheet extends ObsidianItemSheet {
 
 	static enrichFlags (data) {
 		if (data.type === 'consumable') {
-			if (!data.flags) {
-				data.flags = {};
-			}
-
 			if (!data.flags.obsidian) {
 				data.flags.obsidian = duplicate(OBSIDIAN.Schema.Consumable);
 			}
