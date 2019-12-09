@@ -5,6 +5,7 @@ import {prepareInventory} from '../rules/inventory.js';
 import {prepareSpells} from '../rules/spells.js';
 import {prepareSpellcasting} from '../rules/spellcasting.js';
 import {Rolls} from '../rules/rolls.js';
+import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData (actorData) {
@@ -34,6 +35,25 @@ export class ObsidianActor extends Actor5e {
 					: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
 			cls.data.levels = Number(cls.data.levels);
 			data.details.level.value += cls.data.levels;
+		}
+
+		if (flags.details.milestone) {
+			data.details.level.max = data.details.level.value;
+		} else {
+			let i = 0;
+			for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
+				if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
+					break;
+				}
+			}
+
+			const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
+			data.details.level.max = i;
+			data.details.xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
+			data.details.xp.pct =
+				Math.floor(
+					((data.details.xp.value - lowerBound) / (data.details.xp.max - lowerBound))
+					* 100);
 		}
 
 		actorData.obsidian.classFormat = ObsidianActor._classFormat(actorData.obsidian.classes);
