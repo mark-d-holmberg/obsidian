@@ -20,7 +20,8 @@ export class ObsidianActor extends Actor5e {
 		const flags = actorData.flags.obsidian;
 		actorData.obsidian = {};
 
-		actorData.obsidian.classes = actorData.items.filter(item => item.type === 'class');
+		actorData.obsidian.classes =
+			actorData.items.filter(item => item.type === 'class' && item.flags.obsidian);
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
 		data.details.level.value = 0;
