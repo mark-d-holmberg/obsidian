@@ -74,6 +74,10 @@ export const Prepare = {
 
 	calculateDamage: function (data, cls, ...dmgs) {
 		for (const dmg of dmgs.reduce((acc, entry) => acc.concat(entry), [])) {
+			if (!dmg) {
+				continue;
+			}
+
 			dmg.mod = dmg.bonus || 0;
 			if (dmg.stat && dmg.stat.length > 0) {
 				if (dmg.stat === 'spell') {
