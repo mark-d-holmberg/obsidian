@@ -643,7 +643,7 @@ export const Rolls = {
 		const skillName = skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
-			let prof = skill.custom ? skill : data.skills[id];
+			let prof = skill.custom ? skill.value : data.skills[id].value;
 			const mods = [{
 				mod: (flags.skills.bonus || 0) + (skill.bonus || 0),
 				name: game.i18n.localize('OBSIDIAN.Bonus')
