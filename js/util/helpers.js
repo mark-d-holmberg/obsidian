@@ -179,9 +179,15 @@ export function registerHandlebarHelpers () {
 		}
 
 		const spell = actor.data.spells[`spell${level}`];
-		return (spellbook[level]
-			&& spellbook[level].spells.filter(spell =>
-				spell.flags.obsidian && spell.flags.obsidian.visible).length > 0)
+		let spellbookEntry;
+
+		if (spellbook && spellbook.length) {
+			spellbookEntry = spellbook.find(entry => entry.level === level);
+		}
+
+		return (spellbookEntry
+			&& spellbookEntry.spells.some(spell =>
+				spell.flags.obsidian && spell.flags.obsidian.visible))
 			|| (level > 0 && Number(spell.max));
 	});
 
@@ -272,6 +278,14 @@ export function registerHandlebarHelpers () {
 		}
 
 		return out;
+	});
+
+	Handlebars.registerHelper('spellbook-lookup', function (spellbook, level) {
+		if (!spellbook || !spellbook.length || isNaN(Number(level))) {
+			return {spells: []};
+		}
+
+		return spellbook.find(entry => entry.level === level) || {spells: []};
 	});
 
 	Handlebars.registerHelper('starts-with', function (haystack, needle) {

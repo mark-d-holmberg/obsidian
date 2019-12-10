@@ -9,7 +9,7 @@
 	</details>
 	{{#each actor.obsidian.classes}}
 		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS name))}}
-			<h2>{{label}}</h2>
+			<h2>{{flags.obsidian.label}}</h2>
 			{{#if (eq flags.obsidian.spellcasting.preparation 'prep')}}
 				{{#with (lookup ../actor.obsidian.spells name)}}
 					<details>

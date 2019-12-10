@@ -412,6 +412,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 				jqel.removeClass('obsidian-hidden');
 				jqel.prev().removeClass('obsidian-hidden');
 			});
+
+		if (filter === 'all') {
+			spellTab.find('.obsidian-spell-table > h3').removeClass('obsidian-hidden');
+		}
 	}
 
 	_injectHTML (html) {

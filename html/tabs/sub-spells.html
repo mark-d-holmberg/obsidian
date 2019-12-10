@@ -31,10 +31,11 @@
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 				</div>
 				<div class="obsidian-tbody">
-					{{#with (lookup ../spellbook this)}}
+					{{#with (spellbook-lookup ../spellbook this)}}
 					{{#each spells}}
+					{{#if flags.obsidian.visible}}
 						<div class="obsidian-tr obsidian-spell-tr item" data-item-id="{{id}}"
-						     data-level="{{data.level.value}}" data-name="{{name}}"
+						     data-level="{{data.level}}" data-name="{{name}}"
 						     data-concentration="{{data.components.concentration}}"
 						     data-ritual="{{data.components.ritual}}">
 							<div class="obsidian-col-icon">
@@ -119,6 +120,7 @@
 								{{/each}}
 							</div>
 						</div>
+					{{/if}}
 					{{/each}}
 					{{/with}}
 				</div>
