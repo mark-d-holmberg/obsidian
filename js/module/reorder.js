@@ -80,7 +80,12 @@ export const Reorder = {
 				// TODO: Delete from old actor.
 				src = (await actor.createOwnedItem(data.data)).data;
 			} else if (data.pack) {
-				src = (await actor.importItemFromCollection(data.pack, data.id)).data;
+				const item = await actor.importItemFromCollection(data.pack, data.id);
+				if (item) {
+					src = item.data;
+				} else {
+					return false;
+				}
 			} else if (!idData) {
 				src = (await actor.createOwnedItem(game.items.get(data.id).data)).data;
 			}

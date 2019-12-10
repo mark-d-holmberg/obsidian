@@ -76,7 +76,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				spellcasting.totalPrepared++;
 			}
 
-			if (data.actor.obsidian.spells[cls.name]) {
+			if (cls.name !== 'custom' && data.actor.obsidian.spells[cls.name]) {
 				const clsSpells = data.actor.obsidian.spells[cls.name];
 				if (spell.data.level === 0) {
 					clsSpells.known.push(spell);

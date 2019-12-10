@@ -54,11 +54,13 @@ export const Prepare = {
 		hit.value = hit.bonus || 0;
 		hit.spellMod = 0;
 
-		if (cls && hit.stat === 'spell') {
-			hit.spellMod = cls.flags.obsidian.spellcasting.mod;
-			hit.value += cls.flags.obsidian.spellcasting.mod;
-		} else if (hit.stat !== 'spell') {
-			hit.value += data.abilities[hit.stat].mod;
+		if (!OBSIDIAN.notDefinedOrEmpty(hit.stat)) {
+			if (hit.stat === 'spell') {
+				hit.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
+				hit.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
+			} else {
+				hit.value += data.abilities[hit.stat].mod;
+			}
 		}
 
 		if (hit.proficient || hit.stat === 'spell') {

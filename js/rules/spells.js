@@ -80,14 +80,15 @@ export function prepareSpells (actorData) {
 		}
 
 		if (spell.data.level < 1) {
-			flags.cantrip = {
-				damage: flags.upcast.damage.map(dmg => {
+			flags.cantrip = {damage: flags.damage};
+			if (flags.upcast.damage) {
+				flags.cantrip.damage = flags.upcast.damage.map(dmg => {
 					const scaled = duplicate(dmg);
 					scaled.ndice *=
 						(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
 					return scaled;
-				})
-			};
+				});
+			}
 
 			Prepare.calculateDamage(actorData.data, cls, flags.cantrip.damage);
 		}
