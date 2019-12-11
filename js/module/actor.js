@@ -237,8 +237,10 @@ export class ObsidianActor extends Actor5e {
 
 		for (const [die, hd] of Object.entries(flags.attributes.hd)) {
 			if (hd.max > 0) {
-				update[`flags.obsidian.attributes.hd.${die}.value`] =
-					hd.value + Math.floor(hd.max / 2);
+				let newValue = hd.value + Math.floor(hd.max / 2);
+				if (newValue <= hd.max) {
+					update[`flags.obsidian.attributes.hd.${die}.value`] = newValue;
+				}
 			}
 		}
 
