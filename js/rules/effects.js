@@ -17,11 +17,19 @@ export function prepareEffects (actorData, item) {
 		attacks: [],
 		saves: [],
 		damage: [],
-		versatile: []
+		versatile: [],
+		resources: []
 	};
 
-	for (const effect of effects) {
-		for (const component of effect.components) {
+	for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {
+		const effect = effects[effectIdx];
+		effect.idx = effectIdx;
+
+		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
+			const component = effect.components[componentIdx];
+			component.parentEffect = effect.uuid;
+			component.idx = componentIdx;
+
 			if (component.type === 'attack') {
 				Prepare.calculateHit(component, data);
 				item.obsidian.attacks.push(component);
@@ -34,6 +42,10 @@ export function prepareEffects (actorData, item) {
 			} else if (component.type === 'save') {
 				Prepare.calculateSave(component, data);
 				item.obsidian.saves.push(component);
+			} else if (component.type === 'resource') {
+				Prepare.calculateResources(
+					item.id, item.idx, data, component, actorData.obsidian.classes);
+				item.obsidian.resources.push(component);
 			}
 		}
 	}
@@ -49,5 +61,16 @@ export function prepareEffects (actorData, item) {
 	if (item.obsidian.saves.length) {
 		item.obsidian.bestSave =
 			item.obsidian.saves.reduce((acc, save) => save.value > acc.value ? save : acc);
+	}
+
+	if (item.obsidian.resources.length) {
+		item.obsidian.bestResource =
+			item.obsidian.resources.reduce((acc, resource) =>
+				resource.max > acc.max ? resource: acc);
+
+		flags.notes.push(
+			'<div class="obsidian-table-note-flex">'
+				+ `${item.obsidian.bestResource.name}: ${item.obsidian.bestResource.display}`
+			+'</div>');
 	}
 }

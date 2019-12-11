@@ -3,11 +3,13 @@
 		<div class="obsidian-item-card-header">
 			<h3>{{item.name}}</h3>
 			<div class="obsidian-item-card-sub-header">
-				{{#if item.flags.obsidian.uses.enabled}}
+				{{#if item.obsidian.bestResource}}
 					<div class="obsidian-item-card-header-row">
-						<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
+						<div class="obsidian-item-card-header-key">
+							{{item.obsidian.bestResource.name}}:
+						</div>
 						<div class="obsidian-item-card-header-value">
-							{{{item.flags.obsidian.uses.display}}}
+							{{{item.obsidian.bestResource.display}}}
 						</div>
 					</div>
 				{{/if}}

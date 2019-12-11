@@ -71,10 +71,7 @@ Schema.EquipTypes = [
 ];
 
 Schema.Consumable = {
-	damage: [],
-	hit: {enabled: false, stat: ''},
-	dc: {enabled: false},
-	uses: {enabled: false, limit: 'limited', ability: '', bonus: 0}
+	unlimited: false
 };
 
 Schema.Container = {currency: {}};

@@ -1,6 +1,11 @@
 import {OBSIDIAN} from './rules.js';
 import {Parse} from '../module/parse.js';
 
+const ops = {
+	plus: (a, b) => a + b,
+	mult: (a, b) => a * b
+};
+
 /**
  * Determines whether a given roll has advantage, disadvantage, or neither,
  * depending on all the modifiers applied to the roll.
@@ -101,6 +106,38 @@ export const Prepare = {
 
 			dmg.display = Prepare.damageFormat(dmg);
 		}
+	},
+
+	calculateResources: function (id, idx, data, resource, classes) {
+		const op = ops[resource.operator];
+		if (resource.key === 'abl') {
+			resource.max = op(resource.bonus, data.abilities[resource.ability].mod);
+		} else if (resource.key === 'chr') {
+			resource.max = op(resource.bonus, data.details.level.value);
+		} else if (resource.key === 'cls') {
+			const cls = classes.find(cls => cls.flags.obsidian.uuid === resource.class);
+			if (cls) {
+				resource.max = op(resource.bonus, cls.data.levels);
+			}
+		}
+
+		resource.max = Math.max(resource.min, resource.max);
+		if (!OBSIDIAN.notDefinedOrEmpty(resource.fixed)) {
+			resource.max = Number(resource.fixed);
+		}
+
+		if (isNaN(resource.max)) {
+			resource.max = 0;
+		}
+
+		if (resource.remaining === undefined || resource.remaining > resource.max) {
+			resource.remaining = resource.max;
+		} else if (resource.remaining < 0) {
+			resource.remaining = 0;
+		}
+
+		resource.display =
+			Prepare.usesFormat(id, idx, resource.max, resource.remaining);
 	},
 
 	calculateUses: function (id, idx, data, cls, uses) {
@@ -234,7 +271,6 @@ export const Prepare = {
 	},
 
 	consumables: function (actorData) {
-		const data = actorData.data;
 		actorData.obsidian.consumables =
 			actorData.items.filter(item => item.type === 'consumable' && item.flags.obsidian);
 		actorData.obsidian.ammo = [];
@@ -243,27 +279,9 @@ export const Prepare = {
 			const flags = consumable.flags.obsidian;
 			flags.notes = [];
 
-			if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
-				Prepare.calculateUses(consumable.id, consumable.idx, data, null, flags.uses);
-				flags.notes.push(
-					'<div class="obsidian-table-note-flex">'
-						+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
-					+ '</div>');
-			}
-
 			if (flags.subtype === 'ammo') {
 				actorData.obsidian.ammo.push(consumable);
 			}
-
-			if (flags.hit.enabled) {
-				Prepare.calculateHit(flags.hit, data);
-			}
-
-			if (flags.dc.enabled) {
-				Prepare.calculateSave(flags.dc, data);
-			}
-
-			Prepare.calculateDamage(data, null, flags.damage);
 		}
 	},
 
@@ -350,11 +368,6 @@ export const Prepare = {
 	},
 
 	features: function (actorData) {
-		const ops = {
-			plus: (a, b) => a + b,
-			mult: (a, b) => a * b
-		};
-
 		const data = actorData.data;
 		actorData.obsidian.feats = [];
 

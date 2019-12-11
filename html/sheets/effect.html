@@ -5,6 +5,8 @@
 				{{> modules/obsidian/html/components/weapon.html}}
 			{{else if (eq item.type 'equipment')}}
 				{{> modules/obsidian/html/components/equipment.html}}
+			{{else if (eq item.type 'consumable')}}
+				{{> modules/obsidian/html/components/consumable.html}}
 			{{/if}}
 			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 			<div class="obsidian-rich-text">

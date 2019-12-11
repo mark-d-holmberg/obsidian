@@ -642,24 +642,33 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (item.flags.obsidian.equippable) {
 			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
 		} else if (item.flags.obsidian.consumable) {
-			if (item.flags.obsidian.uses && item.flags.obsidian.uses.enabled) {
+			if (item.obsidian.bestResource) {
+				const resource = item.obsidian.bestResource;
 				let quantity = item.data.quantity;
-				let remaining = item.flags.obsidian.uses.remaining - 1;
+				let remaining = resource.remaining - 1;
 
 				if (remaining < 1) {
 					quantity--;
 					if (quantity <= 0) {
 						quantity = 0;
 					} else {
-						remaining = item.flags.obsidian.uses.max;
+						remaining = resource.max;
 					}
 				}
 
-				this.actor.updateOwnedItem({
+				const parentEffect =
+					item.flags.obsidian.effects.find(effect =>
+						effect.uuid === resource.parentEffect);
+
+				const update = {
 					id: id,
 					'data.quantity': quantity,
-					'flags.obsidian.uses.remaining': remaining
-				});
+					[`flags.obsidian.effects.${parentEffect.idx}.`
+					+ `components.${resource.idx}.remaining`]: remaining
+				};
+
+				const expanded = OBSIDIAN.updateArrays(item, update);
+				this.actor.updateOwnedItem(expanded);
 			} else {
 				const quantity = item.data.quantity - 1;
 				if (quantity >= 0) {
@@ -667,7 +676,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 				}
 			}
 
-			Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
+			// TODO: Re-enable this once features are converted.
+			//Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
 		}
 	}
 
@@ -679,6 +689,37 @@ export class Obsidian extends ActorSheet5eCharacter {
 		this.settings.width = this.position.width;
 		this.settings.height = this.position.height;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+	}
+
+	/**
+	 * @private
+	 */
+	_onResourceUsed (item, n) {
+		const resource = item.obsidian.bestResource;
+		const parentEffect =
+			item.flags.obsidian.effects.find(effect => effect.uuid === resource.parentEffect);
+
+		if (!parentEffect) {
+			return;
+		}
+
+		const max = resource.max;
+		let used = max - resource.remaining;
+
+		if (n > used) {
+			used++;
+		} else {
+			used--;
+		}
+
+		const update = {
+			id: item.id,
+			[`flags.obsidian.effects.${parentEffect.idx}.components.${resource.idx}.remaining`]:
+				max - used
+		};
+
+		const expanded = OBSIDIAN.updateArrays(item, update);
+		return this.actor.updateOwnedItem(expanded);
 	}
 
 	/**
@@ -751,6 +792,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const feat = this.actor.data.items.find(feat => feat.id === featID);
 		if (!feat) {
 			return;
+		}
+
+		if (feat.obsidian && feat.obsidian.bestResource) {
+			return this._onResourceUsed(feat, n);
 		}
 
 		const max = getProperty(feat.flags.obsidian, prop).max;

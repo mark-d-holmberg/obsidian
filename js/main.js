@@ -26,7 +26,7 @@ const _init = async function () {
 	Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
-		types: ['weapon', 'equipment'],
+		types: ['weapon', 'equipment', 'consumable'],
 		makeDefault: true
 	});
 
