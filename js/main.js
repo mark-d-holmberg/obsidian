@@ -10,7 +10,6 @@ import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianConsumableSheet} from './sheets/consumable.js';
 import {ObsidianContainerSheet} from './sheets/container.js';
-import {ObsidianEquipmentSheet} from './sheets/equipment.js';
 import {ObsidianFeatureSheet} from './sheets/feature.js';
 import {ObsidianSpellSheet} from './sheets/spell.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
@@ -24,10 +23,12 @@ const _init = async function () {
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianConsumableSheet, {types: ['consumable'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianContainerSheet, {types: ['backpack'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianEquipmentSheet, {types: ['equipment'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianEffectSheet, {types: ['weapon'], makeDefault: true});
+	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
+		types: ['weapon', 'equipment'],
+		makeDefault: true
+	});
 
 	// We need to set the game config first, before doing any async work
 	// otherwise we yield execution and the game continues to initialise.
@@ -86,11 +87,12 @@ function enrichItemFlags (data) {
 	ObsidianClassSheet.enrichFlags(data);
 	ObsidianConsumableSheet.enrichFlags(data);
 	ObsidianContainerSheet.enrichFlags(data);
-	ObsidianEquipmentSheet.enrichFlags(data);
 	ObsidianFeatureSheet.enrichFlags(data);
 	ObsidianSpellSheet.enrichFlags(data);
 
-	if (data.type === 'weapon') {
+	if (data.type === 'equipment') {
+		data.flags.obsidian = mergeObject(Schema.Equipment, data.flags.obsidian || {});
+	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
 	} else if (data.type === 'loot' || data.type === 'tool') {
 		data.flags.obsidian = {};

@@ -1,6 +1,7 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../rules/rules.js';
+import {Schema} from '../module/schema.js';
 
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
@@ -61,6 +62,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		super.close();
+	}
+
+	getData () {
+		const data = super.getData();
+		data.equipTypes = Schema.EquipTypes;
+		return data;
 	}
 
 	get _formData () {

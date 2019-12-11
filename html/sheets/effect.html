@@ -3,6 +3,8 @@
 		<section class="obsidian-left-pane">
 			{{#if (eq item.type 'weapon')}}
 				{{> modules/obsidian/html/components/weapon.html}}
+			{{else if (eq item.type 'equipment')}}
+				{{> modules/obsidian/html/components/equipment.html}}
 			{{/if}}
 			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 			<div class="obsidian-rich-text">

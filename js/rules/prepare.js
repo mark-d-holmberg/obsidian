@@ -166,10 +166,6 @@ export const Prepare = {
 			flags.notes = [];
 			flags.baseAC = armour.data.armor.value;
 
-			if (flags.magic !== undefined && flags.magic !== '') {
-				flags.baseAC += Number(flags.magic);
-			}
-
 			if (armour.data.armor.type === 'shield') {
 				if (armour.data.equipped
 					&& (!bestShield || bestShield.flags.obsidian.baseAC < flags.baseAC))
