@@ -11,6 +11,7 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/weapon-notes.html',
 		'modules/obsidian/html/components/tag-dropdown.html',
 		'modules/obsidian/html/components/consumable.html',
+		'modules/obsidian/html/components/container.html',
 		'modules/obsidian/html/components/equipment.html',
 		'modules/obsidian/html/components/weapon.html',
 		'modules/obsidian/html/components/effects/resource.html',

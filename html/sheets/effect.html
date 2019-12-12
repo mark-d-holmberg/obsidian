@@ -7,6 +7,8 @@
 				{{> modules/obsidian/html/components/equipment.html}}
 			{{else if (eq item.type 'consumable')}}
 				{{> modules/obsidian/html/components/consumable.html}}
+			{{else if (eq item.type 'backpack')}}
+				{{> modules/obsidian/html/components/container.html}}
 			{{/if}}
 			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 			<div class="obsidian-rich-text">

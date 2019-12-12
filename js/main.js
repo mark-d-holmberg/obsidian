@@ -8,8 +8,6 @@ import {registerHandlebarHelpers} from './util/helpers.js';
 import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
-import {ObsidianConsumableSheet} from './sheets/consumable.js';
-import {ObsidianContainerSheet} from './sheets/container.js';
 import {ObsidianFeatureSheet} from './sheets/feature.js';
 import {ObsidianSpellSheet} from './sheets/spell.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
@@ -21,12 +19,10 @@ const _init = async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianConsumableSheet, {types: ['consumable'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianContainerSheet, {types: ['backpack'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianFeatureSheet, {types: ['feat'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
-		types: ['weapon', 'equipment', 'consumable'],
+		types: ['weapon', 'equipment', 'consumable', 'backpack'],
 		makeDefault: true
 	});
 
@@ -85,12 +81,14 @@ function enrichItemFlags (data) {
 	}
 
 	ObsidianClassSheet.enrichFlags(data);
-	ObsidianConsumableSheet.enrichFlags(data);
-	ObsidianContainerSheet.enrichFlags(data);
 	ObsidianFeatureSheet.enrichFlags(data);
 	ObsidianSpellSheet.enrichFlags(data);
 
-	if (data.type === 'equipment') {
+	if (data.type === 'consumable') {
+		data.flags.obsidian = mergeObject(Schema.Consumable, data.flags.obsidian || {});
+	} else if (data.type === 'container') {
+		data.flags.obsidian = mergeObject(Schema.Container, data.flags.obsidian || {});
+	} else if (data.type === 'equipment') {
 		data.flags.obsidian = mergeObject(Schema.Equipment, data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});

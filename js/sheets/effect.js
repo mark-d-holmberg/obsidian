@@ -2,6 +2,7 @@ import {ObsidianItemSheet} from './item-sheet.js';
 import {Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../rules/rules.js';
 import {Schema} from '../module/schema.js';
+import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
@@ -44,6 +45,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		});
 
 		html.find('.fancy-checkbox').click(this._onCheckBoxClicked.bind(this));
+		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
 
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
