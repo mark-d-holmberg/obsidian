@@ -1,0 +1,30 @@
+<fieldset>
+	<legend>{{localize 'OBSIDIAN.Feature'}}</legend>
+  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+    <div class="obsidian-fullwidth">
+      <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
+             value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
+      <label class="obsidian-inline">
+        {{localize 'OBSIDIAN.Source'}}
+        <select name="flags.obsidian.source.type" data-selector="source">
+          {{#select item.flags.obsidian.source.type}}
+	          {{#each ObsidianRules.FEAT_SOURCE_TYPES}}
+		          <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
+	          {{/each}}
+          {{/select}}
+        </select>
+      </label>
+      <select name="flags.obsidian.source.class" data-selector-parent="source" data-show="class">
+        {{#select item.flags.obsidian.source.class}}
+	        {{#each actor.data.obsidian.classes}}
+		        <option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
+	        {{/each}}
+        {{/select}}
+      </select>
+      <input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="other"
+             data-selector-parent="source" name="flags.obsidian.source.other"
+             value="{{item.flags.obsidian.source.other}}"
+             placeholder="{{localize 'OBSIDIAN.Source'}}">
+    </div>
+  </div>
+</fieldset>

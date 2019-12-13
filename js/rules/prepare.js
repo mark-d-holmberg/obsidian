@@ -244,7 +244,7 @@ export const Prepare = {
 		}
 
 		const acOverride = actorData.flags.obsidian.attributes.ac.override;
-		if (acOverride === undefined || acOverride === '') {
+		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
 				data.attributes.ac.min =
 					bestArmour.flags.obsidian.baseAC
@@ -368,9 +368,7 @@ export const Prepare = {
 	},
 
 	features: function (actorData) {
-		const data = actorData.data;
 		actorData.obsidian.feats = [];
-
 		for (let i = 0; i < actorData.items.length; i++) {
 			if (actorData.items[i].type !== 'feat') {
 				continue;
@@ -393,50 +391,6 @@ export const Prepare = {
 				}
 			}
 
-			if (flags.uses.enabled) {
-				const op = ops[flags.uses.operator];
-				if (flags.uses.key === 'abl') {
-					flags.uses.max = op(flags.uses.bonus, data.abilities[flags.uses.ability].mod);
-				} else if (flags.uses.key === 'chr') {
-					flags.uses.max = op(flags.uses.bonus, data.details.level.value);
-				} else if (flags.uses.key === 'cls') {
-					const cls =
-						actorData.obsidian.classes.find(cls =>
-							cls.flags.obsidian.uuid === flags.uses.class);
-
-					if (cls) {
-						flags.uses.max = op(flags.uses.bonus, cls.data.levels);
-					}
-				}
-
-				flags.uses.max = Math.max(flags.uses.min, flags.uses.max);
-				if (flags.uses.fixed !== undefined && flags.uses.fixed !== '') {
-					flags.uses.max = Number(flags.uses.fixed);
-				}
-
-				if (isNaN(flags.uses.max)) {
-					flags.uses.max = 0;
-				}
-
-				if (flags.uses.remaining === undefined || flags.uses.remaining > flags.uses.max) {
-					flags.uses.remaining = flags.uses.max;
-				} else if (flags.uses.remaining < 0) {
-					flags.uses.remaining = 0;
-				}
-
-				flags.uses.display =
-					Prepare.usesFormat(feat.id, i, flags.uses.max, flags.uses.remaining);
-			}
-
-			if (flags.dc.enabled) {
-				Prepare.calculateSave(flags.dc, data);
-			}
-
-			if (flags.hit.enabled) {
-				Prepare.calculateHit(flags.hit, data);
-			}
-
-			Prepare.calculateDamage(data, null, flags.damage);
 			flags.display = Parse.parse(actorData, feat.data.description.value);
 		}
 	},

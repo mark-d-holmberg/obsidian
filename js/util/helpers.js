@@ -139,30 +139,15 @@ export function registerHandlebarHelpers () {
 			+ game.i18n.localize(`${prefix}${duration.type}`).toLocaleLowerCase();
 	});
 
-	Handlebars.registerHelper('format-uses', function (items, feature) {
-		const uses = feature.flags.obsidian.uses;
-		if (!uses.enabled) {
-			return '';
+	Handlebars.registerHelper('format-uses', function (feature) {
+		if (!feature.obsidian.bestResource) {
+			return;
 		}
 
-		const features = items.filter(item => item.type === 'feat' && item.flags.obsidian);
-		const map = new Map(features.map(feat => [feat.id, feat]));
-		let id = feature.id;
-		let idx = feature.idx;
-		let max = uses.max;
-		let remaining = uses.remaining;
-
-		if (uses.type === 'shared') {
-			const shared = items.find(feat => feat.id === uses.shared);
-			if (shared) {
-				id = shared.id;
-				idx = shared.idx;
-				max = map.get(id).flags.obsidian.uses.max;
-				remaining = map.get(id).flags.obsidian.uses.remaining;
-			}
-		}
-
-		return new Handlebars.SafeString(Prepare.usesFormat(id, idx, max, remaining));
+		return new Handlebars.SafeString(
+			Prepare.usesFormat(
+				feature.id, feature.idx, feature.obsidian.bestResource.max,
+				feature.obsidian.bestResource.remaining));
 	});
 
 	Handlebars.registerHelper('get-property', function (data, key) {

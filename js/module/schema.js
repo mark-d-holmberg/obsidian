@@ -76,16 +76,7 @@ Schema.Consumable = {
 
 Schema.Container = {currency: {}};
 Schema.Equipment = {subtype: 'gear'};
-
-Schema.Feature = {
-	active: 'active',
-	action: 'action',
-	source: {},
-	uses: {enabled: false},
-	dc: {enabled: false},
-	hit: {enabled: false},
-	damage: []
-};
+Schema.Feature = {source: {}};
 
 Schema.Spell = {
 	damage: [],

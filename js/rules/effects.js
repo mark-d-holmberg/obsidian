@@ -1,17 +1,13 @@
 import {Prepare} from './prepare.js';
 
 export function prepareEffects (actorData, item) {
-	if (!item.flags
-		|| !item.flags.obsidian
-		|| !item.flags.obsidian.effects
-		|| !item.flags.obsidian.effects.length)
-	{
+	if (!item.flags || !item.flags.obsidian) {
 		return;
 	}
 
 	const data = actorData.data;
 	const flags = item.flags.obsidian;
-	const effects = flags.effects;
+	const effects = flags.effects || [];
 
 	item.obsidian = {
 		attacks: [],
@@ -68,9 +64,11 @@ export function prepareEffects (actorData, item) {
 			item.obsidian.resources.reduce((acc, resource) =>
 				resource.max > acc.max ? resource: acc);
 
-		flags.notes.push(
-			'<div class="obsidian-table-note-flex">'
+		if (flags.notes) {
+			flags.notes.push(
+				'<div class="obsidian-table-note-flex">'
 				+ `${item.obsidian.bestResource.name}: ${item.obsidian.bestResource.display}`
-			+'</div>');
+				+'</div>');
+		}
 	}
 }
