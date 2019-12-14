@@ -11,6 +11,8 @@
 				{{> modules/obsidian/html/components/container.html}}
 			{{else if (eq item.type 'feat')}}
 				{{> modules/obsidian/html/components/feature.html}}
+			{{else if (eq item.type 'spell')}}
+				{{> modules/obsidian/html/components/spell.html}}
 			{{/if}}
 			<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
 			<div class="obsidian-rich-text">

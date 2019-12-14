@@ -8,7 +8,6 @@ import {registerHandlebarHelpers} from './util/helpers.js';
 import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
-import {ObsidianSpellSheet} from './sheets/spell.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
 
@@ -18,9 +17,8 @@ const _init = async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianSpellSheet, {types: ['spell'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
-		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat'],
+		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell'],
 		makeDefault: true
 	});
 
@@ -79,7 +77,6 @@ function enrichItemFlags (data) {
 	}
 
 	ObsidianClassSheet.enrichFlags(data);
-	ObsidianSpellSheet.enrichFlags(data);
 
 	if (data.type === 'consumable') {
 		data.flags.obsidian = mergeObject(Schema.Consumable, data.flags.obsidian || {});
@@ -89,6 +86,8 @@ function enrichItemFlags (data) {
 		data.flags.obsidian = mergeObject(Schema.Equipment, data.flags.obsidian || {});
 	} else if (data.type === 'feat') {
 		data.flags.obsidian = mergeObject(Schema.Feature, data.flags.obsidian || {});
+	} else if (data.type === 'spell') {
+		data.flags.obsidian = mergeObject(Schema.Spell, data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
 	} else if (data.type === 'loot' || data.type === 'tool') {

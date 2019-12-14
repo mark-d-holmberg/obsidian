@@ -126,6 +126,7 @@ OBSIDIAN.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour', 'spec
 OBSIDIAN.Rules.SPELL_DURATIONS = ['instant', 'dispel', 'special', 'round', 'min', 'hour', 'day'];
 OBSIDIAN.Rules.SPELL_RANGES = ['self', 'touch', 'short', 'long'];
 OBSIDIAN.Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
+OBSIDIAN.Rules.SPELL_SOURCES = ['class', 'custom'];
 OBSIDIAN.Rules.SPELL_PREP = ['known', 'prep', 'book'];
 OBSIDIAN.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
 OBSIDIAN.Rules.SPELL_RITUALS = ['prep', 'book'];

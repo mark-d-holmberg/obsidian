@@ -234,6 +234,8 @@
 	"OBSIDIAN.FeatSrc-race": "Race",
 	"OBSIDIAN.FeatSrc-feat": "Feat",
 	"OBSIDIAN.FeatSrc-other": "Other",
+	"OBSIDIAN.SpellSrc-class": "Class",
+	"OBSIDIAN.SpellSrc-custom": "Custom",
 	"OBSIDIAN.Uses": "Uses",
 	"OBSIDIAN.UsesKey-abl": "Ability",
 	"OBSIDIAN.UsesKey-chr": "Character Level",

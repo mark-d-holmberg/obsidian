@@ -79,14 +79,10 @@ Schema.Equipment = {subtype: 'gear'};
 Schema.Feature = {source: {}};
 
 Schema.Spell = {
-	damage: [],
-	upcast: {enabled: false, damage: []},
 	time: {},
 	range: {},
 	duration: {},
 	components: {},
-	hit: {enabled: false, stat: ''},
-	dc: {enabled: false, bonus: 8, prof: 1, ability: 'spell'},
 	source: {type: 'custom'}
 };
 
