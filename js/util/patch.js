@@ -23,27 +23,36 @@ export function runPatches () {
 	Entity.prototype.update = async function (data, options = {}) {
 		const collection = this.collection;
 		const name = this.entity;
-		const changed = {};
+		const update = updatePreserveArrays(this, data);
 
-		for (const [k, v] of Object.entries(data)) {
-			const c = getProperty(this.data, k);
-			if (c !== v) {
-				changed[k] = v;
-			}
-		}
-
-		if (Object.keys(changed).length < 1) {
+		if (update === false) {
 			return this;
 		}
-
-		const expanded = OBSIDIAN.updateArrays(this.data, changed);
-		const update = Object.keys(expanded).length > 0 ? expanded : changed;
 
 		update._id = this._id;
 		return SocketInterface.trigger(`update${name}`, {data: update}, options, {
 			preHook: `preUpdate${name}`,
 			context: collection,
 			success: collection._updateEntity,
+			postHook: `update${name}`
+		});
+	};
+
+	PlaceableObject.prototype.update = async function (sceneId, data, options = {}) {
+		const name = this.constructor.name;
+		const update = updatePreserveArrays(this, flattenObject(data));
+
+		if (update === false) {
+			return this;
+		}
+
+		update.id = this.id;
+		const eventData = {parentId: sceneId, data: expandObject(update)};
+
+		await SocketInterface.trigger(`update${name}`, eventData, options, {
+			preHook: `preUpdate${name}`,
+			context: this,
+			success: response => this.constructor.layer._updatePlaceableObject(response),
 			postHook: `update${name}`
 		});
 	};
@@ -63,6 +72,23 @@ export function runPatches () {
 
 	patchChatMessage();
 	patchDraggable_onDragMouseUp();
+}
+
+function updatePreserveArrays (entity, newData) {
+	const changed = {};
+	for (const [k, v] of Object.entries(newData)) {
+		const c = getProperty(entity.data, k);
+		if (c !== v) {
+			changed[k] = v;
+		}
+	}
+
+	if (Object.keys(changed).length < 1) {
+		return false;
+	}
+
+	const expanded = OBSIDIAN.updateArrays(entity.data, changed);
+	return Object.keys(expanded).length > 0 ? expanded : changed;
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {
