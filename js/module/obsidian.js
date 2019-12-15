@@ -705,6 +705,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		}
 
+		if (this.entity.isToken) {
+			// Is this a foundry bug? Newly-dragged tokens do not have
+			// actorData populated, which messes with the array
+			// detection.
+			this.entity.token.data.actorData = this.actor.data;
+		}
+
 		return super._onSubmit(event, {preventClose: preventClose});
 	}
 
