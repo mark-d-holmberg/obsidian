@@ -204,7 +204,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	getData () {
-		this.actor.data = this.actor.prepareData(this.actor.data);
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
 		console.debug(data);

@@ -8,24 +8,24 @@ import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 
 export class ObsidianActor extends Actor5e {
-	prepareData (actorData) {
-		actorData = super.prepareData(actorData);
-		if (actorData.type === 'npc') {
-			return actorData;
+	prepareData () {
+		super.prepareData();
+		if (this.data.type === 'npc') {
+			return this.data;
 		}
 
-		ObsidianActor._enrichFlags(actorData.flags);
+		ObsidianActor._enrichFlags(this.data.flags);
 
-		const data = actorData.data;
-		const flags = actorData.flags.obsidian;
-		actorData.obsidian = {};
+		const data = this.data.data;
+		const flags = this.data.flags.obsidian;
+		this.data.obsidian = {};
 
-		actorData.obsidian.classes =
-			actorData.items.filter(item => item.type === 'class' && item.flags.obsidian);
+		this.data.obsidian.classes =
+			this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
 		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
 		data.details.level.value = 0;
-		for (const cls of Object.values(actorData.obsidian.classes)) {
+		for (const cls of Object.values(this.data.obsidian.classes)) {
 			if (!cls.flags.obsidian) {
 				continue;
 			}
@@ -57,7 +57,7 @@ export class ObsidianActor extends Actor5e {
 					* 100);
 		}
 
-		actorData.obsidian.classFormat = ObsidianActor._classFormat(actorData.obsidian.classes);
+		this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
 		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
@@ -81,30 +81,30 @@ export class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = flags.attributes.ac.override;
 		}
 
-		actorData.obsidian.profs = {
+		this.data.obsidian.profs = {
 			armour: flags.traits.profs.custom.armour,
 			weapons: flags.traits.profs.custom.weapons,
 			langs: flags.traits.profs.custom.langs
 		};
 
-		actorData.obsidian.magicalItems =
-			actorData.items.filter(item =>
+		this.data.obsidian.magicalItems =
+			this.data.items.filter(item =>
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
 		Prepare.defenses(flags);
-		Prepare.skills(actorData, data, flags);
-		Prepare.tools(actorData, data, flags);
-		Prepare.saves(actorData, data, flags);
-		prepareSpellcasting(actorData, flags);
-		Prepare.features(actorData);
-		prepareInventory(actorData);
-		Prepare.consumables(actorData);
-		Prepare.weapons(actorData);
-		Prepare.armour(actorData);
-		prepareSpells(actorData);
+		Prepare.skills(this.data, data, flags);
+		Prepare.tools(this.data, data, flags);
+		Prepare.saves(this.data, data, flags);
+		prepareSpellcasting(this.data, flags);
+		Prepare.features(this.data);
+		prepareInventory(this.data);
+		Prepare.consumables(this.data);
+		Prepare.weapons(this.data);
+		Prepare.armour(this.data);
+		prepareSpells(this.data);
 
-		return actorData;
+		return this.data;
 	}
 
 	async createOwnedItem (itemData, options) {
