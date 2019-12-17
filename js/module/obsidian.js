@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Reorder} from './reorder.js';
+import {Rolls} from '../rules/rolls.js';
 import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
@@ -31,7 +32,6 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
-import {Rolls} from '../rules/rolls.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -181,6 +181,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
 		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
+		html.find('[contenteditable]').focusout(this._onContenteditableUnfocus.bind(this));
 
 		this._activateDialogs(html);
 
@@ -567,6 +568,17 @@ export class Obsidian extends ActorSheet5eCharacter {
 		} else {
 			new ObsidianSpellSlotDialog(this, spell).render(true);
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onContenteditableUnfocus (evt) {
+		setTimeout(() => {
+			if (!$(':focus').length) {
+				this._onSubmit(evt);
+			}
+		}, 25);
 	}
 
 	/**
