@@ -61,7 +61,7 @@
 
 .obsidian-effect {
 	padding: 10px;
-	border: 4px solid var(--mid);
+	border: 2px ridge var(--mid);
 	min-height: 100px;
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
 	margin-bottom: 10px;

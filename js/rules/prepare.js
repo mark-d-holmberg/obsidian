@@ -109,25 +109,22 @@ export const Prepare = {
 	},
 
 	calculateResources: function (id, idx, data, resource, classes) {
-		const op = ops[resource.operator];
-		if (resource.key === 'abl') {
-			resource.max = op(resource.bonus, data.abilities[resource.ability].mod);
-		} else if (resource.key === 'chr') {
-			resource.max = op(resource.bonus, data.details.level.value);
-		} else if (resource.key === 'cls') {
-			const cls = classes.find(cls => cls.flags.obsidian.uuid === resource.class);
-			if (cls) {
-				resource.max = op(resource.bonus, cls.data.levels);
+		if (resource.calc === 'fixed') {
+			resource.max = resource.fixed;
+		} else {
+			const op = ops[resource.operator];
+			if (resource.key === 'abl') {
+				resource.max = op(resource.bonus, data.abilities[resource.ability].mod);
+			} else if (resource.key === 'chr') {
+				resource.max = op(resource.bonus, data.details.level.value);
+			} else if (resource.key === 'cls') {
+				const cls = classes.find(cls => cls.flags.obsidian.uuid === resource.class);
+				if (cls) {
+					resource.max = op(resource.bonus, cls.data.levels);
+				}
 			}
-		}
 
-		resource.max = Math.max(resource.min, resource.max);
-		if (!OBSIDIAN.notDefinedOrEmpty(resource.fixed)) {
-			resource.max = Number(resource.fixed);
-		}
-
-		if (isNaN(resource.max)) {
-			resource.max = 0;
+			resource.max = Math.max(resource.min, resource.max);
 		}
 
 		if (resource.remaining === undefined || resource.remaining > resource.max) {
