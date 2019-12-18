@@ -395,6 +395,34 @@ export const Prepare = {
 		}
 	},
 
+	hd: function (actorData) {
+		const classHD = {};
+		const existingHD = actorData.flags.obsidian.attributes.hd;
+
+		for (const cls of actorData.obsidian.classes) {
+			const die = String(cls.flags.obsidian.hd);
+			let hd = classHD[die] || 0;
+			hd += cls.data.levels;
+			classHD[die] = hd;
+		}
+
+		for (const hd of Object.values(existingHD)) {
+			if (!OBSIDIAN.notDefinedOrEmpty(hd.override)) {
+				hd.override = Number(hd.override);
+			}
+		}
+
+		for (const [die, hd] of Object.entries(classHD)) {
+			let existing = existingHD[die];
+			if (existing === undefined) {
+				existing = {value: hd, max: hd};
+				existingHD[die] = existing;
+			} else {
+				existing.max = hd;
+			}
+		}
+	},
+
 	saves: function (actorData, data, flags) {
 		for (const [id, save] of Object.entries(data.abilities)) {
 			save.save += flags.saves.bonus;

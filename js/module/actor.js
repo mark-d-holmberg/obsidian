@@ -95,6 +95,7 @@ export class ObsidianActor extends Actor5e {
 				&& getProperty(item, 'flags.obsidian.magical'));
 
 		Prepare.defenses(flags);
+		Prepare.hd(this.data);
 		Prepare.skills(this.data, data, flags);
 		Prepare.tools(this.data, data, flags);
 		Prepare.saves(this.data, data, flags);
@@ -108,30 +109,6 @@ export class ObsidianActor extends Actor5e {
 		prepareEffects(this.data);
 
 		return this.data;
-	}
-
-	async createOwnedItem (itemData, options) {
-		await super.createOwnedItem(itemData, options);
-		if (itemData.type === 'class') {
-			const update = {};
-			await this.updateClasses(update);
-			if (Object.keys(update).length > 0) {
-				this.update(update);
-			}
-		}
-	}
-
-	async deleteOwnedItem (itemId, options = {}) {
-		const item = this.data.items.find(itm => itm.id === itemId);
-		const isClass = item.type === 'class';
-		await super.deleteOwnedItem(itemId, options);
-		if (isClass) {
-			const update = {};
-			await this.updateClasses(update);
-			if (Object.keys(update).length > 0) {
-				this.update(update);
-			}
-		}
 	}
 
 	linkClasses (item) {
@@ -297,35 +274,6 @@ export class ObsidianActor extends Actor5e {
 		return Promise.resolve();
 	}
 
-	async updateClasses (update) {
-		const clsMap =
-			new Map(this.data.obsidian.classes.map(cls => [cls.flags.obsidian.uuid, cls]));
-		const spells = this.data.items.filter(item => item.type === 'spell');
-		const features =
-			this.data.items.filter(item =>
-				item.type === 'feat' && item.flags.obsidian && item.flags.obsidian.custom);
-
-		for (const feature of features) {
-			const flags = feature.flags.obsidian;
-			if (flags.source.type === 'class' && !clsMap.has(flags.source.class)) {
-				await this.deleteOwnedItem(feature.id);
-			}
-
-			if (flags.uses.key === 'cls' && !clsMap.has(flags.uses.class)) {
-				await this.deleteOwnedItem(feature.id);
-			}
-		}
-
-		for (const spell of spells) {
-			const flags = spell.flags.obsidian;
-			if (flags.source && flags.source.type === 'class' && !clsMap.has(flags.source.class)) {
-				await this.deleteOwnedItem(spell.id);
-			}
-		}
-
-		update['flags.obsidian.attributes.hd'] = this.updateHD(this.data.obsidian.classes);
-	}
-
 	async updateEquipment (deleted) {
 		if (deleted) {
 			const update = {};
@@ -356,80 +304,5 @@ export class ObsidianActor extends Actor5e {
 
 			await this.update(update);
 		}
-
-		const magicalItems =
-			this.data.items.filter(item =>
-				(item.type === 'weapon' || item.type === 'equipment')
-				&& getProperty(item, 'flags.obsidian.magical'));
-
-		const itemMap = new Map(magicalItems.map(item => [item.id, item]));
-		const spells = this.data.items.filter(item => item.type === 'spell');
-
-		for (const spell of spells) {
-			const flags = spell.flags.obsidian;
-			if (flags.source === 'item' && !itemMap.has(flags.source.item)) {
-				await this.deleteOwnedItem(spell.id);
-			}
-		}
-	}
-
-	async updateFeatures (update) {
-		const features =
-			this.data.items.filter(item => item.type === 'feat' && item.flags.obsidian);
-		const featMap = new Map(features.map(feat => [feat.id, feat]));
-
-		for (let i = 0; i < this.data.items.length; i++) {
-			const item = this.data.items[i];
-			if (item.type === 'spell') {
-				const flags = item.flags.obsidian;
-				if (flags.source && flags.source.type === 'feat'
-					&& !featMap.has(flags.source.feat))
-				{
-					await this.deleteOwnedItem(item.id);
-				}
-			}
-
-			if (item.type !== 'feat' || !item.flags.obsidian || !item.flags.obsidian.custom) {
-				continue;
-			}
-
-			const feature = item.flags.obsidian;
-			if (feature.uses.type === 'shared' && !featMap.has(feature.uses.shared)) {
-				update[`items.${i}.flags.obsidian.uses.type`] = 'formula';
-			}
-		}
-	}
-
-	updateHD (classes) {
-		const existing = this.data.flags.obsidian.attributes.hd;
-		const newHD = {};
-		const totals = {};
-
-		for (const cls of classes) {
-			if (totals[cls.flags.obsidian.hd] === undefined) {
-				totals[cls.flags.obsidian.hd] = 0;
-			}
-
-			totals[cls.flags.obsidian.hd] += cls.data.levels;
-		}
-
-		for (const [hd, val] of Object.entries(existing)) {
-			const updated = duplicate(val);
-			const diff = (totals[hd] || 0) - val.max;
-			updated.max = totals[hd] || 0;
-			updated.value = val.value + diff;
-			newHD[hd] = updated;
-		}
-
-		for (const [hd, val] of Object.entries(totals)) {
-			if (newHD[hd] === undefined) {
-				newHD[hd] = {
-					max: val,
-					value: val
-				};
-			}
-		}
-
-		return newHD;
 	}
 }

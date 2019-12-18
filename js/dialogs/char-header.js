@@ -136,9 +136,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		return this.parent.actor.update({
 			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
 			'data.details.race': formData['data.details.race'],
-			'flags.obsidian.details.subrace': formData['flags.obsidian.details.subrace'],
-			'flags.obsidian.attributes.hd':
-				this.parent.actor.updateHD(this.parent.actor.data.obsidian.classes)
+			'flags.obsidian.details.subrace': formData['flags.obsidian.details.subrace']
 		});
 	}
 }

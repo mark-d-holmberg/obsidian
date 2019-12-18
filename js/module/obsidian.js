@@ -602,14 +602,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const update = {};
 		const id = Number(target.closest('.item').data('item-id'));
 		await this.actor.deleteOwnedItem(id);
-		await this.actor.updateFeatures(update);
-
-		if (Object.keys(update) > 0) {
-			this.actor.update(update);
-		}
 	}
 
 	_onDragItemStart (event) {
