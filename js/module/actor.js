@@ -19,13 +19,14 @@ export class ObsidianActor extends Actor5e {
 
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
-		this.data.obsidian = {};
 
+		this.data.obsidian = {};
 		this.data.obsidian.classes =
 			this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
-		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 
+		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 		data.details.level.value = 0;
+
 		for (const cls of Object.values(this.data.obsidian.classes)) {
 			if (!cls.flags.obsidian) {
 				continue;
@@ -93,25 +94,18 @@ export class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
-		this.data.obsidian.effects =
-			this.data.items.filter(item => item.flags.obsidian && item.flags.obsidian.effects);
-
 		Prepare.defenses(flags);
 		Prepare.skills(this.data, data, flags);
 		Prepare.tools(this.data, data, flags);
 		Prepare.saves(this.data, data, flags);
 		prepareSpellcasting(this.data, flags);
-		Prepare.features(this.data);
 		prepareInventory(this.data);
+		Prepare.features(this.data);
 		Prepare.consumables(this.data);
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
-
-		this.data.obsidian.attacks = [];
-		for (const item of this.data.items) {
-			prepareEffects(this.data, item);
-		}
+		prepareEffects(this.data);
 
 		return this.data;
 	}

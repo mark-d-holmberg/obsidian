@@ -1,6 +1,7 @@
 import {OBSIDIAN} from './rules.js';
 
 export function prepareInventory (actorData) {
+	actorData.obsidian.itemsByID = new Map();
 	actorData.obsidian.inventory = {
 		weight: 0,
 		encumbered: false,
@@ -11,7 +12,7 @@ export function prepareInventory (actorData) {
 	const containerOrder = new Set(actorData.flags.obsidian.order.equipment.containers);
 	const inventory = actorData.obsidian.inventory;
 	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot']);
-	const map = new Map();
+	const map = actorData.obsidian.itemsByID;
 
 	for (let i = 0; i < actorData.items.length; i++) {
 		const item = actorData.items[i];
