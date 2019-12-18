@@ -565,14 +565,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const hasUses = spell.flags.obsidian.uses && spell.flags.obsidian.uses.enabled;
-		if (spell.data.level < 1 || hasUses) {
-			if (hasUses && spell.flags.obsidian.uses.limit === 'limited') {
-				spell.update({
-					'flags.obsidian.uses.remaining': spell.flags.obsidian.uses.remaining - 1
-				});
-			}
-
+		if (spell.data.level < 1) {
 			evt.currentTarget.dataset.roll = 'spl';
 			evt.currentTarget.dataset.level = spell.data.level;
 			Rolls.fromClick(this.actor, evt);

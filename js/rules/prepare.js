@@ -59,25 +59,21 @@ export const Prepare = {
 		hit.value = hit.bonus || 0;
 		hit.spellMod = 0;
 
-		const ability = hit.ability || hit.stat;
-		if (!OBSIDIAN.notDefinedOrEmpty(hit.stat)) {
-			if (ability === 'spell') {
+		if (!OBSIDIAN.notDefinedOrEmpty(hit.ability)) {
+			if (hit.ability === 'spell') {
 				hit.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
 				hit.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
 			} else {
-				hit.value += data.abilities[ability].mod;
+				hit.value += data.abilities[hit.ability].mod;
 			}
 		}
 
-		if (hit.proficient || ability === 'spell') {
+		if (hit.proficient || hit.ability === 'spell') {
 			hit.value += data.attributes.prof;
 		}
 
-		if (OBSIDIAN.notDefinedOrEmpty(hit.crit)) {
-			hit.crit = 20;
-		} else {
-			hit.crit = parseInt(hit.crit);
-		}
+		hit.attackType =
+			game.i18n.localize(`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}`);
 	},
 
 	calculateDamage: function (data, cls, ...dmgs) {

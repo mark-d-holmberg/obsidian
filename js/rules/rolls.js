@@ -304,7 +304,20 @@ export const Rolls = {
 		}
 
 		const roll = dataset.roll;
-		if (roll === 'atk') {
+		if (roll === 'fx') {
+			if (dataset.id === undefined) {
+				return;
+			}
+
+			const id = Number(dataset.id);
+			const item = actor.data.obsidian.itemsByID.get(id);
+
+			if (!item) {
+				return;
+			}
+
+			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item));
+		} else if (roll === 'atk') {
 			if (dataset.atk === undefined) {
 				return;
 			}
@@ -446,6 +459,37 @@ export const Rolls = {
 				[flags.attributes.init.roll],
 				data.attributes.init.mod);
 		}
+	},
+
+	itemRoll: function (actor, item) {
+		if (!item.flags.obsidian || !item.flags.obsidian.effects) {
+			return [];
+		}
+
+		const itemFlags = item.flags.obsidian;
+		return itemFlags.effects.map(effect => {
+			const results = {type: 'fx', title: item.name};
+			const attacks = effect.components.filter(c => c.type === 'attack');
+			const damage = effect.components.filter(c => c.type === 'damage');
+			const saves = effect.components.filter(c => c.type === 'save');
+
+			if (attacks.length) {
+				const mods = [];
+				results.results = Rolls.toHitRoll(actor, attacks[0], mods);
+				results.dmgBtn = effect.uuid;
+				results.dmgCount = 1;
+				results.subtitle = attacks[0].attackType;
+			} else if (damage.length) {
+				results.damage = Rolls.rollDamage(actor, damage, {crit: false});
+				results.crit = Rolls.rollDamage(actor, damage, {crit: false});
+			}
+
+			if (saves.length) {
+				results.save = Rolls.compileSave(actor, saves);
+			}
+
+			return {flags: {obsidian: results}};
+		});
 	},
 
 	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
