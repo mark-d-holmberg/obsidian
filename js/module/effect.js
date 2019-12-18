@@ -3,7 +3,7 @@ import {OBSIDIAN} from '../rules/rules.js';
 export const Effect = {
 	create: function () {
 		return {
-			name: game.i18n.localize('OBSIDIAN.NewEffect'),
+			name: '',
 			uuid: OBSIDIAN.uuid(),
 			components: []
 		};
@@ -11,7 +11,6 @@ export const Effect = {
 
 	newResource: function () {
 		return {
-			name: '',
 			type: 'resource',
 			uuid: OBSIDIAN.uuid(),
 			recharge: 'long',
