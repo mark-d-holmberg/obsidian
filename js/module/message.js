@@ -1,6 +1,5 @@
 // Is monkey-patching better than extending ChatMessage and changing the
 // entityClass? ¯\_(ツ)_/¯
-import {OBSIDIAN} from '../rules/rules.js';
 import {Rolls} from '../rules/rolls.js';
 
 export function patchChatMessage () {

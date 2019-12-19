@@ -45,23 +45,25 @@
 		{{/each}}
 	</section>
 	{{/if}}
-	{{#if message.flags.obsidian.save}}
+	{{#if message.flags.obsidian.saves}}
 	<section class="obsidian-msg-save">
+		{{#each message.flags.obsidian.saves}}
 		<div>
 			<div class="obsidian-msg-save-dc">
 				{{localize 'OBSIDIAN.DC'}}
-				<div class="obsidian-msg-roll-box">{{message.flags.obsidian.save.dc}}</div>
-				<div class="obsidian-msg-tooltip">{{message.flags.obsidian.save.breakdown}}</div>
-				{{message.flags.obsidian.save.target}} {{localize 'OBSIDIAN.Save'}}
+				<div class="obsidian-msg-roll-box">{{dc}}</div>
+				<div class="obsidian-msg-tooltip">{{breakdown}}</div>
+				{{target}} {{localize 'OBSIDIAN.Save'}}
 			</div>
-			<div class="obsidian-msg-save-effect">{{message.flags.obsidian.save.effect}}</div>
+			<div class="obsidian-msg-save-effect">{{effect}}</div>
 		</div>
+		{{/each}}
 	</section>
 	{{/if}}
 	{{#if (and (defined message.flags.obsidian.dmgBtn) (or user.isGM (eq user.id author.id)))}}
 	<section class="obsidian-msg-btn-row">
 		<button type="button" class="obsidian-btn-outline" data-roll="dmg"
-		        data-actor="{{message.speaker.actor}}" data-item="{{message.flags.obsidian.dmgBtn}}"
+		        data-actor="{{message.speaker.actor}}" data-effect="{{message.flags.obsidian.dmgBtn}}"
 		        data-count="{{message.flags.obsidian.dmgCount}}"
 		        data-upcast="{{message.flags.obsidian.dmgUpcast}}">
 			<i class="fas fa-dice-d20"></i>

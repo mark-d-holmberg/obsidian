@@ -73,7 +73,8 @@ export const Prepare = {
 		}
 
 		hit.attackType =
-			game.i18n.localize(`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}`);
+			game.i18n.localize(
+				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
 	calculateDamage: function (data, cls, ...dmgs) {
