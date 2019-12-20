@@ -182,7 +182,10 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			roll[0].dataset.roll = rollType;
 			roll[0].dataset[rollType] = this.item.id;
 
-			if (this.item.type === 'feat' && this.item.flags.obsidian.uses.enabled) {
+			if (this.item.type === 'feat'
+				&& this.item.flags.obsidian.uses
+				&& this.item.flags.obsidian.uses.enabled)
+			{
 				this._renderUses().insertBefore(roll);
 			}
 		}
