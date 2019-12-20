@@ -541,6 +541,13 @@ export const Rolls = {
 				}
 			}
 
+			if (!OBSIDIAN.notDefinedOrEmpty(itemFlags.magic)) {
+				subMods.push({
+					mod: Number(itemFlags.magic),
+					name: game.i18n.localize('OBSIDIAN.Magic')
+				});
+			}
+
 			return subMods;
 		});
 
@@ -743,11 +750,9 @@ export const Rolls = {
 							type: 'dmg',
 							title: spell.name,
 							damage:
-								Rolls.rollDamage(
-									actor, spell, {crit: false, upcast: upcastAmount}),
+								Rolls.rollDamage(actor, spell, {crit: false, upcast: upcastAmount}),
 							crit:
-								Rolls.rollDamage(
-									actor, spell, {crit: true, upcast: upcastAmount})
+								Rolls.rollDamage(actor, spell, {crit: true, upcast: upcastAmount})
 						}
 					}
 				});

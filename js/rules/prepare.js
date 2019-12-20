@@ -80,7 +80,7 @@ export const Prepare = {
 				continue;
 			}
 
-			dmg.mod = dmg.bonus || 0;
+			dmg.mod = (dmg.bonus || 0) + (dmg.magic || 0);
 			if (dmg.stat && dmg.stat.length > 0) {
 				if (dmg.stat === 'spell') {
 					dmg.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
@@ -319,6 +319,9 @@ export const Prepare = {
 
 			if (flags.hit.enabled) {
 				Prepare.calculateHit(flags.hit, data);
+				if (!OBSIDIAN.notDefinedOrEmpty(flags.magic)) {
+					flags.hit.value += Number(flags.magic);
+				}
 			}
 
 			if (flags.dc.enabled) {
@@ -357,7 +360,13 @@ export const Prepare = {
 				}
 			}
 
+			if (!OBSIDIAN.notDefinedOrEmpty(flags.magic)) {
+				flags.damage.forEach(dmg => dmg.magic = Number(flags.magic));
+				flags.versatile.forEach(dmg => dmg.magic = Number(flags.magic));
+			}
+
 			Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
+
 			flags.dmgPair = flags.damage.map((dmg, i) => {
 				return {
 					fst: Prepare.damageFormat(dmg, false),
