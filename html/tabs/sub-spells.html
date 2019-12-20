@@ -84,13 +84,13 @@
 							</div>
 							<div class="obsidian-col-dc">
 								<div class="obsidian-table-number-lg">
-									{{#if flags.obsidian.hit.enabled}}
-										{{numberFormat flags.obsidian.hit.value decimals=0 sign=true}}
-									{{else if flags.obsidian.dc.enabled}}
+									{{#if obsidian.bestAttack}}
+										{{numberFormat obsidian.bestAttack.value decimals=0 sign=true}}
+									{{else if obsidian.bestSave}}
 										<div class="obsidian-table-sub-text obsidian-table-save">
-											{{i18n-join 'OBSIDIAN.AbilityAbbr-' flags.obsidian.dc.target}}
+											{{i18n-join 'OBSIDIAN.AbilityAbbr-' obsidian.bestSave.target}}
 										</div>
-										<div class="obsidian-table-number-md">{{flags.obsidian.dc.value}}</div>
+										<div class="obsidian-table-number-md">{{obsidian.bestSave.value}}</div>
 									{{else}}
 										<span class="obsidian-na">&mdash;</span>
 									{{/if}}
@@ -98,18 +98,11 @@
 							</div>
 							<div class="obsidian-col-damage">
 								<div class="obsidian-table-dmg">
-									{{#each flags.obsidian.damage}}
+									{{#each obsidian.damage}}
 										<div class="obsidian-dmg-component">
 											{{display}}
-											<div class="obsidian-icon-sm obsidian-icon-{{type}}"
-											     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
-										</div>
-									{{/each}}
-									{{#each flags.obsidian.cantrip.damage}}
-										<div class="obsidian-dmg-component">
-											{{display}}
-											<div class="obsidian-icon-sm obsidian-icon-{{type}}"
-											     title="{{i18n-join 'OBSIDIAN.Damage-' type}}"></div>
+											<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
+											     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
 										</div>
 									{{/each}}
 								</div>

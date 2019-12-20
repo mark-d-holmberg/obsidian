@@ -23,6 +23,12 @@ export function prepareEffects (actorData) {
 			scaling: null
 		};
 
+		let cls;
+		if (flags.source && flags.source.type === 'class') {
+			cls = actorData.obsidian.classes.find(cls =>
+				cls.flags.obsidian.uuid === flags.source.class);
+		}
+
 		for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {
 			const effect = effects[effectIdx];
 			const isScaling = effect.components.some(c => c.type === 'scaling');
@@ -40,7 +46,7 @@ export function prepareEffects (actorData) {
 				component.idx = componentIdx;
 
 				if (component.type === 'attack') {
-					Prepare.calculateHit(component, data);
+					Prepare.calculateHit(component, data, cls);
 					item.obsidian.attacks.push(component);
 				} else if (component.type === 'damage' && !isScaling) {
 					if (component.versatile) {
@@ -57,6 +63,8 @@ export function prepareEffects (actorData) {
 					item.obsidian.resources.push(component);
 				} else if (component.type === 'target') {
 					targetComponent = component;
+				} else if (component.type === 'scaling') {
+					effect.scalingComponent = component;
 				}
 			}
 
@@ -71,26 +79,32 @@ export function prepareEffects (actorData) {
 			}
 		}
 
-		if (item.obsidian.scaling && item.obsidian.scaling.method === 'cantrip') {
+		if (item.obsidian.scaling && item.obsidian.scaling.scalingComponent.method === 'cantrip') {
 			// Cantrips are scaled up-front, not when rolled.
 			const extra = Math.round((data.details.level.value + 1) / 6 + .5) - 1;
-			const targetComponent = item.obsidian.scaling.components.find(c => c.type === 'target');
-			const damageComponents =
-				item.obsidian.scaling.components.filter(c => c.type === 'damage');
+			if (extra > 0) {
+				const targetComponent =
+					item.obsidian.scaling.components.find(c => c.type === 'target');
+				const damageComponents =
+					item.obsidian.scaling.components.filter(c => c.type === 'damage');
 
-			if (targetComponent) {
-				item.obsidian.attacks.forEach(atk => atk.targets += targetComponent.count * extra);
-			} else if (damageComponents.length) {
-				item.obsidian.damage =
-					item.obsidian.damage.concat(
-						damageComponents.map(dmg => dmg.ndice *= (extra + 1)));
+				if (targetComponent) {
+					item.obsidian.attacks.forEach(atk =>
+						atk.targets += targetComponent.count * extra);
+				} else if (damageComponents.length) {
+					damageComponents.forEach(dmg => dmg.ndice *= extra);
+					item.obsidian.damage = item.obsidian.damage.concat(damageComponents);
+				}
 			}
 		}
 
-		Prepare.calculateDamage(data, null, item.obsidian.damage, item.obsidian.versatile);
+		Prepare.calculateDamage(data, cls, item.obsidian.damage, item.obsidian.versatile);
 
 		if (item.obsidian.attacks.length) {
-			actorData.obsidian.attacks.push(item);
+			if (item.type !== 'spell') {
+				actorData.obsidian.attacks.push(item);
+			}
+
 			item.obsidian.bestAttack =
 				item.obsidian.attacks.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
 

@@ -1,5 +1,4 @@
 import {OBSIDIAN} from './rules.js';
-import {Prepare} from './prepare.js';
 
 export function prepareSpells (actorData) {
 	for (let i = 0; i < actorData.items.length; i++) {
@@ -42,49 +41,6 @@ export function prepareSpells (actorData) {
 				.filter(s => s !== undefined)
 				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 				.join(', ');
-
-		if (flags.hit.enabled) {
-			if (OBSIDIAN.notDefinedOrEmpty(flags.hit.n)) {
-				flags.hit.n = 1;
-			} else {
-				flags.hit.n = Number(flags.hit.n);
-			}
-
-			flags.hit.count = flags.hit.n;
-			if (spell.data.level < 1) {
-				flags.hit.count +=
-					(flags.upcast.natk || 0) *
-					(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
-			}
-
-			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
-			Prepare.calculateHit(flags.hit, actorData.data, cls);
-		}
-
-		if (flags.upcast && flags.upcast.enabled) {
-			if (OBSIDIAN.notDefinedOrEmpty(flags.upcast.nlvl)) {
-				flags.upcast.nlvl = 1;
-			} else {
-				flags.upcast.nlvl = Number(flags.upcast.nlvl);
-			}
-		}
-
-		if (spell.data.level < 1) {
-			flags.cantrip = {damage: flags.damage};
-			if (flags.upcast.damage) {
-				flags.cantrip.damage = flags.upcast.damage.map(dmg => {
-					const scaled = duplicate(dmg);
-					scaled.ndice *=
-						(Math.round((actorData.data.details.level.value + 1) / 6 + .5) - 1);
-					return scaled;
-				});
-			}
-
-			Prepare.calculateDamage(actorData.data, cls, flags.cantrip.damage);
-		}
-
-		Prepare.calculateSave(flags.dc, actorData.data, cls);
-		Prepare.calculateDamage(actorData.data, cls, flags.damage);
 
 		if (flags.components.m && spell.data.materials.length > 0) {
 			flags.notes.push(
