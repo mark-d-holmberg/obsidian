@@ -168,7 +168,8 @@
 	background-image: url('../img/weapon.svg');
 }
 
-.obsidian-icon-gear {
+.obsidian-icon-gear,
+.obsidian-icon-loot {
 	background-image: url('../img/gear.svg');
 }
 

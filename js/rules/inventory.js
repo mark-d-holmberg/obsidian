@@ -10,7 +10,7 @@ export function prepareInventory (actorData) {
 	const rootOrder = new Set(actorData.flags.obsidian.order.equipment.root);
 	const containerOrder = new Set(actorData.flags.obsidian.order.equipment.containers);
 	const inventory = actorData.obsidian.inventory;
-	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool']);
+	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot']);
 	const map = new Map();
 
 	for (let i = 0; i < actorData.items.length; i++) {

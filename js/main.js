@@ -89,6 +89,10 @@ function enrichItemFlags (data) {
 	ObsidianFeatureSheet.enrichFlags(data);
 	ObsidianSpellSheet.enrichFlags(data);
 	ObsidianWeaponSheet.enrichFlags(data);
+
+	if (data.type === 'loot' || data.type === 'tool') {
+		data.flags.obsidian = {};
+	}
 }
 
 Hooks.on('preCreateItem', (constructor, data) => enrichItemFlags(data));
