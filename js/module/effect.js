@@ -62,5 +62,22 @@ export const Effect = {
 			target: 'con',
 			effect: ''
 		};
+	},
+
+	newScaling: function () {
+		return {
+			type: 'scaling',
+			uuid: OBSIDIAN.uuid(),
+			method: 'spell'
+		};
+	},
+
+	newTarget: function () {
+		return {
+			type: 'target',
+			uuid: OBSIDIAN.uuid(),
+			target: 'individual',
+			count: 1
+		};
 	}
 };

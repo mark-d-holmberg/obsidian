@@ -19,7 +19,9 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/resource.html',
 		'modules/obsidian/html/components/effects/attack.html',
 		'modules/obsidian/html/components/effects/damage.html',
-		'modules/obsidian/html/components/effects/save.html'
+		'modules/obsidian/html/components/effects/save.html',
+		'modules/obsidian/html/components/effects/scaling.html',
+		'modules/obsidian/html/components/effects/targets.html'
 	]);
 };
 

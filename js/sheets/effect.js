@@ -6,7 +6,7 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
-	+ ' .obsidian-add-save';
+	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets';
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -36,6 +36,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-attack').click(this._onAddComponent.bind(this, Effect.newAttack));
 		html.find('.obsidian-add-damage').click(this._onAddComponent.bind(this, Effect.newDamage));
 		html.find('.obsidian-add-save').click(this._onAddComponent.bind(this, Effect.newSave));
+		html.find('.obsidian-add-scaling').click(this._onAddComponent.bind(this, Effect.newScaling));
+		html.find('.obsidian-add-targets').click(this._onAddComponent.bind(this, Effect.newTarget));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
@@ -123,8 +125,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	_onClickAnywhere (evt) {
-		const closest = evt.target.closest('.obsidian-effect');
-		if (closest == null) {
+		const closestEffect = evt.target.closest('.obsidian-effect');
+		const closestTab = evt.target.closest('.obsidian-effects-tab');
+
+		if (closestEffect == null
+			&& (closestTab == null || $(closestTab).hasClass('obsidian-rm-effect')))
+		{
 			this._selectedEffect = null;
 			this._selectedComponent = null;
 			this.element.find('.obsidian-effect, .obsidian-effect fieldset')

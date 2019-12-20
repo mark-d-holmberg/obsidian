@@ -33,8 +33,6 @@ export function prepareSpells (actorData) {
 			if (cls) {
 				flags.source.display = cls.flags.obsidian.label;
 			}
-		} else if (flags.source.type === 'item') {
-			flags.source.display = actorData.items.find(x => x.id === flags.source.item).name;
 		}
 
 		flags.components.display =
@@ -61,14 +59,6 @@ export function prepareSpells (actorData) {
 
 			flags.notes.push(`${game.i18n.localize('OBSIDIAN.Count')}: ${flags.hit.count}`);
 			Prepare.calculateHit(flags.hit, actorData.data, cls);
-		}
-
-		if (flags.uses && flags.uses.enabled && flags.uses.limit === 'limited') {
-			Prepare.calculateUses(spell.id, i, actorData.data, cls, flags.uses);
-			flags.notes.push(
-				'<div class="obsidian-table-note-flex">'
-					+ `${game.i18n.localize('OBSIDIAN.Uses')}: ${flags.uses.display}`
-				+ '</div>');
 		}
 
 		if (flags.upcast && flags.upcast.enabled) {

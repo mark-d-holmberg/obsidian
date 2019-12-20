@@ -39,6 +39,12 @@
 						{{else if (eq type 'save')}}
 							{{> modules/obsidian/html/components/effects/save.html
 							    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'scaling')}}
+							{{> modules/obsidian/html/components/effects/scaling.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'target')}}
+							{{> modules/obsidian/html/components/effects/targets.html
+									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 						{{/if}}
 					{{/each}}
 				</div>
@@ -60,6 +66,12 @@
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-save obsidian-add-save obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddSave'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-scaling obsidian-add-scaling obsidian-hidden">
+		  <div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddScaling'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-target obsidian-add-targets obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddTargets'}}</div>
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>

@@ -193,6 +193,14 @@
 	background-image: url('../img/save.svg');
 }
 
+.obsidian-icon-scaling {
+	background-image: url('../img/scaling.svg');
+}
+
+.obsidian-icon-target {
+	background-image: url('../img/target.svg');
+}
+
 .obsidian-spell-school {
 	display: inline-block;
 	font-style: normal;

@@ -516,5 +516,14 @@
 	"OBSIDIAN.AddSave": "Add Save",
 	"OBSIDIAN.UnlimitedUses": "Unlimited Uses",
 	"OBSIDIAN.Magic": "Magic",
-	"OBSIDIAN.NewSpell": "New Spell"
+	"OBSIDIAN.NewSpell": "New Spell",
+	"OBSIDIAN.AddScaling": "Add Scaling",
+	"OBSIDIAN.Scaling": "Scaling",
+	"OBSIDIAN.Scaling-spell": "Spell Scaling",
+	"OBSIDIAN.Scaling-cantrip": "Cantrip Scaling",
+	"OBSIDIAN.Scaling-resource": "Resource Scaling",
+	"OBSIDIAN.Method": "Method",
+	"OBSIDIAN.AddTargets": "Add Targets",
+	"OBSIDIAN.Targets": "Targets",
+	"OBSIDIAN.Target-individual": "Individual"
 }

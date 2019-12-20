@@ -58,6 +58,7 @@ export const Prepare = {
 	calculateHit: function (hit, data, cls) {
 		hit.value = hit.bonus || 0;
 		hit.spellMod = 0;
+		hit.targets = 1;
 
 		if (!OBSIDIAN.notDefinedOrEmpty(hit.ability)) {
 			if (hit.ability === 'spell') {
