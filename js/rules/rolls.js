@@ -541,9 +541,9 @@ export const Rolls = {
 				}
 			}
 
-			if (!OBSIDIAN.notDefinedOrEmpty(itemFlags.magic)) {
+			if (!OBSIDIAN.notDefinedOrEmpty(dmg.magic)) {
 				subMods.push({
-					mod: Number(itemFlags.magic),
+					mod: dmg.magic,
 					name: game.i18n.localize('OBSIDIAN.Magic')
 				});
 			}

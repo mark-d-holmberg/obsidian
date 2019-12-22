@@ -361,8 +361,13 @@ export const Prepare = {
 			}
 
 			if (!OBSIDIAN.notDefinedOrEmpty(flags.magic)) {
-				flags.damage.forEach(dmg => dmg.magic = Number(flags.magic));
-				flags.versatile.forEach(dmg => dmg.magic = Number(flags.magic));
+				if (flags.damage.length) {
+					flags.damage[0].magic = Number(flags.magic);
+				}
+
+				if (flags.versatile.length) {
+					flags.versatile[0].magic = Number(flags.magic);
+				}
 			}
 
 			Prepare.calculateDamage(data, null, flags.damage, flags.versatile);
