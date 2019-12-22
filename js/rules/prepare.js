@@ -34,6 +34,11 @@ export function determineAdvantage (...mods) {
 
 export const Prepare = {
 	calculateSave: function (dc, data, cls) {
+		if (dc.calc === 'fixed') {
+			dc.value = dc.fixed;
+			return;
+		}
+
 		let bonus = 8;
 		if (!OBSIDIAN.notDefinedOrEmpty(dc.bonus)) {
 			bonus = Number(dc.bonus);
@@ -48,10 +53,6 @@ export const Prepare = {
 			} else {
 				dc.value += data.abilities[dc.ability].mod;
 			}
-		}
-
-		if (!OBSIDIAN.notDefinedOrEmpty(dc.fixed)) {
-			dc.value = Number(dc.fixed);
 		}
 	},
 
@@ -133,27 +134,6 @@ export const Prepare = {
 
 		resource.display =
 			Prepare.usesFormat(id, idx, resource.max, resource.remaining);
-	},
-
-	calculateUses: function (id, idx, data, cls, uses) {
-		uses.max = uses.bonus || 0;
-		if (!OBSIDIAN.notDefinedOrEmpty(uses.ability)) {
-			if (uses.ability === 'spell') {
-				uses.max += cls ? cls.flags.obsidian.spellcasting.mod : 0;
-			} else {
-				uses.max += data.abilities[uses.ability].mod;
-			}
-		}
-
-		if (uses.remaining === undefined || uses.remaining > uses.max) {
-			uses.remaining = uses.max;
-		}
-
-		if (uses.remaining < 0) {
-			uses.remaining = 0;
-		}
-
-		uses.display = Prepare.usesFormat(id, idx, uses.max, uses.remaining, 6);
 	},
 
 	damageFormat: function (dmg, mod = true) {

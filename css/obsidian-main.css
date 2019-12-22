@@ -1366,22 +1366,30 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	color: var(--text-subtle);
 }
 
-.obsidian-spell-slot {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	max-height: 176px;
-	flex-direction: column;
-}
-
 .obsidian-spell-slot-row {
 	display: flex;
-	width: 50%;
-	margin-bottom: 10px;
-	min-height: 19px;
+	margin-bottom: 6px;
+	padding-bottom: 4px;
+	border-bottom: 1px solid var(--mid);
+}
+
+.obsidian-spell-slot-row:last-child {
+	border-bottom: none;
+	padding: 0;
+	margin: 0;
 }
 
 .obsidian-spell-slot-row > div:first-child {
+	width: 45px;
+	color: var(--text-subtle);
+	font-size: 13px;
+}
+
+.obsidian-spell-slot-row > div:first-child.obsidian-negative {
+	color: var(--negative);
+}
+
+.obsidian-spell-slot-row > div:last-child {
 	text-transform: uppercase;
 	font-size: 13px;
 	font-weight: bold;

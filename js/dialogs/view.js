@@ -163,7 +163,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 
 		let rollType = null;
 		switch (this.item.type) {
-			case 'weapon': rollType = 'atk'; break;
+			case 'weapon': rollType = 'fx'; break;
 			case 'feat': rollType = 'feat'; break;
 			case 'spell': rollType = 'spl'; break;
 		}

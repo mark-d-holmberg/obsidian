@@ -55,7 +55,7 @@ export function prepareEffects (actorData) {
 						item.obsidian.damage.push(component);
 					}
 				} else if (component.type === 'save') {
-					Prepare.calculateSave(component, data);
+					Prepare.calculateSave(component, data, cls);
 					item.obsidian.saves.push(component);
 				} else if (component.type === 'resource') {
 					Prepare.calculateResources(
@@ -112,6 +112,15 @@ export function prepareEffects (actorData) {
 				flags.notes.push(
 					`${game.i18n.localize('OBSIDIAN.Count')}: `
 					+ item.obsidian.bestAttack.targets);
+			}
+		} else if (item.obsidian.damage.length) {
+			const targetComponents =
+				effects.filter(effect => effect !== item.obsidian.scaling)
+					.flatMap(effect => effect.components).filter(c => c.type === 'target');
+
+			if (targetComponents.length && flags.notes) {
+				flags.notes.push(
+					`${game.i18n.localize('OBSIDIAN.Count')}: ${targetComponents[0].count}`);
 			}
 		}
 
