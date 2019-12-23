@@ -710,7 +710,10 @@ export const Rolls = {
 
 			results.results = [];
 			for (let i = 0; i < count; i++) {
-				results.results.push(Rolls.toHitRoll(actor, itemFlags.hit));
+				results.results.push(Rolls.toHitRoll(actor, itemFlags.hit, [{
+					mod: actor.data.data.attributes.prof,
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				}]));
 			}
 
 			results.dmgBtn = spell.id;
