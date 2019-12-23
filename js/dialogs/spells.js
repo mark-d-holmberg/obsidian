@@ -236,7 +236,8 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 					{
 						await this.parent.actor.deleteOwnedItem(id);
 					} else {
-						flags.prepared = !flags.prepared;
+						await this.parent.actor.updateOwnedItem(
+							{id: id, 'flags.obsidian.prepared': !flags.prepared});
 					}
 				}
 			} else {
