@@ -121,6 +121,10 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('format-spell-duration', function (spell) {
+		if (!spell.flags.obsidian) {
+			return '—';
+		}
+
 		const duration = spell.flags.obsidian.duration;
 		if (!['round', 'min', 'hour'].includes(duration.type)) {
 			return game.i18n.localize(`OBSIDIAN.Duration-${duration.type}`);
