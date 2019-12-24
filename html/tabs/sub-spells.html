@@ -76,6 +76,8 @@
 											{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
 										</span>
 									</div>
+								{{else if (eq flags.obsidian.range.type 'unlimited')}}
+									<div class="obsidian-table-number-md">&infin;</div>
 								{{else}}
 									<div class="obsidian-table-text">
 										{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}

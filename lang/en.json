@@ -308,6 +308,7 @@
 	"OBSIDIAN.CastTimeAbbr-special": "S",
 	"OBSIDIAN.SpellRange-self": "Self",
 	"OBSIDIAN.SpellRange-touch": "Touch",
+	"OBSIDIAN.SpellRange-unlimited": "Unlimited",
 	"OBSIDIAN.SpellRange-short": "Feet",
 	"OBSIDIAN.SpellRange-long": "Miles",
 	"OBSIDIAN.SpellRangeAbbr-short": "ft.",

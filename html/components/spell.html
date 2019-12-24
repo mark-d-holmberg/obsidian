@@ -20,6 +20,7 @@
                        checked=data.components.ritual}}
     </div>
   </div>
+	{{#if actor}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
 	  <div class="obsidian-fullwidth">
 	    <label class="obsidian-inline">
@@ -45,6 +46,10 @@
 	           value="{{item.flags.obsidian.source.custom}}">
 	  </div>
 	</div>
+	{{else}}
+		<input type="hidden" name="flags.obsidian.source.type" value="custom">
+		<input type="hidden" name="flags.obsidian.source.custom" value="{{localize 'OBSIDIAN.Custom'}}">
+	{{/if}}
   <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
     <div class="obsidian-fullwidth">
       <label class="obsidian-inline">
