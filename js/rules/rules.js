@@ -17,7 +17,8 @@ OBSIDIAN.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 OBSIDIAN.Rules.COIN_WEIGHT = 0.02;
 OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
 OBSIDIAN.Rules.CLASSES = [
-	'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz', 'custom'
+	'art', 'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz',
+	'custom'
 ];
 
 OBSIDIAN.Rules.CURRENCY = ['pp', 'gp', 'ep', 'sp', 'cp'];
@@ -32,6 +33,7 @@ OBSIDIAN.Rules.CONDITIONS = [
 ];
 
 OBSIDIAN.Rules.CLASS_HIT_DICE = {
+	art: 8,
 	brb: 12,
 	brd: 8,
 	clr: 8,
@@ -47,6 +49,7 @@ OBSIDIAN.Rules.CLASS_HIT_DICE = {
 };
 
 OBSIDIAN.Rules.CLASS_SPELL_MODS = {
+	art: 'int',
 	brd: 'cha',
 	clr: 'wis',
 	drd: 'wis',
@@ -58,6 +61,7 @@ OBSIDIAN.Rules.CLASS_SPELL_MODS = {
 };
 
 OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION = {
+	art: 'artificer',
 	brd: 'full',
 	clr: 'full',
 	drd: 'full',
@@ -69,6 +73,7 @@ OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION = {
 };
 
 OBSIDIAN.Rules.CLASS_SPELL_PREP = {
+	art: 'prep',
 	brd: 'known',
 	clr: 'prep',
 	drd: 'prep',
@@ -134,6 +139,10 @@ OBSIDIAN.Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'
 OBSIDIAN.Rules.SPELL_RITUALS = ['prep', 'book'];
 
 OBSIDIAN.Rules.SPELLS_KNOWN_TABLE = {
+	art: {
+		cantrips: [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4],
+		known: []
+	},
 	brd: {
 		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
 		known: [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22]
