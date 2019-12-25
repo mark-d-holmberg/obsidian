@@ -10,6 +10,7 @@ import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
+import {addSettingsHook} from './rules/spell-lists.js';
 
 runPatches();
 
@@ -70,6 +71,8 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
+
+addSettingsHook();
 
 function enrichItemFlags (data) {
 	if (!data.flags) {

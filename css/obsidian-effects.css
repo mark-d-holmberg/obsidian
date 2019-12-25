@@ -8,12 +8,20 @@
 	height: 100%;
 }
 
+.obsidian-2-pane-sm {
+	grid-template-columns: 400px 400px;
+}
+
 .obsidian-2-pane > section {
 	padding: 0 10px;
 }
 
 .obsidian-2-pane > section:first-child {
 	border-right: 1px solid var(--mid);
+}
+
+.obsidian-2-pane-header > section:first-child {
+	border-right: none;
 }
 
 .obsidian-effects-tab-list {

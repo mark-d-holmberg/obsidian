@@ -628,7 +628,7 @@
 	margin-right: 0;
 }
 
-form.obsidian input.obsidian-input-search,
+.obsidian input.obsidian-input-search,
 .dnd5e.sheet form.obsidian input.obsidian-input-search,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input {
 	color: var(--text-bright);
@@ -651,18 +651,18 @@ form.obsidian input.obsidian-input-search,
 	margin-bottom: 10px;
 }
 
-form.obsidian input.obsidian-input-search:hover,
+.obsidian input.obsidian-input-search:hover,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:hover {
 	box-shadow: none;
 }
 
-form.obsidian .obsidian-input-search::placeholder,
+.obsidian .obsidian-input-search::placeholder,
 .dnd5e.sheet form.obsidian .obsidian-input-search::placeholder,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input::placeholder {
 	color: var(--text-placeholder);
 }
 
-form.obsidian input.obsidian-input-search:focus,
+.obsidian input.obsidian-input-search:focus,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input:focus {
 	color: var(--text-inverse);
@@ -671,8 +671,8 @@ form.obsidian input.obsidian-input-search:focus,
 	outline: none;
 }
 
-form.obsidian input.obsidian-input-search:focus + i,
-form.obsidian input.obsidian-input-search:focus + i + span,
+.obsidian input.obsidian-input-search:focus + i,
+.obsidian input.obsidian-input-search:focus + i + span,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span,
 .obsidian-compendium .header-search input:focus + i,
@@ -716,7 +716,7 @@ form.obsidian input.obsidian-input-search:focus + i + span,
 }
 
 .obsidian-spell-level-tab {
-	min-width: 34px;
+	min-width: 36px;
 }
 
 .obsidian-spell-level-tab.obsidian-icon-tab {
@@ -1454,4 +1454,99 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	width: 40px;
 	justify-self: flex-end;
 	margin-right: 4px;
+}
+
+#client-settings .obsidian-btn-outline {
+	flex: 1;
+}
+
+.obsidian-import-export {
+	display: flex;
+}
+
+.obsidian-import-export button {
+	width: 50%;
+}
+
+.obsidian-import-export button:first-child {
+	margin-right: 10px;
+}
+
+.obsidian-drop-down-with-manage {
+	display: flex;
+	margin-bottom: 5px;
+}
+
+.obsidian-drop-down-with-manage select {
+	width: 70%;
+	margin-right: 10px;
+}
+
+.obsidian-drop-down-with-manage button {
+	width: 30%;
+	height: 27px;
+	font-size: 11px;
+	font-weight: bold;
+	text-transform: uppercase;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.obsidian-2-pane section header input {
+	display: inline-block;
+}
+
+select[multiple] {
+	width: 100%;
+	height: 400px;
+	border: 2px ridge var(--mid);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
+}
+
+select[multiple]::-webkit-scrollbar {
+	height: 6px;
+}
+
+select[multiple]::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+select[multiple]::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
+}
+
+select[multiple] option {
+	color: var(--text-regular);
+	padding: 6px 12px;
+}
+
+select[multiple] option:nth-child(2n) {
+	background-color: var(--mid);
+}
+
+.obsidian-transfer-buttons {
+	position: absolute;
+	left: 387px;
+	top: 315px;
+	display: flex;
+	flex-direction: column;
+}
+
+.obsidian .obsidian-transfer-buttons button {
+	border: none;
+	padding: 4px 8px;
+	width: auto;
+	line-height: 1;
+	background: transparent;
+	margin-bottom: 10px;
+}
+
+.obsidian .obsidian-transfer-buttons button:hover {
+	box-shadow: none;
+	text-shadow: 0 0 5px var(--highlight);
 }

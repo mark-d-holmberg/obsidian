@@ -527,5 +527,11 @@
 	"OBSIDIAN.Method": "Method",
 	"OBSIDIAN.AddTargets": "Add Targets",
 	"OBSIDIAN.Targets": "Targets",
-	"OBSIDIAN.Target-individual": "Individual"
+	"OBSIDIAN.Target-individual": "Individual",
+	"OBSIDIAN.SettingsConfSpellLists": "Configure class spell lists",
+	"OBSIDIAN.Configure": "Configure",
+	"OBSIDIAN.ManageCustom": "Manage Custom",
+	"OBSIDIAN.Import": "Import",
+	"OBSIDIAN.Export": "Export",
+	"OBSIDIAN.CustomClasses": "Custom Classes"
 }

@@ -497,6 +497,16 @@ export const Rolls = {
 			}
 		}
 
+		if (scaling != null && scaling.scalingComponent.method === 'cantrip') {
+			const damageComponents = scaling.components.filter(c => c.type === 'damage');
+			if (damageComponents) {
+				damage = damage.concat(duplicate(damageComponents).map(dmg => {
+					dmg.ndice = Math.floor(dmg.ndice * dmg.scaledDice);
+					return dmg;
+				}).filter(dmg => dmg.ndice > 0));
+			}
+		}
+
 		const rolls = damage.map(dmg => {
 			if (!dmg.ndice) {
 				return null;
@@ -524,13 +534,6 @@ export const Rolls = {
 						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${dmg.ability}`)
 					});
 				}
-			}
-
-			if (!OBSIDIAN.notDefinedOrEmpty(dmg.magic)) {
-				subMods.push({
-					mod: dmg.magic,
-					name: game.i18n.localize('OBSIDIAN.Magic')
-				});
 			}
 
 			return subMods;

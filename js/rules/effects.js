@@ -92,7 +92,7 @@ export function prepareEffects (actorData) {
 					item.obsidian.attacks.forEach(atk =>
 						atk.targets += targetComponent.count * extra);
 				} else if (damageComponents.length) {
-					damageComponents.forEach(dmg => dmg.ndice *= extra);
+					damageComponents.forEach(dmg => dmg.scaledDice = extra);
 					item.obsidian.damage = item.obsidian.damage.concat(damageComponents);
 				}
 			}
@@ -138,7 +138,7 @@ export function prepareEffects (actorData) {
 				flags.notes.push(
 					'<div class="obsidian-table-note-flex">'
 					+ `${item.obsidian.bestResource.name}: ${item.obsidian.bestResource.display}`
-					+'</div>');
+					+ '</div>');
 			}
 		}
 	}

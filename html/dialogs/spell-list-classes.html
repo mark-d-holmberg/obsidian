@@ -1,0 +1,17 @@
+<form class="obsidian" autocomplete="off">
+	<label class="obsidian-label-lg obsidian-inline">
+		{{localize 'OBSIDIAN.CustomClasses'}}
+		<button type="button" class="obsidian-btn-positive obsidian-add-class obsidian-btn-sm">
+			{{localize 'OBSIDIAN.Add'}}
+		</button>
+	</label>
+	{{#each classes}}
+		<div class="obsidian-form-row obsidian-inline">
+			<input type="text" class="obsidian-input-compact obsidian-input-lg" value="{{this}}"
+			       placeholder="{{localize 'OBSIDIAN.Name'}}" {{#unless (eq this '')}}disabled{{/unless}}>
+			<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
+				{{localize 'OBSIDIAN.Remove'}}
+			</button>
+		</div>
+	{{/each}}
+</form>

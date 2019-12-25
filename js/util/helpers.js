@@ -180,6 +180,17 @@ export function registerHandlebarHelpers () {
 			|| (level > 0 && Number(spell.max));
 	});
 
+	Handlebars.registerHelper('i18n-class', function (cls) {
+		const key = `OBSIDIAN.Class-${cls}`;
+		const translation = game.i18n.localize(key);
+
+		if (translation === key) {
+			return cls;
+		}
+
+		return translation;
+	});
+
 	Handlebars.registerHelper('i18n-join', function (...args) {
 		args.pop();
 		args = args.filter(arg => arg !== undefined && arg.length > 0);

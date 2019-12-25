@@ -142,13 +142,18 @@ export const Prepare = {
 		}
 
 		let out = '';
+		let ndice = dmg.ndice;
 
-		if (dmg.ndice > 0) {
-			out += `${dmg.ndice}d${dmg.die}`;
+		if (dmg.scaledDice !== undefined) {
+			ndice *= dmg.scaledDice;
+		}
+
+		if (ndice > 0) {
+			out += `${ndice}d${dmg.die}`;
 		}
 
 		if (dmg.mod !== 0 && mod) {
-			if (dmg.ndice > 0 && dmg.mod > 0) {
+			if (ndice > 0 && dmg.mod > 0) {
 				out += '+';
 			}
 
