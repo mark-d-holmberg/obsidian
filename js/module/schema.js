@@ -1,5 +1,7 @@
 export const Schema = {};
 
+Schema.VERSION = 2;
+
 Schema.Actor = {
 	obsidian: {
 		attributes: {

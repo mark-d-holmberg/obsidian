@@ -11,6 +11,7 @@ import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
 import {addSettingsHook} from './rules/spell-lists.js';
+import {Effect} from './module/effect.js';
 
 runPatches();
 
@@ -93,9 +94,14 @@ function enrichItemFlags (data) {
 		data.flags.obsidian = mergeObject(Schema.Spell, data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
+		data.flags.obsidian.effects = [Effect.create()];
+		data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
+		data.flags.obsidian.effects[0].components[0].proficient = true;
 	} else if (data.type === 'loot' || data.type === 'tool') {
 		data.flags.obsidian = {};
 	}
+
+	data.flags.obsidian.version = Schema.VERSION;
 }
 
 Hooks.on('preCreateItem', (constructor, data) => enrichItemFlags(data));
