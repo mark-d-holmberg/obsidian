@@ -203,8 +203,8 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('is-attack-toggleable', function (attack) {
-		const type = attack.flags.obsidian.type;
-		const tags = attack.flags.obsidian.tags;
+		const type = attack.parentItem.flags.obsidian.type;
+		const tags = attack.parentItem.flags.obsidian.tags;
 		return (type === 'melee' && tags.thrown) || tags.versatile;
 	});
 
@@ -293,8 +293,8 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('which-damage', function (attack) {
-		return attack.flags.obsidian.mode === 'versatile'
-			? attack.obsidian.versatile
-			: attack.obsidian.damage;
+		return attack.mode === 'versatile'
+			? attack.parentEffect.versatile
+			: attack.parentEffect.damage;
 	});
 }

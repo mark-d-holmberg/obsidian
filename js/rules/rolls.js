@@ -98,6 +98,25 @@ export const Rolls = {
 		return result;
 	},
 
+	componentRoll: function (actor, component) {
+		const effect = actor.data.obsidian.effects.get(component.parentEffect);
+		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const results = {type: 'fx', title: effect.name.length ? effect.name : item.name};
+		const saves = effect.components.filter(c => c.type === 'save');
+		const mods = [];
+
+		results.results = [Rolls.toHitRoll(actor, component, mods)];
+		results.dmgBtn = effect.uuid;
+		results.dmgCount = 1;
+		results.subtitle = game.i18n.localize(`${component.attackType}Attack`);
+
+		if (saves.length) {
+			results.saves = saves.map(save => Rolls.compileSave(actor, save));
+		}
+
+		return [{flags: {obsidian: results}}];
+	},
+
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
 		const roll = new Die(20).roll(2);
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
@@ -127,7 +146,10 @@ export const Rolls = {
 		}
 
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
-		const damage = effect.components.filter(c => c.type === 'damage');
+		const isVersatile =
+			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
+		const damage =
+			effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile);
 
 		if (!item || !damage.length) {
 			return [];
@@ -276,18 +298,16 @@ export const Rolls = {
 
 		const roll = dataset.roll;
 		if (roll === 'fx') {
-			if (dataset.id === undefined) {
+			if (dataset.uuid === undefined) {
 				return;
 			}
 
-			const id = Number(dataset.id);
-			const item = actor.data.obsidian.itemsByID.get(id);
-
-			if (!item) {
+			const component = actor.data.obsidian.components.get(dataset.uuid);
+			if (!component) {
 				return;
 			}
 
-			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item));
+			Rolls.toChat(actor, ...Rolls.componentRoll(actor, component));
 		} else if (roll === 'save') {
 			if (!dataset.save) {
 				return;
@@ -521,7 +541,7 @@ export const Rolls = {
 		});
 
 		mods = damage.map(dmg => {
-			const subMods = [{mod: dmg.bonus, name: game.i18n.localize('OBSIDIAN.Bonus')}];
+			const subMods = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
 			if (!OBSIDIAN.notDefinedOrEmpty(dmg.ability)) {
 				if (dmg.ability === 'spell') {
 					subMods.push({
@@ -720,7 +740,7 @@ export const Rolls = {
 				results[0].dmgBtn = effect.uuid;
 				results[0].dmgCount = count;
 				results[0].dmgUpcast = upcastAmount;
-				results[0].subtitle = attacks[0].attackType;
+				results[0].subtitle = game.i18n.localize(`${attacks[0].attackType}Attack`);
 			}
 
 			if (saves.length) {

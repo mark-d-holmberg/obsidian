@@ -47,6 +47,7 @@ export function prepareEffects (actorData) {
 
 				if (component.type === 'attack') {
 					Prepare.calculateHit(component, data, cls);
+					Prepare.calculateAttackType(flags, component);
 					item.obsidian.attacks.push(component);
 				} else if (component.type === 'damage' && !isScaling) {
 					if (component.versatile) {
@@ -101,8 +102,9 @@ export function prepareEffects (actorData) {
 		Prepare.calculateDamage(data, cls, item.obsidian.damage, item.obsidian.versatile);
 
 		if (item.obsidian.attacks.length) {
-			if (item.type !== 'spell') {
-				actorData.obsidian.attacks.push(item);
+			if (item.type !== 'weapon' || item.data.equipped) {
+				actorData.obsidian.attacks =
+					actorData.obsidian.attacks.concat(item.obsidian.attacks);
 			}
 
 			item.obsidian.bestAttack =

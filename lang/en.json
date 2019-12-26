@@ -492,6 +492,8 @@
 	"OBSIDIAN.Total": "Total",
 	"OBSIDIAN.Details": "Details",
 	"OBSIDIAN.CastAtWhichLevel": "Cast at which level?",
+	"OBSIDIAN.MeleeSpell": "Melee Spell",
+	"OBSIDIAN.RangedSpell": "Ranged Spell",
 	"OBSIDIAN.MeleeSpellAttack": "Melee Spell Attack",
 	"OBSIDIAN.RangedSpellAttack": "Ranged Spell Attack",
 	"OBSIDIAN.RitualLC": "ritual",

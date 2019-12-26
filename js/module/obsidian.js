@@ -155,17 +155,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>
 			new ObsidianSkillDialog(
-				this,
-				$(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id'))
+				this, $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id'))
 				.render(true));
 		html.find('.obsidian-save-mod').click(evt =>
 			new ObsidianSaveDialog(
-				this,
-				$(evt.currentTarget).closest('.obsidian-save-item').data('value'))
+				this, $(evt.currentTarget).closest('.obsidian-save-item').data('value'))
 				.render(true));
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
-		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
 		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
@@ -208,6 +205,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.actor.obsidian.attacks.forEach(atk => {
+			atk.parentEffect = this.actor.data.obsidian.effects.get(atk.parentEffect);
+			atk.parentEffect.damage =
+				atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
+			atk.parentEffect.versatile =
+				atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
+			atk.parentItem = this.actor.data.obsidian.itemsByID.get(atk.parentEffect.parentItem);
+		});
 		console.debug(data);
 		return data;
 	}
@@ -306,9 +311,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 			noDelMenu = [view];
 		}
 
-		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr)', menu);
+		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', menu);
 		new ContextMenu(html, '.obsidian-inv-container', menu);
-		new ContextMenu(html, '.obsidian-spell-tr.item', noDelMenu);
+		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', noDelMenu);
 	}
 
 	/**
@@ -434,20 +439,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onAddAttack (evt) {
-		evt.preventDefault();
-		this.actor.createOwnedItem({
-			type: 'weapon',
-			name: game.i18n.localize('OBSIDIAN.NewAttack')
-		}, {
-			displaySheet: true
-		});
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
 	_onAddFeature (evt) {
 		evt.preventDefault();
 		const flags = {
@@ -526,10 +517,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onAttackToggle (evt) {
 		evt.preventDefault();
-		const attackID = Number(evt.currentTarget.dataset.itemId);
-		const attack = this.actor.getOwnedItem(attackID);
-		const tags = attack.data.flags.obsidian.tags;
-		const current = attack.data.flags.obsidian.mode;
+		const uuid = evt.currentTarget.dataset.uuid;
+		const attack = this.actor.data.obsidian.components.get(uuid);
+		const effect = this.actor.data.obsidian.effects.get(attack.parentEffect);
+		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const tags = item.flags.obsidian.tags;
+		const current = attack.mode;
 		let mode = 'melee';
 
 		if (tags.thrown && tags.versatile) {
@@ -546,7 +539,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		}
 
-		attack.update({'flags.obsidian.mode': mode});
+		const update = {
+			id: item.id,
+			[`flags.obsidian.effects.${effect.idx}.components.${attack.idx}.mode`]: mode
+		};
+
+		const expanded = OBSIDIAN.updateArrays(item, update);
+		this.actor.updateOwnedItem(expanded);
 	}
 
 	/**

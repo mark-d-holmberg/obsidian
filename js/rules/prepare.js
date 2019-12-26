@@ -136,6 +136,37 @@ export const Prepare = {
 			Prepare.usesFormat(id, idx, resource.max, resource.remaining);
 	},
 
+	calculateAttackType: function (flags, atk) {
+		if (atk.category === 'spell') {
+			atk.attackType = `OBSIDIAN.${atk.attack.capitalise()}${atk.category.capitalise()}`;
+			return;
+		}
+
+		atk.attackType = 'OBSIDIAN.MeleeWeapon';
+		if (flags.category === 'unarmed') {
+			atk.mode = 'unarmed';
+		} else if (flags.type === 'ranged') {
+			atk.mode = 'ranged';
+		} else {
+			if (!atk.mode ||
+				(atk.mode === 'versatile' && !flags.tags.versatile)
+				|| (atk.mode === 'ranged' && !flags.tags.thrown))
+			{
+				atk.mode = 'melee'
+			}
+		}
+
+		if (atk.mode === 'ranged') {
+			if (flags.type === 'melee') {
+				atk.attackType = 'OBSIDIAN.RangedAttack';
+			} else {
+				atk.attackType = 'OBSIDIAN.RangedWeapon';
+			}
+		} else if (atk.mode === 'unarmed') {
+			atk.attackType = 'OBSIDIAN.MeleeAttack';
+		}
+	},
+
 	damageFormat: function (dmg, mod = true) {
 		if (dmg === undefined) {
 			return;
@@ -304,30 +335,6 @@ export const Prepare = {
 				}
 			}
 
-			flags.attackType = 'OBSIDIAN.MeleeWeapon';
-			if (flags.category === 'unarmed') {
-				flags.mode = 'unarmed';
-			} else if (flags.type === 'ranged') {
-				flags.mode = 'ranged';
-			} else {
-				if (!flags.mode ||
-					(flags.mode === 'versatile' && !flags.tags.versatile)
-					|| (flags.mode === 'ranged' && !flags.tags.thrown))
-				{
-					flags.mode = 'melee'
-				}
-			}
-
-			if (flags.mode === 'ranged') {
-				if (flags.type === 'melee') {
-					flags.attackType = 'OBSIDIAN.RangedAttack';
-				} else {
-					flags.attackType = 'OBSIDIAN.RangedWeapon';
-				}
-			} else if (flags.mode === 'unarmed') {
-				flags.attackType = 'OBSIDIAN.MeleeAttack';
-			}
-
 			if (flags.tags.ammunition) {
 				if (!flags.ammo) {
 					flags.ammo = {};
@@ -405,11 +412,15 @@ export const Prepare = {
 
 	saves: function (actorData, data, flags) {
 		for (const [id, save] of Object.entries(data.abilities)) {
-			save.save += flags.saves.bonus;
+			save.save =
+				(flags.saves.bonus || 0)
+				+ data.abilities[id].mod
+				+ save.proficient * data.attributes.prof;
+
 			if (flags.saves.hasOwnProperty(id)) {
 				save.save += flags.saves[id].bonus;
 				const override = flags.saves[id].override;
-				if (override !== undefined && override !== '') {
+				if (!OBSIDIAN.notDefinedOrEmpty(override)) {
 					save.save = Number(override);
 				}
 			}

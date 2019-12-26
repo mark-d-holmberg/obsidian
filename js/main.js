@@ -83,17 +83,17 @@ function enrichItemFlags (data) {
 	ObsidianClassSheet.enrichFlags(data);
 
 	if (data.type === 'consumable') {
-		data.flags.obsidian = mergeObject(Schema.Consumable, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Consumable), data.flags.obsidian || {});
 	} else if (data.type === 'container') {
-		data.flags.obsidian = mergeObject(Schema.Container, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Container), data.flags.obsidian || {});
 	} else if (data.type === 'equipment') {
-		data.flags.obsidian = mergeObject(Schema.Equipment, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Equipment), data.flags.obsidian || {});
 	} else if (data.type === 'feat') {
-		data.flags.obsidian = mergeObject(Schema.Feature, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Feature), data.flags.obsidian || {});
 	} else if (data.type === 'spell') {
-		data.flags.obsidian = mergeObject(Schema.Spell, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Spell), data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
-		data.flags.obsidian = mergeObject(Schema.Weapon, data.flags.obsidian || {});
+		data.flags.obsidian = mergeObject(duplicate(Schema.Weapon), data.flags.obsidian || {});
 		data.flags.obsidian.effects = [Effect.create()];
 		data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
 		data.flags.obsidian.effects[0].components[0].proficient = true;
