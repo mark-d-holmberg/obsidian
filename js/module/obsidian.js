@@ -167,6 +167,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-attack').click(this._onAddAttack.bind(this));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
+		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
 		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
 		html.find('[data-feat-id] .obsidian-feature-use').click(this._onUseClicked.bind(this));
@@ -507,6 +508,22 @@ export class Obsidian extends ActorSheet5eCharacter {
 			},
 			default: 'create'
 		}).render(true);
+	}
+
+	/**
+	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onAddSpell (evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+
+		this.actor.createOwnedItem({
+			type: 'spell',
+			name: game.i18n.localize('OBSIDIAN.NewSpell')
+		}, {
+			displaySheet: true
+		});
 	}
 
 	/**

@@ -490,5 +490,6 @@
 	"OBSIDIAN.CustomName": "Custom Name",
 	"OBSIDIAN.HitDie": "Hit Die",
 	"OBSIDIAN.ViewFeature": "View Feature",
-	"OBSIDIAN.Magic": "Magic"
+	"OBSIDIAN.Magic": "Magic",
+	"OBSIDIAN.NewSpell": "New Spell"
 }

@@ -107,7 +107,8 @@
 	margin-left: 5px;
 }
 
-.obsidian-tab-contents h3 a {
+.obsidian-tab-contents h3 a,
+.obsidian-char-spell-header a {
 	color: var(--text-regular);
 	font-size: 10px;
 	font-weight: bold;
@@ -515,6 +516,14 @@
 .obsidian-char-spell-header {
 	justify-content: center;
 	cursor: pointer;
+	position: relative;
+}
+
+.obsidian-char-spell-header a {
+	position: absolute;
+	right: 0;
+	bottom: 1px;
+	text-transform: uppercase;
 }
 
 .obsidian-char-inv-header {
