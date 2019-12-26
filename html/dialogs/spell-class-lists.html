@@ -14,12 +14,12 @@
 				</div>
 				<div class="obsidian-spell-filter">
 					<div class="obsidian-input-search-container">
-						<input type="text" class="obsidian-input-search"
+						<input type="text" class="obsidian-input-search" data-prop="left"
 						       placeholder="{{localize 'OBSIDIAN.SpellName'}}...">
 						<i class="fas fa-search"></i>
 						<span class="obsidian-clear-search">&times;</span>
 					</div>
-					<ul class="obsidian-tab-bar">
+					<ul class="obsidian-tab-bar" data-prop="left">
 						{{#each (range 0 9)}}
 							<li class="obsidian-sub-tab obsidian-spell-level-tab" data-value="{{this}}">
 								{{spell-level-format this}}
@@ -44,12 +44,12 @@
 				</div>
 				<div class="obsidian-spell-filter">
 					<div class="obsidian-input-search-container">
-						<input type="text" class="obsidian-input-search"
+						<input type="text" class="obsidian-input-search" data-prop="right"
 						       placeholder="{{localize 'OBSIDIAN.SpellName'}}...">
 						<i class="fas fa-search"></i>
 						<span class="obsidian-clear-search">&times;</span>
 					</div>
-					<ul class="obsidian-tab-bar">
+					<ul class="obsidian-tab-bar" data-prop="right">
 						{{#each (range 0 9)}}
 							<li class="obsidian-sub-tab obsidian-spell-level-tab" data-value="{{this}}">
 								{{spell-level-format this}}

@@ -1507,15 +1507,18 @@ select[multiple] {
 	scrollbar-width: thin;
 }
 
-select[multiple]::-webkit-scrollbar {
+select[multiple]::-webkit-scrollbar,
+.obsidian-json-dump::-webkit-scrollbar {
 	height: 6px;
 }
 
-select[multiple]::-webkit-scrollbar-track {
+select[multiple]::-webkit-scrollbar-track,
+.obsidian-json-dump::-webkit-scrollbar-track {
 	box-shadow: none;
 }
 
-select[multiple]::-webkit-scrollbar-thumb {
+select[multiple]::-webkit-scrollbar-thumb,
+.obsidian-json-dump::-webkit-scrollbar-thumb {
 	border: none;
 	background: rgba(0, 0, 0, .75);
 }
@@ -1549,4 +1552,13 @@ select[multiple] option:nth-child(2n) {
 .obsidian .obsidian-transfer-buttons button:hover {
 	box-shadow: none;
 	text-shadow: 0 0 5px var(--highlight);
+}
+
+.obsidian-json-dump {
+	height: 100%;
+	background: transparent;
+	color: var(--text-regular);
+	border: 1px solid var(--mid);
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
 }
