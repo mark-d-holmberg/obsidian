@@ -884,7 +884,7 @@
 	padding: 5px;
 }
 
-form.obsidian .obsidian-spell-filter input.obsidian-input-search {
+.obsidian .obsidian-spell-filter input.obsidian-input-search {
 	margin: 0 0 5px 0;
 }
 
@@ -1561,4 +1561,8 @@ select[multiple] option:nth-child(2n) {
 	border: 1px solid var(--mid);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
+}
+
+.obsidian-2-pane ul.obsidian-tab-bar {
+	margin-bottom: 5px;
 }

@@ -1,6 +1,6 @@
 import {OBSIDIAN} from './rules/rules.js';
 
-OBSIDIAN.Data = {SPELLS_BY_CLASS: {}};
+OBSIDIAN.Data = {};
 OBSIDIAN.spellComparator = (a, b) => {
 	const diff = a.data.level - b.data.level;
 	if (diff === 0) {
@@ -8,6 +8,15 @@ OBSIDIAN.spellComparator = (a, b) => {
 	}
 
 	return diff;
+};
+
+OBSIDIAN.computeSpellsByClass = lists => {
+	OBSIDIAN.Data.SPELLS_BY_CLASS = {};
+	Object.entries(lists).forEach(([cls, slugs]) =>
+		OBSIDIAN.Data.SPELLS_BY_CLASS[cls] =
+			slugs.map(slug => OBSIDIAN.Data.SPELLS_BY_SLUG.get(slug))
+				.filter(spell => spell)
+				.sort(OBSIDIAN.spellComparator));
 };
 
 export async function loadSpellData () {
@@ -36,9 +45,5 @@ export async function loadSpellData () {
 		await game.packs.find(pack => pack.collection === 'obsidian.spells').getContent();
 
 	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell.data]));
-	Object.entries(spellLists).forEach(([cls, slugs]) =>
-		OBSIDIAN.Data.SPELLS_BY_CLASS[cls] =
-			slugs.map(slug => OBSIDIAN.Data.SPELLS_BY_SLUG.get(slug))
-				.filter(spell => spell)
-				.sort(OBSIDIAN.spellComparator));
+	OBSIDIAN.computeSpellsByClass(spellLists);
 }

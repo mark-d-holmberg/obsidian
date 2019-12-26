@@ -43,6 +43,11 @@ class ObsidianSpellLists extends Application {
 		this._computeDifference();
 	}
 
+	async close () {
+		OBSIDIAN.computeSpellsByClass(this._lists);
+		return super.close();
+	}
+
 	getData (options) {
 		const data = super.getData(options);
 		data.lists = this._lists;
@@ -96,14 +101,14 @@ class ObsidianSpellLists extends Application {
 		const key = evt.currentTarget.dataset.value;
 		const prop = evt.currentTarget.closest('.obsidian-tab-bar').dataset.prop;
 		this._tabs[prop][key] = !this._tabs[prop][key];
-		this.element.find('.obsidian-spell-level-tab').removeClass('active');
+		this.element.find('.obsidian-spell-level-tab').removeClass('obsidian-active');
 
 		for (let i = 0; i < 10; i++) {
 			['left', 'right'].forEach(k => {
 				if (this._tabs[k][i]) {
 					this.element
 						.find(`ul[data-prop="${k}"] .obsidian-sub-tab[data-value="${i}"]`)
-						.addClass('active');
+						.addClass('obsidian-active');
 				}
 			});
 		}
