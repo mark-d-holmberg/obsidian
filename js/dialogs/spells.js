@@ -34,6 +34,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			search.val('');
 			this._filterOnName({currentTarget: search[0]});
 		});
+		this._applyFilters();
 	}
 
 	getData () {
@@ -132,6 +133,10 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 					$(el).addClass('obsidian-active');
 				}
 			});
+
+			if (filter.name !== undefined) {
+				filterBlock.find('.obsidian-input-search').val(filter.name);
+			}
 
 			filterBlock.next().find('details').each((i, el) => {
 				el.className = '';
