@@ -180,7 +180,11 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			}
 
 			roll[0].dataset.roll = rollType;
-			roll[0].dataset[rollType] = this.item.id;
+			if (this.item.type === 'weapon') {
+				roll[0].dataset.uuid = this.item.obsidian.bestAttack.uuid;
+			} else {
+				roll[0].dataset[rollType] = this.item.id;
+			}
 
 			if (this.item.type === 'feat'
 				&& this.item.flags.obsidian.uses
