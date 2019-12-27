@@ -313,9 +313,28 @@ export function addSettingsHook () {
 					${game.i18n.localize('OBSIDIAN.Configure')}
 				</button>
 			</div>
+			<div class="form-group">
+				<label>${game.i18n.localize('OBSIDIAN.SpellCompendium')}</label>
+				<select id="obsidian-config-spell-compendium"></select>
+			</div>
 		`));
 
+		const compendium = game.settings.get('obsidian', 'spell-compendium');
 		parent.find('#obsidian-config-spell-lists').click(() =>
 			new ObsidianSpellLists().render(true));
+
+		parent.find('#obsidian-config-spell-compendium').change(async evt => {
+			const newCompendium = $(evt.currentTarget).val();
+			game.settings.set('obsidian', 'spell-compendium', newCompendium);
+			await OBSIDIAN.collateSpells(newCompendium);
+			OBSIDIAN.computeSpellsByClass(
+				JSON.parse(game.settings.get('obsidian', 'spell-class-lists')));
+		}).append(
+			game.packs.filter(pack => pack.entity === 'Item')
+				.map(pack =>
+					$(`<option value="${pack.collection}">`
+						+ `[${pack.metadata.module ? pack.metadata.module : pack.metadata.system}] `
+						+`${pack.metadata.label}</option>`)))
+			.find(`option[value="${compendium}"]`).prop('selected', true);
 	});
 }

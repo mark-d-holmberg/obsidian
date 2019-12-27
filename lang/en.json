@@ -537,5 +537,6 @@
 	"OBSIDIAN.Export": "Export",
 	"OBSIDIAN.CustomClasses": "Custom Classes",
 	"OBSIDIAN.ExportSpellLists": "Export Spell Lists",
-	"OBSIDIAN.ImportSpellLists": "Import Spell Lists"
+	"OBSIDIAN.ImportSpellLists": "Import Spell Lists",
+	"OBSIDIAN.SpellCompendium": "Configure spell compendium source"
 }

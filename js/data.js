@@ -10,6 +10,12 @@ OBSIDIAN.spellComparator = (a, b) => {
 	return diff;
 };
 
+const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
+OBSIDIAN.collateSpells = async (compendium) => {
+	const spells = await game.packs.find(pack => pack.collection === compendium).getContent();
+	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell.data]));
+};
+
 OBSIDIAN.computeSpellsByClass = lists => {
 	OBSIDIAN.Data.SPELLS_BY_CLASS = {};
 	Object.entries(lists).forEach(([cls, slugs]) =>
@@ -20,14 +26,21 @@ OBSIDIAN.computeSpellsByClass = lists => {
 };
 
 export async function loadSpellData () {
-	const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 	game.settings.register('obsidian', 'spell-class-lists', {
 		scope: 'world',
 		type: String,
 		default: ''
 	});
 
+	game.settings.register('obsidian', 'spell-compendium', {
+		scope: 'world',
+		type: String,
+		default: 'obsidian.spells'
+	});
+
+	const compendium = game.settings.get('obsidian', 'spell-compendium');
 	let spellLists = game.settings.get('obsidian', 'spell-class-lists');
+
 	if (spellLists.length) {
 		spellLists = JSON.parse(spellLists);
 	} else {
@@ -41,9 +54,6 @@ export async function loadSpellData () {
 		}
 	}
 
-	const spells =
-		await game.packs.find(pack => pack.collection === 'obsidian.spells').getContent();
-
-	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell.data]));
+	await OBSIDIAN.collateSpells(compendium);
 	OBSIDIAN.computeSpellsByClass(spellLists);
 }
