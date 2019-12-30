@@ -1281,3 +1281,101 @@ legend .fancy-checkbox {
 .obsidian-checkbox-grid .fancy-checkbox {
 	flex-basis: 25%;
 }
+
+.obsidian-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	background-color: rgba(0, 0, 0, .75);
+}
+
+.obsidian-migrate-container {
+	margin: 100px auto 0 auto;
+	width: 450px;
+	position: relative;
+}
+
+.obsidian-migrate-box {
+	width: 100%;
+	border: 2px ridge var(--mid);
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, .75);
+	background-color: var(--bg);
+	color: var(--text-regular);
+	font-size: 13px;
+	font-family: var(--font);
+	padding: 10px;
+	border-radius: 3px;
+}
+
+.obsidian-migrate-box h3 {
+	width: 100%;
+	font-size: 16px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid var(--mid);
+	margin-bottom: 10px;
+}
+
+.obsidian-migrate-buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+.obsidian-migrate-buttons button {
+	width: 50%;
+	color: var(--text-bright);
+	font-size: 13px;
+	padding: 8px;
+	cursor: pointer;
+	background-color: transparent;
+	margin: 0;
+	line-height: 1;
+}
+
+.obsidian-migrate-buttons button:first-child {
+	margin-right: 10px;
+}
+
+.obsidian-migrate-buttons button:hover {
+	background-color: var(--dark);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-positive {
+	border: 1px solid var(--positive);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-positive i {
+	color: var(--positive);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-positive:hover {
+	box-shadow: 0 0 5px var(--positive);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-negative {
+	border: 1px solid var(--negative);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-negative i {
+	color: var(--negative);
+}
+
+.obsidian-migrate-buttons .obsidian-btn-negative:hover {
+	box-shadow: 0 0 5px var(--negative);
+}
+
+.obsidian-migrate-progress {
+	position: absolute;
+	left: 2px;
+	bottom: 2px;
+	width: 446px;
+	height: 4px;
+	display: none;
+}
+
+.obsidian-migrate-bar {
+	height: 4px;
+	background-color: var(--positive);
+}

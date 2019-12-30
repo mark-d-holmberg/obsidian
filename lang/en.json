@@ -538,5 +538,11 @@
 	"OBSIDIAN.CustomClasses": "Custom Classes",
 	"OBSIDIAN.ExportSpellLists": "Export Spell Lists",
 	"OBSIDIAN.ImportSpellLists": "Import Spell Lists",
-	"OBSIDIAN.SpellCompendium": "Configure spell compendium source"
+	"OBSIDIAN.SpellCompendium": "Configure spell compendium source",
+	"OBSIDIAN.MigrateTitle": "Obsidian Update",
+	"OBSIDIAN.MigrateMessage": "In order to support new features, the underlying data model has been changed and your existing content needs to be migrated to this new format. <strong>Please make a backup of your world data before proceeding as this process cannot be reversed.</strong>",
+	"OBSIDIAN.MigrateMessage2": "If you do not wish to perform the migration at this time, click 'Cancel' below and then disable the module from the 'Manage Modules' section.",
+	"OBSIDIAN.MigrateNotPermitted": "The Obsidian system requires an update but this can only be performed by your DM, please notify them.",
+	"OBSIDIAN.MigrateStart": "Begin Migration",
+	"OBSIDIAN.MigrateCancel": "Cancel Migration"
 }

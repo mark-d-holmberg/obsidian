@@ -12,6 +12,7 @@ import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
 import {addSettingsHook} from './rules/spell-lists.js';
 import {Effect} from './module/effect.js';
+import {checkVersion} from './module/migrate.js';
 
 runPatches();
 
@@ -50,6 +51,7 @@ Hooks.once('ready', async function () {
 	link.href = `modules/obsidian/css/${fontSheet}.css`;
 	document.getElementsByTagName('head')[0].appendChild(link);
 
+	checkVersion();
 	loadSpellData();
 
 	await _initialising;
@@ -74,6 +76,17 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 });
 
 addSettingsHook();
+
+function enrichActorFlags (data) {
+	if (!data.flags) {
+		data.flags = {};
+	}
+
+	if (data.type === 'character') {
+		data.flags.obsidian = mergeObject(duplicate(Schema.Actor), data.flags.obsidian || {});
+		data.flags.obsidian.version = Schema.VERSION;
+	}
+}
 
 function enrichItemFlags (data) {
 	if (!data.flags) {
@@ -104,6 +117,7 @@ function enrichItemFlags (data) {
 	data.flags.obsidian.version = Schema.VERSION;
 }
 
+Hooks.on('preCreateActor', (collection, data) => enrichActorFlags(data));
 Hooks.on('preCreateItem', (constructor, data) => enrichItemFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, id, data) => {
 	enrichItemFlags(data);

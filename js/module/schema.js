@@ -3,66 +3,64 @@ export const Schema = {};
 Schema.VERSION = 2;
 
 Schema.Actor = {
-	obsidian: {
-		attributes: {
-			ac: {
-				ability1: 'dex',
-				base: 10
-			},
-			conditions: {},
-			death: {
-				adv: false,
-				bonus: 0,
-				threshold: 10
-			},
-			hd: {},
-			hpMaxMod: 0,
-			init: {
-				ability: 'dex'
-			},
-			senses: {},
-			speed: {}
+	attributes: {
+		ac: {
+			ability1: 'dex',
+			base: 10
 		},
-		defenses: {
-			damage: [],
-			conditions: [],
-			disease: false,
-			sleep: false
-		},
-		details: {
-			gender: null,
-			subrace: null,
-			milestone: false
-		},
-		order: {
-			equipment: {
-				root: [],
-				containers: []
-			}
-		},
-		saves: {
-			bonus: 0
-		},
-		sheet: {
-			roll: 'reg'
-		},
-		skills: {
+		conditions: {},
+		death: {
+			adv: false,
 			bonus: 0,
-			joat: false,
-			custom: [],
-			tools: [],
-			passives: ['prc', 'inv']
+			threshold: 10
 		},
-		spells: {
-			slots: {}
+		hd: {},
+		hpMaxMod: 0,
+		init: {
+			ability: 'dex'
 		},
-		traits: {
-			profs: {
-				custom: {
-					armour: [],
-					weapons: [],
-					langs: []
-				}
+		senses: {},
+		speed: {}
+	},
+	defenses: {
+		damage: [],
+		conditions: [],
+		disease: false,
+		sleep: false
+	},
+	details: {
+		gender: null,
+		subrace: null,
+		milestone: false
+	},
+	order: {
+		equipment: {
+			root: [],
+			containers: []
+		}
+	},
+	saves: {
+		bonus: 0
+	},
+	sheet: {
+		roll: 'reg'
+	},
+	skills: {
+		bonus: 0,
+		joat: false,
+		custom: [],
+		tools: [],
+		passives: ['prc', 'inv']
+	},
+	spells: {
+		slots: {}
+	},
+	traits: {
+		profs: {
+			custom: {
+				armour: [],
+				weapons: [],
+				langs: []
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import {prepareSpellcasting} from '../rules/spellcasting.js';
 import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {prepareEffects} from '../rules/effects.js';
+import {Schema} from './schema.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -15,7 +16,13 @@ export class ObsidianActor extends Actor5e {
 			return this.data;
 		}
 
-		ObsidianActor._enrichFlags(this.data.flags);
+		if (!this.data.flags
+			|| !this.data.flags.obsidian
+			|| (this.data.flags.obsidian.version || 0) < Schema.VERSION)
+		{
+			// This actor needs migrating.
+			return this.data;
+		}
 
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
