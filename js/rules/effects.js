@@ -66,6 +66,14 @@ export function prepareEffects (actorData) {
 					targetComponent = component;
 				} else if (component.type === 'scaling') {
 					effect.scalingComponent = component;
+				} else if (component.type === 'consume') {
+					if (component.target === 'this-item' || component.target === 'this-effect') {
+						component.itemID = item.id;
+					}
+
+					if (component.target === 'this-effect') {
+						component.ref = effect.uuid;
+					}
 				}
 			}
 

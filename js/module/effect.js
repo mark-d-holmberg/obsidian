@@ -79,5 +79,20 @@ export const Effect = {
 			target: 'individual',
 			count: 1
 		};
+	},
+
+	newConsume: function () {
+		return {
+			type: 'consume',
+			uuid: OBSIDIAN.uuid(),
+			target: 'this-effect',
+			itemID: -1,
+			featID: -1,
+			ref: '',
+			calc: 'fixed',
+			fixed: 1,
+			slots: 'any',
+			class: ''
+		};
 	}
 };

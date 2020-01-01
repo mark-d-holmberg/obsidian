@@ -1,0 +1,74 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.ConsumesResource'}}</legend>
+  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+    <div class="obsidian-fullwidth">
+	    <label class="obsidian-inline">
+		    {{localize 'OBSIDIAN.Resource'}}
+	      <select name="{{prefix}}.target" data-selector="{{prefix}}.target">
+	        {{#select target}}
+		        {{#each @root.ObsidianRules.EFFECT_CONSUME_TARGETS}}
+			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumeTarget-' this}}</option>
+		        {{/each}}
+	        {{/select}}
+	      </select>
+	    </label>
+      <select name="{{prefix}}.itemID" data-dtype="Number" data-selector-parent="{{prefix}}.target"
+              data-show="item">
+        {{#select itemID}}
+	        {{#each @root.itemsWithResources}}
+		        <option value="{{id}}">{{name}}</option>
+	        {{/each}}
+        {{/select}}
+      </select>
+	    <select name="{{prefix}}.featID" data-dtype="Number" data-selector-parent="{{prefix}}.target"
+	            data-show="feat">
+		    {{#select featID}}
+			    {{#each @root.featsWithResources}}
+				    <option value="{{id}}">{{name}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
+	    <select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target"
+	            data-hide="this-effect, spell">
+		    {{#select ref}}
+			    {{#each itemEffectsWithResources}}
+				    <option value="{{uuid}}">{{name}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
+	    <select name="{{prefix}}.slots" data-selector-parent="{{prefix}}.target" data-show="spell"
+	            data-selector="{{prefix}}.slots">
+		    {{#select slots}}
+			    {{#each @root.ObsidianRules.EFFECT_CONSUME_SLOTS}}
+				    <option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumeSlots-' this}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
+	    <select name="{{prefix}}.class" data-selector-parent="{{prefix}}.slots" data-show="class">
+		    {{#select class}}
+			    {{#each @root.actor.data.obsidian.classes}}
+				    <option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
+    </div>
+  </div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.target" data-hide="spell">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Amount'}}
+				<select name="{{prefix}}.calc" data-selector="{{prefix}}.calc">
+					{{#select calc}}
+						{{#each @root.ObsidianRules.EFFECT_CONSUME_CALC}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumeCalc-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" name="{{prefix}}.fixed" value="{{fixed}}"
+			       data-selector-parent="{{prefix}}.calc" data-show="fixed">
+		</div>
+	</div>
+</fieldset>

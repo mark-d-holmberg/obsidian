@@ -45,6 +45,9 @@
 						{{else if (eq type 'target')}}
 							{{> modules/obsidian/html/components/effects/targets.html
 									prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+						{{else if (eq type 'consume')}}
+							{{> modules/obsidian/html/components/effects/consume.html
+								  prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 						{{/if}}
 					{{/each}}
 				</div>
@@ -57,6 +60,9 @@
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-resource obsidian-add-resource obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddResource'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-consume-resource obsidian-add-consume obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.ConsumesResource'}}</div>
 		</li>
 		<li class="obsidian-effects-tab obsidian-icon-melee obsidian-add-attack obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddAttack'}}</div>

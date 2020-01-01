@@ -530,6 +530,16 @@
 	"OBSIDIAN.AddTargets": "Add Targets",
 	"OBSIDIAN.Targets": "Targets",
 	"OBSIDIAN.Target-individual": "Individual",
+	"OBSIDIAN.ConsumesResource": "Consumes Resource",
+	"OBSIDIAN.ConsumeTarget-this-effect": "This Effect",
+	"OBSIDIAN.ConsumeTarget-this-item": "This Item",
+	"OBSIDIAN.ConsumeTarget-item": "Item",
+	"OBSIDIAN.ConsumeTarget-feat": "Feature",
+	"OBSIDIAN.ConsumeTarget-spell": "Spell Slots",
+	"OBSIDIAN.ConsumeCalc-fixed": "Fixed",
+	"OBSIDIAN.ConsumeCalc-var": "Variable",
+	"OBSIDIAN.ConsumeSlots-any": "Any",
+	"OBSIDIAN.ConsumeSlots-class": "Class",
 	"OBSIDIAN.SettingsConfSpellLists": "Configure class spell lists",
 	"OBSIDIAN.Configure": "Configure",
 	"OBSIDIAN.ManageCustom": "Manage Custom",
@@ -544,5 +554,6 @@
 	"OBSIDIAN.MigrateMessage2": "If you do not wish to perform the migration at this time, click 'Cancel' below and then disable the module from the 'Manage Modules' section.",
 	"OBSIDIAN.MigrateNotPermitted": "The Obsidian system requires an update but this can only be performed by your DM, please notify them.",
 	"OBSIDIAN.MigrateStart": "Begin Migration",
-	"OBSIDIAN.MigrateCancel": "Cancel Migration"
+	"OBSIDIAN.MigrateCancel": "Cancel Migration",
+	"OBSIDIAN.Amount": "Amount"
 }

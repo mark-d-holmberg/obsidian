@@ -6,7 +6,7 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
-	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets';
+	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume';
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -38,6 +38,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-save').click(this._onAddComponent.bind(this, Effect.newSave));
 		html.find('.obsidian-add-scaling').click(this._onAddComponent.bind(this, Effect.newScaling));
 		html.find('.obsidian-add-targets').click(this._onAddComponent.bind(this, Effect.newTarget));
+		html.find('.obsidian-add-consume').click(this._onAddComponent.bind(this, Effect.newConsume));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
@@ -71,6 +72,37 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	getData () {
 		const data = super.getData();
 		data.equipTypes = Schema.EquipTypes;
+
+		if (data.actor) {
+			const hasResource = item =>
+				item.flags && item.flags.obsidian && item.flags.obsidian.effects
+				&& item.flags.obsidian.effects.some(e =>
+					e.components.some(c => c.type === 'resource'));
+
+			data.itemsWithResources =
+				data.actor.data.items
+					.filter(item =>
+						!['class', 'spell', 'feat'].includes(item.type) && hasResource(item));
+
+			data.featsWithResources =
+				data.actor.data.items.filter(item => item.type === 'feat' && hasResource(item));
+
+			data.item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'consume')
+				.forEach(component => {
+					const item =
+						data.actor.data.obsidian.itemsByID.get(
+							component.target === 'feat' ? component.featID : component.itemID);
+
+					if (item) {
+						component.itemEffectsWithResources =
+							item.flags.obsidian.effects.filter(e =>
+								e.components.some(c => c.type === 'resource'));
+					}
+				});
+		}
+
 		return data;
 	}
 
