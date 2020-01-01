@@ -37,6 +37,11 @@ export function prepareEffects (actorData) {
 			effect.parentActor = actorData._id;
 			effect.parentItem = item.id;
 			effect.idx = effectIdx;
+			effect.label = effect.name;
+
+			if (!effect.name.length) {
+				effect.label = game.i18n.localize('OBSIDIAN.Unnamed');
+			}
 
 			let targetComponent;
 			for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
@@ -62,6 +67,13 @@ export function prepareEffects (actorData) {
 					Prepare.calculateResources(
 						item.id, item.idx, data, component, actorData.obsidian.classes);
 					item.obsidian.resources.push(component);
+
+					if (flags.notes) {
+						flags.notes.push(
+							'<div class="obsidian-table-note-flex">'
+								+ `${effect.label}: ${component.display}`
+							+ '</div>');
+					}
 				} else if (component.type === 'target') {
 					targetComponent = component;
 				} else if (component.type === 'scaling') {
@@ -143,13 +155,6 @@ export function prepareEffects (actorData) {
 			item.obsidian.bestResource =
 				item.obsidian.resources.reduce((acc, resource) =>
 					resource.max > acc.max ? resource: acc);
-
-			if (flags.notes) {
-				flags.notes.push(
-					'<div class="obsidian-table-note-flex">'
-					+ `${item.obsidian.bestResource.name}: ${item.obsidian.bestResource.display}`
-					+ '</div>');
-			}
 		}
 	}
 }

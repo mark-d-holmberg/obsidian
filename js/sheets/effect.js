@@ -73,7 +73,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const data = super.getData();
 		data.equipTypes = Schema.EquipTypes;
 
-		if (data.actor) {
+		if (data.actor && data.item.flags && data.item.flags.obsidian
+			&& data.item.flags.obsidian.effects)
+		{
 			const hasResource = item =>
 				item.flags && item.flags.obsidian && item.flags.obsidian.effects
 				&& item.flags.obsidian.effects.some(e =>

@@ -259,8 +259,7 @@ export const Prepare = {
 			if (bestArmour) {
 				data.attributes.ac.min =
 					bestArmour.flags.obsidian.baseAC
-					+ actorData.flags.obsidian.attributes.ac.mod
-					+ bestArmour.flags.obsidian.magic;
+					+ actorData.flags.obsidian.attributes.ac.mod;
 
 				if (bestArmour.flags.obsidian.addDex) {
 					let maxDex = bestArmour.flags.obsidian.maxDex;
@@ -275,8 +274,7 @@ export const Prepare = {
 			}
 
 			if (bestShield) {
-				data.attributes.ac.min +=
-					bestShield.flags.obsidian.baseAC + bestShield.flags.obsidian.magic;
+				data.attributes.ac.min += bestShield.flags.obsidian.baseAC;
 			}
 		}
 	},
