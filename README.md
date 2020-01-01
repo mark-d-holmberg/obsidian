@@ -19,9 +19,9 @@ In addition to the above information, it can be useful if you are able to do the
 ## License
 All source code (`*.html`, `*.css`, `*.js`, `*.json`, `*.d.ts`) is made available under the terms of the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html). A copy of this license is available in the `LICENSE` file.
 
-The fonts Roboto and Roboto Condensed found in the `fonts` directory are used and redistributed under the terms of the [Apache License v2](http://www.apache.org/licenses/LICENSE-2.0).
+The fonts Roboto and Roboto Condensed found in the `fonts` directory are used and redistributed under the terms of the [Apache License v2](http://www.apache.org/licenses/LICENSE-2.0). A copy of this license is available in the `fonts/LICENSE-2.0.txt` file.
 
-The font Noto Sans JP found in the `fonts` directory is used and redistributed under the terms of the [OFL 1.1](https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web).
+The font Noto Sans JP found in the `fonts` directory is used and redistributed under the terms of the [OFL 1.1](https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web). A copy of this license is available in the `fonts/OFL.txt` file.
 
 The SVG images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
 
