@@ -555,6 +555,7 @@
 	"OBSIDIAN.MigrateNotPermitted": "The Obsidian system requires an update but this can only be performed by your DM, please notify them.",
 	"OBSIDIAN.MigrateStart": "Begin Migration",
 	"OBSIDIAN.MigrateCancel": "Cancel Migration",
+	"OBSIDIAN.MigrateFailed": "Migration has failed. Check console errors for details.",
 	"OBSIDIAN.Amount": "Amount",
 	"OBSIDIAN.Unnamed": "[Unnamed]"
 }

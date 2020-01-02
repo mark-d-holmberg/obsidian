@@ -12,7 +12,7 @@ import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
 import {addSettingsHook} from './rules/spell-lists.js';
 import {Effect} from './module/effect.js';
-import {checkVersion} from './module/migrate.js';
+import {checkVersion, Migrate} from './module/migrate.js';
 
 runPatches();
 
@@ -84,6 +84,10 @@ function enrichActorFlags (data) {
 
 	if (data.type === 'character') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Actor), data.flags.obsidian || {});
+		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+			mergeObject(data, Migrate.convertActor(data));
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 	}
 }
@@ -107,11 +111,19 @@ function enrichItemFlags (data) {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Spell), data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Weapon), data.flags.obsidian || {});
-		data.flags.obsidian.effects = [Effect.create()];
-		data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
-		data.flags.obsidian.effects[0].components[0].proficient = true;
+		if (!data.flags.obsidian.effects.length) {
+			data.flags.obsidian.effects = [Effect.create()];
+			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
+			data.flags.obsidian.effects[0].components[0].proficient = true;
+		}
 	} else if (data.type === 'loot' || data.type === 'tool') {
-		data.flags.obsidian = {};
+		if (!data.flags.obsidian) {
+			data.flags.obsidian = {};
+		}
+	}
+
+	if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+		mergeObject(data, Migrate.convertItem(data));
 	}
 
 	data.flags.obsidian.version = Schema.VERSION;
