@@ -98,23 +98,30 @@ export const Rolls = {
 		return result;
 	},
 
-	componentRoll: function (actor, component) {
-		const effect = actor.data.obsidian.effects.get(component.parentEffect);
+	effectRoll: function (actor, effect, name) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
-		const results = {type: 'fx', title: effect.name.length ? effect.name : item.name};
-		const saves = effect.components.filter(c => c.type === 'save');
-		const mods = [];
+		const results =
+			{type: 'fx', title: name ? name : effect.name.length ? effect.name : item.name};
 
-		results.results = [Rolls.toHitRoll(actor, component, mods)];
-		results.dmgBtn = effect.uuid;
-		results.dmgCount = 1;
-		results.subtitle = game.i18n.localize(`${component.attackType}Attack`);
+		const attacks = effect.components.filter(c => c.type === 'attack');
+		const damage = effect.components.filter(c => c.type === 'damage');
+		const saves = effect.components.filter(c => c.type === 'save');
+
+		if (attacks.length) {
+			results.results = [Rolls.toHitRoll(actor, attacks[0])];
+			results.dmgBtn = effect.uuid;
+			results.dmgCount = 1;
+			results.subtitle = game.i18n.localize(attacks[0].attackType);
+		} else if (damage.length) {
+			results.damage = Rolls.rollDamage(actor, damage, {crit: false});
+			results.crit = Rolls.rollDamage(actor, damage, {crit: true});
+		}
 
 		if (saves.length) {
 			results.saves = saves.map(save => Rolls.compileSave(actor, save));
 		}
 
-		return [{flags: {obsidian: results}}];
+		return {flags: {obsidian: results}};
 	},
 
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
@@ -302,12 +309,12 @@ export const Rolls = {
 				return;
 			}
 
-			const component = actor.data.obsidian.components.get(dataset.uuid);
-			if (!component) {
+			const effect = actor.data.obsidian.effects.get(dataset.uuid);
+			if (!effect) {
 				return;
 			}
 
-			Rolls.toChat(actor, ...Rolls.componentRoll(actor, component));
+			Rolls.toChat(actor, Rolls.effectRoll(actor, effect));
 		} else if (roll === 'save') {
 			if (!dataset.save) {
 				return;
@@ -443,33 +450,9 @@ export const Rolls = {
 		}
 
 		const itemFlags = item.flags.obsidian;
-		return itemFlags.effects.map(effect => {
-			if (effect === item.obsidian.scaling) {
-				return null;
-			}
-
-			const results = {type: 'fx', title: item.name};
-			const attacks = effect.components.filter(c => c.type === 'attack');
-			const damage = effect.components.filter(c => c.type === 'damage');
-			const saves = effect.components.filter(c => c.type === 'save');
-
-			if (attacks.length) {
-				const mods = [];
-				results.results = [Rolls.toHitRoll(actor, attacks[0], mods)];
-				results.dmgBtn = effect.uuid;
-				results.dmgCount = 1;
-				results.subtitle = attacks[0].attackType;
-			} else if (damage.length) {
-				results.damage = Rolls.rollDamage(actor, damage, {crit: false});
-				results.crit = Rolls.rollDamage(actor, damage, {crit: true});
-			}
-
-			if (saves.length) {
-				results.saves = saves.map(save => Rolls.compileSave(actor, save));
-			}
-
-			return {flags: {obsidian: results}};
-		}).filter(result => result != null);
+		return itemFlags.effects
+			.filter(effect => effect !== item.obsidian.scaling)
+			.map(effect => Rolls.effectRoll(actor, effect, item.name));
 	},
 
 	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
@@ -740,7 +723,7 @@ export const Rolls = {
 				results[0].dmgBtn = effect.uuid;
 				results[0].dmgCount = count;
 				results[0].dmgUpcast = upcastAmount;
-				results[0].subtitle = game.i18n.localize(`${attacks[0].attackType}Attack`);
+				results[0].subtitle = game.i18n.localize(attacks[0].attackType);
 			}
 
 			if (saves.length) {

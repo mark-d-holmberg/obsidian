@@ -107,7 +107,7 @@ export const Prepare = {
 		}
 	},
 
-	calculateResources: function (id, idx, data, resource, classes) {
+	calculateResources: function (data, item, effect, resource, classes) {
 		if (resource.calc === 'fixed') {
 			resource.max = resource.fixed;
 		} else {
@@ -132,38 +132,30 @@ export const Prepare = {
 			resource.remaining = 0;
 		}
 
-		resource.display =
-			Prepare.usesFormat(id, idx, resource.max, resource.remaining);
+		resource.display = Prepare.usesFormat(item, effect, resource, 6);
 	},
 
 	calculateAttackType: function (flags, atk) {
-		if (atk.category === 'spell') {
-			atk.attackType = `OBSIDIAN.${atk.attack.capitalise()}${atk.category.capitalise()}`;
+		if (atk.category === 'spell' || flags.category === undefined) {
+			atk.attackType =
+				`OBSIDIAN.${atk.attack.capitalise()}${atk.category.capitalise()}Attack`;
 			return;
 		}
 
-		atk.attackType = 'OBSIDIAN.MeleeWeapon';
+		atk.attackType = 'OBSIDIAN.MeleeWeaponAttack';
 		if (flags.category === 'unarmed') {
 			atk.mode = 'unarmed';
 		} else if (flags.type === 'ranged') {
 			atk.mode = 'ranged';
-		} else {
-			if (!atk.mode ||
-				(atk.mode === 'versatile' && !flags.tags.versatile)
-				|| (atk.mode === 'ranged' && !flags.tags.thrown))
-			{
-				atk.mode = 'melee'
-			}
+		} else if (!atk.mode
+			|| (atk.mode === 'versatile' && !flags.tags.versatile)
+			|| (atk.mode === 'ranged' && !flags.tags.thrown))
+		{
+			atk.mode = 'melee'
 		}
 
 		if (atk.mode === 'ranged') {
-			if (flags.type === 'melee') {
-				atk.attackType = 'OBSIDIAN.RangedAttack';
-			} else {
-				atk.attackType = 'OBSIDIAN.RangedWeapon';
-			}
-		} else if (atk.mode === 'unarmed') {
-			atk.attackType = 'OBSIDIAN.MeleeAttack';
+			atk.attackType = 'OBSIDIAN.RangedWeaponAttack';
 		}
 	},
 
@@ -349,6 +341,30 @@ export const Prepare = {
 							</option>`)}
 					</select>`;
 			}
+
+			flags.notes = [];
+
+			if (flags.category) {
+				flags.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
+			}
+
+			flags.notes =
+				flags.notes.concat(
+					Object.entries(flags.tags).map(([tag, val]) => {
+						if (tag === 'custom' && val.length) {
+							return val;
+						}
+
+						if (val) {
+							if (tag === 'ammunition') {
+								return flags.ammo.display;
+							}
+
+							return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
+						}
+
+						return null;
+					}).filter(tag => tag != null));
 		}
 	},
 
@@ -482,31 +498,32 @@ export const Prepare = {
 		}
 	},
 
-	usesFormat: function (id, idx, max, remaining, threshold = 10, prop = 'uses') {
-		if (max === undefined || max < 0) {
+	usesFormat: function (item, effect, resource, threshold = 10) {
+		if (resource.max === undefined || resource.max < 0) {
 			return '';
 		}
 
-		let used = max - remaining;
+		let used = resource.max - resource.remaining;
 		if (used < 0) {
 			used = 0;
 		}
 
-		let out = `<div class="obsidian-feature-uses" data-feat-id="${id}" data-prop="${prop}">`;
-		if (max <= threshold) {
-			for (let i = 0; i < max; i++) {
+		let out = `<div class="obsidian-feature-uses" data-uuid="${resource.uuid}">`;
+		if (resource.max <= threshold) {
+			for (let i = 0; i < resource.max; i++) {
 				out += `
-						<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
-						     data-n="${i + 1}"></div>
-					`;
+					<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
+					     data-n="${i + 1}"></div>
+				`;
 			}
 		} else {
 			out += `
-					<input type="number" data-name="items.${idx}.flags.obsidian.${prop}.remaining"
-					       class="obsidian-input-sheet" value="${remaining}" data-dtype="Number">
-					<span class="obsidian-binary-operator">&sol;</span>
-					<span class="obsidian-feature-max">${max}</span>
-				`;
+				<input type="number" class="obsidian-input-sheet" value="${resource.remaining}"
+				       data-name="items.${item.idx}.flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining"
+				       data-dtype="Number">
+				<span class="obsidian-binary-operator">&sol;</span>
+				<span class="obsidian-feature-max">${resource.max}</span>
+			`;
 		}
 
 		out += '</div>';

@@ -111,7 +111,7 @@ function enrichItemFlags (data) {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Spell), data.flags.obsidian || {});
 	} else if (data.type === 'weapon') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Weapon), data.flags.obsidian || {});
-		if (!data.flags.obsidian.effects.length) {
+		if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
 			data.flags.obsidian.effects = [Effect.create()];
 			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
 			data.flags.obsidian.effects[0].components[0].proficient = true;

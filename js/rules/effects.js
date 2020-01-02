@@ -65,13 +65,15 @@ export function prepareEffects (actorData) {
 					item.obsidian.saves.push(component);
 				} else if (component.type === 'resource') {
 					Prepare.calculateResources(
-						item.id, item.idx, data, component, actorData.obsidian.classes);
+						data, item, effect, component, actorData.obsidian.classes);
 					item.obsidian.resources.push(component);
 
 					if (flags.notes) {
 						flags.notes.push(
 							'<div class="obsidian-table-note-flex">'
-								+ `${effect.label}: ${component.display}`
+								+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
+									+ effect.label
+								+ `</div>: ${component.display}`
 							+ '</div>');
 					}
 				} else if (component.type === 'target') {

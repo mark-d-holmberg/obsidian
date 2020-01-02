@@ -3,15 +3,8 @@
 		<div class="obsidian-item-card-header">
 			<h3>{{item.name}}</h3>
 			<div class="obsidian-item-card-sub-header">
-				<div class="obsidian-table-note-text">
-					{{~i18n-join 'OBSIDIAN.WeaponCat-' item.flags.obsidian.category~}}
-				</div>
-				{{#each item.flags.obsidian.tags}}
-					{{~#if (and this (eq @key 'custom'))~}}
-						<div class="obsidian-table-note-text">{{this}}</div>
-					{{~else if this~}}
-						<div class="obsidian-table-note-text">{{{i18n-join 'OBSIDIAN.AtkTag-' @key}}}</div>
-					{{~/if~}}
+				{{#each item.flags.obsidian.notes}}
+					<div class="obsidian-table-note-text">{{{this}}}</div>
 				{{/each}}
 			</div>
 			{{#if item.flags.obsidian.charges.enabled}}

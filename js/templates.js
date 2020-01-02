@@ -8,7 +8,6 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/charges.html',
 		'modules/obsidian/html/components/spell-card.html',
 		'modules/obsidian/html/components/inventory.html',
-		'modules/obsidian/html/components/weapon-notes.html',
 		'modules/obsidian/html/components/tag-dropdown.html',
 		'modules/obsidian/html/components/consumable.html',
 		'modules/obsidian/html/components/container.html',

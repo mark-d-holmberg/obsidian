@@ -8,7 +8,6 @@ import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
-
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -167,14 +166,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
 		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
-		html.find('[data-feat-id] .obsidian-feature-use').click(this._onUseClicked.bind(this));
+		html.find('[data-uuid] .obsidian-feature-use').click(this._onUseClicked.bind(this));
 		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
-		html.find('[data-roll]').click(evt => Rolls.fromClick(this.actor, evt));
+		html.find('[data-roll]').click(this._onRoll.bind(this));
 		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
@@ -617,7 +616,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onEquip (evt) {
+	_onEquip (evt, resource) {
 		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
 		const item = this.actor.data.items.find(item => item.id === id);
 
@@ -628,8 +627,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (item.flags.obsidian.equippable) {
 			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
 		} else if (item.flags.obsidian.consumable) {
-			if (item.obsidian.bestResource) {
-				const resource = item.obsidian.bestResource;
+			if (!resource) {
+				resource = item.obsidian.bestResource;
+			}
+
+			if (resource) {
 				let quantity = item.data.quantity;
 				let remaining = resource.remaining - 1;
 
@@ -642,10 +644,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 					}
 				}
 
-				const parentEffect =
-					item.flags.obsidian.effects.find(effect =>
-						effect.uuid === resource.parentEffect);
-
+				const parentEffect = this.actor.data.obsidian.effects.get(resource.parentEffect);
 				const update = {
 					id: id,
 					'data.quantity': quantity,
@@ -655,15 +654,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 				const expanded = OBSIDIAN.updateArrays(item, update);
 				this.actor.updateOwnedItem(expanded);
+				Rolls.toChat(this.actor, Rolls.effectRoll(this.actor, parentEffect));
 			} else {
 				const quantity = item.data.quantity - 1;
 				if (quantity >= 0) {
 					this.actor.updateOwnedItem({id: id, 'data.quantity': quantity});
 				}
-			}
 
-			// TODO: Re-enable this once features are converted.
-			//Rolls.toChat(this.actor, Rolls.feature(this.actor, item));
+				Rolls.toChat(this.actor, ...Rolls.itemRoll(this.actor, item));
+			}
 		}
 	}
 
@@ -679,33 +678,25 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onResourceUsed (item, n) {
-		const resource = item.obsidian.bestResource;
-		const parentEffect =
-			item.flags.obsidian.effects.find(effect => effect.uuid === resource.parentEffect);
+	_onRoll (evt) {
+		const uuid = evt.currentTarget.dataset.uuid;
+		const effect = this.actor.data.obsidian.effects.get(uuid);
 
-		if (!parentEffect) {
-			return;
+		if (effect) {
+			const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+			const resources = effect.components.filter(component => component.type === 'resource');
+
+			if (item.flags.obsidian.consumable) {
+				this._onEquip(evt, resources[0]);
+				return;
+			} else if (resources.length) {
+				this._useResource(item, effect, resources[0]);
+			}
 		}
 
-		const max = resource.max;
-		let used = max - resource.remaining;
-
-		if (n > used) {
-			used++;
-		} else {
-			used--;
-		}
-
-		const update = {
-			id: item.id,
-			[`flags.obsidian.effects.${parentEffect.idx}.components.${resource.idx}.remaining`]:
-				max - used
-		};
-
-		const expanded = OBSIDIAN.updateArrays(item, update);
-		return this.actor.updateOwnedItem(expanded);
+		Rolls.fromClick(this.actor, evt);
 	}
 
 	/**
@@ -769,21 +760,26 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_onUseClicked (evt) {
 		const target = $(evt.currentTarget);
 		const parent = target.parent();
-		const featID = parent.data('feat-id');
-		const prop = parent.data('prop');
+		const uuid = parent.data('uuid');
 		const n = Number(target.data('n'));
 
-		const feat = this.actor.data.items.find(feat => feat.id === featID);
-		if (!feat) {
+		const resource = this.actor.data.obsidian.components.get(uuid);
+		if (!resource) {
 			return;
 		}
 
-		if (feat.obsidian && feat.obsidian.bestResource) {
-			return this._onResourceUsed(feat, n);
+		const effect = this.actor.data.obsidian.effects.get(resource.parentEffect);
+		if (!effect) {
+			return;
 		}
 
-		const max = getProperty(feat.flags.obsidian, prop).max;
-		let used = max - getProperty(feat.flags.obsidian, prop).remaining;
+		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		if (!item) {
+			return;
+		}
+
+		const max = resource.max;
+		let used = max - resource.remaining;
 
 		if (n > used) {
 			used++;
@@ -791,14 +787,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 			used--;
 		}
 
-		const update = {id: featID, [`flags.obsidian.${prop}.remaining`]: max - used};
-		const expanded = OBSIDIAN.updateArrays(feat, update);
+		const update = {
+			id: item.id,
+			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
+			max - used
+		};
 
-		if (Object.keys(expanded).length > 0) {
-			return this.actor.updateOwnedItem(expanded);
-		}
-
-		return this.actor.updateOwnedItem(expandObject(update));
+		const expanded = OBSIDIAN.updateArrays(item, update);
+		return this.actor.updateOwnedItem(expanded);
 	}
 
 	/**
@@ -1054,6 +1050,23 @@ export class Obsidian extends ActorSheet5eCharacter {
 		$(this.form).closest('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+	}
+
+	/**
+	 * @private
+	 */
+	_useResource (item, effect, resource) {
+		let remaining = resource.remaining - 1;
+		if (remaining < 0) {
+			return;
+		}
+
+		const update = {
+			id: item.id,
+			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
+		};
+
+		this.actor.updateOwnedItem(OBSIDIAN.updateArrays(item, update));
 	}
 
 	/**

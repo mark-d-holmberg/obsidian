@@ -80,13 +80,9 @@
 			"></div>
 		</div>
 		<div class="obsidian-col-notes">
-			{{#if (eq type 'weapon')}}
-				{{> modules/obsidian/html/components/weapon-notes.html category=true}}
-			{{else if (or (eq type 'equipment') (eq type 'consumable'))}}
-				{{#each flags.obsidian.notes}}
-					<div class="obsidian-table-note-text">{{{this}}}</div>
-				{{/each}}
-			{{/if}}
+			{{#each flags.obsidian.notes}}
+				<div class="obsidian-table-note-text">{{{this}}}</div>
+			{{/each}}
 		</div>
 	</div>
 {{/each}}
