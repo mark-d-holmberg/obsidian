@@ -144,10 +144,16 @@ export function registerHandlebarHelpers () {
 			return;
 		}
 
+		const effect =
+			feature.flags.obsidian.effects.find(effect =>
+				effect.uuid === feature.obsidian.bestResource.parentEffect);
+
+		if (!effect) {
+			return;
+		}
+
 		return new Handlebars.SafeString(
-			Prepare.usesFormat(
-				feature.id, feature.idx, feature.obsidian.bestResource.max,
-				feature.obsidian.bestResource.remaining));
+			Prepare.usesFormat(feature, effect, feature.obsidian.bestResource));
 	});
 
 	Handlebars.registerHelper('get-property', function (data, key) {

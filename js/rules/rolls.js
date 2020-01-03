@@ -304,7 +304,18 @@ export const Rolls = {
 		}
 
 		const roll = dataset.roll;
-		if (roll === 'fx') {
+		if (roll === 'item') {
+			if (dataset.id === undefined) {
+				return;
+			}
+
+			const item = actor.data.obsidian.itemsByID.get(dataset.id);
+			if (!item) {
+				return;
+			}
+
+			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item));
+		} else if (roll === 'fx') {
 			if (dataset.uuid === undefined) {
 				return;
 			}

@@ -11,15 +11,10 @@
 			<div class="obsidian-feature item" data-item-id="{{feat.id}}">
 				<div class="obsidian-feature-header">
 					<div>
-						<h4 class="rollable" data-roll="fx" data-id="{{feat.id}}">{{feat.name}}</h4>
-						{{#if feat.flags.obsidian.uses.enabled}}
+						<h4 class="rollable" data-roll="item" data-id="{{feat.id}}">{{feat.name}}</h4>
+						{{#if feat.obsidian.bestResource}}
 							<div class="obsidian-feature-recharge">
-								&bull;
-								{{#if (eq feat.flags.obsidian.uses.recharge 'short')}}
-									{{localize 'OBSIDIAN.ShortRest'}}
-								{{else}}
-									{{localize 'OBSIDIAN.LongRest'}}
-								{{/if}}
+								&bull; {{i18n-join 'OBSIDIAN.Recharge-' feat.obsidian.bestResource.recharge}}
 							</div>
 						{{/if}}
 						<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"

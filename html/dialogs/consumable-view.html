@@ -3,16 +3,9 @@
 		<div class="obsidian-item-card-header">
 			<h3>{{item.name}}</h3>
 			<div class="obsidian-item-card-sub-header">
-				{{#if item.obsidian.bestResource}}
-					<div class="obsidian-item-card-header-row">
-						<div class="obsidian-item-card-header-key">
-							{{item.obsidian.bestResource.name}}:
-						</div>
-						<div class="obsidian-item-card-header-value">
-							{{{item.obsidian.bestResource.display}}}
-						</div>
-					</div>
-				{{/if}}
+				{{#each item.flags.obsidian.notes}}
+					<div class="obsidian-table-note-text">{{{this}}}</div>
+				{{/each}}
 			</div>
 		</div>
 		<div class="obsidian-item-card-body">{{{item.data.description.value}}}</div>

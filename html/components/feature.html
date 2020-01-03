@@ -4,27 +4,45 @@
     <div class="obsidian-fullwidth">
       <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
              value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
-      <label class="obsidian-inline">
-        {{localize 'OBSIDIAN.Source'}}
-        <select name="flags.obsidian.source.type" data-selector="source">
-          {{#select item.flags.obsidian.source.type}}
-	          {{#each ObsidianRules.FEAT_SOURCE_TYPES}}
-		          <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
-	          {{/each}}
-          {{/select}}
-        </select>
-      </label>
-      <select name="flags.obsidian.source.class" data-selector-parent="source" data-show="class">
-        {{#select item.flags.obsidian.source.class}}
-	        {{#each actor.data.obsidian.classes}}
-		        <option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
-	        {{/each}}
-        {{/select}}
-      </select>
-      <input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="other"
-             data-selector-parent="source" name="flags.obsidian.source.other"
-             value="{{item.flags.obsidian.source.other}}"
-             placeholder="{{localize 'OBSIDIAN.Source'}}">
+	    <select name="flags.obsidian.active">
+		    {{#select item.flags.obsidian.active}}
+			    {{#each ObsidianRules.FEAT_ACTIVE}}
+				    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
+	    <select name="flags.obsidian.action">
+		    {{#select item.flags.obsidian.action}}
+			    {{#each ObsidianRules.FEAT_ACTION}}
+				    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
+			    {{/each}}
+		    {{/select}}
+	    </select>
     </div>
   </div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Source'}}
+				<select name="flags.obsidian.source.type" data-selector="source">
+					{{#select item.flags.obsidian.source.type}}
+						{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<select name="flags.obsidian.source.class" data-selector-parent="source" data-show="class">
+				{{#select item.flags.obsidian.source.class}}
+					{{#each actor.data.obsidian.classes}}
+						<option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="other"
+			       data-selector-parent="source" name="flags.obsidian.source.other"
+			       value="{{item.flags.obsidian.source.other}}"
+			       placeholder="{{localize 'OBSIDIAN.Source'}}">
+		</div>
+	</div>
 </fieldset>

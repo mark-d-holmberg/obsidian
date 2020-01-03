@@ -240,9 +240,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			effects.splice(idx, 1);
 		} else if (this._selectedComponent != null) {
-			const effectUUID = $(`[data-uuid="${this._selectedComponent}"]`).parent().data('uuid');
-			const effect = effects.find(effect => effect.uuid === effectUUID);
+			const effectUUID =
+				this.element.find(`[data-uuid="${this._selectedComponent}"]`).parent().data('uuid');
 
+			const effect = effects.find(effect => effect.uuid === effectUUID);
 			if (!effect) {
 				return;
 			}

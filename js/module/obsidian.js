@@ -451,7 +451,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 			flags.obsidian.source = {type: evt.currentTarget.dataset.source};
 			if (flags.obsidian.source.type === 'class') {
 				if (this.actor.data.obsidian.classes.length > 0) {
-					flags.obsidian.source.class = this.actor.data.obsidian.classes[0].name;
+					flags.obsidian.source.class =
+						this.actor.data.obsidian.classes[0].flags.obsidian.uuid;
 				} else {
 					flags.obsidian.source.type = 'other';
 				}
