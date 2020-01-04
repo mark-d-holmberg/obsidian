@@ -383,6 +383,7 @@ export const Prepare = {
 				continue;
 			}
 
+			flags.notes = [];
 			if (flags.source.type === 'class') {
 				const cls = actorData.obsidian.classes.find(cls =>
 					cls.flags.obsidian.uuid === flags.source.class);

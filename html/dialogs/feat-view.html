@@ -1,7 +1,10 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<div class="obsidian-item-card">
 		<div class="obsidian-item-card-header">
-			<h3>{{item.name}}</h3>
+			<h3>
+				<span>{{item.name}}</span>
+			  {{format-uses actor item}}
+			</h3>
 			<div class="obsidian-item-card-sub-header">
 				<div class="obsidian-table-note-text">
 					{{~#if (eq item.flags.obsidian.source.type 'race')~}}
@@ -14,24 +17,12 @@
 						{{~item.flags.obsidian.source.className~}}
 					{{~/if~}}
 				</div>
-				{{#if item.flags.obsidian.uses.enabled}}
+				{{#if item.obsidian.bestResource}}
 					<div class="obsidian-table-note-text">
-						{{~#if (eq item.flags.obsidian.uses.recharge 'short')~}}
-							{{~localize 'OBSIDIAN.ShortRest'~}}
-						{{~else~}}
-							{{~localize 'OBSIDIAN.LongRest'~}}
-						{{~/if~}}
+						{{i18n-join 'OBSIDIAN.Recharge-' item.obsidian.bestResource.recharge}}
 					</div>
 				{{/if}}
 			</div>
-			{{#if item.flags.obsidian.uses.enabled}}
-				<div class="obsidian-item-card-header-row">
-					<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
-					<div class="obsidian-item-card-header-value">
-						{{{item.flags.obsidian.uses.display}}}
-					</div>
-				</div>
-			{{/if}}
 		</div>
 		<div class="obsidian-item-card-body">{{{item.flags.obsidian.display}}}</div>
 	</div>

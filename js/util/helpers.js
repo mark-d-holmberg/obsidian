@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Prepare} from '../rules/prepare.js';
+import {Effect} from '../module/effect.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('badge', function (badge) {
@@ -139,21 +140,31 @@ export function registerHandlebarHelpers () {
 			+ game.i18n.localize(`${prefix}${duration.type}`).toLocaleLowerCase();
 	});
 
-	Handlebars.registerHelper('format-uses', function (feature) {
-		if (!feature.obsidian.bestResource) {
-			return;
+	Handlebars.registerHelper('format-uses', function (actor, feature) {
+		if (feature.obsidian.bestResource) {
+			const effect =
+				feature.flags.obsidian.effects.find(effect =>
+					effect.uuid === feature.obsidian.bestResource.parentEffect);
+
+			if (!effect) {
+				return;
+			}
+
+			return new Handlebars.SafeString(
+				Prepare.usesFormat(feature, effect, feature.obsidian.bestResource));
 		}
 
-		const effect =
-			feature.flags.obsidian.effects.find(effect =>
-				effect.uuid === feature.obsidian.bestResource.parentEffect);
+		if (feature.obsidian.consumers.length) {
+			// This data is actually duplicated so we lose our maps and need to
+			// instead get the actual actor instance.
+			actor = game.actors.get(actor._id);
+			const [item, effect, resource] =
+				Effect.getLinkedResource(actor.data, feature.obsidian.consumers[0]);
 
-		if (!effect) {
-			return;
+			if (item && effect && resource) {
+				return new Handlebars.SafeString(Prepare.usesFormat(item, effect, resource));
+			}
 		}
-
-		return new Handlebars.SafeString(
-			Prepare.usesFormat(feature, effect, feature.obsidian.bestResource));
 	});
 
 	Handlebars.registerHelper('get-property', function (data, key) {

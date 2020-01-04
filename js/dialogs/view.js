@@ -1,6 +1,7 @@
 import {ObsidianDialog} from './dialog.js';
 import {Reorder} from '../module/reorder.js';
 import {Rolls} from '../rules/rolls.js';
+import {OBSIDIAN} from '../rules/rules.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
@@ -26,7 +27,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			if (actorID === this.parent.actor.id && data.id === this.item.id) {
 				const remaining = this.element.find('.obsidian-titlebar-uses input');
 				if (remaining.length > 0) {
-					remaining.val(data.flags.obsidian.uses.remaining);
+					remaining.val(item.data.obsidian.bestResource.remaining);
 				}
 
 				this.render(false);
@@ -94,6 +95,8 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			const item = new Item(this.item, {actor: this.parent.actor});
 			item.sheet.render(true);
 		});
+
+		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
 
 		if (this.item.type === 'backpack') {
 			ObsidianDialog.recalculateHeight(html);
@@ -186,10 +189,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 				roll[0].dataset[rollType] = this.item.id;
 			}
 
-			if (this.item.type === 'feat'
-				&& this.item.flags.obsidian.uses
-				&& this.item.flags.obsidian.uses.enabled)
-			{
+			if (this.item.type === 'feat' && this.item.obsidian.bestResource) {
 				this._renderUses().insertBefore(roll);
 			}
 		}
@@ -202,21 +202,23 @@ export class ObsidianViewDialog extends ObsidianDialog {
 	 * @return {JQuery}
 	 */
 	_renderUses () {
+		const resource = this.item.obsidian.bestResource;
 		const uses = $('<div class="obsidian-titlebar-uses"></div>');
-		const remaining =
-			$('<input type="text" data-dtype="Number">')
-				.val(this.item.flags.obsidian.uses.remaining);
+		const remaining = $('<input type="text" data-dtype="Number">').val(resource.remaining);
 
 		uses.append(remaining)
 			.append($('<span>&sol;</span>'))
-			.append($(`<strong>${this.item.flags.obsidian.uses.max}</strong>`));
+			.append($(`<strong>${resource.max}</strong>`));
 
 		remaining.focusout(async () => {
 			const n = Number(remaining.val());
-			await this.parent.actor.updateOwnedItem({
+			const effect = this.parent.actor.data.obsidian.effects.get(resource.parentEffect);
+			const update = {
 				id: this.item.id,
-				flags: {obsidian: {uses: {remaining: n}}}
-			});
+				[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: n
+			};
+
+			await this.parent.actor.updateOwnedItem(OBSIDIAN.updateArrays(this.item, update));
 			this.render(false);
 		});
 

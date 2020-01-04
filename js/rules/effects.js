@@ -1,4 +1,5 @@
 import {Prepare} from './prepare.js';
+import {Effect} from '../module/effect.js';
 
 export function prepareEffects (actorData) {
 	actorData.obsidian.attacks = [];
@@ -20,6 +21,7 @@ export function prepareEffects (actorData) {
 			damage: [],
 			versatile: [],
 			resources: [],
+			consumers: [],
 			scaling: null
 		};
 
@@ -37,11 +39,7 @@ export function prepareEffects (actorData) {
 			effect.parentActor = actorData._id;
 			effect.parentItem = item.id;
 			effect.idx = effectIdx;
-			effect.label = effect.name;
-
-			if (!effect.name.length) {
-				effect.label = game.i18n.localize('OBSIDIAN.Unnamed');
-			}
+			effect.label = getEffectLabel(effect);
 
 			let targetComponent;
 			for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
@@ -88,6 +86,8 @@ export function prepareEffects (actorData) {
 					if (component.target === 'this-effect') {
 						component.ref = effect.uuid;
 					}
+
+					item.obsidian.consumers.push(component);
 				}
 			}
 
@@ -159,4 +159,12 @@ export function prepareEffects (actorData) {
 					resource.max > acc.max ? resource: acc);
 		}
 	}
+}
+
+function getEffectLabel (effect) {
+	if (effect.name.length) {
+		return effect.name;
+	}
+
+	return game.i18n.localize('OBSIDIAN.Unnamed');
 }

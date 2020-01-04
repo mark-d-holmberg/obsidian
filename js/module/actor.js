@@ -138,13 +138,17 @@ export class ObsidianActor extends Actor5e {
 			}
 		} else {
 			const needle = item.flags.obsidian.source.class;
-			const cls = this.data.obsidian.classes.find(cls => cls.name === needle);
+			const cls = this.data.obsidian.classes.find(cls => cls.flags.obsidian.uuid === needle);
 
 			if (cls === undefined) {
-				item.flags.obsidian.source.type = 'other';
-				item.flags.obsidian.source.other = game.i18n.localize(`OBSIDIAN.Class-${needle}`);
-			} else {
-				item.flags.obsidian.source.class = cls.flags.obsidian.uuid;
+				const byName = this.data.obsidian.classes.find(cls => cls.name === needle);
+				if (byName === undefined) {
+					item.flags.obsidian.source.type = 'other';
+					item.flags.obsidian.source.other =
+						game.i18n.localize(`OBSIDIAN.Class-${needle}`);
+				} else {
+					item.flags.obsidian.source.class = byName.flags.obsidian.uuid;
+				}
 			}
 		}
 	}

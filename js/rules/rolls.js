@@ -309,7 +309,7 @@ export const Rolls = {
 				return;
 			}
 
-			const item = actor.data.obsidian.itemsByID.get(dataset.id);
+			const item = actor.data.obsidian.itemsByID.get(Number(dataset.id));
 			if (!item) {
 				return;
 			}

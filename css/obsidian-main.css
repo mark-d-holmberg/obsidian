@@ -956,6 +956,13 @@
 	font-style: italic;
 	padding: 0 0 10px 0;
 	border-bottom: 1px solid var(--mid);
+	display: flex;
+	justify-content: space-between;
+}
+
+.obsidian-item-card-header h3 .obsidian-feature-max {
+	font-style: normal;
+	font-weight: bold;
 }
 
 .obsidian-item-card-header-row {

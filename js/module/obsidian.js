@@ -31,6 +31,7 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
+import {Effect} from './effect.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -617,7 +618,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onEquip (evt, resource) {
+	_onEquip (evt) {
 		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
 		const item = this.actor.data.items.find(item => item.id === id);
 
@@ -628,42 +629,18 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (item.flags.obsidian.equippable) {
 			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
 		} else if (item.flags.obsidian.consumable) {
-			if (!resource) {
-				resource = item.obsidian.bestResource;
-			}
-
-			if (resource) {
-				let quantity = item.data.quantity;
-				let remaining = resource.remaining - 1;
-
-				if (remaining < 1) {
-					quantity--;
-					if (quantity <= 0) {
-						quantity = 0;
-					} else {
-						remaining = resource.max;
-					}
-				}
-
-				const parentEffect = this.actor.data.obsidian.effects.get(resource.parentEffect);
-				const update = {
-					id: id,
-					'data.quantity': quantity,
-					[`flags.obsidian.effects.${parentEffect.idx}.`
-					+ `components.${resource.idx}.remaining`]: remaining
-				};
-
-				const expanded = OBSIDIAN.updateArrays(item, update);
-				this.actor.updateOwnedItem(expanded);
-				Rolls.toChat(this.actor, Rolls.effectRoll(this.actor, parentEffect));
+			if (item.obsidian.bestResource) {
+				const parentEffect =
+					this.actor.data.obsidian.effects.get(item.obsidian.bestResource.parentEffect);
+				this._useResource(item, parentEffect, item.obsidian.bestResource);
 			} else {
 				const quantity = item.data.quantity - 1;
 				if (quantity >= 0) {
 					this.actor.updateOwnedItem({id: id, 'data.quantity': quantity});
 				}
-
-				Rolls.toChat(this.actor, ...Rolls.itemRoll(this.actor, item));
 			}
+
+			Rolls.toChat(this.actor, ...Rolls.itemRoll(this.actor, item));
 		}
 	}
 
@@ -688,12 +665,43 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (effect) {
 			const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
 			const resources = effect.components.filter(component => component.type === 'resource');
+			const consumers = effect.components.filter(component => component.type === 'consume');
 
-			if (item.flags.obsidian.consumable) {
-				this._onEquip(evt, resources[0]);
-				return;
-			} else if (resources.length) {
+			if (resources.length) {
 				this._useResource(item, effect, resources[0]);
+			}
+
+			if (consumers.length) {
+				const [refItem, refEffect, resource] =
+					Effect.getLinkedResource(this.actor.data, consumers[0]);
+
+				if (refItem && refEffect && resource) {
+					this._useResource(refItem, refEffect, resource);
+				}
+			}
+		}
+
+		if (evt.currentTarget.dataset.roll === 'item') {
+			const item =
+				this.actor.data.obsidian.itemsByID.get(Number(evt.currentTarget.dataset.id));
+
+			if (item && item.obsidian) {
+				if (item.obsidian.bestResource) {
+					const effect =
+						this.actor.data.obsidian.effects.get(
+							item.obsidian.bestResource.parentEffect);
+
+					this._useResource(item, effect, item.obsidian.bestResource);
+				}
+
+				if (item.obsidian.consumers.length) {
+					const [refItem, refEffect, resource] =
+						Effect.getLinkedResource(this.actor.data, item.obsidian.consumers[0]);
+
+					if (refItem && refEffect && resource) {
+						this._useResource(refItem, refEffect, resource);
+					}
+				}
 			}
 		}
 
@@ -1057,15 +1065,30 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	_useResource (item, effect, resource) {
+		let quantity = 1;
 		let remaining = resource.remaining - 1;
+
+		if (remaining < 1 && item.type === 'consumable') {
+			quantity--;
+			if (quantity <= 0) {
+				quantity = 0;
+			} else {
+				remaining = resource.max;
+			}
+		}
+
 		if (remaining < 0) {
-			return;
+			remaining = 0;
 		}
 
 		const update = {
 			id: item.id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
 		};
+
+		if (item.type === 'consumable') {
+			update['data.quantity'] = quantity;
+		}
 
 		this.actor.updateOwnedItem(OBSIDIAN.updateArrays(item, update));
 	}

@@ -4,14 +4,14 @@
     <div class="obsidian-fullwidth">
       <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
              value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
-	    <select name="flags.obsidian.active">
+	    <select name="flags.obsidian.active" data-selector="feat-active">
 		    {{#select item.flags.obsidian.active}}
 			    {{#each ObsidianRules.FEAT_ACTIVE}}
 				    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatActive-' this}}</option>
 			    {{/each}}
 		    {{/select}}
 	    </select>
-	    <select name="flags.obsidian.action">
+	    <select name="flags.obsidian.action" data-selector-parent="feat-active" data-show="active">
 		    {{#select item.flags.obsidian.action}}
 			    {{#each ObsidianRules.FEAT_ACTION}}
 				    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>

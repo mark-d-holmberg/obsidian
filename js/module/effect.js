@@ -94,5 +94,27 @@ export const Effect = {
 			slots: 'any',
 			class: ''
 		};
+	},
+
+	getLinkedResource: function (actorData, consumer) {
+		const item =
+			actorData.obsidian.itemsByID.get(
+				consumer.target === 'feat' ? consumer.featID : consumer.itemID);
+
+		if (!item || !item.flags || !item.flags.obsidian || !item.flags.obsidian.effects) {
+			return [];
+		}
+
+		const effect = item.flags.obsidian.effects.find(effect => effect.uuid === consumer.ref);
+		if (!effect) {
+			return [];
+		}
+
+		const resources = effect.components.filter(c => c.type === 'resource');
+		if (!resources.length) {
+			return [];
+		}
+
+		return [item, effect, resources[0]];
 	}
 };
