@@ -38,8 +38,14 @@
 		<div class="obsidian-item-card-header-row">
 			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Components'}}:</div>
 			<div class="obsidian-item-card-header-value">
-				{{flags.obsidian.components.display}}
-				{{#if flags.obsidian.components.m}}
+				{{#if flags.obsidian.components.v~}}
+					<div class="obsidian-spell-card-component">{{localize 'OBSIDIAN.VerbalAbbr'}}</div>
+				{{~/if~}}
+				{{~#if flags.obsidian.components.s~}}
+					<div class="obsidian-spell-card-component">{{localize 'OBSIDIAN.SomaticAbbr'}}</div>
+				{{~/if~}}
+				{{~#if flags.obsidian.components.m~}}
+					<div class="obsidian-spell-card-component">{{localize 'OBSIDIAN.MaterialAbbr'}}</div>
 					<span class="obsidian-table-sub-text">({{data.materials.value}})</span>
 				{{/if}}
 			</div>
@@ -55,12 +61,6 @@
 				{{/if}}
 			</div>
 		</div>
-		{{#if (and view flags.obsidian.uses.enabled)}}
-			<div class="obsidian-item-card-header-row">
-				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Uses'}}:</div>
-				<div class="obsidian-item-card-header-value">{{{flags.obsidian.uses.display}}}</div>
-			</div>
-		{{/if}}
 	</div>
 	<div class="obsidian-item-card-body">{{{data.description.value}}}</div>
 </div>

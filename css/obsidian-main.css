@@ -992,6 +992,18 @@
 	font-family: var(--font);
 }
 
+.obsidian-spell-card-component {
+	display: inline-block;
+}
+
+.obsidian-spell-card-component:before {
+	content: ', ';
+}
+
+.obsidian-spell-card-component:first-child:before {
+	content: '';
+}
+
 .obsidian .obsidian-item-card input {
 	width: 40px;
 	font-family: var(--font);
