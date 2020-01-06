@@ -536,6 +536,7 @@
 	"OBSIDIAN.ConsumeTarget-item": "Item",
 	"OBSIDIAN.ConsumeTarget-feat": "Feature",
 	"OBSIDIAN.ConsumeTarget-spell": "Spell Slots",
+	"OBSIDIAN.ConsumeTarget-qty": "Quantity",
 	"OBSIDIAN.ConsumeCalc-fixed": "Fixed",
 	"OBSIDIAN.ConsumeCalc-var": "Variable",
 	"OBSIDIAN.ConsumeSlots-any": "Any",

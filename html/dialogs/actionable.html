@@ -1,0 +1,10 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	{{#each item.obsidian.actionable}}
+		<div class="obsidian-action-row">
+			<button type="button" class="obsidian-btn-outline" data-uuid="{{uuid}}" data-roll="fx">
+				{{localize 'OBSIDIAN.Use'}}
+			</button>
+			{{label}}
+		</div>
+	{{/each}}
+</form>

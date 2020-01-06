@@ -22,6 +22,7 @@ export function prepareEffects (actorData) {
 			versatile: [],
 			resources: [],
 			consumers: [],
+			actionable: new Set(),
 			scaling: null
 		};
 
@@ -52,7 +53,9 @@ export function prepareEffects (actorData) {
 					Prepare.calculateHit(component, data, cls);
 					Prepare.calculateAttackType(flags, component);
 					item.obsidian.attacks.push(component);
+					item.obsidian.actionable.add(effect);
 				} else if (component.type === 'damage' && !isScaling) {
+					item.obsidian.actionable.add(effect);
 					if (component.versatile) {
 						item.obsidian.versatile.push(component);
 					} else {
@@ -61,6 +64,7 @@ export function prepareEffects (actorData) {
 				} else if (component.type === 'save') {
 					Prepare.calculateSave(component, data, cls);
 					item.obsidian.saves.push(component);
+					item.obsidian.actionable.add(effect);
 				} else if (component.type === 'resource') {
 					Prepare.calculateResources(
 						data, item, effect, component, actorData.obsidian.classes);
@@ -88,6 +92,7 @@ export function prepareEffects (actorData) {
 					}
 
 					item.obsidian.consumers.push(component);
+					item.obsidian.actionable.add(effect);
 				}
 			}
 

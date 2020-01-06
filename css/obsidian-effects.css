@@ -101,3 +101,24 @@
 	border: 1px solid var(--dark);
 	box-shadow: 0 0 8px var(--negative);
 }
+
+.obsidian-action-row {
+	display: flex;
+	justify-content: flex-start;
+	font-size: 14px;
+	font-family: var(--font-condensed);
+	align-items: center;
+	padding-bottom: 8px;
+	margin-bottom: 8px;
+	border-bottom: 1px dotted var(--mid);
+}
+
+.obsidian-action-row:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.obsidian-action-row button {
+	margin-right: 10px;
+}

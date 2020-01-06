@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Reorder} from './reorder.js';
 import {Rolls} from '../rules/rolls.js';
+import {Effect} from './effect.js';
 import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
@@ -8,6 +9,7 @@ import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
+import {ObsidianActionableDialog} from '../dialogs/actionable.js';
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -31,7 +33,6 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
-import {Effect} from './effect.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -314,6 +315,26 @@ export class Obsidian extends ActorSheet5eCharacter {
 		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', menu);
 		new ContextMenu(html, '.obsidian-inv-container', menu);
 		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', noDelMenu);
+	}
+
+	/**
+	 * @private
+	 */
+	_consumeQuantity (consumer) {
+		const effect = this.actor.data.obsidian.effects.get(consumer.parentEffect);
+		if (!effect) {
+			return;
+		}
+
+		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		if (!item) {
+			return;
+		}
+
+		const quantity = item.data.quantity - 1;
+		if (quantity >= 0) {
+			this.actor.updateOwnedItem({id: item.id, 'data.quantity': quantity});
+		}
 	}
 
 	/**
@@ -629,18 +650,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (item.flags.obsidian.equippable) {
 			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
 		} else if (item.flags.obsidian.consumable) {
-			if (item.obsidian.bestResource) {
-				const parentEffect =
-					this.actor.data.obsidian.effects.get(item.obsidian.bestResource.parentEffect);
-				this._useResource(item, parentEffect, item.obsidian.bestResource);
-			} else {
-				const quantity = item.data.quantity - 1;
-				if (quantity >= 0) {
-					this.actor.updateOwnedItem({id: id, 'data.quantity': quantity});
-				}
-			}
-
-			Rolls.toChat(this.actor, ...Rolls.itemRoll(this.actor, item));
+			evt.currentTarget.dataset.roll = 'item';
+			evt.currentTarget.dataset.id = id;
+			this._onRoll(evt);
 		}
 	}
 
@@ -672,11 +684,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 
 			if (consumers.length) {
-				const [refItem, refEffect, resource] =
-					Effect.getLinkedResource(this.actor.data, consumers[0]);
+				const consumer = consumers[0];
+				if (consumer.target === 'qty') {
+					this._consumeQuantity(consumer);
+				} else {
+					const [refItem, refEffect, resource] =
+						Effect.getLinkedResource(this.actor.data, consumers[0]);
 
-				if (refItem && refEffect && resource) {
-					this._useResource(refItem, refEffect, resource);
+					if (refItem && refEffect && resource) {
+						this._useResource(refItem, refEffect, resource);
+					}
 				}
 			}
 		}
@@ -686,21 +703,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 				this.actor.data.obsidian.itemsByID.get(Number(evt.currentTarget.dataset.id));
 
 			if (item && item.obsidian) {
-				if (item.obsidian.bestResource) {
-					const effect =
-						this.actor.data.obsidian.effects.get(
-							item.obsidian.bestResource.parentEffect);
-
-					this._useResource(item, effect, item.obsidian.bestResource);
-				}
-
-				if (item.obsidian.consumers.length) {
-					const [refItem, refEffect, resource] =
-						Effect.getLinkedResource(this.actor.data, item.obsidian.consumers[0]);
-
-					if (refItem && refEffect && resource) {
-						this._useResource(refItem, refEffect, resource);
-					}
+				const actionable = Array.from(item.obsidian.actionable);
+				if (actionable.length > 1) {
+					new ObsidianActionableDialog(this, item).render(true);
+					return;
+				} else if (actionable.length) {
+					evt.currentTarget.dataset.roll = 'fx';
+					evt.currentTarget.dataset.uuid = actionable[0].uuid;
+					this._onRoll(evt);
+					return;
 				}
 			}
 		}
