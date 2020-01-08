@@ -171,3 +171,6 @@ Number.prototype.sgn = function () {
 Number.prototype.sgnex = function () {
 	return this < 0 ? ` - ${this * -1}` : ` + ${this}`;
 };
+
+// For debugging/
+window.OBSIDIAN = OBSIDIAN;

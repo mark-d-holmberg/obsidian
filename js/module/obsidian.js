@@ -326,14 +326,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		if (!item) {
 			return;
 		}
 
 		const quantity = item.data.quantity - 1;
 		if (quantity >= 0) {
-			this.actor.updateOwnedItem({id: item.id, 'data.quantity': quantity});
+			this.actor.updateEmbeddedEntity(
+				'OwnedItem',
+				{_id: item._id, 'data.quantity': quantity});
 		}
 	}
 
@@ -542,7 +544,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const uuid = evt.currentTarget.dataset.uuid;
 		const attack = this.actor.data.obsidian.components.get(uuid);
 		const effect = this.actor.data.obsidian.effects.get(attack.parentEffect);
-		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		const tags = item.flags.obsidian.tags;
 		const current = attack.mode;
 		let mode = 'melee';
@@ -562,12 +564,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {
-			id: item.id,
+			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${attack.idx}.mode`]: mode
 		};
 
-		const expanded = OBSIDIAN.updateArrays(item, update);
-		this.actor.updateOwnedItem(expanded);
+		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
 	}
 
 	/**
@@ -640,7 +641,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onEquip (evt) {
-		const id = Number($(evt.currentTarget).closest('.obsidian-tr').data('item-id'));
+		const id = $(evt.currentTarget).closest('.obsidian-tr').data('item-id');
 		const item = this.actor.data.items.find(item => item.id === id);
 
 		if (!item || !item.flags.obsidian) {
@@ -648,7 +649,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		if (item.flags.obsidian.equippable) {
-			this.actor.updateOwnedItem({id: id, 'data.equipped': !item.data.equipped});
+			this.actor.updateEmbeddedEntity(
+				'OwnedItem',
+				{_id: id, 'data.equipped': !item.data.equipped});
 		} else if (item.flags.obsidian.consumable) {
 			evt.currentTarget.dataset.roll = 'item';
 			evt.currentTarget.dataset.id = id;
@@ -753,15 +756,17 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (event.currentTarget && event.currentTarget.dataset) {
 			const name = event.currentTarget.dataset.name;
 			if (name && name.startsWith('items.')) {
+				// Special case updates to items to avoid sending the whole item
+				// array each time.
 				const components = name.split('.');
 				const idx = Number(components[1]);
 				const item = this.actor.data.items[idx];
 				const property = components.slice(2).join('.');
-				const update = {id: item.id};
+				const update = {_id: item._id};
 				update[property] = event.currentTarget.value;
-				const expanded = OBSIDIAN.updateArrays(item, update);
-				return this.actor.updateOwnedItem(
-					Object.keys(expanded).length > 0 ? expanded : update);
+				return this.actor.updateEmbeddedEntity(
+					'OwnedItem',
+					OBSIDIAN.updateArrays(item, update));
 			}
 		}
 
@@ -808,13 +813,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {
-			id: item.id,
+			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
 			max - used
 		};
 
-		const expanded = OBSIDIAN.updateArrays(item, update);
-		return this.actor.updateOwnedItem(expanded);
+		return this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
 	}
 
 	/**
@@ -893,14 +897,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_saveContainerState (evt) {
 		const target = evt.currentTarget;
-		const id = Number(target.dataset.itemId);
+		const id = target.dataset.itemId;
 
 		// Doesn't seem to be a way to do this without re-rendering the sheet,
 		// which is unfortunate as this could easily just be passively saved.
 
 		// The click event fires before the open state is toggled so we invert
 		// it here to represent what the state will be right after this event.
-		this.actor.updateOwnedItem({id: id, flags: {obsidian: {open: !target.parentNode.open}}});
+		this.actor.updateEmbeddedEntity(
+			'OwnedItem',
+			{_id: id, flags: {obsidian: {open: !target.parentNode.open}}});
 	}
 
 	/**
@@ -1072,6 +1078,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
 	}
 
+	_updateObject (event, formData) {
+		// TODO: Handle tokens.
+		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
+	}
+
 	/**
 	 * @private
 	 */
@@ -1093,7 +1104,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {
-			id: item.id,
+			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
 		};
 
@@ -1101,7 +1112,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			update['data.quantity'] = quantity;
 		}
 
-		this.actor.updateOwnedItem(OBSIDIAN.updateArrays(item, update));
+		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
 	}
 
 	/**
