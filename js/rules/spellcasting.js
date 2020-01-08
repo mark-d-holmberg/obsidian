@@ -20,6 +20,7 @@ export function prepareSpellcasting (actorData, flags) {
 		const spellcasting = cls.flags.obsidian.spellcasting;
 		const levels = cls.data.levels;
 
+		spellcasting.list = cls.name === 'custom' ? cls.flags.obsidian.custom : cls.name;
 		if (spellcasting.spell === undefined) {
 			spellcasting.spell = OBSIDIAN.Rules.CLASS_SPELL_MODS[cls.name];
 		}

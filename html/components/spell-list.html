@@ -32,9 +32,8 @@
 {{/if}}
 <div class="obsidian-spell-list">
 	{{#each spells as |spell id|}}
-		<details data-item-id="{{spell._id}}"
-		         data-spell-list="{{../spellList}}" data-name="{{spell.name}}"
-		         data-level="{{spell.data.level}}">
+		<details data-item-id="{{spell._id}}" data-spell-list="{{../spellList}}"
+		         data-name="{{spell.name}}" data-level="{{spell.data.level}}">
 			<summary>
 				<div class="obsidian-col-icon">
 					<i class="obsidian-spell-school obsidian-spell-school-{{spell.data.school}}"></i>

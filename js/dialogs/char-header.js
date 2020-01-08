@@ -46,7 +46,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 	static determineSpellcasting (cls) {
 		if (cls === 'custom') {
-			return {};
+			return {enabled: false};
 		}
 
 		if (OBSIDIAN.Rules.NON_CASTERS.includes(cls)) {

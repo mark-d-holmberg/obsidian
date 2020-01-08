@@ -50,7 +50,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}));
 
 		data.actor.obsidian.spells = {custom: []};
-		Object.keys(OBSIDIAN.Rules.CLASS_SPELL_MODS)
+		Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS)
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
 
 		for (const spell of Object.values(
@@ -77,8 +77,8 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				spellcasting.totalPrepared++;
 			}
 
-			if (cls.name !== 'custom' && data.actor.obsidian.spells[cls.name]) {
-				const clsSpells = data.actor.obsidian.spells[cls.name];
+			if (data.actor.obsidian.spells[cls.flags.obsidian.spellcasting.list]) {
+				const clsSpells = data.actor.obsidian.spells[cls.flags.obsidian.spellcasting.list];
 				if (spell.data.level === 0) {
 					clsSpells.known.push(spell);
 					clsSpells.prepared.push(spell);
@@ -215,6 +215,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		const row = $(evt.currentTarget).closest('details');
 		const id = row.data('item-id');
 		const list = row.data('spell-list');
+		const classID = row.parent().closest('details').prev('h2').data('class-id');
 		const owned = list === '';
 		let spell;
 
@@ -258,8 +259,8 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				await this.parent.actor.deleteEmbeddedEntity('OwnedItem', exists._id);
 			} else {
 				flags.source.type = 'class';
-				flags.source.class = list;
-				await this.parent.actor.createEmbeddedEntity('OwnedItem', spell);
+				flags.source.class = classID;
+				await this.parent.actor.createEmbeddedEntity('OwnedItem', duplicate(spell));
 			}
 		}
 
