@@ -212,7 +212,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 				atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
 			atk.parentEffect.versatile =
 				atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
-			atk.parentItem = this.actor.data.obsidian.itemsByID.get(atk.parentEffect.parentItem);
+			atk.parentItem = this.actor.getEmbeddedEntity('OwnedItem', atk.parentEffect.parentItem);
 		});
 		console.debug(data);
 		return data;
@@ -344,9 +344,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param el {JQuery}
 	 */
 	async _deleteItem (el) {
-		const id = Number(el.data('item-id'));
-		const item = this.actor.data.items.find(item => item.id === id);
-		await this.actor.deleteOwnedItem(id);
+		const id = el.data('item-id');
+		const item = this.actor.data.items.find(item => item._id === id);
+		await this.actor.deleteEmbeddedEntity('OwnedItem', id);
 		this.actor.updateEquipment(item);
 	}
 
@@ -355,8 +355,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param el {JQuery}
 	 */
 	_editItem (el) {
-		const item = this.actor.getOwnedItem(el.data('item-id'));
-		item.sheet.render(true);
+		this.actor.items.find(item => item.id === el.data('item-id')).sheet.render(true);
 	}
 
 	/**
@@ -476,14 +475,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 			if (flags.obsidian.source.type === 'class') {
 				if (this.actor.data.obsidian.classes.length > 0) {
 					flags.obsidian.source.class =
-						this.actor.data.obsidian.classes[0].flags.obsidian.uuid;
+						this.actor.data.obsidian.classes[0]._id;
 				} else {
 					flags.obsidian.source.type = 'other';
 				}
 			}
 		}
 
-		this.actor.createOwnedItem({
+		this.actor.createEmbeddedEntity('OwnedItem', {
 			type: 'feat',
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			flags: flags
@@ -512,7 +511,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 				create: {
 					icon: '<i class="fas fa-check"></i>',
 					label: game.i18n.localize('OBSIDIAN.CreateItem'),
-					callback: dlg => this.actor.createOwnedItem(validateForm(dlg[0].children[0]))
+					callback: dlg =>
+						this.actor.createEmbeddedEntity(
+							'OwnedItem', validateForm(dlg[0].children[0]))
 				}
 			},
 			default: 'create'
@@ -527,7 +528,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		evt.preventDefault();
 		evt.stopPropagation();
 
-		this.actor.createOwnedItem({
+		this.actor.createEmbeddedEntity('OwnedItem', {
 			type: 'spell',
 			name: game.i18n.localize('OBSIDIAN.NewSpell')
 		}, {
@@ -580,8 +581,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const id = Number(evt.currentTarget.dataset.spl);
-		const spell = this.actor.data.items.find(item => item.id === id);
+		const spell =
+			this.actor.data.items.find(item => item._id === evt.currentTarget.dataset.spl);
 
 		if (!spell) {
 			return;
@@ -617,8 +618,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const id = Number(target.closest('.item').data('item-id'));
-		await this.actor.deleteOwnedItem(id);
+		await this.actor.deleteEmbeddedEntity('OwnedItem', target.closest('.item').data('item-id'));
 	}
 
 	_onDragItemStart (event) {
@@ -642,7 +642,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onEquip (evt) {
 		const id = $(evt.currentTarget).closest('.obsidian-tr').data('item-id');
-		const item = this.actor.data.items.find(item => item.id === id);
+		const item = this.actor.data.items.find(item => item._id === id);
 
 		if (!item || !item.flags.obsidian) {
 			return;
@@ -678,7 +678,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const effect = this.actor.data.obsidian.effects.get(uuid);
 
 		if (effect) {
-			const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+			const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 			const resources = effect.components.filter(component => component.type === 'resource');
 			const consumers = effect.components.filter(component => component.type === 'consume');
 
@@ -703,7 +703,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		if (evt.currentTarget.dataset.roll === 'item') {
 			const item =
-				this.actor.data.obsidian.itemsByID.get(Number(evt.currentTarget.dataset.id));
+				this.actor.getEmbeddedEntity('OwnedItem', evt.currentTarget.dataset.id);
 
 			if (item && item.obsidian) {
 				const actionable = Array.from(item.obsidian.actionable);
@@ -798,7 +798,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const item = this.actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		if (!item) {
 			return;
 		}
@@ -1120,10 +1120,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param el {JQuery}
 	 */
 	_viewItem (el) {
-		const id = Number(el.data('item-id'));
+		const id = el.data('item-id');
 		const existing =
 			Object.values(this.actor.apps).find(app =>
-				app.constructor === ObsidianViewDialog && app.item.id === id);
+				app.constructor === ObsidianViewDialog && app.item._id === id);
 
 		if (existing) {
 			existing.render(true);

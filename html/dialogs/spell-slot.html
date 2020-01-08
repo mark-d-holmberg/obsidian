@@ -2,7 +2,7 @@
 	{{#if spell.data.ritual}}
 	<div class="obsidian-spell-slot-row">
 	  <div></div>
-		<div class="rollable" data-roll="spl" data-spl="{{spell.id}}" data-level="ritual">
+		<div class="rollable" data-roll="spl" data-spl="{{spell._id}}" data-level="ritual">
 			{{localize 'OBSIDIAN.Ritual'}}
 		</div>
 	</div>
@@ -12,7 +12,7 @@
 		{{#with (lookup ../data.spells (add 'spell' this))}}
 		<div{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}>({{remaining}} / {{max}})</div>
 		{{/with}}
-		<div class="rollable" data-roll="spl" data-spl="{{../spell.id}}" data-level="{{this}}">
+		<div class="rollable" data-roll="spl" data-spl="{{../spell._id}}" data-level="{{this}}">
 			{{spell-level-format this}} {{localize 'OBSIDIAN.Level'}}
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 	  {{#with data.spells.pact}}
 		<div{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}>({{remaining}} / {{slots}})</div>
 	  {{/with}}
-		<div class="rollable" data-roll="spl" data-spl="{{spell.id}}" data-level="pact">
+		<div class="rollable" data-roll="spl" data-spl="{{spell._id}}" data-level="pact">
 			{{localize 'OBSIDIAN.Pact'}}
 		</div>
 	</div>

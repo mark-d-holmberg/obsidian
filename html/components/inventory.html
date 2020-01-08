@@ -1,5 +1,5 @@
 {{#each this}}
-	<div class="obsidian-tr item" data-item-id="{{id}}" data-reorderable="true" data-name="{{name}}"
+	<div class="obsidian-tr item" data-item-id="{{_id}}" data-reorderable="true" data-name="{{name}}"
 	     draggable="true"
 	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
 	     {{#if (eq type 'weapon')}}data-filter-weapon="true" {{/if}}

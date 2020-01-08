@@ -1,4 +1,3 @@
-import {patchDraggable_onDragMouseUp} from '../dialogs/view.js';
 import {OBSIDIAN} from '../rules/rules.js';
 import {patchChatMessage} from '../module/message.js';
 
@@ -34,7 +33,6 @@ export function runPatches () {
 	})();
 
 	patchChatMessage();
-	patchDraggable_onDragMouseUp();
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {

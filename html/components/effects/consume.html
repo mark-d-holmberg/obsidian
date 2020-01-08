@@ -16,7 +16,7 @@
               data-show="item">
         {{#select itemID}}
 	        {{#each @root.itemsWithResources}}
-		        <option value="{{id}}">{{name}}</option>
+		        <option value="{{_id}}">{{name}}</option>
 	        {{/each}}
         {{/select}}
       </select>
@@ -24,7 +24,7 @@
 	            data-show="feat">
 		    {{#select featID}}
 			    {{#each @root.featsWithResources}}
-				    <option value="{{id}}">{{name}}</option>
+				    <option value="{{_id}}">{{name}}</option>
 			    {{/each}}
 		    {{/select}}
 	    </select>
@@ -47,7 +47,7 @@
 	    <select name="{{prefix}}.class" data-selector-parent="{{prefix}}.slots" data-show="class">
 		    {{#select class}}
 			    {{#each @root.actor.data.obsidian.classes}}
-				    <option value="{{flags.obsidian.uuid}}">{{flags.obsidian.label}}</option>
+				    <option value="{{_id}}">{{flags.obsidian.label}}</option>
 			    {{/each}}
 		    {{/select}}
 	    </select>

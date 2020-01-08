@@ -1,6 +1,7 @@
 import {OBSIDIAN} from './rules.js';
 
 export function prepareInventory (actorData) {
+	actorData.obsidian.itemsByID = new Map();
 	actorData.obsidian.inventory = {
 		weight: 0,
 		encumbered: false,
@@ -11,11 +12,11 @@ export function prepareInventory (actorData) {
 	const containerOrder = new Set(actorData.flags.obsidian.order.equipment.containers);
 	const inventory = actorData.obsidian.inventory;
 	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot']);
-	const map = new Map();
+	const map = actorData.obsidian.itemsByID;
 
 	for (let i = 0; i < actorData.items.length; i++) {
 		const item = actorData.items[i];
-		map.set(item.id, item);
+		map.set(item._id, item);
 		item.idx = i;
 
 		if (!itemTypes.has(item.type) || !item.flags.obsidian) {
@@ -40,8 +41,8 @@ export function prepareInventory (actorData) {
 			}
 
 			item.obsidian = {order: new Set(item.flags.obsidian.order)};
-			if (!containerOrder.has(item.id)) {
-				actorData.flags.obsidian.order.equipment.containers.push(item.id);
+			if (!containerOrder.has(item._id)) {
+				actorData.flags.obsidian.order.equipment.containers.push(item._id);
 			}
 		}
 	}
@@ -56,8 +57,8 @@ export function prepareInventory (actorData) {
 
 		if (flags.parent == null) {
 			inventory.weight += totalWeight;
-			if (item.type !== 'backpack' && !rootOrder.has(item.id)) {
-				actorData.flags.obsidian.order.equipment.root.push(item.id);
+			if (item.type !== 'backpack' && !rootOrder.has(item._id)) {
+				actorData.flags.obsidian.order.equipment.root.push(item._id);
 			}
 		} else {
 			const container = map.get(flags.parent);
@@ -67,8 +68,8 @@ export function prepareInventory (actorData) {
 					inventory.weight += totalWeight;
 				}
 
-				if (container.obsidian && !container.obsidian.order.has(item.id)) {
-					container.flags.obsidian.order.push(item.id);
+				if (container.obsidian && !container.obsidian.order.has(item._id)) {
+					container.flags.obsidian.order.push(item._id);
 				}
 			}
 		}

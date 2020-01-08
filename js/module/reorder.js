@@ -1,8 +1,10 @@
+import {OBSIDIAN} from '../rules/rules.js';
+
 export const Reorder = {
 	dragStart: function (event) {
 		const target = event.target;
 		if (target.dataset && target.dataset.reorderable === 'true') {
-			event.dataTransfer.setData(`item-id/${target.dataset.itemId}`, null);
+			event.dataTransfer.setData(`item-id`, target.dataset.itemId);
 			if (target.tagName === 'SUMMARY') {
 				event.dataTransfer.setData('source/container', null);
 			}
@@ -54,7 +56,7 @@ export const Reorder = {
 	drop: async function (actor, event) {
 		event.preventDefault();
 		const items = actor.data.items;
-		const idData = event.dataTransfer.types.find(type => type.startsWith('item-id'));
+		const idData = event.dataTransfer.types.find(type => type === 'item-id');
 
 		let srcID;
 		let data;
@@ -66,7 +68,7 @@ export const Reorder = {
 		if (data && data.id) {
 			srcID = data.id;
 		} else if (idData) {
-			srcID = Number(idData.split('/')[1]);
+			srcID = event.dataTransfer.getData('item-id');
 		}
 
 		let src;
@@ -78,7 +80,7 @@ export const Reorder = {
 			if (data.data && data.actorId !== undefined && data.actorId !== actor.id) {
 				// Transfer from another actor.
 				// TODO: Delete from old actor.
-				src = (await actor.createOwnedItem(data.data)).data;
+				src = (await actor.createEmbeddedEntity('OwnedItem', data.data)).data;
 			} else if (data.pack) {
 				const item = await actor.importItemFromCollection(data.pack, data.id);
 				if (item) {
@@ -87,7 +89,7 @@ export const Reorder = {
 					return false;
 				}
 			} else if (!idData) {
-				src = (await actor.createOwnedItem(game.items.get(data.id).data)).data;
+				src = (await actor.createEmbeddedEntity('OwnedItem', game.items.get(data.id).data)).data;
 			}
 		}
 
@@ -99,8 +101,8 @@ export const Reorder = {
 		const target = row ? row : container;
 		const half = Reorder.whichHalf(event, target);
 		const where = half === 'bottom' ? 'after' : 'before';
-		const destID = Number(target.dataset.itemId);
-		const dest = items.find(item => item.id === destID);
+		const destID = target.dataset.itemId;
+		const dest = items.find(item => item._id === destID);
 		const update = {};
 
 		if (!dest) {
@@ -111,7 +113,7 @@ export const Reorder = {
 			if (srcID === destID) {
 				return false;
 			} else {
-				src = items.find(item => item.id === srcID);
+				src = items.find(item => item._id === srcID);
 				if (!src) {
 					return false;
 				}
@@ -119,7 +121,7 @@ export const Reorder = {
 		}
 
 		Reorder.insert(actor, src, dest, where, update);
-		actor.update(update);
+		actor.update(OBSIDIAN.updateArrays(actor.data, update));
 		return false;
 	},
 
@@ -166,8 +168,8 @@ export const Reorder = {
 			toOrder = dest.flags.obsidian.order;
 		}
 
-		const oldPos = fromOrder.indexOf(src.id);
-		let newPos = toOrder.indexOf(dest.id);
+		const oldPos = fromOrder.indexOf(src._id);
+		let newPos = toOrder.indexOf(dest._id);
 
 		if (fromOrder === toOrder) {
 			if (oldPos < newPos && where === 'before') {
@@ -189,13 +191,13 @@ export const Reorder = {
 
 		if (fromOrder !== toOrder || oldPos !== newPos) {
 			fromOrder.splice(oldPos, 1);
-			toOrder.splice(newPos, 0, src.id);
+			toOrder.splice(newPos, 0, src._id);
 		}
 
 		update['flags.obsidian.order.equipment'] = duplicate(data.flags.obsidian.order.equipment);
 		update[`items.${src.idx}.flags.obsidian.parent`] =
 			src.type !== 'backpack' && dest.type === 'backpack'
-				? dest.id
+				? dest._id
 				: dest.flags.obsidian.parent === undefined ? null : dest.flags.obsidian.parent;
 
 		if (srcParent != null) {

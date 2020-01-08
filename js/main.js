@@ -1,7 +1,6 @@
 import {Obsidian} from './module/obsidian.js';
 import {preloadPartials, preloadTemplates} from './templates.js';
 import {loadSpellData} from './data.js';
-import {restoreViewPins} from './dialogs/view.js';
 import {runPatches} from './util/patch.js';
 import {OBSIDIAN} from './rules/rules.js';
 import {registerHandlebarHelpers} from './util/helpers.js';
@@ -16,7 +15,7 @@ import {checkVersion, Migrate} from './module/migrate.js';
 
 runPatches();
 
-const _init = async function () {
+Hooks.once('init', async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
@@ -31,15 +30,9 @@ const _init = async function () {
 	registerHandlebarHelpers();
 	await preloadPartials();
 	await preloadTemplates();
-};
-
-let _initialising = null;
-
-Hooks.once('init', function () {
-	_initialising = _init();
 });
 
-Hooks.once('ready', async function () {
+Hooks.once('ready', function () {
 	let fontSheet = 'font';
 	if (game.i18n.lang === 'ja') {
 		fontSheet = 'ja';
@@ -53,9 +46,6 @@ Hooks.once('ready', async function () {
 
 	checkVersion();
 	loadSpellData();
-
-	await _initialising;
-	restoreViewPins();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {
@@ -101,7 +91,7 @@ function enrichItemFlags (data) {
 
 	if (data.type === 'consumable') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Consumable), data.flags.obsidian || {});
-	} else if (data.type === 'container') {
+	} else if (data.type === 'backpack') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Container), data.flags.obsidian || {});
 	} else if (data.type === 'equipment') {
 		data.flags.obsidian = mergeObject(duplicate(Schema.Equipment), data.flags.obsidian || {});

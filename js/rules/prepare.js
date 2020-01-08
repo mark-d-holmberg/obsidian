@@ -117,7 +117,7 @@ export const Prepare = {
 			} else if (resource.key === 'chr') {
 				resource.max = op(resource.bonus, data.details.level.value);
 			} else if (resource.key === 'cls') {
-				const cls = classes.find(cls => cls.flags.obsidian.uuid === resource.class);
+				const cls = classes.find(cls => cls._id === resource.class);
 				if (cls) {
 					resource.max = op(resource.bonus, cls.data.levels);
 				}
@@ -385,9 +385,7 @@ export const Prepare = {
 
 			flags.notes = [];
 			if (flags.source.type === 'class') {
-				const cls = actorData.obsidian.classes.find(cls =>
-					cls.flags.obsidian.uuid === flags.source.class);
-
+				const cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
 				if (cls) {
 					flags.source.className = cls.flags.obsidian.label;
 				}

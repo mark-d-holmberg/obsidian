@@ -134,11 +134,11 @@ export class ObsidianActor extends Actor5e {
 				item.flags.obsidian.source.type = 'other';
 				item.flags.obsidian.source.other = item.flags.obsidian.source.custom;
 			} else {
-				item.flags.obsidian.source.class = cls.flags.obsidian.uuid;
+				item.flags.obsidian.source.class = cls._id;
 			}
 		} else {
 			const needle = item.flags.obsidian.source.class;
-			const cls = this.data.obsidian.classes.find(cls => cls.flags.obsidian.uuid === needle);
+			const cls = this.data.obsidian.classes.find(cls => cls._id === needle);
 
 			if (cls === undefined) {
 				const byName = this.data.obsidian.classes.find(cls => cls.name === needle);
@@ -147,7 +147,7 @@ export class ObsidianActor extends Actor5e {
 					item.flags.obsidian.source.other =
 						game.i18n.localize(`OBSIDIAN.Class-${needle}`);
 				} else {
-					item.flags.obsidian.source.class = byName.flags.obsidian.uuid;
+					item.flags.obsidian.source.class = byName._id;
 				}
 			}
 		}
@@ -172,25 +172,8 @@ export class ObsidianActor extends Actor5e {
 		}).join(' / ');
 	}
 
-	/**
-	 * @private
-	 */
-	static _enrichFlags (flags) {
-		const walk = (master, target) => {
-			for (const [key, val] of Object.entries(master)) {
-				if (target[key] === undefined) {
-					target[key] = val;
-				} else if ($.isPlainObject(val)) {
-					walk(val, target[key]);
-				}
-			}
-		};
-
-		walk(duplicate(OBSIDIAN.Schema.Actor), flags);
-	}
-
 	getItemParent (item) {
-		return this.data.items.find(other => other.id === item.flags.obsidian.parent);
+		return this.data.items.find(other => other._id === item.flags.obsidian.parent);
 	}
 
 	async shortRest () {
@@ -205,14 +188,14 @@ export class ObsidianActor extends Actor5e {
 			const flags = feat.flags.obsidian;
 			if (flags.uses && flags.uses.enabled && flags.uses.recharge === 'short') {
 				items.push({
-					id: feat.id,
+					_id: feat._id,
 					flags: {obsidian: {uses: {remaining: flags.uses.max}}}
 				});
 			}
 		}
 
 		if (items.length > 0) {
-			return this.updateManyOwnedItem(items);
+			return this.updateManyEmbeddedEntities('OwnedItem', items);
 		}
 
 		return Promise.resolve();
@@ -252,7 +235,7 @@ export class ObsidianActor extends Actor5e {
 				&& itemFlags.uses.recharge === 'long')
 			{
 				items.push({
-					id: item.id,
+					_id: item._id,
 					flags: {obsidian: {uses: {remaining: itemFlags.uses.max}}}
 				});
 			}
@@ -268,10 +251,13 @@ export class ObsidianActor extends Actor5e {
 					}
 
 					Rolls.toChat(this, recharge);
-					items.push({id: item.id, flags: {obsidian: {charges: {remaining: remaining}}}});
+					items.push({
+						_id: item._id,
+						flags: {obsidian: {charges: {remaining: remaining}}}
+					});
 				} else {
 					items.push({
-						id: item.id,
+						_id: item._id,
 						flags: {obsidian: {charges: {remaining: itemFlags.charges.max}}}
 					});
 				}
@@ -279,7 +265,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		if (items.length > 0) {
-			return this.updateManyOwnedItem(items);
+			return this.updateManyEmbeddedEntities('OwnedItem', items);
 		}
 
 		return Promise.resolve();
@@ -288,12 +274,12 @@ export class ObsidianActor extends Actor5e {
 	async updateEquipment (deleted) {
 		if (deleted) {
 			const update = {};
-			const parent = this.data.items.find(item => item.id === deleted.flags.obsidian.parent);
+			const parent = this.data.items.find(item => item._id === deleted.flags.obsidian.parent);
 
 			if (deleted.type === 'backpack') {
 				deleted.flags.obsidian.contents.forEach(item => {
 					update[`items.${item.idx}.flags.obsidian.parent`] = null;
-					this.data.flags.obsidian.order.equipment.root.push(item.id);
+					this.data.flags.obsidian.order.equipment.root.push(item._id);
 				});
 
 				update['flags.obsidian.order.equipment.root'] =
@@ -302,18 +288,18 @@ export class ObsidianActor extends Actor5e {
 
 			if (parent == null) {
 				const bucket = deleted.type === 'backpack' ? 'containers' : 'root';
-				const idx = this.data.flags.obsidian.order.equipment[bucket].indexOf(deleted.id);
+				const idx = this.data.flags.obsidian.order.equipment[bucket].indexOf(deleted._id);
 				this.data.flags.obsidian.order.equipment[bucket].splice(idx, 1);
 				update[`flags.obsidian.order.equipment.${bucket}`] =
 					duplicate(this.data.flags.obsidian.order.equipment[bucket]);
 			} else {
-				const idx = parent.flags.obsidian.order.indexOf(deleted.id);
+				const idx = parent.flags.obsidian.order.indexOf(deleted._id);
 				parent.flags.obsidian.order.splice(idx, 1);
 				update[`items.${parent.idx}.flags.obsidian.order`] =
 					duplicate(parent.flags.obsidian.order);
 			}
 
-			await this.update(update);
+			await this.update(OBSIDIAN.updateArrays(this.data, update));
 		}
 	}
 }

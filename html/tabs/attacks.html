@@ -15,7 +15,7 @@
 		</div>
 		<div class="obsidian-tbody">
 			{{#each actor.obsidian.attacks}}
-				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem.id}}">
+				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem._id}}">
 					<div class="obsidian-col-icon">
 						{{#if (eq parentItem.type 'spell')}}
 							<i class="obsidian-spell-school obsidian-spell-school-{{parentItem.data.school}}"></i>
@@ -33,7 +33,7 @@
 					<div class="obsidian-col-attack">
 						<div class="obsidian-table-text rollable {{#if (eq parentItem.type 'spell')}}obsidian-cast-spell{{/if}}"
 							{{#if (eq parentItem.type 'spell')}}
-								data-spl="{{parentItem.id}}"
+								data-spl="{{parentItem._id}}"
 							{{else}}
 							 data-roll="fx" data-uuid="{{parentEffect.uuid}}"
 							{{/if}}>

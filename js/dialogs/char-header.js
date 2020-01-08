@@ -77,8 +77,8 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	_editItem (evt) {
 		const item =
-			this.parent.actor.getOwnedItem(
-				$(evt.currentTarget).closest('[data-item-id]').data('item-id'));
+			this.parent.actor.items.find(item =>
+				item.id === $(evt.currentTarget).closest('[data-item-id]').data('item-id'));
 		item.sheet.render(true);
 	}
 
@@ -106,7 +106,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			item.flags.obsidian.custom = cls.custom;
 		}
 
-		await this.parent.actor.createOwnedItem(item, {displaySheet: false});
+		await this.parent.actor.createEmbeddedEntity('OwnedItem', item, {displaySheet: false});
 		this.render(false);
 	}
 
@@ -115,8 +115,8 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
-		const itemID = Number($(evt.currentTarget).closest('.obsidian-class-row').data('item-id'));
-		await this.parent.actor.deleteOwnedItem(itemID);
+		const itemID = $(evt.currentTarget).closest('.obsidian-class-row').data('item-id');
+		await this.parent.actor.deleteEmbeddedEntity('OwnedItem', itemID);
 		this.render(false);
 	}
 
@@ -124,7 +124,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		const data = Array.from(this.element.find('[data-item-id]')).map(el => {
 			const inputs = $(el).find('input');
 			return {
-				id: Number(el.dataset.itemId),
+				_id: el.dataset.itemId,
 				data: {
 					levels: Number(inputs[1].value),
 					subclass: inputs[0].value
@@ -132,7 +132,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			};
 		});
 
-		await this.parent.actor.updateManyOwnedItem(data);
+		await this.parent.actor.updateManyEmbeddedEntities('OwnedItem', data);
 		return this.parent.actor.update({
 			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
 			'data.details.race': formData['data.details.race'],

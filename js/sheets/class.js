@@ -1,6 +1,5 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
-import {OBSIDIAN} from '../rules/rules.js';
 
 export class ObsidianClassSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
@@ -34,7 +33,6 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 				case 'Wizard': data.name = 'wiz'; break;
 			}
 
-			data.flags.obsidian.uuid = OBSIDIAN.uuid();
 			data.flags.obsidian.hd = ObsidianHeaderDetailsDialog.determineHD(data.name);
 			data.flags.obsidian.spellcasting =
 				ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);

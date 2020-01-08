@@ -1,5 +1,4 @@
 import {Prepare} from './prepare.js';
-import {Effect} from '../module/effect.js';
 
 export function prepareEffects (actorData) {
 	actorData.obsidian.attacks = [];
@@ -28,8 +27,7 @@ export function prepareEffects (actorData) {
 
 		let cls;
 		if (flags.source && flags.source.type === 'class') {
-			cls = actorData.obsidian.classes.find(cls =>
-				cls.flags.obsidian.uuid === flags.source.class);
+			cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
 		}
 
 		for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {
@@ -38,7 +36,7 @@ export function prepareEffects (actorData) {
 
 			actorData.obsidian.effects.set(effect.uuid, effect);
 			effect.parentActor = actorData._id;
-			effect.parentItem = item.id;
+			effect.parentItem = item._id;
 			effect.idx = effectIdx;
 			effect.label = getEffectLabel(effect);
 
@@ -84,7 +82,7 @@ export function prepareEffects (actorData) {
 					effect.scalingComponent = component;
 				} else if (component.type === 'consume') {
 					if (component.target === 'this-item' || component.target === 'this-effect') {
-						component.itemID = item.id;
+						component.itemID = item._id;
 					}
 
 					if (component.target === 'this-effect') {

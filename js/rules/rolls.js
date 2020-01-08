@@ -309,7 +309,7 @@ export const Rolls = {
 				return;
 			}
 
-			const item = actor.data.obsidian.itemsByID.get(Number(dataset.id));
+			const item = actor.getEmbeddedEntity('OwnedItem', dataset.id);
 			if (!item) {
 				return;
 			}
@@ -373,9 +373,7 @@ export const Rolls = {
 				return;
 			}
 
-			const id = Number(dataset.feat);
-			const feat = actor.data.items.find(item => item.id === id);
-
+			const feat = actor.getEmbeddedEntity('OwnedItem', dataset.feat);
 			if (!feat) {
 				return;
 			}
@@ -386,8 +384,7 @@ export const Rolls = {
 				return;
 			}
 
-			const id = Number(dataset.spl);
-			const spell = actor.data.items.find(item => item.id === id);
+			const spell = actor.getEmbeddedEntity('OwnedItem', dataset.spl);
 
 			if (!spell) {
 				return;
@@ -790,7 +787,8 @@ export const Rolls = {
 			speaker: ChatMessage.getSpeaker({actor: actor}),
 			user: game.user._id,
 			rollMode: game.settings.get('core', 'rollMode'),
-			sound: CONFIG.sounds.dice
+			sound: CONFIG.sounds.dice,
+			content: 'N/A' // This can't be blank for some reason.
 		};
 
 		if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {

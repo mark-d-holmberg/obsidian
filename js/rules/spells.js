@@ -27,8 +27,7 @@ export function prepareSpells (actorData) {
 		} else if (flags.source.type === 'custom') {
 			flags.source.display = flags.source.custom;
 		} else if (flags.source.type === 'class') {
-			cls = actorData.obsidian.classes.find(cls =>
-				cls.flags.obsidian.uuid === flags.source.class);
+			cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
 			if (cls) {
 				flags.source.display = cls.flags.obsidian.label;
 			}

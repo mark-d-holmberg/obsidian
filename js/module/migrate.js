@@ -57,7 +57,7 @@ async function beginMigration (html) {
 			for (const item of actor.data.items) {
 				const update = Migrate.convertItem(item);
 				if (Object.keys(update) > 0) {
-					update.id = item.id;
+					update._id = item._id;
 					itemUpdates.push(update);
 				}
 
@@ -66,7 +66,7 @@ async function beginMigration (html) {
 			}
 
 			if (itemUpdates.length) {
-				await actor.updateManyOwnedItem(itemUpdates);
+				await actor.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
 			}
 
 			const actorUpdate = Migrate.convertActor(actor.data);
