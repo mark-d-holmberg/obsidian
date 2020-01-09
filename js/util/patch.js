@@ -2,23 +2,6 @@ import {OBSIDIAN} from '../rules/rules.js';
 import {patchChatMessage} from '../module/message.js';
 
 export function runPatches () {
-	window.createEditor = (function () {
-		const cached = window.createEditor;
-		return function () {
-			const name = $(arguments[0].target).closest('form').data('obsidian-name');
-			if (name) {
-				arguments[0].content_css = 'css/mce.css,modules/obsidian/css/obsidian-mce.css';
-			}
-
-			const capture = cached.apply(this, arguments);
-			if (name) {
-				Hooks.callAll(`MCEInit-${name}`, capture);
-			}
-
-			return capture;
-		};
-	})();
-
 	Draggable.prototype._onDragMouseDown = (function () {
 		const cached = Draggable.prototype._onDragMouseDown;
 		return function (evt) {

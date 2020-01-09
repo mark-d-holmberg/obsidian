@@ -706,13 +706,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 				this.actor.getEmbeddedEntity('OwnedItem', evt.currentTarget.dataset.id);
 
 			if (item && item.obsidian) {
-				const actionable = Array.from(item.obsidian.actionable);
-				if (actionable.length > 1) {
+				if (item.obsidian.actionable.length > 1) {
 					new ObsidianActionableDialog(this, item).render(true);
 					return;
-				} else if (actionable.length) {
+				} else if (item.obsidian.actionable.length) {
 					evt.currentTarget.dataset.roll = 'fx';
-					evt.currentTarget.dataset.uuid = actionable[0].uuid;
+					evt.currentTarget.dataset.uuid = item.obsidian.actionable[0].uuid;
 					this._onRoll(evt);
 					return;
 				}
@@ -1086,19 +1085,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_useResource (item, effect, resource) {
-		let quantity = 1;
-		let remaining = resource.remaining - 1;
-
-		if (remaining < 1 && item.type === 'consumable') {
-			quantity--;
-			if (quantity <= 0) {
-				quantity = 0;
-			} else {
-				remaining = resource.max;
-			}
-		}
-
+	_useResource (item, effect, resource, n = 1) {
+		let remaining = resource.remaining - n;
 		if (remaining < 0) {
 			remaining = 0;
 		}
@@ -1107,10 +1095,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
 		};
-
-		if (item.type === 'consumable') {
-			update['data.quantity'] = quantity;
-		}
 
 		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
 	}

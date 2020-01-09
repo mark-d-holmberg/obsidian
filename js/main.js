@@ -16,6 +16,7 @@ import {checkVersion, Migrate} from './module/migrate.js';
 runPatches();
 
 Hooks.once('init', async function () {
+	CONFIG.TinyMCE.css.push('modules/obsidian/css/obsidian-mce.css');
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
@@ -162,5 +163,5 @@ Number.prototype.sgnex = function () {
 	return this < 0 ? ` - ${this * -1}` : ` + ${this}`;
 };
 
-// For debugging/
+// For debugging.
 window.OBSIDIAN = OBSIDIAN;

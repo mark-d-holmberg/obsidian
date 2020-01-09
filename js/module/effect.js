@@ -68,7 +68,8 @@ export const Effect = {
 		return {
 			type: 'scaling',
 			uuid: OBSIDIAN.uuid(),
-			method: 'spell'
+			method: 'spell',
+			ref: ''
 		};
 	},
 

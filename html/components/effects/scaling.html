@@ -1,15 +1,27 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Scaling'}}</legend>
   <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-    <label class="obsidian-inline">
-      {{localize 'OBSIDIAN.Method'}}
-      <select name="{{prefix}}.method">
-        {{#select method}}
-	        {{#each @root.ObsidianRules.EFFECT_SCALING_METHODS}}
-		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Scaling-' this}}</option>
-	        {{/each}}
-        {{/select}}
-      </select>
-    </label>
+	  <div class="obsidian-fullwidth">
+		  <label class="obsidian-inline">
+			  {{localize 'OBSIDIAN.Effect'}}
+			  <select name="{{prefix}}.ref">
+				  {{#select ref}}
+					  {{#each @root.item.flags.obsidian.effects}}
+						  <option value="{{uuid}}">{{label}}</option>
+					  {{/each}}
+				  {{/select}}
+			  </select>
+		  </label>
+	    <label class="obsidian-inline">
+	      {{localize 'OBSIDIAN.Method'}}
+	      <select name="{{prefix}}.method">
+	        {{#select method}}
+		        {{#each @root.ObsidianRules.EFFECT_SCALING_METHODS}}
+			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Scaling-' this}}</option>
+		        {{/each}}
+	        {{/select}}
+	      </select>
+	    </label>
+	  </div>
   </div>
 </fieldset>

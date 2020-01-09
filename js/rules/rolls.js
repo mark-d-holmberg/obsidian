@@ -686,26 +686,16 @@ export const Rolls = {
 
 	spell: function (actor, spell, level) {
 		const itemFlags = spell.flags.obsidian;
-		let upcastAmount = 0;
-
-		if (level > 0
-			&& level > spell.data.level
-			&& spell.obsidian.scaling
-			&& spell.obsidian.scaling.scalingComponent.method === 'spell')
-		{
-			upcastAmount = level - spell.data.level;
-		}
-
+		const upcastAmount = level - spell.data.level;
 		let isFirst = true;
-		return itemFlags.effects.flatMap(effect => {
-			if (effect === spell.obsidian.scaling) {
-				return null;
-			}
 
+		return itemFlags.effects.filter(effect => !effect.isScaling || effect.selfScaling).flatMap(effect => {
 			const attacks = effect.components.filter(c => c.type === 'attack');
 			const damage = effect.components.filter(c => c.type === 'damage');
 			const saves = effect.components.filter(c => c.type === 'save');
 			const targets = effect.components.filter(c => c.type === 'target');
+			const scaling =
+				spell.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 			const results = [];
 
 			if (attacks.length || saves.length) {
@@ -714,10 +704,8 @@ export const Rolls = {
 
 			if (attacks.length) {
 				let count = attacks[0].targets;
-				if (upcastAmount > 0 && spell.obsidian.scaling) {
-					const targetScaling =
-						spell.obsidian.scaling.components.find(c => c.type === 'target');
-
+				if (upcastAmount > 0 && scaling) {
+					const targetScaling = scaling.components.find(c => c.type === 'target');
 					if (targetScaling) {
 						count += Math.floor(targetScaling.count * upcastAmount);
 					}
@@ -744,10 +732,8 @@ export const Rolls = {
 					count = targets[0].count;
 				}
 
-				if (upcastAmount > 0 && spell.obsidian.scaling) {
-					const targetScaling =
-						spell.obsidian.scaling.components.find(c => c.type === 'target');
-
+				if (upcastAmount > 0 && scaling) {
+					const targetScaling = scaling.components.find(c => c.type === 'target');
 					if (targetScaling) {
 						count += Math.floor(targetScaling.count * upcastAmount);
 					}
@@ -761,11 +747,14 @@ export const Rolls = {
 							Rolls.rollDamage(actor, damage, {
 								crit: false,
 								upcast: upcastAmount,
-								scaling: spell.obsidian.scaling
+								scaling: scaling
 							}),
 						crit:
-							Rolls.rollDamage(actor, damage,
-								{crit: true, upcast: upcastAmount, scaling: spell.obsidian.scaling})
+							Rolls.rollDamage(actor, damage, {
+								crit: true,
+								upcast: upcastAmount,
+								scaling: scaling
+							})
 					});
 				}
 			}
@@ -779,7 +768,7 @@ export const Rolls = {
 			return results.map(result => {
 				return {flags: {obsidian: result}};
 			});
-		}).filter(result => result != null);
+		});
 	},
 
 	toChat: async function (actor, ...msgs) {
