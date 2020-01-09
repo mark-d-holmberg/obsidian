@@ -10,6 +10,7 @@ import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
 import {ObsidianActionableDialog} from '../dialogs/actionable.js';
+import {ObsidianResourceScalingDialog} from '../dialogs/resource-scaling.js';
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -320,7 +321,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_consumeQuantity (consumer) {
+	_consumeQuantity (consumer, n = 1) {
 		const effect = this.actor.data.obsidian.effects.get(consumer.parentEffect);
 		if (!effect) {
 			return;
@@ -331,7 +332,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const quantity = item.data.quantity - 1;
+		const quantity = item.data.quantity - n;
 		if (quantity >= 0) {
 			this.actor.updateEmbeddedEntity(
 				'OwnedItem',
@@ -679,26 +680,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		if (effect) {
 			const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-			const resources = effect.components.filter(component => component.type === 'resource');
-			const consumers = effect.components.filter(component => component.type === 'consume');
+			const scaling = item.obsidian.scaling.find(e =>
+				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
-			if (resources.length) {
-				this._useResource(item, effect, resources[0]);
+			if (scaling) {
+				new ObsidianResourceScalingDialog(this, item, effect).render(true);
+			} else {
+				this._onRollEffect(effect);
 			}
 
-			if (consumers.length) {
-				const consumer = consumers[0];
-				if (consumer.target === 'qty') {
-					this._consumeQuantity(consumer);
-				} else {
-					const [refItem, refEffect, resource] =
-						Effect.getLinkedResource(this.actor.data, consumers[0]);
-
-					if (refItem && refEffect && resource) {
-						this._useResource(refItem, refEffect, resource);
-					}
-				}
-			}
+			return;
 		}
 
 		if (evt.currentTarget.dataset.roll === 'item') {
@@ -717,6 +708,50 @@ export class Obsidian extends ActorSheet5eCharacter {
 				}
 			}
 		}
+
+		Rolls.fromClick(this.actor, evt);
+	}
+
+	/**
+	 * @private
+	 * @param effect {Object}
+	 * @param scaling {Number}
+	 */
+	_onRollEffect (effect, scaling) {
+		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
+		const resources = effect.components.filter(component => component.type === 'resource');
+		const consumers = effect.components.filter(component => component.type === 'consume');
+		let scaledAmount = scaling || 0;
+
+		if (resources.length) {
+			this._useResource(item, effect, resources[0], scaling || 1);
+		}
+
+		if (consumers.length) {
+			const consumer = consumers[0];
+			if (consumer.target === 'qty') {
+				this._consumeQuantity(consumer, scaling || consumer.fixed);
+			} else {
+				const [refItem, refEffect, resource] =
+					Effect.getLinkedResource(this.actor.data, consumers[0]);
+
+				if (refItem && refEffect && resource) {
+					this._useResource(
+						refItem, refEffect, resource, scaling || consumer.fixed);
+				}
+			}
+
+			if (scaling) {
+				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
+				if (scaledAmount < 0) {
+					scaledAmount = 0;
+				}
+			}
+		}
+
+		const evt = {
+			currentTarget: {dataset: {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount}}
+		};
 
 		Rolls.fromClick(this.actor, evt);
 	}

@@ -7,7 +7,7 @@ export function prepareEffects (actorData) {
 
 	for (const item of actorData.items) {
 		if (!item.flags || !item.flags.obsidian) {
-			return;
+			continue;
 		}
 
 		const data = actorData.data;
