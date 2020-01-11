@@ -84,7 +84,7 @@ export const Reorder = {
 			} else if (data.pack) {
 				const item = await actor.importItemFromCollection(data.pack, data.id);
 				if (item) {
-					src = item.data;
+					src = item;
 				} else {
 					return false;
 				}

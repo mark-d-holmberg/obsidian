@@ -63,9 +63,9 @@ export class ObsidianDefensesDialog extends ObsidianDialog {
 	 */
 	async _onAddCondition () {
 		const update = this._formData;
-		this.parent.actor.data.flags.obsidian.defenses.conditions.push('charmed');
-		update['flags.obsidian.defenses.conditions'] =
-			duplicate(this.parent.actor.data.flags.obsidian.defenses.conditions);
+		const conditions = duplicate(this.parent.actor.data.flags.obsidian.defenses.conditions);
+		conditions.push('charmed');
+		update['flags.obsidian.defenses.conditions'] = conditions;
 		await this.parent.actor.update(update);
 		this.render(false);
 	}
