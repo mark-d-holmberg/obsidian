@@ -1,12 +1,198 @@
 import {Schema} from './schema.js';
+import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
+import {OBSIDIAN} from '../rules/rules.js';
+import {Effect} from './effect.js';
 
 export const Migrate = {
-	convertActor: function (actorData) {
-		return {};
+	convertActor: function (data) {
+		if (!data.flags) {
+			data.flags = {};
+		}
+
+		data.flags.obsidian =
+			mergeObject(Schema.Actor, data.flags.obsidian || {}, {inplace: false});
+
+		return data;
 	},
 
-	convertItem: function (itemData) {
-		return {};
+	convertItem: function (data) {
+		if (!data.flags) {
+			data.flags = {};
+		}
+
+		if (!data.flags.obsidian) {
+			data.flags.obsidian = {};
+		}
+
+		if (data.type === 'class') {
+			Migrate.convertClass(data);
+		} else if (data.type === 'consumable') {
+			data.flags.obsidian =
+				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false})
+		} else if (data.type === 'backpack') {
+			data.flags.obsidian =
+				mergeObject(Schema.Container, data.flags.obsidian || {}, {inplace: false});
+		} else if (data.type === 'equipment') {
+			data.flags.obsidian =
+				mergeObject(Schema.Equipment, data.flags.obsidian || {}, {inplace: false});
+		} else if (data.type === 'feat') {
+			data.flags.obsidian =
+				mergeObject(Schema.Feature, data.flags.obsidian || {}, {inplace: false});
+		} else if (data.type === 'spell') {
+			data.flags.obsidian =
+				mergeObject(Schema.Spell, data.flags.obsidian || {}, {inplace: false});
+		} else if (data.type === 'weapon') {
+			data.flags.obsidian =
+				mergeObject(Schema.Weapon, data.flags.obsidian || {}, {inplace: false});
+		} else if (data.type === 'loot' || data.type === 'tool') {
+			data.flags.obsidian = {};
+		}
+
+		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+			if (data.type === 'consumable') {
+				Migrate.convertConsumable(data);
+			} else if (data.type === 'equipment') {
+				Migrate.convertEquipment(data);
+			} else if (data.type === 'feat') {
+				Migrate.convertFeature(data);
+			} else if (data.type === 'spell') {
+				Migrate.convertSpell(data);
+			} else if (data.type === 'weapon') {
+				Migrate.convertWeapon(data);
+			}
+		}
+
+		return data;
+	},
+
+	convertClass: function (data) {
+		OBSIDIAN.Rules.CLASSES.forEach(cls => {
+			if (data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`)) {
+				data.name = cls;
+			} else {
+				const name = data.name;
+				data.name = 'custom';
+				data.flags.obsidian.custom = name;
+			}
+		});
+
+		data.flags.obsidian.hd = ObsidianHeaderDetailsDialog.determineHD(data.name);
+		data.flags.obsidian.spellcasting =
+			ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
+	},
+
+	convertConsumable: function (data) {
+
+	},
+
+	convertEquipment: function (data) {
+
+	},
+
+	convertFeature: function (data) {
+
+	},
+
+	convertSpell: function (data) {
+
+	},
+
+	convertWeapon: function (data) {
+		if (data.flags.obsidian.type === 'unarmed') {
+			data.flags.obsidian.type = 'melee';
+			data.flags.obsidian.category = 'unarmed';
+		}
+
+		const primaryEffect = Effect.create();
+		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
+			primaryEffect.name = game.i18n.localize('OBSIDIAN.Charges');
+			const charges = data.flags.obsidian.charges;
+			const component = Effect.newResource();
+
+			component.fixed = charges.max;
+			component.recharge.time = charges.recharge;
+			component.recharge.calc = charges.rechargeType;
+			component.recharge.ndice = charges.ndice;
+			component.recharge.die = charges.die;
+			component.recharge.bonus = charges.bonus;
+			component.remaining = charges.remaining || 0;
+			primaryEffect.components.push(component);
+		}
+
+		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
+			const save = data.flags.obsidian.dc;
+			const component = Effect.newSave();
+			component.target = save.target;
+			component.effect = save.effect;
+
+			if (OBSIDIAN.notDefinedOrEmpty(save.fixed)) {
+				component.fixed = Number(save.fixed);
+			} else {
+				component.calc = 'formula';
+				component.ability = save.ability;
+				component.prof = save.prof;
+				component.bonus = save.bonus;
+			}
+
+			primaryEffect.components.push(component);
+		}
+
+		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
+			const attack = data.flags.obsidian.hit;
+			const component = Effect.newAttack();
+			component.attack = data.flags.obsidian.type;
+			component.ability = attack.stat;
+			component.bonus = attack.bonus;
+			component.proficient = attack.proficient;
+			primaryEffect.components.push(component);
+		}
+
+		let dmgs = [];
+		if (data.flags.obsidian.damage && data.flags.obsidian.damage.length) {
+			dmgs = dmgs.concat(data.flags.obsidian.damage.map(dmg => [dmg, false]));
+		}
+
+		if (data.flags.obsidian.versatile && data.flags.obsidian.versatile.length) {
+			dmgs = dmgs.concat(data.flags.obsidian.versatile.map(dmg => [dmg, true]));
+		}
+
+		for (const [dmg, versatile] of dmgs) {
+			const component = Effect.newDamage();
+			component.ndice = dmg.ndice;
+			component.die = dmg.die;
+			component.ability = dmg.stat;
+			component.bonus = dmg.bonus;
+			component.damage = dmg.type;
+			component.versatile = versatile;
+			primaryEffect.components.push(component);
+		}
+
+		if (primaryEffect.components.length) {
+			data.flags.obsidian.effects.push(primaryEffect);
+		}
+
+		if (data.flags.obsidian.special && data.flags.obsidian.special.length) {
+			for (const special of data.flags.obsidian.special) {
+				const effect = Effect.create();
+				const component = Effect.newResource();
+
+				effect.name = special.name;
+				data.flags.obsidian.effects.push(effect);
+				effect.components.push(component);
+				component.fixed = special.uses.max;
+				component.remaining = special.uses.remaining;
+			}
+		}
+
+		if (data.flags.obsidian.tags.custom && data.flags.obsidian.tags.custom.length) {
+			data.flags.obsidian.tags.custom = data.flags.obsidian.tags.custom.join(', ');
+		}
+
+		if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
+			data.flags.obsidian.effects = [Effect.create()];
+			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
+			data.flags.obsidian.effects[0].components[0].proficient = true;
+		}
 	}
 };
 
@@ -36,15 +222,18 @@ async function beginMigration (html) {
 	};
 
 	try {
+		const updates = [];
 		for (item of game.items.entities) {
 			const update = Migrate.convertItem(item.data);
 			if (Object.keys(update) > 0) {
-				await item.update(update);
+				updates.push(update);
 			}
 
 			progress++;
 			updateProgress();
 		}
+
+		await Item.updateMany(updates);
 	} catch (e) {
 		console.error(item, e);
 		migrationFailed();
@@ -52,6 +241,7 @@ async function beginMigration (html) {
 	}
 
 	try {
+		const actorUpdates = [];
 		for (actor of game.actors.entities) {
 			const itemUpdates = [];
 			for (const item of actor.data.items) {
@@ -71,9 +261,11 @@ async function beginMigration (html) {
 
 			const actorUpdate = Migrate.convertActor(actor.data);
 			if (Object.keys(actorUpdate) > 0) {
-				await actor.update(actorUpdate);
+				actorUpdates.push(actorUpdate);
 			}
 		}
+
+		await Actor.updateMany(actorUpdates);
 	} catch (e) {
 		console.error(actor, e);
 		migrationFailed();
@@ -81,6 +273,7 @@ async function beginMigration (html) {
 	}
 
 	try {
+		const updates = [];
 		for (scene of game.scenes.entities) {
 			const tokens = [];
 			let requiresUpdate = false;
@@ -104,12 +297,14 @@ async function beginMigration (html) {
 			}
 
 			if (requiresUpdate) {
-				await scene.update({tokens: tokens});
+				updates.push({_id: scene.data._id, tokens: tokens});
 			}
 
 			progress++;
 			updateProgress();
 		}
+
+		await Scene.updateMany(updates);
 	} catch (e) {
 		console.error(scene, e);
 		migrationFailed();

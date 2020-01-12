@@ -104,6 +104,7 @@ OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn', 'hlg'
 ];
 
+OBSIDIAN.Rules.EFFECT_RESOURCE_RECHARGE_CALC = ['all', 'formula'];
 OBSIDIAN.Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];
 OBSIDIAN.Rules.EFFECT_TARGETS = ['individual'];
 OBSIDIAN.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];

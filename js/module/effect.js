@@ -13,7 +13,7 @@ export const Effect = {
 		return {
 			type: 'resource',
 			uuid: OBSIDIAN.uuid(),
-			recharge: 'long',
+			recharge: {time: 'long', calc: 'all', ndice: 0, die: 2, bonus: 0},
 			bonus: 0,
 			operator: 'plus',
 			key: 'abl',

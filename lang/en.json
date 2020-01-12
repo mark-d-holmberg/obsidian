@@ -363,6 +363,8 @@
 	"OBSIDIAN.Recharge-dusk": "Dusk",
 	"OBSIDIAN.Recharge-long": "Long Rest",
 	"OBSIDIAN.Recharge-short": "Short Rest",
+	"OBSIDIAN.RechargeCalc-all": "All",
+	"OBSIDIAN.RechargeCalc-formula": "Formula",
 	"OBSIDIAN.SpecialProperties": "Special Properties",
 	"OBSIDIAN.View": "View",
 	"OBSIDIAN.OverCapacity": "Over Carrying Capacity",

@@ -69,54 +69,14 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 addSettingsHook();
 
 function enrichActorFlags (data) {
-	if (!data.flags) {
-		data.flags = {};
-	}
-
 	if (data.type === 'character') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Actor), data.flags.obsidian || {});
-		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
-			mergeObject(data, Migrate.convertActor(data));
-		}
-
+		mergeObject(data, Migrate.convertActor(data));
 		data.flags.obsidian.version = Schema.VERSION;
 	}
 }
 
 function enrichItemFlags (data) {
-	if (!data.flags) {
-		data.flags = {};
-	}
-
-	ObsidianClassSheet.enrichFlags(data);
-
-	if (data.type === 'consumable') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Consumable), data.flags.obsidian || {});
-	} else if (data.type === 'backpack') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Container), data.flags.obsidian || {});
-	} else if (data.type === 'equipment') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Equipment), data.flags.obsidian || {});
-	} else if (data.type === 'feat') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Feature), data.flags.obsidian || {});
-	} else if (data.type === 'spell') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Spell), data.flags.obsidian || {});
-	} else if (data.type === 'weapon') {
-		data.flags.obsidian = mergeObject(duplicate(Schema.Weapon), data.flags.obsidian || {});
-		if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
-			data.flags.obsidian.effects = [Effect.create()];
-			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
-			data.flags.obsidian.effects[0].components[0].proficient = true;
-		}
-	} else if (data.type === 'loot' || data.type === 'tool') {
-		if (!data.flags.obsidian) {
-			data.flags.obsidian = {};
-		}
-	}
-
-	if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
-		mergeObject(data, Migrate.convertItem(data));
-	}
-
+	mergeObject(data, Migrate.convertItem(data));
 	data.flags.obsidian.version = Schema.VERSION;
 }
 
