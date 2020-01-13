@@ -56,7 +56,7 @@ export const Migrate = {
 			} else if (data.type === 'feat') {
 				Migrate.convertFeature(data, actor);
 			} else if (data.type === 'spell') {
-				Migrate.convertSpell(data);
+				Migrate.convertSpell(data, actor);
 			} else if (data.type === 'weapon') {
 				Migrate.convertWeapon(data);
 			}
@@ -108,9 +108,9 @@ export const Migrate = {
 	},
 
 	convertEquipment: function (data) {
-		data.armor.value += data.flags.obsidian.magic;
-		if (isNaN(Number(data.strength))) {
-			data.strength = '';
+		data.data.armor.value += data.flags.obsidian.magic;
+		if (isNaN(Number(data.data.strength))) {
+			data.data.strength = '';
 		}
 	},
 
@@ -156,8 +156,82 @@ export const Migrate = {
 		}
 	},
 
-	convertSpell: function (data) {
+	convertSpell: function (data, actor) {
+		const classMap = new Map();
+		if (actor) {
+			actor.data.items
+				.filter(item =>
+					item.type === 'class' && item.flags && item.flags.obsidian
+					&& item.flags.obsidian.uuid)
+				.forEach(cls => classMap.set(cls.flags.obsidian.uuid, cls));
+		}
 
+		const spellEffect = Effect.create();
+		const scalingEffect = Effect.create();
+		const resourceEffect = Effect.create();
+
+		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
+			spellEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
+		}
+
+		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
+			const attack = data.flags.obsidian.hit;
+			spellEffect.components.push(Migrate.v1.convertAttack(attack, attack.type, 'spell'));
+
+			if (attack.count > 1) {
+				const component = Effect.newTarget();
+				spellEffect.components.push(component);
+				component.count = attack.count;
+			}
+		}
+
+		for (const dmg of data.flags.obsidian.damage || []) {
+			spellEffect.components.push(Migrate.v1.convertDamage(dmg));
+		}
+
+		if (spellEffect.components.length) {
+			data.flags.obsidian.effects.push(spellEffect);
+		}
+
+		if ((data.flags.obsidian.upcast && data.flags.obsidian.upcast.enabled)
+			|| data.data.level < 1)
+		{
+			const upcast = data.flags.obsidian.upcast;
+
+			if (upcast.natk > 0 && upcast.nlvl > 0) {
+				const component = Effect.newTarget();
+				scalingEffect.components.push(component);
+				component.count = upcast.natk / upcast.nlvl;
+			}
+
+			for (const dmg of upcast.damage || []) {
+				scalingEffect.components.push(Migrate.v1.convertDamage(dmg));
+			}
+		}
+
+		if (scalingEffect.components.length) {
+			const scaling = Effect.newScaling();
+			scalingEffect.components.unshift(scaling);
+			scaling.method = data.data.level < 1 ? 'cantrip' : 'spell';
+			scaling.ref = spellEffect.uuid;
+			data.flags.obsidian.effects.push(scalingEffect);
+		}
+
+		if (data.flags.obsidian.uses
+			&& data.flags.obsidian.uses.enabled
+			&& data.flags.obsidian.uses.limit !== 'unlimited')
+		{
+			resourceEffect.name = game.i18n.localize('OBSIDIAN.Uses');
+			data.flags.obsidian.effects.push(resourceEffect);
+			Migrate.v1.convertConsumableUses(data, resourceEffect);
+		}
+
+		if (data.flags.obsidian.source && data.flags.obsidian.source.type === 'class') {
+			const cls = classMap.get(data.flags.obsidian.source.class);
+			if (cls) {
+				data.flags.obsidian.source.class = cls._id;
+			}
+		}
 	},
 
 	convertWeapon: function (data) {
