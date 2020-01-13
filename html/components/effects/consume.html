@@ -12,16 +12,14 @@
 	        {{/select}}
 	      </select>
 	    </label>
-      <select name="{{prefix}}.itemID" data-dtype="Number" data-selector-parent="{{prefix}}.target"
-              data-show="item">
+      <select name="{{prefix}}.itemID" data-selector-parent="{{prefix}}.target" data-show="item">
         {{#select itemID}}
 	        {{#each @root.itemsWithResources}}
 		        <option value="{{_id}}">{{name}}</option>
 	        {{/each}}
         {{/select}}
       </select>
-	    <select name="{{prefix}}.featID" data-dtype="Number" data-selector-parent="{{prefix}}.target"
-	            data-show="feat">
+	    <select name="{{prefix}}.featID" data-selector-parent="{{prefix}}.target" data-show="feat">
 		    {{#select featID}}
 			    {{#each @root.featsWithResources}}
 				    <option value="{{_id}}">{{name}}</option>

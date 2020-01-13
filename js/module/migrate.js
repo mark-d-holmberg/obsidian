@@ -15,7 +15,7 @@ export const Migrate = {
 		return data;
 	},
 
-	convertItem: function (data) {
+	convertItem: function (data, actor) {
 		if (!data.flags) {
 			data.flags = {};
 		}
@@ -54,7 +54,7 @@ export const Migrate = {
 			} else if (data.type === 'equipment') {
 				Migrate.convertEquipment(data);
 			} else if (data.type === 'feat') {
-				Migrate.convertFeature(data);
+				Migrate.convertFeature(data, actor);
 			} else if (data.type === 'spell') {
 				Migrate.convertSpell(data);
 			} else if (data.type === 'weapon') {
@@ -82,15 +82,78 @@ export const Migrate = {
 	},
 
 	convertConsumable: function (data) {
+		const primaryEffect = Effect.create();
+		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
+			primaryEffect.name = game.i18n.localize('OBSIDIAN.Uses');
+			Migrate.v1.convertConsumableUses(data, primaryEffect);
+		}
 
+		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
+			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
+		}
+
+		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
+			const attack = data.flags.obsidian.hit;
+			primaryEffect.components.push(
+				Migrate.v1.convertAttack(attack, attack.attack, 'weapon'));
+		}
+
+		for (const dmg of data.flags.obsidian.damage || []) {
+			primaryEffect.components.push(Migrate.v1.convertDamage(dmg));
+		}
+
+		if (primaryEffect.components.length) {
+			data.flags.obsidian.effects.push(primaryEffect);
+		}
 	},
 
 	convertEquipment: function (data) {
-
+		data.armor.value += data.flags.obsidian.magic;
+		if (isNaN(Number(data.strength))) {
+			data.strength = '';
+		}
 	},
 
-	convertFeature: function (data) {
+	convertFeature: function (data, actor) {
+		const classMap = new Map();
+		if (actor) {
+			actor.data.items
+				.filter(item =>
+					item.type === 'class' && item.flags && item.flags.obsidian
+					&& item.flags.obsidian.uuid)
+				.forEach(cls => classMap.set(cls.flags.obsidian.uuid, cls));
+		}
 
+		const primaryEffect = Effect.create();
+		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
+			primaryEffect.components.push(
+				Migrate.v1.convertUses(data.flags.obsidian.uses, classMap));
+		}
+
+		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
+			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
+		}
+
+		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
+			const attack = data.flags.obsidian.hit;
+			primaryEffect.components.push(
+				Migrate.v1.convertAttack(attack, attack.attack, attack.type));
+		}
+
+		for (const dmg of data.flags.obsidian.damage || []) {
+			primaryEffect.components.push(Migrate.v1.convertDamage(dmg));
+		}
+
+		if (primaryEffect.components.length) {
+			data.flags.obsidian.effects.push(primaryEffect);
+		}
+
+		if (data.flags.obsidian.source && data.flags.obsidian.source.type === 'class') {
+			const cls = classMap.get(data.flags.obsidian.source.class);
+			if (cls) {
+				data.flags.obsidian.source.class = cls._id;
+			}
+		}
 	},
 
 	convertSpell: function (data) {
@@ -104,47 +167,21 @@ export const Migrate = {
 		}
 
 		const primaryEffect = Effect.create();
+		const magic = data.flags.obsidian.magic;
+
 		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
 			primaryEffect.name = game.i18n.localize('OBSIDIAN.Charges');
-			const charges = data.flags.obsidian.charges;
-			const component = Effect.newResource();
-
-			component.fixed = charges.max;
-			component.recharge.time = charges.recharge;
-			component.recharge.calc = charges.rechargeType;
-			component.recharge.ndice = charges.ndice;
-			component.recharge.die = charges.die;
-			component.recharge.bonus = charges.bonus;
-			component.remaining = charges.remaining || 0;
-			primaryEffect.components.push(component);
+			primaryEffect.components.push(Migrate.v1.convertCharges(data.flags.obsidian.charges));
 		}
 
 		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
-			const save = data.flags.obsidian.dc;
-			const component = Effect.newSave();
-			component.target = save.target;
-			component.effect = save.effect;
-
-			if (OBSIDIAN.notDefinedOrEmpty(save.fixed)) {
-				component.fixed = Number(save.fixed);
-			} else {
-				component.calc = 'formula';
-				component.ability = save.ability;
-				component.prof = save.prof;
-				component.bonus = save.bonus;
-			}
-
-			primaryEffect.components.push(component);
+			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
 		}
 
 		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
-			const attack = data.flags.obsidian.hit;
-			const component = Effect.newAttack();
-			component.attack = data.flags.obsidian.type;
-			component.ability = attack.stat;
-			component.bonus = attack.bonus;
-			component.proficient = attack.proficient;
-			primaryEffect.components.push(component);
+			primaryEffect.components.push(
+				Migrate.v1.convertAttack(
+					data.flags.obsidian.hit, data.flags.obsidian.type, 'weapon', magic));
 		}
 
 		let dmgs = [];
@@ -157,14 +194,7 @@ export const Migrate = {
 		}
 
 		for (const [dmg, versatile] of dmgs) {
-			const component = Effect.newDamage();
-			component.ndice = dmg.ndice;
-			component.die = dmg.die;
-			component.ability = dmg.stat;
-			component.bonus = dmg.bonus;
-			component.damage = dmg.type;
-			component.versatile = versatile;
-			primaryEffect.components.push(component);
+			primaryEffect.components.push(Migrate.v1.convertDamage(dmg, versatile, magic));
 		}
 
 		if (primaryEffect.components.length) {
@@ -193,6 +223,104 @@ export const Migrate = {
 			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
 			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
+	}
+};
+
+Migrate.v1 = {
+	convertAttack: function (attack, type, category, magic = 0) {
+		const component = Effect.newAttack();
+		component.attack = type;
+		component.category = category;
+		component.ability = attack.stat;
+		component.bonus = attack.bonus + magic;
+		component.proficient = attack.proficient;
+		return component;
+	},
+
+	convertConsumableUses: function (data, effect) {
+		const uses = data.flags.obsidian.uses;
+		if (uses.limit === 'unlimited') {
+			data.flags.obsidian.unlimited = true;
+		} else {
+			const component = Effect.newResource();
+			component.calc = 'formula';
+			component.key = uses.ability;
+			component.bonus = uses.bonus;
+			component.recharge.time = 'never';
+			effect.components.push(component);
+		}
+	},
+
+	convertCharges: function (charges) {
+		const component = Effect.newResource();
+		component.fixed = charges.max;
+		component.recharge.time = charges.recharge;
+		component.recharge.calc = charges.rechargeType;
+		component.recharge.ndice = charges.ndice;
+		component.recharge.die = charges.die;
+		component.recharge.bonus = charges.bonus;
+		component.remaining = charges.remaining || 0;
+		return component;
+	},
+
+	convertDamage: function (dmg, versatile = false, magic = 0) {
+		const component = Effect.newDamage();
+		component.ndice = dmg.ndice;
+		component.die = dmg.die;
+		component.ability = dmg.stat;
+		component.bonus = dmg.bonus + magic;
+		component.damage = dmg.type;
+		component.versatile = versatile;
+		return component;
+	},
+
+	convertSave: function (save) {
+		const component = Effect.newSave();
+		component.target = save.target;
+		component.effect = save.effect;
+
+		if (OBSIDIAN.notDefinedOrEmpty(save.fixed)) {
+			component.fixed = Number(save.fixed);
+		} else {
+			component.calc = 'formula';
+			component.ability = save.ability;
+			component.prof = save.prof;
+			component.bonus = save.bonus;
+		}
+
+		return component;
+	},
+
+	convertUses: function (uses, classMap) {
+		let component;
+		if (uses.type === 'formula') {
+			component = Effect.newResource();
+			component.recharge.time = uses.recharge;
+
+			if (OBSIDIAN.notDefinedOrEmpty(uses.fixed)) {
+				component.fixed = Number(uses.fixed);
+			} else {
+				component.calc = 'formula';
+				component.bonus = uses.bonus;
+				component.operator = uses.operator;
+				component.min = uses.min;
+				component.key = uses.key;
+				component.ability = uses.ability;
+
+				const cls = classMap.get(uses.class);
+				if (cls) {
+					component.class = cls._id;
+				} else {
+					component.key = 'chr';
+				}
+			}
+		} else {
+			// Unfortunately, item IDs have all been wiped by this point during
+			// the core migration so we cannot re-link the resources.
+			component = Effect.newConsume();
+		}
+
+		return component;
 	}
 };
 
@@ -245,7 +373,7 @@ async function beginMigration (html) {
 		for (actor of game.actors.entities) {
 			const itemUpdates = [];
 			for (const item of actor.data.items) {
-				const update = Migrate.convertItem(item);
+				const update = Migrate.convertItem(item, actor);
 				if (Object.keys(update) > 0) {
 					update._id = item._id;
 					itemUpdates.push(update);
