@@ -78,7 +78,9 @@ export const Effect = {
 			type: 'target',
 			uuid: OBSIDIAN.uuid(),
 			target: 'individual',
-			count: 1
+			count: 1,
+			area: 'cone',
+			distance: 0
 		};
 	},
 

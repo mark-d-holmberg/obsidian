@@ -12,6 +12,18 @@
       <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
              data-dtype="Number" placeholder="0" name="{{prefix}}.count" value="{{this.count}}"
              data-selector-parent="{{prefix}}.target" data-show="individual">
+	    <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+	           data-dtype="Number" placeholder="0" name="{{prefix}}.distance" value="{{distance}}"
+	           data-selector-parent="{{prefix}}.target" data-show="area">
+      <span class="obsidian-binary-operator" data-selector-parent="{{prefix}}.target"
+            data-show="area">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+      <select name="{{prefix}}.area" data-selector-parent="{{prefix}}.target" data-show="area">
+        {{#select area}}
+	        {{#each @root.ObsidianRules.EFFECT_TARGETS_AREA}}
+		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Target-' this}}</option>
+	        {{/each}}
+        {{/select}}
+      </select>
     </div>
   </div>
 </fieldset>

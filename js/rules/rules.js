@@ -15,7 +15,7 @@ OBSIDIAN.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'
 OBSIDIAN.Rules.ATTACK_TYPES = ['melee', 'ranged'];
 OBSIDIAN.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 OBSIDIAN.Rules.COIN_WEIGHT = 0.02;
-OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'gear'];
+OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear'];
 OBSIDIAN.Rules.CLASSES = [
 	'art', 'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz',
 	'custom'
@@ -85,6 +85,7 @@ OBSIDIAN.Rules.CLASS_SPELL_PREP = {
 };
 
 OBSIDIAN.Rules.CLASS_RITUALS = {
+	art: 'prep',
 	brd: 'prep',
 	clr: 'prep',
 	drd: 'prep',
@@ -106,7 +107,8 @@ OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
 
 OBSIDIAN.Rules.EFFECT_RESOURCE_RECHARGE_CALC = ['all', 'formula'];
 OBSIDIAN.Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];
-OBSIDIAN.Rules.EFFECT_TARGETS = ['individual'];
+OBSIDIAN.Rules.EFFECT_TARGETS = ['individual', 'area'];
+OBSIDIAN.Rules.EFFECT_TARGETS_AREA = ['cone', 'cube', 'cylinder', 'line', 'sphere'];
 OBSIDIAN.Rules.FEAT_ACTION = ['action', 'ba', 'react', 'trigger'];
 OBSIDIAN.Rules.FEAT_ACTIVE = ['active', 'passive'];
 OBSIDIAN.Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
