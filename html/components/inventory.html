@@ -66,13 +66,13 @@
 		</div>
 		<div class="obsidian-col-type">
 			<div class="obsidian-icon obsidian-icon-
-				{{~#if (eq type 'equipment')~}}
+				{{~#if (or (eq type 'equipment') (eq type 'consumable'))~}}
 					{{~flags.obsidian.subtype~}}
 				{{~else~}}
 					{{~type~}}
 				{{~/if~}}
 			" title="
-				{{~#if (eq type 'equipment')~}}
+				{{~#if (or (eq type 'equipment') (eq type 'consumable'))~}}
 					{{i18n-join 'OBSIDIAN.ItemType-' flags.obsidian.subtype}}
 				{{~else~}}
 					{{i18n-join 'OBSIDIAN.ItemType-' type}}

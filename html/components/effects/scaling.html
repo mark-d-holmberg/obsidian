@@ -7,7 +7,7 @@
 			  <select name="{{prefix}}.ref">
 				  {{#select ref}}
 					  {{#each @root.item.flags.obsidian.effects}}
-						  <option value="{{uuid}}">{{label}}</option>
+						  <option value="{{uuid}}">{{effect-label this}}</option>
 					  {{/each}}
 				  {{/select}}
 			  </select>

@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Prepare} from '../rules/prepare.js';
 import {Effect} from '../module/effect.js';
+import {getEffectLabel} from '../rules/effects.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('badge', function (badge) {
@@ -40,6 +41,10 @@ export function registerHandlebarHelpers () {
 
 	Handlebars.registerHelper('exists', function (arg) {
 		return arg != null;
+	});
+
+	Handlebars.registerHelper('effect-label', function (effect) {
+		return getEffectLabel(effect);
 	});
 
 	Handlebars.registerHelper('fancy-checkbox', function (...args) {

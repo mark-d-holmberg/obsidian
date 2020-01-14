@@ -87,6 +87,11 @@ export function prepareEffects (actorData) {
 					}
 				} else if (component.type === 'target') {
 					targetComponent = component;
+					if (flags.notes && component.target === 'area') {
+						flags.notes.push(
+							`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
+							+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
+					}
 				} else if (component.type === 'scaling') {
 					effect.scalingComponent = component;
 				} else if (component.type === 'consume') {
@@ -104,7 +109,7 @@ export function prepareEffects (actorData) {
 				}
 			}
 
-			if (targetComponent) {
+			if (targetComponent && targetComponent.target === 'individual') {
 				effect.components
 					.filter(c => c.type === 'attack')
 					.forEach(atk => atk.targets = targetComponent.count);
@@ -158,7 +163,8 @@ export function prepareEffects (actorData) {
 		} else if (item.obsidian.damage.length) {
 			const targetComponents =
 				effects.filter(effect => !effect.isScaling || effect.selfScaling)
-					.flatMap(effect => effect.components).filter(c => c.type === 'target');
+					.flatMap(effect => effect.components)
+					.filter(c => c.type === 'target' && c.target === 'individual');
 
 			if (targetComponents.length && flags.notes) {
 				flags.notes.push(
@@ -179,7 +185,7 @@ export function prepareEffects (actorData) {
 	}
 }
 
-function getEffectLabel (effect) {
+export function getEffectLabel (effect) {
 	if (effect.name.length) {
 		return effect.name;
 	}

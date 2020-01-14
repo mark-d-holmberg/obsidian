@@ -144,6 +144,7 @@
 	background-image: url('../img/cloak.svg');
 }
 
+.obsidian-icon-potion,
 .obsidian-icon-consumable {
 	background-image: url('../img/consumable.svg');
 }
@@ -171,6 +172,26 @@
 .obsidian-icon-gear,
 .obsidian-icon-loot {
 	background-image: url('../img/gear.svg');
+}
+
+.obsidian-icon-ammo {
+	background-image: url('../img/ammo.svg');
+}
+
+.obsidian-icon-scroll {
+	background-image: url('../img/scroll.svg');
+}
+
+.obsidian-icon-wand {
+	background-image: url('../img/wand.svg');
+}
+
+.obsidian-icon-rod {
+	background-image: url('../img/rod.svg');
+}
+
+.obsidian-icon-trinket {
+	background-image: url('../img/trinket.svg');
 }
 
 .obsidian-icon-effect {
