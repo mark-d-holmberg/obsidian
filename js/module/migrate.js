@@ -143,7 +143,7 @@ export const Migrate = {
 			data.flags.obsidian.armour = true;
 		}
 
-		if (data.data.armor.dex != '0' && data.data.armor.type !== 'shield') {
+		if (data.data.armor.dex !== 0 && data.data.armor.type !== 'shield') {
 			data.flags.obsidian.addDex = true;
 		}
 
@@ -151,7 +151,7 @@ export const Migrate = {
 			data.data.armor.dex = String(data.flags.obsidian.maxDex);
 		}
 
-		data.data.armor.value += data.flags.obsidian.magic;
+		data.data.armor.value += data.flags.obsidian.magic || 0;
 		if (isNaN(Number(data.data.strength))) {
 			data.data.strength = '';
 		}
