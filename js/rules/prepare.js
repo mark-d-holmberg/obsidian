@@ -254,8 +254,8 @@ export const Prepare = {
 					+ actorData.flags.obsidian.attributes.ac.mod;
 
 				if (bestArmour.flags.obsidian.addDex) {
-					let maxDex = bestArmour.flags.obsidian.maxDex;
-					if (maxDex === undefined || maxDex === '') {
+					let maxDex = bestArmour.data.armor.dex;
+					if (OBSIDIAN.notDefinedOrEmpty(maxDex)) {
 						maxDex = Infinity;
 					} else {
 						maxDex = Number(maxDex);

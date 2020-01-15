@@ -29,7 +29,7 @@ export const Effect = {
 			uuid: OBSIDIAN.uuid(),
 			attack: 'melee',
 			category: 'weapon',
-			ability: 'str',
+			ability: '',
 			bonus: 0,
 			crit: 20,
 			proficient: false

@@ -3,6 +3,22 @@ import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
 import {OBSIDIAN} from '../rules/rules.js';
 import {Effect} from './effect.js';
 
+const CONVERT = {
+	activation: {action: 'action', bonus: 'ba', reaction: 'react'},
+	damage: {
+		bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
+		force: 'frc', lightning: 'lig', necrotic: 'ncr', poison: 'psn', psychic: 'psy',
+		radiant: 'rad', thunder: 'thn'
+	},
+	recharge: {sr: 'short', lr: 'long', day: 'dawn'},
+	validTargetTypes: new Set(['creature', 'object', 'sphere', 'cylinder', 'cone', 'cube', 'line'])
+};
+
+const OPERATORS = {
+	'+': (a, b) => a + b,
+	'-': (a, b) => a - b
+};
+
 export const Migrate = {
 	convertActor: function (data) {
 		if (!data.flags) {
@@ -60,6 +76,17 @@ export const Migrate = {
 			} else if (data.type === 'weapon') {
 				Migrate.convertWeapon(data);
 			}
+
+			Migrate.core.convertActivation(data);
+			Migrate.core.convertAttack(data);
+		}
+
+		if (data.type === 'weapon'
+			&& (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length))
+		{
+			data.flags.obsidian.effects = [Effect.create()];
+			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
+			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
 
 		return data;
@@ -108,6 +135,22 @@ export const Migrate = {
 	},
 
 	convertEquipment: function (data) {
+		if (!data.data.armor) {
+			return data;
+		}
+
+		if (data.data.armor.value) {
+			data.flags.obsidian.armour = true;
+		}
+
+		if (data.data.armor.dex != '0' && data.data.armor.type !== 'shield') {
+			data.flags.obsidian.addDex = true;
+		}
+
+		if (data.flags.obsidian.maxDex !== undefined) {
+			data.data.armor.dex = String(data.flags.obsidian.maxDex);
+		}
+
 		data.data.armor.value += data.flags.obsidian.magic;
 		if (isNaN(Number(data.data.strength))) {
 			data.data.strength = '';
@@ -291,11 +334,183 @@ export const Migrate = {
 		if (data.flags.obsidian.tags.custom && data.flags.obsidian.tags.custom.length) {
 			data.flags.obsidian.tags.custom = data.flags.obsidian.tags.custom.join(', ');
 		}
+	}
+};
 
-		if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
-			data.flags.obsidian.effects = [Effect.create()];
-			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
-			data.flags.obsidian.effects[0].components[0].proficient = true;
+Migrate.core = {
+	convertActivation: function (data) {
+		if (data.type === 'feat') {
+			const activation = CONVERT.activation[data.data.activation.type];
+			if (activation) {
+				data.flags.obsidian.active = 'active';
+				data.flags.obsidian.action = activation;
+			}
+		}
+
+		if (data.data.target.value && CONVERT.validTargetTypes.has(data.data.target.type)) {
+			const target = data.data.target;
+			const effect = getPrimaryEffect(data);
+			const component = Effect.newTarget();
+			effect.components.push(component);
+
+			if (target.type === 'creature' || target.type === 'object') {
+				component.count = target.value;
+			} else {
+				component.target = 'area';
+				component.area = target.type;
+				component.distance = target.value;
+			}
+		}
+
+		if ((data.data.uses.max || 0) > 0) {
+			const uses = data.data.uses;
+			const effect = getPrimaryEffect(data);
+			const component = Effect.newResource();
+			effect.components.push(component);
+
+			if (!effect.name.length) {
+				if (uses.per === 'charges') {
+					effect.name = game.i18n.localize('OBSIDIAN.Charges');
+				} else {
+					effect.name = game.i18n.localize('OBSIDIAN.Uses');
+				}
+			}
+
+			component.fixed = uses.max;
+			component.remaining = uses.max - (uses.value || 0);
+
+			if (CONVERT.recharge[uses.per]) {
+				component.recharge.time = CONVERT.recharge[uses.per];
+			}
+		}
+	},
+
+	convertAttack: function (data) {
+		if (OBSIDIAN.notDefinedOrEmpty(data.data.actionType)) {
+			return;
+		}
+
+		let spell = false;
+		const action = data.data.actionType;
+
+		if (action.endsWith('ak')) {
+			const effect = getPrimaryEffect(data);
+			const component = Effect.newAttack();
+			effect.components.push(component);
+
+			if (action[0] === 'r') {
+				component.attack = 'ranged';
+			}
+
+			if (action[1] === 's') {
+				spell = true;
+				component.category = 'spell';
+				if (OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
+					component.ability = 'spell';
+				}
+			}
+
+			if (!OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
+				component.ability = data.data.ability;
+			}
+
+			component.bonus = data.data.attackBonus || 0;
+			component.proficient = !!data.data.proficient;
+		}
+
+		const damage = data.data.damage;
+		if ((damage.parts && damage.parts.length && damage.parts.some(dmg => dmg[0].length))
+			|| (damage.versatile && damage.versatile.length)
+			|| (data.data.formula && data.data.formula.length))
+		{
+			const effect = getPrimaryEffect(data);
+			if (damage.parts && damage.parts.length) {
+				effect.components =
+					effect.components.concat(
+						damage.parts
+							.map(dmg => Migrate.core.convertDamage(dmg, spell))
+							.filter(dmg => dmg));
+			}
+
+			if (damage.versatile && damage.versatile.length) {
+				const versatile = Migrate.core.convertDamage(damage.versatile);
+				versatile.versatile = true;
+				effect.components.push(versatile);
+			}
+
+			if (data.data.formula && data.data.formula.length) {
+				effect.components.push(Migrate.core.convertDamage(data.data.formula));
+			}
+		}
+
+		const save = data.data.save || {};
+		if (!OBSIDIAN.notDefinedOrEmpty(save.ability)) {
+			const effect = getPrimaryEffect(data);
+			const component = Effect.newSave();
+			effect.components.push(component);
+			component.target = save.ability;
+
+			if (save.scaling === 'flat') {
+				component.fixed = save.dc;
+			} else {
+				component.calc = 'formula';
+				component.ability = save.scaling;
+				component.bonus = 8;
+			}
+		}
+	},
+
+	convertDamage: function (dmg, spell = false) {
+		let formula = dmg;
+		if (Array.isArray(dmg)) {
+			formula = dmg[0];
+		}
+
+		if (!formula.length) {
+			return;
+		}
+
+		const component = Effect.newDamage();
+		if (Array.isArray(dmg) && CONVERT.damage[dmg[1]]) {
+			component.damage = CONVERT.damage[dmg[1]];
+		}
+
+		const terms = Roll.prototype._getTerms(formula);
+		const dice = terms.find(term => /^\d+d\d+$/.test(term));
+		const mod = terms.some(term => term === '@mod');
+
+		if (dice) {
+			const d = dice.split('d');
+			component.ndice = Number(d[0]);
+			component.die = Number(d[1]);
+		} else {
+			component.calc = 'fixed';
+		}
+
+		if (mod) {
+			component.ability = 'str';
+			if (spell) {
+				component.ability = 'spell';
+			}
+		}
+
+		let op = '+';
+		let total = 0;
+
+		for (let i = 0; i < terms.length; i++) {
+			const term = terms[i];
+			if (term === dice || term.startsWith('@')) {
+				continue;
+			}
+
+			if (term === '+' || term === '-') {
+				op = term;
+				continue;
+			}
+
+			if (/^\d+$/.test(term)) {
+				total = OPERATORS[op](total, Number(term));
+			}
 		}
 	}
 };
@@ -575,4 +790,12 @@ export function checkVersion () {
 	if (currentVersion < Schema.VERSION) {
 		launchMigrationDialog();
 	}
+}
+
+function getPrimaryEffect (data) {
+	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
+		data.flags.obsidian.effects = [Effect.create()];
+	}
+
+	return data.flags.obsidian.effects[0];
 }

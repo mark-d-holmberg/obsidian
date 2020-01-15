@@ -24,6 +24,7 @@
 		<div class="obsidian-fullwidth">
 			<select name="{{prefix}}.ability">
 				{{#select ability}}
+					<option value="">&mdash;</option>
 					{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
 					{{/each}}

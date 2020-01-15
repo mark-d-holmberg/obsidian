@@ -845,13 +845,15 @@ export const Rolls = {
 			...extraMods
 		];
 
-		if (hit.ability === 'spell') {
-			mods.push({mod: hit.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
-		} else {
-			mods.push({
-				mod: data.abilities[hit.ability].mod,
-				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${hit.ability}`)
-			});
+		if (!OBSIDIAN.notDefinedOrEmpty(hit.ability)) {
+			if (hit.ability === 'spell') {
+				mods.push({mod: hit.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
+			} else {
+				mods.push({
+					mod: data.abilities[hit.ability].mod,
+					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${hit.ability}`)
+				});
+			}
 		}
 
 		if (hit.proficient) {
