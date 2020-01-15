@@ -87,7 +87,7 @@ export function prepareEffects (actorData) {
 					}
 				} else if (component.type === 'target') {
 					targetComponent = component;
-					if (flags.notes && component.target === 'area') {
+					if (flags.notes && component.target === 'area' && !effect.isScaling) {
 						flags.notes.push(
 							`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
 							+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));

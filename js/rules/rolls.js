@@ -109,7 +109,9 @@ export const Rolls = {
 
 		let scaledTargets = 0;
 		if (scaledAmount > 0 && scaling) {
-			const targetScaling = scaling.components.find(c => c.type === 'target');
+			const targetScaling =
+				scaling.components.find(c => c.type === 'target' && c.target === 'individual');
+
 			if (targetScaling) {
 				scaledTargets = Math.floor(targetScaling.count * scaledAmount);
 			}
@@ -734,7 +736,9 @@ export const Rolls = {
 
 			let scaledTargets = 0;
 			if (upcastAmount > 0 && scaling) {
-				const targetScaling = scaling.components.find(c => c.type === 'target');
+				const targetScaling =
+					scaling.components.find(c => c.type === 'target' && c.target === 'individual');
+
 				if (targetScaling) {
 					scaledTargets = Math.floor(targetScaling.count * upcastAmount);
 				}
