@@ -11,6 +11,10 @@ const CONVERT = {
 		radiant: 'rad', thunder: 'thn'
 	},
 	recharge: {sr: 'short', lr: 'long', day: 'dawn'},
+	tags: {
+		ver: 'versatile', hvy: 'heavy', fin: 'finesse', lgt: 'light', lod: 'loading', rch: 'reach',
+		thr: 'thrown', two: 'twohanded'
+	},
 	validTargetTypes: new Set(['creature', 'object', 'sphere', 'cylinder', 'cone', 'cube', 'line'])
 };
 
@@ -334,6 +338,29 @@ export const Migrate = {
 		if (data.flags.obsidian.tags.custom && data.flags.obsidian.tags.custom.length) {
 			data.flags.obsidian.tags.custom = data.flags.obsidian.tags.custom.join(', ');
 		}
+
+		if (data.data.weaponType) {
+			const type = data.data.weaponType;
+			if (type.startsWith('martial')) {
+				data.flags.obsidian.category = 'martial';
+			}
+
+			if (type === 'natural') {
+				data.flags.obsidian.category = 'unarmed';
+			}
+
+			if (type.endsWith('R')) {
+				data.flags.obsidian.type = 'ranged';
+			}
+		}
+
+		if (data.data.properties) {
+			Object.entries(data.data.properties)
+				.filter(([_, v]) => v)
+				.map(([k, _]) => CONVERT.tags[k])
+				.filter(tag => tag)
+				.forEach(tag => data.flags.obsidian.tags[tag] = true);
+		}
 	}
 };
 
@@ -391,6 +418,7 @@ Migrate.core = {
 		}
 
 		let spell = false;
+		let ability = 'str';
 		const action = data.data.actionType;
 
 		if (action.endsWith('ak')) {
@@ -411,6 +439,7 @@ Migrate.core = {
 			}
 
 			if (!OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
+				ability = data.data.ability;
 				component.ability = data.data.ability;
 			}
 
@@ -428,18 +457,24 @@ Migrate.core = {
 				effect.components =
 					effect.components.concat(
 						damage.parts
-							.map(dmg => Migrate.core.convertDamage(dmg, spell))
+							.map(dmg => Migrate.core.convertDamage(dmg, ability, spell))
 							.filter(dmg => dmg));
 			}
 
 			if (damage.versatile && damage.versatile.length) {
-				const versatile = Migrate.core.convertDamage(damage.versatile);
+				const versatile = Migrate.core.convertDamage(damage.versatile, ability);
+				const firstDamage = effect.components.filter(dmg => dmg.type === 'damage')[0];
 				versatile.versatile = true;
+
+				if (firstDamage) {
+					versatile.damage = firstDamage.damage;
+				}
+
 				effect.components.push(versatile);
 			}
 
 			if (data.data.formula && data.data.formula.length) {
-				effect.components.push(Migrate.core.convertDamage(data.data.formula));
+				effect.components.push(Migrate.core.convertDamage(data.data.formula, ability));
 			}
 		}
 
@@ -460,7 +495,7 @@ Migrate.core = {
 		}
 	},
 
-	convertDamage: function (dmg, spell = false) {
+	convertDamage: function (dmg, ability, spell = false) {
 		let formula = dmg;
 		if (Array.isArray(dmg)) {
 			formula = dmg[0];
@@ -488,7 +523,7 @@ Migrate.core = {
 		}
 
 		if (mod) {
-			component.ability = 'str';
+			component.ability = ability;
 			if (spell) {
 				component.ability = 'spell';
 			}
@@ -512,6 +547,9 @@ Migrate.core = {
 				total = OPERATORS[op](total, Number(term));
 			}
 		}
+
+		component.bonus = total;
+		return component;
 	}
 };
 
