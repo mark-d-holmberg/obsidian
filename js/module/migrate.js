@@ -5,12 +5,22 @@ import {Effect} from './effect.js';
 
 const CONVERT = {
 	activation: {action: 'action', bonus: 'ba', reaction: 'react'},
+	castTime: {
+		action: 'action', bonus: 'ba', reaction: 'react', minute: 'min', hour: 'hour',
+		special: 'special'
+	},
 	damage: {
 		bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
 		force: 'frc', lightning: 'lig', necrotic: 'ncr', poison: 'psn', psychic: 'psy',
 		radiant: 'rad', thunder: 'thn'
 	},
+	duration: {
+		inst: 'instant', perm: 'dispel', spec: 'special', round: 'round', minute: 'min',
+		hour: 'hour', day: 'day'
+	},
+	range: {self: 'self', touch: 'touch', ft: 'short', mi: 'long', any: 'unlimited'},
 	recharge: {sr: 'short', lr: 'long', day: 'dawn'},
+	spellComponents: {vocal: 'v', somatic: 's', material: 'm'},
 	tags: {
 		ver: 'versatile', hvy: 'heavy', fin: 'finesse', lgt: 'light', lod: 'loading', rch: 'reach',
 		thr: 'thrown', two: 'twohanded'
@@ -40,8 +50,10 @@ export const Migrate = {
 			data.flags = {};
 		}
 
+		let source = 'obsidian';
 		if (!data.flags.obsidian) {
 			data.flags.obsidian = {};
+			source = 'core';
 		}
 
 		if (data.type === 'class') {
@@ -70,19 +82,21 @@ export const Migrate = {
 
 		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
 			if (data.type === 'consumable') {
-				Migrate.convertConsumable(data);
+				Migrate.convertConsumable(data, source);
 			} else if (data.type === 'equipment') {
-				Migrate.convertEquipment(data);
+				Migrate.convertEquipment(data, source);
 			} else if (data.type === 'feat') {
-				Migrate.convertFeature(data, actor);
+				Migrate.convertFeature(data, source, actor);
 			} else if (data.type === 'spell') {
-				Migrate.convertSpell(data, actor);
+				Migrate.convertSpell(data, source, actor);
 			} else if (data.type === 'weapon') {
-				Migrate.convertWeapon(data);
+				Migrate.convertWeapon(data, source);
 			}
 
-			Migrate.core.convertActivation(data);
-			Migrate.core.convertAttack(data);
+			if (source === 'core') {
+				Migrate.core.convertActivation(data);
+				Migrate.core.convertAttack(data);
+			}
 		}
 
 		if (data.type === 'weapon'
@@ -138,17 +152,9 @@ export const Migrate = {
 		}
 	},
 
-	convertEquipment: function (data) {
+	convertEquipment: function (data, source) {
 		if (!data.data.armor) {
-			return data;
-		}
-
-		if (data.data.armor.value) {
-			data.flags.obsidian.armour = true;
-		}
-
-		if (data.data.armor.dex !== 0 && data.data.armor.type !== 'shield') {
-			data.flags.obsidian.addDex = true;
+			return;
 		}
 
 		if (data.flags.obsidian.maxDex !== undefined) {
@@ -159,9 +165,21 @@ export const Migrate = {
 		if (isNaN(Number(data.data.strength))) {
 			data.data.strength = '';
 		}
+
+		if (source !== 'core') {
+			return;
+		}
+
+		if (data.data.armor.value) {
+			data.flags.obsidian.armour = true;
+		}
+
+		if (data.data.armor.dex !== 0 && data.data.armor.type !== 'shield') {
+			data.flags.obsidian.addDex = true;
+		}
 	},
 
-	convertFeature: function (data, actor) {
+	convertFeature: function (data, source, actor) {
 		const classMap = new Map();
 		if (actor) {
 			actor.data.items
@@ -203,7 +221,7 @@ export const Migrate = {
 		}
 	},
 
-	convertSpell: function (data, actor) {
+	convertSpell: function (data, source, actor) {
 		const classMap = new Map();
 		if (actor) {
 			actor.data.items
@@ -216,6 +234,9 @@ export const Migrate = {
 		const spellEffect = Effect.create();
 		const scalingEffect = Effect.create();
 		const resourceEffect = Effect.create();
+
+		spellEffect.name = game.i18n.localize('OBSIDIAN.Spell');
+		scalingEffect.name = game.i18n.localize('OBSIDIAN.Scaling');
 
 		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
 			spellEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
@@ -279,9 +300,24 @@ export const Migrate = {
 				data.flags.obsidian.source.class = cls._id;
 			}
 		}
+
+		if (data.flags.obsidian.time && typeof data.flags.obsidian.time.n === 'string') {
+			data.flags.obsidian.time.n = Number(data.flags.obsidian.time.n);
+			if (isNaN(data.flags.obsidian.time.n)) {
+				data.flags.obsidian.time.n = 0;
+			}
+		}
+
+		if (data.data.components && source === 'core') {
+			Object.entries(data.data.components)
+				.filter(([_, v]) => v)
+				.map(([k, _]) => CONVERT.spellComponents[k])
+				.filter(component => component)
+				.forEach(component => data.flags.obsidian.components[component] = true);
+		}
 	},
 
-	convertWeapon: function (data) {
+	convertWeapon: function (data, source) {
 		if (data.flags.obsidian.type === 'unarmed') {
 			data.flags.obsidian.type = 'melee';
 			data.flags.obsidian.category = 'unarmed';
@@ -339,6 +375,10 @@ export const Migrate = {
 			data.flags.obsidian.tags.custom = data.flags.obsidian.tags.custom.join(', ');
 		}
 
+		if (source !== 'core') {
+			return;
+		}
+
 		if (data.data.weaponType) {
 			const type = data.data.weaponType;
 			if (type.startsWith('martial')) {
@@ -372,11 +412,37 @@ Migrate.core = {
 				data.flags.obsidian.active = 'active';
 				data.flags.obsidian.action = activation;
 			}
+		} else if (data.type === 'spell') {
+			const activation = CONVERT.castTime[data.data.activation.type];
+			if (activation) {
+				data.flags.obsidian.time.type = activation;
+			}
+
+			const range = CONVERT.range[data.data.range.units];
+			if (range) {
+				data.flags.obsidian.range.type = range;
+			}
+
+			const duration = CONVERT.duration[data.data.duration.units];
+			if (duration) {
+				data.flags.obsidian.duration.type = duration;
+			}
+
+			data.flags.obsidian.time.n = data.data.activation.cost;
+			data.flags.obsidian.time.react = data.data.activation.condition;
+			data.flags.obsidian.range.n = data.data.range.value;
+			data.flags.obsidian.duration.n = data.data.duration.value;
 		}
 
 		if (data.data.target.value && CONVERT.validTargetTypes.has(data.data.target.type)) {
+			let effect;
+			if (data.type === 'spell') {
+				effect = getSpellEffect(data);
+			} else {
+				effect = getPrimaryEffect(data);
+			}
+
 			const target = data.data.target;
-			const effect = getPrimaryEffect(data);
 			const component = Effect.newTarget();
 			effect.components.push(component);
 
@@ -390,8 +456,15 @@ Migrate.core = {
 		}
 
 		if ((data.data.uses.max || 0) > 0) {
+			let effect;
+			if (data.type === 'spell') {
+				effect = Effect.create();
+				data.flags.obsidian.effects.push(effect);
+			} else {
+				effect = getPrimaryEffect(data);
+			}
+
 			const uses = data.data.uses;
-			const effect = getPrimaryEffect(data);
 			const component = Effect.newResource();
 			effect.components.push(component);
 
@@ -422,7 +495,13 @@ Migrate.core = {
 		const action = data.data.actionType;
 
 		if (action.endsWith('ak')) {
-			const effect = getPrimaryEffect(data);
+			let effect;
+			if (data.type === 'spell') {
+				effect = getSpellEffect(data);
+			} else {
+				effect = getPrimaryEffect(data);
+			}
+
 			const component = Effect.newAttack();
 			effect.components.push(component);
 
@@ -452,7 +531,13 @@ Migrate.core = {
 			|| (damage.versatile && damage.versatile.length)
 			|| (data.data.formula && data.data.formula.length))
 		{
-			const effect = getPrimaryEffect(data);
+			let effect;
+			if (data.type === 'spell') {
+				effect = getSpellEffect(data);
+			} else {
+				effect = getPrimaryEffect(data);
+			}
+
 			if (damage.parts && damage.parts.length) {
 				effect.components =
 					effect.components.concat(
@@ -480,7 +565,13 @@ Migrate.core = {
 
 		const save = data.data.save || {};
 		if (!OBSIDIAN.notDefinedOrEmpty(save.ability)) {
-			const effect = getPrimaryEffect(data);
+			let effect;
+			if (data.type === 'spell') {
+				effect = getSpellEffect(data);
+			} else {
+				effect = getPrimaryEffect(data);
+			}
+
 			const component = Effect.newSave();
 			effect.components.push(component);
 			component.target = save.ability;
@@ -491,6 +582,35 @@ Migrate.core = {
 				component.calc = 'formula';
 				component.ability = save.scaling;
 				component.bonus = 8;
+			}
+		}
+
+		if (data.type === 'spell'
+			&& data.data.scaling.mode !== 'none'
+			&& !OBSIDIAN.notDefinedOrEmpty(data.data.scaling.formula))
+		{
+			const spellEffect = getSpellEffect(data);
+			const scalingEffect = getScalingEffect(data);
+			const scaling = scalingEffect.components.find(c => c.type === 'scaling');
+			scaling.ref = spellEffect.uuid;
+
+			if (data.data.level < 1) {
+				scaling.method = 'cantrip';
+			}
+
+			const component = Effect.newDamage();
+			scalingEffect.components.push(component);
+
+			const existingDamage = spellEffect.components.find(c => c.type === 'damage');
+			if (existingDamage) {
+				component.damage = existingDamage.damage;
+			}
+
+			const diceMatches = /\b(\d+d\d+)\b/.exec(data.data.scaling.formula);
+			if (diceMatches) {
+				const dice = diceMatches[1].split('d');
+				component.ndice = Number(dice[0]);
+				component.die = Number(dice[1]);
 			}
 		}
 	},
@@ -836,4 +956,43 @@ function getPrimaryEffect (data) {
 	}
 
 	return data.flags.obsidian.effects[0];
+}
+
+function getSpellEffect (data) {
+	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
+		data.flags.obsidian.effects = [Effect.create()];
+		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.Spell');
+	}
+
+	let effect =
+		data.flags.obsidian.effects.find(e =>
+			!e.components.some(c => c.type === 'scaling' || c.type === 'resource'));
+
+	if (!effect) {
+		effect = Effect.create();
+		effect.name = game.i18n.localize('OBSIDIAN.Spell');
+		data.flags.obsidian.effects.push(effect);
+	}
+
+	return effect;
+}
+
+function getScalingEffect (data) {
+	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
+		data.flags.obsidian.effects = [Effect.create()];
+		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.Scaling');
+		data.flags.obsidian.effects[0].components.push(Effect.newScaling());
+	}
+
+	let effect =
+		data.flags.obsidian.effects.find(e => e.components.some(c => c.type === 'scaling'));
+
+	if (!effect) {
+		effect = Effect.create();
+		effect.name = game.i18n.localize('OBSIDIAN.Scaling');
+		effect.components.push(Effect.newScaling());
+		data.flags.obsidian.effects.push(effect);
+	}
+
+	return effect;
 }
