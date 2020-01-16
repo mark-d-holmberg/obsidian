@@ -41,10 +41,10 @@ export function prepareSpells (actorData) {
 				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 				.join(', ');
 
-		if (flags.components.m && spell.data.materials.length > 0) {
+		if (flags.components.m && spell.data.materials.value.length > 0) {
 			flags.notes.push(
 				`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: `
-				+ spell.data.materials);
+				+ spell.data.materials.value);
 		}
 
 		if (flags.time.type === 'react' && flags.time.react.length > 0) {

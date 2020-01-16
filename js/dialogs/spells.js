@@ -258,9 +258,22 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			if (exists) {
 				await this.parent.actor.deleteEmbeddedEntity('OwnedItem', exists._id);
 			} else {
-				flags.source.type = 'class';
-				flags.source.class = classID;
-				await this.parent.actor.createEmbeddedEntity('OwnedItem', duplicate(spell));
+				spell = duplicate(spell);
+				if (!spell.flags) {
+					spell.flags = {};
+				}
+
+				if (!spell.flags.obsidian) {
+					spell.flags.obsidian = {};
+				}
+
+				if (!spell.flags.obsidian.source) {
+					spell.flags.obsidian.source = {};
+				}
+
+				spell.flags.obsidian.source.type = 'class';
+				spell.flags.obsidian.source.class = classID;
+				await this.parent.actor.createEmbeddedEntity('OwnedItem', spell);
 			}
 		}
 

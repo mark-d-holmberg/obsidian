@@ -42,6 +42,7 @@ export const Migrate = {
 		data.flags.obsidian =
 			mergeObject(Schema.Actor, data.flags.obsidian || {}, {inplace: false});
 
+		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
 
@@ -56,11 +57,19 @@ export const Migrate = {
 			source = 'core';
 		}
 
-		if (data.type === 'class') {
+		if (data.type === 'spell' && !data.flags.obsidian.components) {
+			// This is an awkward case where we actually attach some flags to
+			// spells when they come in via 'Manage Spells', so our usual
+			// detection for whether an item is from core or is already
+			// obsidian-enriched fails.
+			source = 'core';
+		}
+
+		if (data.type === 'class' && source === 'core') {
 			Migrate.convertClass(data);
 		} else if (data.type === 'consumable') {
 			data.flags.obsidian =
-				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false})
+				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false});
 		} else if (data.type === 'backpack') {
 			data.flags.obsidian =
 				mergeObject(Schema.Container, data.flags.obsidian || {}, {inplace: false});
@@ -78,6 +87,10 @@ export const Migrate = {
 				mergeObject(Schema.Weapon, data.flags.obsidian || {}, {inplace: false});
 		} else if (data.type === 'loot' || data.type === 'tool') {
 			data.flags.obsidian = {};
+		}
+
+		if (!data.flags.obsidian.effects) {
+			data.flags.obsidian.effects = [];
 		}
 
 		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
@@ -107,19 +120,22 @@ export const Migrate = {
 			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
 
+		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
 
 	convertClass: function (data) {
-		OBSIDIAN.Rules.CLASSES.forEach(cls => {
-			if (data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`)) {
-				data.name = cls;
-			} else {
-				const name = data.name;
-				data.name = 'custom';
-				data.flags.obsidian.custom = name;
-			}
-		});
+		const official =
+			OBSIDIAN.Rules.CLASSES.find(cls =>
+				data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`));
+
+		if (official) {
+			data.name = official;
+		} else {
+			const name = data.name;
+			data.name = 'custom';
+			data.flags.obsidian.custom = name;
+		}
 
 		data.flags.obsidian.hd = ObsidianHeaderDetailsDialog.determineHD(data.name);
 		data.flags.obsidian.spellcasting =
@@ -244,7 +260,7 @@ export const Migrate = {
 
 		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
 			const attack = data.flags.obsidian.hit;
-			spellEffect.components.push(Migrate.v1.convertAttack(attack, attack.type, 'spell'));
+			spellEffect.components.push(Migrate.v1.convertAttack(attack, attack.attack, 'spell'));
 
 			if (attack.count > 1) {
 				const component = Effect.newTarget();
@@ -261,11 +277,10 @@ export const Migrate = {
 			data.flags.obsidian.effects.push(spellEffect);
 		}
 
-		if ((data.flags.obsidian.upcast && data.flags.obsidian.upcast.enabled)
-			|| data.data.level < 1)
+		if (data.flags.obsidian.upcast
+			&& (data.flags.obsidian.upcast.enabled || data.data.level < 1))
 		{
 			const upcast = data.flags.obsidian.upcast;
-
 			if (upcast.natk > 0 && upcast.nlvl > 0) {
 				const component = Effect.newTarget();
 				scalingEffect.components.push(component);
@@ -407,34 +422,36 @@ export const Migrate = {
 Migrate.core = {
 	convertActivation: function (data) {
 		if (data.type === 'feat') {
-			const activation = CONVERT.activation[data.data.activation.type];
+			const activation = CONVERT.activation[getProperty(data.data, 'activation.type')];
 			if (activation) {
 				data.flags.obsidian.active = 'active';
 				data.flags.obsidian.action = activation;
 			}
 		} else if (data.type === 'spell') {
-			const activation = CONVERT.castTime[data.data.activation.type];
+			const activation = CONVERT.castTime[getProperty(data.data, 'activation.type')];
 			if (activation) {
 				data.flags.obsidian.time.type = activation;
 			}
 
-			const range = CONVERT.range[data.data.range.units];
+			const range = CONVERT.range[getProperty(data.data, 'range.units')];
 			if (range) {
 				data.flags.obsidian.range.type = range;
 			}
 
-			const duration = CONVERT.duration[data.data.duration.units];
+			const duration = CONVERT.duration[getProperty(data.data, 'duration.units')];
 			if (duration) {
 				data.flags.obsidian.duration.type = duration;
 			}
 
-			data.flags.obsidian.time.n = data.data.activation.cost;
-			data.flags.obsidian.time.react = data.data.activation.condition;
-			data.flags.obsidian.range.n = data.data.range.value;
-			data.flags.obsidian.duration.n = data.data.duration.value;
+			data.flags.obsidian.time.n = getProperty(data.data, 'activation.cost');
+			data.flags.obsidian.time.react = getProperty(data.data, 'activation.condition');
+			data.flags.obsidian.range.n = getProperty(data.data, 'range.value');
+			data.flags.obsidian.duration.n = getProperty(data.data, 'duration.value');
 		}
 
-		if (data.data.target.value && CONVERT.validTargetTypes.has(data.data.target.type)) {
+		if (getProperty(data.data, 'target.value')
+			&& CONVERT.validTargetTypes.has(getProperty(data.data, 'target.type')))
+		{
 			let effect;
 			if (data.type === 'spell') {
 				effect = getSpellEffect(data);
@@ -455,7 +472,7 @@ Migrate.core = {
 			}
 		}
 
-		if ((data.data.uses.max || 0) > 0) {
+		if ((getProperty(data.data, 'uses.max') || 0) > 0) {
 			let effect;
 			if (data.type === 'spell') {
 				effect = Effect.create();
@@ -494,7 +511,7 @@ Migrate.core = {
 		let ability = 'str';
 		const action = data.data.actionType;
 
-		if (action.endsWith('ak')) {
+		if (action && action.endsWith('ak')) {
 			let effect;
 			if (data.type === 'spell') {
 				effect = getSpellEffect(data);
@@ -526,7 +543,7 @@ Migrate.core = {
 			component.proficient = !!data.data.proficient;
 		}
 
-		const damage = data.data.damage;
+		const damage = data.data.damage || {};
 		if ((damage.parts && damage.parts.length && damage.parts.some(dmg => dmg[0].length))
 			|| (damage.versatile && damage.versatile.length)
 			|| (data.data.formula && data.data.formula.length))
@@ -586,8 +603,8 @@ Migrate.core = {
 		}
 
 		if (data.type === 'spell'
-			&& data.data.scaling.mode !== 'none'
-			&& !OBSIDIAN.notDefinedOrEmpty(data.data.scaling.formula))
+			&& getProperty(data.data, 'scaling.mode') !== 'none'
+			&& !OBSIDIAN.notDefinedOrEmpty(getProperty(data.data, 'scaling.formula')))
 		{
 			const spellEffect = getSpellEffect(data);
 			const scalingEffect = getScalingEffect(data);
@@ -799,8 +816,8 @@ async function beginMigration (html) {
 	try {
 		const updates = [];
 		for (item of game.items.entities) {
-			const update = Migrate.convertItem(item.data);
-			if (Object.keys(update) > 0) {
+			const update = Migrate.convertItem(duplicate(item.data));
+			if (Object.keys(update).length > 0) {
 				updates.push(update);
 			}
 
@@ -820,8 +837,8 @@ async function beginMigration (html) {
 		for (actor of game.actors.entities) {
 			const itemUpdates = [];
 			for (const item of actor.data.items) {
-				const update = Migrate.convertItem(item, actor);
-				if (Object.keys(update) > 0) {
+				const update = Migrate.convertItem(duplicate(item), actor);
+				if (Object.keys(update).length > 0) {
 					update._id = item._id;
 					itemUpdates.push(update);
 				}
@@ -834,8 +851,8 @@ async function beginMigration (html) {
 				await actor.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
 			}
 
-			const actorUpdate = Migrate.convertActor(actor.data);
-			if (Object.keys(actorUpdate) > 0) {
+			const actorUpdate = Migrate.convertActor(duplicate(actor.data));
+			if (Object.keys(actorUpdate).length > 0) {
 				actorUpdates.push(actorUpdate);
 			}
 		}
@@ -861,9 +878,20 @@ async function beginMigration (html) {
 					continue;
 				}
 
+				const actor = game.actors.get(token.actorId);
+				if (!actor) {
+					continue;
+				}
+
 				if (token.actorData.items && token.actorData.items.length) {
 					for (const item of token.actorData.items) {
-						items.push(mergeObject(item, Migrate.convertItem(item), {inplace: false}));
+						const realItem = actor.getEmbeddedEntity('OwnedItem', item._id);
+						if (!realItem) {
+							continue;
+						}
+
+						items.push(
+							Migrate.convertItem(mergeObject(realItem, item, {inplace: false})));
 					}
 
 					token.actorData.items = items;

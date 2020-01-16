@@ -10,7 +10,6 @@ import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Schema} from './module/schema.js';
 import {addSettingsHook} from './rules/spell-lists.js';
-import {Effect} from './module/effect.js';
 import {checkVersion, Migrate} from './module/migrate.js';
 
 runPatches();
@@ -71,13 +70,11 @@ addSettingsHook();
 function enrichActorFlags (data) {
 	if (data.type === 'character') {
 		mergeObject(data, Migrate.convertActor(data));
-		data.flags.obsidian.version = Schema.VERSION;
 	}
 }
 
 function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
-	data.flags.obsidian.version = Schema.VERSION;
 }
 
 Hooks.on('preCreateActor', (collection, data) => enrichActorFlags(data));
