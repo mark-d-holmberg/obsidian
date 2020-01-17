@@ -53,15 +53,21 @@
 		{{#if (not-empty actor.obsidian.spellbook.concentration)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-concentration">
-				<div class="obsidian-icon-flag obsidian-icon-concentration"
-				     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
+				<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-circle"
+				     title="{{localize 'OBSIDIAN.Concentration'}}">
+					<div class="obsidian-css-icon-shape"></div>
+					<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.ConcentrationAbbr'}}</div>
+				</div>
 			</li>
 		{{/if}}
 		{{#if (not-empty actor.obsidian.spellbook.rituals)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-ritual">
-				<div class="obsidian-icon-flag obsidian-icon-ritual"
-				     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
+				<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-circle"
+				     title="{{localize 'OBSIDIAN.Ritual'}}">
+					<div class="obsidian-css-icon-shape"></div>
+					<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.RitualAbbr'}}</div>
+				</div>
 			</li>
 		{{/if}}
 	</ul>

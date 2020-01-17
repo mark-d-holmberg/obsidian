@@ -13,13 +13,6 @@
 	margin-left: 5px;
 }
 
-.obsidian-icon-flag {
-	width: 14px;
-	height: 14px;
-	background: 50% transparent no-repeat;
-	background-size: 14px 14px;
-}
-
 .obsidian-icon-melee {
 	background-image: url('../img/melee.svg');
 }
@@ -90,14 +83,6 @@
 
 .obsidian-icon-hlg {
 	background-image: url('../img/healing.svg');
-}
-
-.obsidian-icon-concentration {
-	background-image: url('../img/concentration.svg');
-}
-
-.obsidian-icon-ritual {
-	background-image: url('../img/ritual.svg');
 }
 
 .obsidian-icon-cp {
@@ -285,9 +270,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.obsidian-css-icon-positive .obsidian-css-icon-label {
 	color: var(--bg);
 }
 
@@ -306,6 +288,37 @@
 .obsidian-css-icon-diamond .obsidian-css-icon-label {
 	width: 20px;
 	height: 19px;
+}
+
+.obsidian-css-icon-circle,
+.obsidian-css-icon-circle .obsidian-css-icon-shape,
+.obsidian-css-icon-circle .obsidian-css-icon-label {
+	width: 20px;
+	height: 20px;
+}
+
+.obsidian-css-icon-circle .obsidian-css-icon-label {
+	font-weight: bold;
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-sm,
+.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-shape,
+.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label {
+	width: 14px;
+	height: 14px;
+	transform: scale(1);
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-xs,
+.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-shape,
+.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-label {
+	width: 12px;
+	height: 12px;
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label,
+.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-label {
+	font-size: 11px;
 }
 
 .obsidian-css-icon-shape {
@@ -357,6 +370,10 @@
 	border-left: 10px solid transparent;
 }
 
+.obsidian-css-icon-circle .obsidian-css-icon-shape {
+	border-radius: 50%;
+}
+
 .obsidian-css-icon-positive.obsidian-css-icon-hexagon {
 	background: var(--positive);
 }
@@ -395,4 +412,12 @@
 
 .obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
 	border-top-color: var(--negative);
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-secondary .obsidian-css-icon-shape {
+	background: var(--text-secondary);
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-regular .obsidian-css-icon-shape {
+	background: var(--text-regular);
 }

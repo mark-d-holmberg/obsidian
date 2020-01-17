@@ -41,12 +41,18 @@
 				<div class="obsidian-col-spell">
 					<div class="obsidian-table-text">{{spell.name}}</div>
 					{{#if spell.data.components.concentration}}
-						<div class="obsidian-icon-flag obsidian-icon-concentration"
-						     title="{{localize 'OBSIDIAN.Concentration'}}"></div>
+						<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+						 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Concentration'}}">
+						  <div class="obsidian-css-icon-shape"></div>
+						  <div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.ConcentrationAbbr'}}</div>
+						</div>
 					{{/if}}
 					{{#if spell.data.components.ritual}}
-						<div class="obsidian-icon-flag obsidian-icon-ritual"
-						     title="{{localize 'OBSIDIAN.Ritual'}}"></div>
+						<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+						 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Ritual'}}">
+						  <div class="obsidian-css-icon-shape"></div>
+						  <div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.RitualAbbr'}}</div>
+						</div>
 					{{/if}}
 					<div class="obsidian-table-sub-text">
 						({{spell-level-format spell.data.level cantrip=true}})

@@ -23,8 +23,6 @@
 	--positive: #40d250;
 	--horizontal-space: 10px;
 	--vertical-space: 20px;
-	--img-secondary: brightness(0) saturate(100%) invert(33%) sepia(21%) saturate(398%) hue-rotate(185deg) brightness(94%) contrast(90%);
-	--img-regular: brightness(0) saturate(100%) invert(84%) sepia(23%) saturate(68%) hue-rotate(186deg) brightness(102%) contrast(81%);
 }
 
 .dnd5e.actor.obsidian-window {

@@ -730,13 +730,13 @@
 	padding: 4px 0 4px 4px;
 }
 
-.obsidian-icon-tab > div {
-	filter: var(--img-secondary);
+.obsidian-icon-tab .obsidian-css-icon-shape {
+	background: var(--text-secondary);
 }
 
-.obsidian-icon-tab:hover > div,
-.obsidian-icon-tab.active > div {
-	filter: none;
+.obsidian-icon-tab:hover .obsidian-css-icon-shape,
+.obsidian-icon-tab.active .obsidian-css-icon-shape {
+	background: var(--text-regular);
 }
 
 .obsidian-spell-level-tab.obsidian-active {
@@ -913,7 +913,7 @@
 	display: inline-block;
 }
 
-.obsidian-col-spell .obsidian-icon-flag {
+.obsidian-col-spell .obsidian-css-icon {
 	display: inline-block;
 }
 
