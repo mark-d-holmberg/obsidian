@@ -17,8 +17,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.classes.push('obsidian-2-pane-window');
-		options.width = 1024;
+		options.classes.push('obsidian-effects-window');
+		options.width = 560;
 		options.height = 768;
 		options.template = 'modules/obsidian/html/sheets/effect.html';
 		return options;
@@ -106,6 +106,14 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		return data;
+	}
+
+	/**
+	 * @private
+	 */
+	_createEditor (target, editorOptions, initialContent) {
+		TextEditor.create(editorOptions, initialContent)
+			.then(mce => mce[0].on('change', () => this.editors[target].changed = true));
 	}
 
 	get _formData () {

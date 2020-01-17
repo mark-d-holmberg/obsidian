@@ -16,12 +16,6 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			{{fancy-checkbox (add prefix '.proficient') content='OBSIDIAN.Proficiency-prof'
-			                 checked=proficient}}
-		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
 			<select name="{{prefix}}.ability">
 				{{#select ability}}
 					<option value="">&mdash;</option>
@@ -38,6 +32,8 @@
 				       name="{{prefix}}.crit" value="{{crit}}" placeholder="20">
 				<span>{{localize 'OBSIDIAN.Crit'}}</span>
 			</label>
+			{{fancy-checkbox (add prefix '.proficient') content='OBSIDIAN.Proficiency-prof'
+			                 checked=proficient}}
 		</div>
 	</div>
 </fieldset>

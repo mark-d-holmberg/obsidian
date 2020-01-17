@@ -6,8 +6,8 @@ import {prepareSpells} from '../rules/spells.js';
 import {prepareSpellcasting} from '../rules/spellcasting.js';
 import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
-import {prepareEffects} from '../rules/effects.js';
 import {Schema} from './schema.js';
+import {prepareEffects} from './item.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -113,7 +113,16 @@ export class ObsidianActor extends Actor5e {
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
-		prepareEffects(this.data);
+
+		this.data.obsidian.attacks = [];
+		this.data.obsidian.effects = new Map();
+		this.data.obsidian.components = new Map();
+
+		for (const item of this.data.items) {
+			prepareEffects(
+				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
+				this.data.obsidian.components);
+		}
 
 		return this.data;
 	}

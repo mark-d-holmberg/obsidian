@@ -1,7 +1,7 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Prepare} from '../rules/prepare.js';
 import {Effect} from '../module/effect.js';
-import {getEffectLabel} from '../rules/effects.js';
+import {getEffectLabel} from '../module/item.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('badge', function (badge) {

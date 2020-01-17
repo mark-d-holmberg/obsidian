@@ -34,6 +34,7 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
+import {ObsidianConsumeSlotDialog} from '../dialogs/consume-slot.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -684,7 +685,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
 			if (scaling) {
-				new ObsidianResourceScalingDialog(this, item, effect).render(true);
+				const consumer = effect.components.find(c => c.type === 'consume');
+				if (consumer && consumer.target === 'spell') {
+					new ObsidianConsumeSlotDialog(this, effect).render(true);
+				} else {
+					new ObsidianResourceScalingDialog(this, item, effect).render(true);
+				}
 			} else {
 				this._onRollEffect(effect);
 			}
@@ -721,7 +727,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		const resources = effect.components.filter(component => component.type === 'resource');
 		const consumers = effect.components.filter(component => component.type === 'consume');
-		let scaledAmount = scaling || 0;
+		let scaledAmount = (scaling || 0) - 1;
 
 		if (resources.length) {
 			this._useResource(item, effect, resources[0], scaling || 1);
@@ -731,7 +737,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			const consumer = consumers[0];
 			if (consumer.target === 'qty') {
 				this._consumeQuantity(consumer, scaling || consumer.fixed);
-			} else {
+			} else if (consumer.target !== 'spell') {
 				const [refItem, refEffect, resource] =
 					Effect.getLinkedResource(this.actor.data, consumers[0]);
 
@@ -741,12 +747,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 				}
 			}
 
-			if (scaling) {
+			if (scaling && consumer.target !== 'spell') {
 				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
-				if (scaledAmount < 0) {
-					scaledAmount = 0;
-				}
 			}
+		}
+
+		if (scaledAmount < 0) {
+			scaledAmount = 0;
 		}
 
 		const evt = {

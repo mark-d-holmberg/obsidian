@@ -570,5 +570,6 @@
 	"OBSIDIAN.MigrateCancel": "Cancel Migration",
 	"OBSIDIAN.MigrateFailed": "Migration has failed. Check console errors for details.",
 	"OBSIDIAN.Amount": "Amount",
-	"OBSIDIAN.Unnamed": "[Unnamed]"
+	"OBSIDIAN.Unnamed": "[Unnamed]",
+	"OBSIDIAN.Feat": "Feat"
 }

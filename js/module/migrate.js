@@ -744,12 +744,12 @@ Migrate.v1 = {
 		component.effect = save.effect;
 
 		if (OBSIDIAN.notDefinedOrEmpty(save.fixed)) {
-			component.fixed = Number(save.fixed);
-		} else {
 			component.calc = 'formula';
 			component.ability = save.ability;
 			component.prof = save.prof;
 			component.bonus = save.bonus;
+		} else {
+			component.fixed = Number(save.fixed);
 		}
 
 		return component;
@@ -762,8 +762,6 @@ Migrate.v1 = {
 			component.recharge.time = uses.recharge;
 
 			if (OBSIDIAN.notDefinedOrEmpty(uses.fixed)) {
-				component.fixed = Number(uses.fixed);
-			} else {
 				component.calc = 'formula';
 				component.bonus = uses.bonus;
 				component.operator = uses.operator;
@@ -777,6 +775,8 @@ Migrate.v1 = {
 				} else {
 					component.key = 'chr';
 				}
+			} else {
+				component.fixed = Number(uses.fixed);
 			}
 		} else {
 			// Unfortunately, item IDs have all been wiped by this point during

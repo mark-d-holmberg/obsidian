@@ -8,9 +8,9 @@ import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
-import {Schema} from './module/schema.js';
 import {addSettingsHook} from './rules/spell-lists.js';
 import {checkVersion, Migrate} from './module/migrate.js';
+import {patchItem_prepareData} from './module/item.js';
 
 runPatches();
 
@@ -23,6 +23,8 @@ Hooks.once('init', async function () {
 		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell'],
 		makeDefault: true
 	});
+
+	patchItem_prepareData();
 
 	// We need to set the game config first, before doing any async work
 	// otherwise we yield execution and the game continues to initialise.
