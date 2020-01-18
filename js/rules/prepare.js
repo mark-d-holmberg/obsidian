@@ -365,6 +365,10 @@ export const Prepare = {
 
 						return null;
 					}).filter(tag => tag != null));
+
+			if (flags.magical) {
+				flags.notes.push(game.i18n.localize('OBSIDIAN.Magical'));
+			}
 		}
 	},
 

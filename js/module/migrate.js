@@ -9,10 +9,14 @@ const CONVERT = {
 		action: 'action', bonus: 'ba', reaction: 'react', minute: 'min', hour: 'hour',
 		special: 'special'
 	},
+	consumable: {
+		potion: 'potion', poison: 'potion', scroll: 'scroll', wand: 'wand', rod: 'rod',
+		trinket: 'trinket'
+	},
 	damage: {
 		bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
 		force: 'frc', lightning: 'lig', necrotic: 'ncr', poison: 'psn', psychic: 'psy',
-		radiant: 'rad', thunder: 'thn'
+		radiant: 'rad', thunder: 'thn', healing: 'hlg'
 	},
 	duration: {
 		inst: 'instant', perm: 'dispel', spec: 'special', round: 'round', minute: 'min',
@@ -120,6 +124,21 @@ export const Migrate = {
 			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
 
+		if (data.type === 'consumable'
+			&& (!data.flags.obsidian.effects
+				|| !data.flags.obsidian.effects.length
+				|| !data.flags.obsidian.effects.some(e =>
+					e.components.some(c => c.type === 'consume' || c.type === 'resource'))))
+		{
+			if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
+				data.flags.obsidian.effects.push(Effect.create());
+			}
+
+			const component = Effect.newConsume();
+			component.target = 'qty';
+			data.flags.obsidian.effects[0].components.push(component);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
@@ -142,7 +161,7 @@ export const Migrate = {
 			ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
 	},
 
-	convertConsumable: function (data) {
+	convertConsumable: function (data, source) {
 		const primaryEffect = Effect.create();
 		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
 			primaryEffect.name = game.i18n.localize('OBSIDIAN.Uses');
@@ -166,6 +185,10 @@ export const Migrate = {
 		if (primaryEffect.components.length) {
 			data.flags.obsidian.effects.push(primaryEffect);
 		}
+
+		if (source === 'core' && CONVERT.consumable[data.data.consumableType]) {
+			data.flags.obsidian.subtype = CONVERT.consumable[data.data.consumableType];
+		}
 	},
 
 	convertEquipment: function (data, source) {
@@ -177,7 +200,9 @@ export const Migrate = {
 			data.data.armor.dex = String(data.flags.obsidian.maxDex);
 		}
 
+		data.flags.obsidian.magical = !!data.flags.obsidian.magic;
 		data.data.armor.value += data.flags.obsidian.magic || 0;
+
 		if (isNaN(Number(data.data.strength))) {
 			data.data.strength = '';
 		}
@@ -340,6 +365,7 @@ export const Migrate = {
 
 		const primaryEffect = Effect.create();
 		const magic = data.flags.obsidian.magic;
+		data.flags.obsidian.magical = !!magic;
 
 		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
 			primaryEffect.name = game.i18n.localize('OBSIDIAN.Charges');

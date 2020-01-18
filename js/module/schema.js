@@ -71,11 +71,12 @@ Schema.EquipTypes = [
 ];
 
 Schema.Consumable = {
-	unlimited: false
+	unlimited: false,
+	subtype: 'potion'
 };
 
 Schema.Container = {currency: {}};
-Schema.Equipment = {subtype: 'gear'};
+Schema.Equipment = {subtype: 'gear', magical: false};
 Schema.Feature = {source: {}};
 
 Schema.Spell = {
@@ -90,5 +91,6 @@ Schema.Weapon = {
 	category: 'simple',
 	type: 'melee',
 	mode: 'melee',
-	tags: {}
+	tags: {},
+	magical: false
 };

@@ -1,7 +1,7 @@
 <fieldset>
 	<legend>{{i18n-join 'OBSIDIAN.ItemType-' item.type}}</legend>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
 			       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
 			<select name="flags.obsidian.category">
@@ -18,6 +18,8 @@
 					{{/each}}
 				{{/select}}
 			</select>
+			{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical'
+			                 checked=item.flags.obsidian.magical}}
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
