@@ -51,6 +51,10 @@ export const Migrate = {
 	},
 
 	convertItem: function (data, actor) {
+		if (!data.data) {
+			data.data = {};
+		}
+
 		if (!data.flags) {
 			data.flags = {};
 		}
@@ -366,6 +370,16 @@ export const Migrate = {
 		const primaryEffect = Effect.create();
 		const magic = data.flags.obsidian.magic;
 		data.flags.obsidian.magical = !!magic;
+
+		if (data.flags.obsidian.type === 'unarmed') {
+			data.flags.obsidian.type = 'melee';
+			data.flags.obsidian.category = 'unarmed';
+		}
+
+		if (data.flags.obsidian.type === 'ranged') {
+			data.data.range.value = data.flags.obsidian.range1;
+			data.data.range.long = data.flags.obsidian.range2;
+		}
 
 		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
 			primaryEffect.name = game.i18n.localize('OBSIDIAN.Charges');

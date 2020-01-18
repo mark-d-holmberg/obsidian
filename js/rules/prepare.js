@@ -336,7 +336,7 @@ export const Prepare = {
 							${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
 						</option>
 						${actorData.obsidian.ammo.map(ammo =>
-							`<option value="${ammo.id}" ${ammo.id == flags.ammo.id ? 'selected': ''}>
+							`<option value="${ammo._id}" ${ammo._id === flags.ammo.id ? 'selected': ''}>
 								${ammo.name}
 							</option>`)}
 					</select>`;

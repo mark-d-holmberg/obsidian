@@ -320,13 +320,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_consumeQuantity (consumer, n = 1) {
-		const effect = this.actor.data.obsidian.effects.get(consumer.parentEffect);
-		if (!effect) {
-			return;
+	_consumeQuantity (item, n = 1) {
+		if (item.parentEffect) {
+			const effect = this.actor.data.obsidian.effects.get(item.parentEffect);
+			if (!effect) {
+				return;
+			}
+
+			item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		}
 
-		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		if (!item) {
 			return;
 		}
@@ -728,6 +731,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 			if (scaling && consumer.target !== 'spell') {
 				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
+			}
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
+			const ammo = this.actor.getEmbeddedEntity('OwnedItem', item.flags.obsidian.ammo.id);
+			if (ammo) {
+				this._consumeQuantity(ammo);
 			}
 		}
 

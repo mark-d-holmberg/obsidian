@@ -94,7 +94,7 @@ export function prepareSpellcasting (actorData, flags) {
 			// determining their level on the spell slot table.
 			const caster =
 				actorData.obsidian.classes.find(cls =>
-					!OBSIDIAN.notDefinedOrEmpty(
+					['half', 'third'].includes(
 						getProperty(cls, 'flags.obsidian.spellcasting.progression')));
 
 			slotLevel =

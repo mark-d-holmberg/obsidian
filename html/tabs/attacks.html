@@ -45,12 +45,12 @@
 						{{#if (eq mode 'ranged')}}
 							<div class="obsidian-table-number-md">
 								<div>
-									{{parentItem.flags.obsidian.range1}}
+									{{parentItem.data.range.value}}
 									<span class="obsidian-table-number-split">/</span>
 								</div>
 								<div>
 									<span class="obsidian-table-number-minor">
-										{{parentItem.flags.obsidian.range2}}
+										{{parentItem.data.range.long}}
 									</span>
 									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 								</div>
