@@ -416,7 +416,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian-list-box {
-	height: 79px;
+	min-height: 79px;
 	width: 150px;
 }
 
