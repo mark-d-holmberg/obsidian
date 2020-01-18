@@ -444,7 +444,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian-char-hp {
-	padding: 10px 16px;
+	padding: 4px 14px;
 }
 
 .obsidian-char-hd {
@@ -477,6 +477,17 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	color: var(--text-subtle);
 	text-transform: uppercase;
 	font-size: 14px;
+}
+
+.obsidian-char-hp,
+.dnd5e.sheet form .obsidian-char-hp input[type=text] {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.dnd5e.sheet form .obsidian-char-hp input[placeholder="TMP"] {
+	color: var(--text-secondary);
+	font-weight: normal;
 }
 
 .obsidian-bisect {
