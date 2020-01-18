@@ -286,19 +286,19 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_contextMenu (html) {
 		const del = {
-			name: game.i18n.localize('OBSIDIAN.Delete'),
+			name: 'OBSIDIAN.Delete',
 			icon: '<i class="fas fa-trash"></i>',
 			callback: this._deleteItem.bind(this)
 		};
 
 		const edit = {
-			name: game.i18n.localize('OBSIDIAN.Edit'),
+			name: 'OBSIDIAN.Edit',
 			icon: '<i class="fas fa-edit"></i>',
 			callback: this._editItem.bind(this)
 		};
 
 		const view = {
-			name: game.i18n.localize('OBSIDIAN.View'),
+			name: 'OBSIDIAN.View',
 			icon: '<i class="fas fa-eye"></i>',
 			callback: this._viewItem.bind(this)
 		};

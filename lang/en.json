@@ -573,5 +573,6 @@
 	"OBSIDIAN.MigrateFailed": "Migration has failed. Check console errors for details.",
 	"OBSIDIAN.Amount": "Amount",
 	"OBSIDIAN.Unnamed": "[Unnamed]",
-	"OBSIDIAN.Feat": "Feat"
+	"OBSIDIAN.Feat": "Feat",
+	"OBSIDIAN.ConvertObsidian": "Convert to Obsidian"
 }

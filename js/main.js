@@ -11,6 +11,7 @@ import {ObsidianEffectSheet} from './sheets/effect.js';
 import {addSettingsHook} from './rules/spell-lists.js';
 import {checkVersion, Migrate} from './module/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
+import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 
 runPatches();
 
@@ -67,6 +68,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
 
+addCompendiumContextMenuHook();
 addSettingsHook();
 
 function enrichActorFlags (data) {

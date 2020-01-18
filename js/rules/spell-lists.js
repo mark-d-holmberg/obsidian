@@ -333,7 +333,11 @@ export function addSettingsHook () {
 			game.packs.filter(pack => pack.entity === 'Item')
 				.map(pack =>
 					$(`<option value="${pack.collection}">`
-						+ `[${pack.metadata.module ? pack.metadata.module : pack.metadata.system}] `
+						+ `[${pack.metadata.module
+								? pack.metadata.module
+								: pack.metadata.system
+									? pack.metadata.system
+									: pack.metadata.package}] `
 						+`${pack.metadata.label}</option>`)))
 			.find(`option[value="${compendium}"]`).prop('selected', true);
 	});

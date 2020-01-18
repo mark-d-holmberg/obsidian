@@ -5,6 +5,12 @@
 	background-size: 20px 20px;
 }
 
+li.context-item .obsidian-icon {
+	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: -4px;
+}
+
 .obsidian-icon-sm {
 	width: 16px;
 	height: 16px;
@@ -209,6 +215,10 @@
 
 .obsidian-icon-consume-resource {
 	background-image: url('../img/consume-resource.svg');
+}
+
+.obsidian-icon-obsidian {
+	background-image: url('../img/obsidian.png');
 }
 
 .obsidian-spell-school {
