@@ -25,7 +25,7 @@ export function prepareSpellcasting (actorData, flags) {
 			spellcasting.spell = OBSIDIAN.Rules.CLASS_SPELL_MODS[cls.name];
 		}
 
-		if (spellcasting.spell !== undefined && spellcasting.spell !== '') {
+		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell)) {
 			const val = data.abilities[spellcasting.spell].mod;
 			spellcasting.mod = val;
 			spellcasting.attack = val + data.attributes.prof;
@@ -43,7 +43,7 @@ export function prepareSpellcasting (actorData, flags) {
 			spellcasting.progression = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[cls.name];
 		}
 
-		if (spellcasting.progression !== undefined && spellcasting.progression !== '') {
+		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.progression)) {
 			if (spellcasting.progression !== 'pact') {
 				totalCasters++;
 			}
@@ -86,10 +86,21 @@ export function prepareSpellcasting (actorData, flags) {
 		}
 	}
 
+	slotLevel = Math.clamped(slotLevel, 1, 20);
+
 	if (slotLevel > 0) {
 		if (totalCasters === 1 && nonFullCasters === 1) {
-			// Single-classed non-half-caster.
-			slotLevel++;
+			// Single-classed non-full-casters round up instead of down when
+			// determining their level on the spell slot table.
+			const caster =
+				actorData.obsidian.classes.find(cls =>
+					!OBSIDIAN.notDefinedOrEmpty(
+						getProperty(cls, 'flags.obsidian.spellcasting.progression')));
+
+			slotLevel =
+				Math.ceil(
+					caster.data.levels
+					/ (caster.flags.obsidian.spellcasting.progression === 'third' ? 3 : 2));
 		}
 
 		const slots = OBSIDIAN.Rules.SPELL_SLOT_TABLE[slotLevel - 1];

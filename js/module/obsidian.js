@@ -6,11 +6,11 @@ import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/shee
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
-import {ObsidianSpellSlotDialog} from '../dialogs/spell-slot.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
 import {ObsidianActionableDialog} from '../dialogs/actionable.js';
 import {ObsidianResourceScalingDialog} from '../dialogs/resource-scaling.js';
+import {ObsidianConsumeSlotDialog} from '../dialogs/consume-slot.js';
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -34,7 +34,6 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
-import {ObsidianConsumeSlotDialog} from '../dialogs/consume-slot.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -178,7 +177,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 		html.find('[data-roll]').click(this._onRoll.bind(this));
-		html.find('.obsidian-cast-spell').click(this._onCastSpell.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
 		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
@@ -576,31 +574,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onCastSpell (evt) {
-		if (!evt.currentTarget.dataset || !evt.currentTarget.dataset.spl) {
-			return;
-		}
-
-		const spell =
-			this.actor.data.items.find(item => item._id === evt.currentTarget.dataset.spl);
-
-		if (!spell) {
-			return;
-		}
-
-		if (spell.data.level < 1) {
-			evt.currentTarget.dataset.roll = 'spl';
-			evt.currentTarget.dataset.level = spell.data.level;
-			Rolls.fromClick(this.actor, evt);
-		} else {
-			new ObsidianSpellSlotDialog(this, spell).render(true);
-		}
-	}
-
-	/**
-	 * @private
 	 */
 	_onContenteditableUnfocus (evt) {
 		setTimeout(() => {
@@ -687,7 +660,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			if (scaling) {
 				const consumer = effect.components.find(c => c.type === 'consume');
 				if (consumer && consumer.target === 'spell') {
-					new ObsidianConsumeSlotDialog(this, effect).render(true);
+					new ObsidianConsumeSlotDialog(this, item, effect).render(true);
 				} else {
 					new ObsidianResourceScalingDialog(this, item, effect).render(true);
 				}
@@ -703,7 +676,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 				this.actor.getEmbeddedEntity('OwnedItem', evt.currentTarget.dataset.id);
 
 			if (item && item.obsidian) {
-				if (item.obsidian.actionable.length > 1) {
+				if (item.type === 'spell') {
+					if (item.data.level > 0) {
+						new ObsidianConsumeSlotDialog(this, item, item.flags.obsidian.effects[0])
+							.render(true);
+						return;
+					}
+				} else if (item.obsidian.actionable.length > 1) {
 					new ObsidianActionableDialog(this, item).render(true);
 					return;
 				} else if (item.obsidian.actionable.length) {

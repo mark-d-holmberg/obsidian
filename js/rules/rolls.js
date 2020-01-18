@@ -98,7 +98,7 @@ export const Rolls = {
 		return result;
 	},
 
-	effectRoll: function (actor, effect, {name, scaledAmount}) {
+	effectRoll: function (actor, effect, {name, scaledAmount, isFirst}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
@@ -122,9 +122,9 @@ export const Rolls = {
 			multiDamage += targets[0].count;
 		}
 
-		if ((attacks.length || (damage.length && multiDamage < 1)) || saves.length) {
+		if (!damage.length || attacks.length || multiDamage < 1) {
 			results.push({
-				type: 'fx',
+				type: item.type === 'spell' ? 'spl' : 'fx',
 				title: name ? name : effect.name.length ? effect.name : item.name
 			});
 		}
@@ -139,18 +139,18 @@ export const Rolls = {
 
 			results[0].dmgBtn = effect.uuid;
 			results[0].dmgCount = count;
-			results[0].dmgUpcast = scaledAmount;
+			results[0].dmgScaling = scaledAmount;
 			results[0].subtitle = game.i18n.localize(attacks[0].attackType);
 		} else if (damage.length && multiDamage < 1) {
 			results[0].damage = Rolls.rollDamage(actor, damage, {
 				crit: false,
-				upcast: scaledAmount,
+				scaledAmount: scaledAmount,
 				scaling: scaling
 			});
 
 			results[0].crit = Rolls.rollDamage(actor, damage, {
 				crit: true,
-				upcast: scaledAmount,
+				scaledAmount: scaledAmount,
 				scaling: scaling
 			});
 		}
@@ -162,22 +162,27 @@ export const Rolls = {
 		if (damage.length && !attacks.length && multiDamage > 0) {
 			for (let i = 0; i < multiDamage; i++) {
 				results.push({
-					type: 'fx',
+					type: item.type === 'spell' ? 'spl' : 'fx',
 					title: name ? name : effect.name.length ? effect.name : item.name,
 					damage:
 						Rolls.rollDamage(actor, damage, {
 							crit: false,
-							upcast: scaledAmount,
+							scaledAmount: scaledAmount,
 							scaling: scaling
 						}),
 					crit:
 						Rolls.rollDamage(actor, damage, {
 							crit: true,
-							upcast: scaledAmount,
+							scaledAmount: scaledAmount,
 							scaling: scaling
 						})
 				});
 			}
+		}
+
+		if (isFirst) {
+			results[0].details = item;
+			results[0].open = !attacks.length && !damage.length;
 		}
 
 		return results.map(result => {
@@ -204,9 +209,9 @@ export const Rolls = {
 		return results;
 	},
 
-	damage: function (actor, effect, count, upcast) {
-		if (isNaN(upcast)) {
-			upcast = undefined;
+	damage: function (actor, effect, count, scaledAmount) {
+		if (isNaN(scaledAmount)) {
+			scaledAmount = undefined;
 		}
 
 		if (count === undefined || isNaN(count)) {
@@ -233,11 +238,11 @@ export const Rolls = {
 						title: item.name,
 						damage:
 							Rolls.rollDamage(actor, damage, {
-								crit: false, upcast: upcast, scaling: scaling
+								crit: false, scaledAmount: scaledAmount, scaling: scaling
 							}),
 						crit:
 							Rolls.rollDamage(actor, damage, {
-								crit: true, upcast: upcast, scaling: scaling
+								crit: true, scaledAmount: scaledAmount, scaling: scaling
 							})
 					}
 				}
@@ -353,7 +358,7 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item));
+			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, Number(dataset.scaling)));
 		} else if (roll === 'fx') {
 			if (dataset.uuid === undefined) {
 				return;
@@ -409,19 +414,6 @@ export const Rolls = {
 			}
 
 			Rolls.toChat(actor, Rolls.skillCheck(actor, tool));
-		} else if (roll === 'spl') {
-			if (dataset.spl === undefined || dataset.level === undefined) {
-				return;
-			}
-
-			const spell = actor.getEmbeddedEntity('OwnedItem', dataset.spl);
-
-			if (!spell) {
-				return;
-			}
-
-			Rolls.toChat(
-				actor, ...Rolls.spell(actor, spell, Number(dataset.level)));
 		} else if (roll === 'dmg') {
 			if (dataset.effect === undefined) {
 				return;
@@ -435,7 +427,7 @@ export const Rolls = {
 			Rolls.toChat(
 				actor,
 				...Rolls.damage(
-					actor, effect, Number(dataset.count), Number(dataset.upcast)));
+					actor, effect, Number(dataset.count), Number(dataset.scaling)));
 		}
 	},
 
@@ -482,15 +474,29 @@ export const Rolls = {
 		}
 	},
 
-	itemRoll: function (actor, item) {
+	itemRoll: function (actor, item, scaling) {
 		if (!item.flags.obsidian || !item.flags.obsidian.effects) {
 			return [];
 		}
 
 		const itemFlags = item.flags.obsidian;
+		let scaledAmount = 0;
+
+		if (scaling && item.type === 'spell') {
+			scaledAmount = scaling - item.data.level;
+		}
+
+		if (scaledAmount < 0) {
+			scaledAmount = 0;
+		}
+
 		return itemFlags.effects
-			.filter(effect => effect !== item.obsidian.scaling)
-			.map(effect => Rolls.effectRoll(actor, effect, {name: item.name}));
+			.filter(effect => !effect.isScaling || effect.selfScaling)
+			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
+				name: item.name,
+				scaledAmount: scaledAmount,
+				isFirst: i === 0
+			}));
 	},
 
 	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
@@ -524,19 +530,19 @@ export const Rolls = {
 		};
 	},
 
-	rollDamage: function (actor, damage, {crit = false, upcast = 0, scaling = null}) {
+	rollDamage: function (actor, damage, {crit = false, scaledAmount = 0, scaling = null}) {
 		const data = actor.data.data;
 		let mods = [];
 
-		if (upcast > 0 && scaling != null && scaling.scalingComponent.method !== 'spell') {
+		if (scaledAmount > 0 && scaling != null && scaling.scalingComponent.method !== 'cantrip') {
 			const damageComponents = scaling.components.filter(c => c.type === 'damage');
 			if (damageComponents) {
 				damage = damage.concat(duplicate(damageComponents).map(dmg => {
 					if (dmg.calc === 'fixed') {
-						dmg.bonus = Math.floor(dmg.bonus * upcast);
-						dmg.mod = Math.floor(dmg.mod * upcast);
+						dmg.bonus = Math.floor(dmg.bonus * scaledAmount);
+						dmg.mod = Math.floor(dmg.mod * scaledAmount);
 					} else {
-						dmg.ndice = Math.floor(dmg.ndice * upcast);
+						dmg.ndice = Math.floor(dmg.ndice * scaledAmount);
 					}
 
 					return dmg;
@@ -718,102 +724,6 @@ export const Rolls = {
 				[flags.skills.roll, skill.roll],
 				skill.override);
 		}
-	},
-
-	spell: function (actor, spell, level) {
-		const itemFlags = spell.flags.obsidian;
-		const upcastAmount = level - spell.data.level;
-		let isFirst = true;
-
-		return itemFlags.effects.filter(effect => !effect.isScaling || effect.selfScaling).flatMap(effect => {
-			const attacks = effect.components.filter(c => c.type === 'attack');
-			const damage = effect.components.filter(c => c.type === 'damage');
-			const saves = effect.components.filter(c => c.type === 'save');
-			const targets = effect.components.filter(c => c.type === 'target');
-			const scaling = spell.obsidian.scaling.find(e =>
-				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'spell');
-			const results = [];
-
-			let scaledTargets = 0;
-			if (upcastAmount > 0 && scaling) {
-				const targetScaling =
-					scaling.components.find(c => c.type === 'target' && c.target === 'individual');
-
-				if (targetScaling) {
-					scaledTargets = Math.floor(targetScaling.count * upcastAmount);
-				}
-			}
-
-			let multiDamage = scaledTargets;
-			if (targets.length) {
-				multiDamage += targets[0].count;
-			}
-
-			if ((attacks.length || (damage.length && multiDamage < 1)) || saves.length) {
-				results.push({type: 'spl', title: spell.name});
-			}
-
-			if (attacks.length) {
-				const count = attacks[0].targets + scaledTargets;
-				results[0].results = [];
-
-				for (let i = 0; i < count; i++) {
-					results[0].results.push(Rolls.toHitRoll(actor, attacks[0]));
-				}
-
-				results[0].dmgBtn = effect.uuid;
-				results[0].dmgCount = count;
-				results[0].dmgUpcast = upcastAmount;
-				results[0].subtitle = game.i18n.localize(attacks[0].attackType);
-			} else if (damage.length && multiDamage < 1) {
-				results[0].damage = Rolls.rollDamage(actor, damage, {
-					crit: false,
-					upcast: upcastAmount,
-					scaling: scaling
-				});
-
-				results[0].crit = Rolls.rollDamage(actor, damage, {
-					crit: true,
-					upcast: upcastAmount,
-					scaling: scaling
-				});
-			}
-
-			if (saves.length) {
-				results[0].saves = saves.map(save => Rolls.compileSave(actor, save));
-			}
-
-			if (damage.length && !attacks.length && multiDamage > 0) {
-				for (let i = 0; i < multiDamage; i++) {
-					results.push({
-						type: 'spl',
-						title: spell.name,
-						damage:
-							Rolls.rollDamage(actor, damage, {
-								crit: false,
-								upcast: upcastAmount,
-								scaling: scaling
-							}),
-						crit:
-							Rolls.rollDamage(actor, damage, {
-								crit: true,
-								upcast: upcastAmount,
-								scaling: scaling
-							})
-					});
-				}
-			}
-
-			if (isFirst) {
-				isFirst = false;
-				results[0].details = spell;
-				results[0].open = !attacks.length && !damage.length;
-			}
-
-			return results.map(result => {
-				return {flags: {obsidian: result}};
-			});
-		});
 	},
 
 	toChat: async function (actor, ...msgs) {

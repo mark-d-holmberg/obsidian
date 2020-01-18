@@ -1,8 +1,10 @@
 import {ObsidianDialog} from './dialog.js';
+import {Rolls} from '../rules/rolls.js';
 
 export class ObsidianConsumeSlotDialog extends ObsidianDialog {
-	constructor (parent, effect) {
+	constructor (parent, item, effect) {
 		super(parent);
+		this._item = item;
 		this._effect = effect;
 	}
 
@@ -25,7 +27,8 @@ export class ObsidianConsumeSlotDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.effect = this._effect;
+		data.min = this._item.type === 'spell' ? this._item.data.level : 1;
+		data.ritual = this._item.type === 'spell';
 		return data;
 	}
 
@@ -34,17 +37,29 @@ export class ObsidianConsumeSlotDialog extends ObsidianDialog {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onUse (evt) {
+		const isRitual = evt.currentTarget.dataset.level === 'ritual';
 		const isPact = evt.currentTarget.dataset.level === 'pact';
 		let level = Number(evt.currentTarget.dataset.level);
 
 		if (isPact) {
 			level = this.parent.actor.data.data.spells.pact.level;
+		} else if (isRitual && this._item.type === 'spell') {
+			level = this._item.data.level;
 		}
 
-		const prop = isPact ? 'data.spells.pact.uses' : `data.spells.spell${level}.value`;
-		this.parent.actor.update({[`${prop}`]: getProperty(this.parent.actor.data, prop) + 1});
+		if (!isRitual) {
+			const prop = isPact ? 'data.spells.pact.uses' : `data.spells.spell${level}.value`;
+			this.parent.actor.update({[`${prop}`]: getProperty(this.parent.actor.data, prop) + 1});
+		}
 
-		this.parent._onRollEffect(this._effect, level);
+		if (this._item.type === 'spell') {
+			Rolls.fromClick(this.parent.actor, {
+				currentTarget: {dataset: {roll: 'item', id: this._item._id, scaling: level}}
+			});
+		} else {
+			this.parent._onRollEffect(this._effect, level);
+		}
+
 		this.close();
 	}
 }

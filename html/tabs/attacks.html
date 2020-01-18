@@ -31,9 +31,9 @@
 						{{/if}}
 					</div>
 					<div class="obsidian-col-attack">
-						<div class="obsidian-table-text rollable {{#if (eq parentItem.type 'spell')}}obsidian-cast-spell{{/if}}"
+						<div class="obsidian-table-text rollable"
 							{{#if (eq parentItem.type 'spell')}}
-								data-spl="{{parentItem._id}}"
+								data-roll="item" data-id="{{parentItem._id}}"
 							{{else}}
 							 data-roll="fx" data-uuid="{{parentEffect.uuid}}"
 							{{/if}}>
