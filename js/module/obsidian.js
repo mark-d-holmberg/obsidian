@@ -949,16 +949,17 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setAttributeLevel (prop, evt) {
-		let value = Number($(evt.currentTarget).data('value'));
 		const current = getProperty(this.actor.data, prop);
+		let value = Number($(evt.currentTarget).data('value'));
+		let update = current;
 
-		if (value === 1 && current === 1) {
-			value = 0;
+		if (value > current) {
+			update++;
+		} else {
+			update--;
 		}
 
-		const update = {};
-		update[prop] = value;
-		this.actor.update(update);
+		this.actor.update({[`${prop}`]: update});
 	}
 
 	/**
