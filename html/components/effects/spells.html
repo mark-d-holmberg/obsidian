@@ -1,0 +1,89 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.ProvidesSpells'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Source'}}
+				<select name="{{prefix}}.source" data-selector="{{prefix}}.source">
+					{{#select source}}
+						{{#each @root.ObsidianRules.EFFECT_ADD_SPELLS_SOURCE}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AddSpellsSource-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<select name="{{prefix}}.list" data-selector-parent="{{prefix}}.source" data-show="list">
+				{{#select list}}
+					{{#each @root.spellLists}}
+						<option value="{{this}}">
+							{{#if (and (includes @root.ObsidianRules.CLASSES this) (not (eq this 'custom')))}}
+								{{i18n-join 'OBSIDIAN.Class-' this}}
+							{{else}}
+								{{this}}
+							{{/if}}
+						</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.source" data-show="individual">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<select name="{{prefix}}.method" data-selector="{{prefix}}.method">
+				{{#select method}}
+					{{#each @root.ObsidianRules.EFFECT_ADD_SPELLS_METHOD}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AddSpellsMethod-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.method" data-hide="innate">
+				{{#select class}}
+					{{#each @root.actor.data.obsidian.classes}}
+						<option value="{{_id}}">{{flags.obsidian.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.method" data-show="innate">
+				{{#select ability}}
+					{{#each @root.ObsidianRules.ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{fancy-checkbox (add prefix '.upcast') content='OBSIDIAN.CastAtHigherLevel' checked=upcast
+											 selectorParent=(add prefix '.method') show='innate'
+											 selector=(add prefix '.upcast')}}
+			<select name="{{prefix}}.level" data-dtype="Number" data-selector-parent="{{prefix}}.upcast"
+			        style="margin-left: 10px;">
+				{{#select level}}
+					{{#each (range 1 9)}}
+						<option value="{{this}}">
+							{{#if (eq this 1)}}
+								{{localize 'OBSIDIAN.FirstN'}}
+							{{else if (eq this 2)}}
+								{{localize 'OBSIDIAN.SecondN'}}
+							{{else if (eq this 3)}}
+								{{localize 'OBSIDIAN.ThirdN'}}
+							{{else}}
+								{{this}}{{localize 'OBSIDIAN.th'}}
+							{{/if}}
+						</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</div>
+	<div class="obsidian-item-drop" data-selector-parent="{{prefix}}.source" data-show="individual">
+		<div class="obsidian-item-drop-empty">{{localize 'OBSIDIAN.DropSpellsHere'}}</div>
+		{{#each spells}}
+				<div class="obsidian-item-drop-pill">
+					<div class="obsidian-item-drop-pill-body">
+						<i class="obsidian-spell-school obsidian-spell-school-{{school}}"></i>
+				{{name}}
+					</div>
+					<div class="obsidian-item-drop-pill-rm">&times;</div>
+				</div>
+		{{/each}}
+	</div>
+</fieldset>

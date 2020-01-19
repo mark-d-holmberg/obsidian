@@ -99,6 +99,21 @@ export const Effect = {
 		};
 	},
 
+	newSpells: function () {
+		return {
+			type: 'spells',
+			uuid: OBSIDIAN.uuid(),
+			source: 'list',
+			list: 'clr',
+			spells: [],
+			method: 'innate',
+			class: '',
+			ability: 'cha',
+			upcast: false,
+			level: 0
+		};
+	},
+
 	getLinkedResource: function (actorData, consumer) {
 		const item =
 			actorData.obsidian.itemsByID.get(

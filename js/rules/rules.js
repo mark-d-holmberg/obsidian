@@ -94,6 +94,8 @@ OBSIDIAN.Rules.CLASS_RITUALS = {
 
 OBSIDIAN.Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
 OBSIDIAN.Rules.EFFECT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'spell'];
+OBSIDIAN.Rules.EFFECT_ADD_SPELLS_METHOD = ['innate', 'known', 'prep', 'list'];
+OBSIDIAN.Rules.EFFECT_ADD_SPELLS_SOURCE = ['list', 'individual'];
 OBSIDIAN.Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
 OBSIDIAN.Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
 OBSIDIAN.Rules.EFFECT_CONSUME_TARGETS = [

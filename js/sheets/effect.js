@@ -6,7 +6,8 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
-	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume';
+	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume,'
+	+ ' .obsidian-add-spells';
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -39,6 +40,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-scaling').click(this._onAddComponent.bind(this, Effect.newScaling));
 		html.find('.obsidian-add-targets').click(this._onAddComponent.bind(this, Effect.newTarget));
 		html.find('.obsidian-add-consume').click(this._onAddComponent.bind(this, Effect.newConsume));
+		html.find('.obsidian-add-spells').click(this._onAddComponent.bind(this, Effect.newSpells));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
@@ -72,6 +74,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	getData () {
 		const data = super.getData();
 		data.equipTypes = Schema.EquipTypes;
+		data.spellLists = Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS);
 
 		if (data.actor && data.item.flags && data.item.flags.obsidian
 			&& data.item.flags.obsidian.effects)

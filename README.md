@@ -25,7 +25,7 @@ The font Noto Sans JP found in the `fonts` directory is used and redistributed u
 
 The SVG images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
 
-* [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`, `ammo.svg`, `trinket.svg`
+* [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`, `ammo.svg`, `trinket.svg`, `provides-spells.svg`
 * [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `weapon.svg`, `tool.svg`, `armour.svg`, `helm.svg`, `consumable.svg`, `amulet.svg`, `effect.svg`, `demolish.svg`, `resource.svg`, `damage.svg`, `save.svg`, `scaling.svg`, `target.svg`, `consume-resource.svg`, `scroll.svg`
 * [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`, `wand.svg`
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`

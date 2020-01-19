@@ -21,7 +21,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/save.html',
 		'modules/obsidian/html/components/effects/scaling.html',
 		'modules/obsidian/html/components/effects/targets.html',
-		'modules/obsidian/html/components/effects/consume.html'
+		'modules/obsidian/html/components/effects/consume.html',
+		'modules/obsidian/html/components/effects/spells.html'
 	]);
 };
 

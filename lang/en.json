@@ -574,5 +574,14 @@
 	"OBSIDIAN.Amount": "Amount",
 	"OBSIDIAN.Unnamed": "[Unnamed]",
 	"OBSIDIAN.Feat": "Feat",
-	"OBSIDIAN.ConvertObsidian": "Convert to Obsidian"
+	"OBSIDIAN.ConvertObsidian": "Convert to Obsidian",
+	"OBSIDIAN.ProvidesSpells": "Provides Spells",
+	"OBSIDIAN.DropSpellsHere": "Drop Spells Here",
+	"OBSIDIAN.AddSpellsMethod-innate": "Innate",
+	"OBSIDIAN.AddSpellsMethod-known": "Spells Known",
+	"OBSIDIAN.AddSpellsMethod-prep": "Always Prepared",
+	"OBSIDIAN.AddSpellsMethod-list": "Added to List",
+	"OBSIDIAN.AddSpellsSource-list": "Class List",
+	"OBSIDIAN.AddSpellsSource-individual": "Individual Spells",
+	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level"
 }

@@ -224,6 +224,10 @@ export function registerHandlebarHelpers () {
 		return game.i18n.localize(args.reduce((acc, x) => acc + x));
 	});
 
+	Handlebars.registerHelper('includes', function (haystack, needle) {
+		return haystack.includes(needle);
+	});
+
 	Handlebars.registerHelper('is-attack-toggleable', function (attack) {
 		const type = attack.parentItem.flags.obsidian.type;
 		const tags = attack.parentItem.flags.obsidian.tags;
