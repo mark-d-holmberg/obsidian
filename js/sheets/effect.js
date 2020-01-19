@@ -51,6 +51,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		html.find('.fancy-checkbox').click(this._onCheckBoxClicked.bind(this));
 		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
+		html.find('.obsidian-item-drop').on('dragover', evt => evt.preventDefault());
+		html.find('.obsidian-item-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
+		html.find('.obsidian-item-drop-pill-rm').click(this._onRemoveSpell.bind(this));
+		html.find('.obsidian-item-drop-pill-body').click(this._onEditSpell.bind(this));
 
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
@@ -220,6 +224,79 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
+	async _onDropSpell (evt) {
+		evt.preventDefault();
+		let data;
+
+		try {
+			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
+		} catch (ignored) {}
+
+		if (!data || !data.pack) {
+			return false;
+		}
+
+		const pack = game.packs.find(pack => pack.collection === data.pack);
+		if (!pack) {
+			return false;
+		}
+
+		const item = await pack.getEntity(data.id);
+		if (!item || item.type !== 'spell') {
+			return false;
+		}
+
+		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const fieldset = evt.target.closest('fieldset');
+		const effectDiv = fieldset.closest('.obsidian-effect');
+		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
+
+		if (!effect) {
+			return false;
+		}
+
+		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
+		if (!component) {
+			return false;
+		}
+
+		component.spells.push({
+			_id: item.data._id,
+			name: item.data.name,
+			school: item.data.data.school,
+			data: JSON.stringify(item.data)
+		});
+
+		this.item.update({'flags.obsidian.effects': effects});
+	}
+
+	/**
+	 * @private
+	 */
+	_onEditSpell (evt) {
+		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
+		const fieldset = pill.closest('fieldset');
+		const effectDiv = fieldset.closest('.obsidian-effect');
+		const effect =
+			this.item.data.flags.obsidian.effects.find(e => e.uuid === effectDiv.dataset.uuid);
+		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
+		const spell = component.spells.find(spell => spell._id === pill.dataset.id);
+		const cls = CONFIG.Item.entityClass;
+		const item = new cls(JSON.parse(spell.data));
+
+		item.obsidian = {
+			embeddedSpell: true,
+			parentComponent: component,
+			parentEffect: effect,
+			parentItem: this.item
+		};
+
+		item.sheet.render(true);
+	}
+
+	/**
+	 * @private
+	 */
 	_onEffectSelected (uuid) {
 		this._selectedEffect = uuid;
 		this._selectedComponent = null;
@@ -270,5 +347,46 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		this.item.update(formData);
+	}
+
+	/**
+	 * @private
+	 */
+	_onRemoveSpell (evt) {
+		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
+		const fieldset = pill.closest('fieldset');
+		const effectDiv = fieldset.closest('.obsidian-effect');
+		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
+		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
+		component.spells = component.spells.filter(spell => spell._id !== pill.dataset.id);
+		this.item.update({'flags.obsidian.effects': effects});
+	}
+
+	/**
+	 * @private
+	 */
+	async _updateObject (event, formData) {
+		if (this.item.obsidian && this.item.obsidian.embeddedSpell) {
+			const newData =
+				mergeObject(
+					this.item.data,
+					expandObject(OBSIDIAN.updateArrays(this.item.data, formData)),
+					{inplace: false});
+
+			const effects = duplicate(this.item.obsidian.parentItem.data.flags.obsidian.effects);
+			const effect = effects.find(e => e.uuid === this.item.obsidian.parentEffect.uuid);
+			const component =
+				effect.components.find(c => c.uuid === this.item.obsidian.parentComponent.uuid);
+
+			const spell = component.spells.find(spell => spell._id === this.item.data._id);
+			spell.data = JSON.stringify(newData);
+
+			await this.item.obsidian.parentItem.update({'flags.obsidian.effects': effects});
+			this.item.data = newData;
+			this.render(false);
+		} else {
+			super._updateObject(event, formData);
+		}
 	}
 }

@@ -126,3 +126,47 @@
 .obsidian-action-row button {
 	margin-right: 10px;
 }
+
+.obsidian-item-drop {
+	border: 2px dashed var(--mid);
+	margin-top: 10px;
+	padding: 5px 5px 0 5px;
+}
+
+.obsidian-item-drop.obsidian-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+}
+
+.obsidian-item-drop-empty {
+	font-family: var(--font-condensed);
+	font-size: 12px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: var(--text-secondary);
+}
+
+.obsidian-item-drop-pill {
+	display: inline-flex;
+	background-color: var(--dark);
+	border-radius: 5px;
+	font-family: var(--font-condensed);
+	margin-bottom: 5px;
+}
+
+.obsidian-item-drop-pill-body {
+	padding: 4px 8px;
+	border-right: 1px solid var(--bg);
+}
+
+.obsidian-item-drop-pill-body i {
+	margin-right: 4px;
+}
+
+.obsidian-item-drop-pill-rm {
+	padding: 4px 8px;
+	font-family: var(--font);
+	cursor: pointer;
+}

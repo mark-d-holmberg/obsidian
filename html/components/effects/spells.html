@@ -74,10 +74,13 @@
 			</select>
 		</div>
 	</div>
-	<div class="obsidian-item-drop" data-selector-parent="{{prefix}}.source" data-show="individual">
-		<div class="obsidian-item-drop-empty">{{localize 'OBSIDIAN.DropSpellsHere'}}</div>
+	<div class="obsidian-item-drop{{#unless spells.length}} obsidian-empty{{/unless}}"
+	     data-selector-parent="{{prefix}}.source" data-show="individual">
+		{{#unless spells.length}}
+			<div class="obsidian-item-drop-empty">{{localize 'OBSIDIAN.DropSpellsHere'}}</div>
+		{{/unless}}
 		{{#each spells}}
-				<div class="obsidian-item-drop-pill">
+				<div class="obsidian-item-drop-pill" data-id="{{_id}}">
 					<div class="obsidian-item-drop-pill-body">
 						<i class="obsidian-spell-school obsidian-spell-school-{{school}}"></i>
 				{{name}}
