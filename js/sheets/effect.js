@@ -110,6 +110,14 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 								e.components.some(c => c.type === 'resource'));
 					}
 				});
+
+			data.item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'spells')
+				.forEach(component => component.spells = component.spells.map(id => {
+					const item = this.actor.data.obsidian.itemsByID.get(id);
+					return {name: item.name, school: item.data.school, _id: item._id};
+				}));
 		}
 
 		return data;
@@ -228,6 +236,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		evt.preventDefault();
 		let data;
 
+		if (!this.actor) {
+			return;
+		}
+
 		try {
 			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
 		} catch (ignored) {}
@@ -260,13 +272,23 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return false;
 		}
 
-		component.spells.push({
-			_id: item.data._id,
-			name: item.data.name,
-			school: item.data.data.school,
-			data: JSON.stringify(item.data)
-		});
+		if (!item.data.flags) {
+			item.data.flags = {};
+		}
 
+		if (!item.data.flags.obsidian) {
+			item.data.flags.obsidian = {};
+		}
+
+		item.data.flags.obsidian.isEmbedded = true;
+		item.data.flags.obsidian.parentComponent = component.uuid;
+		item.data.flags.obsidian.source = {
+			type: 'item',
+			item: this.item.data._id,
+			display: this.item.data.name
+		};
+
+		component.spells.push((await this.actor.createEmbeddedEntity('OwnedItem', item.data))._id);
 		this.item.update({'flags.obsidian.effects': effects});
 	}
 
@@ -274,22 +296,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	_onEditSpell (evt) {
-		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
-		const fieldset = pill.closest('fieldset');
-		const effectDiv = fieldset.closest('.obsidian-effect');
-		const effect =
-			this.item.data.flags.obsidian.effects.find(e => e.uuid === effectDiv.dataset.uuid);
-		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
-		const spell = component.spells.find(spell => spell._id === pill.dataset.id);
-		const cls = CONFIG.Item.entityClass;
-		const item = new cls(JSON.parse(spell.data));
+		if (!this.actor) {
+			return;
+		}
 
-		item.obsidian = {
-			embeddedSpell: true,
-			parentComponent: component,
-			parentEffect: effect,
-			parentItem: this.item
-		};
+		const item =
+			this.actor.items.find(item =>
+				item.id === evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.id);
+
+		if (!item) {
+			return;
+		}
 
 		item.sheet.render(true);
 	}
@@ -352,41 +369,18 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	_onRemoveSpell (evt) {
+	async _onRemoveSpell (evt) {
 		const effects = duplicate(this.item.data.flags.obsidian.effects);
 		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
 		const fieldset = pill.closest('fieldset');
 		const effectDiv = fieldset.closest('.obsidian-effect');
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
-		component.spells = component.spells.filter(spell => spell._id !== pill.dataset.id);
-		this.item.update({'flags.obsidian.effects': effects});
-	}
+		component.spells = component.spells.filter(spell => spell !== pill.dataset.id);
+		await this.item.update({'flags.obsidian.effects': effects});
 
-	/**
-	 * @private
-	 */
-	async _updateObject (event, formData) {
-		if (this.item.obsidian && this.item.obsidian.embeddedSpell) {
-			const newData =
-				mergeObject(
-					this.item.data,
-					expandObject(OBSIDIAN.updateArrays(this.item.data, formData)),
-					{inplace: false});
-
-			const effects = duplicate(this.item.obsidian.parentItem.data.flags.obsidian.effects);
-			const effect = effects.find(e => e.uuid === this.item.obsidian.parentEffect.uuid);
-			const component =
-				effect.components.find(c => c.uuid === this.item.obsidian.parentComponent.uuid);
-
-			const spell = component.spells.find(spell => spell._id === this.item.data._id);
-			spell.data = JSON.stringify(newData);
-
-			await this.item.obsidian.parentItem.update({'flags.obsidian.effects': effects});
-			this.item.data = newData;
-			this.render(false);
-		} else {
-			super._updateObject(event, formData);
+		if (this.actor) {
+			this.actor.deleteEmbeddedEntity('OwnedItem', pill.dataset.id);
 		}
 	}
 }

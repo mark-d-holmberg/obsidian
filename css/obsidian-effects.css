@@ -159,6 +159,7 @@
 .obsidian-item-drop-pill-body {
 	padding: 4px 8px;
 	border-right: 1px solid var(--bg);
+	cursor: pointer;
 }
 
 .obsidian-item-drop-pill-body i {

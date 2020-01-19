@@ -20,7 +20,7 @@
                        checked=data.components.ritual}}
     </div>
   </div>
-	{{#if actor}}
+	{{#if (and actor (not item.flags.obsidian.isEmbedded))}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
 	  <div class="obsidian-fullwidth">
 	    <label class="obsidian-inline">
@@ -46,7 +46,7 @@
 	           value="{{item.flags.obsidian.source.custom}}">
 	  </div>
 	</div>
-	{{else}}
+	{{else if (not item.flags.obsidian.isEmbedded)}}
 		<input type="hidden" name="flags.obsidian.source.type" value="custom">
 		<input type="hidden" name="flags.obsidian.source.custom" value="{{localize 'OBSIDIAN.Custom'}}">
 	{{/if}}

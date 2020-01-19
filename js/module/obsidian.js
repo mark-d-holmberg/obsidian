@@ -214,6 +214,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 				atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
 			atk.parentItem = this.actor.getEmbeddedEntity('OwnedItem', atk.parentEffect.parentItem);
 		});
+
 		console.debug(data);
 		return data;
 	}

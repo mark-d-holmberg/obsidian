@@ -8,7 +8,7 @@
 				spells=actor.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
 	{{#each actor.obsidian.classes}}
-		{{#if (not-empty (lookup ../ObsidianData.SPELLS_BY_CLASS flags.obsidian.spellcasting.list))}}
+		{{#if (not-empty (lookup ../spellsByClass flags.obsidian.spellcasting.list))}}
 			<h2 data-class-id="{{_id}}">{{flags.obsidian.label}}</h2>
 			{{#if (eq flags.obsidian.spellcasting.preparation 'prep')}}
 				{{#with (lookup ../actor.obsidian.spells flags.obsidian.spellcasting.list)}}
@@ -20,7 +20,7 @@
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
 								btnActive='OBSIDIAN.Prepared' filter=true active=prepared
 								spellList=../flags.obsidian.spellcasting.list
-								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../flags.obsidian.spellcasting.list)
+								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
 								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
 								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
 								totalPrepared=../flags.obsidian.spellcasting.totalPrepared
@@ -46,7 +46,7 @@
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
 								btnActive='OBSIDIAN.Remove' filter=true active=known
 								totalKnown=../flags.obsidian.spellcasting.totalKnown
-								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../flags.obsidian.spellcasting.list)
+								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
 							  spellList=../flags.obsidian.spellcasting.list
 								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
 								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
@@ -70,7 +70,7 @@
 						</summary>
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn' active=book
 								btnActive='OBSIDIAN.Remove' filter=true spellList=../flags.obsidian.spellcasting.list
-								spells=(lookup ../../ObsidianData.SPELLS_BY_CLASS ../flags.obsidian.spellcasting.list)
+								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
 								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
 								maxCantrips=../flags.obsidian.spellcasting.maxCantrips}}
 					</details>

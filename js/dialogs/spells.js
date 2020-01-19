@@ -39,18 +39,26 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.ObsidianData = OBSIDIAN.Data;
+		data.spellsByClass = duplicate(OBSIDIAN.Data.SPELLS_BY_CLASS);
 
 		const classByID =
 			new Map(data.actor.obsidian.classes.filter(cls => cls.flags.obsidian).map(cls => {
-				cls.flags.obsidian.spellcasting.totalCantrips = 0;
-				cls.flags.obsidian.spellcasting.totalPrepared = 0;
-				cls.flags.obsidian.spellcasting.totalKnown = 0;
+				const spellcasting = cls.flags.obsidian.spellcasting;
+				spellcasting.totalCantrips = 0;
+				spellcasting.totalPrepared = 0;
+				spellcasting.totalKnown = 0;
+
+				if (spellcasting.spellList) {
+					const listKey = cls.name === 'custom' ? cls.flags.obsidian.custom : cls.name;
+					data.spellsByClass[listKey] = spellcasting.spellList;
+				}
+
 				return [cls._id, cls];
 			}));
 
 		data.actor.obsidian.spells = {custom: []};
-		Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS)
+		Object.values(data.spellsByClass).forEach(list => list.sort(OBSIDIAN.spellComparator));
+		Object.keys(data.spellsByClass)
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
 
 		for (const spell of Object.values(
@@ -223,6 +231,15 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			spell = this.parent.actor.data.items.find(item => item._id === id);
 		} else {
 			spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);
+			if (!OBSIDIAN.notDefinedOrEmpty(classID)) {
+				const cls =
+					this.parent.actor.data.obsidian.classes.find(cls => cls._id === classID);
+
+				if (getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+					spell =
+						cls.flags.obsidian.spellcasting.spellList.find(spell => spell._id === id);
+				}
+			}
 		}
 
 		if (spell === undefined) {
@@ -253,7 +270,9 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		} else {
 			const exists =
 				this.parent.actor.data.items.find(item =>
-					item.type === 'spell' && item.name === spell.name);
+					item.type === 'spell'
+					&& item.name === spell.name
+					&& !getProperty(item, 'flags.obsidian.isEmbedded'));
 
 			if (exists) {
 				await this.parent.actor.deleteEmbeddedEntity('OwnedItem', exists._id);
@@ -273,6 +292,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 				spell.flags.obsidian.source.type = 'class';
 				spell.flags.obsidian.source.class = classID;
+				spell.flags.obsidian.isEmbedded = false;
 				await this.parent.actor.createEmbeddedEntity('OwnedItem', spell);
 			}
 		}

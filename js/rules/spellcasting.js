@@ -21,6 +21,11 @@ export function prepareSpellcasting (actorData, flags) {
 		const levels = cls.data.levels;
 
 		spellcasting.list = cls.name === 'custom' ? cls.flags.obsidian.custom : cls.name;
+		if (OBSIDIAN.Data.SPELLS_BY_CLASS && OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list]) {
+			const originalList = OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list];
+			spellcasting.spellList = [].concat(originalList);
+		}
+
 		if (spellcasting.spell === undefined) {
 			spellcasting.spell = OBSIDIAN.Rules.CLASS_SPELL_MODS[cls.name];
 		}

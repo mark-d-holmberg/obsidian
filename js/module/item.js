@@ -119,6 +119,21 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.consumers.push(component);
 				}
+			} else if (component.type === 'spells') {
+				if (component.source === 'individual' && component.method === 'list') {
+					const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
+					component.spells.forEach(id => {
+						const spell = actorData.obsidian.itemsByID.get(id);
+						if (!spell) {
+							return;
+						}
+
+						spell.flags.obsidian.visible = false;
+						if (getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+							cls.flags.obsidian.spellcasting.spellList.push(spell);
+						}
+					});
+				}
 			}
 		}
 
