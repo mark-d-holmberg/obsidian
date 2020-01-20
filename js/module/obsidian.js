@@ -713,7 +713,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 		let scaledAmount = (scaling || 0) - 1;
 
 		if (resources.length) {
-			this._useResource(item, effect, resources[0], scaling || 1);
+			if (resources[0].remaining - (scaling || 1) < 1
+				&& item.type === 'consumable'
+				&& item.data.quantity > 0)
+			{
+				this._refreshConsumable(item, effect, resources[0], scaling || 1);
+			} else {
+				this._useResource(item, effect, resources[0], scaling || 1);
+			}
 		}
 
 		if (consumers.length) {
@@ -906,6 +913,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 			const offset = game.i18n.lang === 'ja' ? 29 : -30;
 			jqel.css('height', `${total - innerTotal + offset}px`);
 		});
+	}
+
+	_refreshConsumable (item, effect, resource) {
+		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
+			_id: item._id,
+			'data.quantity': item.data.quantity - 1,
+			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
+				resource.max
+		}));
 	}
 
 	/**
