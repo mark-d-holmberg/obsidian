@@ -1,5 +1,6 @@
 import {Item5e} from '../../../../systems/dnd5e/module/item/entity.js';
 import {Prepare} from '../rules/prepare.js';
+import {Schema} from './schema.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
@@ -17,6 +18,13 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	}
 
 	const actorData = actor.data;
+	if (!actorData.flags
+		|| !actorData.flags.obsidian
+		|| (actorData.flags.obsidian.version || 0) < Schema.VERSION)
+	{
+		return;
+	}
+
 	const data = actorData.data;
 	const flags = item.flags.obsidian;
 	const effects = flags.effects || [];
