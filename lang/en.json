@@ -583,5 +583,6 @@
 	"OBSIDIAN.AddSpellsMethod-list": "Added to List",
 	"OBSIDIAN.AddSpellsSource-list": "Class List",
 	"OBSIDIAN.AddSpellsSource-individual": "Individual Spells",
-	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level"
+	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level",
+	"OBSIDIAN.ResourceName": "Resource Name"
 }

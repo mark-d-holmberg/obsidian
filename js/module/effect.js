@@ -12,6 +12,7 @@ export const Effect = {
 	newResource: function () {
 		return {
 			type: 'resource',
+			name: '',
 			uuid: OBSIDIAN.uuid(),
 			recharge: {time: 'long', calc: 'all', ndice: 0, die: 2, bonus: 0},
 			bonus: 0,
@@ -123,16 +124,24 @@ export const Effect = {
 			return [];
 		}
 
-		const effect = item.flags.obsidian.effects.find(effect => effect.uuid === consumer.ref);
-		if (!effect) {
+		let effect;
+		let resource;
+
+		outer:
+		for (const e of item.flags.obsidian.effects) {
+			for (const c of e.components) {
+				if (c.uuid === consumer.ref) {
+					resource = c;
+					effect = e;
+					break outer;
+				}
+			}
+		}
+
+		if (!effect || !resource) {
 			return [];
 		}
 
-		const resources = effect.components.filter(c => c.type === 'resource');
-		if (!resources.length) {
-			return [];
-		}
-
-		return [item, effect, resources[0]];
+		return [item, effect, resource];
 	}
 };

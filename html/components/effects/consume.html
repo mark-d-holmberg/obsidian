@@ -26,11 +26,10 @@
 			    {{/each}}
 		    {{/select}}
 	    </select>
-	    <select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target"
-	            data-hide="this-effect, spell, qty">
+	    <select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target" data-hide="spell, qty">
 		    {{#select ref}}
-			    {{#each itemEffectsWithResources}}
-				    <option value="{{uuid}}">{{name}}</option>
+			    {{#each itemResourceComponents}}
+				    <option value="{{uuid}}">{{label}}</option>
 			    {{/each}}
 		    {{/select}}
 	    </select>

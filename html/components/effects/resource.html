@@ -1,6 +1,11 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Resource'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-inline">
+		<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.name"
+		       value="{{name}}" placeholder="{{localize 'OBSIDIAN.ResourceName'}}"
+		       style="max-width: none;">
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">
 			<label class="obsidian-inline">
 				{{localize 'OBSIDIAN.Recharges'}}

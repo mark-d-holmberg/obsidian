@@ -105,9 +105,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 							component.target === 'feat' ? component.featID : component.itemID);
 
 					if (item) {
-						component.itemEffectsWithResources =
-							item.flags.obsidian.effects.filter(e =>
-								e.components.some(c => c.type === 'resource'));
+						component.itemResourceComponents =
+							item.flags.obsidian.effects
+								.flatMap(e => e.components)
+								.filter(c => c.type === 'resource');
 					}
 				});
 

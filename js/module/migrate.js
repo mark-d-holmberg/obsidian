@@ -129,6 +129,7 @@ export const Migrate = {
 		}
 
 		if (data.type === 'consumable'
+			&& !data.flags.obsidian.unlimited
 			&& (!data.flags.obsidian.effects
 				|| !data.flags.obsidian.effects.length
 				|| !data.flags.obsidian.effects.some(e =>
@@ -168,7 +169,6 @@ export const Migrate = {
 	convertConsumable: function (data, source) {
 		const primaryEffect = Effect.create();
 		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
-			primaryEffect.name = game.i18n.localize('OBSIDIAN.Uses');
 			Migrate.v1.convertConsumableUses(data, primaryEffect);
 		}
 
@@ -333,7 +333,6 @@ export const Migrate = {
 			&& data.flags.obsidian.uses.enabled
 			&& data.flags.obsidian.uses.limit !== 'unlimited')
 		{
-			resourceEffect.name = game.i18n.localize('OBSIDIAN.Uses');
 			data.flags.obsidian.effects.push(resourceEffect);
 			Migrate.v1.convertConsumableUses(data, resourceEffect);
 		}
@@ -382,7 +381,6 @@ export const Migrate = {
 		}
 
 		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
-			primaryEffect.name = game.i18n.localize('OBSIDIAN.Charges');
 			primaryEffect.components.push(Migrate.v1.convertCharges(data.flags.obsidian.charges));
 		}
 
@@ -527,9 +525,9 @@ Migrate.core = {
 
 			if (!effect.name.length) {
 				if (uses.per === 'charges') {
-					effect.name = game.i18n.localize('OBSIDIAN.Charges');
+					component.name = game.i18n.localize('OBSIDIAN.Charges');
 				} else {
-					effect.name = game.i18n.localize('OBSIDIAN.Uses');
+					component.name = game.i18n.localize('OBSIDIAN.Uses');
 				}
 			}
 
@@ -751,6 +749,7 @@ Migrate.v1 = {
 			component.key = uses.ability;
 			component.bonus = uses.bonus;
 			component.recharge.time = 'never';
+			component.name = game.i18n.localize('OBSIDIAN.Uses');
 			effect.components.push(component);
 		}
 	},
@@ -764,6 +763,7 @@ Migrate.v1 = {
 		component.recharge.die = charges.die;
 		component.recharge.bonus = charges.bonus;
 		component.remaining = charges.remaining || 0;
+		component.name = game.i18n.localize('OBSIDIAN.Charges');
 		return component;
 	},
 
@@ -800,6 +800,7 @@ Migrate.v1 = {
 		if (uses.type === 'formula') {
 			component = Effect.newResource();
 			component.recharge.time = uses.recharge;
+			component.name = game.i18n.localize('OBSIDIAN.Uses');
 
 			if (OBSIDIAN.notDefinedOrEmpty(uses.fixed)) {
 				component.calc = 'formula';

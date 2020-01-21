@@ -96,13 +96,16 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			} else if (component.type === 'resource') {
 				Prepare.calculateResources(
 					data, item, effect, component, actorData.obsidian.classes);
+
 				item.obsidian.resources.push(component);
+				component.label =
+					component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
 
 				if (flags.notes) {
 					flags.notes.push(
 						'<div class="obsidian-table-note-flex">'
 						+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
-						+ effect.label
+							+ component.label
 						+ `</div>: ${component.display}`
 						+ '</div>');
 				}
@@ -118,10 +121,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			} else if (component.type === 'consume') {
 				if (component.target === 'this-item' || component.target === 'this-effect') {
 					component.itemID = item._id;
-				}
-
-				if (component.target === 'this-effect') {
-					component.ref = effect.uuid;
 				}
 
 				if (!effect.isScaling || effect.selfScaling) {
