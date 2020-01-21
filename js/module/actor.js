@@ -127,28 +127,49 @@ export class ObsidianActor extends Actor5e {
 		return this.data;
 	}
 
-	importSpells (item) {
-		if (!item.flags || !item.flags.obsidian || !item.flags.obsidian.effects) {
+	/**
+	 * @private
+	 */
+	_onDeleteEmbeddedEntity ({embeddedName, deleted, options, userId}) {
+		super._onDeleteEmbeddedEntity({embeddedName, deleted, options, userId});
+		if (!getProperty(deleted, 'flags.obsidian.effects.length')) {
 			return;
 		}
 
-		const newSpells = [];
-		item.flags.obsidian.effects
-			.flatMap(e => e.components)
-			.filter(c => c.type === 'spells' && c.source === 'individual')
-			.forEach(c => {
-				c.spells = c.spells.map(spell => {
-					if (typeof spell === 'object') {
-						newSpells.push(spell);
-						return spell._id;
-					}
+		const orphaned =
+			deleted.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'spells')
+				.flatMap(c => c.spells);
 
-					return spell;
+		if (orphaned.length) {
+			this.deleteManyEmbeddedEntities(embeddedName, orphaned);
+		}
+	}
+
+	async importSpells (item) {
+		if (!getProperty(item, 'flags.obsidian.effects.length')) {
+			return;
+		}
+
+		const effects = duplicate(item.flags.obsidian.effects);
+		const pending =
+			effects.flatMap(e => e.components)
+				.filter(c =>
+					c.type === 'spells'
+					&& c.source === 'individual'
+					&& c.spells.length
+					&& typeof c.spells[0] === 'object')
+				.map(async c => {
+					const ownedSpells =
+						await this.createManyEmbeddedEntities('OwnedItem', c.spells);
+					c.spells = ownedSpells.map(spell => spell._id);
 				});
-			});
 
-		if (newSpells.length) {
-			this.createManyEmbeddedEntities('OwnedItem', newSpells);
+		if (pending.length) {
+			await Promise.all(pending);
+			this.updateEmbeddedEntity(
+				'OwnedItem', {_id: item._id, 'flags.obsidian.effects': effects});
 		}
 	}
 

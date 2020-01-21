@@ -300,19 +300,40 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	_onEditSpell (evt) {
-		if (!this.actor) {
-			return;
+		if (this.actor) {
+			const item =
+				this.actor.items.find(item =>
+					item.id === evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.id);
+
+			if (!item) {
+				return;
+			}
+
+			item.sheet.render(true);
+		} else {
+			const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
+			const fieldset = pill.closest('fieldset');
+			const component =
+				this.item.data.flags.obsidian.effects
+					.flatMap(e => e.components)
+					.find(c => c.uuid === fieldset.dataset.uuid);
+
+			if (!component) {
+				return;
+			}
+
+			const spell = component.spells.find(spell => spell._id === pill.dataset.id);
+			if (!spell) {
+				return;
+			}
+
+			const item = new CONFIG.Item.entityClass(spell, {
+				parentComponent: component.uuid,
+				parentItem: this.item
+			});
+
+			item.sheet.render(true);
 		}
-
-		const item =
-			this.actor.items.find(item =>
-				item.id === evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.id);
-
-		if (!item) {
-			return;
-		}
-
-		item.sheet.render(true);
 	}
 
 	/**
@@ -391,6 +412,38 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		if (this.actor) {
 			this.actor.deleteEmbeddedEntity('OwnedItem', pill.dataset.id);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	async _updateObject (event, formData) {
+		if (getProperty(this.item, 'data.flags.obsidian.isEmbedded')
+			&& this.item.options.parentItem
+			&& this.item.options.parentComponent
+			&& !this.actor)
+		{
+			const newData =
+				mergeObject(
+					this.item.data,
+					expandObject(OBSIDIAN.updateArrays(this.item.data, formData)),
+					{inplace: false});
+
+			const effects = duplicate(this.item.options.parentItem.data.flags.obsidian.effects);
+			const component =
+				effects
+					.flatMap(e => e.components)
+					.find(c => c.uuid === this.item.options.parentComponent);
+
+			const idx = component.spells.findIndex(spell => spell._id === this.item.data._id);
+			component.spells[idx] = newData;
+
+			await this.item.options.parentItem.update({'flags.obsidian.effects': effects});
+			this.item.data = newData;
+			this.render(false);
+		} else {
+			super._updateObject(event, formData);
 		}
 	}
 }

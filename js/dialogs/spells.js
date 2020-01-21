@@ -65,8 +65,12 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			data.actor.items.filter(item => item.type === 'spell')))
 		{
 			const flags = spell.flags.obsidian;
-			if (!flags || flags.source.type !== 'class') {
+			if (!flags || !flags.source || !['class', 'item'].includes(flags.source.type)) {
 				data.actor.obsidian.spells.custom.push(spell);
+				continue;
+			}
+
+			if (flags.source.type === 'item') {
 				continue;
 			}
 

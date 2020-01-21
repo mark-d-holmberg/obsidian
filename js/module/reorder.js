@@ -89,7 +89,9 @@ export const Reorder = {
 					return false;
 				}
 			} else if (!idData) {
-				src = (await actor.createEmbeddedEntity('OwnedItem', game.items.get(data.id).data)).data;
+				src =
+					await actor.createEmbeddedEntity(
+						'OwnedItem', duplicate(game.items.get(data.id).data));
 			}
 		}
 

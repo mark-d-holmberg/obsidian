@@ -37,7 +37,7 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			{{#if actor}}
+			{{#if @root.actor}}
 			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.method" data-hide="innate">
 				{{#select class}}
 					{{#each @root.actor.data.obsidian.classes}}
