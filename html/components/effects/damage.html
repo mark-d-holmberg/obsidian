@@ -7,7 +7,7 @@
 				<select name="{{prefix}}.calc" data-selector="{{prefix}}.calc">
 					{{#select calc}}
 						{{#each @root.ObsidianRules.RESOURCE_USES}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.ResourceUses-' this}}</option>
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.DamageCalc-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>

@@ -1,11 +1,6 @@
 export const preloadPartials = function () {
 	return loadTemplates([
-		'modules/obsidian/html/components/damage.html',
-		'modules/obsidian/html/components/dc.html',
-		'modules/obsidian/html/components/hit.html',
 		'modules/obsidian/html/components/spell-list.html',
-		'modules/obsidian/html/components/uses.html',
-		'modules/obsidian/html/components/charges.html',
 		'modules/obsidian/html/components/spell-card.html',
 		'modules/obsidian/html/components/inventory.html',
 		'modules/obsidian/html/components/tag-dropdown.html',

@@ -127,17 +127,57 @@ export class ObsidianActor extends Actor5e {
 		return this.data;
 	}
 
-	linkClasses (item) {
-		if (!item.flags || !item.flags.obsidian || !item.flags.obsidian.source
-			|| item.flags.obsidian.source.type !== 'class')
-		{
+	importSpells (item) {
+		if (!item.flags || !item.flags.obsidian || !item.flags.obsidian.effects) {
 			return;
 		}
 
-		if (item.flags.obsidian.source.class === 'custom') {
-			const needle = item.flags.obsidian.source.custom.toLowerCase();
-			const cls = this.data.obsidian.classes.find(cls =>
-				cls.name === 'custom' && cls.flags.obsidian.custom.toLowerCase() === needle);
+		const newSpells = [];
+		item.flags.obsidian.effects
+			.flatMap(e => e.components)
+			.filter(c => c.type === 'spells' && c.source === 'individual')
+			.forEach(c => {
+				c.spells = c.spells.map(spell => {
+					if (typeof spell === 'object') {
+						newSpells.push(spell);
+						return spell._id;
+					}
+
+					return spell;
+				});
+			});
+
+		if (newSpells.length) {
+			this.createManyEmbeddedEntities('OwnedItem', newSpells);
+		}
+	}
+
+	linkClasses (item) {
+		if (!item.flags || !item.flags.obsidian) {
+			return;
+		}
+
+		item.flags.obsidian.effects
+			.flatMap(e => e.components)
+			.filter(c => !OBSIDIAN.notDefinedOrEmpty(c.text))
+			.forEach(c => {
+				const needle = c.text.toLowerCase();
+				const cls =
+					this.data.obsidian.classes.find(cls =>
+						cls.flags.obsidian.label.toLowerCase() === needle);
+
+				c.class = cls ? cls._id : '';
+			});
+
+		if (!item.flags.obsidian.source || item.flags.obsidian.source.type !== 'class') {
+			return;
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.source.text)) {
+			const needle = item.flags.obsidian.source.text.toLowerCase();
+			const cls =
+				this.data.obsidian.classes.find(cls =>
+					cls.flags.obsidian.label.toLowerCase() === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';

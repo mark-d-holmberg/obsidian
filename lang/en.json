@@ -584,5 +584,7 @@
 	"OBSIDIAN.AddSpellsSource-list": "Class List",
 	"OBSIDIAN.AddSpellsSource-individual": "Individual Spells",
 	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level",
-	"OBSIDIAN.ResourceName": "Resource Name"
+	"OBSIDIAN.ResourceName": "Resource Name",
+	"OBSIDIAN.DamageCalc-fixed": "Fixed",
+	"OBSIDIAN.DamageCalc-formula": "Roll"
 }

@@ -90,6 +90,7 @@
 					{{/each}}
 				{{/select}}
 			</select>
+			{{#if actor}}
 			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.key" data-show="cls">
 				{{#select class}}
 					{{#each @root.actor.data.obsidian.classes}}
@@ -97,6 +98,11 @@
 					{{/each}}
 				{{/select}}
 			</select>
+			{{else}}
+			<input type="text" class="obsidian-input-compact" name="{{prefix}}.text" value="{{text}}"
+			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="{{prefix}}.key"
+			       data-show="cls">
+			{{/if}}
 		</div>
 	</div>
 </fieldset>

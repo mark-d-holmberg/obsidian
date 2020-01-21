@@ -112,13 +112,14 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					}
 				});
 
-			data.item.flags.obsidian.effects
-				.flatMap(e => e.components)
-				.filter(c => c.type === 'spells')
-				.forEach(component => component.spells = component.spells.map(id => {
-					const item = this.actor.data.obsidian.itemsByID.get(id);
-					return {name: item.name, school: item.data.school, _id: item._id};
-				}));
+			if (this.actor) {
+				data.item.flags.obsidian.effects
+					.flatMap(e => e.components)
+					.filter(c => c.type === 'spells')
+					.forEach(component =>
+						component.spells = component.spells.map(id =>
+							this.actor.data.obsidian.itemsByID.get(id)));
+			}
 		}
 
 		return data;
@@ -237,10 +238,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		evt.preventDefault();
 		let data;
 
-		if (!this.actor) {
-			return;
-		}
-
 		try {
 			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
 		} catch (ignored) {}
@@ -289,7 +286,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			display: this.item.data.name
 		};
 
-		component.spells.push((await this.actor.createEmbeddedEntity('OwnedItem', item.data))._id);
+		if (this.actor) {
+			component.spells.push(
+				(await this.actor.createEmbeddedEntity('OwnedItem', item.data))._id);
+		} else {
+			component.spells.push(item.data);
+		}
+
 		this.item.update({'flags.obsidian.effects': effects});
 	}
 
@@ -377,7 +380,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effectDiv = fieldset.closest('.obsidian-effect');
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
-		component.spells = component.spells.filter(spell => spell !== pill.dataset.id);
+
+		if (this.actor) {
+			component.spells = component.spells.filter(spell => spell !== pill.dataset.id);
+		} else {
+			component.spells = component.spells.filter(spell => spell._id !== pill.dataset.id);
+		}
+
 		await this.item.update({'flags.obsidian.effects': effects});
 
 		if (this.actor) {

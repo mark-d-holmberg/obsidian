@@ -86,6 +86,7 @@ Hooks.on('preCreateItem', (constructor, data) => enrichItemFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, id, data) => {
 	enrichItemFlags(data);
 	actor.linkClasses(data);
+	actor.importSpells(data);
 });
 
 OBSIDIAN.notDefinedOrEmpty = function (obj) {
