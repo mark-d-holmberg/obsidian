@@ -136,10 +136,28 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 						}
 
 						spell.flags.obsidian.visible = false;
-						if (getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+						if (cls && getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
 							cls.flags.obsidian.spellcasting.spellList.push(spell);
 						}
 					});
+				} else if (component.source === 'list'
+					&& getProperty(item, 'flags.obsidian.source.type') === 'class'
+					&& OBSIDIAN.Data.SPELLS_BY_CLASS[component.list])
+				{
+					const cls = actorData.obsidian.classes.find(cls =>
+						cls._id === item.flags.obsidian.source.class);
+
+					if (!cls || !getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+						return;
+					}
+
+					const list = cls.flags.obsidian.spellcasting.spellList;
+					const existing = new Set(list.map(spell => spell._id));
+
+					cls.flags.obsidian.spellcasting.spellList =
+						list.concat(
+							OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
+								.filter(spell => !existing.has(spell._id)));
 				}
 			}
 		}
