@@ -272,12 +272,8 @@ export class ObsidianActor extends Actor5e {
 			.filter(hd => !OBSIDIAN.notDefinedOrEmpty(hd.override))
 			.forEach(hd => hd.max = Number(hd.override));
 
-		const missingHD =
-			Object.values(hds)
-				.filter(hd => hd.value < hd.max)
-				.reduce((acc, hd) => acc + hd.max - hd.value, 0);
-
-		const hdToRecover = Math.max(1, Math.floor(missingHD / 2));
+		const totalHD = Object.values(hds).reduce((acc, hd) => acc + hd.max, 0);
+		const hdToRecover = Math.max(1, Math.floor(totalHD / 2));
 		let recoveredHD = 0;
 
 		// Recover largest HD first.
