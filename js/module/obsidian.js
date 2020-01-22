@@ -715,7 +715,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (resources.length) {
 			if (resources[0].remaining - (scaling || 1) < 1
 				&& item.type === 'consumable'
-				&& item.data.quantity > 0)
+				&& item.data.quantity > 0
+				&& item.data.autoDestroy)
 			{
 				this._refreshConsumable(item, effect, resources[0], scaling || 1);
 			} else {
@@ -801,7 +802,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 				const item = this.actor.data.items[idx];
 				const property = components.slice(2).join('.');
 				const update = {_id: item._id};
-				update[property] = event.currentTarget.value;
+
+				let value = event.currentTarget.value;
+				if (event.currentTarget.dataset.dtype === 'Number') {
+					value = Number(value);
+				} else if (event.currentTarget.dataset.dtype === 'Boolean') {
+					value = value === 'true';
+				}
+
+				update[property] = value;
 				return this.actor.updateEmbeddedEntity(
 					'OwnedItem',
 					OBSIDIAN.updateArrays(item, update));
@@ -915,12 +924,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 		});
 	}
 
-	_refreshConsumable (item, effect, resource) {
+	_refreshConsumable (item, effect, resource, n) {
 		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
 			_id: item._id,
 			'data.quantity': item.data.quantity - 1,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
-				resource.max
+				resource.max - (n - resource.remaining)
 		}));
 	}
 

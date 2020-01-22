@@ -586,5 +586,6 @@
 	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level",
 	"OBSIDIAN.ResourceName": "Resource Name",
 	"OBSIDIAN.DamageCalc-fixed": "Fixed",
-	"OBSIDIAN.DamageCalc-formula": "Roll"
+	"OBSIDIAN.DamageCalc-formula": "Roll",
+	"OBSIDIAN.DestroyOnEmpty": "Destroy on Empty"
 }
