@@ -509,21 +509,25 @@ export const Rolls = {
 		});
 	},
 
-	recharge: function (item) {
-		const charges = item.flags.obsidian.charges;
-		const roll = new Die(charges.die).roll(charges.ndice);
+	recharge: function (item, effect, component) {
+		const recharge = component.recharge;
+		const roll = new Die(recharge.die).roll(recharge.ndice);
 
 		return {
 			flags: {
 				obsidian: {
 					type: 'item',
-					title: item.name,
+					title:
+						component.name.length
+							? component.name
+							: effect.name.length
+								? effect.name : item.name,
 					subtitle: game.i18n.localize('OBSIDIAN.Recharge'),
 					results: [[{
-						total: roll.results.reduce((acc, val) => acc + val, 0) + charges.bonus,
+						total: roll.results.reduce((acc, val) => acc + val, 0) + recharge.bonus,
 						breakdown:
-							`${charges.ndice}d${charges.die}${charges.bonus.sgnex()} = `
-							+ `(${roll.results.join('+')})${charges.bonus.sgnex()}`
+							`${recharge.ndice}d${recharge.die}${recharge.bonus.sgnex()} = `
+							+ `(${roll.results.join('+')})${recharge.bonus.sgnex()}`
 					}]]
 				}
 			}

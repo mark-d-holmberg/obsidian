@@ -251,21 +251,9 @@ export class ObsidianActor extends Actor5e {
 			await this.update({'data.spells.pact.uses': 0});
 		}
 
-		const items = [];
-		const feats = this.data.items.filter(item => item.type === 'feat');
-
-		for (const feat of feats) {
-			const flags = feat.flags.obsidian;
-			if (flags.uses && flags.uses.enabled && flags.uses.recharge === 'short') {
-				items.push({
-					_id: feat._id,
-					flags: {obsidian: {uses: {remaining: flags.uses.max}}}
-				});
-			}
-		}
-
-		if (items.length > 0) {
-			return this.updateManyEmbeddedEntities('OwnedItem', items);
+		const itemUpdates = this._resourceUpdates(['short']);
+		if (itemUpdates.length > 0) {
+			return this.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
 		}
 
 		return Promise.resolve();
@@ -279,12 +267,32 @@ export class ObsidianActor extends Actor5e {
 
 		update['data.attributes.hp.value'] = data.attributes.hp.maxAdjusted;
 
-		for (const [die, hd] of Object.entries(flags.attributes.hd)) {
-			if (hd.max > 0) {
-				let newValue = hd.value + Math.floor(hd.max / 2);
-				if (newValue <= hd.max) {
-					update[`flags.obsidian.attributes.hd.${die}.value`] = newValue;
-				}
+		const hds = duplicate(flags.attributes.hd);
+		Object.values(hds)
+			.filter(hd => !OBSIDIAN.notDefinedOrEmpty(hd.override))
+			.forEach(hd => hd.max = Number(hd.override));
+
+		const missingHD =
+			Object.values(hds)
+				.filter(hd => hd.value < hd.max)
+				.reduce((acc, hd) => acc + hd.max - hd.value, 0);
+
+		const hdToRecover = Math.max(1, Math.floor(missingHD / 2));
+		let recoveredHD = 0;
+
+		// Recover largest HD first.
+		for (const [die, hd] of
+			Object.entries(hds)
+				.filter(([, hd]) => hd.max > 0 && hd.value < hd.max)
+				.sort((a, b) => b[0] - a[0]))
+		{
+			const diff = hd.max - hd.value;
+			const recovered = Math.clamped(diff, 1, hdToRecover - recoveredHD);
+			recoveredHD += recovered;
+			update[`flags.obsidian.attributes.hd.${die}.value`] = hd.value + recovered;
+
+			if (recoveredHD >= hdToRecover) {
+				break;
 			}
 		}
 
@@ -295,47 +303,10 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		await this.update(update);
-		const items = [];
+		const itemUpdates = this._resourceUpdates(['long', 'dawn', 'dusk']);
 
-		for (const item of this.data.items) {
-			const itemFlags = item.flags.obsidian;
-			if (item.type === 'feat'
-				&& itemFlags.uses
-				&& itemFlags.uses.enabled
-				&& itemFlags.uses.recharge === 'long')
-			{
-				items.push({
-					_id: item._id,
-					flags: {obsidian: {uses: {remaining: itemFlags.uses.max}}}
-				});
-			}
-
-			if (item.type === 'weapon' && itemFlags.charges && itemFlags.charges.enabled) {
-				if (itemFlags.charges.rechargeType === 'formula') {
-					const recharge = Rolls.recharge(item);
-					let remaining =
-						itemFlags.charges.remaining + recharge.flags.obsidian.results[0][0].total;
-
-					if (remaining > itemFlags.charges.max) {
-						remaining = itemFlags.charges.max;
-					}
-
-					Rolls.toChat(this, recharge);
-					items.push({
-						_id: item._id,
-						flags: {obsidian: {charges: {remaining: remaining}}}
-					});
-				} else {
-					items.push({
-						_id: item._id,
-						flags: {obsidian: {charges: {remaining: itemFlags.charges.max}}}
-					});
-				}
-			}
-		}
-
-		if (items.length > 0) {
-			return this.updateManyEmbeddedEntities('OwnedItem', items);
+		if (itemUpdates.length > 0) {
+			return this.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
 		}
 
 		return Promise.resolve();
@@ -371,5 +342,57 @@ export class ObsidianActor extends Actor5e {
 
 			await this.update(OBSIDIAN.updateArrays(this.data, update));
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_recharge (item, effect, component, updates) {
+		const updateKey =
+			`flags.obsidian.effects.${effect.idx}.components.${component.idx}.remaining`;
+
+		if (component.recharge.calc === 'all') {
+			updates[updateKey] = component.max;
+		} else {
+			const recharge = Rolls.recharge(item, effect, component);
+			const remaining =
+				Math.clamped(
+					component.remaining + recharge.flags.obsidian.results[0][0].total,
+					0, component.max);
+
+			Rolls.toChat(this, recharge);
+			updates[updateKey] = remaining;
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_resourceUpdates (validTimes) {
+		const itemUpdates = [];
+		for (const item of this.data.items) {
+			if (!getProperty(item, 'flags.obsidian.effects.length')) {
+				continue;
+			}
+
+			const updates = {_id: item._id};
+			for (const effect of item.flags.obsidian.effects) {
+				for (const component of effect.components) {
+					if (component.type !== 'resource'
+						|| !validTimes.includes(component.recharge.time))
+					{
+						continue;
+					}
+
+					this._recharge(item, effect, component, updates);
+				}
+			}
+
+			if (Object.keys(updates).length > 1) {
+				itemUpdates.push(OBSIDIAN.updateArrays(item, updates));
+			}
+		}
+
+		return itemUpdates;
 	}
 }
