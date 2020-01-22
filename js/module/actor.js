@@ -375,7 +375,8 @@ export class ObsidianActor extends Actor5e {
 			for (const effect of item.flags.obsidian.effects) {
 				for (const component of effect.components) {
 					if (component.type !== 'resource'
-						|| !validTimes.includes(component.recharge.time))
+						|| !validTimes.includes(component.recharge.time)
+						|| component.remaining === component.max)
 					{
 						continue;
 					}

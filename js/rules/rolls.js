@@ -490,6 +490,20 @@ export const Rolls = {
 			scaledAmount = 0;
 		}
 
+		if (!itemFlags.effects.length) {
+			return [{
+				flags: {
+					obsidian: {
+						type: item.type === 'spell' ? 'spl' : 'fx',
+						title: item.name,
+						details: item,
+						open: true
+					}
+				}
+			}];
+		}
+
+
 		return itemFlags.effects
 			.filter(effect => !effect.isScaling || effect.selfScaling)
 			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
@@ -517,12 +531,8 @@ export const Rolls = {
 			flags: {
 				obsidian: {
 					type: 'item',
-					title:
-						component.name.length
-							? component.name
-							: effect.name.length
-								? effect.name : item.name,
-					subtitle: game.i18n.localize('OBSIDIAN.Recharge'),
+					title: item.name,
+					subtitle: component.label,
 					results: [[{
 						total: roll.results.reduce((acc, val) => acc + val, 0) + recharge.bonus,
 						breakdown:
@@ -547,6 +557,7 @@ export const Rolls = {
 						dmg.mod = Math.floor(dmg.mod * scaledAmount);
 					} else {
 						dmg.ndice = Math.floor(dmg.ndice * scaledAmount);
+						dmg.ncrit = Math.floor(dmg.ncrit * scaledAmount);
 					}
 
 					return dmg;
@@ -559,6 +570,7 @@ export const Rolls = {
 			if (damageComponents) {
 				damage = damage.concat(duplicate(damageComponents).map(dmg => {
 					dmg.ndice = Math.floor(dmg.ndice * dmg.scaledDice);
+					dmg.ncrit = Math.floor(dmg.ncrit * dmg.scaledDice);
 					return dmg;
 				}).filter(dmg => dmg.ndice > 0));
 			}

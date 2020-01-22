@@ -29,7 +29,7 @@
 			       data-dtype="Number" placeholder="0" name="{{prefix}}.recharge.ndice" data-hide="all"
 			       data-selector-parent="{{prefix}}.recharge.calc" value="{{recharge.ndice}}">
 			<select name="{{prefix}}.recharge.die" data-selector-parent="{{prefix}}.recharge.calc"
-			        data-hide="all">
+			        data-hide="all" data-dtype="Number">
 				{{#select recharge.die}}
 					{{#each @root.ObsidianRules.ITEM_CHARGE_DICE}}
 						<option value="{{this}}">d{{this}}</option>
