@@ -581,6 +581,7 @@
 	"OBSIDIAN.AddSpellsMethod-known": "Spells Known",
 	"OBSIDIAN.AddSpellsMethod-prep": "Always Prepared",
 	"OBSIDIAN.AddSpellsMethod-list": "Added to List",
+	"OBSIDIAN.AddSpellsMethod-item": "Provided by Item",
 	"OBSIDIAN.AddSpellsSource-list": "Class List",
 	"OBSIDIAN.AddSpellsSource-individual": "Individual Spells",
 	"OBSIDIAN.CastAtHigherLevel": "Cast At Higher Level",

@@ -38,7 +38,8 @@
 				{{/select}}
 			</select>
 			{{#if @root.actor}}
-			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.method" data-hide="innate">
+			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.method"
+			        data-hide="innate, item">
 				{{#select class}}
 					{{#each @root.actor.data.obsidian.classes}}
 						<option value="{{_id}}">{{flags.obsidian.label}}</option>
@@ -48,7 +49,7 @@
 			{{else}}
 			<input type="text" class="obsidian-input-compact" name="{{prefix}}.text" value="{{text}}"
 			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="{{prefix}}.method"
-			       data-hide="innate">
+			       data-hide="innate, item">
 			{{/if}}
 			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.method" data-show="innate">
 				{{#select ability}}
@@ -58,7 +59,7 @@
 				{{/select}}
 			</select>
 			{{fancy-checkbox (add prefix '.upcast') content='OBSIDIAN.CastAtHigherLevel' checked=upcast
-											 selectorParent=(add prefix '.method') show='innate'
+											 selectorParent=(add prefix '.method') show='innate, item'
 											 selector=(add prefix '.upcast')}}
 			<select name="{{prefix}}.level" data-dtype="Number" data-selector-parent="{{prefix}}.upcast"
 			        style="margin-left: 10px;">

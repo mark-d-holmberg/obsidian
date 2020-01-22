@@ -655,6 +655,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_onRoll (evt) {
 		const uuid = evt.currentTarget.dataset.uuid;
 		const effect = this.actor.data.obsidian.effects.get(uuid);
+		const spell = this.actor.data.obsidian.itemsByID.get(evt.currentTarget.dataset.spl);
 
 		if (effect) {
 			const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
@@ -666,10 +667,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 				if (consumer && consumer.target === 'spell') {
 					new ObsidianConsumeSlotDialog(this, item, effect).render(true);
 				} else {
-					new ObsidianResourceScalingDialog(this, item, effect).render(true);
+					new ObsidianResourceScalingDialog(this, item, effect, spell).render(true);
 				}
 			} else {
-				this._onRollEffect(effect);
+				this._onRollEffect(effect, null, spell);
 			}
 
 			return;
@@ -681,7 +682,18 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 			if (item && item.obsidian) {
 				if (item.type === 'spell') {
-					if (item.data.level > 0) {
+					if (getProperty(item, 'flags.obsidian.parentComponent')) {
+						const component =
+							this.actor.data.obsidian.components.get(
+								item.flags.obsidian.parentComponent);
+
+						const effect = this.actor.data.obsidian.effects.get(component.parentEffect);
+						evt.currentTarget.dataset.roll = 'fx';
+						evt.currentTarget.dataset.uuid = effect.uuid;
+						evt.currentTarget.dataset.spl = item._id;
+						this._onRoll(evt);
+						return;
+					} else if (item.data.level > 0) {
 						new ObsidianConsumeSlotDialog(this, item, item.flags.obsidian.effects[0])
 							.render(true);
 						return;
@@ -690,8 +702,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 					new ObsidianActionableDialog(this, item).render(true);
 					return;
 				} else if (item.obsidian.actionable.length) {
+					const action = item.obsidian.actionable[0];
 					evt.currentTarget.dataset.roll = 'fx';
-					evt.currentTarget.dataset.uuid = item.obsidian.actionable[0].uuid;
+					evt.currentTarget.dataset.uuid = action.uuid;
+
+					if (action.type === 'spell') {
+						evt.currentTarget.dataset.roll = 'item';
+						evt.currentTarget.dataset.id = action._id;
+					}
+
 					this._onRoll(evt);
 					return;
 				}
@@ -705,12 +724,17 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 * @param effect {Object}
 	 * @param scaling {Number}
+	 * @param spell {Object|undefined}
 	 */
-	_onRollEffect (effect, scaling) {
+	_onRollEffect (effect, scaling, spell) {
 		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		const resources = effect.components.filter(component => component.type === 'resource');
 		const consumers = effect.components.filter(component => component.type === 'consume');
 		let scaledAmount = (scaling || 0) - 1;
+
+		if (spell) {
+			scaledAmount += spell.data.level;
+		}
 
 		if (resources.length) {
 			if (resources[0].remaining - (scaling || 1) < 1
@@ -757,6 +781,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const evt = {
 			currentTarget: {dataset: {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount}}
 		};
+
+		if (spell) {
+			evt.currentTarget.dataset.roll = 'item';
+			evt.currentTarget.dataset.id = spell._id;
+		}
 
 		Rolls.fromClick(this.actor, evt);
 	}

@@ -159,6 +159,18 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 							OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
 								.filter(spell => !existing.has(spell._id)));
 				}
+
+				if (component.source === 'individual'
+					&& component.method === 'item'
+					&& flags.notes)
+				{
+					flags.notes.push(...component.spells
+						.map(id => actorData.obsidian.itemsByID.get(id))
+						.map(spell =>
+							'<div class="obsidian-table-note-flex">'
+							+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
+							+ `${spell.name}</div></div>`));
+				}
 			}
 		}
 
@@ -172,6 +184,16 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			item.obsidian.actionable.push(effect);
 		}
 	}
+
+	item.obsidian.actionable = item.obsidian.actionable.flatMap(action => {
+		const spells = action.components.filter(c => c.type === 'spells');
+		if (spells.length) {
+			return spells.flatMap(spell =>
+				spell.spells.map(id => actorData.obsidian.itemsByID.get(id)));
+		} else {
+			return action;
+		}
+	});
 
 	if (item.type === 'spell' && item.data.level === 0) {
 		const cantripScaling =

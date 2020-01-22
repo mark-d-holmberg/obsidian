@@ -29,7 +29,9 @@
 	    <select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target" data-hide="spell, qty">
 		    {{#select ref}}
 			    {{#each itemResourceComponents}}
-				    <option value="{{uuid}}">{{label}}</option>
+				    {{#if (or (not (eq ../target 'this-effect')) (eq parentEffect ../parentEffect))}}
+					    <option value="{{uuid}}">{{label}}</option>
+				    {{/if}}
 			    {{/each}}
 		    {{/select}}
 	    </select>

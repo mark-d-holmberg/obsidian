@@ -1,11 +1,12 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
 	{{#each item.obsidian.actionable}}
 		<div class="obsidian-action-row">
-			<button type="button" class="obsidian-btn-outline obsidian-btn-compact" data-uuid="{{uuid}}"
-			        data-roll="fx">
+			<button type="button" class="obsidian-btn-outline obsidian-btn-compact"
+			        {{#if (eq type 'spell')}}data-roll="item" data-id="{{_id}}"
+			        {{~else}}data-roll="fx" data-uuid="{{uuid}}"{{/if}}>
 				{{localize 'OBSIDIAN.Use'}}
 			</button>
-			{{label}}
+			{{#if (eq type 'spell')}}{{name}}{{else}}{{label}}{{/if}}
 		</div>
 	{{/each}}
 </form>

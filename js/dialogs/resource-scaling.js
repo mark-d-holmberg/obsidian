@@ -2,10 +2,11 @@ import {ObsidianDialog} from './dialog.js';
 import {Effect} from '../module/effect.js';
 
 export class ObsidianResourceScalingDialog extends ObsidianDialog {
-	constructor (parent, item, effect) {
+	constructor (parent, item, effect, spell) {
 		super(parent);
 		this._item = item;
 		this._effect = effect;
+		this._spell = spell;
 		this._resources = effect.components.filter(c => c.type === 'resource');
 		this._consumers = effect.components.filter(c => c.type === 'consume');
 	}
@@ -27,7 +28,7 @@ export class ObsidianResourceScalingDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(() => {
-			this.parent._onRollEffect(this._effect, Number(html.find('input').val()));
+			this.parent._onRollEffect(this._effect, Number(html.find('input').val()), this._spell);
 			this.close();
 		});
 	}
