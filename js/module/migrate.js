@@ -73,8 +73,8 @@ export const Migrate = {
 			source = 'core';
 		}
 
-		if (data.type === 'class' && source === 'core') {
-			Migrate.convertClass(data);
+		if (data.type === 'class') {
+			Migrate.convertClass(data, source);
 		} else if (data.type === 'consumable') {
 			data.flags.obsidian =
 				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false});
@@ -148,17 +148,19 @@ export const Migrate = {
 		return data;
 	},
 
-	convertClass: function (data) {
-		const official =
-			OBSIDIAN.Rules.CLASSES.find(cls =>
-				data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`));
+	convertClass: function (data, source) {
+		if (source === 'core') {
+			const official =
+				OBSIDIAN.Rules.CLASSES.find(cls =>
+					data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`));
 
-		if (official) {
-			data.name = official;
-		} else {
-			const name = data.name;
-			data.name = 'custom';
-			data.flags.obsidian.custom = name;
+			if (official) {
+				data.name = official;
+			} else {
+				const name = data.name;
+				data.name = 'custom';
+				data.flags.obsidian.custom = name;
+			}
 		}
 
 		data.flags.obsidian.hd = ObsidianHeaderDetailsDialog.determineHD(data.name);
@@ -775,6 +777,11 @@ Migrate.v1 = {
 		component.bonus = dmg.bonus + magic;
 		component.damage = dmg.type;
 		component.versatile = versatile;
+
+		if (!isNaN(Number(dmg.ncrit))) {
+			component.ncrit = Number(dmg.ncrit);
+		}
+
 		return component;
 	},
 

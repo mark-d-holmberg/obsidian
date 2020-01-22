@@ -12,6 +12,11 @@
 					{{/select}}
 				</select>
 			</label>
+			<label class="obsidian-inline">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" placeholder="1" name="{{prefix}}.ncrit" value="{{ncrit}}">
+				<span>{{localize 'OBSIDIAN.CritDice'}}</span>
+			</label>
 			{{fancy-checkbox (add prefix '.versatile') content='OBSIDIAN.Versatile' checked=versatile}}
 		</div>
 	</div>

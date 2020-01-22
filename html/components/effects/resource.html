@@ -90,7 +90,7 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			{{#if actor}}
+			{{#if @root.actor}}
 			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.key" data-show="cls">
 				{{#select class}}
 					{{#each @root.actor.data.obsidian.classes}}
