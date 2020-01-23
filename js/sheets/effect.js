@@ -7,7 +7,10 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
 	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume,'
-	+ ' .obsidian-add-spells';
+	+ ' .obsidian-add-spells, .obsidian-roll-modifier';
+
+const componentMenus = new Map();
+componentMenus.set(['attack', 'damage'], '.obsidian-roll-modifier');
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -225,10 +228,27 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	_onComponentSelected (uuid) {
 		this._selectedEffect = null;
 		this._selectedComponent = uuid;
-		$('.obsidian-effect, .obsidian-effect fieldset').removeClass('obsidian-selected');
-		$(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
-		$(effectSelectMenu).addClass('obsidian-hidden');
-		$('.obsidian-rm-effect').removeClass('obsidian-hidden');
+		this.element.find('.obsidian-effect, .obsidian-effect fieldset')
+			.removeClass('obsidian-selected');
+
+		this.element.find(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
+		this.element.find(effectSelectMenu).addClass('obsidian-hidden');
+		this.element.find('.obsidian-rm-effect').removeClass('obsidian-hidden');
+
+		const component =
+			this.item.data.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.find(c => c.uuid === uuid);
+
+		if (component) {
+			const menu =
+				Array.from(componentMenus.entries())
+					.find(([types,]) => types.includes(component.type));
+
+			if (menu) {
+				this.element.find(menu[1]).removeClass('obsidian-hidden');
+			}
+		}
 	}
 
 	/**
@@ -342,9 +362,11 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	_onEffectSelected (uuid) {
 		this._selectedEffect = uuid;
 		this._selectedComponent = null;
-		$('.obsidian-effect, .obsidian-effect fieldset').removeClass('obsidian-selected');
-		$(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
-		$(effectSelectMenu).removeClass('obsidian-hidden');
+		this.element.find('.obsidian-effect, .obsidian-effect fieldset')
+			.removeClass('obsidian-selected');
+
+		this.element.find(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
+		this.element.find(effectSelectMenu).removeClass('obsidian-hidden');
 	}
 
 	/**

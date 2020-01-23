@@ -588,5 +588,6 @@
 	"OBSIDIAN.ResourceName": "Resource Name",
 	"OBSIDIAN.DamageCalc-fixed": "Fixed",
 	"OBSIDIAN.DamageCalc-formula": "Roll",
-	"OBSIDIAN.DestroyOnEmpty": "Destroy on Empty"
+	"OBSIDIAN.DestroyOnEmpty": "Destroy on Empty",
+	"OBSIDIAN.RollModifier": "Roll Modifier"
 }
