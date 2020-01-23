@@ -17,7 +17,9 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/scaling.html',
 		'modules/obsidian/html/components/effects/targets.html',
 		'modules/obsidian/html/components/effects/consume.html',
-		'modules/obsidian/html/components/effects/spells.html'
+		'modules/obsidian/html/components/effects/spells.html',
+		'modules/obsidian/html/components/effects/roll-mod.html',
+		'modules/obsidian/html/components/effects/roll-mod-body.html'
 	]);
 };
 

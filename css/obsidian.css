@@ -107,6 +107,7 @@
 
 .obsidian select.obsidian-select-operator {
 	font-family: var(--font);
+	padding-bottom: 2px;
 }
 
 .obsidian :disabled select,

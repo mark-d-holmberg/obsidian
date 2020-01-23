@@ -1,0 +1,21 @@
+<div class="obsidian-form-row{{#if stacked}} obsidian-stacked-row{{/if}} obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.Minimum'}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="1" name="{{prefix}}.min" value="{{min}}">
+		</label>
+		<label class="obsidian-inline" style="margin-right: 10px;">
+			{{localize 'OBSIDIAN.Reroll'}}
+			<select class="obsidian-select-operator" name="{{prefix}}.operator">
+				{{#select operator}}
+					<option value="lt">&lt;</option>
+					<option value="gt">&gt;</option>
+				{{/select}}
+			</select>
+		</label>
+		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+		       data-dtype="Number" placeholder="1" name="{{prefix}}.reroll" value="{{reroll}}">
+		{{fancy-checkbox (add prefix '.once') content='OBSIDIAN.OnceOnly' checked=once}}
+	</div>
+</div>

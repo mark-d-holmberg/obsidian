@@ -1,6 +1,6 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
-	<div class="obsidian-form-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<select name="{{prefix}}.attack">
 				{{#select attack}}
@@ -36,4 +36,8 @@
 			                 checked=proficient}}
 		</div>
 	</div>
+	{{#if rollMod}}
+		{{> modules/obsidian/html/components/effects/roll-mod-body.html rollMod stacked=true
+				prefix=(add prefix '.rollMod')}}
+	{{/if}}
 </fieldset>

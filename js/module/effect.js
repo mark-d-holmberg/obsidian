@@ -116,6 +116,17 @@ export const Effect = {
 		};
 	},
 
+	newRollMod: function () {
+		return {
+			type: 'roll-mod',
+			uuid: OBSIDIAN.uuid(),
+			min: 1,
+			reroll: 1,
+			operator: 'lt',
+			once: true
+		};
+	},
+
 	getLinkedResource: function (actorData, consumer) {
 		const item =
 			actorData.obsidian.itemsByID.get(

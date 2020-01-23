@@ -589,5 +589,7 @@
 	"OBSIDIAN.DamageCalc-fixed": "Fixed",
 	"OBSIDIAN.DamageCalc-formula": "Roll",
 	"OBSIDIAN.DestroyOnEmpty": "Destroy on Empty",
-	"OBSIDIAN.RollModifier": "Roll Modifier"
+	"OBSIDIAN.RollModifier": "Roll Modifier",
+	"OBSIDIAN.Reroll": "Reroll",
+	"OBSIDIAN.OnceOnly": "Once Only"
 }

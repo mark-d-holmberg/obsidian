@@ -130,5 +130,13 @@ Number.prototype.sgnex = function () {
 	return this < 0 ? ` - ${this * -1}` : ` + ${this}`;
 };
 
+Array.range = function (start, end) {
+	return [...Array(end - start + 1).keys()].map(i => i + start);
+};
+
+Array.prototype.last = function () {
+	return this[this.length - 1];
+};
+
 // For debugging.
 window.OBSIDIAN = OBSIDIAN;

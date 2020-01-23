@@ -278,7 +278,7 @@ export function registerHandlebarHelpers () {
 			start = 0;
 		}
 
-		return [...Array(end - start + 1).keys()].map(i => i + start);
+		return Array.range(start, end);
 	});
 
 	Handlebars.registerHelper('spell-level-format', function (level, options) {

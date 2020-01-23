@@ -61,6 +61,9 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			effect.isScaling = true;
 			effect.selfScaling = scalingComponent.ref === effect.uuid;
 			item.obsidian.scaling.push(effect);
+		} else {
+			effect.isScaling = false;
+			effect.selfScaling = false;
 		}
 
 		let targetComponent;

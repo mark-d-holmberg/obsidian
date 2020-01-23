@@ -9,8 +9,8 @@ const effectSelectMenu =
 	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume,'
 	+ ' .obsidian-add-spells, .obsidian-roll-modifier';
 
-const componentMenus = new Map();
-componentMenus.set(['attack', 'damage'], '.obsidian-roll-modifier');
+const subMenus = {rollMod: 'roll-modifier'};
+const componentMenus = {attack: ['rollMod'], damage: ['rollMod']};
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -44,7 +44,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-targets').click(this._onAddComponent.bind(this, Effect.newTarget));
 		html.find('.obsidian-add-consume').click(this._onAddComponent.bind(this, Effect.newConsume));
 		html.find('.obsidian-add-spells').click(this._onAddComponent.bind(this, Effect.newSpells));
+		html.find('.obsidian-roll-modifier')
+			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
+		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
 		html.find('.obsidian-effect legend').click(evt => {
@@ -166,8 +169,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	async _onAddComponent (generator) {
-		if (this._selectedEffect == null) {
+	async _onAddComponent (generator, prop) {
+		if (this._selectedEffect == null && this._selectedComponent == null) {
 			return;
 		}
 
@@ -175,11 +178,19 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effects = formData['flags.obsidian.effects'];
 		const effect = effects.find(effect => effect.uuid === this._selectedEffect);
 
-		if (!effect) {
-			return;
+		if (effect) {
+			effect.components.push(generator());
+		} else {
+			const component =
+				effects.flatMap(e => e.components).find(c => c.uuid === this._selectedComponent);
+
+			if (component) {
+				component[prop] = generator();
+			} else {
+				return;
+			}
 		}
 
-		effect.components.push(generator());
 		this.item.update(formData);
 	}
 
@@ -240,15 +251,29 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				.flatMap(e => e.components)
 				.find(c => c.uuid === uuid);
 
-		if (component) {
-			const menu =
-				Array.from(componentMenus.entries())
-					.find(([types,]) => types.includes(component.type));
-
-			if (menu) {
-				this.element.find(menu[1]).removeClass('obsidian-hidden');
-			}
+		if (!component) {
+			return;
 		}
+
+		const menu = componentMenus[component.type];
+		if (!menu) {
+			return;
+		}
+
+		menu.forEach(prop => {
+			const css = subMenus[prop];
+			if (!css) {
+				return;
+			}
+
+			if (component[prop] === undefined) {
+				this.element.find(`.obsidian-${css}`).removeClass('obsidian-hidden');
+				this.element.find(`.obsidian-rm-${css}`).addClass('obsidian-hidden');
+			} else {
+				this.element.find(`.obsidian-${css}`).addClass('obsidian-hidden');
+				this.element.find(`.obsidian-rm-${css}`).removeClass('obsidian-hidden');
+			}
+		});
 	}
 
 	/**
@@ -372,7 +397,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	async _onRemoveSelected () {
+	async _onRemoveSelected (prop) {
 		if (this._selectedEffect == null && this._selectedComponent == null) {
 			return;
 		}
@@ -407,7 +432,11 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				return;
 			}
 
-			effect.components.splice(idx, 1);
+			if (typeof prop === 'string') {
+				delete effect.components[idx][prop];
+			} else {
+				effect.components.splice(idx, 1);
+			}
 		}
 
 		this.item.update(formData);

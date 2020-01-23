@@ -56,4 +56,8 @@
 			</select>
 		</div>
 	</div>
+	{{#if rollMod}}
+		{{> modules/obsidian/html/components/effects/roll-mod-body.html rollMod stacked=true
+				prefix=(add prefix '.rollMod')}}
+	{{/if}}
 </fieldset>

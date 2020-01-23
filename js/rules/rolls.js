@@ -1,6 +1,11 @@
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 
+const OPERATORS = {
+	lt: (a, b) => a < b,
+	gt: (a, b) => a > b
+};
+
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], extraMods = []) {
 		const mods = [{
@@ -56,6 +61,14 @@ export const Rolls = {
 	compileBreakdown: mods =>
 		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
 
+	compileRerolls: rolls => {
+		if (rolls.length > 1) {
+			return `[${rolls.join(',')}]`;
+		}
+
+		return rolls[0];
+	},
+
 	compileSave: function (actor, save) {
 		const data = actor.data.data;
 		const result = {
@@ -98,14 +111,43 @@ export const Rolls = {
 		return result;
 	},
 
-	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1) {
+	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1, rollMod) {
 		const roll = new Die(20).roll(2);
+		const rolls = roll.results.map(r => [r]);
+
+		if (rollMod) {
+			if (rollMod.reroll > 1) {
+				let i = 0;
+				const op = OPERATORS[rollMod.operator];
+
+				while (rolls.some(r => op(r.last(), rollMod.reroll)) && i < 100) {
+					rolls.forEach(r => {
+						if (op(r.last(), rollMod.reroll)) {
+							r.push(roll._roll().roll);
+						}
+					});
+
+					if (rollMod.once) {
+						break;
+					}
+				}
+			}
+
+			if (rollMod.min > 1) {
+				rolls.forEach(r => {
+					if (r.last() < rollMod.min) {
+						r.push(rollMod.min);
+					}
+				});
+			}
+		}
+
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
-		const results = roll.results.map(r => {
+		const results = rolls.map(r => {
 			return {
-				roll: r,
-				total: r + total,
-				breakdown: r + Rolls.compileBreakdown(mods)
+				roll: r.last(),
+				total: r.last() + total,
+				breakdown: Rolls.compileRerolls(r) + Rolls.compileBreakdown(mods)
 			}
 		});
 
@@ -144,14 +186,12 @@ export const Rolls = {
 					obsidian: {
 						type: 'dmg',
 						title: item.name,
-						damage:
-							Rolls.rollDamage(actor, damage, {
-								crit: false, scaledAmount: scaledAmount, scaling: scaling
-							}),
-						crit:
-							Rolls.rollDamage(actor, damage, {
-								crit: true, scaledAmount: scaledAmount, scaling: scaling
-							})
+						damage: Rolls.rollDamage(actor, damage, {
+							crit: false, scaledAmount: scaledAmount, scaling: scaling
+						}),
+						crit: Rolls.rollDamage(actor, damage, {
+							crit: true, scaledAmount: scaledAmount, scaling: scaling
+						})
 					}
 				}
 			});
@@ -299,18 +339,16 @@ export const Rolls = {
 				results.push({
 					type: item.type === 'spell' ? 'spl' : 'fx',
 					title: name ? name : effect.name.length ? effect.name : item.name,
-					damage:
-						Rolls.rollDamage(actor, damage, {
-							crit: false,
-							scaledAmount: scaledAmount,
-							scaling: scaling
-						}),
-					crit:
-						Rolls.rollDamage(actor, damage, {
-							crit: true,
-							scaledAmount: scaledAmount,
-							scaling: scaling
-						})
+					damage: Rolls.rollDamage(actor, damage, {
+						crit: false,
+						scaledAmount: scaledAmount,
+						scaling: scaling
+					}),
+					crit: Rolls.rollDamage(actor, damage, {
+						crit: true,
+						scaledAmount: scaledAmount,
+						scaling: scaling
+					})
 				});
 			}
 		}
@@ -789,6 +827,6 @@ export const Rolls = {
 			});
 		}
 
-		return Rolls.d20Roll(actor, [], mods, hit.crit);
+		return Rolls.d20Roll(actor, [], mods, hit.crit, 1, hit.rollMod);
 	}
 };
