@@ -1273,6 +1273,18 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-family: var(--font);
 }
 
+.obsidian-msg-tooltip .obsidian-positive {
+	color: var(--positive);
+}
+
+.obsidian-msg-tooltip .obsidian-negative {
+	color: var(--negative);
+}
+
+.obsidian-msg-tooltip .obsidian-grey {
+	color: var(--text-subtle);
+}
+
 .obsidian-msg-tooltip:after {
 	content: '';
 	position: absolute;

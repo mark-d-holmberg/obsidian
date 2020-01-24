@@ -58,15 +58,64 @@ export const Rolls = {
 		}
 	},
 
+	applyRollModifiers: function (roll, rolls, rollMod) {
+		if (rollMod.reroll > 1) {
+			let i = 0;
+			const op = OPERATORS[rollMod.operator];
+
+			while (rolls.some(r => op(r.last(), rollMod.reroll)) && i < 100) {
+				rolls.forEach(r => {
+					if (op(r.last(), rollMod.reroll)) {
+						r.push(roll._roll().roll);
+					}
+				});
+
+				if (rollMod.once) {
+					break;
+				}
+			}
+		}
+
+		if (rollMod.min > 1) {
+			rolls.forEach(r => {
+				if (r.last() < rollMod.min) {
+					r.push(rollMod.min);
+				}
+			});
+		}
+	},
+
 	compileBreakdown: mods =>
 		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
 
-	compileRerolls: rolls => {
-		if (rolls.length > 1) {
-			return `[${rolls.join(',')}]`;
+	compileRerolls: (rolls, max, min = 1) => {
+		const annotated = [];
+		for (let i = 0; i < rolls.length; i++) {
+			const roll = rolls[i];
+			let cls;
+
+			if (i === rolls.length - 1) {
+				if (roll >= max) {
+					cls = 'positive';
+				} else if (roll <= min) {
+					cls = 'negative';
+				}
+			} else {
+				cls = 'grey';
+			}
+
+			if (cls) {
+				annotated.push(`<span class="obsidian-${cls}">${roll}</span>`);
+			} else {
+				annotated.push(roll.toString());
+			}
 		}
 
-		return rolls[0];
+		if (rolls.length > 1) {
+			return `[${annotated.join(',')}]`;
+		}
+
+		return annotated[0];
 	},
 
 	compileSave: function (actor, save) {
@@ -116,30 +165,7 @@ export const Rolls = {
 		const rolls = roll.results.map(r => [r]);
 
 		if (rollMod) {
-			if (rollMod.reroll > 1) {
-				let i = 0;
-				const op = OPERATORS[rollMod.operator];
-
-				while (rolls.some(r => op(r.last(), rollMod.reroll)) && i < 100) {
-					rolls.forEach(r => {
-						if (op(r.last(), rollMod.reroll)) {
-							r.push(roll._roll().roll);
-						}
-					});
-
-					if (rollMod.once) {
-						break;
-					}
-				}
-			}
-
-			if (rollMod.min > 1) {
-				rolls.forEach(r => {
-					if (r.last() < rollMod.min) {
-						r.push(rollMod.min);
-					}
-				});
-			}
+			Rolls.applyRollModifiers(roll, rolls, rollMod);
 		}
 
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
@@ -147,7 +173,7 @@ export const Rolls = {
 			return {
 				roll: r.last(),
 				total: r.last() + total,
-				breakdown: Rolls.compileRerolls(r) + Rolls.compileBreakdown(mods)
+				breakdown: Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods)
 			}
 		});
 
@@ -624,7 +650,14 @@ export const Rolls = {
 				ndice += dmg.ncrit || 1;
 			}
 
-			return new Die(dmg.die).roll(ndice);
+			const roll = new Die(dmg.die).roll(ndice);
+			const rolls = roll.results.map(r => [r]);
+
+			if (dmg.rollMod) {
+				Rolls.applyRollModifiers(roll, rolls, dmg.rollMod);
+			}
+
+			return rolls;
 		});
 
 		mods = damage.map(dmg => {
@@ -648,9 +681,9 @@ export const Rolls = {
 
 		return {
 			total:
-				rolls.reduce((acc, r) => {
-					if (r) {
-						return acc + r.total;
+				rolls.reduce((acc, rolls) => {
+					if (rolls) {
+						return acc + rolls.reduce((acc, r) => acc + r.last(), 0);
 					}
 
 					return 0;
@@ -658,17 +691,18 @@ export const Rolls = {
 				+ mods.flat().reduce((acc, mod) => acc + mod.mod, 0),
 
 			results: damage.map((dmg, i) => {
-				const r = rolls[i];
+				const subRolls = rolls[i];
 				const subMods = mods[i];
 				const subTotal = subMods.reduce((acc, mod) => acc + mod.mod, 0);
 				let total = subTotal;
 				let breakdown;
 
-				if (r) {
-					total += r.total;
+				if (subRolls) {
+					total += subRolls.reduce((acc, r) => acc + r.last(), 0);
 					breakdown =
-						`${r.rolls.length}d${dmg.die}${Rolls.compileBreakdown(subMods)} = `
-						+ `(${r.results.join('+')})${subTotal.sgnex()}`;
+						`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(subMods)} = `
+						+ `(${subRolls.map(r => Rolls.compileRerolls(r, dmg.die)).join('+')})`
+						+ subTotal.sgnex();
 				} else {
 					breakdown =
 						`${Rolls.compileBreakdown(subMods)} = ${total}`.substring(3);
