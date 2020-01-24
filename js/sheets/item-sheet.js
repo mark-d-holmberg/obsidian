@@ -53,6 +53,12 @@ export class ObsidianItemSheet extends ItemSheet {
 		}
 	}
 
+	_createEditor (target, editorOptions, initialContent) {
+		editorOptions.content_css =
+			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		super._createEditor(target, editorOptions, initialContent);
+	}
+
 	get _formData () {
 		const form = this.element.find('form')[0];
 		const formData = validateForm(form);

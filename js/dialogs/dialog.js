@@ -140,6 +140,12 @@ export class ObsidianDialog extends BaseEntitySheet {
 		return super.render(force, options);
 	}
 
+	_createEditor (target, editorOptions, initialContent) {
+		editorOptions.content_css =
+			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		super._createEditor(target, editorOptions, initialContent);
+	}
+
 	/**
 	 * @private
 	 */

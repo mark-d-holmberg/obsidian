@@ -16,7 +16,6 @@ import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 runPatches();
 
 Hooks.once('init', async function () {
-	CONFIG.TinyMCE.css.push('modules/obsidian/css/obsidian-mce.css');
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
