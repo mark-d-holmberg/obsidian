@@ -101,6 +101,30 @@ export function registerHandlebarHelpers () {
 		});
 	});
 
+	Handlebars.registerHelper('format-recharge', function (actor, feature) {
+		if (getProperty(feature, 'obsidian.bestResource.recharge.time')) {
+			return new Handlebars.SafeString(
+				' &bull; '
+				+ game.i18n.localize(
+					`OBSIDIAN.Recharge-${feature.obsidian.bestResource.recharge.time}`));
+		}
+
+		if (feature.obsidian.consumers.length) {
+			const consumer = feature.obsidian.consumers[0];
+			if (consumer.target === 'spell' || consumer.target === 'qty') {
+				return;
+			}
+
+			actor = game.actors.get(actor._id);
+			const [, , resource] = Effect.getLinkedResource(actor.data, consumer);
+
+			if (resource && getProperty(resource, 'recharge.time')) {
+				return new Handlebars.SafeString(
+					' &bull; ' + game.i18n.localize(`OBSIDIAN.Recharge-${resource.recharge.time}`));
+			}
+		}
+	});
+
 	Handlebars.registerHelper('format-slots', function (data, level) {
 		if (data === undefined) {
 			return '';
@@ -160,11 +184,15 @@ export function registerHandlebarHelpers () {
 		}
 
 		if (feature.obsidian.consumers.length) {
+			const consumer = feature.obsidian.consumers[0];
+			if (consumer.target === 'spell' || consumer.target === 'qty') {
+				return;
+			}
+
 			// This data is actually duplicated so we lose our maps and need to
 			// instead get the actual actor instance.
 			actor = game.actors.get(actor._id);
-			const [item, effect, resource] =
-				Effect.getLinkedResource(actor.data, feature.obsidian.consumers[0]);
+			const [item, effect, resource] = Effect.getLinkedResource(actor.data, consumer);
 
 			if (item && effect && resource) {
 				return new Handlebars.SafeString(Prepare.usesFormat(item, effect, resource));

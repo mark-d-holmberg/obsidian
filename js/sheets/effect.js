@@ -58,10 +58,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		html.find('.fancy-checkbox').click(this._onCheckBoxClicked.bind(this));
 		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
-		html.find('.obsidian-item-drop').on('dragover', evt => evt.preventDefault());
-		html.find('.obsidian-item-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
-		html.find('.obsidian-item-drop-pill-rm').click(this._onRemoveSpell.bind(this));
-		html.find('.obsidian-item-drop-pill-body').click(this._onEditSpell.bind(this));
+		html.find('.obsidian-spell-drop').on('dragover', evt => evt.preventDefault());
+		html.find('.obsidian-spell-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
+		html.find('.obsidian-rm-provide-spell').click(this._onRemoveSpell.bind(this));
+		html.find('.obsidian-provide-spell-body').click(this._onEditSpell.bind(this));
+		html.find('.obsidian-add-filter-collection').click(this._onAddToFilterCollection.bind(this));
+		html.find('.obsidian-rm-filter-collection').click(this._onRemoveFromFilterCollection.bind(this));
 
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
@@ -119,6 +121,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					}
 				});
 
+			data.item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'filter')
+				.forEach(component => {
+					component.isMulti =
+						component.filter === 'score'
+						&& OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI.includes(component.score);
+					component.isCollection = component.isMulti && component.multi === 'some';
+					component.availableSelections = this._generateFilterSelections(component.score);
+				});
+
 			if (this.actor) {
 				data.item.flags.obsidian.effects
 					.flatMap(e => e.components)
@@ -151,6 +164,40 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		return formData;
+	}
+
+	/**
+	 * @private
+	 */
+	_generateFilterSelections (key) {
+		let rule;
+		let i18n;
+		const selections = {};
+
+		if (key === 'ability') {
+			rule = OBSIDIAN.Rules.ABILITIES;
+			i18n = 'OBSIDIAN.Ability';
+		} else if (key === 'speed') {
+			rule = OBSIDIAN.Rules.SPEEDS;
+			i18n = 'OBSIDIAN.Speed';
+		} else if (key === 'passive') {
+			rule = OBSIDIAN.Rules.SKILLS;
+			i18n = 'OBSIDIAN.Skill';
+		}
+
+		if (rule && i18n) {
+			rule.forEach(k => selections[k] = game.i18n.localize(`${i18n}-${k}`));
+		}
+
+		if (key === 'passive'
+			&& this.actor
+			&& getProperty(this.actor, 'data.flags.obsidian.skills.custom.length'))
+		{
+			this.actor.data.flags.obsidian.skills.custom.forEach((v, i) =>
+				selections[`custom.${i}`] = v.label);
+		}
+
+		return selections;
 	}
 
 	/**
@@ -193,6 +240,33 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				return;
 			}
 		}
+
+		this.item.update(formData);
+	}
+
+	/**
+	 * @private
+	 */
+	_onAddToFilterCollection (evt) {
+		const uuid = evt.currentTarget.closest('fieldset').dataset.uuid;
+		const target = $(evt.currentTarget);
+		const selection = target.next();
+		const formData = this._formData;
+		const effects = formData['flags.obsidian.effects'];
+
+		if (!effects) {
+			return;
+		}
+
+		const component = effects.flatMap(e => e.components).find(c => c.uuid === uuid);
+		if (!component) {
+			return;
+		}
+
+		component.collection.push({
+			key: selection.val(),
+			label: selection.find('option:selected').text()
+		});
 
 		this.item.update(formData);
 	}
@@ -395,6 +469,29 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		this.element.find(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
 		this.element.find(effectSelectMenu).removeClass('obsidian-hidden');
+	}
+
+	/**
+	 * @private
+	 */
+	_onRemoveFromFilterCollection (evt) {
+		const uuid = evt.currentTarget.closest('fieldset').dataset.uuid;
+		const key = evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.key;
+		const formData = this._formData;
+		const effects = formData['flags.obsidian.effects'];
+
+		if (!effects) {
+			return;
+		}
+
+		const component = effects.flatMap(e => e.components).find(c => c.uuid === uuid);
+		if (!component) {
+			return;
+		}
+
+		const idx = component.collection.findIndex(element => element.key === key);
+		component.collection.splice(idx, 1);
+		this.item.update(formData);
 	}
 
 	/**

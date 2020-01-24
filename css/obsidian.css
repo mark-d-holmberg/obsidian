@@ -107,7 +107,6 @@
 
 .obsidian select.obsidian-select-operator {
 	font-family: var(--font);
-	padding-bottom: 2px;
 }
 
 .obsidian :disabled select,
@@ -774,7 +773,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian .obsidian-form-row.obsidian-mixed-form-row input {
-	padding-bottom: 3px;
+	padding-bottom: 1px;
 }
 
 .obsidian .obsidian-form-row.obsidian-stacked-form-row input {

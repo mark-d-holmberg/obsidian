@@ -49,6 +49,11 @@ export class ObsidianDialog extends BaseEntitySheet {
 			const val = parent.val();
 			html.find(`[data-selector-parent="${selector}"]`).each((i, el) => {
 				const jqel = $(el);
+				if (parent.hasClass('obsidian-hidden')) {
+					jqel.addClass('obsidian-hidden');
+					return;
+				}
+
 				const show = el.dataset.show && el.dataset.show.split(',').map(s => s.trimStart());
 				const hide = el.dataset.hide && el.dataset.hide.split(',').map(s => s.trimStart());
 

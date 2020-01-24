@@ -107,6 +107,10 @@ OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn', 'hlg'
 ];
 
+OBSIDIAN.Rules.EFFECT_FILTERS = ['roll', 'score'];
+OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI = ['ability', 'passive', 'speed'];
+OBSIDIAN.Rules.EFFECT_FILTER_MULTI = ['any', 'some'];
+OBSIDIAN.Rules.EFFECT_FILTER_SCORES = ['ability', 'ac', 'max-hp', 'passive', 'prof', 'speed'];
 OBSIDIAN.Rules.EFFECT_RESOURCE_RECHARGE_CALC = ['all', 'formula'];
 OBSIDIAN.Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];
 OBSIDIAN.Rules.EFFECT_TARGETS = ['individual', 'area'];
@@ -138,6 +142,11 @@ OBSIDIAN.Rules.RESOURCE_USES = ['fixed', 'formula'];
 OBSIDIAN.Rules.ROLL = ['reg', 'adv', 'dis'];
 OBSIDIAN.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 OBSIDIAN.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];
+OBSIDIAN.Rules.SKILLS = [
+	'acr', 'ani', 'arc', 'ath', 'dec', 'his', 'ins', 'inv', 'itm', 'med', 'nat', 'per', 'prc',
+	'prf', 'rel', 'slt', 'ste', 'sur'
+];
+
 OBSIDIAN.Rules.SPEEDS = ['walk', 'burrow', 'climb', 'fly', 'swim'];
 OBSIDIAN.Rules.SPELL_COMPONENT_MAP = {v: 'Verbal', s: 'Somatic', m: 'Material', r: 'Royalty'};
 OBSIDIAN.Rules.SPELL_CAST_TIMES = ['action', 'ba', 'react', 'min', 'hour', 'special'];

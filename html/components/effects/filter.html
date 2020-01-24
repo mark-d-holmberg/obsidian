@@ -1,4 +1,61 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Filter'}}</legend>
-
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Filter'}}
+				<select name="{{prefix}}.filter" data-selector="{{prefix}}.filter">
+					{{#select filter}}
+						{{#each @root.ObsidianRules.EFFECT_FILTERS}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Filters-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<select name="{{prefix}}.score" data-selector-parent="{{prefix}}.filter" data-show="score"
+			        data-selector="{{prefix}}.score">
+				{{#select score}}
+					{{#each @root.ObsidianRules.EFFECT_FILTER_SCORES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Scores-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{#if isMulti}}
+			<select name="{{prefix}}.multi">
+				{{#select multi}}
+					{{#each @root.ObsidianRules.EFFECT_FILTER_MULTI}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Multi-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{/if}}
+		</div>
+	</div>
+	{{#if isCollection}}
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<button class="obsidian-btn-positive obsidian-btn-sm obsidian-add-filter-collection"
+			        type="button">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+			<select name="{{prefix}}.some" data-selector="{{prefix}}.some">
+				{{#select some}}
+					{{#each availableSelections}}
+						<option value="{{@key}}">{{this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<input type="text" class="obsidian-input-compact" data-selector-parent="{{prefix}}.some"
+			       data-show="custom">
+		</div>
+	</div>
+	<div class="obsidian-item-drop{{#unless collection.length}} obsidian-empty{{/unless}}">
+		{{#each collection}}
+			<div class="obsidian-item-drop-pill" data-key="{{key}}">
+				<div class="obsidian-item-drop-pill-body">{{label}}</div>
+				<div class="obsidian-item-drop-pill-rm obsidian-rm-filter-collection">&times;</div>
+			</div>
+		{{/each}}
+	</div>
+	{{/if}}
 </fieldset>

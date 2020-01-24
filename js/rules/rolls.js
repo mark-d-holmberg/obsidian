@@ -161,11 +161,17 @@ export const Rolls = {
 	},
 
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1, rollMod) {
-		const roll = new Die(20).roll(2);
+		let n = 2;
+		if (rollMod) {
+			n += rollMod.ndice;
+		}
+
+		const roll = new Die(20).roll(n);
 		const rolls = roll.results.map(r => [r]);
 
 		if (rollMod) {
 			Rolls.applyRollModifiers(roll, rolls, rollMod);
+			adv.push(rollMod.mode);
 		}
 
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);

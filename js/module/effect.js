@@ -123,7 +123,9 @@ export const Effect = {
 			min: 1,
 			reroll: 1,
 			operator: 'lt',
-			once: true
+			once: true,
+			mode: 'reg',
+			ndice: 0
 		};
 	},
 
@@ -131,7 +133,11 @@ export const Effect = {
 		return {
 			type: 'filter',
 			uuid: OBSIDIAN.uuid(),
-			filter: 'roll'
+			filter: 'roll',
+			score: 'ability',
+			multi: 'any',
+			some: '',
+			collection: []
 		};
 	},
 

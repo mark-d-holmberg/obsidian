@@ -593,5 +593,16 @@
 	"OBSIDIAN.Reroll": "Reroll",
 	"OBSIDIAN.OnceOnly": "Once Only",
 	"OBSIDIAN.Filter": "Filter",
-	"OBSIDIAN.AddFilter": "Add Filter"
+	"OBSIDIAN.AddFilter": "Add Filter",
+	"OBSIDIAN.ExtraDice": "Extra Dice",
+	"OBSIDIAN.Filters-roll": "Roll",
+	"OBSIDIAN.Filters-score": "Score",
+	"OBSIDIAN.Scores-ability": "Ability",
+	"OBSIDIAN.Scores-ac": "AC",
+	"OBSIDIAN.Scores-max-hp": "Max HP",
+	"OBSIDIAN.Scores-passive": "Passive Skill",
+	"OBSIDIAN.Scores-prof": "Proficiency",
+	"OBSIDIAN.Scores-speed": "Speed",
+	"OBSIDIAN.Multi-any": "Any",
+	"OBSIDIAN.Multi-some": "Some"
 }

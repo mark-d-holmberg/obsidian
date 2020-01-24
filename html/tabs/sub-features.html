@@ -12,11 +12,7 @@
 				<div class="obsidian-feature-header">
 					<div>
 						<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
-						{{#if feat.obsidian.bestResource}}
-							<div class="obsidian-feature-recharge">
-								&bull; {{i18n-join 'OBSIDIAN.Recharge-' feat.obsidian.bestResource.recharge.time}}
-							</div>
-						{{/if}}
+						<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat}}}</div>
 						<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
 						   data-item-id="{{feat._id}}">
 							<i class="fas fa-eye"></i>

@@ -19,3 +19,21 @@
 		{{fancy-checkbox (add prefix '.once') content='OBSIDIAN.OnceOnly' checked=once}}
 	</div>
 </div>
+{{#unless damage}}
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth">
+		<select name="{{prefix}}.mode">
+			{{#select mode}}
+				{{#each @root.ObsidianRules.ROLL}}
+					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
+		<label class="obsidian-inline">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" name="{{prefix}}.ndice" value="{{ndice}}">
+			<span>{{localize 'OBSIDIAN.ExtraDice'}}</span>
+		</label>
+	</div>
+</div>
+{{/unless}}
