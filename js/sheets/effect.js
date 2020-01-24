@@ -7,7 +7,7 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 const effectSelectMenu =
 	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
 	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume,'
-	+ ' .obsidian-add-spells, .obsidian-roll-modifier';
+	+ ' .obsidian-add-spells, .obsidian-roll-modifier, .obsidian-add-filter';
 
 const subMenus = {rollMod: 'roll-modifier'};
 const componentMenus = {attack: ['rollMod'], damage: ['rollMod']};
@@ -46,6 +46,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-spells').click(this._onAddComponent.bind(this, Effect.newSpells));
 		html.find('.obsidian-roll-modifier')
 			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
+		html.find('.obsidian-add-filter').click(this._onAddComponent.bind(this, Effect.newFilter));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
 		html.find('.obsidian-effect').click(evt =>

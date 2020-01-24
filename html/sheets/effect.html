@@ -46,6 +46,9 @@
 					{{else if (eq type 'roll-mod')}}
 						{{> modules/obsidian/html/components/effects/roll-mod.html
 								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'filter')}}
+						{{> modules/obsidian/html/components/effects/filter.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{/if}}
 				{{/each}}
 			</div>
@@ -89,6 +92,9 @@
 		</li>
 		<li class="obsidian-effects-tab obsidian-effects-tab-rm obsidian-icon-roll-modifier obsidian-rm-roll-modifier obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
+		</li>
+		<li class="obsidian-effects-tab obsidian-icon-filter obsidian-add-filter obsidian-hidden">
+			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddFilter'}}</div>
 		</li>
 		<li class="obsidian-effects-tab obsidian-effects-tab-rm obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
 			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>

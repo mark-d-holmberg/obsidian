@@ -127,6 +127,14 @@ export const Effect = {
 		};
 	},
 
+	newFilter: function () {
+		return {
+			type: 'filter',
+			uuid: OBSIDIAN.uuid(),
+			filter: 'roll'
+		};
+	},
+
 	getLinkedResource: function (actorData, consumer) {
 		const item =
 			actorData.obsidian.itemsByID.get(
