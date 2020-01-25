@@ -87,5 +87,9 @@ export function prepareInventory (actorData) {
 	inventory.root = link(actorData.flags.obsidian.order.equipment.root);
 	inventory.containers = link(actorData.flags.obsidian.order.equipment.containers);
 	inventory.containers.forEach(container =>
-		container.flags.obsidian.contents = link(container.flags.obsidian.order))
+		container.flags.obsidian.contents = link(container.flags.obsidian.order));
+
+	if (inventory.weight >= actorData.data.abilities.str.value * OBSIDIAN.Rules.CARRY_MULTIPLIER) {
+		inventory.encumbered = true;
+	}
 }

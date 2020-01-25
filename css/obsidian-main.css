@@ -588,6 +588,10 @@
 	color: var(--text-subtle);
 }
 
+.obsidian-char-inv-header-weight > div:last-child.obsidian-negative {
+	color: var(--negative);
+}
+
 .obsidian-char-inv-header-currency {
 	color: var(--text-subtle);
 	display: flex;

@@ -14,6 +14,7 @@ OBSIDIAN.Rules.WEAPON_TAGS = [
 OBSIDIAN.Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
 OBSIDIAN.Rules.ATTACK_TYPES = ['melee', 'ranged'];
 OBSIDIAN.Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
+OBSIDIAN.Rules.CARRY_MULTIPLIER = 15;
 OBSIDIAN.Rules.COIN_WEIGHT = 0.02;
 OBSIDIAN.Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear'];
 OBSIDIAN.Rules.CLASSES = [
