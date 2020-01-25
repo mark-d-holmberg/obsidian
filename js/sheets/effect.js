@@ -125,11 +125,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				.flatMap(e => e.components)
 				.filter(c => c.type === 'filter')
 				.forEach(component => {
-					component.isMulti =
-						component.filter === 'score'
-						&& OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI.includes(component.score);
+					component.isMulti = Effect.determineMulti(component);
 					component.isCollection = component.isMulti && component.multi === 'some';
-					component.availableSelections = this._generateFilterSelections(component.score);
+					component.availableSelections = this._generateFilterSelections(component);
 				});
 
 			if (this.actor) {
@@ -169,32 +167,63 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	_generateFilterSelections (key) {
+	_generateFilterSelections (component) {
 		let rule;
 		let i18n;
 		const selections = {};
 
-		if (key === 'ability') {
-			rule = OBSIDIAN.Rules.ABILITIES;
-			i18n = 'OBSIDIAN.Ability';
-		} else if (key === 'speed') {
-			rule = OBSIDIAN.Rules.SPEEDS;
-			i18n = 'OBSIDIAN.Speed';
-		} else if (key === 'passive') {
-			rule = OBSIDIAN.Rules.SKILLS;
-			i18n = 'OBSIDIAN.Skill';
+		if (component.filter === 'score') {
+			if (component.score === 'ability') {
+				rule = OBSIDIAN.Rules.ABILITIES;
+				i18n = 'OBSIDIAN.Ability';
+			} else if (component.score === 'speed') {
+				rule = OBSIDIAN.Rules.SPEEDS;
+				i18n = 'OBSIDIAN.Speed';
+			} else if (component.score === 'passive') {
+				rule = OBSIDIAN.Rules.SKILLS;
+				i18n = 'OBSIDIAN.Skill';
+			}
+		} else {
+			if (component.roll === 'attack') {
+				rule = OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS;
+				i18n = 'OBSIDIAN.Attack';
+			} else if (component.roll === 'check') {
+				if (component.check === 'ability') {
+					rule = OBSIDIAN.Rules.ABILITIES;
+					i18n = 'OBSIDIAN.Ability';
+				} else if (component.check === 'skill') {
+					rule = OBSIDIAN.Rules.SKILLS;
+					i18n = 'OBSIDIAN.Skill';
+				}
+			} else if (component.roll === 'save') {
+				rule = OBSIDIAN.Rules.EFFECT_FILTER_SAVES;
+				i18n = 'OBSIDIAN.Ability';
+			}
 		}
 
 		if (rule && i18n) {
 			rule.forEach(k => selections[k] = game.i18n.localize(`${i18n}-${k}`));
 		}
 
-		if (key === 'passive'
-			&& this.actor
-			&& getProperty(this.actor, 'data.flags.obsidian.skills.custom.length'))
+		if (this.actor
+			&& getProperty(this.actor, 'data.flags.obsidian.skills.custom.length')
+			&& ((component.filter === 'score' && component.score === 'passive')
+				|| (component.filter === 'roll'
+					&& component.roll === 'check'
+					&& component.check === 'skill')))
 		{
 			this.actor.data.flags.obsidian.skills.custom.forEach((v, i) =>
 				selections[`custom.${i}`] = v.label);
+		}
+
+		if (this.actor
+			&& getProperty(this.actor, 'data.flags.obsidian.skills.tools.length')
+			&& component.filter === 'roll'
+			&& component.roll === 'check'
+			&& component.check === 'tool')
+		{
+			this.actor.data.flags.obsidian.skills.tools.forEach((v, i) =>
+				selections[`tool.${i}`] = v.label);
 		}
 
 		return selections;

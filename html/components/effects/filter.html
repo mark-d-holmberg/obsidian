@@ -20,6 +20,21 @@
 					{{/each}}
 				{{/select}}
 			</select>
+			<select name="{{prefix}}.roll" data-selector-parent="{{prefix}}.filter" data-show="roll"
+			        data-selector="{{prefix}}.roll">
+				{{#select roll}}
+					{{#each @root.ObsidianRules.EFFECT_FILTER_ROLLS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.check" data-selector-parent="{{prefix}}.roll" data-show="check">
+				{{#select check}}
+					{{#each @root.ObsidianRules.EFFECT_FILTER_CHECKS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Check-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
 			{{#if isMulti}}
 			<select name="{{prefix}}.multi">
 				{{#select multi}}
@@ -30,6 +45,19 @@
 			</select>
 			{{/if}}
 		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.filter" data-show="roll">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.RollingAt'}}
+			<select name="{{prefix}}.mode">
+				{{#select mode}}
+					{{#each @root.ObsidianRules.ROLL}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</label>
 	</div>
 	{{#if isCollection}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">

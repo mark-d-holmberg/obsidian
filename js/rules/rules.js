@@ -108,8 +108,19 @@ OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
 ];
 
 OBSIDIAN.Rules.EFFECT_FILTERS = ['roll', 'score'];
-OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI = ['ability', 'passive', 'speed'];
+OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS = ['mw', 'rw', 'ms', 'rs'];
+OBSIDIAN.Rules.EFFECT_FILTER_CHECKS = ['ability', 'skill', 'tool', 'init'];
+OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI = {
+	score: {ability: 1, passive: 1, speed: 1},
+	roll: {
+		attack: 1, save: 1,
+		check: {ability: 1, skill: 1, tool: 1}
+	}
+};
+
 OBSIDIAN.Rules.EFFECT_FILTER_MULTI = ['any', 'some'];
+OBSIDIAN.Rules.EFFECT_FILTER_ROLLS = ['attack', 'check', 'save'];
+OBSIDIAN.Rules.EFFECT_FILTER_SAVES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'death'];
 OBSIDIAN.Rules.EFFECT_FILTER_SCORES = ['ability', 'ac', 'max-hp', 'passive', 'prof', 'speed'];
 OBSIDIAN.Rules.EFFECT_RESOURCE_RECHARGE_CALC = ['all', 'formula'];
 OBSIDIAN.Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];

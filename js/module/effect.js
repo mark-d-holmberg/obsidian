@@ -135,10 +135,25 @@ export const Effect = {
 			uuid: OBSIDIAN.uuid(),
 			filter: 'roll',
 			score: 'ability',
+			roll: 'attack',
+			check: 'ability',
 			multi: 'any',
 			some: '',
-			collection: []
+			collection: [],
+			mode: 'reg'
 		};
+	},
+
+	determineMulti: function (filter) {
+		let prop = 'filter';
+		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;
+
+		do {
+			prop = filter[prop];
+			tree = tree[prop];
+		} while (typeof tree === 'object');
+
+		return !!tree;
 	},
 
 	getLinkedResource: function (actorData, consumer) {
