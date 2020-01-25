@@ -181,6 +181,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
 		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
 		html.find('[contenteditable]').focusout(this._onContenteditableUnfocus.bind(this));
+		html.find('.obsidian-effect-row .obsidian-radio').click(this._onEffectToggled.bind(this));
 
 		this._activateDialogs(html);
 
@@ -614,6 +615,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	_onDragOver (event) { return Reorder.dragOver(event); }
 	_onDrop (event) { return Reorder.drop(this.actor, event); }
+
+	_onEffectToggled (evt) {
+		const uuid = evt.currentTarget.closest('.obsidian-effect-row').dataset.uuid;
+		const effect = this.actor.data.obsidian.effects.get(uuid);
+		const item = this.actor.items.find(item => item.data._id === effect.parentItem);
+		const effects = duplicate(item.data.flags.obsidian.effects);
+		const newEffect = effects.find(e => e.uuid === uuid);
+		newEffect.toggle.active = !newEffect.toggle.active;
+		item.update({'flags.obsidian.effects': effects});
+	}
 
 	/**
 	 * @private

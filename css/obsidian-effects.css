@@ -171,3 +171,21 @@
 	font-family: var(--font);
 	cursor: pointer;
 }
+
+.obsidian-effect-row {
+	display: flex;
+	font-size: 13px;
+}
+
+.obsidian-effect-row-name {
+	margin-right: 3px;
+}
+
+.obsidian-effect-row-content {
+	font-weight: normal;
+}
+
+.obsidian-effect-row .obsidian-radio {
+	width: 18px;
+	cursor: pointer;
+}

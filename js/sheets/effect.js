@@ -198,6 +198,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			} else if (component.roll === 'save') {
 				rule = OBSIDIAN.Rules.EFFECT_FILTER_SAVES;
 				i18n = 'OBSIDIAN.Ability';
+			} else if (component.roll === 'damage') {
+				rule = OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES;
+				i18n = 'OBSIDIAN.Damage';
 			}
 		}
 

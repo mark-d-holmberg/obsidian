@@ -8,6 +8,7 @@ import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
 import {prepareEffects} from './item.js';
+import {prepareToggleableEffects} from '../rules/effects.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -117,12 +118,17 @@ export class ObsidianActor extends Actor5e {
 		this.data.obsidian.attacks = [];
 		this.data.obsidian.effects = new Map();
 		this.data.obsidian.components = new Map();
+		this.data.obsidian.toggleable = new Set();
 
 		for (const item of this.data.items) {
 			prepareEffects(
 				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
-				this.data.obsidian.components);
+				this.data.obsidian.components, this.data.obsidian.toggleable);
 		}
+
+		// Convert it to an array here so it doesn't get nuked when duplicated.
+		this.data.obsidian.toggleable = Array.from(this.data.obsidian.toggleable.values());
+		prepareToggleableEffects(this.data);
 
 		return this.data;
 	}

@@ -5,14 +5,14 @@ import {Schema} from './schema.js';
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
 		const cached = Item5e.prototype.prepareData;
-		return function (attackList, effectMap, componentMap) {
+		return function (attackList, effectMap, componentMap, toggleList) {
 			cached.apply(this, arguments);
-			prepareEffects(this.actor, this.data, attackList, effectMap, componentMap);
+			prepareEffects(this.actor, this.data, attackList, effectMap, componentMap, toggleList);
 		};
 	})();
 }
 
-export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
+export function prepareEffects (actor, item, attackList, effectMap, componentMap, toggleList) {
 	if (!item.flags || !item.flags.obsidian || !actor) {
 		return;
 	}
@@ -55,6 +55,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.parentItem = item._id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
+		effect.mods = [];
+		effect.filters = [];
 
 		const scalingComponent = effect.components.find(c => c.type === 'scaling');
 		if (scalingComponent) {
@@ -174,6 +176,13 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 							+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
 							+ `${spell.name}</div></div>`));
 				}
+			} else if (component.type === 'roll-mod') {
+				effect.mods.push(component);
+				if (toggleList) {
+					toggleList.add(effect);
+				}
+			} else if (component.type === 'filter' && component.filter === 'roll') {
+				effect.filters.push(component);
 			}
 		}
 

@@ -1,2 +1,14 @@
 <div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
-     data-tab="effects"></div>
+     data-tab="effects">
+	<h3>{{localize 'OBSIDIAN.Effects'}}</h3>
+	{{#each actor.obsidian.toggleable}}
+		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
+			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
+			            obsidian-radio obsidian-radio-negative">
+				<span></span>
+			</div>
+			<div class="obsidian-effect-row-name">{{label}}:</div>
+			<div class="obsidian-effect-row-content">{{{toggle.display}}}</div>
+		</div>
+	{{/each}}
+</div>

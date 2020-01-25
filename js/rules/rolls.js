@@ -59,7 +59,7 @@ export const Rolls = {
 	},
 
 	applyRollModifiers: function (roll, rolls, rollMod) {
-		if (rollMod.reroll > 1) {
+		if (rollMod.reroll > 1 || rollMod.operator === 'gt') {
 			let i = 0;
 			const op = OPERATORS[rollMod.operator];
 

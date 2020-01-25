@@ -121,6 +121,22 @@ String.prototype.capitalise = function () {
 	return this[0].toLocaleUpperCase() + this.substring(1);
 };
 
+String.prototype.format = function (...args) {
+	let str = this.toString();
+	if (args.length) {
+		const type = typeof args[0];
+		if (!['string', 'number'].includes(type)) {
+			args = args[0];
+		}
+
+		for (const key in args) {
+			str = str.replace(new RegExp(`\\{${key}\\}`, 'gi'), args[key]);
+		}
+	}
+
+	return str;
+};
+
 Number.prototype.sgn = function () {
 	return this < 0 ? `${this}` : `+${this}`;
 };

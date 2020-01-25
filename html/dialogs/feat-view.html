@@ -17,10 +17,8 @@
 						{{~item.flags.obsidian.source.className~}}
 					{{~/if~}}
 				</div>
-				{{#if item.obsidian.bestResource}}
-					<div class="obsidian-table-note-text">
-						{{i18n-join 'OBSIDIAN.Recharge-' item.obsidian.bestResource.recharge.time}}
-					</div>
+				{{#if (format-recharge actor item)}}
+					<div class="obsidian-table-note-text">{{{format-recharge actor item}}}</div>
 				{{/if}}
 			</div>
 		</div>
