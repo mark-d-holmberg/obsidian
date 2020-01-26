@@ -619,8 +619,6 @@ export const Rolls = {
 
 	rollDamage: function (actor, damage, {crit = false, scaledAmount = 0, scaling = null}) {
 		const data = actor.data.data;
-		let mods = [];
-
 		if (scaledAmount > 0 && scaling != null && scaling.scalingComponent.method !== 'cantrip') {
 			const damageComponents = scaling.components.filter(c => c.type === 'damage');
 			if (damageComponents) {
@@ -691,23 +689,21 @@ export const Rolls = {
 			return rolls;
 		});
 
-		mods = damage.map(dmg => {
-			const subMods = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
+		damage.forEach(dmg => {
+			dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
 			if (!OBSIDIAN.notDefinedOrEmpty(dmg.ability)) {
 				if (dmg.ability === 'spell') {
-					subMods.push({
+					dmg.rollParts.push({
 						mod: dmg.spellMod,
 						name: game.i18n.localize('OBSIDIAN.Spell')
 					});
 				} else {
-					subMods.push({
+					dmg.rollParts.push({
 						mod: data.abilities[dmg.ability].mod,
 						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${dmg.ability}`)
 					});
 				}
 			}
-
-			return subMods;
 		});
 
 		return {
@@ -719,24 +715,23 @@ export const Rolls = {
 
 					return 0;
 				}, 0)
-				+ mods.flat().reduce((acc, mod) => acc + mod.mod, 0),
+				+ damage.flatMap(dmg => dmg.rollParts).reduce((acc, mod) => acc + mod.mod, 0),
 
 			results: damage.map((dmg, i) => {
 				const subRolls = rolls[i];
-				const subMods = mods[i];
-				const subTotal = subMods.reduce((acc, mod) => acc + mod.mod, 0);
+				const subTotal = dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0);
 				let total = subTotal;
 				let breakdown;
 
 				if (subRolls) {
 					total += subRolls.reduce((acc, r) => acc + r.last(), 0);
 					breakdown =
-						`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(subMods)} = `
+						`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(dmg.rollParts)} = `
 						+ `(${subRolls.map(r => Rolls.compileRerolls(r, dmg.die)).join('+')})`
 						+ subTotal.sgnex();
 				} else {
 					breakdown =
-						`${Rolls.compileBreakdown(subMods)} = ${total}`.substring(3);
+						`${Rolls.compileBreakdown(dmg.rollParts)} = ${total}`.substring(3);
 				}
 
 				return {

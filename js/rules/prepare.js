@@ -67,6 +67,7 @@ export const Prepare = {
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr')
 		}];
 
+		dc.spellMod = 0;
 		Prepare.spellPart(dc, data, cls);
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
@@ -100,24 +101,9 @@ export const Prepare = {
 				continue;
 			}
 
-			const ability = dmg.ability || dmg.stat;
-			dmg.mod = dmg.bonus || 0;
-
-			if (ability && ability.length > 0) {
-				if (ability === 'spell') {
-					dmg.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
-					dmg.mod += cls ? cls.flags.obsidian.spellcasting.mod : 0;
-				} else {
-					dmg.mod += data.abilities[ability].mod;
-				}
-			}
-
-			if (dmg.ncrit === undefined || dmg.ncrit === '') {
-				dmg.ncrit = 1;
-			} else {
-				dmg.ncrit = Number(dmg.ncrit);
-			}
-
+			dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
+			Prepare.spellPart(dmg, data, cls);
+			dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			dmg.display = Prepare.damageFormat(dmg);
 		}
 	},
@@ -237,7 +223,7 @@ export const Prepare = {
 		const flags = actorData.flags.obsidian;
 		flags.abilities = {};
 
-		for (const ability of data.abilities) {
+		for (const ability of Object.keys(data.abilities)) {
 			flags.abilities[ability] = {};
 		}
 	},
