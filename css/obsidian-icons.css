@@ -229,6 +229,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/filter.svg');
 }
 
+.obsidian-icon-bonus {
+	background-image: url('../img/bonus.svg');
+}
+
 .obsidian-icon-obsidian {
 	background-image: url('../img/obsidian.png');
 }

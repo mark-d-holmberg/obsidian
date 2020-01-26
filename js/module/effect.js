@@ -127,6 +127,21 @@ export const Effect = {
 		};
 	},
 
+	newBonus: function () {
+		return {
+			type: 'bonus',
+			uuid: OBSIDIAN.uuid(),
+			bonus: 0,
+			prof: 0,
+			ability: '',
+			level: '',
+			class: '',
+			text: '',
+			ndice: 0,
+			die: 4
+		};
+	},
+
 	newFilter: function () {
 		return {
 			type: 'filter',

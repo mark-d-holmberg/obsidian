@@ -98,6 +98,7 @@ OBSIDIAN.Rules.EFFECT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'sp
 OBSIDIAN.Rules.EFFECT_ADD_SPELLS_METHOD = ['innate', 'known', 'prep', 'list', 'item'];
 OBSIDIAN.Rules.EFFECT_ADD_SPELLS_SOURCE = ['list', 'individual'];
 OBSIDIAN.Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
+OBSIDIAN.Rules.EFFECT_BONUS_LEVEL = ['chr', 'cls'];
 OBSIDIAN.Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
 OBSIDIAN.Rules.EFFECT_CONSUME_TARGETS = [
 	'this-effect', 'this-item', 'item', 'feat', 'spell', 'qty'

@@ -641,5 +641,6 @@
 	"OBSIDIAN.Checks": "checks",
 	"OBSIDIAN.Saves": "saves",
 	"OBSIDIAN.Dice": "dice",
-	"OBSIDIAN.Die": "die"
+	"OBSIDIAN.Die": "die",
+	"OBSIDIAN.AddBonus": "Add Bonus"
 }

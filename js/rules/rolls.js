@@ -526,24 +526,34 @@ export const Rolls = {
 			&& (FILTERS.isInit(filter)
 				|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, 'dex'))));
 
-		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
-			return Rolls.abilityCheck(
-				actor,
-				flags.attributes.init.ability,
-				game.i18n.localize('OBSIDIAN.Initiative'),
-				[flags.attributes.init.roll],
-				[{mod: data.attributes.init.value, name: game.i18n.localize('OBSIDIAN.Bonus')}],
-				rollMod);
+		const mods = [];
+		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.overide)) {
+			mods.push({
+				mod: data.abilities[flags.attributes.init.ability].mod,
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.attributes.init.ability}`)
+			});
+
+			if (flags.skills.joat) {
+				mods.push({
+					mod: Math.floor(data.attributes.prof / 2),
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				});
+			}
+
+			mods.push({
+				mod: data.attributes.init.value,
+				name: game.i18n.localize('OBSIDIAN.Bonus')
+			});
 		} else {
-			return Rolls.overriddenRoll(
-				actor,
-				'abl',
-				game.i18n.localize('OBSIDIAN.Initiative'),
-				game.i18n.localize('OBSIDIAN.AbilityCheck'),
-				[flags.attributes.init.roll],
-				data.attributes.init.mod,
-				rollMod);
+			mods.push({
+				mod: Number(flags.attributes.init.override),
+				name: game.i18n.localize('OBSIDIAN.Override')
+			});
 		}
+
+		return Rolls.abilityCheck(
+			actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'),
+			[flags.attributes.init.roll], mods, rollMod);
 	},
 
 	itemRoll: function (actor, item, scaling) {
@@ -583,17 +593,6 @@ export const Rolls = {
 				scaledAmount: scaledAmount,
 				isFirst: i === 0
 			}));
-	},
-
-	overriddenRoll: function (actor, type, title, subtitle, adv = [], override, rollMod) {
-		return Rolls.simpleRoll(actor, {
-			type: type,
-			title: title,
-			subtitle: subtitle,
-			adv: adv,
-			mods: [{mod: Number(override), name: game.i18n.localize('OBSIDIAN.Override')}],
-			rollMod: rollMod
-		});
 	},
 
 	recharge: function (item, effect, component) {
