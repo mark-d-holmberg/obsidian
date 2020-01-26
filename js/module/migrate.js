@@ -102,7 +102,9 @@ export const Migrate = {
 		}
 
 		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
-			if (data.type === 'consumable') {
+			if (data.type === 'backpack') {
+				Migrate.convertContainer(data);
+			} else if (data.type === 'consumable') {
 				Migrate.convertConsumable(data, source);
 			} else if (data.type === 'equipment') {
 				Migrate.convertEquipment(data, source);
@@ -194,6 +196,12 @@ export const Migrate = {
 
 		if (source === 'core' && CONVERT.consumable[data.data.consumableType]) {
 			data.flags.obsidian.subtype = CONVERT.consumable[data.data.consumableType];
+		}
+	},
+
+	convertContainer: function (data) {
+		if (getProperty(data, 'flags.obsidian.weightless')) {
+			data.data.capacity.weightless = true;
 		}
 	},
 

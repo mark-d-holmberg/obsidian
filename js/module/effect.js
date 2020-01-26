@@ -122,8 +122,6 @@ export const Effect = {
 			uuid: OBSIDIAN.uuid(),
 			min: 1,
 			reroll: 1,
-			operator: 'lt',
-			once: true,
 			mode: 'reg',
 			ndice: 0
 		};

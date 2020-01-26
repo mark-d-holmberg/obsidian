@@ -1,17 +1,40 @@
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 
-const OPERATORS = {
-	lt: (a, b) => a < b,
-	gt: (a, b) => a > b
+const FILTERS = {
+	isAttack: filter => filter.filter === 'roll' && filter.roll === 'attack',
+	isCheck: filter => filter.filter === 'roll' && filter.roll === 'check',
+	isDamage: filter => filter.filter === 'roll' && filter.roll === 'damage',
+	isSave: filter => filter.filter === 'roll' && filter.roll === 'save',
+	isAbility: filter => filter.check === 'ability',
+	isInit: filter => filter.check === 'init',
+	isSkillOrTool: (filter, tool) => filter.check === (tool ? 'tool' : 'skill'),
+	inCollection: (filter, key) =>
+		filter.multi === 'any' || filter.collection.some(item => item.key === key)
 };
 
 export const Rolls = {
-	abilityCheck: function (actor, ability, skill, adv = [], extraMods = []) {
+	abilityCheck: function (actor, ability, skill, adv = [], extraMods = [], rollMod) {
 		const mods = [{
 			mod: actor.data.data.abilities[ability].mod,
 			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
 		}, ...extraMods];
+
+		if (!skill) {
+			const rollMods =
+				actor.data.obsidian.toggleable
+					.filter(effect => effect.toggle.active)
+					.filter(effect => effect.mods.length)
+					.filter(effect =>
+						!effect.filters.length
+						|| effect.filters.some(filter =>
+							FILTERS.isCheck(filter)
+							&& FILTERS.isAbility(filter)
+							&& FILTERS.inCollection(filter, ability)))
+					.flatMap(effect => effect.mods);
+
+			rollMod = Rolls.combineRollMods(...rollMods);
+		}
 
 		return Rolls.simpleRoll(actor, {
 			type: 'abl',
@@ -19,7 +42,8 @@ export const Rolls = {
 			parens: skill,
 			subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
 			adv: adv,
-			mods: mods
+			mods: mods,
+			rollMod: rollMod
 		});
 	},
 
@@ -59,21 +83,12 @@ export const Rolls = {
 	},
 
 	applyRollModifiers: function (roll, rolls, rollMod) {
-		if (rollMod.reroll > 1 || rollMod.operator === 'gt') {
-			let i = 0;
-			const op = OPERATORS[rollMod.operator];
-
-			while (rolls.some(r => op(r.last(), rollMod.reroll)) && i < 100) {
-				rolls.forEach(r => {
-					if (op(r.last(), rollMod.reroll)) {
-						r.push(roll._roll().roll);
-					}
-				});
-
-				if (rollMod.once) {
-					break;
+		if (rollMod.reroll > 1) {
+			rolls.forEach(r => {
+				if (r.last() < rollMod.reroll) {
+					r.push(roll._roll().roll);
 				}
-			}
+			});
 		}
 
 		if (rollMod.min > 1) {
@@ -83,6 +98,15 @@ export const Rolls = {
 				}
 			});
 		}
+	},
+
+	combineRollMods: mods => {
+		return {
+			min: Math.max(...mods.map(mod => mod.min)),
+			reroll: Math.max(...mods.map(mod => mod.reroll)),
+			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
+			mode: mods.map(mod => mod.mode)
+		};
 	},
 
 	compileBreakdown: mods =>
@@ -171,7 +195,11 @@ export const Rolls = {
 
 		if (rollMod) {
 			Rolls.applyRollModifiers(roll, rolls, rollMod);
-			adv.push(rollMod.mode);
+			if (Array.isArray(rollMod.mode)) {
+				adv.push(...rollMod.mode);
+			} else {
+				adv.push(rollMod.mode);
+			}
 		}
 
 		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
@@ -241,12 +269,25 @@ export const Rolls = {
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
+		const rollMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter =>
+						FILTERS.isSave(filter)
+						&& FILTERS.inCollection(filter, 'death')))
+				.flatMap(effect => effect.mods);
+
+		const rollMod = Rolls.combineRollMods(...rollMods);
 		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
 			adv: advantageComponents,
-			mods: mods
+			mods: mods,
+			rollMod: rollMod
 		});
 
 		const adv =
@@ -525,14 +566,28 @@ export const Rolls = {
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
+		const rollMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter =>
+						FILTERS.isCheck(filter)
+						&& (FILTERS.isInit(filter)
+							|| (FILTERS.isAbility(filter)
+								&& FILTERS.inCollection(filter, 'dex')))))
+				.flatMap(effect => effect.mods);
 
+		const rollMod = Rolls.combineRollMods(rollMods);
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			return Rolls.abilityCheck(
 				actor,
 				flags.attributes.init.ability,
 				game.i18n.localize('OBSIDIAN.Initiative'),
 				[flags.attributes.init.roll],
-				[{mod: data.attributes.init.value, name: game.i18n.localize('OBSIDIAN.Bonus')}]);
+				[{mod: data.attributes.init.value, name: game.i18n.localize('OBSIDIAN.Bonus')}],
+				rollMod);
 		} else {
 			return Rolls.overriddenRoll(
 				actor,
@@ -540,7 +595,8 @@ export const Rolls = {
 				game.i18n.localize('OBSIDIAN.Initiative'),
 				game.i18n.localize('OBSIDIAN.AbilityCheck'),
 				[flags.attributes.init.roll],
-				data.attributes.init.mod);
+				data.attributes.init.mod,
+				rollMod);
 		}
 	},
 
@@ -583,13 +639,14 @@ export const Rolls = {
 			}));
 	},
 
-	overriddenRoll: function (actor, type, title, subtitle, adv = [], override) {
+	overriddenRoll: function (actor, type, title, subtitle, adv = [], override, rollMod) {
 		return Rolls.simpleRoll(actor, {
 			type: type,
 			title: title,
 			subtitle: subtitle,
 			adv: adv,
-			mods: [{mod: Number(override), name: game.i18n.localize('OBSIDIAN.Override')}]
+			mods: [{mod: Number(override), name: game.i18n.localize('OBSIDIAN.Override')}],
+			rollMod: rollMod
 		});
 	},
 
@@ -646,6 +703,14 @@ export const Rolls = {
 			}
 		}
 
+		const damageMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter => FILTERS.isDamage(filter)));
+
 		const rolls = damage.map(dmg => {
 			if (dmg.calc === 'fixed' || !dmg.ndice) {
 				return null;
@@ -658,11 +723,23 @@ export const Rolls = {
 
 			const roll = new Die(dmg.die).roll(ndice);
 			const rolls = roll.results.map(r => [r]);
+			let condition = filter => filter.multi === 'any';
 
-			if (dmg.rollMod) {
-				Rolls.applyRollModifiers(roll, rolls, dmg.rollMod);
+			if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
+				condition = filter =>
+					filter.multi === 'any'
+					|| filter.collection.some(item => item.key === dmg.damage);
 			}
 
+			const rollMods =
+				damageMods.filter(filter => condition(filter)).flatMap(effect => effect.mods);
+
+			if (dmg.rollMod) {
+				rollMods.push(dmg.rollMod);
+			}
+
+			const rollMod = Rolls.combineRollMods(rollMods);
+			Rolls.applyRollModifiers(roll, rolls, rollMod);
 			return rolls;
 		});
 
@@ -715,7 +792,7 @@ export const Rolls = {
 				}
 
 				return {
-					type: dmg.type === 'damage' ? dmg.damage : dmg.type,
+					type: dmg.damage,
 					total: total,
 					breakdown: breakdown
 				};
@@ -732,6 +809,19 @@ export const Rolls = {
 		if (saveData) {
 			adv.push(saveData.roll);
 		}
+
+		const rollMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter =>
+						FILTERS.isSave(filter)
+						&& FILTERS.inCollection(filter, save)))
+				.flatMap(effect => effect.mods);
+
+		const rollMod = Rolls.combineRollMods(...rollMods);
 
 		if (!saveData || OBSIDIAN.notDefinedOrEmpty(saveData.override)) {
 			const saveBonus = saveData ? (saveData.bonus || 0) : 0;
@@ -753,7 +843,8 @@ export const Rolls = {
 				title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 				subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
 				adv: adv,
-				mods: mods
+				mods: mods,
+				rollMod: rollMod
 			});
 		} else {
 			return Rolls.overriddenRoll(
@@ -762,11 +853,12 @@ export const Rolls = {
 				game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 				game.i18n.localize('OBSIDIAN.SavingThrow'),
 				adv,
-				saveData.override);
+				saveData.override,
+				rollMod);
 		}
 	},
 
-	simpleRoll: function (actor, {type, title, parens, subtitle, adv = [], mods = []}) {
+	simpleRoll: function (actor, {type, title, parens, subtitle, adv = [], mods = [], rollMod}) {
 		return {
 			flags: {
 				obsidian: {
@@ -774,7 +866,7 @@ export const Rolls = {
 					title: title,
 					parens: parens,
 					subtitle: subtitle,
-					results: [Rolls.d20Roll(actor, adv, mods)]
+					results: [Rolls.d20Roll(actor, adv, mods, 20, 1, rollMod)]
 				}
 			}
 		}
@@ -784,7 +876,37 @@ export const Rolls = {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
 		const skillName = skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${id}`);
+		let tool = false;
+		let key = id;
 
+		if (!key) {
+			let list = 'custom';
+			let idx = flags.skills.custom.indexOf(skill);
+
+			if (idx < 0) {
+				tool = true;
+				list = 'tools';
+				idx = flags.skills.tools.indexOf(skill);
+			}
+
+			key = `${list}.${idx}`;
+		}
+
+		const rollMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter =>
+						FILTERS.isCheck(filter) && (
+						(FILTERS.isSkillOrTool(filter, tool)
+							&& FILTERS.inCollection(filter, key))
+						|| (FILTERS.isAbility(filter)
+							&& FILTERS.inCollection(filter, skill.ability)))))
+				.flatMap(effect => effect.mods);
+
+		const rollMod = Rolls.combineRollMods(rollMods);
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 			let prof = skill.custom ? skill.value : data.skills[id].value;
 			const mods = [{
@@ -808,7 +930,8 @@ export const Rolls = {
 				skill.ability,
 				skillName,
 				[flags.skills.roll, skill.roll],
-				mods);
+				mods,
+				rollMod);
 		} else {
 			return Rolls.overriddenRoll(
 				actor,
@@ -816,7 +939,8 @@ export const Rolls = {
 				skillName,
 				game.i18n.localize('OBSIDIAN.AbilityCheck'),
 				[flags.skills.roll, skill.roll],
-				skill.override);
+				skill.override,
+				rollMod);
 		}
 	},
 
@@ -867,6 +991,23 @@ export const Rolls = {
 			});
 		}
 
-		return Rolls.d20Roll(actor, [], mods, hit.crit, 1, hit.rollMod);
+		const key = hit.attack[0] + hit.category[0];
+		const rollMods =
+			actor.data.obsidian.toggleable
+				.filter(effect => effect.toggle.active)
+				.filter(effect => effect.mods.length)
+				.filter(effect =>
+					!effect.filters.length
+					|| effect.filters.some(filter =>
+						FILTERS.isAttack(filter)
+						&& FILTERS.inCollection(filter, key)))
+				.flatMap(effect => effect.mods);
+
+		if (hit.rollMod) {
+			rollMods.push(hit.rollMod);
+		}
+
+		const rollMod = Rolls.combineRollMods(...rollMods);
+		return Rolls.d20Roll(actor, [], mods, hit.crit, 1, rollMod);
 	}
 };

@@ -29,7 +29,7 @@ export function prepareInventory (actorData) {
 
 		if (item.type === 'backpack') {
 			item.flags.obsidian.carriedWeight = 0;
-			if (!item.flags.obsidian.weightless && item.flags.obsidian.currency) {
+			if (!item.data.capacity.weightless && item.flags.obsidian.currency) {
 				item.flags.obsidian.carriedWeight +=
 					Object.values(item.flags.obsidian.currency)
 						.reduce((acc, currency) => acc + currency, 0)
@@ -64,7 +64,7 @@ export function prepareInventory (actorData) {
 			const container = map.get(flags.parent);
 			if (container) {
 				container.flags.obsidian.carriedWeight += totalWeight;
-				if (!container.flags.obsidian.weightless) {
+				if (!container.data.capacity.weightless) {
 					inventory.weight += totalWeight;
 				}
 

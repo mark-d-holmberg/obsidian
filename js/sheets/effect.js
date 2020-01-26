@@ -226,7 +226,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			&& component.check === 'tool')
 		{
 			this.actor.data.flags.obsidian.skills.tools.forEach((v, i) =>
-				selections[`tool.${i}`] = v.label);
+				selections[`tools.${i}`] = v.label);
 		}
 
 		return selections;

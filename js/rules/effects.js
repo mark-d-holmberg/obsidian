@@ -105,13 +105,8 @@ function formatRollMod (mod) {
 		parts.push(localize('OBSIDIAN.RollModMin').format(mod.min));
 	}
 
-	if (mod.reroll > 1 || mod.operator === 'gt') {
-		parts.push(
-			localize('OBSIDIAN.RollModReroll')
-				.format(
-					localize(
-						`OBSIDIAN.${mod.operator === 'lt' ? 'LessThan' : 'GreaterThan'}`),
-					mod.reroll));
+	if (mod.reroll > 1) {
+		parts.push(localize('OBSIDIAN.RollModReroll').format(mod.reroll));
 	}
 
 	if (mod.mode !== 'reg') {
