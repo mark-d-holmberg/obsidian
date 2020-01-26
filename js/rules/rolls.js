@@ -15,17 +15,17 @@ const FILTERS = {
 };
 
 export const Rolls = {
-	abilityCheck: function (actor, ability, skill, adv = [], extraMods = [], rollMod) {
-		const mods = [{
-			mod: actor.data.data.abilities[ability].mod,
-			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
-		}, ...extraMods];
-
+	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
 		if (!skill) {
 			rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
 				FILTERS.isCheck(filter)
 				&& FILTERS.isAttack(filter)
-				&& FILTERS.inCollection(filter, ability))
+				&& FILTERS.inCollection(filter, ability));
+
+			mods.push({
+				mod: actor.data.data.abilities[ability].mod,
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
+			});
 		}
 
 		return Rolls.simpleRoll(actor, {
@@ -126,7 +126,6 @@ export const Rolls = {
 	},
 
 	compileSave: function (actor, save) {
-		const data = actor.data.data;
 		const result = {
 			effect: save.effect,
 			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.target}`)
@@ -138,27 +137,8 @@ export const Rolls = {
 				bonus = Number(save.bonus);
 			}
 
-			const mods = [{
-				mod: save.prof * data.attributes.prof,
-				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
-			}];
-
-			if (!OBSIDIAN.notDefinedOrEmpty(save.ability)) {
-				if (save.ability === 'spell') {
-					mods.push({
-						mod: save.spellMod,
-						name: game.i18n.localize('OBSIDIAN.Spell')
-					});
-				} else {
-					mods.push({
-						mod: data.abilities[save.ability].mod,
-						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.ability}`)
-					});
-				}
-			}
-
-			result.dc = bonus + mods.reduce((acc, mod) => acc + mod.mod, 0);
-			result.breakdown = bonus + Rolls.compileBreakdown(mods);
+			result.dc = save.value;
+			result.breakdown = bonus + Rolls.compileBreakdown(save.rollParts);
 		} else {
 			result.dc = save.fixed;
 			result.breakdown = `${result.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
@@ -769,51 +749,23 @@ export const Rolls = {
 	},
 
 	savingThrow: function (actor, save) {
-		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
 		const saveData = flags.saves[save];
 		const adv = [flags.saves.roll];
 
-		if (saveData) {
+		if (saveData.roll) {
 			adv.push(saveData.roll);
 		}
 
 		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
 			FILTERS.isSave(filter) && FILTERS.inCollection(filter, save));
 
-		if (!saveData || OBSIDIAN.notDefinedOrEmpty(saveData.override)) {
-			const saveBonus = saveData ? (saveData.bonus || 0) : 0;
-			const mods = [
-				{
-					mod: data.abilities[save].mod,
-					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save}`)
-				}, {
-					mod: (flags.saves.bonus || 0) + saveBonus,
-					name: game.i18n.localize('OBSIDIAN.Bonus')
-				}, {
-					mod: data.attributes.prof * data.abilities[save].proficient,
-					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
-				}
-			];
-
-			return Rolls.simpleRoll(actor, {
-				type: 'save',
-				title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
-				subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-				adv: adv,
-				mods: mods,
-				rollMod: rollMod
-			});
-		} else {
-			return Rolls.overriddenRoll(
-				actor,
-				'save',
-				game.i18n.localize(`OBSIDIAN.Ability-${save}`),
-				game.i18n.localize('OBSIDIAN.SavingThrow'),
-				adv,
-				saveData.override,
-				rollMod);
-		}
+		return Rolls.simpleRoll(actor, {
+			type: 'save',
+			title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
+			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
+			adv: adv, mods: saveData.rollParts, rollMod: rollMod
+		});
 	},
 
 	simpleRoll: function (actor, {type, title, parens, subtitle, adv = [], mods = [], rollMod}) {
@@ -831,7 +783,6 @@ export const Rolls = {
 	},
 
 	skillCheck: function (actor, skill, id) {
-		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
 		const skillName = skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 		let tool = false;
@@ -855,41 +806,9 @@ export const Rolls = {
 				(FILTERS.isSkillOrTool(filter, tool) && FILTERS.inCollection(filter, key))
 				|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability))));
 
-		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
-			let prof = skill.custom ? skill.value : data.skills[id].value;
-			const mods = [{
-				mod: (flags.skills.bonus || 0) + (skill.bonus || 0),
-				name: game.i18n.localize('OBSIDIAN.Bonus')
-			}];
-
-			if (prof === 0 && flags.skills.joat) {
-				prof = .5;
-			}
-
-			if (prof > 0) {
-				mods.push({
-					mod: data.attributes.prof * prof,
-					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
-				});
-			}
-
-			return Rolls.abilityCheck(
-				actor,
-				skill.ability,
-				skillName,
-				[flags.skills.roll, skill.roll],
-				mods,
-				rollMod);
-		} else {
-			return Rolls.overriddenRoll(
-				actor,
-				'abl',
-				skillName,
-				game.i18n.localize('OBSIDIAN.AbilityCheck'),
-				[flags.skills.roll, skill.roll],
-				skill.override,
-				rollMod);
-		}
+		return Rolls.abilityCheck(
+			actor, skill.ability, skillName, [flags.skills.roll, skill.roll], skill.rollParts,
+			rollMod);
 	},
 
 	toChat: async function (actor, ...msgs) {
@@ -915,30 +834,6 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraMods = []) {
-		const data = actor.data.data;
-		const mods = [
-			{mod: hit.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')},
-			...extraMods
-		];
-
-		if (!OBSIDIAN.notDefinedOrEmpty(hit.ability)) {
-			if (hit.ability === 'spell') {
-				mods.push({mod: hit.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
-			} else {
-				mods.push({
-					mod: data.abilities[hit.ability].mod,
-					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${hit.ability}`)
-				});
-			}
-		}
-
-		if (hit.proficient) {
-			mods.push({
-				mod: data.attributes.prof,
-				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
-			});
-		}
-
 		const key = hit.attack[0] + hit.category[0];
 		let rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
 			FILTERS.isAttack(filter) && FILTERS.inCollection(filter, key));
@@ -947,6 +842,6 @@ export const Rolls = {
 			rollMod = Effect.combineRollMods([rollMod, hit.rollMod]);
 		}
 
-		return Rolls.d20Roll(actor, [], mods, hit.crit, 1, rollMod);
+		return Rolls.d20Roll(actor, [], [...hit.rollParts, ...extraMods], hit.crit, 1, rollMod);
 	}
 };

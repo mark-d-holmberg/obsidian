@@ -33,6 +33,24 @@ export function determineAdvantage (...mods) {
 }
 
 export const Prepare = {
+	spellPart: function (component, data, cls) {
+		if (!OBSIDIAN.notDefinedOrEmpty(component.ability)) {
+			let mod;
+			let i18n;
+
+			if (component.ability === 'spell') {
+				component.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
+				mod = component.spellMod;
+				i18n = 'OBSIDIAN.Spell';
+			} else {
+				mod = data.abilities[component.ability].mod;
+				i18n = `OBSIDIAN.AbilityAbbr-${component.ability}`;
+			}
+
+			component.rollParts.push({mod: mod, name: game.i18n.localize(i18n)});
+		}
+	},
+
 	calculateSave: function (dc, data, cls) {
 		if (dc.calc === 'fixed') {
 			dc.value = dc.fixed;
@@ -44,36 +62,33 @@ export const Prepare = {
 			bonus = Number(dc.bonus);
 		}
 
-		dc.value = bonus + dc.prof * data.attributes.prof;
+		dc.rollParts = [{
+			mod: dc.prof * data.attributes.prof,
+			name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+		}];
 
-		if (!OBSIDIAN.notDefinedOrEmpty(dc.ability)) {
-			if (dc.ability === 'spell') {
-				dc.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
-				dc.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
-			} else {
-				dc.value += data.abilities[dc.ability].mod;
-			}
-		}
+		Prepare.spellPart(dc, data, cls);
+		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
 
 	calculateHit: function (hit, data, cls) {
-		hit.value = hit.bonus || 0;
+		hit.rollParts = [{
+			mod: hit.bonus || 0,
+			name: game.i18n.localize('OBSIDIAN.Bonus')
+		}];
+
 		hit.spellMod = 0;
 		hit.targets = 1;
+		Prepare.spellPart(hit, data, cls);
 
-		if (!OBSIDIAN.notDefinedOrEmpty(hit.ability)) {
-			if (hit.ability === 'spell') {
-				hit.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
-				hit.value += cls ? cls.flags.obsidian.spellcasting.mod : 0;
-			} else {
-				hit.value += data.abilities[hit.ability].mod;
-			}
+		if (hit.proficient) {
+			hit.rollParts.push({
+				mod: data.attributes.prof,
+				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+			});
 		}
 
-		if (hit.proficient || hit.ability === 'spell') {
-			hit.value += data.attributes.prof;
-		}
-
+		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		hit.attackType =
 			game.i18n.localize(
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
@@ -159,6 +174,33 @@ export const Prepare = {
 		}
 	},
 
+	calculateSkill: function (data, flags, skill) {
+		let prof = skill.value;
+		if (prof === 0 && flags.skills.joat) {
+			prof = .5;
+		}
+
+		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
+			skill.rollParts = [{
+				mod: data.attributes.prof * prof,
+				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+			}, {
+				mod: data.abilities[skill.ability].mod,
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${skill.ability}`)
+			}, {
+				mod: (flags.skills.bonus || 0) + (skill.bonus || 0),
+				name: game.i18n.localize('OBSIDIAN.Bonus')
+			}];
+		} else {
+			skill.rollParts = [{
+				mod: Number(skill.override),
+				name: game.i18n.localize('OBSIDIAN.Override')
+			}];
+		}
+
+		skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
+	},
+
 	damageFormat: function (dmg, mod = true) {
 		if (dmg === undefined) {
 			return;
@@ -188,6 +230,16 @@ export const Prepare = {
 		}
 
 		return out;
+	},
+
+	abilities: function (actorData) {
+		const data = actorData.data;
+		const flags = actorData.flags.obsidian;
+		flags.abilities = {};
+
+		for (const ability of data.abilities) {
+			flags.abilities[ability] = {};
+		}
 	},
 
 	armour: function (actorData) {
@@ -429,18 +481,29 @@ export const Prepare = {
 
 	saves: function (actorData, data, flags) {
 		for (const [id, save] of Object.entries(data.abilities)) {
-			save.save =
-				(flags.saves.bonus || 0)
-				+ data.abilities[id].mod
-				+ save.proficient * data.attributes.prof;
-
-			if (flags.saves.hasOwnProperty(id)) {
-				save.save += flags.saves[id].bonus;
-				const override = flags.saves[id].override;
-				if (!OBSIDIAN.notDefinedOrEmpty(override)) {
-					save.save = Number(override);
-				}
+			if (!flags.saves[id]) {
+				flags.saves[id] = {};
 			}
+
+			if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
+				flags.saves[id].rollParts = [{
+					mod: save.proficient * data.attributes.prof,
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				}, {
+					mod: data.abilities[id].mod,
+					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)
+				}, {
+					mod: (flags.saves.bonus || 0) + (flags.saves[id].bonus || 0),
+					name: game.i18n.localize('OBSIDIAN.Bonus')
+				}];
+			} else {
+				flags.saves[id].rollParts = [{
+					mod: Number(flags.saves[id].override),
+					name: game.i18n.localize('OBSIDIAN.Override')
+				}];
+			}
+
+			save.save = flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0);
 		}
 	},
 
@@ -462,21 +525,7 @@ export const Prepare = {
 			}
 
 			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
-
-			skill.mod =
-				data.abilities[skill.ability].mod
-				+ Math.floor(skill.value * data.attributes.prof)
-				+ flags.skills.bonus
-				+ (skill.bonus || 0);
-
-			if (flags.skills.joat && skill.value === 0) {
-				skill.mod += Math.floor(data.attributes.prof / 2);
-			}
-
-			if (skill.override !== undefined && skill.override !== '') {
-				skill.mod = Number(skill.override);
-			}
-
+			Prepare.calculateSkill(data, flags, skill);
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll);
 		}
@@ -484,20 +533,7 @@ export const Prepare = {
 
 	tools: function (actorData, data, flags) {
 		for (const tool of flags.skills.tools) {
-			if (tool.override !== undefined && tool.override !== '') {
-				tool.mod = Number(tool.override);
-				continue;
-			}
-
-			tool.mod =
-				data.abilities[tool.ability].mod
-				+ tool.bonus
-				+ flags.skills.bonus
-				+ Math.floor(tool.value * data.attributes.prof);
-
-			if (flags.skills.joat && tool.value === 0) {
-				tool.mod += Math.floor(data.attributes.prof / 2);
-			}
+			Prepare.calculateSkill(data, flags, tool);
 		}
 	},
 

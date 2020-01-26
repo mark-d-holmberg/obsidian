@@ -180,7 +180,7 @@ export const Effect = {
 			actorData.obsidian.itemsByID.get(
 				consumer.target === 'feat' ? consumer.featID : consumer.itemID);
 
-		if (!item || !item.flags || !item.flags.obsidian || !item.flags.obsidian.effects) {
+		if (!item || !getProperty(item, 'flags.obsidian.effects.length')) {
 			return [];
 		}
 

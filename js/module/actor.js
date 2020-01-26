@@ -102,6 +102,7 @@ export class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
+		Prepare.abilities(this.data);
 		Prepare.defenses(flags);
 		Prepare.hd(this.data);
 		Prepare.skills(this.data, data, flags);
