@@ -137,8 +137,7 @@ export const Effect = {
 			check: 'ability',
 			multi: 'any',
 			some: '',
-			collection: [],
-			mode: 'reg'
+			collection: []
 		};
 	},
 
@@ -152,6 +151,28 @@ export const Effect = {
 		} while (typeof tree === 'object');
 
 		return !!tree;
+	},
+
+	combineRollMods: mods => {
+		if (!mods.length) {
+			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg'});
+		}
+
+		return {
+			min: Math.max(...mods.map(mod => mod.min)),
+			reroll: Math.max(...mods.map(mod => mod.reroll)),
+			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
+			mode: mods.map(mod => mod.mode)
+		};
+	},
+
+	filterRollMods: function (effects, condition) {
+		const mods =
+			effects.filter(effect => effect.toggle.active && effect.mods.length)
+				.filter(effect => !effect.filters.length || effect.filters.some(condition))
+				.flatMap(effect => effect.mods);
+
+		return Effect.combineRollMods(mods);
 	},
 
 	getLinkedResource: function (actorData, consumer) {

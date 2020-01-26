@@ -46,19 +46,6 @@
 			{{/if}}
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
-	     data-selector-parent="{{prefix}}.roll" data-hide="damage">
-		<label class="obsidian-inline">
-			{{localize 'OBSIDIAN.RollingAt'}}
-			<select name="{{prefix}}.mode">
-				{{#select mode}}
-					{{#each @root.ObsidianRules.ROLL}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-		</label>
-	</div>
 	{{#if isCollection}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">

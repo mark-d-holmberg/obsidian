@@ -622,9 +622,9 @@
 	"OBSIDIAN.Check-skill": "Skill",
 	"OBSIDIAN.Check-tool": "Tool",
 	"OBSIDIAN.Check-init": "Initiative",
-	"OBSIDIAN.RollingAt": "Rolling At",
 	"OBSIDIAN.RollModMin": "any roll lower than {0} becomes a {0}",
 	"OBSIDIAN.RollModReroll": "reroll results less than {0}",
+	"OBSIDIAN.RollModExtraDice": "roll {0} extra {1}",
 	"OBSIDIAN.On": "on",
 	"OBSIDIAN.And": "and",
 	"OBSIDIAN.AttackRolls": "attack rolls",
@@ -635,10 +635,11 @@
 	"OBSIDIAN.RangedAttacks": "ranged attacks",
 	"OBSIDIAN.WeaponAttacks": "weapon attacks",
 	"OBSIDIAN.SpellAttacks": "spell attacks",
-	"OBSIDIAN.WhenRollingAt": "when rolling at {0}",
 	"OBSIDIAN.SkillChecks": "skill checks",
 	"OBSIDIAN.ToolChecks": "tool checks",
 	"OBSIDIAN.InitiativeRolls": "initiative rolls",
 	"OBSIDIAN.Checks": "checks",
-	"OBSIDIAN.Saves": "saves"
+	"OBSIDIAN.Saves": "saves",
+	"OBSIDIAN.Dice": "dice",
+	"OBSIDIAN.Die": "die"
 }

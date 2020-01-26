@@ -32,7 +32,7 @@ function formatFilter (filter) {
 	if (filter.roll === 'attack') {
 		if (filter.multi === 'any') {
 			parts.push(localize('OBSIDIAN.AttackRolls'));
-		} else {
+		} else if (filter.collection.length) {
 			if (filter.collection.length < 2) {
 				parts.push(localize(`OBSIDIAN.AttackFullLC-${filter.collection[0].key}`));
 			} else if (filter.collection.every(item => item.key[0] === 'm')) {
@@ -67,7 +67,7 @@ function formatFilter (filter) {
 		} else if (filter.check === 'tool') {
 			if (filter.multi === 'any') {
 				parts.push(localize('OBSIDIAN.ToolChecks'));
-			} else {
+			} else if (filter.collection.length) {
 				parts.push(...filter.collection.map(item => item.label));
 				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
 			}
@@ -90,12 +90,6 @@ function formatFilter (filter) {
 		}
 	}
 
-	if (filter.roll !== 'damage' && filter.mode !== 'reg' && parts.length > 0) {
-		parts[parts.length - 1] +=
-			` (${localize('OBSIDIAN.WhenRollingAt')
-				.format(localize(`OBSIDIAN.Roll-${filter.mode}`))})`;
-	}
-
 	return oxfordComma(parts);
 }
 
@@ -109,18 +103,28 @@ function formatRollMod (mod) {
 		parts.push(localize('OBSIDIAN.RollModReroll').format(mod.reroll));
 	}
 
+	if (mod.ndice > 0) {
+		parts.push(
+			localize('OBSIDIAN.RollModExtraDice')
+				.format(mod.ndice, localize(mod.ndice > 1 ? 'OBSIDIAN.Dice' : 'OBSIDIAN.Die')));
+	}
+
 	if (mod.mode !== 'reg') {
 		parts.push(localize(`OBSIDIAN.Roll-${mod.mode}`));
 	}
 
-	return parts.join(', ').capitalise();
+	return oxfordComma(parts).capitalise();
 }
 
 function oxfordComma (parts) {
-	if (parts.length < 2) {
-		return parts[0]
-	} else {
-		const last = parts.pop();
-		return `${parts.join(', ')}, ${localize('OBSIDIAN.And')} ${last}`;
+	if (parts.length) {
+		if (parts.length < 2) {
+			return parts[0];
+		} else {
+			const last = parts.pop();
+			return `${parts.join(', ')}, ${localize('OBSIDIAN.And')} ${last}`;
+		}
 	}
+
+	return '';
 }
