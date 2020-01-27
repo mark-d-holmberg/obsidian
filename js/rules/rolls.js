@@ -627,7 +627,7 @@ export const Rolls = {
 						dmg.mod = Math.floor(dmg.mod * scaledAmount);
 					} else {
 						dmg.ndice = Math.floor(dmg.ndice * scaledAmount);
-						dmg.ncrit = Math.floor(dmg.ncrit * scaledAmount);
+						dmg.derived.ncrit = Math.floor(dmg.derived.ncrit * scaledAmount);
 					}
 
 					return dmg;
@@ -640,7 +640,7 @@ export const Rolls = {
 			if (damageComponents) {
 				damage = damage.concat(duplicate(damageComponents).map(dmg => {
 					dmg.ndice = Math.floor(dmg.ndice * dmg.scaledDice);
-					dmg.ncrit = Math.floor(dmg.ncrit * dmg.scaledDice);
+					dmg.derived.ncrit = Math.floor(dmg.derived.ncrit * dmg.scaledDice);
 					return dmg;
 				}).filter(dmg => dmg.ndice > 0));
 			}
@@ -661,7 +661,7 @@ export const Rolls = {
 
 			let ndice = dmg.ndice;
 			if (crit) {
-				ndice += dmg.ncrit || 1;
+				ndice += dmg.derived.ncrit || 1;
 			}
 
 			const roll = new Die(dmg.die).roll(ndice);

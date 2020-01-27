@@ -676,7 +676,6 @@ Migrate.core = {
 				const dice = diceMatches[1].split('d');
 				component.ndice = Number(dice[0]);
 				component.die = Number(dice[1]);
-				component.ncrit = component.ndice;
 			}
 		}
 	},
@@ -704,7 +703,6 @@ Migrate.core = {
 			const d = dice.split('d');
 			component.ndice = Number(d[0]);
 			component.die = Number(d[1]);
-			component.ncrit = component.ndice;
 		} else {
 			component.calc = 'fixed';
 		}
@@ -782,16 +780,12 @@ Migrate.v1 = {
 	convertDamage: function (dmg, versatile = false, magic = 0) {
 		const component = Effect.newDamage();
 		component.ndice = dmg.ndice;
-		component.ncrit = dmg.ndice;
+		component.ncrit = dmg.ncrit;
 		component.die = dmg.die;
 		component.ability = dmg.stat;
 		component.bonus = dmg.bonus + magic;
 		component.damage = dmg.type;
 		component.versatile = versatile;
-
-		if (!isNaN(Number(dmg.ncrit))) {
-			component.ncrit = Number(dmg.ncrit);
-		}
 
 		return component;
 	},

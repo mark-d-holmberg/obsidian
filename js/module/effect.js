@@ -47,8 +47,7 @@ export const Effect = {
 			ability: '',
 			bonus: 0,
 			damage: '',
-			versatile: false,
-			ncrit: 1
+			versatile: false
 		};
 	},
 

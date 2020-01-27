@@ -105,6 +105,11 @@ export const Prepare = {
 			Prepare.spellPart(dmg, data, cls);
 			dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			dmg.display = Prepare.damageFormat(dmg);
+			dmg.derived = {ncrit: dmg.ndice};
+
+			if (!OBSIDIAN.notDefinedOrEmpty(dmg.ncrit)) {
+				dmg.derived.ncrit = Number(dmg.ncrit);
+			}
 		}
 	},
 
