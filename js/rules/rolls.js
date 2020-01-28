@@ -1,18 +1,7 @@
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
-
-const FILTERS = {
-	isAttack: filter => filter.filter === 'roll' && filter.roll === 'attack',
-	isCheck: filter => filter.filter === 'roll' && filter.roll === 'check',
-	isDamage: filter => filter.filter === 'roll' && filter.roll === 'damage',
-	isSave: filter => filter.filter === 'roll' && filter.roll === 'save',
-	isAbility: filter => filter.check === 'ability',
-	isInit: filter => filter.check === 'init',
-	isSkillOrTool: (filter, tool) => filter.check === (tool ? 'tool' : 'skill'),
-	inCollection: (filter, key) =>
-		filter.multi === 'any' || filter.collection.some(item => item.key === key)
-};
+import {FILTERS} from './filters.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -661,7 +650,7 @@ export const Rolls = {
 
 			let ndice = dmg.ndice;
 			if (crit) {
-				ndice += dmg.derived.ncrit || 1;
+				ndice += dmg.derived.ncrit || ndice;
 			}
 
 			const roll = new Die(dmg.die).roll(ndice);
@@ -669,9 +658,7 @@ export const Rolls = {
 			let condition = filter => filter.multi === 'any';
 
 			if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
-				condition = filter =>
-					filter.multi === 'any'
-					|| filter.collection.some(item => item.key === dmg.damage);
+				condition = filter => FILTERS.inCollection(filter, dmg.damage);
 			}
 
 			const rollMods =

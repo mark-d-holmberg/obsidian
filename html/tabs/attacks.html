@@ -87,7 +87,7 @@
 					</div>
 					<div class="obsidian-col-damage">
 						<div class="obsidian-table-dmg">
-							{{#each (which-damage this)}}
+							{{#each (which-damage parentItem this)}}
 								<div class="obsidian-dmg-component">
 									{{display}}
 									<div class="obsidian-icon-sm obsidian-icon-{{damage}}"

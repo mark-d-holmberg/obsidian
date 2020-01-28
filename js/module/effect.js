@@ -130,6 +130,7 @@ export const Effect = {
 		return {
 			type: 'bonus',
 			uuid: OBSIDIAN.uuid(),
+			name: '',
 			bonus: 0,
 			prof: 0,
 			ability: '',

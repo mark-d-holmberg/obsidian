@@ -608,6 +608,7 @@
 	"OBSIDIAN.Scores-passive": "Passive Skill",
 	"OBSIDIAN.Scores-prof": "Proficiency",
 	"OBSIDIAN.Scores-speed": "Speed",
+	"OBSIDIAN.Scores-dc": "Save DC",
 	"OBSIDIAN.Multi-any": "Any",
 	"OBSIDIAN.Multi-some": "Some",
 	"OBSIDIAN.Attack-mw": "Melee Weapon",
@@ -642,5 +643,15 @@
 	"OBSIDIAN.Saves": "saves",
 	"OBSIDIAN.Dice": "dice",
 	"OBSIDIAN.Die": "die",
-	"OBSIDIAN.AddBonus": "Add Bonus"
+	"OBSIDIAN.AddBonus": "Add Bonus",
+	"OBSIDIAN.RollName": "Roll Name",
+	"OBSIDIAN.AddLC": "add",
+	"OBSIDIAN.Subtract": "subtract",
+	"OBSIDIAN.To": "to",
+	"OBSIDIAN.BonusProf-half": "add half your proficiency bonus",
+	"OBSIDIAN.BonusProf-prof": "add your proficiency bonus",
+	"OBSIDIAN.BonusProf-expert": "add twice your proficiency bonus",
+	"OBSIDIAN.BonusAbilityMod": "add your {0} modifier",
+	"OBSIDIAN.BonusCharLevel": "add your level",
+	"OBSIDIAN.BonusClassLevel": "add your {0} level"
 }

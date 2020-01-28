@@ -57,6 +57,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.label = getEffectLabel(effect);
 		effect.mods = [];
 		effect.filters = [];
+		effect.bonuses = [];
 
 		const scalingComponent = effect.components.find(c => c.type === 'scaling');
 		if (scalingComponent) {
@@ -181,8 +182,13 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				if (toggleList) {
 					toggleList.add(effect);
 				}
-			} else if (component.type === 'filter' && component.filter === 'roll') {
+			} else if (component.type === 'filter') {
 				effect.filters.push(component);
+			} else if (component.type === 'bonus') {
+				effect.bonuses.push(component);
+				if (toggleList) {
+					toggleList.add(effect);
+				}
 			}
 		}
 

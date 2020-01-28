@@ -1,3 +1,5 @@
+import {OBSIDIAN} from './rules.js';
+
 let localize;
 
 export function prepareToggleableEffects (actorData) {
@@ -7,13 +9,23 @@ export function prepareToggleableEffects (actorData) {
 			effect.toggle = {active: true, display: ''};
 		}
 
-		if (!effect.mods.length) {
+		if (!effect.mods.length && !effect.bonuses.length) {
 			continue;
 		}
 
-		effect.toggle.display = formatRollMod(effect.mods[0]);
+		effect.toggle.display =
+			oxfordComma(
+				effect.bonuses.map(bonus => formatBonus(actorData, bonus))
+					.concat(effect.mods.map(formatRollMod)))
+				.capitalise();
+
 		if (effect.filters.length) {
-			effect.toggle.display += ` ${localize('OBSIDIAN.On')} ${formatFilters(effect.filters)}`;
+			let preposition = 'OBSIDIAN.On';
+			if (!effect.mods.length) {
+				preposition = 'OBSIDIAN.To';
+			}
+
+			effect.toggle.display += ` ${localize(preposition)} ${formatFilters(effect.filters)}`;
 		}
 	}
 }
@@ -22,6 +34,57 @@ function formatFilters (filters) {
 	const parts = [];
 	for (const filter of filters) {
 		parts.push(formatFilter(filter));
+	}
+
+	return oxfordComma(parts);
+}
+
+function formatBonus (actorData, bonus) {
+	const parts = [];
+	if (bonus.ndice !== 0) {
+		let i18n = 'OBSIDIAN.AddLC';
+		let ndice = bonus.ndice;
+
+		if (ndice < 0) {
+			i18n = 'OBSIDIAN.Subtract';
+			ndice *= -1;
+		}
+
+		parts.push(`${localize(i18n)} ${ndice}d${bonus.die}`);
+	}
+
+	if (bonus.bonus !== 0) {
+		let operator = '&plus;';
+		let mod = bonus.bonus;
+
+		if (mod < 0) {
+			operator = '&minus;';
+			mod *= -1;
+		}
+
+		parts.push(`<strong>${operator}${mod}</strong>`);
+	}
+
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
+		const key = OBSIDIAN.Rules.PLUS_PROF[bonus.prof];
+		parts.push(localize(key));
+	}
+
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability)) {
+		parts.push(
+			localize('OBSIDIAN.BonusAbilityMod')
+				.format(localize(`OBSIDIAN.Ability-${bonus.ability}`)));
+	}
+
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.level)) {
+		if (bonus.level === 'chr') {
+			parts.push(localize('OBSIDIAN.BonusCharLevel'));
+		} else if (bonus.level === 'cls') {
+			const cls = actorData.obsidian.classes(cls => cls._id === bonus.cls);
+			if (cls) {
+				parts.push(localize('OBSIDIAN.BonusClassLevel').format(cls.label));
+			}
+		}
 	}
 
 	return oxfordComma(parts);
@@ -113,7 +176,7 @@ function formatRollMod (mod) {
 		parts.push(localize(`OBSIDIAN.Roll-${mod.mode}`));
 	}
 
-	return oxfordComma(parts).capitalise();
+	return oxfordComma(parts);
 }
 
 function oxfordComma (parts) {

@@ -9,6 +9,7 @@ import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
 import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
+import {applyBonuses} from '../rules/bonuses.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -130,6 +131,7 @@ export class ObsidianActor extends Actor5e {
 		// Convert it to an array here so it doesn't get nuked when duplicated.
 		this.data.obsidian.toggleable = Array.from(this.data.obsidian.toggleable.values());
 		prepareToggleableEffects(this.data);
+		applyBonuses(this.data);
 
 		return this.data;
 	}

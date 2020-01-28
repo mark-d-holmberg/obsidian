@@ -183,6 +183,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			} else if (component.score === 'passive') {
 				rule = OBSIDIAN.Rules.SKILLS;
 				i18n = 'OBSIDIAN.Skill';
+			} else if (component.score === 'dc') {
+				rule = OBSIDIAN.Rules.EFFECT_ABILITIES;
+				i18n = 'OBSIDIAN.Ability';
 			}
 		} else {
 			if (component.roll === 'attack') {

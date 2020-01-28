@@ -175,6 +175,7 @@
 .obsidian-effect-row {
 	display: flex;
 	font-size: 13px;
+	margin-bottom: 5px;
 }
 
 .obsidian-effect-row-name {

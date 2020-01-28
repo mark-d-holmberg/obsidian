@@ -346,7 +346,11 @@ export function registerHandlebarHelpers () {
 		return haystack.startsWith(needle);
 	});
 
-	Handlebars.registerHelper('which-damage', function (attack) {
+	Handlebars.registerHelper('which-damage', function (item, attack) {
+		if (item.type === 'spell' && item.data.level < 1) {
+			return item.obsidian.damage;
+		}
+
 		return attack.mode === 'versatile'
 			? attack.parentEffect.versatile
 			: attack.parentEffect.damage;
