@@ -1,8 +1,10 @@
 import {FILTERS} from './filters.js';
 import {OBSIDIAN} from './rules.js';
-import {Prepare} from './prepare.js';
+import {determineAdvantage, Prepare} from './prepare.js';
 
 export function applyBonuses (actorData) {
+	const data = actorData.data;
+	const flags = actorData.flags.obsidian;
 	const attacks = [];
 	const damage = [];
 
@@ -53,6 +55,93 @@ export function applyBonuses (actorData) {
 			dmg.display = Prepare.damageFormat(dmg);
 		}
 	});
+
+	for (const [id, abl] of Object.entries(data.abilities)) {
+		const saveBonuses =
+			toggleable.filter(effect =>
+				partition(effect, filter =>
+					FILTERS.isSave(filter) && FILTERS.inCollection(filter, id)))
+				.flatMap(effect => effect.bonuses);
+
+		if (saveBonuses.length) {
+			flags.saves[id].rollParts.push(
+				...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			abl.save = flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0);
+		}
+
+		const abilityBonuses =
+			toggleable.filter(effect =>
+				partition(effect, filter =>
+					FILTERS.isCheck(filter)
+					&& FILTERS.isAbility(filter)
+					&& FILTERS.inCollection(filter, id)))
+				.flatMap(effect => effect.bonuses);
+
+		if (abilityBonuses.length) {
+			flags.abilities[id].rollParts.push(
+				...abilityBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		}
+	}
+
+	for (let [id, skill] of
+		Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
+	{
+		const custom = !isNaN(Number(id));
+		let key = id;
+
+		if (custom) {
+			key = `custom.${flags.skills.custom.indexOf(skill)}`;
+		} else {
+			skill = flags.skills[id];
+		}
+
+		const bonuses =
+			toggleable.filter(effect =>
+				partition(effect, filter =>
+					FILTERS.isCheck(filter) && (
+						(filter.check === 'skill' && FILTERS.inCollection(filter, key))
+						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability)))))
+				.flatMap(effect => effect.bonuses);
+
+		if (bonuses.length) {
+			skill.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll);
+		}
+	}
+
+	for (let i = 0; i < flags.skills.tools.length; i++) {
+		const tool = flags.skills.tools[i];
+		const bonuses =
+			toggleable.filter(effect =>
+				partition(effect, filter =>
+					FILTERS.isCheck(filter) && (
+						(filter.check === 'tool' && FILTERS.inCollection(filter, `tool.${id}`))
+						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, tool.ability)))))
+				.flatMap(effect => effect.bonuses);
+
+		if (bonuses.length) {
+			tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		}
+	}
+
+	const initBonuses =
+		toggleable.filter(effect =>
+			partition(effect, filter =>
+				FILTERS.isCheck(filter)
+				&& (FILTERS.isInit(filter)
+					|| (FILTERS.isAbility(filter)
+						&& FILTERS.inCollection(filter, flags.attributes.init.ability)))))
+			.flatMap(effect => effect.bonuses);
+
+	if (initBonuses.length) {
+		flags.attributes.init.rollParts.push(
+			...initBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		data.attributes.init.mod +=
+			flags.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
+	}
 }
 
 function bonusName (actorData, bonus) {

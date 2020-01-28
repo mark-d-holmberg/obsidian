@@ -8,13 +8,13 @@ export const Rolls = {
 		if (!skill) {
 			rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
 				FILTERS.isCheck(filter)
-				&& FILTERS.isAttack(filter)
+				&& FILTERS.isAbility(filter)
 				&& FILTERS.inCollection(filter, ability));
 
 			mods.push({
 				mod: actor.data.data.abilities[ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
-			});
+			}, ...actor.data.flags.obsidian.abilities[ability].rollParts);
 		}
 
 		return Rolls.simpleRoll(actor, {
@@ -136,6 +136,21 @@ export const Rolls = {
 		return result;
 	},
 
+	d20Breakdown: function (r, crit, total, mods) {
+		const extraRolls = mods.filter(mod => mod.roll);
+		if (!extraRolls.length) {
+			// Simplified breakdown.
+			return Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods);
+		}
+
+		return '1d20 '
+			+ extraRolls.map(mod => `${mod.sgn} ${mod.ndice}d${mod.die}`).join(' ')
+			+ Rolls.compileBreakdown(mods) + ' = '
+			+ Rolls.compileRerolls(r, crit)
+			+ extraRolls.map(mod => ` ${mod.sgn} (${mod.roll.results.join('+')})`).join('')
+			+ total.sgnex();
+	},
+
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1, rollMod) {
 		let n = 2;
 		if (rollMod) {
@@ -154,12 +169,27 @@ export const Rolls = {
 			}
 		}
 
-		const total = mods.reduce((acc, mod) => acc + mod.mod, 0);
+		const total = mods.reduce((acc, mod) => {
+			if (mod.ndice !== undefined) {
+				if (mod.ndice < 0) {
+					mod.sgn = '-';
+					mod.ndice *= -1;
+				} else {
+					mod.sgn = '+';
+				}
+
+				mod.roll = new Die(mod.die).roll(mod.ndice);
+				return acc + mod.roll.results.reduce((acc, r) => acc + r, 0);
+			}
+
+			return acc + mod.mod;
+		}, 0);
+
 		const results = rolls.map(r => {
 			return {
 				roll: r.last(),
 				total: r.last() + total,
-				breakdown: Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods)
+				breakdown: Rolls.d20Breakdown(r, crit, total, mods)
 			}
 		});
 
@@ -513,10 +543,11 @@ export const Rolls = {
 		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
 			FILTERS.isCheck(filter)
 			&& (FILTERS.isInit(filter)
-				|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, 'dex'))));
+				|| (FILTERS.isAbility(filter)
+					&& FILTERS.inCollection(filter, flags.attributes.init.ability))));
 
-		const mods = [];
-		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.overide)) {
+		const mods = flags.attributes.init.rollParts;
+		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			mods.push({
 				mod: data.abilities[flags.attributes.init.ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.attributes.init.ability}`)
@@ -606,7 +637,17 @@ export const Rolls = {
 	},
 
 	rollDamage: function (actor, damage, {crit = false, scaledAmount = 0, scaling = null}) {
-		const data = actor.data.data;
+		damage = damage.concat(
+			damage.flatMap(dmg => dmg.rollParts)
+				.filter(mod => mod.ndice !== undefined)
+				.map(mod => {
+					mod.derived = {ncrit: mod.ndice};
+					mod.calc = 'formula';
+					mod.addMods = false;
+					mod.rollParts = [];
+					return mod;
+				}));
+
 		if (scaledAmount > 0 && scaling != null && scaling.scalingComponent.method !== 'cantrip') {
 			const damageComponents = scaling.components.filter(c => c.type === 'damage');
 			if (damageComponents) {
@@ -655,8 +696,12 @@ export const Rolls = {
 
 			const roll = new Die(dmg.die).roll(ndice);
 			const rolls = roll.results.map(r => [r]);
-			let condition = filter => filter.multi === 'any';
 
+			if (dmg.addMods === false) {
+				return rolls;
+			}
+
+			let condition = filter => filter.multi === 'any';
 			if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
 				condition = filter => FILTERS.inCollection(filter, dmg.damage);
 			}
@@ -673,23 +718,6 @@ export const Rolls = {
 			const rollMod = Effect.combineRollMods(rollMods);
 			Rolls.applyRollModifiers(roll, rolls, rollMod);
 			return rolls;
-		});
-
-		damage.forEach(dmg => {
-			dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
-			if (!OBSIDIAN.notDefinedOrEmpty(dmg.ability)) {
-				if (dmg.ability === 'spell') {
-					dmg.rollParts.push({
-						mod: dmg.spellMod,
-						name: game.i18n.localize('OBSIDIAN.Spell')
-					});
-				} else {
-					dmg.rollParts.push({
-						mod: data.abilities[dmg.ability].mod,
-						name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${dmg.ability}`)
-					});
-				}
-			}
 		});
 
 		return {
@@ -782,10 +810,11 @@ export const Rolls = {
 			key = `${list}.${idx}`;
 		}
 
-		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-			FILTERS.isCheck(filter) && (
-				(FILTERS.isSkillOrTool(filter, tool) && FILTERS.inCollection(filter, key))
-				|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability))));
+		const rollMod =
+			Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
+				FILTERS.isCheck(filter) && (
+					(FILTERS.isSkillOrTool(filter, tool) && FILTERS.inCollection(filter, key))
+					|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability))));
 
 		return Rolls.abilityCheck(
 			actor, skill.ability, skillName, [flags.skills.roll, skill.roll], skill.rollParts,

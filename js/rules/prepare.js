@@ -229,7 +229,7 @@ export const Prepare = {
 		flags.abilities = {};
 
 		for (const ability of Object.keys(data.abilities)) {
-			flags.abilities[ability] = {};
+			flags.abilities[ability] = {rollParts: []};
 		}
 	},
 

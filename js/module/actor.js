@@ -70,6 +70,7 @@ export class ObsidianActor extends Actor5e {
 
 		this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
 		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
+		flags.attributes.init.rollParts = [];
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ data.attributes.init.value;
@@ -88,8 +89,8 @@ export class ObsidianActor extends Actor5e {
 			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0)
 			+ flags.attributes.ac.mod;
 
-		if (flags.attributes.ac.override !== undefined && flags.attributes.ac.override !== '') {
-			data.attributes.ac.min = flags.attributes.ac.override;
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+			data.attributes.ac.min = Number(flags.attributes.ac.override);
 		}
 
 		this.data.obsidian.profs = {

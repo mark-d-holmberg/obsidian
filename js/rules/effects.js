@@ -65,7 +65,7 @@ function formatBonus (actorData, bonus) {
 		parts.push(`<strong>${operator}${mod}</strong>`);
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
+	if (bonus.prof > 0) {
 		const key = OBSIDIAN.Rules.PLUS_PROF[bonus.prof];
 		parts.push(localize(key));
 	}
@@ -139,7 +139,7 @@ function formatFilter (filter) {
 		}
 	} else if (filter.roll === 'save') {
 		if (filter.multi === 'any') {
-			parts.push(localize('OBSIDIAN.SavingThrows'));
+			parts.push(localize('OBSIDIAN.SavingThrowsLC'));
 		} else if (filter.collection.length) {
 			parts.push(...filter.collection.map(item => localize(`OBSIDIAN.Ability-${item.key}`)));
 			parts[parts.length - 1] += ` ${localize('OBSIDIAN.Saves')}`;
@@ -184,8 +184,13 @@ function oxfordComma (parts) {
 		if (parts.length < 2) {
 			return parts[0];
 		} else {
+			let comma = ',';
+			if (parts.length === 2) {
+				comma = '';
+			}
+
 			const last = parts.pop();
-			return `${parts.join(', ')}, ${localize('OBSIDIAN.And')} ${last}`;
+			return `${parts.join(', ')}${comma} ${localize('OBSIDIAN.And')} ${last}`;
 		}
 	}
 
