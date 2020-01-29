@@ -39,14 +39,28 @@ export function applyBonuses (actorData) {
 	});
 
 	damage.forEach(dmg => {
-		let pred = filter => filter.multi === 'any';
+		let attackPred = filter => !FILTERS.damage.isAttack(filter);
+		const parentEffect = actorData.obsidian.effects.get(dmg.parentEffect);
+
+		if (parentEffect) {
+			const attack = parentEffect.components.find(c => c.type === 'attack');
+			if (attack) {
+				const key = attack.attack[0] + attack.category[0];
+				attackPred = filter =>
+					FILTERS.damage.isAttack(filter) && FILTERS.inCollection(filter, key);
+			}
+		}
+
+		let damagePred = filter => FILTERS.damage.isDamage(filter) && filter.multi === 'any';
 		if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
-			pred = filter => FILTERS.inCollection(filter, dmg.damage);
+			damagePred = filter =>
+				FILTERS.damage.isDamage(filter) &&  FILTERS.inCollection(filter, dmg.damage);
 		}
 
 		const bonuses =
 			toggleable.filter(effect =>
-				partition(effect, filter => FILTERS.isDamage(filter) && pred(filter)))
+				partition(effect, filter =>
+					FILTERS.isDamage(filter) && (attackPred(filter) || damagePred(filter))))
 			.flatMap(effect => effect.bonuses);
 
 		if (bonuses.length) {

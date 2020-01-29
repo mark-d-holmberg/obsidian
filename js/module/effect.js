@@ -150,6 +150,7 @@ export const Effect = {
 			score: 'ability',
 			roll: 'attack',
 			check: 'ability',
+			dmg: 'damage',
 			multi: 'any',
 			some: '',
 			collection: []

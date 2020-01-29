@@ -203,8 +203,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				rule = OBSIDIAN.Rules.EFFECT_FILTER_SAVES;
 				i18n = 'OBSIDIAN.Ability';
 			} else if (component.roll === 'damage') {
-				rule = OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES;
-				i18n = 'OBSIDIAN.Damage';
+				if (component.dmg === 'damage') {
+					rule = OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES;
+					i18n = 'OBSIDIAN.Damage';
+				} else if (component.dmg === 'attack') {
+					rule = OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS;
+					i18n = 'OBSIDIAN.Attack';
+				}
 			}
 		}
 

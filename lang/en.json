@@ -653,5 +653,7 @@
 	"OBSIDIAN.BonusProf-expert": "add twice your proficiency bonus",
 	"OBSIDIAN.BonusAbilityMod": "add your {0} modifier",
 	"OBSIDIAN.BonusCharLevel": "add your level",
-	"OBSIDIAN.BonusClassLevel": "add your {0} level"
+	"OBSIDIAN.BonusClassLevel": "add your {0} level",
+	"OBSIDIAN.FilterDmg-damage": "Damage Type",
+	"OBSIDIAN.FilterDmg-attack": "Attacks"
 }

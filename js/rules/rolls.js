@@ -680,9 +680,7 @@ export const Rolls = {
 			actor.data.obsidian.toggleable
 				.filter(effect => effect.toggle.active)
 				.filter(effect => effect.mods.length)
-				.filter(effect =>
-					!effect.filters.length
-					|| effect.filters.some(filter => FILTERS.isDamage(filter)));
+				.filter(effect => !effect.filters.length || effect.filters.some(FILTERS.isDamage));
 
 		const rolls = damage.map(dmg => {
 			if (dmg.calc === 'fixed' || !dmg.ndice) {
@@ -701,14 +699,29 @@ export const Rolls = {
 				return rolls;
 			}
 
-			let condition = filter => filter.multi === 'any';
+			let attackPred = filter => !FILTERS.damage.isAttack(filter);
+			const parentEffect = actor.data.obsidian.effects.get(dmg.parentEffect);
+
+			if (parentEffect) {
+				const attack = parentEffect.components.find(c => c.type === 'attack');
+				if (attack) {
+					const key = attack.attack[0] + attack.category[0];
+					attackPred = filter =>
+						FILTERS.damage.isAttack(filter) && FILTERS.inCollection(filter, key);
+				}
+			}
+
+			let damagePred = filter => FILTERS.damage.isDamage(filter) && filter.multi === 'any';
 			if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
-				condition = filter => FILTERS.inCollection(filter, dmg.damage);
+				damagePred = filter =>
+					FILTERS.damage.isDamage(filter) && FILTERS.inCollection(filter, dmg.damage);
 			}
 
 			const rollMods =
 				damageMods
-					.filter(effect => effect.filters.some(condition))
+					.filter(effect =>
+						!effect.filters.length
+						|| effect.filters.some(filter => attackPred(filter) || damagePred(filter)))
 					.flatMap(effect => effect.mods);
 
 			if (dmg.rollMod) {

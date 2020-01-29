@@ -112,6 +112,7 @@ OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES = [
 OBSIDIAN.Rules.EFFECT_FILTERS = ['roll', 'score'];
 OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS = ['mw', 'rw', 'ms', 'rs'];
 OBSIDIAN.Rules.EFFECT_FILTER_CHECKS = ['ability', 'skill', 'tool', 'init'];
+OBSIDIAN.Rules.EFFECT_FILTER_DAMAGE = ['damage', 'attack'];
 OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI = {
 	score: {ability: 1, passive: 1, speed: 1, dc: 1},
 	roll: {

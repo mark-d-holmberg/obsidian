@@ -35,6 +35,13 @@
 					{{/each}}
 				{{/select}}
 			</select>
+			<select name="{{prefix}}.dmg" data-selector-parent="{{prefix}}.roll" data-show="damage">
+				{{#select dmg}}
+					{{#each @root.ObsidianRules.EFFECT_FILTER_DAMAGE}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.FilterDmg-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
 			{{#if isMulti}}
 			<select name="{{prefix}}.multi">
 				{{#select multi}}
