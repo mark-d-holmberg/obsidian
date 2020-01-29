@@ -95,21 +95,15 @@ export const Prepare = {
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
-	calculateDamage: function (data, cls, ...dmgs) {
-		for (const dmg of dmgs.reduce((acc, entry) => acc.concat(entry), [])) {
-			if (!dmg) {
-				continue;
-			}
+	calculateDamage: function (dmg, data, cls) {
+		dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
+		Prepare.spellPart(dmg, data, cls);
+		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		dmg.display = Prepare.damageFormat(dmg);
+		dmg.derived = {ncrit: dmg.ndice};
 
-			dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
-			Prepare.spellPart(dmg, data, cls);
-			dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
-			dmg.display = Prepare.damageFormat(dmg);
-			dmg.derived = {ncrit: dmg.ndice};
-
-			if (!OBSIDIAN.notDefinedOrEmpty(dmg.ncrit)) {
-				dmg.derived.ncrit = Number(dmg.ncrit);
-			}
+		if (!OBSIDIAN.notDefinedOrEmpty(dmg.ncrit)) {
+			dmg.derived.ncrit = Number(dmg.ncrit);
 		}
 	},
 
@@ -228,8 +222,8 @@ export const Prepare = {
 		const flags = actorData.flags.obsidian;
 		flags.abilities = {};
 
-		for (const ability of Object.keys(data.abilities)) {
-			flags.abilities[ability] = {rollParts: []};
+		for (const [id, ability] of Object.entries(data.abilities)) {
+			flags.abilities[id] = {rollParts: [], value: ability.value};
 		}
 	},
 

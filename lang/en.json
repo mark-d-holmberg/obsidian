@@ -632,6 +632,7 @@
 	"OBSIDIAN.AbilityChecks": "ability checks",
 	"OBSIDIAN.SavingThrowsLC": "saving throws",
 	"OBSIDIAN.DamageRolls": "damage rolls",
+	"OBSIDIAN.DamageRollsWith": "damage rolls with",
 	"OBSIDIAN.MeleeAttacks": "melee attacks",
 	"OBSIDIAN.RangedAttacks": "ranged attacks",
 	"OBSIDIAN.WeaponAttacks": "weapon attacks",
@@ -655,5 +656,14 @@
 	"OBSIDIAN.BonusCharLevel": "add your level",
 	"OBSIDIAN.BonusClassLevel": "add your {0} level",
 	"OBSIDIAN.FilterDmg-damage": "Damage Type",
-	"OBSIDIAN.FilterDmg-attack": "Attacks"
+	"OBSIDIAN.FilterDmg-attack": "Attacks",
+	"OBSIDIAN.AbilityScores": "ability scores",
+	"OBSIDIAN.MaxHPLC": "maximum HP",
+	"OBSIDIAN.PassiveLC": "passive",
+	"OBSIDIAN.PassiveChecks": "passive checks",
+	"OBSIDIAN.Your": "your",
+	"OBSIDIAN.SpeedLC": "speed",
+	"OBSIDIAN.YourSpeed": "your speed",
+	"OBSIDIAN.SaveDCs": "your save DCs",
+	"OBSIDIAN.DCs": "DCs"
 }

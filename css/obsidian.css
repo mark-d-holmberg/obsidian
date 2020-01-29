@@ -619,6 +619,14 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	line-height: 1;
 }
 
+.dnd5e.sheet form input[type=text].obsidian-char-ability-score.obsidian-positive {
+	color: var(--positive);
+}
+
+.dnd5e.sheet form input[type=text].obsidian-char-ability-score.obsidian-negative {
+	color: var(--negative);
+}
+
 .obsidian label {
 	font-family: var(--font-condensed);
 	color: var(--text-secondary);

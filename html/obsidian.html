@@ -129,10 +129,10 @@
 							{{#with actor.flags.obsidian.attributes as |attr|}}
 								{{#if attr.speedDisplay}}
 									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
-										{{#if spd.override}}
-											{{spd.override}}
+										{{#if spd.derived}}
+											{{spd.derived}}
 										{{else}}
-											{{spd}}
+											{{spd.override}}
 										{{/if}}
 									{{/with}}
 								{{/if}}
@@ -186,8 +186,16 @@
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
-					<input name="data.abilities.{{id}}.value" type="text" value="{{ability.value}}"
-					       placeholder="10" class="obsidian-char-ability-score" data-dtype="Number">
+					{{#with (lookup ../actor.flags.obsidian.abilities id)}}
+						<input type="text" value="{{value}}" placeholder="10" class="obsidian-char-ability-score
+							{{#if (gt value ability.value)}}
+								obsidian-positive
+							{{else if (lt value ability.value) }}
+								obsidian-negative
+							{{/if}}">
+					{{/with}}
+					<input name="data.abilities.{{id}}.value" type="hidden" value="{{ability.value}}"
+					       data-dtype="Number">
 				</div>
 				{{/each}}
 			</div>

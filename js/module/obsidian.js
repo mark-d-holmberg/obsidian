@@ -182,6 +182,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
 		html.find('[contenteditable]').focusout(this._onContenteditableUnfocus.bind(this));
 		html.find('.obsidian-effect-row .obsidian-radio').click(this._onEffectToggled.bind(this));
+		html.find('.obsidian-char-ability-score')
+			.focus(this._onFocusAbilityScore.bind(this))
+			.focusout(this._onLeaveAbilityScore.bind(this))
+			.change(this._onChangeAbilityScore.bind(this));
 
 		this._activateDialogs(html);
 
@@ -751,7 +755,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			if (resources[0].remaining - (scaling || 1) < 1
 				&& item.type === 'consumable'
 				&& item.data.quantity > 0
-				&& item.data.autoDestroy)
+				&& item.data.uses.autoDestroy)
 			{
 				this._refreshConsumable(item, effect, resources[0], scaling || 1);
 			} else {
@@ -906,6 +910,41 @@ export class Obsidian extends ActorSheet5eCharacter {
 		};
 
 		return this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
+	}
+
+	/**
+	 * @private
+	 */
+	_onFocusAbilityScore (evt) {
+		const target = $(evt.currentTarget);
+		const positive = target.hasClass('.obsidian-positive');
+		const negative = target.hasClass('.obsidian-negative');
+		evt.currentTarget._orig = target.val();
+		evt.currentTarget._positive = positive;
+		evt.currentTarget._negative = negative;
+		target.removeClass('obsidian-positive obsidian-negative');
+		target.val(target.next().val());
+	}
+
+	/**
+	 * @private
+	 */
+	_onLeaveAbilityScore (evt) {
+		if (evt.currentTarget._positive) {
+			evt.currentTarget.classList.add('obsidian-positive');
+		} else if (evt.currentTarget._negative) {
+			evt.currentTarget.classList.remove('obsidian-negative');
+		}
+
+		evt.currentTarget.value = evt.currentTarget._orig;
+	}
+
+	/**
+	 * @private
+	 */
+	_onChangeAbilityScore (evt) {
+		const target = $(evt.currentTarget);
+		target.next().val(target.val());
 	}
 
 	/**

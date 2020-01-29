@@ -86,13 +86,14 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.attacks.push(component);
 				}
-			} else if (component.type === 'damage'
-				&& (!effect.isScaling || effect.selfScaling))
-			{
-				if (component.versatile) {
-					item.obsidian.versatile.push(component);
-				} else {
-					item.obsidian.damage.push(component);
+			} else if (component.type === 'damage') {
+				Prepare.calculateDamage(component, data, cls);
+				if (!effect.isScaling || effect.selfScaling) {
+					if (component.versatile) {
+						item.obsidian.versatile.push(component);
+					} else {
+						item.obsidian.damage.push(component);
+					}
 				}
 			} else if (component.type === 'save') {
 				Prepare.calculateSave(component, data, cls);
@@ -198,7 +199,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				.forEach(atk => atk.targets = targetComponent.count);
 		}
 
-		if (!effect.isScaling || effect.selfScaling) {
+		if ((!effect.isScaling || effect.selfScaling) && !effect.bonuses.length) {
 			item.obsidian.actionable.push(effect);
 		}
 	}
@@ -236,8 +237,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			}
 		}
 	}
-
-	Prepare.calculateDamage(data, cls, item.obsidian.damage, item.obsidian.versatile);
 
 	if (item.obsidian.attacks.length) {
 		if (attackList && (item.type !== 'weapon' || item.data.equipped)) {

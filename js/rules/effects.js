@@ -92,64 +92,97 @@ function formatBonus (actorData, bonus) {
 
 function formatFilter (filter) {
 	const parts = [];
-	if (filter.roll === 'attack') {
-		if (filter.multi === 'any') {
-			parts.push(localize('OBSIDIAN.AttackRolls'));
-		} else if (filter.collection.length) {
-			if (filter.collection.length < 2) {
-				parts.push(localize(`OBSIDIAN.AttackFullLC-${filter.collection[0].key}`));
-			} else if (filter.collection.every(item => item.key[0] === 'm')) {
-				parts.push(localize('OBSIDIAN.MeleeAttacks'));
-			} else if (filter.collection.every(item => item.key[0] === 'r')) {
-				parts.push(localize('OBSIDIAN.RangedAttacks'));
-			} else if (filter.collection.every(item => item.key[1] === 'w')) {
-				parts.push(localize('OBSIDIAN.WeaponAttacks'));
-			} else if (filter.collection.every(item => item.key[1] === 's')) {
-				parts.push(localize('OBSIDIAN.SpellAttacks'));
-			} else {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.AttackFullLC-${item.key}`)));
-			}
-		}
-	} else if (filter.roll === 'check') {
-		if (filter.check === 'ability') {
+	if (filter.filter === 'roll') {
+		if (filter.roll === 'attack') {
 			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.AbilityChecks'));
+				parts.push(localize('OBSIDIAN.AttackRolls'));
+			} else if (filter.collection.length) {
+				weaponAttacks(filter, parts);
+			}
+		} else if (filter.roll === 'check') {
+			if (filter.check === 'ability') {
+				if (filter.multi === 'any') {
+					parts.push(localize('OBSIDIAN.AbilityChecks'));
+				} else if (filter.collection.length) {
+					parts.push(...filter.collection.map(item =>
+						localize(`OBSIDIAN.Ability-${item.key}`)));
+					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
+				}
+			} else if (filter.check === 'skill') {
+				if (filter.multi === 'any') {
+					parts.push(localize('OBSIDIAN.SkillChecks'));
+				} else if (filter.collection.length) {
+					parts.push(...filter.collection.map(item => item.label));
+					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
+				}
+			} else if (filter.check === 'tool') {
+				if (filter.multi === 'any') {
+					parts.push(localize('OBSIDIAN.ToolChecks'));
+				} else if (filter.collection.length) {
+					parts.push(...filter.collection.map(item => item.label));
+					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
+				}
+			} else if (filter.check === 'init') {
+				parts.push(localize('OBSIDIAN.InitiativeRolls'));
+			}
+		} else if (filter.roll === 'save') {
+			if (filter.multi === 'any') {
+				parts.push(localize('OBSIDIAN.SavingThrowsLC'));
 			} else if (filter.collection.length) {
 				parts.push(...filter.collection.map(item =>
 					localize(`OBSIDIAN.Ability-${item.key}`)));
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
+				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Saves')}`;
 			}
-		} else if (filter.check === 'skill') {
+		} else if (filter.roll === 'damage') {
 			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.SkillChecks'));
-			} else if (filter.collection.length) {
+				parts.push(localize('OBSIDIAN.DamageRolls'));
+			} else if (filter.collection.length && filter.dmg === 'damage') {
 				parts.push(...filter.collection.map(item => item.label));
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
+				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DamageRolls')}`;
+			} else if (filter.collection.length && filter.dmg === 'attack') {
+				weaponAttacks(filter, parts);
+				parts[0] = `${localize('OBSIDIAN.DamageRollsWith')} ${parts[0]}`;
 			}
-		} else if (filter.check === 'tool') {
+		}
+	} else if (filter.filter === 'score') {
+		if (filter.score === 'ability') {
 			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.ToolChecks'));
+				parts.push(localize('OBSIDIAN.AbilityScores'));
 			} else if (filter.collection.length) {
+				parts.push(...filter.collection.map(item =>
+					localize(`OBSIDIAN.Ability-${item.key}`)));
+				parts[parts.length - 1] += ` ${localize('OBSIDIAN.AbilityScores')}`;
+			}
+		} else if (filter.score === 'ac') {
+			parts.push(localize('OBSIDIAN.ACAbbr'));
+		} else if (filter.score === 'max-hp') {
+			parts.push(localize('OBSIDIAN.MaxHPLC'));
+		} else if (filter.score === 'passive') {
+			if (filter.multi === 'any') {
+				parts.push(localize('OBSIDIAN.PassiveChecks'));
+			} else {
 				parts.push(...filter.collection.map(item => item.label));
+				parts[0] = `${localize('OBSIDIAN.PassiveLC')} ${parts[0]}`;
 				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
 			}
-		} else if (filter.check === 'init') {
-			parts.push(localize('OBSIDIAN.InitiativeRolls'));
-		}
-	} else if (filter.roll === 'save') {
-		if (filter.multi === 'any') {
-			parts.push(localize('OBSIDIAN.SavingThrowsLC'));
-		} else if (filter.collection.length) {
-			parts.push(...filter.collection.map(item => localize(`OBSIDIAN.Ability-${item.key}`)));
-			parts[parts.length - 1] += ` ${localize('OBSIDIAN.Saves')}`;
-		}
-	} else if (filter.roll === 'damage') {
-		if (filter.multi === 'any') {
-			parts.push(localize('OBSIDIAN.DamageRolls'));
-		} else if (filter.collection.length) {
-			parts.push(...filter.collection.map(item => item.label));
-			parts[parts.length - 1] += ` ${localize('OBSIDIAN.DamageRolls')}`;
+		} else if (filter.score === 'speed') {
+			if (filter.multi === 'any') {
+				parts.push(localize('OBSIDIAN.YourSpeed'));
+			} else {
+				parts.push(...filter.collection.map(item =>
+					localize(`OBSIDIAN.Speed-${item.key}`)));
+				parts[0] = `${localize('OBSIDIAN.Your')} ${parts[0]}`;
+				parts[parts.length - 1] += ` ${localize('OBSIDIAN.SpeedLC')}`;
+			}
+		} else if (filter.score === 'dc') {
+			if (filter.multi === 'any') {
+				parts.push(localize('OBSIDIAN.SaveDCs'));
+			} else {
+				parts.push(...filter.collection.map(item =>
+					localize(`OBSIDIAN.Ability-${item.key}`)));
+				parts[0] = `${localize('OBSIDIAN.Your')} ${parts[0]}`;
+				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DCs')}`;
+			}
 		}
 	}
 
@@ -195,4 +228,21 @@ function oxfordComma (parts) {
 	}
 
 	return '';
+}
+
+function weaponAttacks (filter, parts) {
+	if (filter.collection.length < 2) {
+		parts.push(localize(`OBSIDIAN.AttackFullLC-${filter.collection[0].key}`));
+	} else if (filter.collection.every(item => item.key[0] === 'm')) {
+		parts.push(localize('OBSIDIAN.MeleeAttacks'));
+	} else if (filter.collection.every(item => item.key[0] === 'r')) {
+		parts.push(localize('OBSIDIAN.RangedAttacks'));
+	} else if (filter.collection.every(item => item.key[1] === 'w')) {
+		parts.push(localize('OBSIDIAN.WeaponAttacks'));
+	} else if (filter.collection.every(item => item.key[1] === 's')) {
+		parts.push(localize('OBSIDIAN.SpellAttacks'));
+	} else {
+		parts.push(...filter.collection.map(item =>
+			localize(`OBSIDIAN.AttackFullLC-${item.key}`)));
+	}
 }
