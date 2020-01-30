@@ -1,6 +1,7 @@
 import {FILTERS} from './filters.js';
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage, Prepare} from './prepare.js';
+import {Effect} from '../module/effect.js';
 
 export function applyBonuses (actorData) {
 	const data = actorData.data;
@@ -162,11 +163,25 @@ export function applyBonuses (actorData) {
 						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability)))))
 				.flatMap(effect => effect.bonuses);
 
+		const rollMods =
+			toggleable.filter(effect => effect.toggle.active && effect.mods.length)
+				.filter(effect => !effect.filters.length || effect.filters.some(filter =>
+					FILTERS.isCheck(filter) && (
+						(filter.check === 'skill' && FILTERS.inCollection(filter, key))
+						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability)))))
+				.flatMap(effect => effect.mods);
+
 		if (bonuses.length) {
 			skill.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll);
+		}
+
+		if (rollMods.length) {
+			const rollMod = Effect.combineRollMods(rollMods);
+			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 		}
 
 		const passiveBonuses =

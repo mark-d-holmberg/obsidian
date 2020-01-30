@@ -180,14 +180,14 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				}
 			} else if (component.type === 'roll-mod') {
 				effect.mods.push(component);
-				if (toggleList) {
+				if (toggleList && (!flags.equippable || item.data.equipped)) {
 					toggleList.add(effect);
 				}
 			} else if (component.type === 'filter') {
 				effect.filters.push(component);
 			} else if (component.type === 'bonus') {
 				effect.bonuses.push(component);
-				if (toggleList) {
+				if (toggleList && (!flags.equippable || item.data.equipped)) {
 					toggleList.add(effect);
 				}
 			}
