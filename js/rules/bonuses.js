@@ -386,4 +386,6 @@ function highestProficiency (parts) {
 			hasProficiency = true;
 		}
 	}
+
+	return newParts;
 }
