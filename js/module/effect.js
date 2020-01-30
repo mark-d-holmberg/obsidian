@@ -1,4 +1,5 @@
 import {OBSIDIAN} from '../rules/rules.js';
+import {Filters} from '../rules/filters.js';
 
 export const Effect = {
 	create: function () {
@@ -182,13 +183,27 @@ export const Effect = {
 		};
 	},
 
-	filterRollMods: function (effects, condition) {
-		const mods =
-			effects.filter(effect => effect.toggle.active && effect.mods.length)
-				.filter(effect => !effect.filters.length || effect.filters.some(condition))
-				.flatMap(effect => effect.mods);
+	filterDamage: (actorData, filter, dmg) => {
+		let attackPred = filter => !Filters.damage.isAttack(filter);
+		const parentEffect = actorData.obsidian.effects.get(dmg.parentEffect);
 
-		return Effect.combineRollMods(mods);
+		if (parentEffect) {
+			const attack = parentEffect.components.find(c => c.type === 'attack');
+			if (attack) {
+				const key = attack.attack[0] + attack.category[0];
+				attackPred = filter =>
+					Filters.damage.isAttack(filter) && Filters.inCollection(filter, key);
+			}
+		}
+
+		let damagePred = filter => Filters.damage.isDamage(filter) && filter.multi === 'any';
+		if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
+			damagePred = filter =>
+				Filters.damage.isDamage(filter) && Filters.inCollection(filter, dmg.damage);
+		}
+
+		return filter(filter =>
+			Filters.isDamage(filter) && (attackPred(filter) || damagePred(filter)));
 	},
 
 	getLinkedResource: function (actorData, consumer) {

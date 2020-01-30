@@ -1,16 +1,15 @@
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
-import {FILTERS} from './filters.js';
+import {Filters} from './filters.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
 		if (!skill) {
-			rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-				FILTERS.isCheck(filter)
-				&& FILTERS.isAbility(filter)
-				&& FILTERS.inCollection(filter, ability));
+			const rollMods =
+				actor.data.obsidian.filters.mods(Filters.appliesTo.abilityChecks(ability));
 
+			rollMod = Effect.combineRollMods(rollMods);
 			mods.push({
 				mod: actor.data.data.abilities[ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
@@ -251,9 +250,8 @@ export const Rolls = {
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
-		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-			FILTERS.isSave(filter) && FILTERS.inCollection(filter, 'death'));
-
+		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.deathSaves);
+		const rollMod = Effect.combineRollMods(rollMods);
 		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
@@ -540,13 +538,13 @@ export const Rolls = {
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
-		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-			FILTERS.isCheck(filter)
-			&& (FILTERS.isInit(filter)
-				|| (FILTERS.isAbility(filter)
-					&& FILTERS.inCollection(filter, flags.attributes.init.ability))));
+		const rollMods =
+			actor.data.obsidian.filters.mods(
+				Filters.appliesTo.initiative(flags.attributes.init.ability));
 
+		const rollMod = Effect.combineRollMods(rollMods);
 		const mods = flags.attributes.init.rollParts;
+
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			mods.push({
 				mod: data.abilities[flags.attributes.init.ability].mod,
@@ -676,12 +674,6 @@ export const Rolls = {
 			}
 		}
 
-		const damageMods =
-			actor.data.obsidian.toggleable
-				.filter(effect => effect.toggle.active)
-				.filter(effect => effect.mods.length)
-				.filter(effect => !effect.filters.length || effect.filters.some(FILTERS.isDamage));
-
 		const rolls = damage.map(dmg => {
 			if (dmg.calc === 'fixed' || !dmg.ndice) {
 				return null;
@@ -699,31 +691,7 @@ export const Rolls = {
 				return rolls;
 			}
 
-			let attackPred = filter => !FILTERS.damage.isAttack(filter);
-			const parentEffect = actor.data.obsidian.effects.get(dmg.parentEffect);
-
-			if (parentEffect) {
-				const attack = parentEffect.components.find(c => c.type === 'attack');
-				if (attack) {
-					const key = attack.attack[0] + attack.category[0];
-					attackPred = filter =>
-						FILTERS.damage.isAttack(filter) && FILTERS.inCollection(filter, key);
-				}
-			}
-
-			let damagePred = filter => FILTERS.damage.isDamage(filter) && filter.multi === 'any';
-			if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
-				damagePred = filter =>
-					FILTERS.damage.isDamage(filter) && FILTERS.inCollection(filter, dmg.damage);
-			}
-
-			const rollMods =
-				damageMods
-					.filter(effect =>
-						!effect.filters.length
-						|| effect.filters.some(filter => attackPred(filter) || damagePred(filter)))
-					.flatMap(effect => effect.mods);
-
+			const rollMods = Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
 			if (dmg.rollMod) {
 				rollMods.push(dmg.rollMod);
 			}
@@ -779,8 +747,8 @@ export const Rolls = {
 			adv.push(saveData.roll);
 		}
 
-		const rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-			FILTERS.isSave(filter) && FILTERS.inCollection(filter, save));
+		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.savingThrows(save));
+		const rollMod = Effect.combineRollMods(rollMods);
 
 		return Rolls.simpleRoll(actor, {
 			type: 'save',
@@ -823,12 +791,11 @@ export const Rolls = {
 			key = `${list}.${idx}`;
 		}
 
-		const rollMod =
-			Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-				FILTERS.isCheck(filter) && (
-					(FILTERS.isSkillOrTool(filter, tool) && FILTERS.inCollection(filter, key))
-					|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability))));
+		const rollMods =
+			actor.data.obsidian.filters.mods(
+				Filters.appliesTo.skillChecks(tool, key, skill.ability));
 
+		const rollMod = Effect.combineRollMods(rollMods);
 		return Rolls.abilityCheck(
 			actor, skill.ability, skillName, [flags.skills.roll, skill.roll], skill.rollParts,
 			rollMod);
@@ -857,9 +824,8 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraMods = []) {
-		const key = hit.attack[0] + hit.category[0];
-		let rollMod = Effect.filterRollMods(actor.data.obsidian.toggleable, filter =>
-			FILTERS.isAttack(filter) && FILTERS.inCollection(filter, key));
+		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.attackRolls(hit));
+		let rollMod = Effect.combineRollMods(rollMods);
 
 		if (hit.rollMod) {
 			rollMod = Effect.combineRollMods([rollMod, hit.rollMod]);

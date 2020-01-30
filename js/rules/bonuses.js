@@ -1,4 +1,4 @@
-import {FILTERS} from './filters.js';
+import {Filters} from './filters.js';
 import {OBSIDIAN} from './rules.js';
 import {determineAdvantage, Prepare} from './prepare.js';
 import {Effect} from '../module/effect.js';
@@ -23,19 +23,8 @@ export function applyBonuses (actorData) {
 			}
 		});
 
-	const toggleable = actorData.obsidian.toggleable;
-	const partition = (effect, pred) =>
-		effect.toggle.active && effect.bonuses.length
-		&& (!effect.filters.length || effect.filters.some(pred));
-
 	attacks.forEach(attack => {
-		const key = attack.attack[0] + attack.category[0];
-		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isAttack(filter) && FILTERS.inCollection(filter, key)))
-				.flatMap(effect => effect.bonuses);
-
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(attack));
 		if (bonuses.length) {
 			attack.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 			attack.value = attack.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -43,30 +32,7 @@ export function applyBonuses (actorData) {
 	});
 
 	damage.forEach(dmg => {
-		let attackPred = filter => !FILTERS.damage.isAttack(filter);
-		const parentEffect = actorData.obsidian.effects.get(dmg.parentEffect);
-
-		if (parentEffect) {
-			const attack = parentEffect.components.find(c => c.type === 'attack');
-			if (attack) {
-				const key = attack.attack[0] + attack.category[0];
-				attackPred = filter =>
-					FILTERS.damage.isAttack(filter) && FILTERS.inCollection(filter, key);
-			}
-		}
-
-		let damagePred = filter => FILTERS.damage.isDamage(filter) && filter.multi === 'any';
-		if (!OBSIDIAN.notDefinedOrEmpty(dmg.damage)) {
-			damagePred = filter =>
-				FILTERS.damage.isDamage(filter) &&  FILTERS.inCollection(filter, dmg.damage);
-		}
-
-		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isDamage(filter) && (attackPred(filter) || damagePred(filter))))
-			.flatMap(effect => effect.bonuses);
-
+		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
 		if (bonuses.length) {
 			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 			dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -75,16 +41,7 @@ export function applyBonuses (actorData) {
 	});
 
 	saves.forEach(save => {
-		let pred = filter => filter.multi === 'any';
-		if (!OBSIDIAN.notDefinedOrEmpty(save.ability)) {
-			pred = filter => FILTERS.inCollection(filter, save.ability);
-		}
-
-		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter => FILTERS.isDC(filter) && pred(filter)))
-				.flatMap(effect => effect.bonuses);
-
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(save));
 		if (bonuses.length) {
 			let bonus = 8;
 			if (!OBSIDIAN.notDefinedOrEmpty(save.bonus)) {
@@ -99,10 +56,7 @@ export function applyBonuses (actorData) {
 	for (const [id, abl] of Object.entries(data.abilities)) {
 		if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
 			const saveBonuses =
-				toggleable.filter(effect =>
-					partition(effect, filter =>
-						FILTERS.isSave(filter) && FILTERS.inCollection(filter, id)))
-					.flatMap(effect => effect.bonuses);
+				actorData.obsidian.filters.bonuses(Filters.appliesTo.savingThrows(id));
 
 			if (saveBonuses.length) {
 				flags.saves[id].rollParts.push(
@@ -112,12 +66,7 @@ export function applyBonuses (actorData) {
 		}
 
 		const abilityBonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isCheck(filter)
-					&& FILTERS.isAbility(filter)
-					&& FILTERS.inCollection(filter, id)))
-				.flatMap(effect => effect.bonuses);
+			actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityChecks(id));
 
 		if (abilityBonuses.length) {
 			flags.abilities[id].rollParts.push(
@@ -125,10 +74,7 @@ export function applyBonuses (actorData) {
 		}
 
 		const scoreBonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isAbilityScore(filter) && FILTERS.inCollection(filter, id)))
-				.flatMap(effect => effect.bonuses);
+			actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityScores(id));
 
 		if (scoreBonuses.length) {
 			flags.abilities[id].value +=
@@ -156,20 +102,12 @@ export function applyBonuses (actorData) {
 		}
 
 		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isCheck(filter) && (
-						(filter.check === 'skill' && FILTERS.inCollection(filter, key))
-						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability)))))
-				.flatMap(effect => effect.bonuses);
+			actorData.obsidian.filters.bonuses(
+				Filters.appliesTo.skillChecks(false, key, skill.ability));
 
 		const rollMods =
-			toggleable.filter(effect => effect.toggle.active && effect.mods.length)
-				.filter(effect => !effect.filters.length || effect.filters.some(filter =>
-					FILTERS.isCheck(filter) && (
-						(filter.check === 'skill' && FILTERS.inCollection(filter, key))
-						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, skill.ability)))))
-				.flatMap(effect => effect.mods);
+			actorData.obsidian.filters.mods(
+				Filters.appliesTo.skillChecks(false, key, skill.ability));
 
 		if (bonuses.length) {
 			skill.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
@@ -185,10 +123,7 @@ export function applyBonuses (actorData) {
 		}
 
 		const passiveBonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isPassive(filter) && FILTERS.inCollection(filter, key)))
-				.flatMap(effect => effect.bonuses);
+			actorData.obsidian.filters.bonuses(Filters.appliesTo.passiveScores(key));
 
 		if (passiveBonuses.length) {
 			skill.passive +=
@@ -205,12 +140,8 @@ export function applyBonuses (actorData) {
 		}
 
 		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isCheck(filter) && (
-						(filter.check === 'tool' && FILTERS.inCollection(filter, `tool.${id}`))
-						|| (FILTERS.isAbility(filter) && FILTERS.inCollection(filter, tool.ability)))))
-				.flatMap(effect => effect.bonuses);
+			actorData.obsidian.filters.bonuses(
+				Filters.appliesTo.skillChecks(true, `tool.${id}`, tool.ability));
 
 		if (bonuses.length) {
 			tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
@@ -223,12 +154,7 @@ export function applyBonuses (actorData) {
 			flags.attributes.speed[speed] = {};
 		}
 
-		const bonuses =
-			toggleable.filter(effect =>
-				partition(effect, filter =>
-					FILTERS.isSpeed(filter) && FILTERS.inCollection(filter, speed)))
-				.flatMap(effect => effect.bonuses);
-
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.speedScores(speed));
 		if (bonuses.length) {
 			flags.attributes.speed[speed].derived =
 				(flags.attributes.speed[speed].override || 0)
@@ -241,13 +167,8 @@ export function applyBonuses (actorData) {
 	}
 
 	const initBonuses =
-		toggleable.filter(effect =>
-			partition(effect, filter =>
-				FILTERS.isCheck(filter)
-				&& (FILTERS.isInit(filter)
-					|| (FILTERS.isAbility(filter)
-						&& FILTERS.inCollection(filter, flags.attributes.init.ability)))))
-			.flatMap(effect => effect.bonuses);
+		actorData.obsidian.filters.bonuses(
+			Filters.appliesTo.initiative(flags.attributes.init.ability));
 
 	if (initBonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 		flags.attributes.init.rollParts.push(
@@ -256,34 +177,21 @@ export function applyBonuses (actorData) {
 			flags.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	}
 
-	const acBonuses =
-		toggleable.filter(effect => partition(effect, FILTERS.isAC))
-			.flatMap(effect => effect.bonuses);
-
+	const acBonuses = actorData.obsidian.filters.bonuses(Filters.isAC);
 	if (acBonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 		data.attributes.ac.min +=
 			acBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 	}
 
-	const hpBonuses =
-		toggleable.filter(effect => partition(effect, FILTERS.isHP))
-			.flatMap(effect => effect.bonuses);
-
+	const hpBonuses = actorData.obsidian.filters.bonuses(Filters.isHP);
 	if (hpBonuses.length) {
 		data.attributes.hp.maxAdjusted +=
 			hpBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 	}
 
-	const spellAttackBonuses =
-		toggleable.filter(effect =>
-			partition(effect, filter =>
-				FILTERS.isAttack(filter)
-				&& filter.multi === 'some'
-				&& filter.collection.every(item => item.key[1] === 's')))
-			.flatMap(effect => effect.bonuses);
-
+	const spellAttackBonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.spellAttacks);
 	if (spellAttackBonuses.length) {
 		const total =
 			spellAttackBonuses
@@ -294,12 +202,7 @@ export function applyBonuses (actorData) {
 			flags.attributes.spellcasting.attacks.map(attack => attack + total);
 	}
 
-	const spellDCBonuses =
-		toggleable.filter(effect =>
-			partition(effect, filter =>
-				FILTERS.isDC(filter) && FILTERS.inCollection(filter, 'spell')))
-			.flatMap(effect => effect.bonuses);
-
+	const spellDCBonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.spellDCs);
 	if (spellDCBonuses.length) {
 		const total =
 			spellDCBonuses

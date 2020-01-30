@@ -10,6 +10,7 @@ import {Schema} from './schema.js';
 import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
+import {Filters} from '../rules/filters.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -133,6 +134,11 @@ export class ObsidianActor extends Actor5e {
 		this.data.obsidian.toggleable = Array.from(this.data.obsidian.toggleable.values());
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data);
+
+		this.data.obsidian.filters = {
+			mods: Filters.mods(this.data.obsidian.toggleable),
+			bonuses: Filters.mods(this.data.obsidian.bonuses)
+		};
 
 		return this.data;
 	}
