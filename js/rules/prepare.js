@@ -476,7 +476,8 @@ export const Prepare = {
 			if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
 				flags.saves[id].rollParts = [{
 					mod: save.proficient * data.attributes.prof,
-					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+					name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
+					proficiency: true
 				}, {
 					mod: data.abilities[id].mod,
 					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)
