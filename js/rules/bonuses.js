@@ -367,3 +367,23 @@ function bonusToParts (actorData, bonus) {
 
 	return parts;
 }
+
+function highestProficiency (parts) {
+	const highest = parts.reduce((acc, part) =>
+		part.proficiency && part.mod > acc.mod ? part : acc, {mod: -Infinity});
+
+	const newParts = [];
+	let hasProficiency = false;
+
+	for (const part of parts) {
+		if (!part.proficiency) {
+			newParts.push(part);
+			continue;
+		}
+
+		if (part.mod >= highest.mod && !hasProficiency) {
+			newParts.push(part);
+			hasProficiency = true;
+		}
+	}
+}

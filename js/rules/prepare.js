@@ -64,7 +64,8 @@ export const Prepare = {
 
 		dc.rollParts = [{
 			mod: dc.prof * data.attributes.prof,
-			name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
+			proficiency: true
 		}];
 
 		dc.spellMod = 0;
@@ -85,7 +86,8 @@ export const Prepare = {
 		if (hit.proficient) {
 			hit.rollParts.push({
 				mod: data.attributes.prof,
-				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
+				proficiency: true
 			});
 		}
 
@@ -168,7 +170,8 @@ export const Prepare = {
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 			skill.rollParts = [{
 				mod: data.attributes.prof * prof,
-				name: game.i18n.localize('OBSIDIAN.ProfAbbr')
+				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
+				proficiency: true
 			}, {
 				mod: data.abilities[skill.ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${skill.ability}`)

@@ -67,7 +67,7 @@ function formatBonus (actorData, bonus) {
 
 	if (bonus.prof > 0) {
 		const key = OBSIDIAN.Rules.PLUS_PROF[bonus.prof];
-		parts.push(localize(key));
+		parts.push(localize(`OBSIDIAN.BonusProf-${key}`));
 	}
 
 	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability)) {
