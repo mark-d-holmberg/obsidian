@@ -12,7 +12,7 @@ export function patchItem_prepareData () {
 	})();
 }
 
-export function prepareEffects (actor, item, attackList, effectMap, componentMap, toggleList) {
+export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
 	if (!item.flags || !item.flags.obsidian || !actor) {
 		return;
 	}
@@ -55,9 +55,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.parentItem = item._id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
-		effect.mods = [];
-		effect.filters = [];
-		effect.bonuses = [];
 
 		const scalingComponent = effect.components.find(c => c.type === 'scaling');
 		if (scalingComponent) {
@@ -80,14 +77,14 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			component.idx = componentIdx;
 
 			if (component.type === 'attack') {
-				Prepare.calculateHit(component, data, cls);
+				Prepare.calculateHit(actorData, component, data, cls);
 				Prepare.calculateAttackType(flags, component);
 
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.attacks.push(component);
 				}
 			} else if (component.type === 'damage') {
-				Prepare.calculateDamage(component, data, cls);
+				Prepare.calculateDamage(actorData, component, data, cls);
 				if (!effect.isScaling || effect.selfScaling) {
 					if (component.versatile) {
 						item.obsidian.versatile.push(component);
@@ -96,7 +93,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					}
 				}
 			} else if (component.type === 'save') {
-				Prepare.calculateSave(component, data, cls);
+				Prepare.calculateSave(actorData, component, data, cls);
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.saves.push(component);
 				}
@@ -178,18 +175,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 							+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
 							+ `${spell.name}</div></div>`));
 				}
-			} else if (component.type === 'roll-mod') {
-				effect.mods.push(component);
-				if (toggleList && (!flags.equippable || item.data.equipped)) {
-					toggleList.add(effect);
-				}
-			} else if (component.type === 'filter') {
-				effect.filters.push(component);
-			} else if (component.type === 'bonus') {
-				effect.bonuses.push(component);
-				if (toggleList && (!flags.equippable || item.data.equipped)) {
-					toggleList.add(effect);
-				}
 			}
 		}
 
@@ -199,7 +184,9 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				.forEach(atk => atk.targets = targetComponent.count);
 		}
 
-		if ((!effect.isScaling || effect.selfScaling) && !effect.bonuses.length) {
+		if ((!effect.isScaling || effect.selfScaling)
+			&& !effect.bonuses.length && !effect.mods.length)
+		{
 			item.obsidian.actionable.push(effect);
 		}
 	}

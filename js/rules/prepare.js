@@ -1,5 +1,8 @@
 import {OBSIDIAN} from './rules.js';
 import {Parse} from '../module/parse.js';
+import {Filters} from './filters.js';
+import {bonusToParts} from './bonuses.js';
+import {Effect} from '../module/effect.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -51,7 +54,7 @@ export const Prepare = {
 		}
 	},
 
-	calculateSave: function (dc, data, cls) {
+	calculateSave: function (actorData, dc, data, cls) {
 		if (dc.calc === 'fixed') {
 			dc.value = dc.fixed;
 			return;
@@ -70,10 +73,16 @@ export const Prepare = {
 
 		dc.spellMod = 0;
 		Prepare.spellPart(dc, data, cls);
+
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
+		if (bonuses.length) {
+			dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		}
+
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
 
-	calculateHit: function (hit, data, cls) {
+	calculateHit: function (actorData, hit, data, cls) {
 		hit.rollParts = [{
 			mod: hit.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -91,15 +100,26 @@ export const Prepare = {
 			});
 		}
 
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
+		if (bonuses.length) {
+			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		}
+
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		hit.attackType =
 			game.i18n.localize(
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
-	calculateDamage: function (dmg, data, cls) {
+	calculateDamage: function (actorData, dmg, data, cls) {
 		dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
 		Prepare.spellPart(dmg, data, cls);
+
+		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
+		if (bonuses.length) {
+			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		}
+
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		dmg.display = Prepare.damageFormat(dmg);
 		dmg.derived = {ncrit: dmg.ndice};
@@ -185,8 +205,6 @@ export const Prepare = {
 				name: game.i18n.localize('OBSIDIAN.Override')
 			}];
 		}
-
-		skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
 
 	damageFormat: function (dmg, mod = true) {
@@ -227,6 +245,23 @@ export const Prepare = {
 
 		for (const [id, ability] of Object.entries(data.abilities)) {
 			flags.abilities[id] = {rollParts: [], value: ability.value};
+			const abilityBonuses =
+				actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityChecks(id));
+
+			if (abilityBonuses.length) {
+				flags.abilities[id].rollParts.push(
+					...abilityBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			}
+
+			const scoreBonuses =
+				actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityScores(id));
+
+			if (scoreBonuses.length) {
+				flags.abilities[id].value +=
+					scoreBonuses.reduce((acc, bonus) =>
+						acc + bonusToParts(actorData, bonus)
+							.reduce((acc, part) => acc + part.mod, 0), 0);
+			}
 		}
 	},
 
@@ -485,6 +520,14 @@ export const Prepare = {
 					mod: (flags.saves.bonus || 0) + (flags.saves[id].bonus || 0),
 					name: game.i18n.localize('OBSIDIAN.Bonus')
 				}];
+
+				const saveBonuses =
+					actorData.obsidian.filters.bonuses(Filters.appliesTo.savingThrows(id));
+
+				if (saveBonuses.length) {
+					flags.saves[id].rollParts.push(
+						...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+				}
 			} else {
 				flags.saves[id].rollParts = [{
 					mod: Number(flags.saves[id].override),
@@ -513,16 +556,61 @@ export const Prepare = {
 				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 			}
 
-			actorData.obsidian.skills[custom ? `custom.${id}` : id] = skill;
+			const key = custom ? `custom.${id}` : id;
+			actorData.obsidian.skills[key] = skill;
 			Prepare.calculateSkill(data, flags, skill);
+
+			if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
+				const bonuses =
+					actorData.obsidian.filters.bonuses(
+						Filters.appliesTo.skillChecks(false, key, skill.ability));
+
+				if (bonuses.length) {
+					skill.rollParts.push(
+						...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+				}
+			}
+
+			const rollMods =
+				actorData.obsidian.filters.mods(
+					Filters.appliesTo.skillChecks(false, key, skill.ability));
+
+			let rollMod = {mode: ['reg']};
+			if (rollMods.length) {
+				rollMod = Effect.combineRollMods(rollMods);
+			}
+
+			const passiveBonuses =
+				actorData.obsidian.filters.bonuses(Filters.appliesTo.passiveScores(key));
+
+			if (passiveBonuses.length) {
+				skill.passive +=
+					passiveBonuses.reduce((acc, bonus) =>
+						acc + bonusToParts(actorData, bonus)
+							.reduce((acc, part) => acc + part.mod, 0), 0);
+			}
+
+			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
-			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll);
+			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 		}
 	},
 
 	tools: function (actorData, data, flags) {
 		for (const tool of flags.skills.tools) {
 			Prepare.calculateSkill(data, flags, tool);
+			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
+				const bonuses =
+					actorData.obsidian.filters.bonuses(
+						Filters.appliesTo.skillChecks(true, `tool.${tool.id}`, tool.ability));
+
+				if (bonuses.length) {
+					tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+					tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+				}
+			}
+
+			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		}
 	},
 

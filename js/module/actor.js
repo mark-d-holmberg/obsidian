@@ -11,6 +11,7 @@ import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
 import {Filters} from '../rules/filters.js';
+import {filterToggleable} from '../rules/toggleable.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -105,6 +106,18 @@ export class ObsidianActor extends Actor5e {
 				(item.type === 'weapon' || item.type === 'equipment')
 				&& getProperty(item, 'flags.obsidian.magical'));
 
+		this.data.obsidian.attacks = [];
+		this.data.obsidian.effects = new Map();
+		this.data.obsidian.components = new Map();
+
+		// Convert it to an array here so it doesn't get nuked when duplicated.
+		this.data.obsidian.toggleable = Array.from(new Set(filterToggleable(this.data)).values());
+		this.data.obsidian.filters = {
+			mods: Filters.mods(this.data.obsidian.toggleable),
+			bonuses: Filters.bonuses(this.data.obsidian.toggleable)
+		};
+
+		prepareInventory(this.data);
 		Prepare.abilities(this.data);
 		Prepare.defenses(flags);
 		Prepare.hd(this.data);
@@ -112,34 +125,20 @@ export class ObsidianActor extends Actor5e {
 		Prepare.tools(this.data, data, flags);
 		Prepare.saves(this.data, data, flags);
 		prepareSpellcasting(this.data, flags);
-		prepareInventory(this.data);
 		Prepare.features(this.data);
 		Prepare.consumables(this.data);
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
 
-		this.data.obsidian.attacks = [];
-		this.data.obsidian.effects = new Map();
-		this.data.obsidian.components = new Map();
-		this.data.obsidian.toggleable = new Set();
-
 		for (const item of this.data.items) {
 			prepareEffects(
 				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
-				this.data.obsidian.components, this.data.obsidian.toggleable);
+				this.data.obsidian.components);
 		}
 
-		// Convert it to an array here so it doesn't get nuked when duplicated.
-		this.data.obsidian.toggleable = Array.from(this.data.obsidian.toggleable.values());
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data);
-
-		this.data.obsidian.filters = {
-			mods: Filters.mods(this.data.obsidian.toggleable),
-			bonuses: Filters.mods(this.data.obsidian.bonuses)
-		};
-
 		return this.data;
 	}
 
