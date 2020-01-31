@@ -89,7 +89,7 @@
 	display: block;
 }
 
-.obsidian-tab-contents h3 {
+.obsidian-tab-contents > h3 {
 	text-transform: uppercase;
 	font-family: var(--font-condensed);
 	font-size: 13px;

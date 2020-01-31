@@ -272,9 +272,7 @@ export const Prepare = {
 		const data = actorData.data;
 		actorData.obsidian.armour =
 			actorData.items.filter(item =>
-				item.type === 'equipment'
-				&& item.flags.obsidian
-				&& item.flags.obsidian.subtype === 'armour');
+				item.type === 'equipment' && item.flags.obsidian && item.flags.obsidian.armour);
 
 		let bestArmour;
 		let bestShield;

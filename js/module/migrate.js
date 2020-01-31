@@ -24,6 +24,7 @@ const CONVERT = {
 	},
 	range: {self: 'self', touch: 'touch', ft: 'short', mi: 'long', any: 'unlimited'},
 	recharge: {sr: 'short', lr: 'long', day: 'dawn'},
+	size: {tiny: 'tiny', small: 'sm', medium: 'med', large: 'lg', huge: 'huge', gargantuan: 'grg'},
 	spellComponents: {vocal: 'v', somatic: 's', material: 'm'},
 	tags: {
 		ver: 'versatile', hvy: 'heavy', fin: 'finesse', lgt: 'light', lod: 'loading', rch: 'reach',
@@ -52,6 +53,7 @@ export const Migrate = {
 			mergeObject(Schema.Actor, data.flags.obsidian || {}, {inplace: false});
 
 		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+			Migrate.convertNotes(data, source);
 			Migrate.convertProficiencies(data, source);
 			Migrate.convertSpecial(data, source);
 		}
@@ -284,6 +286,10 @@ export const Migrate = {
 				data.flags.obsidian.source.class = cls._id;
 			}
 		}
+
+		if (source === 'core') {
+			data.flags.obsidian.source.type = 'other';
+		}
 	},
 
 	convertProficiencies: function (data, source) {
@@ -323,6 +329,20 @@ export const Migrate = {
 					label: translateOrElseOriginal(`OBSIDIAN.ToolProf-${prof}`, prof)
 				}
 			}));
+		}
+	},
+
+	convertNotes: function (data, source) {
+		if (source === 'obsidian') {
+			data.data.traits.size = CONVERT.size[data.flags.obsidian.details.size];
+		} else if (source === 'core') {
+			for (const alignment of OBSIDIAN.Rules.ALIGNMENTS) {
+				const translation = game.i18n.localize(`OBSIDIAN.Alignment-${alignment}`);
+				if (translation.toLowerCase() === data.data.details.alignment.toLowerCase()) {
+					data.data.details.alignment = alignment;
+					break;
+				}
+			}
 		}
 	},
 
@@ -539,6 +559,8 @@ Migrate.core = {
 			if (activation) {
 				data.flags.obsidian.active = 'active';
 				data.flags.obsidian.action = activation;
+			} else {
+				data.flags.obsidian.active = 'passive';
 			}
 		} else if (data.type === 'spell') {
 			const activation = CONVERT.castTime[getProperty(data.data, 'activation.type')];

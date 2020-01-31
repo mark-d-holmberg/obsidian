@@ -155,7 +155,6 @@ OBSIDIAN.Rules.PROFICIENCY_LEVELS = {
 OBSIDIAN.Rules.RESOURCE_USES = ['fixed', 'formula'];
 OBSIDIAN.Rules.ROLL = ['reg', 'adv', 'dis'];
 OBSIDIAN.Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
-OBSIDIAN.Rules.SIZES = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'];
 OBSIDIAN.Rules.SKILLS = [
 	'acr', 'ani', 'arc', 'ath', 'dec', 'his', 'ins', 'inv', 'itm', 'med', 'nat', 'per', 'prc',
 	'prf', 'rel', 'slt', 'ste', 'sur'

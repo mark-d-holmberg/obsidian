@@ -9,9 +9,9 @@
 				{{/select}}
 			</select>
 			<select name="flags.obsidian.details.size">
-				{{#select actor.flags.obsidian.details.size}}
-					{{#each ObsidianRules.SIZES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Size-' this}}</option>
+				{{#select data.traits.size}}
+					{{#each config.actorSizes}}
+						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Size-' @key}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

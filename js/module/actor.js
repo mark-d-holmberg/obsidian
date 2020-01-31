@@ -89,7 +89,7 @@ export class ObsidianActor extends Actor5e {
 			flags.attributes.ac.base
 			+ data.abilities[flags.attributes.ac.ability1].mod
 			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0)
-			+ flags.attributes.ac.mod;
+			+ (flags.attributes.ac.mod || 0);
 
 		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 			data.attributes.ac.min = Number(flags.attributes.ac.override);
