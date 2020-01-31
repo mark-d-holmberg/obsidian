@@ -3,7 +3,7 @@
 	"title": "Obsidian Character Sheets",
 	"description": "Dark theme character sheets.",
 	"version": "2.0.0",
-	"minimumCoreVersion": "0.4.4",
+	"minimumCoreVersion": "0.4.5",
 	"author": "Kim Mantas",
 	"systems": ["dnd5e"],
 	"esmodules": ["js/main.js"],
