@@ -13,7 +13,7 @@ export function patchItem_prepareData () {
 }
 
 export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
-	if (!item.flags || !item.flags.obsidian || !actor) {
+	if (!item.flags || !item.flags.obsidian || !actor || actor.data.type === 'npc') {
 		return;
 	}
 

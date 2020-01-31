@@ -88,7 +88,8 @@ export function bonusToParts (actorData, bonus) {
 		parts.push({
 			mod: Math.floor(bonus.prof * actorData.data.attributes.prof),
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-			proficiency: true
+			proficiency: true,
+			value: bonus.prof
 		});
 	}
 
@@ -118,7 +119,7 @@ export function bonusToParts (actorData, bonus) {
 	return parts;
 }
 
-function highestProficiency (parts) {
+export function highestProficiency (parts) {
 	const highest = parts.reduce((acc, part) =>
 		part.proficiency && part.mod > acc.mod ? part : acc, {mod: -Infinity});
 

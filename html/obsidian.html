@@ -327,13 +327,13 @@
 					<div class="obsidian-char-box obsidian-skills-box">
 						{{#each actor.obsidian.skills as |skill id|}}
 							<div class="obsidian-skill-item" data-skill-id="{{id}}">
-								<div class="obsidian-prof obsidian-ptr {{#if (eq 0.5 skill.value)~}}
+								<div class="obsidian-prof obsidian-ptr {{#if (eq 0.5 skill.proficiency.value)~}}
 									obsidian-half-proficient
-								{{~else if (eq 1 skill.value)~}}
+								{{~else if (eq 1 skill.proficiency.value)~}}
 									obsidian-proficient
-								{{~else if (eq 2 skill.value)~}}
+								{{~else if (eq 2 skill.proficiency.value)~}}
 									obsidian-expertise
-								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 skill.value))~}}
+								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 skill.proficiency.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -377,13 +377,13 @@
 						{{#each actor.flags.obsidian.skills.tools as |tool id|}}
 							<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
 								<div class="
-								{{~#if (eq 0.5 tool.value)~}}
+								{{~#if (eq 0.5 tool.proficiency.value)~}}
 									obsidian-half-proficient
-								{{~else if (eq 1 tool.value)~}}
+								{{~else if (eq 1 tool.proficiency.value)~}}
 									obsidian-proficient
-								{{~else if (eq 2 tool.value)~}}
+								{{~else if (eq 2 tool.proficiency.value)~}}
 									obsidian-expertise
-								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 tool.value))~}}
+								{{~else if (and ../actor.flags.obsidian.skills.joat (eq 0 tool.proficiency.value))~}}
 									obsidian-half-proficient
 								{{~else~}}
 									obsidian-not-proficient
@@ -535,15 +535,20 @@
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
 						{{#each data.abilities as |ability id|}}
+						{{#with (lookup actor.data.flags.obsidian.saves id)}}
 							<div {{#if (eq id 'dex')}}
 								style="grid-row-start: 2;"
 							{{else if (eq id 'con')}}
 								style="grid-row-start: 3;"
 							{{/if}} class="obsidian-save-item" data-value="{{id}}">
 								<div class="
-								{{~#if ability.proficient~}}
-									obsidian-radio-selected
-								{{~/if}} obsidian-radio obsidian-ptr">
+								{{#if (eq 0.5 proficiency.value)~}}
+									obsidian-half-proficient
+								{{~else if (eq 1 proficiency.value)~}}
+									obsidian-proficient
+								{{~else if (eq 2 proficiency.value)~}}
+									obsidian-expertise
+								{{~/if~}} obsidian-radio obsidian-ptr">
 									<span></span>
 								</div>
 								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}">
@@ -553,6 +558,7 @@
 									{{numberFormat ability.save decimals=0 sign=true}}
 								</div>
 							</div>
+						{{/with}}
 						{{/each}}
 					</div>
 				</div>

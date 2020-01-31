@@ -1,7 +1,7 @@
 import {OBSIDIAN} from './rules.js';
 import {Parse} from '../module/parse.js';
 import {Filters} from './filters.js';
-import {bonusToParts} from './bonuses.js';
+import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
 
 const ops = {
@@ -68,17 +68,16 @@ export const Prepare = {
 		dc.rollParts = [{
 			mod: dc.prof * data.attributes.prof,
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-			proficiency: true
+			proficiency: true,
+			value: dc.prof
 		}];
 
 		dc.spellMod = 0;
 		Prepare.spellPart(dc, data, cls);
 
-		if (actorData.obsidian) {
-			const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
-			if (bonuses.length) {
-				dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-			}
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
+		if (bonuses.length) {
+			dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -98,15 +97,14 @@ export const Prepare = {
 			hit.rollParts.push({
 				mod: data.attributes.prof,
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-				proficiency: true
+				proficiency: true,
+				value: 1
 			});
 		}
 
-		if (actorData.obsidian) {
-			const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
-			if (bonuses.length) {
-				hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-			}
+		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
+		if (bonuses.length) {
+			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -119,11 +117,9 @@ export const Prepare = {
 		dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
 		Prepare.spellPart(dmg, data, cls);
 
-		if (actorData.obsidian) {
-			const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
-			if (bonuses.length) {
-				dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-			}
+		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
+		if (bonuses.length) {
+			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -197,7 +193,8 @@ export const Prepare = {
 			skill.rollParts = [{
 				mod: data.attributes.prof * prof,
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-				proficiency: true
+				proficiency: true,
+				value: prof
 			}, {
 				mod: data.abilities[skill.ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${skill.ability}`)
@@ -518,7 +515,8 @@ export const Prepare = {
 				flags.saves[id].rollParts = [{
 					mod: save.proficient * data.attributes.prof,
 					name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-					proficiency: true
+					proficiency: true,
+					value: save.proficient
 				}, {
 					mod: data.abilities[id].mod,
 					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)
@@ -533,7 +531,11 @@ export const Prepare = {
 				if (saveBonuses.length) {
 					flags.saves[id].rollParts.push(
 						...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+					flags.saves[id].rollParts = highestProficiency(flags.saves[id].rollParts);
 				}
+
+				flags.saves[id].proficiency =
+					flags.saves[id].rollParts.find(part => part.proficiency);
 			} else {
 				flags.saves[id].rollParts = [{
 					mod: Number(flags.saves[id].override),
@@ -574,6 +576,7 @@ export const Prepare = {
 				if (bonuses.length) {
 					skill.rollParts.push(
 						...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+					skill.rollParts = highestProficiency(skill.rollParts);
 				}
 			}
 
@@ -599,6 +602,7 @@ export const Prepare = {
 			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
+			skill.proficiency = skill.rollParts.find(part => part.proficiency);
 		}
 	},
 
@@ -613,10 +617,12 @@ export const Prepare = {
 				if (bonuses.length) {
 					tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 					tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+					tool.rollParts = highestProficiency(tool.rollParts);
 				}
 			}
 
 			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			tool.proficiency = tool.rollParts.find(part => part.proficiency);
 		}
 	},
 
