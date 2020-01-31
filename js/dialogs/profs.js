@@ -30,11 +30,9 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 	async _onAddProficiency (evt) {
 		evt.preventDefault();
 		const cat = $(evt.currentTarget).data('cat');
-		const profs = duplicate(this.parent.actor.data.flags.obsidian.traits.profs.custom[cat]);
+		const profs = duplicate(this.parent.actor.data.data.traits[cat].value);
 		profs.push('');
-		const update = {};
-		update[`flags.obsidian.traits.profs.custom.${cat}`] = profs;
-		await this.parent.actor.update(update);
+		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
 		this.render(false);
 	}
 
@@ -47,11 +45,9 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const id = parseInt(row.data('item-id'));
 		const cat = row.data('cat');
-		const profs = duplicate(this.parent.actor.data.flags.obsidian.traits.profs.custom[cat]);
+		const profs = duplicate(this.parent.actor.data.data.traits[cat].value);
 		profs.splice(id, 1);
-		const update = {};
-		update[`flags.obsidian.traits.profs.custom.${cat}`] = profs;
-		await this.parent.actor.update(update);
+		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
 		this.render(false);
 	}
 
@@ -72,7 +68,11 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 			profs[cat].push(jqel.val());
 		});
 
-		formData = {'flags.obsidian.traits.profs.custom': profs};
+		formData = {};
+		for (const cat in profs) {
+			formData[`data.traits.${cat}.value`] = profs[cat];
+		}
+
 		super._updateObject(event, formData);
 	}
 }

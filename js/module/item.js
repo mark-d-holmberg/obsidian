@@ -185,7 +185,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 
 		if ((!effect.isScaling || effect.selfScaling)
-			&& !effect.bonuses.length && !effect.mods.length)
+			&& !getProperty(effect, 'bonuses.length')
+			&& !getProperty(effect, 'mods.length'))
 		{
 			item.obsidian.actionable.push(effect);
 		}

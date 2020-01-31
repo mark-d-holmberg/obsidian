@@ -43,8 +43,18 @@ export const Migrate = {
 			data.flags = {};
 		}
 
+		let source = 'obsidian';
+		if (!data.flags.obsidian) {
+			source = 'core';
+		}
+
 		data.flags.obsidian =
 			mergeObject(Schema.Actor, data.flags.obsidian || {}, {inplace: false});
+
+		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+			Migrate.convertProficiencies(data, source);
+			Migrate.convertSpecial(data, source);
+		}
 
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
@@ -272,6 +282,61 @@ export const Migrate = {
 			const cls = classMap.get(data.flags.obsidian.source.class);
 			if (cls) {
 				data.flags.obsidian.source.class = cls._id;
+			}
+		}
+	},
+
+	convertProficiencies: function (data, source) {
+		const traits = data.data.traits;
+		const flags = getProperty(data, 'flags.obsidian.traits.profs.custom');
+		const translateOrElseOriginal = (key, original) => {
+			const translation = game.i18n.localize(key);
+			return translation === key ? original : translation;
+		};
+
+		['armorProf', 'weaponProf', 'languages', 'toolProf'].forEach(prop => {
+			if (!traits[prop]) {
+				traits[prop] = {value: []};
+			}
+		});
+
+		if (source === 'obsidian' && flags) {
+			traits.armorProf.value = duplicate(flags.armour);
+			traits.weaponProf.value = duplicate(flags.weapons);
+			traits.languages.value = duplicate(flags.langs);
+		} else if (source === 'core') {
+			traits.armorProf.value =
+				traits.armorProf.value.map(prof =>
+					translateOrElseOriginal(`OBSIDIAN.ArmourProf-${prof}`, prof));
+
+			traits.weaponProf.value =
+				traits.weaponProf.value.map(prof =>
+					translateOrElseOriginal(`OBSIDIAN.WeaponProf-${prof}`, prof));
+
+			traits.languages.value =
+				traits.languages.value.map(prof =>
+					translateOrElseOriginal(`OBSIDIAN.Lang-${prof}`, prof));
+
+			data.flags.obsidian.skills.tools.push(...traits.toolProf.value.map(prof => {
+				return {
+					ability: 'str', bonus: 0, value: 0, custom: true,
+					label: translateOrElseOriginal(`OBSIDIAN.ToolProf-${prof}`, prof)
+				}
+			}));
+		}
+	},
+
+	convertSpecial: function (data, source) {
+		if (source !== 'core') {
+			return;
+		}
+
+		const flags = data.flags.obsidian;
+		const dndFlags = getProperty(data, 'flags.dnd5e');
+
+		if (dndFlags) {
+			if (dndFlags.initiativeAdv) {
+				flags.attributes.init.roll = 'adv';
 			}
 		}
 	},

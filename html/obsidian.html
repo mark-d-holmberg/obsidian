@@ -453,7 +453,7 @@
 								{{localize 'OBSIDIAN.Armour'}}
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each actor.obsidian.profs.armour}}
+								{{#each data.traits.armorProf.value}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -463,7 +463,7 @@
 								{{localize 'OBSIDIAN.Weapons'}}
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each actor.obsidian.profs.weapons}}
+								{{#each data.traits.weaponProf.value}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -474,9 +474,6 @@
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each data.traits.languages.value}}
-									<span>{{this}}</span>
-								{{/each}}
-								{{#each actor.obsidian.profs.langs}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>

@@ -74,9 +74,11 @@ export const Prepare = {
 		dc.spellMod = 0;
 		Prepare.spellPart(dc, data, cls);
 
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
-		if (bonuses.length) {
-			dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		if (actorData.obsidian) {
+			const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
+			if (bonuses.length) {
+				dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			}
 		}
 
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -100,9 +102,11 @@ export const Prepare = {
 			});
 		}
 
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
-		if (bonuses.length) {
-			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		if (actorData.obsidian) {
+			const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
+			if (bonuses.length) {
+				hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			}
 		}
 
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -115,9 +119,11 @@ export const Prepare = {
 		dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
 		Prepare.spellPart(dmg, data, cls);
 
-		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
-		if (bonuses.length) {
-			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		if (actorData.obsidian) {
+			const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
+			if (bonuses.length) {
+				dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			}
 		}
 
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);

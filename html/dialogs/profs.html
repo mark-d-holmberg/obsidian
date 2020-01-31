@@ -2,14 +2,14 @@
 	<label class="obsidian-inline obsidian-label-lg">
 		{{localize 'OBSIDIAN.Armour'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
-		        data-cat="armour">
+		        data-cat="armorProf">
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each actor.flags.obsidian.traits.profs.custom.armour as |armour id|}}
-		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="armour"
-		     data-item-id="{{id}}">
-			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{armour}}">
+	{{#each data.traits.armorProf.value}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="armorProf"
+		     data-item-id="{{@index}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{this}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
 				{{localize 'OBSIDIAN.Remove'}}
 			</button>
@@ -18,14 +18,14 @@
 	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
 		{{localize 'OBSIDIAN.Weapons'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
-		        data-cat="weapons">
+		        data-cat="weaponProf">
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each actor.flags.obsidian.traits.profs.custom.weapons as |weapon id|}}
-		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="weapons"
-		     data-item-id="{{id}}">
-			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{weapon}}">
+	{{#each data.traits.weaponProf.value}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="weaponProf"
+		     data-item-id="{{@index}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{this}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
 				{{localize 'OBSIDIAN.Remove'}}
 			</button>
@@ -34,14 +34,14 @@
 	<label class="obsidian-inline obsidian-label-lg obsidian-stacked-row">
 		{{localize 'OBSIDIAN.Languages'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-prof"
-		        data-cat="langs">
+		        data-cat="languages">
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each actor.flags.obsidian.traits.profs.custom.langs as |language id|}}
-		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="langs"
-		     data-item-id="{{id}}">
-			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{language}}">
+	{{#each data.traits.languages.value}}
+		<div class="obsidian-form-row obsidian-stacked-form-row obsidian-inline" data-cat="languages"
+		     data-item-id="{{@index}}">
+			<input class="obsidian-input-compact obsidian-input-lg" type="text" value="{{this}}">
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-prof">
 				{{localize 'OBSIDIAN.Remove'}}
 			</button>

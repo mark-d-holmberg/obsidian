@@ -95,12 +95,6 @@ export class ObsidianActor extends Actor5e {
 			data.attributes.ac.min = Number(flags.attributes.ac.override);
 		}
 
-		this.data.obsidian.profs = {
-			armour: flags.traits.profs.custom.armour,
-			weapons: flags.traits.profs.custom.weapons,
-			langs: flags.traits.profs.custom.langs
-		};
-
 		this.data.obsidian.magicalItems =
 			this.data.items.filter(item =>
 				(item.type === 'weapon' || item.type === 'equipment')
