@@ -69,7 +69,7 @@ export const Prepare = {
 			mod: dc.prof * data.attributes.prof,
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 			proficiency: true,
-			value: dc.prof
+			value: Number(dc.prof)
 		}];
 
 		dc.spellMod = 0;
@@ -194,7 +194,7 @@ export const Prepare = {
 				mod: data.attributes.prof * prof,
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 				proficiency: true,
-				value: prof
+				value: Number(prof)
 			}, {
 				mod: data.abilities[skill.ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${skill.ability}`)
@@ -516,7 +516,7 @@ export const Prepare = {
 					mod: save.proficient * data.attributes.prof,
 					name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 					proficiency: true,
-					value: save.proficient
+					value: Number(save.proficient)
 				}, {
 					mod: data.abilities[id].mod,
 					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)

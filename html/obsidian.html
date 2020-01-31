@@ -535,20 +535,20 @@
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
 						{{#each data.abilities as |ability id|}}
-						{{#with (lookup actor.data.flags.obsidian.saves id)}}
+						{{#with (lookup ../actor.flags.obsidian.saves id)}}
 							<div {{#if (eq id 'dex')}}
 								style="grid-row-start: 2;"
 							{{else if (eq id 'con')}}
 								style="grid-row-start: 3;"
 							{{/if}} class="obsidian-save-item" data-value="{{id}}">
-								<div class="
+								<div class="obsidian-radio obsidian-ptr
 								{{#if (eq 0.5 proficiency.value)~}}
 									obsidian-half-proficient
 								{{~else if (eq 1 proficiency.value)~}}
 									obsidian-proficient
 								{{~else if (eq 2 proficiency.value)~}}
 									obsidian-expertise
-								{{~/if~}} obsidian-radio obsidian-ptr">
+								{{~/if~}}">
 									<span></span>
 								</div>
 								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}">

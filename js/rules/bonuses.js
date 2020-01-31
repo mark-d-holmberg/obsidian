@@ -89,7 +89,7 @@ export function bonusToParts (actorData, bonus) {
 			mod: Math.floor(bonus.prof * actorData.data.attributes.prof),
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 			proficiency: true,
-			value: bonus.prof
+			value: Number(bonus.prof)
 		});
 	}
 
