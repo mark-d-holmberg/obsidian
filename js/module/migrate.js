@@ -293,6 +293,10 @@ export const Migrate = {
 	},
 
 	convertProficiencies: function (data, source) {
+		if (!data.data) {
+			return;
+		}
+
 		const traits = data.data.traits;
 		const flags = getProperty(data, 'flags.obsidian.traits.profs.custom');
 		const translateOrElseOriginal = (key, original) => {
@@ -333,9 +337,9 @@ export const Migrate = {
 	},
 
 	convertNotes: function (data, source) {
-		if (source === 'obsidian') {
+		if (source === 'obsidian' && getProperty(data, 'data.traits') !== undefined) {
 			data.data.traits.size = CONVERT.size[data.flags.obsidian.details.size];
-		} else if (source === 'core') {
+		} else if (source === 'core' && getProperty(data, 'data.details') !== undefined) {
 			for (const alignment of OBSIDIAN.Rules.ALIGNMENTS) {
 				const translation = game.i18n.localize(`OBSIDIAN.Alignment-${alignment}`);
 				if (translation.toLowerCase() === data.data.details.alignment.toLowerCase()) {
