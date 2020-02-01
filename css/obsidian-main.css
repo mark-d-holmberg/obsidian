@@ -712,13 +712,17 @@
 
 .obsidian-input-search-container > span,
 .obsidian-compendium .header-search > span {
-	top: 1px;
+	top: 2px;
 	right: 0;
 	cursor: pointer;
 }
 
+.obsidian-compendium .header-search > i {
+	top: 1px;
+}
+
 .obsidian-compendium .header-search > span {
-	top: 3px;
+	top: 1px;
 }
 
 .obsidian-char-spell-search > button.obsidian-btn-sm.obsidian-btn-sheet {

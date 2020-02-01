@@ -1232,6 +1232,7 @@ legend .fancy-checkbox {
 #compendium li.compendium-pack footer.compendium-footer {
 	text-transform: uppercase;
 	color: var(--text-secondary);
+	margin-right: 28px;
 }
 
 .obsidian-compendium .window-content {
