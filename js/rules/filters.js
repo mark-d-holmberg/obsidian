@@ -22,7 +22,7 @@ export const Filters = {
 	isDC: filter => filter.filter === 'score' && filter.score === 'dc',
 
 	filterEffects: (effects, collection, pred) =>
-		effects.filter(effect => effect.toggle.active && effect[collection].length)
+		effects.filter(effect => effect.toggle && effect.toggle.active && effect[collection].length)
 			.filter(effect => !effect.filters.length || effect.filters.some(pred))
 			.flatMap(effect => effect[collection]),
 
