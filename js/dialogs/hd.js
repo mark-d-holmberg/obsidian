@@ -24,6 +24,18 @@ export class ObsidianHDDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html);
 	}
 
+	getData () {
+		const data = super.getData();
+		data.hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
+		Object.values(data.hd).forEach(hd => {
+			if (hd.max > 0) {
+				hd.derived = true;
+			}
+		});
+
+		return data;
+	}
+
 	/**
 	 * @private
 	 */
@@ -43,7 +55,7 @@ export class ObsidianHDDialog extends ObsidianDialog {
 			hd[newHD] = {
 				max: 0,
 				value: 0,
-				override: 1
+				override: '1'
 			};
 
 			await this.parent.actor.update({'flags.obsidian.attributes.hd': hd});
@@ -95,6 +107,12 @@ export class ObsidianHDDialog extends ObsidianDialog {
 				};
 			} else {
 				hd[key].override = val;
+			}
+		}
+
+		for (const key of Object.keys(hd)) {
+			if (!overrides[key]) {
+				hd[key].override = '';
 			}
 		}
 
