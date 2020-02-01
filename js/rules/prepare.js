@@ -483,9 +483,13 @@ export const Prepare = {
 			classHD[die] = hd;
 		}
 
-		for (const hd of Object.values(existingHD)) {
+		for (const [die, hd] of Object.entries(existingHD)) {
 			if (!OBSIDIAN.notDefinedOrEmpty(hd.override)) {
 				hd.override = Number(hd.override);
+			}
+
+			if (!classHD[die]) {
+				hd.max = 0;
 			}
 		}
 
