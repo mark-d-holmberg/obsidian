@@ -304,7 +304,14 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const view = {
 			name: 'OBSIDIAN.View',
 			icon: '<i class="fas fa-eye"></i>',
-			callback: this._viewItem.bind(this)
+			callback: this._viewItem.bind(this),
+			condition: li => {
+				const actor = this.actor || this.parent.actor;
+				if (actor) {
+					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
+					return item.type !== 'tool' && item.type !== 'loot';
+				}
+			}
 		};
 
 		let menu;
