@@ -1,6 +1,8 @@
 import {Item5e} from '../../../../systems/dnd5e/module/item/entity.js';
 import {Prepare} from '../rules/prepare.js';
 import {Schema} from './schema.js';
+import {spellNotes} from '../rules/spells.js';
+import {OBSIDIAN} from '../rules/rules.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
@@ -28,6 +30,19 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	const data = actorData.data;
 	const flags = item.flags.obsidian;
 	const effects = flags.effects || [];
+	flags.notes = [];
+
+	if (item.type === 'spell') {
+		spellNotes(item);
+	}
+
+	if (item.type === 'equipment' && item.flags.obsidian.armour) {
+		Prepare.armourNotes(item);
+	}
+
+	if (item.type === 'weapon') {
+		Prepare.weaponNotes(item);
+	}
 
 	item.obsidian = {
 		attacks: [],

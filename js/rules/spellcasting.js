@@ -93,7 +93,7 @@ export function prepareSpellcasting (actorData, flags) {
 		}
 	}
 
-	slotLevel = Math.clamped(slotLevel, 1, 20);
+	slotLevel = Math.clamped(slotLevel, 0, 20);
 
 	if (slotLevel > 0) {
 		if (totalCasters === 1 && nonFullCasters === 1) {

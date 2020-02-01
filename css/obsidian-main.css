@@ -358,7 +358,8 @@
 	width: 13px;
 }
 
-.dnd5e.sheet form .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet {
+.dnd5e.sheet form .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet,
+form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet {
 	font-size: 12px;
 	font-family: var(--font-condensed);
 	width: 30px;

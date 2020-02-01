@@ -3,13 +3,28 @@ import {Reorder} from '../module/reorder.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
-		const item = parent.actor.data.items.find(item => item._id === itemID);
+		const item = parent.actor.data.obsidian.itemsByID.get(itemID);
 		if (item.type === 'backpack') {
 			options.width = 578;
+			options.height = 600;
 		}
 
 		super(parent, options);
 		this.item = item;
+
+		if (item.type === 'backpack') {
+			this._hook = Hooks.on('renderObsidian', () => {
+				this.item = this.parent.actor.data.obsidian.itemsByID.get(itemID);
+				this.render(false)
+			});
+		}
+	}
+
+	async close () {
+		if (this._hook) {
+			Hooks.off('renderObsidian', this._hook);
+		}
+		return super.close();
 	}
 
 	static get defaultOptions () {
@@ -58,10 +73,8 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		});
 
 		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
-
-		if (this.item.type === 'backpack') {
-			ObsidianDialog.recalculateHeight(html);
-		}
+		html.find('[data-roll]').click(this.parent._onRoll.bind(this.parent));
+		html.find('.obsidian-equip-action').click(this.parent._onEquip.bind(this.parent));
 	}
 
 	getData () {

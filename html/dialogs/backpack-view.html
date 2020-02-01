@@ -6,9 +6,9 @@
 				<span>{{numberFormat item.flags.obsidian.carriedWeight decimals=2}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
-			<div{{#if (gt item.flags.obsidian.weightCarried item.flags.obsidian.capacity)}}
+			<div{{#if (gt item.flags.obsidian.weightCarried data.capacity.value)}}
 				class="obsidian-negative"{{/if}}>
-				{{#if (gt item.flags.obsidian.weightCarried item.flags.obsidian.capacity)}}
+				{{#if (gt item.flags.obsidian.weightCarried data.capacity.value)}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
 				{{else}}
 					{{localize 'OBSIDIAN.WithinCapacity'}}

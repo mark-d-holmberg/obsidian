@@ -14,8 +14,6 @@ export function prepareSpells (actorData) {
 		}
 
 		let cls;
-		flags.notes = [];
-
 		if (flags.time.n === undefined || flags.time.n === '') {
 			flags.time.n = 1;
 		} else {
@@ -40,18 +38,6 @@ export function prepareSpells (actorData) {
 				.filter(s => s !== undefined)
 				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 				.join(', ');
-
-		if (flags.components.m && spell.data.materials.value.length > 0) {
-			flags.notes.push(
-				`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: `
-				+ spell.data.materials.value);
-		}
-
-		if (flags.time.type === 'react' && flags.time.react.length > 0) {
-			flags.notes.push(
-				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}: `
-				+ flags.time.react);
-		}
 
 		if (cls) {
 			const spellcasting = cls.flags.obsidian.spellcasting;
@@ -98,5 +84,20 @@ export function prepareSpells (actorData) {
 		if (flags.visible && spell.data.concentration) {
 			actorData.obsidian.spellbook.concentration.push(spell);
 		}
+	}
+}
+
+export function spellNotes (spell) {
+	const flags = spell.flags.obsidian;
+	if (flags.components.m && spell.data.materials.value.length > 0) {
+		flags.notes.push(
+			`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: `
+			+ spell.data.materials.value);
+	}
+
+	if (flags.time.type === 'react' && flags.time.react.length > 0) {
+		flags.notes.push(
+			`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}: `
+			+ flags.time.react);
 	}
 }

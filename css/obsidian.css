@@ -529,7 +529,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	line-height: 1;
 }
 
-.dnd5e.sheet form input[type=number].obsidian-input-sheet {
+.dnd5e.sheet form input[type=number].obsidian-input-sheet,
+form.obsidian input[type=number].obsidian-input-sheet {
 	display: inline-block;
 	width: 40px;
 	font-family: var(--font);
@@ -540,6 +541,11 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	border: none;
 	outline: none;
 	margin: 0;
+}
+
+form.obsidian .rollable:hover {
+	text-shadow: 0 0 10px red;
+	cursor: pointer;
 }
 
 .obsidian-char-xp {

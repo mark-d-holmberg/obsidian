@@ -279,7 +279,6 @@ export const Prepare = {
 
 		for (const armour of actorData.obsidian.armour) {
 			const flags = armour.flags.obsidian;
-			flags.notes = [];
 			flags.baseAC = armour.data.armor.value;
 
 			if (armour.data.armor.type === 'shield') {
@@ -288,36 +287,11 @@ export const Prepare = {
 				{
 					bestShield = armour;
 				}
-
-				flags.notes.push(
-					`${flags.baseAC < 0 ? '-' : '+'}${flags.baseAC} `
-					+ game.i18n.localize('OBSIDIAN.ACAbbr'));
 			} else {
 				if (armour.data.equipped
 					&& (!bestArmour || bestArmour.flags.obsidian.baseAC < flags.baseAC))
 				{
 					bestArmour = armour;
-				}
-
-				flags.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${flags.baseAC}`);
-				if (armour.data.strength !== undefined && armour.data.strength !== '') {
-					flags.notes.push(
-						`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} `
-						+ armour.data.strength);
-				}
-
-				if (armour.data.stealth) {
-					flags.notes.push(
-						'<div class="obsidian-table-note-flex">'
-							+ game.i18n.localize('OBSIDIAN.Skill-ste')
-							+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
-							+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
-								+ '<div class="obsidian-css-icon-shape"></div>'
-								+ '<div class="obsidian-css-icon-label">'
-									+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
-								+ '</div>'
-							+ '</div>'
-						+ '</div>');
 				}
 			}
 		}
@@ -347,19 +321,42 @@ export const Prepare = {
 		}
 	},
 
+	armourNotes: function (item) {
+		const flags = item.flags.obsidian;
+		if (item.data.armor.type === 'shield') {
+			flags.notes.push(
+				`${flags.baseAC < 0 ? '-' : '+'}${flags.baseAC} `
+				+ game.i18n.localize('OBSIDIAN.ACAbbr'));
+		} else {
+			flags.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${flags.baseAC}`);
+			if (!OBSIDIAN.notDefinedOrEmpty(item.data.strength)) {
+				flags.notes.push(
+					`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} `
+					+ item.data.strength);
+			}
+
+			if (item.data.stealth) {
+				flags.notes.push(
+					'<div class="obsidian-table-note-flex">'
+						+ game.i18n.localize('OBSIDIAN.Skill-ste')
+						+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
+						+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
+							+ '<div class="obsidian-css-icon-shape"></div>'
+							+ '<div class="obsidian-css-icon-label">'
+								+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
+							+ '</div>'
+						+ '</div>'
+					+ '</div>');
+			}
+		}
+	},
+
 	consumables: function (actorData) {
 		actorData.obsidian.consumables =
 			actorData.items.filter(item => item.type === 'consumable' && item.flags.obsidian);
-		actorData.obsidian.ammo = [];
-
-		for (const consumable of actorData.obsidian.consumables) {
-			const flags = consumable.flags.obsidian;
-			flags.notes = [];
-
-			if (flags.subtype === 'ammo') {
-				actorData.obsidian.ammo.push(consumable);
-			}
-		}
+		actorData.obsidian.ammo =
+			actorData.obsidian.consumables.filter(consumable =>
+				consumable.flags.obsidian.subtype === 'ammo');
 	},
 
 	defenses: function (flags) {
@@ -417,34 +414,35 @@ export const Prepare = {
 							</option>`)}
 					</select>`;
 			}
+		}
+	},
 
-			flags.notes = [];
+	weaponNotes: function (item) {
+		const flags = item.flags.obsidian;
+		if (flags.category) {
+			flags.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
+		}
 
-			if (flags.category) {
-				flags.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
-			}
+		flags.notes =
+			flags.notes.concat(
+				Object.entries(flags.tags).map(([tag, val]) => {
+					if (tag === 'custom' && val.length) {
+						return val;
+					}
 
-			flags.notes =
-				flags.notes.concat(
-					Object.entries(flags.tags).map(([tag, val]) => {
-						if (tag === 'custom' && val.length) {
-							return val;
+					if (val) {
+						if (tag === 'ammunition') {
+							return flags.ammo.display;
 						}
 
-						if (val) {
-							if (tag === 'ammunition') {
-								return flags.ammo.display;
-							}
+						return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
+					}
 
-							return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
-						}
+					return null;
+				}).filter(tag => tag != null));
 
-						return null;
-					}).filter(tag => tag != null));
-
-			if (flags.magical) {
-				flags.notes.push(game.i18n.localize('OBSIDIAN.Magical'));
-			}
+		if (flags.magical) {
+			flags.notes.push(game.i18n.localize('OBSIDIAN.Magical'));
 		}
 	},
 
@@ -463,7 +461,6 @@ export const Prepare = {
 				continue;
 			}
 
-			flags.notes = [];
 			if (flags.source.type === 'class') {
 				const cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
 				if (cls) {
