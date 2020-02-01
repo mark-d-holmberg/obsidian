@@ -114,6 +114,7 @@ export const Migrate = {
 		}
 
 		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+			Migrate.deOrphan(data);
 			if (data.type === 'backpack') {
 				Migrate.convertContainer(data);
 			} else if (data.type === 'consumable') {
@@ -552,6 +553,13 @@ export const Migrate = {
 				.map(([k, _]) => CONVERT.tags[k])
 				.filter(tag => tag)
 				.forEach(tag => data.flags.obsidian.tags[tag] = true);
+		}
+	},
+
+	deOrphan: function (data) {
+		if (Number.isNumeric(getProperty(data, 'flags.obsidian.parent'))) {
+			data.flags.obsidian.parent = null;
+			data['-=flags.obsidian.parent'] = null;
 		}
 	}
 };
