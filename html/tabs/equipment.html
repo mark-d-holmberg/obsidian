@@ -47,6 +47,9 @@
 			{{localize 'OBSIDIAN.Consumables'}}
 		</li>
 		<li class="obsidian-sub-tab item" data-tab="equipment-other">{{localize 'OBSIDIAN.Other'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-attunement">
+			{{localize 'OBSIDIAN.Attunement'}}
+		</li>
 	</ul>
 	<div class="obsidian-tab-contents obsidian-inv-table tab">
 		<div class="obsidian-drag-indicator">
@@ -54,7 +57,17 @@
 			<i class="fas fa-angle-left"></i>
 		</div>
 		<h3>
-			{{localize 'OBSIDIAN.Inventory'}}
+			<div>
+				{{localize 'OBSIDIAN.Inventory'}}
+				<span class="obsidian-feature-recharge">
+					&bull; {{actor.obsidian.inventory.attunements}}
+					{{#if (eq actor.obsidian.inventory.attunements 1)}}
+						{{localize 'OBSIDIAN.Attunement'}}
+					{{else}}
+						{{localize 'OBSIDIAN.AttunementPlural'}}
+					{{/if}}
+				</span>
+			</div>
 			<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-add-custom-item">
 				{{localize 'OBSIDIAN.AddCustom'}}
 			</a>

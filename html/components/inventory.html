@@ -4,7 +4,8 @@
 	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
 	     {{#if (eq type 'weapon')}}data-filter-weapon="true" {{/if}}
 	     {{#if (eq flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
-	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}>
+	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}
+	     {{#if flags.obsidian.attunement}}data-filter-attunement="true"{{/if}}>
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
 				<button type="button" class="{{#if data.equipped}}obsidian-btn-active{{/if}}
@@ -24,7 +25,17 @@
 			{{/if}}
 		</div>
 		<div class="obsidian-col-inv-item">
-			<div class="obsidian-table-text">{{name}}</div>
+			<div class="obsidian-table-text">
+				{{name}}
+				{{#if flags.obsidian.attunement}}
+					<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle obsidian-ptr
+					 obsidian-attune {{#if data.attuned}}obsidian-css-icon-regular{{else}}obsidian-css-icon-empty{{/if}}"
+					     title="{{localize 'OBSIDIAN.RequiresAttunement'}}">
+						<div class="obsidian-css-icon-shape"></div>
+						<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.AttunementAbbr'}}</div>
+					</div>
+				{{/if}}
+			</div>
 			<div class="obsidian-table-sub-text">
 				{{#if (eq type 'weapon')}}
 					{{#if (eq flags.obsidian.type 'melee')}}

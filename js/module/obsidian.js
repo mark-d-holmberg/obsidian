@@ -175,6 +175,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
 		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
+		html.find('.obsidian-attune').click(this._onAttune.bind(this));
 		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
 		html.find('[data-roll]').click(this._onRoll.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
@@ -586,6 +587,22 @@ export class Obsidian extends ActorSheet5eCharacter {
 		};
 
 		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
+	}
+
+	/**
+	 * @private
+	 */
+	_onAttune (evt) {
+		evt.preventDefault();
+		const id = evt.currentTarget.closest('.obsidian-tr.item').dataset.itemId;
+		const item = this.actor.data.obsidian.itemsByID.get(id);
+
+		if (!item) {
+			return;
+		}
+
+		const attuned = !!item.data.attuned;
+		this.actor.updateEmbeddedEntity('OwnedItem', {_id: item._id, 'data.attuned': !attuned});
 	}
 
 	/**

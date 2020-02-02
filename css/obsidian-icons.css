@@ -447,3 +447,12 @@ li.context-item .obsidian-icon {
 .obsidian-css-icon-circle.obsidian-css-icon-regular .obsidian-css-icon-shape {
 	background: var(--text-regular);
 }
+
+.obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-shape {
+	border: 1px solid var(--text-regular);
+}
+
+.obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-label {
+	color: var(--text-regular);
+	font-weight: normal;
+}

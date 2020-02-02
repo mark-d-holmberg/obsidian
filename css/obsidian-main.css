@@ -428,6 +428,11 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	color: var(--text-subtle);
 }
 
+h3 > div > .obsidian-feature-recharge {
+	margin-left: 0;
+	text-transform: none;
+}
+
 .obsidian-feature-uses {
 	margin-left: 10px;
 }
@@ -922,7 +927,8 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	display: inline-block;
 }
 
-.obsidian-col-spell .obsidian-css-icon {
+.obsidian-col-spell .obsidian-css-icon,
+.obsidian-col-inv-item .obsidian-css-icon {
 	display: inline-block;
 }
 

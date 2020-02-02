@@ -6,6 +6,7 @@ export function prepareInventory (actorData) {
 		weight: 0,
 		encumbered: false,
 		items: [],
+		attunements: 0
 	};
 
 	const rootOrder = new Set(actorData.flags.obsidian.order.equipment.root);
@@ -54,6 +55,10 @@ export function prepareInventory (actorData) {
 		}
 
 		const totalWeight = item.data.weight * (item.data.quantity || 1);
+
+		if (flags.attunement && item.data.attuned) {
+			inventory.attunements++;
+		}
 
 		if (flags.parent == null) {
 			inventory.weight += totalWeight;

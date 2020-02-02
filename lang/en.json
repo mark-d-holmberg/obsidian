@@ -706,5 +706,9 @@
 	"OBSIDIAN.ToolProf-navg": "Navigator's Tools",
 	"OBSIDIAN.ToolProf-pois": "Poisoner's Kit",
 	"OBSIDIAN.ToolProf-thief": "Thieves' Tools",
-	"OBSIDIAN.ToolProf-vehicle": "Vehicle (Land or Water)"
+	"OBSIDIAN.ToolProf-vehicle": "Vehicle (Land or Water)",
+	"OBSIDIAN.RequiresAttunement": "Requires Attunement",
+	"OBSIDIAN.Attunement": "Attunement",
+	"OBSIDIAN.AttunementAbbr": "A",
+	"OBSIDIAN.AttunementPlural": "Attunements"
 }

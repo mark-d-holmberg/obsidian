@@ -75,6 +75,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
 		html.find('[data-roll]').click(this.parent._onRoll.bind(this.parent));
 		html.find('.obsidian-equip-action').click(this.parent._onEquip.bind(this.parent));
+		html.find('.obsidian-attune').click(this.parent._onAttune.bind(this.parent));
 	}
 
 	getData () {
