@@ -394,7 +394,7 @@ export const Prepare = {
 			if (flags.type === 'melee') {
 				flags.reach = 5;
 				if (flags.tags.reach) {
-					flags.reach +=5;
+					flags.reach += 5;
 				}
 			}
 
@@ -431,7 +431,7 @@ export const Prepare = {
 					}
 
 					if (val) {
-						if (tag === 'ammunition') {
+						if (tag === 'ammunition' && flags.ammo) {
 							return flags.ammo.display;
 						}
 
