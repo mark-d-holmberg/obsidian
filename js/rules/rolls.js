@@ -318,7 +318,7 @@ export const Rolls = {
 		return roll;
 	},
 
-	effectRoll: function (actor, effect, {name, scaledAmount, isFirst}) {
+	effectRoll: function (actor, effect, {name, scaledAmount, isFirst = true}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
