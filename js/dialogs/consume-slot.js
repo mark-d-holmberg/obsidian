@@ -53,9 +53,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianDialog {
 		}
 
 		if (this._item.type === 'spell') {
-			Rolls.fromClick(this.parent.actor, {
-				currentTarget: {dataset: {roll: 'item', id: this._item._id, scaling: level}}
-			});
+			Rolls.create(this.parent.actor, {roll: 'item', id: this._item._id, scaling: level});
 		} else {
 			this.parent._onRollEffect(this._effect, level);
 		}

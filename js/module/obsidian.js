@@ -817,16 +817,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 			scaledAmount = 0;
 		}
 
-		const evt = {
-			currentTarget: {dataset: {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount}}
-		};
-
+		const options = {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount};
 		if (spell) {
-			evt.currentTarget.dataset.roll = 'item';
-			evt.currentTarget.dataset.id = spell._id;
+			options.roll = 'item';
+			options.id = spell._id;
 		}
 
-		Rolls.fromClick(this.actor, evt);
+		Rolls.create(this.actor, options);
 	}
 
 	/**

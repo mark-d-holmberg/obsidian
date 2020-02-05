@@ -135,6 +135,107 @@ export const Rolls = {
 		return result;
 	},
 
+	create: function (actor, options) {
+		if (!options.roll) {
+			return;
+		}
+
+		if (!actor) {
+			if (!options.actor) {
+				return;
+			}
+
+			actor = game.actors.get(options.actor);
+		}
+
+		if (!actor) {
+			return;
+		}
+
+		const roll = options.roll;
+		if (roll === 'item') {
+			if (options.id === undefined) {
+				return;
+			}
+
+			const item = actor.getEmbeddedEntity('OwnedItem', options.id);
+			if (!item) {
+				return;
+			}
+
+			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, Number(options.scaling)));
+		} else if (roll === 'fx') {
+			if (options.uuid === undefined) {
+				return;
+			}
+
+			const effect = actor.data.obsidian.effects.get(options.uuid);
+			if (!effect) {
+				return;
+			}
+
+			Rolls.toChat(
+				actor,
+				...Rolls.effectRoll(actor, effect, {scaledAmount: Number(options.scaling)}));
+		} else if (roll === 'save') {
+			if (!options.save) {
+				return;
+			}
+
+			if (options.save === 'death') {
+				Rolls.toChat(actor, Rolls.death(actor));
+			} else {
+				Rolls.toChat(actor, Rolls.savingThrow(actor, options.save));
+			}
+		} else if (roll === 'abl') {
+			if (!options.abl) {
+				return;
+			}
+
+			if (options.abl === 'init') {
+				Rolls.toChat(actor, Rolls.initiative(actor));
+			} else {
+				Rolls.toChat(actor, Rolls.abilityCheck(actor, options.abl));
+			}
+		} else if (roll === 'skl') {
+			if (!options.skl) {
+				return;
+			}
+
+			const skill = getProperty(actor.data.flags.obsidian.skills, options.skl);
+			if (!skill) {
+				return;
+			}
+
+			Rolls.toChat(actor, Rolls.skillCheck(actor, skill, options.skl));
+		} else if (roll === 'tool') {
+			if (options.tool === undefined) {
+				return;
+			}
+
+			const tool = actor.data.flags.obsidian.skills.tools[Number(options.tool)];
+			if (!tool) {
+				return;
+			}
+
+			Rolls.toChat(actor, Rolls.skillCheck(actor, tool));
+		} else if (roll === 'dmg') {
+			if (options.effect === undefined) {
+				return;
+			}
+
+			const effect = actor.data.obsidian.effects.get(options.effect);
+			if (!effect) {
+				return;
+			}
+
+			Rolls.toChat(
+				actor,
+				...Rolls.damage(
+					actor, effect, Number(options.count), Number(options.scaling)));
+		}
+	},
+
 	d20Breakdown: function (r, crit, total, mods) {
 		const extraRolls = mods.filter(mod => mod.roll);
 		if (!extraRolls.length) {
@@ -413,105 +514,7 @@ export const Rolls = {
 			return;
 		}
 
-		const dataset = evt.currentTarget.dataset;
-		if (!dataset.roll) {
-			return;
-		}
-
-		if (!actor) {
-			if (!dataset.actor) {
-				return;
-			}
-
-			actor = game.actors.get(dataset.actor);
-		}
-
-		if (!actor) {
-			return;
-		}
-
-		const roll = dataset.roll;
-		if (roll === 'item') {
-			if (dataset.id === undefined) {
-				return;
-			}
-
-			const item = actor.getEmbeddedEntity('OwnedItem', dataset.id);
-			if (!item) {
-				return;
-			}
-
-			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, Number(dataset.scaling)));
-		} else if (roll === 'fx') {
-			if (dataset.uuid === undefined) {
-				return;
-			}
-
-			const effect = actor.data.obsidian.effects.get(dataset.uuid);
-			if (!effect) {
-				return;
-			}
-
-			Rolls.toChat(
-				actor,
-				...Rolls.effectRoll(actor, effect, {scaledAmount: Number(dataset.scaling)}));
-		} else if (roll === 'save') {
-			if (!dataset.save) {
-				return;
-			}
-
-			if (dataset.save === 'death') {
-				Rolls.toChat(actor, Rolls.death(actor));
-			} else {
-				Rolls.toChat(actor, Rolls.savingThrow(actor, dataset.save));
-			}
-		} else if (roll === 'abl') {
-			if (!dataset.abl) {
-				return;
-			}
-
-			if (dataset.abl === 'init') {
-				Rolls.toChat(actor, Rolls.initiative(actor));
-			} else {
-				Rolls.toChat(actor, Rolls.abilityCheck(actor, dataset.abl));
-			}
-		} else if (roll === 'skl') {
-			if (!dataset.skl) {
-				return;
-			}
-
-			const skill = getProperty(actor.data.flags.obsidian.skills, dataset.skl);
-			if (!skill) {
-				return;
-			}
-
-			Rolls.toChat(actor, Rolls.skillCheck(actor, skill, dataset.skl));
-		} else if (roll === 'tool') {
-			if (dataset.tool === undefined) {
-				return;
-			}
-
-			const tool = actor.data.flags.obsidian.skills.tools[Number(dataset.tool)];
-			if (!tool) {
-				return;
-			}
-
-			Rolls.toChat(actor, Rolls.skillCheck(actor, tool));
-		} else if (roll === 'dmg') {
-			if (dataset.effect === undefined) {
-				return;
-			}
-
-			const effect = actor.data.obsidian.effects.get(dataset.effect);
-			if (!effect) {
-				return;
-			}
-
-			Rolls.toChat(
-				actor,
-				...Rolls.damage(
-					actor, effect, Number(dataset.count), Number(dataset.scaling)));
-		}
+		Rolls.create(actor, evt.currentTarget.dataset);
 	},
 
 	hd: function (actor, rolls, conBonus) {
