@@ -31,7 +31,8 @@
 }
 
 .obsidian button,
-.obsidian-msg button {
+.obsidian-msg button,
+.dialog.obsidian-window button.dialog-button {
 	border-radius: 3px;
 	font-family: var(--font-condensed);
 	cursor: pointer;
@@ -72,13 +73,15 @@
 }
 
 .obsidian button.obsidian-btn-outline,
-.obsidian-msg button.obsidian-btn-outline {
+.obsidian-msg button.obsidian-btn-outline,
+.dialog.obsidian-window button.dialog-button {
 	background: transparent;
 	border: 1px solid var(--highlight);
 }
 
 .obsidian button.obsidian-btn-outline:hover,
-.obsidian-msg button.obsidian-btn-outline:hover {
+.obsidian-msg button.obsidian-btn-outline:hover,
+.dialog.obsidian-window button.dialog-button:hover {
 	background: var(--dark);
 	color: var(--text-bright);
 }
@@ -639,6 +642,10 @@ form.obsidian .rollable:hover {
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: bold;
+}
+
+.obsidian p.notes {
+	color: var(--text-subtle);
 }
 
 .obsidian input {

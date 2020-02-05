@@ -52,7 +52,11 @@ export const Migrate = {
 		data.flags.obsidian =
 			mergeObject(Schema.Actor, data.flags.obsidian || {}, {inplace: false});
 
-		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+		if (data.flags.obsidian.version === undefined) {
+			data.flags.obsidian.version = 0;
+		}
+
+		if (data.flags.obsidian.version < 2) {
 			Migrate.convertNotes(data, source);
 			Migrate.convertProficiencies(data, source);
 			Migrate.convertSpecial(data, source);
@@ -105,7 +109,7 @@ export const Migrate = {
 		} else if (data.type === 'weapon') {
 			data.flags.obsidian =
 				mergeObject(Schema.Weapon, data.flags.obsidian || {}, {inplace: false});
-		} else if (data.type === 'loot' || data.type === 'tool') {
+		} else if (data.type === 'tool') {
 			data.flags.obsidian = {};
 		}
 
@@ -113,7 +117,11 @@ export const Migrate = {
 			data.flags.obsidian.effects = [];
 		}
 
-		if ((data.flags.obsidian.version || 0) < Schema.VERSION) {
+		if (data.flags.obsidian.version === undefined) {
+			data.flags.obsidian.version = 0;
+		}
+
+		if (data.flags.obsidian.version < 2) {
 			Migrate.deOrphan(data);
 			if (data.type === 'backpack') {
 				Migrate.convertContainer(data);
@@ -135,7 +143,7 @@ export const Migrate = {
 			}
 		}
 
-		if (data.type === 'weapon'
+		if (data.type === 'weapon' && data.flags.obsidian.version < 2
 			&& (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length))
 		{
 			data.flags.obsidian.effects = [Effect.create()];
@@ -144,6 +152,7 @@ export const Migrate = {
 		}
 
 		if (data.type === 'consumable'
+			&& data.flags.obsidian.version < 2
 			&& !data.flags.obsidian.unlimited
 			&& (!data.flags.obsidian.effects
 				|| !data.flags.obsidian.effects.length
@@ -157,6 +166,13 @@ export const Migrate = {
 			const component = Effect.newConsume();
 			component.target = 'qty';
 			data.flags.obsidian.effects[0].components.push(component);
+		}
+
+		if (data.type === 'loot') {
+			data.type = 'consumable';
+			data.flags.obsidian =
+				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false});
+			data.flags.obsidian.subtype = 'gear';
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;

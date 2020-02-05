@@ -515,10 +515,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 		evt.stopPropagation();
 
 		const name = game.i18n.localize('OBSIDIAN.Item');
-		const dlg = await renderTemplate('templates/sidebar/entity-create.html', {
+		const dlg = await renderTemplate('modules/obsidian/html/dialogs/new-item.html', {
 			upper: name,
 			lower: name.toLocaleLowerCase(),
-			types: ['weapon', 'equipment', 'consumable', 'backpack']
+			types: ['weapon', 'equipment', 'consumable', 'loot', 'backpack']
 		});
 
 		new Dialog({
@@ -534,7 +534,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 				}
 			},
 			default: 'create'
-		}).render(true);
+		}, {classes: ['form', 'dialog', 'obsidian-window']}).render(true);
 	}
 
 	/**

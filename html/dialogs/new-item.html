@@ -1,0 +1,16 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	<div class="form-group">
+		<label>{{localize 'Name'}}</label>
+		<input type="text" name="name" placeholder="{{localize 'ENTITY.CreateNew'}} {{upper}}"
+		       style="margin-bottom: 4px;">
+	</div>
+	<div class="form-group">
+		<label>{{localize 'Type'}}</label>
+		<select name="type">
+			{{#each types}}
+				<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
+			{{/each}}
+		</select>
+		<p class="notes">{{localize 'ENTITY.TypeHint'}}</p>
+	</div>
+</form>
