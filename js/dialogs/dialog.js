@@ -49,7 +49,12 @@ export class ObsidianDialog extends BaseEntitySheet {
 			const val = parent.val();
 			html.find(`[data-selector-parent="${selector}"]`).each((i, el) => {
 				const jqel = $(el);
-				if (parent.hasClass('obsidian-hidden')) {
+				const isParentHidden =
+					(parent.attr('type') !== 'checkbox' && parent.hasClass('obsidian-hidden'))
+					|| (parent.attr('type') === 'checkbox'
+						&& parent.prev().hasClass('obsidian-hidden'));
+
+				if (isParentHidden) {
 					jqel.addClass('obsidian-hidden');
 					return;
 				}
