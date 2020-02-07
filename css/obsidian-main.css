@@ -1630,6 +1630,8 @@ select[multiple] option:nth-child(2n) {
 	width: 56px;
 	height: 56px;
 	margin-right: 10px;
+	border: 1px solid var(--mid);
+	border-radius: 5px;
 }
 
 .obsidian-form-row-img > div:last-child {
