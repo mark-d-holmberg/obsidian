@@ -550,13 +550,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
+		const orphanedSpells = [];
 		if (this._selectedEffect != null) {
 			const idx = effects.findIndex(effect => effect.uuid === this._selectedEffect);
 			if (idx < 0) {
 				return;
 			}
 
+			const effect = effects[idx];
 			effects.splice(idx, 1);
+			orphanedSpells.push(
+				...effect.components.filter(c => c.type === 'spells').flatMap(c => c.spells));
 		} else if (this._selectedComponent != null) {
 			const effectUUID =
 				this.element.find(`[data-uuid="${this._selectedComponent}"]`).parent().data('uuid');
@@ -576,8 +580,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			if (typeof prop === 'string') {
 				delete effect.components[idx][prop];
 			} else {
+				const component = effect.components[idx];
 				effect.components.splice(idx, 1);
+
+				if (component.type === 'spells') {
+					orphanedSpells.push(...component.spells);
+				}
 			}
+		}
+
+		if (orphanedSpells.length && this.actor) {
+			await this.actor.deleteManyEmbeddedEntities('OwnedItem', orphanedSpells);
 		}
 
 		this.item.update(formData);
