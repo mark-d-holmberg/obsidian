@@ -1,35 +1,44 @@
 <fieldset>
 	<legend>{{i18n-join 'OBSIDIAN.ItemType-' item.type}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-			       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
-			<select name="flags.obsidian.subtype">
-				{{#select item.flags.obsidian.subtype}}
-					{{#each equipTypes}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical'
-			                 checked=item.flags.obsidian.magical}}
+	<div class="obsidian-form-row-img">
+		<div>
+			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-				       name="data.weight" data-dtype="Number" placeholder="0" value="{{item.data.weight}}">
-				<span>{{localize 'OBSIDIAN.Weight'}}</span>
-			</label>
-			<label class="obsidian-inline obsidian-label-icon">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
-				       name="data.price" data-dtype="Number" placeholder="0" value="{{item.data.price}}">
-				<span>{{localize 'OBSIDIAN.Cost'}}</span>
-				<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
-			</label>
-			{{fancy-checkbox 'flags.obsidian.attunement' content='OBSIDIAN.RequiresAttunement'
-			                 checked=item.flags.obsidian.attunement}}
+		<div>
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+				<div class="obsidian-fullwidth obsidian-checkbox-row">
+					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
+					<select name="flags.obsidian.subtype">
+						{{#select item.flags.obsidian.subtype}}
+							{{#each equipTypes}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical'
+					                 checked=item.flags.obsidian.magical}}
+				</div>
+			</div>
+			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+				<div class="obsidian-fullwidth obsidian-checkbox-row">
+					<label class="obsidian-inline">
+						<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+						       name="data.weight" data-dtype="Number" placeholder="0"
+						       value="{{item.data.weight}}">
+						<span>{{localize 'OBSIDIAN.Weight'}}</span>
+					</label>
+					<label class="obsidian-inline obsidian-label-icon">
+						<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-lg"
+						       name="data.price" data-dtype="Number" placeholder="0"
+						       value="{{item.data.price}}">
+						<span>{{localize 'OBSIDIAN.Cost'}}</span>
+						<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
+					</label>
+					{{fancy-checkbox 'flags.obsidian.attunement' content='OBSIDIAN.RequiresAttunement'
+					                 checked=item.flags.obsidian.attunement}}
+				</div>
+			</div>
 		</div>
 	</div>
 </fieldset>

@@ -1,5 +1,10 @@
 <fieldset>
 	<legend>{{localize 'OBSIDIAN.Spell'}}</legend>
+	<div class="obsidian-form-row-img">
+	<div>
+		<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
+	</div>
+	<div>
   <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
     <div class="obsidian-fullwidth obsidian-checkbox-row">
       <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
@@ -46,6 +51,7 @@
 	           value="{{item.flags.obsidian.source.custom}}">
 	  </div>
 	</div>
+	</div></div>
 	{{else if (not item.flags.obsidian.isEmbedded)}}
 		<input type="hidden" name="flags.obsidian.source.type" value="custom">
 		<input type="hidden" name="flags.obsidian.source.custom" value="{{localize 'OBSIDIAN.Custom'}}">
@@ -71,6 +77,7 @@
              style="max-width: 220px;">
     </div>
   </div>
+	{{#if (or (not actor) item.flags.obsidian.isEmbedded)}}</div></div>{{/if}}
   <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
     <div class="obsidian-fullwidth">
       <label class="obsidian-inline">

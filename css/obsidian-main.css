@@ -1621,3 +1621,17 @@ select[multiple] option:nth-child(2n) {
 .obsidian-2-pane ul.obsidian-tab-bar {
 	margin-bottom: 5px;
 }
+
+.obsidian-form-row-img {
+	display: flex;
+}
+
+.obsidian-form-row-img > div:first-child img {
+	width: 56px;
+	height: 56px;
+	margin-right: 10px;
+}
+
+.obsidian-form-row-img > div:last-child {
+	flex: 1;
+}
