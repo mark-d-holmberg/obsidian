@@ -56,8 +56,19 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	};
 
 	let cls;
-	if (flags.source && flags.source.type === 'class') {
-		cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
+	if (flags.source) {
+		if (flags.source.type === 'class') {
+			cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
+		} if (flags.source.type === 'item') {
+			const parent = actorData.obsidian.itemsByID.get(flags.source.item);
+			if (parent
+				&& getProperty(parent, 'flags.obsidian.source')
+				&& parent.flags.obsidian.source.type === 'class')
+			{
+				cls = actorData.obsidian.classes.find(cls =>
+					cls._id === parent.flags.obsidian.source.class);
+			}
+		}
 	}
 
 	for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {

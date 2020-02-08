@@ -60,8 +60,10 @@
 		{{/each}}
 	</section>
 	{{/if}}
-	{{#if (and (defined message.flags.obsidian.dmgBtn) (or user.isGM (eq user.id author.id)))}}
+	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe))
+			      (or user.isGM (eq user.id author.id)))}}
 	<section class="obsidian-msg-btn-row">
+		{{#if (defined message.flags.obsidian.dmgBtn)}}
 		<button type="button" class="obsidian-btn-outline" data-roll="dmg"
 		        data-actor="{{message.speaker.actor}}" data-effect="{{message.flags.obsidian.dmgBtn}}"
 		        data-count="{{message.flags.obsidian.dmgCount}}"
@@ -69,6 +71,14 @@
 			<i class="fas fa-dice-d20"></i>
 			{{localize 'OBSIDIAN.Damage'}}
 		</button>
+		{{/if}}
+		{{#if (defined message.flags.obsidian.aoe)}}
+		<button type="button" class="obsidian-btn-outline obsidian-place-template"
+		        data-actor="{{message.speaker.actor}}" data-effect="{{message.flags.obsidian.aoe}}">
+			<i class="fas fa-bullseye"></i>
+			{{localize 'OBSIDIAN.AreaOfEffect'}}
+		</button>
+		{{/if}}
 	</section>
 	{{/if}}
 	{{#if message.flags.obsidian.damage}}

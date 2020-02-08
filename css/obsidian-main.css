@@ -1286,6 +1286,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	z-index: 999;
 	color: var(--text-regular);
 	font-family: var(--font);
+	word-break: break-all;
 }
 
 .obsidian-msg-tooltip .obsidian-positive {
@@ -1379,8 +1380,12 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-msg button.obsidian-btn-outline {
 	width: auto;
 	font-size: 12px;
-	padding: 6px 12px;
+	padding: 6px 8px;
 	line-height: 1;
+}
+
+.obsidian-msg button.obsidian-btn-outline i.fas {
+	margin-right: 3px;
 }
 
 .obsidian-msg .obsidian-vertical-bisect {

@@ -2,6 +2,7 @@ import {OBSIDIAN} from './rules.js';
 import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
+import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -503,6 +504,10 @@ export const Rolls = {
 		if (isFirst) {
 			results[0].details = item;
 			results[0].open = !attacks.length && !damage.length;
+
+			if (effect.components.some(c => c.type === 'target' && c.target === 'area')) {
+				results[0].aoe = effect.uuid;
+			}
 		}
 
 		return results.map(result => {
@@ -615,6 +620,40 @@ export const Rolls = {
 				scaledAmount: scaledAmount,
 				isFirst: i === 0
 			}));
+	},
+
+	placeTemplate: function (evt) {
+		const actor = game.actors.get(evt.currentTarget.dataset.actor);
+		if (!actor) {
+			return;
+		}
+
+		const effect = actor.data.obsidian.effects.get(evt.currentTarget.dataset.effect);
+		if (!effect) {
+			return;
+		}
+
+		const aoe = effect.components.find(c => c.type === 'target' && c.target === 'area');
+		if (!aoe) {
+			return;
+		}
+
+		const item = actor.items.find(item => item.data._id === effect.parentItem);
+		if (!item) {
+			return;
+		}
+
+		// Temporarily set the core data to the AoE so we can interface with
+		// AbilityTemplate.
+		if (!item.data.target) {
+			item.data.target = {};
+		}
+
+		item.data.target.type = aoe.area;
+		item.data.target.value = aoe.distance;
+
+		const template = AbilityTemplate.fromItem(item);
+		template.drawPreview();
 	},
 
 	recharge: function (item, effect, component) {

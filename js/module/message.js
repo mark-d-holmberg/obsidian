@@ -54,6 +54,7 @@ export function patchChatMessage () {
 			});
 
 			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));
+			html.find('.obsidian-place-template').click(Rolls.placeTemplate);
 			return html;
 		};
 	})();
