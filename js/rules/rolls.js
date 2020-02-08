@@ -807,7 +807,7 @@ export const Rolls = {
 	toChat: async function (actor, ...msgs) {
 		const chatData = {
 			speaker: ChatMessage.getSpeaker({actor: actor}),
-			user: game.user._id,
+			user: game.user.data._id,
 			rollMode: game.settings.get('core', 'rollMode'),
 			sound: CONFIG.sounds.dice,
 			content: 'N/A' // This can't be blank for some reason.

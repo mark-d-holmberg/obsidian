@@ -24,8 +24,9 @@ export function patchChatMessage () {
 				visible:
 					!this.data.whisper.length
 					|| game.user.isGM
-					|| (this.data.rollMode !== 'blindroll'
-					&& this.data.whisper.contains(game.user.data._id))
+					|| (!this.data.blind
+						&& (this.data.whisper.includes(game.user.data._id)
+						|| this.data.user === game.user.data._id))
 			};
 
 			await loadTemplates(['modules/obsidian/html/components/damage-format.html']);
