@@ -721,25 +721,25 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 			if (item && item.obsidian) {
 				if (item.type === 'spell') {
+					let component;
 					if (getProperty(item, 'flags.obsidian.parentComponent')) {
-						const component =
+						component =
 							this.actor.data.obsidian.components.get(
 								item.flags.obsidian.parentComponent);
+					}
 
+					if (component && component.method === 'item') {
 						const effect = this.actor.data.obsidian.effects.get(component.parentEffect);
 						evt.currentTarget.dataset.roll = 'fx';
 						evt.currentTarget.dataset.uuid = effect.uuid;
 						evt.currentTarget.dataset.spl = item._id;
 						this._onRoll(evt);
-						return;
-					} else if (item.data.level > 0) {
+					} else {
 						new ObsidianConsumeSlotDialog(this, item, item.flags.obsidian.effects[0])
 							.render(true);
-						return;
 					}
 				} else if (item.obsidian.actionable.length > 1) {
 					new ObsidianActionableDialog(this, item).render(true);
-					return;
 				} else if (item.obsidian.actionable.length) {
 					const action = item.obsidian.actionable[0];
 					evt.currentTarget.dataset.roll = 'fx';
@@ -751,8 +751,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 					}
 
 					this._onRoll(evt);
-					return;
 				}
+
+				return;
 			}
 		}
 
