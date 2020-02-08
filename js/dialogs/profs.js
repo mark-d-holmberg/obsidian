@@ -30,7 +30,7 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 	async _onAddProficiency (evt) {
 		evt.preventDefault();
 		const cat = $(evt.currentTarget).data('cat');
-		const profs = duplicate(this.parent.actor.data.data.traits[cat].value);
+		const profs = this._profsOfCat(cat);
 		profs.push('');
 		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
 		this.render(false);
@@ -45,10 +45,18 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 		const row = $(evt.currentTarget).closest('.obsidian-form-row');
 		const id = parseInt(row.data('item-id'));
 		const cat = row.data('cat');
-		const profs = duplicate(this.parent.actor.data.data.traits[cat].value);
+		const profs = this._profsOfCat(cat);
 		profs.splice(id, 1);
 		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
 		this.render(false);
+	}
+
+	/**
+	 * @private
+	 */
+	_profsOfCat (cat) {
+		const rows = this.element.find(`.obsidian-form-row[data-cat="${cat}"]`);
+		return Array.from(rows).map(row => $(row).find('input').val());
 	}
 
 	/**
