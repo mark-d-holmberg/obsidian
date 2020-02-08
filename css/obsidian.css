@@ -431,7 +431,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-list-box-row span {
 	font-weight: normal;
-	font-family: var(--font);
+	font-family: var(--font-condensed);
 	font-size: 13px;
 	line-height: 1.2;
 }

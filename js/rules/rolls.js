@@ -424,7 +424,8 @@ export const Rolls = {
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
 		const saves = effect.components.filter(c => c.type === 'save');
-		const targets = effect.components.filter(c => c.type === 'target');
+		const targets =
+			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
@@ -443,7 +444,7 @@ export const Rolls = {
 			multiDamage += targets[0].count;
 		}
 
-		if (!damage.length || attacks.length || multiDamage < 1) {
+		if (!damage.length || attacks.length || multiDamage < 1 || saves.length) {
 			results.push({
 				type: item.type === 'spell' ? 'spl' : 'fx',
 				title: name ? name : effect.name.length ? effect.name : item.name
