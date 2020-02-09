@@ -149,6 +149,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			} else if (component.type === 'scaling') {
 				effect.scalingComponent = component;
 			} else if (component.type === 'consume') {
+				if (component.calc === 'var') {
+					component.fixed = 1;
+				}
+
 				if (component.target === 'this-item' || component.target === 'this-effect') {
 					component.itemID = item._id;
 				}

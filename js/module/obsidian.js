@@ -698,20 +698,21 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		if (effect) {
 			const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
+			const consumer = effect.components.find(c => c.type === 'consume');
 			const scaling = item.obsidian.scaling.find(e =>
 				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
-			if (scaling) {
-				const consumer = effect.components.find(c => c.type === 'consume');
-				if (consumer && consumer.target === 'spell') {
+			if (consumer) {
+				if (consumer.target === 'spell') {
 					new ObsidianConsumeSlotDialog(this, item, effect).render(true);
-				} else {
+					return;
+				} else if (scaling || consumer.calc === 'var') {
 					new ObsidianResourceScalingDialog(this, item, effect, spell).render(true);
+					return;
 				}
-			} else {
-				this._onRollEffect(effect, null, spell);
 			}
 
+			this._onRollEffect(effect, null, spell);
 			return;
 		}
 
