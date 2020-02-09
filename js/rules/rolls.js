@@ -861,6 +861,10 @@ export const Rolls = {
 			}
 		}
 
+		if (chatData.rollMode === 'selfroll') {
+			chatData.whisper = [game.user.data._id];
+		}
+
 		for (const msg of msgs) {
 			await ChatMessage.create(mergeObject(duplicate(chatData), msg));
 		}

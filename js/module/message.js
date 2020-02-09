@@ -26,7 +26,7 @@ export function patchChatMessage () {
 					|| game.user.isGM
 					|| (!this.data.blind
 						&& (this.data.whisper.includes(game.user.data._id)
-						|| this.data.user === game.user.data._id))
+							|| this.data.user === game.user.data._id))
 			};
 
 			await loadTemplates(['modules/obsidian/html/components/damage-format.html']);
