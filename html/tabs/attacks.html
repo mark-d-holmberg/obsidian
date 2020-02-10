@@ -37,7 +37,11 @@
 							{{else}}
 							 data-roll="fx" data-uuid="{{parentEffect.uuid}}"
 							{{/if}}>
-							{{parentItem.name}}
+							{{#if (eq parentEffect.name '')}}
+								{{parentItem.name}}
+							{{else}}
+								{{parentEffect.name}}
+							{{/if}}
 						</div>
 						<div class="obsidian-table-sub-text">{{localize attackType}}</div>
 					</div>

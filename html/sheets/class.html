@@ -15,10 +15,10 @@
 					<span>{{localize 'OBSIDIAN.Level'}}</span>
 				</label>
 				<label class="obsidian-inline">
-					<select name="flags.obsidian.hd">
-						{{#select item.flags.obsidian.hd}}
+					<select name="data.hitDice">
+						{{#select item.data.hitDice}}
 							{{#each ObsidianRules.HD}}
-								<option value="{{this}}">d{{this}}</option>
+								<option value="d{{this}}">d{{this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>

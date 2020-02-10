@@ -9,10 +9,10 @@
 		{{#if (or (gt hd.max 0) (defined-and-not-empty hd.override))}}
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 			<div>
-				<select data-dtype="Number" {{#if hd.derived}}disabled{{/if}}>
+				<select {{#if hd.derived}}disabled{{/if}}>
 					{{#select die}}
 						{{#each ../ObsidianRules.HD}}
-							<option value="{{this}}">d{{this}}</option>
+							<option value="d{{this}}">d{{this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>

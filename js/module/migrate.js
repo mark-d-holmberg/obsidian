@@ -175,6 +175,10 @@ export const Migrate = {
 			data.flags.obsidian.subtype = 'gear';
 		}
 
+		if (data.type === 'class' && data.flags.obsidian.version < 4) {
+			Migrate.v3.convertHD(data);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
@@ -194,7 +198,10 @@ export const Migrate = {
 			}
 		}
 
-		data.flags.obsidian.hd = ObsidianHeaderDetailsDialog.determineHD(data.name);
+		if (!data.data.hitDice) {
+			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(data.name);
+		}
+
 		data.flags.obsidian.spellcasting =
 			ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
 	},
@@ -810,7 +817,7 @@ Migrate.core = {
 			component.damage = CONVERT.damage[dmg[1]];
 		}
 
-		const terms = Roll.prototype._getTerms(formula);
+		const terms = getTerms(formula);
 		const dice = terms.find(term => /^\d+d\d+$/.test(term));
 		const mod = terms.some(term => term === '@mod');
 
@@ -953,6 +960,12 @@ Migrate.v1 = {
 		}
 
 		return component;
+	}
+};
+
+Migrate.v3 = {
+	convertHD: function (data) {
+		data.data.hitDice = `d${data.flags.obsidian.hd}`;
 	}
 };
 
@@ -1191,4 +1204,13 @@ function getScalingEffect (data) {
 	}
 
 	return effect;
+}
+
+function getTerms (formula) {
+	const ops = Object.keys(OPERATORS).concat(['(', ')']);
+	const split = new RegExp(ops.map(term => `\\${term}`).join('|'), 'g');
+	const terms = formula.replace(split, term => `;${term};`).split(';');
+	return terms.map(term => term.trim()).filter(term => term !== '').filter((term, i, arr) => {
+		return !((term === '+') && (arr[i - 1] === '+'));
+	});
 }

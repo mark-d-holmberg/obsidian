@@ -44,10 +44,9 @@ export class ObsidianHDDialog extends ObsidianDialog {
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 		const existingHD = Object.keys(hd);
 		const availableHD =
-			OBSIDIAN.Rules.HD.filter(x => {
-				const s = String(x);
-				return !existingHD.includes(s)
-					|| (hd[s].max < 1 && OBSIDIAN.notDefinedOrEmpty(hd[s].override));
+			OBSIDIAN.Rules.HD.filter(die => {
+				return !existingHD.includes(die)
+					|| (hd[die].max < 1 && OBSIDIAN.notDefinedOrEmpty(hd[die].override));
 			});
 
 		if (availableHD.length > 0) {

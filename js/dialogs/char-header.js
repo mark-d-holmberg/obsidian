@@ -38,10 +38,10 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 	static determineHD (cls) {
 		if (cls === 'custom') {
-			return 6;
+			return 'd6';
 		}
 
-		return OBSIDIAN.Rules.CLASS_HIT_DICE[cls];
+		return `d${OBSIDIAN.Rules.CLASS_HIT_DICE[cls]}`;
 	}
 
 	static determineSpellcasting (cls) {

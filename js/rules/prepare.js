@@ -477,7 +477,7 @@ export const Prepare = {
 		const existingHD = actorData.flags.obsidian.attributes.hd;
 
 		for (const cls of actorData.obsidian.classes) {
-			const die = String(cls.flags.obsidian.hd);
+			const die = cls.data.hitDice;
 			let hd = classHD[die] || 0;
 			hd += cls.data.levels;
 			classHD[die] = hd;

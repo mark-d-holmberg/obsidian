@@ -31,7 +31,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 				.map(el => {
 					const n = Number(el.value);
 					totalDice += n;
-					return [n, Number(el.name.split('.')[1])];
+					return [n, Number(el.name.split('.')[1].substring(1))];
 				}).filter(([n, _]) => n > 0);
 
 		const conBonus = this.parent.actor.data.data.abilities.con.mod * totalDice;
@@ -46,7 +46,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 		}
 
 		rolls.forEach(([n, d]) => {
-			const obj = hd[`${d}`];
+			const obj = hd[`d${d}`];
 			obj.value -= n;
 
 			if (obj.value < 0) {
