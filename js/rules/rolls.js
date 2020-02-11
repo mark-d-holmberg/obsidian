@@ -694,8 +694,10 @@ export const Rolls = {
 			if (damageComponents) {
 				damage = damage.concat(duplicate(damageComponents).map(dmg => {
 					if (dmg.calc === 'fixed') {
-						dmg.bonus = Math.floor(dmg.bonus * scaledAmount);
-						dmg.mod = Math.floor(dmg.mod * scaledAmount);
+						const constant = dmg.rollParts.find(part => part.constant);
+						if (constant) {
+							constant.mod = Math.floor(constant.mod * scaledAmount);
+						}
 					} else {
 						dmg.ndice = Math.floor(dmg.ndice * scaledAmount);
 						dmg.derived.ncrit = Math.floor(dmg.derived.ncrit * scaledAmount);

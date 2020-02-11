@@ -21,6 +21,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 	const actorData = actor.data;
 	if (!actorData.flags
+		|| !actorData.obsidian
 		|| !actorData.flags.obsidian
 		|| (actorData.flags.obsidian.version || 0) < Schema.VERSION)
 	{

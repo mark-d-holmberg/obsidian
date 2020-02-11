@@ -1,17 +1,16 @@
-import {ObsidianDialog} from './dialog.js';
+import {ObsidianItems} from '../rules/items.js';
+import {ObsidianStandaloneDialog} from './standalone.js';
 
-export class ObsidianActionableDialog extends ObsidianDialog {
-	constructor (parent, item) {
-		super(parent);
+export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
+	constructor (parent, actor, item) {
+		super({parent: parent, actor: actor});
+		this._actor = actor;
 		this._item = item;
 	}
 
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.template = 'modules/obsidian/html/dialogs/actionable.html';
-		options.submitOnClose = false;
-		options.submitOnUnfocus = false;
-		options.closeOnSubmit = true;
 		options.width = 200;
 		return options;
 	}
@@ -23,7 +22,7 @@ export class ObsidianActionableDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(evt => {
-			this.parent._onRoll(evt);
+			ObsidianItems.roll(this._actor, evt.currentTarget.dataset);
 			this.close();
 		});
 	}

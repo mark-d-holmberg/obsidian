@@ -1,9 +1,11 @@
-import {ObsidianDialog} from './dialog.js';
 import {Rolls} from '../rules/rolls.js';
+import {ObsidianStandaloneDialog} from './standalone.js';
+import {ObsidianItems} from '../rules/items.js';
 
-export class ObsidianConsumeSlotDialog extends ObsidianDialog {
-	constructor (parent, item, effect) {
-		super(parent);
+export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
+	constructor (parent, actor, item, effect) {
+		super({parent: parent, actor: actor});
+		this._actor = actor;
 		this._item = item;
 		this._effect = effect;
 	}
@@ -42,20 +44,20 @@ export class ObsidianConsumeSlotDialog extends ObsidianDialog {
 		let level = Number(evt.currentTarget.dataset.level);
 
 		if (isPact) {
-			level = this.parent.actor.data.data.spells.pact.level;
+			level = this._actor.data.data.spells.pact.level;
 		} else if (isRitual && this._item.type === 'spell') {
 			level = this._item.data.level;
 		}
 
 		if (!isRitual) {
 			const prop = isPact ? 'data.spells.pact.uses' : `data.spells.spell${level}.value`;
-			this.parent.actor.update({[`${prop}`]: getProperty(this.parent.actor.data, prop) + 1});
+			this._actor.update({[`${prop}`]: getProperty(this._actor.data, prop) + 1});
 		}
 
 		if (this._item.type === 'spell') {
-			Rolls.create(this.parent.actor, {roll: 'item', id: this._item._id, scaling: level});
+			Rolls.create(this._actor, {roll: 'item', id: this._item._id, scaling: level});
 		} else {
-			this.parent._onRollEffect(this._effect, level);
+			ObsidianItems.rollEffect(this._actor, this._effect, level);
 		}
 
 		this.close();

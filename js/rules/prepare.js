@@ -114,10 +114,15 @@ export const Prepare = {
 	},
 
 	calculateDamage: function (actorData, dmg, data, cls) {
-		dmg.rollParts = [{mod: dmg.bonus || 0, name: game.i18n.localize('OBSIDIAN.Bonus')}];
-		Prepare.spellPart(dmg, data, cls);
+		dmg.rollParts = [{
+			mod: dmg.bonus || 0,
+			name: game.i18n.localize('OBSIDIAN.Bonus'),
+			constant: true
+		}];
 
+		Prepare.spellPart(dmg, data, cls);
 		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
+
 		if (bonuses.length) {
 			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}

@@ -101,10 +101,10 @@ export function registerHandlebarHelpers () {
 		});
 	});
 
-	Handlebars.registerHelper('format-recharge', function (actor, feature) {
+	Handlebars.registerHelper('format-recharge', function (actor, feature, options) {
 		if (getProperty(feature, 'obsidian.bestResource.recharge.time')) {
 			return new Handlebars.SafeString(
-				' &bull; '
+				(options.hash.bull ? ' &bull; ' : '')
 				+ game.i18n.localize(
 					`OBSIDIAN.Recharge-${feature.obsidian.bestResource.recharge.time}`));
 		}
@@ -120,7 +120,8 @@ export function registerHandlebarHelpers () {
 
 			if (resource && getProperty(resource, 'recharge.time')) {
 				return new Handlebars.SafeString(
-					' &bull; ' + game.i18n.localize(`OBSIDIAN.Recharge-${resource.recharge.time}`));
+					(options.hash.bull ? ' &bull; ' : '')
+					+ game.i18n.localize(`OBSIDIAN.Recharge-${resource.recharge.time}`));
 			}
 		}
 	});

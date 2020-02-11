@@ -1,9 +1,11 @@
-import {ObsidianDialog} from './dialog.js';
 import {Effect} from '../module/effect.js';
+import {ObsidianItems} from '../rules/items.js';
+import {ObsidianStandaloneDialog} from './standalone.js';
 
-export class ObsidianResourceScalingDialog extends ObsidianDialog {
-	constructor (parent, item, effect, spell) {
-		super(parent);
+export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
+	constructor (parent, actor, item, effect, spell) {
+		super({parent: parent, actor: actor});
+		this._actor = actor;
 		this._item = item;
 		this._effect = effect;
 		this._spell = spell;
@@ -14,9 +16,6 @@ export class ObsidianResourceScalingDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.template = 'modules/obsidian/html/dialogs/resource-scaling.html';
-		options.submitOnClose = false;
-		options.submitOnUnfocus = false;
-		options.closeOnSubmit = true;
 		options.width = 200;
 		return options;
 	}
@@ -28,7 +27,9 @@ export class ObsidianResourceScalingDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(() => {
-			this.parent._onRollEffect(this._effect, Number(html.find('input').val()), this._spell);
+			ObsidianItems.rollEffect(
+				this._actor, this._effect, Number(html.find('input').val()), this._spell);
+
 			this.close();
 		});
 	}
@@ -44,7 +45,7 @@ export class ObsidianResourceScalingDialog extends ObsidianDialog {
 				data.available = this._item.data.quantity;
 			} else {
 				const [, , resource] =
-					Effect.getLinkedResource(this.parent.actor.data, this._consumers[0]);
+					Effect.getLinkedResource(this._actor.data, this._consumers[0]);
 
 				if (resource) {
 					data.available = resource.remaining;

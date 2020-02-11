@@ -34,6 +34,7 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -329,31 +330,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', menu);
 		new ContextMenu(html, '.obsidian-inv-container', menu);
 		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', noDelMenu);
-	}
-
-	/**
-	 * @private
-	 */
-	_consumeQuantity (item, n = 1) {
-		if (item.parentEffect) {
-			const effect = this.actor.data.obsidian.effects.get(item.parentEffect);
-			if (!effect) {
-				return;
-			}
-
-			item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		}
-
-		if (!item) {
-			return;
-		}
-
-		const quantity = item.data.quantity - n;
-		if (quantity >= 0) {
-			this.actor.updateEmbeddedEntity(
-				'OwnedItem',
-				{_id: item._id, 'data.quantity': quantity});
-		}
 	}
 
 	/**
@@ -692,73 +668,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onRoll (evt) {
-		const uuid = evt.currentTarget.dataset.uuid;
-		const effect = this.actor.data.obsidian.effects.get(uuid);
-		const spell = this.actor.data.obsidian.itemsByID.get(evt.currentTarget.dataset.spl);
-
-		if (effect) {
-			const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-			const consumer = effect.components.find(c => c.type === 'consume');
-			const scaling = item.obsidian.scaling.find(e =>
-				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
-
-			if (consumer) {
-				if (consumer.target === 'spell') {
-					new ObsidianConsumeSlotDialog(this, item, effect).render(true);
-					return;
-				} else if (scaling || consumer.calc === 'var') {
-					new ObsidianResourceScalingDialog(this, item, effect, spell).render(true);
-					return;
-				}
-			}
-
-			this._onRollEffect(effect, null, spell);
-			return;
-		}
-
-		if (evt.currentTarget.dataset.roll === 'item') {
-			const item =
-				this.actor.getEmbeddedEntity('OwnedItem', evt.currentTarget.dataset.id);
-
-			if (item && item.obsidian) {
-				if (item.type === 'spell') {
-					let component;
-					if (getProperty(item, 'flags.obsidian.parentComponent')) {
-						component =
-							this.actor.data.obsidian.components.get(
-								item.flags.obsidian.parentComponent);
-					}
-
-					if (component && component.method === 'item') {
-						const effect = this.actor.data.obsidian.effects.get(component.parentEffect);
-						evt.currentTarget.dataset.roll = 'fx';
-						evt.currentTarget.dataset.uuid = effect.uuid;
-						evt.currentTarget.dataset.spl = item._id;
-						this._onRoll(evt);
-					} else {
-						new ObsidianConsumeSlotDialog(this, item, item.flags.obsidian.effects[0])
-							.render(true);
-					}
-				} else if (item.obsidian.actionable.length > 1) {
-					new ObsidianActionableDialog(this, item).render(true);
-				} else if (item.obsidian.actionable.length) {
-					const action = item.obsidian.actionable[0];
-					evt.currentTarget.dataset.roll = 'fx';
-					evt.currentTarget.dataset.uuid = action.uuid;
-
-					if (action.type === 'spell') {
-						evt.currentTarget.dataset.roll = 'item';
-						evt.currentTarget.dataset.id = action._id;
-					}
-
-					this._onRoll(evt);
-				}
-
-				return;
-			}
-		}
-
-		Rolls.fromClick(this.actor, evt);
+		ObsidianItems.roll(this.actor, evt.currentTarget.dataset);
 	}
 
 	/**
@@ -768,64 +678,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param spell {Object|undefined}
 	 */
 	_onRollEffect (effect, scaling, spell) {
-		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		const resources = effect.components.filter(component => component.type === 'resource');
-		const consumers = effect.components.filter(component => component.type === 'consume');
-		let scaledAmount = (scaling || 0) - 1;
-
-		if (spell) {
-			scaledAmount += spell.data.level;
-		}
-
-		if (resources.length) {
-			if (resources[0].remaining - (scaling || 1) < 1
-				&& item.type === 'consumable'
-				&& item.data.quantity > 0
-				&& item.data.uses.autoDestroy)
-			{
-				this._refreshConsumable(item, effect, resources[0], scaling || 1);
-			} else {
-				this._useResource(item, effect, resources[0], scaling || 1);
-			}
-		}
-
-		if (consumers.length) {
-			const consumer = consumers[0];
-			if (consumer.target === 'qty') {
-				this._consumeQuantity(consumer, scaling || consumer.fixed);
-			} else if (consumer.target !== 'spell') {
-				const [refItem, refEffect, resource] =
-					Effect.getLinkedResource(this.actor.data, consumers[0]);
-
-				if (refItem && refEffect && resource) {
-					this._useResource(
-						refItem, refEffect, resource, scaling || consumer.fixed);
-				}
-			}
-
-			if (scaling && consumer.target !== 'spell') {
-				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
-			}
-		}
-
-		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
-			const ammo = this.actor.getEmbeddedEntity('OwnedItem', item.flags.obsidian.ammo.id);
-			if (ammo) {
-				this._consumeQuantity(ammo);
-			}
-		}
-
-		if (scaledAmount < 0) {
-			scaledAmount = 0;
-		}
-
-		const options = {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount};
-		if (spell) {
-			options.roll = 'item';
-			options.id = spell._id;
-		}
-
-		Rolls.create(this.actor, options);
+		ObsidianItems.rollEffect(this.actor, effect, scaling, spell);
 	}
 
 	/**
@@ -1024,15 +877,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 			const offset = game.i18n.lang === 'ja' ? 29 : -30;
 			jqel.css('height', `${total - innerTotal + offset}px`);
 		});
-	}
-
-	_refreshConsumable (item, effect, resource, n) {
-		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
-			_id: item._id,
-			'data.quantity': item.data.quantity - 1,
-			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
-				resource.max - (n - resource.remaining)
-		}));
 	}
 
 	/**
@@ -1240,23 +1084,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_updateObject (event, formData) {
 		// TODO: Handle tokens.
 		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
-	}
-
-	/**
-	 * @private
-	 */
-	_useResource (item, effect, resource, n = 1) {
-		let remaining = resource.remaining - n;
-		if (remaining < 0) {
-			remaining = 0;
-		}
-
-		const update = {
-			_id: item._id,
-			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
-		};
-
-		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
 	}
 
 	/**
