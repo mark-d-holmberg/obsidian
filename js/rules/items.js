@@ -53,16 +53,16 @@ export const ObsidianItems = {
 			const scaling = item.obsidian.scaling.find(e =>
 				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
-			if (consumer) {
-				if (consumer.target === 'spell') {
-					new ObsidianConsumeSlotDialog(options.parent, actor, item, effect).render(true);
-					return;
-				} else if (scaling || consumer.calc === 'var') {
-					new ObsidianResourceScalingDialog(options.parent, actor, item, effect, spell)
-						.render(true);
+			if (consumer && consumer.target === 'spell') {
+				new ObsidianConsumeSlotDialog(options.parent, actor, item, effect).render(true);
+				return;
+			}
 
-					return;
-				}
+			if (scaling || (consumer && consumer.calc === 'var')) {
+				new ObsidianResourceScalingDialog(options.parent, actor, item, effect, spell)
+					.render(true);
+
+				return;
 			}
 
 			ObsidianItems.rollEffect(actor, effect, null, spell);
