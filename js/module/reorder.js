@@ -65,10 +65,10 @@ export const Reorder = {
 			data = JSON.parse(event.dataTransfer.getData('text/plain'));
 		} catch (ignored) {}
 
-		if (data && data.id) {
-			srcID = data.id;
-		} else if (idData) {
+		if (idData) {
 			srcID = event.dataTransfer.getData('item-id');
+		} else if (data && data.id) {
+			srcID = data.id;
 		}
 
 		let src;
@@ -76,7 +76,7 @@ export const Reorder = {
 			return false;
 		}
 
-		if (data) {
+		if (data && !idData) {
 			if (data.data && data.actorId !== undefined && data.actorId !== actor.id) {
 				// Transfer from another actor.
 				// TODO: Delete from old actor.
@@ -88,7 +88,7 @@ export const Reorder = {
 				} else {
 					return false;
 				}
-			} else if (!idData) {
+			} else {
 				src =
 					await actor.createEmbeddedEntity(
 						'OwnedItem', duplicate(game.items.get(data.id).data));
@@ -111,7 +111,7 @@ export const Reorder = {
 			return false;
 		}
 
-		if (!data) {
+		if (idData) {
 			if (srcID === destID) {
 				return false;
 			} else {

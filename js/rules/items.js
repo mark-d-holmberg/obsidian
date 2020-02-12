@@ -26,6 +26,24 @@ export const ObsidianItems = {
 		}
 	},
 
+	effectMacro: function (actor, effect) {
+		actor = game.actors.get(actor);
+		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
+			return;
+		}
+
+		ObsidianItems.roll(actor, {uuid: effect});
+	},
+
+	itemMacro: function (actor, item) {
+		actor = game.actors.get(actor);
+		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
+			return;
+		}
+
+		ObsidianItems.roll(actor, {roll: 'item', id: item});
+	},
+
 	refreshConsumable: function (actor, item, effect, resource, n) {
 		actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
 			_id: item._id,

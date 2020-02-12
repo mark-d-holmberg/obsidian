@@ -15,7 +15,9 @@
 		</div>
 		<div class="obsidian-tbody">
 			{{#each actor.obsidian.attacks}}
-				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem._id}}">
+				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem._id}}"
+				     draggable="true"
+				     {{#unless (eq parentItem.type 'spell')}}data-uuid="{{parentEffect.uuid}}"{{/unless}}>
 					<div class="obsidian-col-icon">
 						{{#if (eq parentItem.type 'spell')}}
 							<i class="obsidian-spell-school obsidian-spell-school-{{parentItem.data.school}}"></i>

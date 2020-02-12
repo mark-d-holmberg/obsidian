@@ -8,7 +8,7 @@
 	</h3>
 	<div class="obsidian-feature-list">
 		{{#each (filter actor.obsidian.feats 'flags.obsidian.source.type' group) as |feat|}}
-			<div class="obsidian-feature item" data-item-id="{{feat._id}}">
+			<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
 				<div class="obsidian-feature-header">
 					<div>
 						<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>

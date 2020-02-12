@@ -12,6 +12,8 @@ import {addSettingsHook} from './rules/spell-lists.js';
 import {checkVersion, Migrate} from './module/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
+import {ObsidianItems} from './rules/items.js';
+import {addMacroHook} from './module/macros.js';
 
 runPatches();
 
@@ -69,6 +71,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 
 addCompendiumContextMenuHook();
 addSettingsHook();
+addMacroHook();
 
 function enrichActorFlags (data) {
 	if (data.type === 'character') {
@@ -153,5 +156,5 @@ Array.prototype.last = function () {
 	return this[this.length - 1];
 };
 
-// For debugging.
+OBSIDIAN.Items = ObsidianItems;
 window.OBSIDIAN = OBSIDIAN;

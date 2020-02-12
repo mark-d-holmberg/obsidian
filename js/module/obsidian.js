@@ -1,16 +1,11 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {Reorder} from './reorder.js';
-import {Rolls} from '../rules/rolls.js';
-import {Effect} from './effect.js';
 import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
-import {ObsidianActionableDialog} from '../dialogs/actionable.js';
-import {ObsidianResourceScalingDialog} from '../dialogs/resource-scaling.js';
-import {ObsidianConsumeSlotDialog} from '../dialogs/consume-slot.js';
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -612,6 +607,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 				this.details.set(el, el.open);
 				el.open = false;
 			});
+		}
+
+		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
+		if (item) {
+			event.dataTransfer.setData('text/plain', JSON.stringify({
+				type: 'ObsidianItem',
+				actorID: this.actor.id,
+				data: item,
+				effectUUID: target.dataset.uuid
+			}));
 		}
 
 		return Reorder.dragStart(event);
