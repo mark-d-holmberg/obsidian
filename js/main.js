@@ -94,7 +94,7 @@ Hooks.on('createOwnedItem', (actor, id, data) => {
 });
 
 OBSIDIAN.notDefinedOrEmpty = function (obj) {
-	return obj === undefined || obj === '';
+	return obj == null || obj === '';
 };
 
 OBSIDIAN.uuid = function () {
