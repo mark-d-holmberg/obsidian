@@ -7,7 +7,7 @@
 	{{/if}}
 	{{#each (range min 9)}}
 	<div class="obsidian-spell-slot-row">
-		{{#with (lookup ../data.spells (add 'spell' this))}}
+		{{#with (lookup ../actor.data.spells (add 'spell' this))}}
 		<div{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}>({{remaining}} / {{max}})</div>
 		{{/with}}
 		<div class="rollable" data-level="{{this}}">
@@ -15,9 +15,9 @@
 		</div>
 	</div>
 	{{/each}}
-	{{#if data.spells.pact}}
+	{{#if actor.data.spells.pact}}
 	<div class="obsidian-spell-slot-row">
-	  {{#with data.spells.pact}}
+	  {{#with actor.data.spells.pact}}
 		<div{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}>({{remaining}} / {{slots}})</div>
 	  {{/with}}
 		<div class="rollable" data-level="pact">{{localize 'OBSIDIAN.Pact'}}</div>

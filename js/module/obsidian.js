@@ -678,16 +678,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param effect {Object}
-	 * @param scaling {Number}
-	 * @param spell {Object|undefined}
-	 */
-	_onRollEffect (effect, scaling, spell) {
-		ObsidianItems.rollEffect(this.actor, effect, scaling, spell);
-	}
-
-	/**
-	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onSlotClicked (evt) {

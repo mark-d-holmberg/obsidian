@@ -103,13 +103,16 @@ export const ObsidianItems = {
 						options.uuid = effect.uuid;
 						options.spl = item._id;
 						ObsidianItems.roll(actor, options);
-					} else {
+						return;
+					} else if (item.data.level > 0) {
 						new ObsidianConsumeSlotDialog(
 							options.parent, actor, item, item.flags.obsidian.effects[0])
 							.render(true);
+						return;
 					}
 				} else if (item.obsidian.actionable.length > 1) {
 					new ObsidianActionableDialog(options.parent, actor, item).render(true);
+					return;
 				} else if (item.obsidian.actionable.length) {
 					const action = item.obsidian.actionable[0];
 					options.roll = 'fx';
@@ -121,9 +124,8 @@ export const ObsidianItems = {
 					}
 
 					ObsidianItems.roll(actor, options);
+					return;
 				}
-
-				return;
 			}
 		}
 

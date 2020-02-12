@@ -4,14 +4,12 @@ export const Reorder = {
 	dragStart: function (event) {
 		const target = event.target;
 		if (target.dataset && target.dataset.reorderable === 'true') {
-			event.dataTransfer.setData(`item-id`, target.dataset.itemId);
+			event.dataTransfer.setData('item-id', target.dataset.itemId);
 			if (target.tagName === 'SUMMARY') {
 				event.dataTransfer.setData('source/container', null);
 			}
 		} else {
-			event.stopPropagation();
-			event.preventDefault();
-			return false;
+			event.dataTransfer.setData('macro-only', '');
 		}
 	},
 
@@ -55,6 +53,10 @@ export const Reorder = {
 
 	drop: async function (actor, event) {
 		event.preventDefault();
+		if (event.dataTransfer.types.some(type => type === 'macro-only')) {
+			return false;
+		}
+
 		const items = actor.data.items;
 		const idData = event.dataTransfer.types.find(type => type === 'item-id');
 
