@@ -165,8 +165,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
 		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
-		html.find('[data-uuid] .obsidian-feature-use').click(this._onUseClicked.bind(this));
-		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
+		html.find('[data-uuid] .obsidian-feature-use, [data-spell-level] .obsidian-feature-use')
+			.mousedown(this._onPipClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
@@ -660,6 +660,50 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
+	 * @param {JQuery.TriggeredEvent} evt
+	 */
+	_onPipClicked (evt) {
+		if (this._pipTimeout) {
+			clearTimeout(this._pipTimeout);
+		}
+
+		const target = $(evt.currentTarget);
+		const n = Number(target.data('n'));
+		const parent = target.parent();
+		let uses =
+			Math.max(
+				...Array.from(parent.children('.obsidian-feature-used'))
+					.map(el => Number(el.dataset.n)));
+
+		if (uses < 0) {
+			uses = 0;
+		}
+
+		if (n > uses) {
+			uses++;
+		} else {
+			uses--;
+		}
+
+		const pips = parent.children();
+		pips.removeClass('obsidian-feature-used');
+		pips.each((i, el) => {
+			if (Number(el.dataset.n) <= uses) {
+				el.classList.add('obsidian-feature-used');
+			}
+		});
+
+		this._pipTimeout = setTimeout(() => {
+			if (parent.data('spell-level')) {
+				this._onSlotClicked(parent.data('spell-level'), uses);
+			} else {
+				this._onUseClicked(parent.data('uuid'), uses);
+			}
+		}, 250);
+	}
+
+	/**
+	 * @private
 	 */
 	_onResize (event) {
 		super._onResize(event);
@@ -678,29 +722,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onSlotClicked (evt) {
-		const target = $(evt.currentTarget);
-		const spellLevel = target.parent().data('spell-level');
+	_onSlotClicked (spellLevel, uses) {
 		const spellKey = spellLevel === 'pact' ? 'pact' : `spell${spellLevel}`;
-		const n = Number(target.data('n'));
-		const spell = this.actor.data.data.spells[spellKey];
-
-		if (spell === undefined) {
-			return;
-		}
-
-		let uses = spell.value || spell.uses || 0;
-		if (n > uses) {
-			uses++;
-		} else {
-			uses--;
-		}
-
-		const update = {};
-		update[`data.spells.${spellKey}.${spellLevel === 'pact' ? 'uses' : 'value'}`] = uses;
-		this.actor.update(update);
+		const usesKey = spellLevel === 'pact' ? 'uses' : 'value';
+		this.actor.update({[`data.spells.${spellKey}.${usesKey}`]: uses});
 	}
 
 	/**
@@ -742,14 +768,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
 	 */
-	_onUseClicked (evt) {
-		const target = $(evt.currentTarget);
-		const parent = target.parent();
-		const uuid = parent.data('uuid');
-		const n = Number(target.data('n'));
-
+	_onUseClicked (uuid, used) {
 		const resource = this.actor.data.obsidian.components.get(uuid);
 		if (!resource) {
 			return;
@@ -766,14 +786,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const max = resource.max;
-		let used = max - resource.remaining;
-
-		if (n > used) {
-			used++;
-		} else {
-			used--;
-		}
-
 		const update = {
 			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
@@ -822,6 +834,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	async _render (force = false, options = {}) {
+		if (this._pipTimeout) {
+			clearTimeout(this._pipTimeout);
+		}
+
 		this._saveScrollPositions();
 		await super._render(force, options);
 		this._restoreScrollPositions();
