@@ -78,7 +78,7 @@ export const Reorder = {
 			return false;
 		}
 
-		if (data && data.data && data.actorID !== undefined && data.actorID !== actor.id) {
+		if (data && data.data && data.actorId !== undefined && data.actorId !== actor.id) {
 			// Transfer from another actor.
 			Reorder.transfer(actor, data);
 			return false;
@@ -224,7 +224,7 @@ export const Reorder = {
 				remaining = 0;
 			}
 
-			const otherActor = game.actors.get(transfer.actorID);
+			const otherActor = game.actors.get(transfer.actorId);
 			if (!otherActor) {
 				return;
 			}

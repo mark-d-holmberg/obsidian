@@ -3,7 +3,7 @@ export function addMacroHook () {
 }
 
 async function onHotbarDrop (bar, data, slot) {
-	if (data.type !== 'ObsidianItem' || !getProperty(data.data, 'flags.obsidian.effects')) {
+	if (data.type !== 'Item' || !getProperty(data.data, 'flags.obsidian.effects')) {
 		return;
 	}
 
@@ -11,7 +11,7 @@ async function onHotbarDrop (bar, data, slot) {
 	let name;
 
 	if (data.effectUUID) {
-		command = `OBSIDIAN.Items.effectMacro('${data.actorID}', '${data.effectUUID}')`;
+		command = `OBSIDIAN.Items.effectMacro('${data.actorId}', '${data.effectUUID}')`;
 		const effect =
 			data.data.flags.obsidian.effects.find(effect => effect.uuid === data.effectUUID);
 
@@ -19,7 +19,7 @@ async function onHotbarDrop (bar, data, slot) {
 			name = OBSIDIAN.notDefinedOrEmpty(effect.name) ? data.data.name : effect.name;
 		}
 	} else {
-		command = `OBSIDIAN.Items.itemMacro('${data.actorID}', '${data.data._id}')`;
+		command = `OBSIDIAN.Items.itemMacro('${data.actorId}', '${data.data._id}')`;
 		name = data.data.name;
 	}
 

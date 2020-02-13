@@ -617,8 +617,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
 		if (item) {
 			event.dataTransfer.setData('text/plain', JSON.stringify({
-				type: 'ObsidianItem',
-				actorID: this.actor.id,
+				type: 'Item',
+				actorId: this.actor.id,
 				data: item,
 				effectUUID: target.dataset.uuid
 			}));
