@@ -78,12 +78,14 @@ export const Reorder = {
 			return false;
 		}
 
+		if (data && data.data && data.actorID !== undefined && data.actorID !== actor.id) {
+			// Transfer from another actor.
+			Reorder.transfer(actor, data);
+			return false;
+		}
+
 		if (data && !idData) {
-			if (data.data && data.actorId !== undefined && data.actorId !== actor.id) {
-				// Transfer from another actor.
-				// TODO: Delete from old actor.
-				src = (await actor.createEmbeddedEntity('OwnedItem', data.data)).data;
-			} else if (data.pack) {
+			if (data.pack) {
 				const item = await actor.importItemFromCollection(data.pack, data.id);
 				if (item) {
 					src = item;
@@ -212,6 +214,62 @@ export const Reorder = {
 			update[`items.${dest.idx}.flags.obsidian.order`] = duplicate(toOrder);
 		} else if (destParent != null) {
 			update[`items.${destParent.idx}.flags.obsidian.order`] = duplicate(toOrder);
+		}
+	},
+
+	transfer: async function (actor, transfer) {
+		const doTransfer = qty => {
+			let remaining = transfer.data.data.quantity - qty;
+			if (remaining < 0) {
+				remaining = 0;
+			}
+
+			const otherActor = game.actors.get(transfer.actorID);
+			if (!otherActor) {
+				return;
+			}
+
+			if (remaining === 0 && transfer.data.type !== 'consumable') {
+				otherActor.deleteEmbeddedEntity('OwnedItem', transfer.data._id);
+			} else {
+				otherActor.updateEmbeddedEntity('OwnedItem', {
+					_id: transfer.data._id,
+					'data.quantity': remaining
+				});
+			}
+
+			transfer.data.data.quantity = qty;
+			if (actor.owner) {
+				actor.createEmbeddedEntity('OwnedItem', transfer.data);
+			} else {
+				game.socket.emit('module.obsidian', {
+					action: 'CREATE.OWNED',
+					actorID: actor.id,
+					data: transfer.data
+				});
+			}
+		};
+
+		if (transfer.data.data.quantity < 2) {
+			doTransfer(1);
+		} else {
+			const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer.html', {
+				max: transfer.data.data.quantity,
+				name: transfer.data.name
+			});
+
+			new Dialog({
+				title: game.i18n.localize('OBSIDIAN.Transfer'),
+				content: dlg,
+				default: 'transfer',
+				buttons: {
+					transfer: {
+						icon: '<i class="fas fa-share"></i>',
+						label: game.i18n.localize('OBSIDIAN.Transfer'),
+						callback: dlg => doTransfer(Number(dlg.find('input').val()))
+					}
+				}
+			}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 		}
 	},
 

@@ -14,6 +14,7 @@ import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
+import {addSocketListener} from './module/socket.js';
 
 runPatches();
 
@@ -50,6 +51,7 @@ Hooks.once('ready', function () {
 
 	checkVersion();
 	loadSpellData();
+	addSocketListener();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {

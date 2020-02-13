@@ -712,5 +712,6 @@
 	"OBSIDIAN.Attunement": "Attunement",
 	"OBSIDIAN.AttunementAbbr": "A",
 	"OBSIDIAN.AttunementPlural": "Attunements",
-	"OBSIDIAN.AreaOfEffect": "Area of Effect"
+	"OBSIDIAN.AreaOfEffect": "Area of Effect",
+	"OBSIDIAN.Transfer": "Transfer"
 }

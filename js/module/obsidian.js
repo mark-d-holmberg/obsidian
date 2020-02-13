@@ -85,7 +85,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		if (!game.user.isGM && this.actor.limited) {
+
+		// Allow drag and drop even when limited to allow transferring items.
+		this.form.ondragover = this._onDragOver.bind(this);
+		this.form.ondrop = this._onDrop.bind(this);
+
+		if (this.actor.limited) {
 			return;
 		}
 
