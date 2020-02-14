@@ -239,6 +239,10 @@ export const Reorder = {
 			}
 
 			transfer.data.data.quantity = qty;
+			if (getProperty(transfer.data, 'flags.obsidian.parent')) {
+				delete transfer.data.flags.obsidian.parent;
+			}
+
 			if (actor.owner) {
 				actor.createEmbeddedEntity('OwnedItem', transfer.data);
 			} else {

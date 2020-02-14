@@ -2,11 +2,12 @@
 	"name": "obsidian",
 	"title": "Obsidian Character Sheets",
 	"description": "Dark theme character sheets.",
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"minimumCoreVersion": "0.4.7",
 	"author": "Kim Mantas",
 	"systems": ["dnd5e"],
 	"esmodules": ["js/main.js"],
+	"socket": true,
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css",
 		"css/obsidian-effects.css"
@@ -21,7 +22,7 @@
 	}],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
-	"download": "https://bitbucket.org/Fyorl/obsidian/get/2.2.3.zip",
+	"download": "https://bitbucket.org/Fyorl/obsidian/get/2.2.4.zip",
 	"languages": [{
 		"lang": "en",
 		"name": "English",
