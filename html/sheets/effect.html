@@ -62,48 +62,72 @@
 			         target='data.description.value'}}
 		</div>
 	</section>
-	<ul class="obsidian-effects-tab-list">
-		<li class="obsidian-effects-tab obsidian-icon-effect obsidian-add-effect">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddEffect'}}</div>
+	<ul class="obsidian-effects-tray">
+		<li class="obsidian-effects-pill obsidian-icon-effect obsidian-add-effect">
+			<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddEffect'}}</div>
 		</li>
-		<li class="obsidian-effects-tab obsidian-icon-resource obsidian-add-resource obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddResource'}}</div>
+		<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
+			<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>
 		</li>
-		<li class="obsidian-effects-tab obsidian-icon-consume-resource obsidian-add-consume obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.ConsumesResource'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-melee obsidian-add-attack obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddAttack'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-damage obsidian-add-damage obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DamageHeal'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-save obsidian-add-save obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddSave'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-scaling obsidian-add-scaling obsidian-hidden">
-		  <div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddScaling'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-target obsidian-add-targets obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddTargets'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-provides-spells obsidian-add-spells obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.ProvidesSpells'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-roll-modifier obsidian-roll-modifier obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-effects-tab-rm obsidian-icon-roll-modifier obsidian-rm-roll-modifier obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-bonus obsidian-add-bonus obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddBonus'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-icon-filter obsidian-add-filter obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.AddFilter'}}</div>
-		</li>
-		<li class="obsidian-effects-tab obsidian-effects-tab-rm obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
-			<div class="obsidian-effects-tab-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>
-		</li>
+		<details class="obsidian-effects-cat" data-key="rolls">
+			<summary class="obsidian-hidden">
+				<div><h3>{{localize 'OBSIDIAN.Rolls'}}</h3></div>
+				<i class="fas fa-angle-down"></i>
+			</summary>
+			<li class="obsidian-effects-pill obsidian-icon-melee obsidian-add-attack">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddAttack'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-damage obsidian-add-damage">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DamageHeal'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-save obsidian-add-save">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddSave'}}</div>
+			</li>
+		</details>
+		<details class="obsidian-effects-cat" data-key="resources">
+			<summary class="obsidian-hidden">
+				<div><h3>{{localize 'OBSIDIAN.Resources'}}</h3></div>
+				<i class="fas fa-angle-down"></i>
+			</summary>
+			<li class="obsidian-effects-pill obsidian-icon-resource obsidian-add-resource">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddResource'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-consume-resource obsidian-add-consume">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ConsumesResource'}}</div>
+			</li>
+		</details>
+		<details class="obsidian-effects-cat" data-key="modifiers">
+			<summary class="obsidian-hidden">
+				<div><h3>{{localize 'OBSIDIAN.Modifiers'}}</h3></div>
+				<i class="fas fa-angle-down"></i>
+			</summary>
+			<li class="obsidian-effects-pill obsidian-icon-roll-modifier obsidian-roll-modifier">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-roll-modifier obsidian-rm-roll-modifier obsidian-hidden">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-bonus obsidian-add-bonus">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddBonus'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-filter obsidian-add-filter">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddFilter'}}</div>
+			</li>
+		</details>
+		<details class="obsidian-effects-cat" data-key="special">
+			<summary class="obsidian-hidden">
+				<div><h3>{{localize 'OBSIDIAN.Special'}}</h3></div>
+				<i class="fas fa-angle-down"></i>
+			</summary>
+			<li class="obsidian-effects-pill obsidian-icon-scaling obsidian-add-scaling">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddScaling'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-target obsidian-add-targets">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddTargets'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-provides-spells obsidian-add-spells">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ProvidesSpells'}}</div>
+			</li>
+		</details>
 	</ul>
 </form>

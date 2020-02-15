@@ -44,7 +44,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			name: 'Obsidian settings',
 			default: '',
 			type: String,
-			scope: 'user',
+			scope: 'client',
 			onChange: settings => this.settings = JSON.parse(settings)
 		});
 

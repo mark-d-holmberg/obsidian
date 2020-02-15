@@ -28,7 +28,7 @@
 	border-right: none;
 }
 
-.obsidian-effects-tab-list {
+.obsidian-effects-tray {
 	position: absolute;
 	list-style-type: none;
 	margin: 0;
@@ -37,31 +37,43 @@
 	left: 560px;
 }
 
-.obsidian-effects-tab {
+.obsidian-effects-tray {
+	left: 570px;
+	width: 184px;
+	height: 738px;
+	background: var(--bg);
+	border-radius: 3px;
+	padding: 10px;
+	border: 2px ridge var(--mid);
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
+}
+
+.obsidian-effects-pill {
 	background-color: var(--dark);
 	padding-left: 34px;
 	background-repeat: no-repeat;
 	background-size: 24px;
 	background-position: 8px;
-	width: 40px;
 	height: 34px;
 	overflow: hidden;
 	cursor: pointer;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
-	transition: width .2s ease-in-out;
 	margin-bottom: 5px;
+}
+
+.obsidian-effects-pill {
+	width: 160px;
+	border-radius: 3px;
 }
 
 .obsidian-effects-tab:hover {
 	width: 160px;
 }
 
-.obsidian-effects-tab.obsidian-effects-tab-rm {
+.obsidian-effects-pill.obsidian-effects-pill-rm {
 	background-color: var(--negative);
 }
 
-.obsidian-effects-tab-text {
+.obsidian-effects-pill-text {
 	text-transform: uppercase;
 	font-family: var(--font-condensed);
 	font-size: 12px;
@@ -189,4 +201,12 @@
 .obsidian-effect-row .obsidian-radio {
 	width: 18px;
 	cursor: pointer;
+}
+
+.obsidian-effects-cat summary {
+	padding: 10px 20px 10px 10px;
+}
+
+.obsidian-effects-cat summary {
+	margin-bottom: 5px;
 }

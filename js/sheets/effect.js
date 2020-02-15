@@ -4,19 +4,16 @@ import {OBSIDIAN} from '../rules/rules.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
-const effectSelectMenu =
-	'.obsidian-rm-effect, .obsidian-add-resource, .obsidian-add-attack, .obsidian-add-damage,'
-	+ ' .obsidian-add-save, .obsidian-add-scaling, .obsidian-add-targets, .obsidian-add-consume,'
-	+ ' .obsidian-add-spells, .obsidian-roll-modifier, .obsidian-add-filter, .obsidian-add-bonus';
-
 const subMenus = {rollMod: 'roll-modifier'};
 const componentMenus = {attack: ['rollMod'], damage: ['rollMod']};
+const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
 		this._addedClickHandler = false;
 		this._anywhereClickHandler = evt => this._onClickAnywhere(evt);
+		game.settings.register('obsidian', 'effects-categories', {default: [], scope: 'client'});
 	}
 
 	static get defaultOptions () {
@@ -65,13 +62,16 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-provide-spell-body').click(this._onEditSpell.bind(this));
 		html.find('.obsidian-add-filter-collection').click(this._onAddToFilterCollection.bind(this));
 		html.find('.obsidian-rm-filter-collection').click(this._onRemoveFromFilterCollection.bind(this));
+		html.find('summary').click(this._saveCategoryStates.bind(this));
 
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
 			this._addedClickHandler = true;
 		}
 
-		if (this._selectedEffect != null) {
+		if (this._selectedEffect == null) {
+			this._setTrayState(TRAY_STATES.START);
+		} else {
 			this._onEffectSelected(this._selectedEffect);
 		}
 	}
@@ -317,16 +317,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 */
 	_onClickAnywhere (evt) {
 		const closestEffect = evt.target.closest('.obsidian-effect');
-		const closestTab = evt.target.closest('.obsidian-effects-tab');
+		const closestPill = evt.target.closest('.obsidian-effects-pill');
+		const closestSummary = evt.target.closest('.obsidian-effects-cat > summary');
 
-		if (closestEffect == null
-			&& (closestTab == null || $(closestTab).hasClass('obsidian-rm-effect')))
+		if (closestEffect == null && closestSummary == null
+			&& (closestPill == null || closestPill.classList.contains('obsidian-rm-effect')))
 		{
 			this._selectedEffect = null;
 			this._selectedComponent = null;
 			this.element.find('.obsidian-effect, .obsidian-effect fieldset')
 				.removeClass('obsidian-selected');
-			this.element.find(effectSelectMenu).addClass('obsidian-hidden');
+			this._setTrayState(TRAY_STATES.START);
 		}
 	}
 
@@ -361,37 +362,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			.removeClass('obsidian-selected');
 
 		this.element.find(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
-		this.element.find(effectSelectMenu).addClass('obsidian-hidden');
-		this.element.find('.obsidian-rm-effect').removeClass('obsidian-hidden');
-
-		const component =
-			this.item.data.flags.obsidian.effects
-				.flatMap(e => e.components)
-				.find(c => c.uuid === uuid);
-
-		if (!component) {
-			return;
-		}
-
-		const menu = componentMenus[component.type];
-		if (!menu) {
-			return;
-		}
-
-		menu.forEach(prop => {
-			const css = subMenus[prop];
-			if (!css) {
-				return;
-			}
-
-			if (component[prop] === undefined) {
-				this.element.find(`.obsidian-${css}`).removeClass('obsidian-hidden');
-				this.element.find(`.obsidian-rm-${css}`).addClass('obsidian-hidden');
-			} else {
-				this.element.find(`.obsidian-${css}`).addClass('obsidian-hidden');
-				this.element.find(`.obsidian-rm-${css}`).removeClass('obsidian-hidden');
-			}
-		});
+		this._setTrayState(TRAY_STATES.COMPONENT);
 	}
 
 	/**
@@ -509,7 +480,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			.removeClass('obsidian-selected');
 
 		this.element.find(`[data-uuid="${uuid}"]`).addClass('obsidian-selected');
-		this.element.find(effectSelectMenu).removeClass('obsidian-hidden');
+		this._setTrayState(TRAY_STATES.EFFECT);
 	}
 
 	/**
@@ -617,6 +588,88 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		if (this.actor) {
 			this.actor.deleteEmbeddedEntity('OwnedItem', pill.dataset.id);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	async _render (force = false, options = {}) {
+		await super._render(force, options);
+		this._restoreCategoryStates();
+	}
+
+	/**
+	 * @private
+	 */
+	_saveCategoryStates (evt) {
+		const key = evt.currentTarget.closest('details').dataset.key;
+		const state = game.settings.get('obsidian', 'effects-categories');
+		const idx = state.indexOf(key);
+
+		if (idx < 0) {
+			state.push(key);
+		} else {
+			state.splice(idx, 1);
+		}
+
+		game.settings.set('obsidian', 'effects-categories', state);
+	}
+
+	/**
+	 * @private
+	 */
+	_restoreCategoryStates () {
+		this.element.find('details').prop('open', false);
+		const state = game.settings.get('obsidian', 'effects-categories');
+		state.forEach(key => this.element.find(`details[data-key="${key}"]`).prop('open', true));
+	}
+
+	/**
+	 * @private
+	 */
+	_setTrayState (newState) {
+		this.element.find('details').prop('open', true);
+		this.element.find('summary').addClass('obsidian-hidden');
+		this.element.find('.obsidian-effects-pill').addClass('obsidian-hidden');
+		this.element.find('.obsidian-add-effect').removeClass('obsidian-hidden');
+
+		if (newState === TRAY_STATES.EFFECT) {
+			this.element.find('summary').removeClass('obsidian-hidden');
+			this.element.find('.obsidian-effects-pill:not(.obsidian-effects-pill-rm)')
+				.removeClass('obsidian-hidden');
+			this.element.find('.obsidian-rm-effect').removeClass('obsidian-hidden');
+			this._restoreCategoryStates();
+		} else if (newState === TRAY_STATES.COMPONENT) {
+			this.element.find('.obsidian-rm-effect').removeClass('obsidian-hidden');
+			const component =
+				this.item.data.flags.obsidian.effects
+					.flatMap(e => e.components)
+					.find(c => c.uuid === this._selectedComponent);
+
+			if (!component) {
+				return;
+			}
+
+			const menu = componentMenus[component.type];
+			if (!menu) {
+				return;
+			}
+
+			menu.forEach(prop => {
+				const css = subMenus[prop];
+				if (!css) {
+					return;
+				}
+
+				if (component[prop] === undefined) {
+					this.element.find(`.obsidian-${css}`).removeClass('obsidian-hidden');
+					this.element.find(`.obsidian-rm-${css}`).addClass('obsidian-hidden');
+				} else {
+					this.element.find(`.obsidian-${css}`).addClass('obsidian-hidden');
+					this.element.find(`.obsidian-rm-${css}`).removeClass('obsidian-hidden');
+				}
+			});
 		}
 	}
 
