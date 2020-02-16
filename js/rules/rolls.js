@@ -3,6 +3,7 @@ import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
 import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
+import {bonusToParts, highestProficiency} from './bonuses.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -347,10 +348,16 @@ export const Rolls = {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
 		const advantageComponents = [flags.saves.roll, flags.attributes.death.roll];
-		const mods = [{
+		let mods = [{
 			mod: (flags.saves.bonus || 0) + (flags.attributes.death.bonus || 0),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
+
+		const bonuses = actor.data.obsidian.filters.bonuses(Filters.appliesTo.deathSaves);
+		if (bonuses.length) {
+			mods.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
+			mods = highestProficiency(mods);
+		}
 
 		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.deathSaves);
 		const rollMod = Effect.combineRollMods(rollMods);
