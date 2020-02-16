@@ -1,7 +1,9 @@
 export function filterToggleable (actorData) {
 	const toggleable = [];
 	for (const item of actorData.items) {
-		if (!getProperty(item, 'flags.obsidian.effects.length')) {
+		if (!getProperty(item, 'flags.obsidian.effects.length')
+			|| (getProperty(item, 'flags.obsidian.attunement') && !item.data.attuned))
+		{
 			continue;
 		}
 
