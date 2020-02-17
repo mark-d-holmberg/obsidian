@@ -84,7 +84,12 @@ export const Parse = {
 			}
 
 			if (isNaN(Number(fst)) && !Array.isArray(fst)) {
-				return Parse.fns[fst](...terms.slice(1).map(arg => evaluate(arg)));
+				const fn = Parse.fns[fst];
+				if (fn) {
+					return fn(...terms.slice(1).map(arg => evaluate(arg)));
+				} else {
+					return 0;
+				}
 			}
 
 			let total = 0;
