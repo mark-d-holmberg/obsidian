@@ -402,8 +402,6 @@ export const Migrate = {
 		const spellEffect = Effect.create();
 		const scalingEffect = Effect.create();
 		const resourceEffect = Effect.create();
-
-		spellEffect.name = game.i18n.localize('OBSIDIAN.Spell');
 		scalingEffect.name = game.i18n.localize('OBSIDIAN.Scaling');
 
 		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
@@ -1170,7 +1168,6 @@ function getPrimaryEffect (data) {
 function getSpellEffect (data) {
 	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
 		data.flags.obsidian.effects = [Effect.create()];
-		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.Spell');
 	}
 
 	let effect =
@@ -1179,7 +1176,6 @@ function getSpellEffect (data) {
 
 	if (!effect) {
 		effect = Effect.create();
-		effect.name = game.i18n.localize('OBSIDIAN.Spell');
 		data.flags.obsidian.effects.push(effect);
 	}
 
