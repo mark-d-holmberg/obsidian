@@ -158,6 +158,15 @@ export const Effect = {
 		};
 	},
 
+	newDuration: function () {
+		return {
+			type: 'duration',
+			uuid: OBSIDIAN.uuid(),
+			duration: 1,
+			ref: ''
+		}
+	},
+
 	determineMulti: function (filter) {
 		let prop = 'filter';
 		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;

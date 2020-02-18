@@ -7,6 +7,19 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 const subMenus = {rollMod: 'roll-modifier'};
 const componentMenus = {attack: ['rollMod'], damage: ['rollMod']};
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
+const COMPONENT_MAP = {
+	'add-resource': Effect.newResource,
+	'add-attack': Effect.newAttack,
+	'add-damage': Effect.newDamage,
+	'add-save': Effect.newSave,
+	'add-scaling': Effect.newScaling,
+	'add-targets': Effect.newTarget,
+	'add-consume': Effect.newConsume,
+	'add-spells': Effect.newSpells,
+	'add-bonus': Effect.newBonus,
+	'add-filter': Effect.newFilter,
+	'add-duration': Effect.newDuration
+};
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
@@ -31,20 +44,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
+		Object.entries(COMPONENT_MAP).forEach(([cls, fn]) =>
+			html.find(`.obsidian-${cls}`).click(this._onAddComponent.bind(this, fn)));
+
 		html.find('.obsidian-add-effect').click(this._onAddEffect.bind(this));
-		html.find('.obsidian-add-resource')
-			.click(this._onAddComponent.bind(this, Effect.newResource));
-		html.find('.obsidian-add-attack').click(this._onAddComponent.bind(this, Effect.newAttack));
-		html.find('.obsidian-add-damage').click(this._onAddComponent.bind(this, Effect.newDamage));
-		html.find('.obsidian-add-save').click(this._onAddComponent.bind(this, Effect.newSave));
-		html.find('.obsidian-add-scaling').click(this._onAddComponent.bind(this, Effect.newScaling));
-		html.find('.obsidian-add-targets').click(this._onAddComponent.bind(this, Effect.newTarget));
-		html.find('.obsidian-add-consume').click(this._onAddComponent.bind(this, Effect.newConsume));
-		html.find('.obsidian-add-spells').click(this._onAddComponent.bind(this, Effect.newSpells));
 		html.find('.obsidian-roll-modifier')
 			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
-		html.find('.obsidian-add-bonus').click(this._onAddComponent.bind(this, Effect.newBonus));
-		html.find('.obsidian-add-filter').click(this._onAddComponent.bind(this, Effect.newFilter));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
 		html.find('.obsidian-effect').click(evt =>

@@ -233,6 +233,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/bonus.svg');
 }
 
+.obsidian-icon-duration {
+	background-image: url('../img/duration.svg');
+}
+
 .obsidian-icon-obsidian {
 	background-image: url('../img/obsidian.png');
 }

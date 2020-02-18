@@ -717,5 +717,7 @@
 	"OBSIDIAN.Rolls": "Rolls",
 	"OBSIDIAN.Resources": "Resources",
 	"OBSIDIAN.Modifiers": "Modifiers",
-	"OBSIDIAN.Special": "Special"
+	"OBSIDIAN.Special": "Special",
+	"OBSIDIAN.CombatDuration": "Combat Duration",
+	"OBSIDIAN.Rounds": "Rounds"
 }

@@ -210,3 +210,9 @@
 .obsidian-effects-cat summary {
 	margin-bottom: 5px;
 }
+
+#obsidian-duration-bar {
+	position: fixed;
+	left: 256px;
+	bottom: 74px;
+}

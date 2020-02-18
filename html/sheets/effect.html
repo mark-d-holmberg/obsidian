@@ -52,6 +52,9 @@
 					{{else if (eq type 'bonus')}}
 						{{> modules/obsidian/html/components/effects/bonus.html
 								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'duration')}}
+						{{> modules/obsidian/html/components/effects/duration.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{/if}}
 				{{/each}}
 			</div>
@@ -127,6 +130,9 @@
 			</li>
 			<li class="obsidian-effects-pill obsidian-icon-provides-spells obsidian-add-spells">
 				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ProvidesSpells'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-duration obsidian-add-duration">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.CombatDuration'}}</div>
 			</li>
 		</details>
 	</ul>

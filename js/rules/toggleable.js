@@ -1,9 +1,7 @@
 export function filterToggleable (actorData) {
 	const toggleable = [];
 	for (const item of actorData.items) {
-		if (!getProperty(item, 'flags.obsidian.effects.length')
-			|| (getProperty(item, 'flags.obsidian.attunement') && !item.data.attuned))
-		{
+		if (!getProperty(item, 'flags.obsidian.effects.length')) {
 			continue;
 		}
 
@@ -14,6 +12,13 @@ export function filterToggleable (actorData) {
 			effect.mods = [];
 			effect.bonuses = [];
 			effect.filters = [];
+
+			if (effect.durationComponent
+				|| (flags.attunement && !item.data.attuned)
+				|| (flags.equippable && !item.data.equipped))
+			{
+				continue;
+			}
 
 			for (const component of effect.components) {
 				component.parentEffect = effect.uuid;

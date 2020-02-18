@@ -21,7 +21,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/roll-mod.html',
 		'modules/obsidian/html/components/effects/roll-mod-body.html',
 		'modules/obsidian/html/components/effects/filter.html',
-		'modules/obsidian/html/components/effects/bonus.html'
+		'modules/obsidian/html/components/effects/bonus.html',
+		'modules/obsidian/html/components/effects/duration.html'
 	]);
 };
 
