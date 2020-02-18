@@ -175,7 +175,7 @@ export const Migrate = {
 			data.flags.obsidian.subtype = 'gear';
 		}
 
-		if (data.type === 'class' && data.flags.obsidian.version < 4) {
+		if (data.type === 'class' && data.flags.obsidian.version < 4 && source !== 'core') {
 			Migrate.v3.convertHD(data);
 		}
 
