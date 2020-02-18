@@ -593,6 +593,11 @@ export const Prepare = {
 				rollMod = Effect.combineRollMods(rollMods);
 			}
 
+			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
+			skill.proficiency = skill.rollParts.find(part => part.proficiency);
+
 			const passiveBonuses =
 				actorData.obsidian.filters.bonuses(Filters.appliesTo.passiveScores(key));
 
@@ -602,11 +607,6 @@ export const Prepare = {
 						acc + bonusToParts(actorData, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 			}
-
-			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
-			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
-			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
-			skill.proficiency = skill.rollParts.find(part => part.proficiency);
 		}
 	},
 
