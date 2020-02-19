@@ -9,6 +9,8 @@ function handleMsg (payload) {
 
 	if (payload.action === 'CREATE.OWNED') {
 		createOwned(payload);
+	} else if (payload.action === 'SET.WORLD') {
+		setWorld(payload);
 	}
 }
 
@@ -19,4 +21,8 @@ function createOwned (payload) {
 	}
 
 	actor.createEmbeddedEntity('OwnedItem', payload.data);
+}
+
+function setWorld (payload) {
+	game.settings.set('obsidian', payload.key, payload.value);
 }

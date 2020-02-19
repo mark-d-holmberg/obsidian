@@ -215,4 +215,36 @@
 	position: fixed;
 	left: 256px;
 	bottom: 74px;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.obsidian-duration {
+	width: 40px;
+	height: 40px;
+	position: relative;
+	cursor: pointer;
+}
+
+.obsidian-duration > img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.obsidian-duration-remaining {
+	position: absolute;
+	right: -5px;
+	top: -5px;
+	width: 16px;
+	height: 16px;
+	background-color: var(--highlight);
+	color: var(--text-regular);
+	font-family: var(--font);
+	font-weight: bold;
+	border-radius: 50%;
+	font-size: 11px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

@@ -15,7 +15,7 @@ import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
-import {displayDurations} from './module/duration.js';
+import {initDurations} from './module/duration.js';
 
 runPatches();
 
@@ -53,7 +53,7 @@ Hooks.once('ready', function () {
 	checkVersion();
 	loadSpellData();
 	addSocketListener();
-	displayDurations();
+	initDurations();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {
