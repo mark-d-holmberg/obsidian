@@ -8,6 +8,28 @@ export function initDurations () {
 	renderDurations();
 }
 
+function onEnter (evt) {
+	const rect = evt.currentTarget.getBoundingClientRect();
+	let tooltip = evt.currentTarget._tt;
+
+	if (!tooltip) {
+		tooltip = $(evt.currentTarget).find('.obsidian-msg-tooltip').clone().appendTo($('body'));
+		evt.currentTarget._tt = tooltip;
+	}
+
+	tooltip.css({
+		display: 'block',
+		left: `${rect.left}px`,
+		top: `${rect.top - tooltip.height() - 12}px`
+	});
+}
+
+function onLeave (evt) {
+	if (evt.currentTarget._tt) {
+		evt.currentTarget._tt.css('display', 'none');
+	}
+}
+
 function renderDurations () {
 	let durationBar = $('#obsidian-duration-bar');
 	if (!durationBar.length) {
@@ -16,8 +38,15 @@ function renderDurations () {
 		$(document.body).append(durationBar);
 	}
 
+	durationBar.find('.obsidian-duration').each((i, el) => {
+		if (el._tt) {
+			el._tt.remove();
+		}
+	});
+
 	durationBar.empty();
 	const durations = game.settings.get('obsidian', 'durations');
+
 	for (const duration of durations) {
 		const actor = game.actors.get(duration.actor);
 		if (!actor || !getProperty(actor, 'data.obsidian.effects')) {
@@ -47,7 +76,10 @@ function renderDurations () {
 			     data-effect="${effect.uuid}">
 				<img src="${item.img}" alt="${label}">
 				<div class="obsidian-duration-remaining">${remaining}</div>
+				<div class="obsidian-msg-tooltip">${label}</div>
 			</div>
 		`));
 	}
+
+	durationBar.find('.obsidian-duration').hover(onEnter, onLeave);
 }
