@@ -5,6 +5,7 @@ export function initDurations () {
 		onChange: renderDurations
 	});
 
+	Hooks.on('updateCombat', advanceDurations);
 	renderDurations();
 }
 
@@ -35,6 +36,24 @@ export function updateDurations (durations) {
 			value: durations
 		});
 	}
+}
+
+function advanceDurations (combat) {
+	if (!combat.combatant.actor) {
+		return;
+	}
+
+	const actor = combat.combatant.actor.data._id;
+	const durations = game.settings.get('obsidian', 'durations');
+	durations
+		.filter(duration => duration.actor === actor)
+		.forEach(duration => duration.remaining--);
+
+	const expired = durations.filter(duration => duration.remaining < 1);
+
+	// Here is where we do something special with the expired durations.
+
+	updateDurations(durations.filter(duration => !expired.includes(duration)));
 }
 
 function onDelete (html) {
