@@ -167,32 +167,6 @@ export const Effect = {
 		}
 	},
 
-	createDuration: function (actor, effect) {
-		const durations = game.settings.get('obsidian', 'durations');
-		const existing = durations.find(duration => duration.effect === effect.uuid);
-
-		if (existing) {
-			existing.elapsed = 0;
-		} else {
-			durations.push({
-				actor: actor.data._id,
-				effect: effect.uuid,
-				elapsed: 0,
-				max: effect.durationComponent.duration
-			});
-		}
-
-		if (game.user.isGM) {
-			game.settings.set('obsidian', 'durations', durations);
-		} else {
-			game.socket.emit('module.obsidian', {
-				action: 'SET.WORLD',
-				key: 'durations',
-				value: durations
-			});
-		}
-	},
-
 	determineMulti: function (filter) {
 		let prop = 'filter';
 		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;

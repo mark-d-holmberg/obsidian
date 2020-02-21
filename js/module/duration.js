@@ -8,7 +8,85 @@ export function initDurations () {
 	renderDurations();
 }
 
+export function createDuration (actor, effect) {
+	const durations = game.settings.get('obsidian', 'durations');
+	const existing = durations.find(duration => duration.effect === effect.uuid);
+
+	if (existing) {
+		existing.remaining = effect.durationComponent.duration;
+	} else {
+		durations.push({
+			actor: actor.data._id,
+			effect: effect.uuid,
+			remaining: effect.durationComponent.duration
+		});
+	}
+
+	updateDurations(durations);
+}
+
+export function updateDurations (durations) {
+	if (game.user.isGM) {
+		game.settings.set('obsidian', 'durations', durations);
+	} else {
+		game.socket.emit('module.obsidian', {
+			action: 'SET.WORLD',
+			key: 'durations',
+			value: durations
+		});
+	}
+}
+
+function onDelete (html) {
+	const durations = game.settings.get('obsidian', 'durations');
+	const uuid = html.data('effect');
+	const idx = durations.findIndex(duration => duration.effect === uuid);
+
+	if (idx < 0) {
+		return;
+	}
+
+	durations.splice(idx, 1);
+	updateDurations(durations);
+}
+
+async function onEdit (html) {
+	const durations = game.settings.get('obsidian', 'durations');
+	const duration = durations.find(duration => duration.effect === html.data('effect'));
+
+	if (!duration) {
+		return;
+	}
+
+	const doEdit = remaining => {
+		duration.remaining = remaining;
+		updateDurations(durations);
+	};
+
+	const dlg = await renderTemplate('modules/obsidian/html/dialogs/duration.html', {
+		name: html.find('img').attr('alt'),
+		remaining: duration.remaining
+	});
+
+	new Dialog({
+		title: game.i18n.localize('OBSIDIAN.Duration'),
+		content: dlg,
+		default: 'update',
+		buttons: {
+			update: {
+				icon: '<i class="fas fa-save"></i>',
+				label: game.i18n.localize('OBSIDIAN.Update'),
+				callback: dlg => doEdit(Number(dlg.find('input').val()))
+			}
+		}
+	}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
+}
+
 function onEnter (evt) {
+	if (evt.currentTarget.classList.contains('context')) {
+		return;
+	}
+
 	const rect = evt.currentTarget.getBoundingClientRect();
 	let tooltip = evt.currentTarget._tt;
 
@@ -36,6 +114,16 @@ function renderDurations () {
 		durationBar = $('<div></div>');
 		durationBar.attr('id', 'obsidian-duration-bar');
 		$(document.body).append(durationBar);
+
+		new ContextMenu(durationBar, '.obsidian-duration', [{
+			name: '',
+			icon: '<i class="fas fa-trash"></i>',
+			callback: onDelete
+		}, {
+			name: '',
+			icon: '<i class="fas fa-edit"></i>',
+			callback: onEdit
+		}]);
 	}
 
 	durationBar.find('.obsidian-duration').each((i, el) => {
@@ -69,13 +157,11 @@ function renderDurations () {
 		}
 
 		const label = referencing.name.length ? referencing.name : item.name;
-		const remaining = Math.clamped(duration.max - duration.elapsed, 0, duration.max);
-
 		durationBar.append($(`
 			<div class="obsidian-duration" data-actor="${duration.actor}"
 			     data-effect="${effect.uuid}">
 				<img src="${item.img}" alt="${label}">
-				<div class="obsidian-duration-remaining">${remaining}</div>
+				<div class="obsidian-duration-remaining">${duration.remaining}</div>
 				<div class="obsidian-msg-tooltip">${label}</div>
 			</div>
 		`));

@@ -232,6 +232,41 @@
 	border-radius: 50%;
 }
 
+.obsidian-duration #context-menu {
+	width: 50px;
+	min-width: unset;
+	font-size: 12px;
+	color: var(--text-regular);
+	background: var(--bg);
+	border: none;
+	left: -5px;
+}
+
+.obsidian-duration #context-menu.expand-down {
+	top: unset;
+	bottom: calc(100% + 2px);
+}
+
+.obsidian-duration #context-menu .context-items {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.obsidian-duration #context-menu .context-item {
+	padding: 0 5px;
+	line-height: 24px;
+	border-right: 1px solid var(--dark);
+}
+
+.obsidian-duration #context-menu .context-item:last-child {
+	border: none;
+}
+
+.obsidian-duration #context-menu .context-item > i {
+	margin: 0;
+}
+
 .obsidian-duration-remaining {
 	position: absolute;
 	right: -5px;

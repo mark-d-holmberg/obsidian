@@ -4,6 +4,7 @@ import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
 import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
+import {createDuration} from '../module/duration.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -439,7 +440,7 @@ export const Rolls = {
 		const results = [];
 
 		if (duration) {
-			Effect.createDuration(actor, duration);
+			createDuration(actor, duration);
 		}
 
 		let scaledTargets = 0;
