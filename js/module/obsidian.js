@@ -763,11 +763,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		}
 
-		if (this.entity.isToken) {
-			this.entity.token.data.actorData =
-				mergeObject(this.actor.data, this.entity.token.data.actorData, {inplace: false});
-		}
-
 		return super._onSubmit(event, {preventClose: preventClose});
 	}
 

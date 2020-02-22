@@ -262,7 +262,7 @@ export class ObsidianActor extends Actor5e {
 
 		const itemUpdates = this._resourceUpdates(['short']);
 		if (itemUpdates.length > 0) {
-			return this.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
+			return OBSIDIAN.updateManyOwnedItems(this, itemUpdates);
 		}
 
 		return Promise.resolve();
@@ -311,7 +311,7 @@ export class ObsidianActor extends Actor5e {
 		const itemUpdates = this._resourceUpdates(['long', 'dawn', 'dusk']);
 
 		if (itemUpdates.length > 0) {
-			return this.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
+			return OBSIDIAN.updateManyOwnedItems(this, itemUpdates);
 		}
 
 		return Promise.resolve();

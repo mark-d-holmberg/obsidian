@@ -132,7 +132,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			};
 		});
 
-		await this.parent.actor.updateManyEmbeddedEntities('OwnedItem', data);
+		await OBSIDIAN.updateManyOwnedItems(this.parent.actor, data);
 		return this.parent.actor.update({
 			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
 			'data.details.race': formData['data.details.race'],

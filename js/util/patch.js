@@ -70,3 +70,21 @@ OBSIDIAN.updateArrays = function (original, changed) {
 
 	return Object.keys(expanded).length > 0 ? expanded : changed;
 };
+
+OBSIDIAN.updateManyOwnedItems = function (actor, data) {
+	if (actor.isToken) {
+		const byID = new Map(data.map(item => [item._id, item]));
+		const items = duplicate(actor.data.items);
+
+		items.forEach(item => {
+			const update = byID.get(item._id);
+			if (update) {
+				mergeObject(item, update);
+			}
+		});
+
+		return actor.token.update({'actorData.items': items});
+	}
+
+	return actor.updateManyEmbeddedEntities('OwnedItem', data);
+};
