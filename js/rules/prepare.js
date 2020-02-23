@@ -509,6 +509,21 @@ export const Prepare = {
 		}
 	},
 
+	init: function (data, flags) {
+		flags.attributes.init.rollParts = [];
+		data.attributes.init.mod =
+			data.abilities[flags.attributes.init.ability].mod
+			+ data.attributes.init.value;
+
+		if (flags.skills.joat) {
+			data.attributes.init.mod += Math.floor(data.attributes.prof / 2);
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
+			data.attributes.init.mod = Number(flags.attributes.init.override);
+		}
+	},
+
 	saves: function (actorData, data, flags) {
 		for (const [id, save] of Object.entries(data.abilities)) {
 			if (!flags.saves[id]) {

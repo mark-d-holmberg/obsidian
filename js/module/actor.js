@@ -12,12 +12,13 @@ import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
 import {Filters} from '../rules/filters.js';
 import {filterToggleable} from '../rules/toggleable.js';
+import {prepareNPC} from './npc.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
 		super.prepareData();
 		if (this.data.type === 'npc') {
-			return this.data;
+			return prepareNPC(this.data);
 		}
 
 		if (!this.data.flags
@@ -72,18 +73,7 @@ export class ObsidianActor extends Actor5e {
 
 		this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
 		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
-		flags.attributes.init.rollParts = [];
-		data.attributes.init.mod =
-			data.abilities[flags.attributes.init.ability].mod
-			+ data.attributes.init.value;
-
-		if (flags.skills.joat) {
-			data.attributes.init.mod += Math.floor(data.attributes.prof / 2);
-		}
-
-		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
-			data.attributes.init.mod = Number(flags.attributes.init.override);
-		}
+		Prepare.init(data, flags);
 
 		data.attributes.ac.min =
 			flags.attributes.ac.base

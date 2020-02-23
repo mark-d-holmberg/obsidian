@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../rules/rules.js';
 import {patchChatMessage} from '../module/message.js';
+import {Rolls} from '../rules/rolls.js';
 
 export function runPatches () {
 	Draggable.prototype._onDragMouseDown = (function () {
@@ -14,6 +15,46 @@ export function runPatches () {
 			cached.apply(this, arguments);
 		};
 	})();
+
+	Combat.prototype.rollInitiative = async function (ids) {
+		ids = typeof ids === 'string' ? [ids] : ids;
+		const currentID = this.combatant._id;
+		const updates = [];
+		const messages = [];
+
+		for (let i = 0; i < ids.length; i++) {
+			const id = ids[i];
+			const combatant = this.getCombatant(id);
+
+			if (!combatant || !combatant.actor) {
+				continue;
+			}
+
+			const roll = Rolls.initiative(combatant.actor);
+			const result = roll.flags.obsidian.results[0].find(r => r.active);
+			updates.push({_id: id, initiative: result.total});
+
+			const chatData =
+				Rolls.toMessage(
+					combatant.actor,
+					combatant.token.hidden || combatant.hidden ? 'gmroll' : 'roll');
+
+			if (i > 0) {
+				chatData.sound = null;
+			}
+
+			messages.push(mergeObject(chatData, roll));
+		}
+
+		if (!updates.length) {
+			return this;
+		}
+
+		await this.updateManyEmbeddedEntities('Combatant', updates);
+		await this.update({turn: this.turns.findIndex(turn => turn._id === currentID)});
+		await ChatMessage.createMany(messages);
+		return this;
+	};
 
 	patchChatMessage();
 }

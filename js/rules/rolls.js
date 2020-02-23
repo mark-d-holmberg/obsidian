@@ -32,6 +32,7 @@ export const Rolls = {
 
 	annotateAdvantage: function (adv, results) {
 		if (adv === 0 || results.length < 2) {
+			results[0].active = true;
 			return;
 		}
 
@@ -49,8 +50,10 @@ export const Rolls = {
 		});
 
 		if (adv > 0) {
+			max.active = true;
 			results.filter(r => r !== max).forEach(r => r.grey = true);
 		} else {
+			min.active = true;
 			results.filter(r => r !== min).forEach(r => r.grey = true);
 		}
 	},
@@ -377,14 +380,7 @@ export const Rolls = {
 
 		// If no advantage or disadvantage, take the first roll, otherwise find
 		// the highest or lowest roll, respectively.
-		const firstRoll = roll.flags.obsidian.results[0];
-		const result =
-			adv === 0
-				? firstRoll[0]
-				: adv > 0
-					? firstRoll.reduce((acc, r) => r.total > acc.total ? r : acc)
-					: firstRoll.reduce((acc, r) => r.total < acc.total ? r : acc);
-
+		const result = roll.flags.obsidian.results[0].find(r => r.active);
 		const success = result.total >= flags.attributes.death.threshold;
 		const key = success ? 'success' : 'failure';
 		let tally = data.attributes.death[key] + 1;
@@ -860,11 +856,27 @@ export const Rolls = {
 			rollMod);
 	},
 
-	toChat: async function (actor, ...msgs) {
+	toChat: function (actor, ...msgs) {
+		const chatData = Rolls.toMessage(actor);
+		ChatMessage.createMany(msgs.map((msg, i) => {
+			const data = duplicate(chatData);
+			if (i > 0) {
+				data.sound = null;
+			}
+
+			return mergeObject(data, msg);
+		}));
+	},
+
+	toMessage: function (actor, rollMode) {
+		if (!rollMode) {
+			rollMode = game.settings.get('core', 'rollMode');
+		}
+
 		const chatData = {
 			speaker: ChatMessage.getSpeaker({actor: actor}),
 			user: game.user.data._id,
-			rollMode: game.settings.get('core', 'rollMode'),
+			rollMode: rollMode,
 			sound: CONFIG.sounds.dice,
 			content: 'N/A' // This can't be blank for some reason.
 		};
@@ -881,9 +893,7 @@ export const Rolls = {
 			chatData.whisper = [game.user.data._id];
 		}
 
-		for (const msg of msgs) {
-			await ChatMessage.create(mergeObject(duplicate(chatData), msg));
-		}
+		return chatData;
 	},
 
 	toHitRoll: function (actor, hit, extraMods = []) {
