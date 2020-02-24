@@ -864,6 +864,7 @@ export const Rolls = {
 				data.sound = null;
 			}
 
+			msg.flags.obsidian.npc = actor.data.type === 'npc';
 			return mergeObject(data, msg);
 		}));
 	},

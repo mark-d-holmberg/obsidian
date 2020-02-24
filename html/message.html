@@ -1,7 +1,10 @@
 {{#if visible}}
 <li class="message flexcol obsidian-msg" data-message-id="{{message._id}}">
 	<header>
-		<h4>{{alias}}</h4>
+		<h4>
+			{{#if message.flags.obsidian.npc}}<div class="obsidian-icon obsidian-icon-npc"></div>{{/if}}
+			{{alias}}
+		</h4>
 		<span class="message-metadata">
 			<time class="message-timestamp">{{timeSince message.timestamp}}</time>
 			{{#if user.isGM}}

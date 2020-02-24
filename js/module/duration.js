@@ -1,3 +1,5 @@
+import {Rolls} from '../rules/rolls.js';
+
 export function initDurations () {
 	game.settings.register('obsidian', 'durations', {
 		default: [],
@@ -54,6 +56,21 @@ function advanceDurations (combat) {
 	// Here is where we do something special with the expired durations.
 
 	updateDurations(durations.filter(duration => !expired.includes(duration)));
+}
+
+function onClick (evt) {
+	const target = evt.currentTarget;
+	const actor = game.actors.get(target.dataset.actor);
+	if (!actor || !getProperty(actor, 'data.obsidian.effects')) {
+		return;
+	}
+
+	const effect = actor.data.obsidian.effects.get(target.dataset.effect);
+	if (!effect) {
+		return;
+	}
+
+	Rolls.create(actor, {roll: 'fx', uuid: effect.uuid, scaling: 0});
 }
 
 function onDelete (html) {
@@ -186,5 +203,5 @@ function renderDurations () {
 		`));
 	}
 
-	durationBar.find('.obsidian-duration').hover(onEnter, onLeave);
+	durationBar.find('.obsidian-duration').hover(onEnter, onLeave).click(onClick);
 }

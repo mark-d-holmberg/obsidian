@@ -92,10 +92,13 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		} else {
 			effect.isScaling = false;
 			effect.selfScaling = false;
+			effect.scalingComponent = null;
 		}
 
 		if (effect.components.some(c => c.type === 'duration')) {
 			item.obsidian.duration.push(effect);
+		} else {
+			effect.durationComponent = null;
 		}
 
 		let targetComponent;

@@ -43,6 +43,7 @@ export function runPatches () {
 				chatData.sound = null;
 			}
 
+			roll.flags.obsidian.npc = combatant.actor.data.type === 'npc';
 			messages.push(mergeObject(chatData, roll));
 		}
 

@@ -1219,18 +1219,24 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	border-bottom: 1px solid var(--mid);
 	padding-bottom: 5px;
 	margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .obsidian-msg header h4 {
 	text-transform: uppercase;
 	color: var(--text-secondary);
 	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-msg header h4 div.obsidian-icon {
+	margin-right: 5px;
 }
 
 .obsidian-msg header .message-metadata {
-	position: absolute;
-	top: 5px;
-	right: 5px;
 	font-size: 11px;
 }
 
