@@ -10,15 +10,14 @@ import {Schema} from './schema.js';
 import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
-import {Filters} from '../rules/filters.js';
-import {filterToggleable} from '../rules/toggleable.js';
+import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from './npc.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
 		super.prepareData();
 		if (this.data.type === 'npc') {
-			return prepareNPC(this.data);
+			prepareNPC(this.data);
 		}
 
 		if (!this.data.flags
@@ -31,59 +30,64 @@ export class ObsidianActor extends Actor5e {
 
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
+		this.data.obsidian = {classes: []};
 
-		this.data.obsidian = {};
-		this.data.obsidian.classes =
-			this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
+		if (this.isPC) {
+			this.data.obsidian.classes =
+				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
 
-		data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
-		data.details.level = {value: 0};
+			data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
+			data.details.level = {value: 0};
 
-		for (const cls of Object.values(this.data.obsidian.classes)) {
-			if (!cls.flags.obsidian) {
-				continue;
-			}
-
-			cls.flags.obsidian.label =
-				cls.name === 'custom'
-					? cls.flags.obsidian.custom
-					: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
-			cls.data.levels = Number(cls.data.levels);
-			data.details.level.value += cls.data.levels;
-		}
-
-		if (flags.details.milestone) {
-			data.details.level.max = data.details.level.value;
-		} else {
-			let i = 0;
-			for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
-				if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
-					break;
+			for (const cls of this.data.obsidian.classes) {
+				if (!cls.flags.obsidian) {
+					continue;
 				}
+
+				cls.flags.obsidian.label =
+					cls.name === 'custom'
+						? cls.flags.obsidian.custom
+						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
+				cls.data.levels = Number(cls.data.levels);
+				data.details.level.value += cls.data.levels;
 			}
 
-			const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
-			data.details.level.max = i;
-			data.details.xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
-			data.details.xp.pct =
-				Math.floor(
-					((data.details.xp.value - lowerBound) / (data.details.xp.max - lowerBound))
-					* 100);
+			if (flags.details.milestone) {
+				data.details.level.max = data.details.level.value;
+			} else {
+				let i = 0;
+				for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
+					if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
+						break;
+					}
+				}
+
+				const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
+				data.details.level.max = i;
+				data.details.xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
+				data.details.xp.pct =
+					Math.floor(
+						((data.details.xp.value - lowerBound) / (data.details.xp.max - lowerBound))
+						* 100);
+			}
+
+			this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
+			data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
+
+			data.attributes.ac.min =
+				flags.attributes.ac.base
+				+ data.abilities[flags.attributes.ac.ability1].mod
+				+ (flags.attributes.ac.ability2
+					? data.abilities[flags.attributes.ac.ability2].mod
+					: 0)
+				+ (flags.attributes.ac.mod || 0);
+
+			if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+				data.attributes.ac.min = Number(flags.attributes.ac.override);
+			}
 		}
 
-		this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
-		data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
 		Prepare.init(data, flags);
-
-		data.attributes.ac.min =
-			flags.attributes.ac.base
-			+ data.abilities[flags.attributes.ac.ability1].mod
-			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0)
-			+ (flags.attributes.ac.mod || 0);
-
-		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-			data.attributes.ac.min = Number(flags.attributes.ac.override);
-		}
 
 		this.data.obsidian.magicalItems =
 			this.data.items.filter(item =>
@@ -94,19 +98,10 @@ export class ObsidianActor extends Actor5e {
 		this.data.obsidian.effects = new Map();
 		this.data.obsidian.components = new Map();
 
-		// Convert it to an array here so it doesn't get nuked when duplicated.
-		this.data.obsidian.toggleable = Array.from(new Set(filterToggleable(this.data)).values());
-		this.data.obsidian.filters = {
-			mods: Filters.mods(this.data.obsidian.toggleable),
-			bonuses: Filters.bonuses(this.data.obsidian.toggleable)
-		};
-
+		prepareFilters(this.data);
 		prepareInventory(this.data);
 		Prepare.abilities(this.data);
-		Prepare.defenses(flags);
-		Prepare.hd(this.data);
 		Prepare.skills(this.data, data, flags);
-		Prepare.tools(this.data, data, flags);
 		Prepare.saves(this.data, data, flags);
 		prepareSpellcasting(this.data, flags);
 		Prepare.features(this.data);
@@ -114,6 +109,12 @@ export class ObsidianActor extends Actor5e {
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
+
+		if (this.isPC) {
+			Prepare.defenses(flags);
+			Prepare.hd(this.data);
+			Prepare.tools(this.data, data, flags);
+		}
 
 		for (const item of this.data.items) {
 			prepareEffects(

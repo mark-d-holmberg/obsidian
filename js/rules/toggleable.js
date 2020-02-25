@@ -1,4 +1,6 @@
-export function filterToggleable (actorData) {
+import {Filters} from './filters.js';
+
+function filterToggleable (actorData) {
 	const toggleable = [];
 	for (const item of actorData.items) {
 		if (!getProperty(item, 'flags.obsidian.effects.length')) {
@@ -40,4 +42,13 @@ export function filterToggleable (actorData) {
 	}
 
 	return toggleable;
+}
+
+export function prepareFilters (actorData) {
+	// Convert it to an array here so it doesn't get nuked when duplicated.
+	actorData.obsidian.toggleable = Array.from(new Set(filterToggleable(actorData)).values());
+	actorData.obsidian.filters = {
+		mods: Filters.mods(actorData.obsidian.toggleable),
+		bonuses: Filters.bonuses(actorData.obsidian.toggleable)
+	};
 }
