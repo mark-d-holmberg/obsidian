@@ -144,6 +144,15 @@ function onLeave (evt) {
 	}
 }
 
+function ownsDuration (duration) {
+	if (game.user.isGM) {
+		return true;
+	}
+
+	const actor = game.actors.get(duration.data('actor'));
+	return actor && actor.owner;
+}
+
 function renderDurations () {
 	let durationBar = $('#obsidian-duration-bar');
 	if (!durationBar.length) {
@@ -154,11 +163,13 @@ function renderDurations () {
 		new ContextMenu(durationBar, '.obsidian-duration', [{
 			name: '',
 			icon: '<i class="fas fa-trash"></i>',
-			callback: onDelete
+			callback: onDelete,
+			condition: ownsDuration
 		}, {
 			name: '',
 			icon: '<i class="fas fa-edit"></i>',
-			callback: onEdit
+			callback: onEdit,
+			condition: ownsDuration
 		}]);
 	}
 
