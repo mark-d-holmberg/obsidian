@@ -106,7 +106,7 @@
 		<summary>{{localize 'OBSIDIAN.Details'}}</summary>
 		{{#if (eq message.flags.obsidian.type 'spl')}}
 			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.details
-					view=false}}
+					view=false upcast=message.flags.obsidian.upcast}}
 		{{else if message.flags.obsidian.details.flags.obsidian.display}}
 			{{{message.flags.obsidian.details.flags.obsidian.display}}}
 		{{else}}

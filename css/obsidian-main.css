@@ -967,19 +967,28 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-item-card-header h3 {
-	margin: 0 0 10px 0;
 	font-family: var(--font);
 	font-size: 13px;
 	font-style: italic;
-	padding: 0 0 10px 0;
-	border-bottom: 1px solid var(--mid);
 	display: flex;
 	justify-content: space-between;
+}
+
+.obsidian-item-card-header h4 {
+	color: var(--text-subtle);
+	margin-top: -5px;
 }
 
 .obsidian-item-card-header h3 .obsidian-feature-max {
 	font-style: normal;
 	font-weight: bold;
+}
+
+h3 + .obsidian-item-card-header-row,
+h4 + .obsidian-item-card-header-row {
+	padding-top: 10px;
+	margin-top: 10px;
+	border-top: 1px solid var(--mid);
 }
 
 .obsidian-item-card-header-row {

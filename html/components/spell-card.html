@@ -12,6 +12,11 @@
 				({{localize 'OBSIDIAN.RitualLC'}})
 			{{/if}}
 		</h3>
+		{{#if (and (gt data.level 0) (gt upcast 0))}}
+			<h4>
+				{{localize 'OBSIDIAN.CastAtLC'}} {{spell-level-format (add upcast data.level) level=true}}
+			</h4>
+		{{/if}}
 		<div class="obsidian-item-card-header-row">
 			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.CastTime'}}:</div>
 			<div class="obsidian-item-card-header-value">

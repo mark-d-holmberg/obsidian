@@ -511,6 +511,7 @@ export const Rolls = {
 		}
 
 		if (isFirst) {
+			results[0].upcast = scaledAmount;
 			results[0].details = item;
 			results[0].open = !attacks.length && !damage.length;
 
