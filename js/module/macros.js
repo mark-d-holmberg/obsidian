@@ -1,9 +1,20 @@
+let dnd5eDrop;
+
 export function addMacroHook () {
+	// This function is encapsulated behind dnd5e.js module scope so this
+	// is the only way we can get to it.
+	dnd5eDrop = Hooks._hooks.hotbarDrop[0];
+	Hooks.off('hotbarDrop', dnd5eDrop);
 	Hooks.on('hotbarDrop', onHotbarDrop);
 }
 
 async function onHotbarDrop (bar, data, slot) {
-	if (data.type !== 'Item' || !getProperty(data.data, 'flags.obsidian.effects')) {
+	const actor = game.actors.get(data.actorId);
+	if (data.type !== 'Item'
+		|| !getProperty(data.data, 'flags.obsidian.effects')
+		|| !actor || actor.data.type === 'npc')
+	{
+		dnd5eDrop(bar, data, slot);
 		return;
 	}
 

@@ -435,7 +435,7 @@ export const Rolls = {
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
-		if (durations) {
+		if (durations.length) {
 			createDuration(actor, durations[0]);
 		}
 
