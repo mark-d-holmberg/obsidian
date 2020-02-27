@@ -3,16 +3,6 @@
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">
 			<label class="obsidian-inline">
-				{{localize 'OBSIDIAN.Effect'}}
-				<select name="{{prefix}}.ref">
-					{{#select ref}}
-						{{#each @root.item.flags.obsidian.effects}}
-							<option value="{{uuid}}">{{effect-label this}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-			</label>
-			<label class="obsidian-inline">
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 				       data-dtype="Number" placeholder="1" name="{{prefix}}.duration" value="{{duration}}">
 				<span>{{localize 'OBSIDIAN.Rounds'}}</span>

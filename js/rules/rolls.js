@@ -429,14 +429,14 @@ export const Rolls = {
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
 		const saves = effect.components.filter(c => c.type === 'save');
+		const durations = effect.components.filter(c => c.type === 'duration');
 		const targets =
 			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
-		const duration = item.obsidian.duration.find(e => e.durationComponent.ref === effect.uuid);
 		const results = [];
 
-		if (duration) {
-			createDuration(actor, duration);
+		if (durations) {
+			createDuration(actor, durations[0]);
 		}
 
 		let scaledTargets = 0;
@@ -624,7 +624,6 @@ export const Rolls = {
 
 		return itemFlags.effects
 			.filter(effect => !effect.isScaling || effect.selfScaling)
-			.filter(effect => !effect.durationComponent)
 			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
 				name: item.name,
 				scaledAmount: scaledAmount,

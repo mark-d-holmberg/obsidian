@@ -1,5 +1,3 @@
-import {Rolls} from '../rules/rolls.js';
-
 export function initDurations () {
 	game.settings.register('obsidian', 'durations', {
 		default: [],
@@ -11,17 +9,17 @@ export function initDurations () {
 	renderDurations();
 }
 
-export function createDuration (actor, effect) {
+export function createDuration (actor, component) {
 	const durations = game.settings.get('obsidian', 'durations');
-	const existing = durations.find(duration => duration.effect === effect.uuid);
+	const existing = durations.find(duration => duration.effect === component.parentEffect);
 
 	if (existing) {
-		existing.remaining = effect.durationComponent.duration;
+		existing.remaining = component.duration;
 	} else {
 		durations.push({
 			actor: actor.data._id,
-			effect: effect.uuid,
-			remaining: effect.durationComponent.duration
+			effect: component.parentEffect,
+			remaining: component.duration
 		});
 	}
 
@@ -56,21 +54,6 @@ function advanceDurations (combat) {
 	// Here is where we do something special with the expired durations.
 
 	updateDurations(durations.filter(duration => !expired.includes(duration)));
-}
-
-function onClick (evt) {
-	const target = evt.currentTarget;
-	const actor = game.actors.get(target.dataset.actor);
-	if (!actor || !getProperty(actor, 'data.obsidian.effects')) {
-		return;
-	}
-
-	const effect = actor.data.obsidian.effects.get(target.dataset.effect);
-	if (!effect) {
-		return;
-	}
-
-	Rolls.create(actor, {roll: 'fx', uuid: effect.uuid, scaling: 0});
 }
 
 function onDelete (html) {
@@ -198,12 +181,7 @@ function renderDurations () {
 			continue;
 		}
 
-		const referencing = actor.data.obsidian.effects.get(effect.durationComponent.ref);
-		if (!referencing) {
-			continue;
-		}
-
-		const label = referencing.name.length ? referencing.name : item.name;
+		const label = effect.name.length ? effect.name : item.name;
 		durationBar.append($(`
 			<div class="obsidian-duration" data-actor="${duration.actor}"
 			     data-effect="${effect.uuid}">
@@ -214,5 +192,5 @@ function renderDurations () {
 		`));
 	}
 
-	durationBar.find('.obsidian-duration').hover(onEnter, onLeave).click(onClick);
+	durationBar.find('.obsidian-duration').hover(onEnter, onLeave);
 }

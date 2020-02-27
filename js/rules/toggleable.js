@@ -15,8 +15,7 @@ function filterToggleable (actorData) {
 			effect.bonuses = [];
 			effect.filters = [];
 
-			if (effect.durationComponent
-				|| (flags.attunement && !item.data.attuned)
+			if ((flags.attunement && !item.data.attuned)
 				|| (flags.equippable && !item.data.equipped))
 			{
 				continue;

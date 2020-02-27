@@ -53,8 +53,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		resources: [],
 		consumers: [],
 		actionable: [],
-		scaling: [],
-		duration: []
+		scaling: []
 	};
 
 	let cls;
@@ -93,12 +92,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			effect.isScaling = false;
 			effect.selfScaling = false;
 			effect.scalingComponent = null;
-		}
-
-		if (effect.components.some(c => c.type === 'duration')) {
-			item.obsidian.duration.push(effect);
-		} else {
-			effect.durationComponent = null;
 		}
 
 		let targetComponent;
@@ -157,8 +150,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				}
 			} else if (component.type === 'scaling') {
 				effect.scalingComponent = component;
-			} else if (component.type === 'duration') {
-				effect.durationComponent = component;
 			} else if (component.type === 'consume') {
 				if (component.calc === 'var') {
 					component.fixed = 1;
