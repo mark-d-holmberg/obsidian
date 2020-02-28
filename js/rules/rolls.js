@@ -94,21 +94,17 @@ export const Rolls = {
 			const npc = token.actor.data.type === 'npc';
 			let hp = data.attributes.hp.value;
 
-			damage.entries().forEach(([type, dmg]) => {
-				if (npc) {
-					type = DAMAGE_CONVERT[type];
-				}
-
+			Array.from(damage.entries()).forEach(([type, dmg]) => {
 				const immune =
-					npc ? data.traits.di.value
+					npc ? data.traits.di.value.map(d => DAMAGE_CONVERT[d])
 						: flags.defenses.damage.reduce(reduceDefenses('imm'));
 
 				const resist =
-					npc ? data.traits.dr.value
+					npc ? data.traits.dr.value.map(d => DAMAGE_CONVERT[d])
 						: flags.defenses.damage.reduce(reduceDefenses('res'));
 
 				const vuln =
-					npc ? data.traits.dv.value
+					npc ? data.traits.dv.value.map(d => DAMAGE_CONVERT[d])
 						: flags.defenses.damage.reduce(reduceDefenses('vuln'));
 
 				if (immune.includes(type)) {
@@ -126,7 +122,7 @@ export const Rolls = {
 				hp -= Math.clamped(Math.floor(dmg), 1, Infinity);
 			});
 
-			await token.actor.update({'data.attributes.hp': hp});
+			await token.actor.update({'data.attributes.hp.value': hp});
 		});
 	},
 
