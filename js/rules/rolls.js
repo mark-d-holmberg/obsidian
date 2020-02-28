@@ -5,6 +5,7 @@ import {Filters} from './filters.js';
 import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {createDuration} from '../module/duration.js';
+import {DAMAGE_CONVERT} from '../module/migrate.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -66,6 +67,67 @@ export const Rolls = {
 				result.negative = true;
 			}
 		}
+	},
+
+	applyDamage: function (evt) {
+		const target = $(evt.currentTarget);
+		const damage = new Map();
+		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + Number(value));
+		const reduceDefenses = level => (acc, def) => {
+			if (def.level === level) {
+				acc.push(def.dmg);
+			}
+
+			return acc;
+		};
+
+		if (target.data('apply-all')) {
+			target.closest('.obsidian-msg-row-dmg').prev().find('[data-dmg]').each((i, el) =>
+				accumulate(el.dataset.type, el.dataset.dmg));
+		} else {
+			accumulate(target.data('type'), target.data('dmg'));
+		}
+
+		game.user.targets.forEach(async token => {
+			const data = token.actor.data.data;
+			const flags = token.actor.data.flags.obsidian;
+			const npc = token.actor.data.type === 'npc';
+			let hp = data.attributes.hp.value;
+
+			damage.entries().forEach(([type, dmg]) => {
+				if (npc) {
+					type = DAMAGE_CONVERT[type];
+				}
+
+				const immune =
+					npc ? data.traits.di.value
+						: flags.defenses.damage.reduce(reduceDefenses('imm'));
+
+				const resist =
+					npc ? data.traits.dr.value
+						: flags.defenses.damage.reduce(reduceDefenses('res'));
+
+				const vuln =
+					npc ? data.traits.dv.value
+						: flags.defenses.damage.reduce(reduceDefenses('vuln'));
+
+				if (immune.includes(type)) {
+					return;
+				}
+
+				if (resist.includes(type)) {
+					dmg /= 2;
+				}
+
+				if (vuln.includes(type)) {
+					dmg *= 2;
+				}
+
+				hp -= Math.clamped(Math.floor(dmg), 1, Infinity);
+			});
+
+			await token.actor.update({'data.attributes.hp': hp});
+		});
 	},
 
 	applyRollModifiers: function (roll, rolls, rollMod) {

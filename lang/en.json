@@ -721,5 +721,6 @@
 	"OBSIDIAN.CombatDuration": "Combat Duration",
 	"OBSIDIAN.Rounds": "Rounds",
 	"OBSIDIAN.Update": "Update",
-	"OBSIDIAN.CastAtLC": "Cast at"
+	"OBSIDIAN.CastAtLC": "Cast at",
+	"OBSIDIAN.Apply": "Apply"
 }

@@ -3,6 +3,12 @@ import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
 import {OBSIDIAN} from '../rules/rules.js';
 import {Effect} from './effect.js';
 
+export const DAMAGE_CONVERT = {
+	bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
+	force: 'frc', lightning: 'lig', necrotic: 'ncr', poison: 'psn', psychic: 'psy',
+	radiant: 'rad', thunder: 'thn', healing: 'hlg'
+};
+
 const CONVERT = {
 	activation: {action: 'action', bonus: 'ba', reaction: 'react'},
 	castTime: {
@@ -13,11 +19,7 @@ const CONVERT = {
 		potion: 'potion', poison: 'potion', scroll: 'scroll', wand: 'wand', rod: 'rod',
 		trinket: 'trinket'
 	},
-	damage: {
-		bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
-		force: 'frc', lightning: 'lig', necrotic: 'ncr', poison: 'psn', psychic: 'psy',
-		radiant: 'rad', thunder: 'thn', healing: 'hlg'
-	},
+	damage: DAMAGE_CONVERT,
 	duration: {
 		inst: 'instant', perm: 'dispel', spec: 'special', round: 'round', minute: 'min',
 		hour: 'hour', day: 'day'

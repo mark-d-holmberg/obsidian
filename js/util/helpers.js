@@ -267,6 +267,10 @@ export function registerHandlebarHelpers () {
 		return game.i18n.lang === 'ja';
 	});
 
+	Handlebars.registerHelper('is-gm', function () {
+		return game.user.isGM;
+	});
+
 	Handlebars.registerHelper('lc', function (arg) {
 		return arg.toLocaleLowerCase();
 	});
