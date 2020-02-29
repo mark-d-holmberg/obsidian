@@ -392,4 +392,19 @@ export class ObsidianActor extends Actor5e {
 
 		return itemUpdates;
 	}
+
+	static fromSceneTokenPair (sceneID, tokenID) {
+		const scene = game.scenes.get(sceneID);
+		if (!scene) {
+			return;
+		}
+
+		const tokenData = scene.getEmbeddedEntity('Token', tokenID);
+		if (!tokenData) {
+			return;
+		}
+
+		const token = new Token(tokenData);
+		return token.actor;
+	}
 }

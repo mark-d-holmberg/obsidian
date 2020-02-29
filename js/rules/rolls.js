@@ -6,6 +6,7 @@ import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-tem
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {createDuration} from '../module/duration.js';
 import {DAMAGE_CONVERT} from '../module/migrate.js';
+import {ObsidianActor} from '../module/actor.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
@@ -205,11 +206,11 @@ export const Rolls = {
 		}
 
 		if (!actor) {
-			if (!options.actor) {
-				return;
+			if (options.actor) {
+				actor = game.actors.get(options.actor);
+			} else if (options.scene && options.token) {
+				actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
 			}
-
-			actor = game.actors.get(options.actor);
 		}
 
 		if (!actor) {
@@ -691,9 +692,16 @@ export const Rolls = {
 	},
 
 	placeTemplate: function (evt) {
-		const actor = game.actors.get(evt.currentTarget.dataset.actor);
+		let actor = game.actors.get(evt.currentTarget.dataset.actor);
 		if (!actor) {
-			return;
+			actor =
+				ObsidianActor.fromSceneTokenPair(
+					evt.currentTarget.dataset.scene,
+					evt.currentTarget.dataset.token);
+
+			if (!actor) {
+				return;
+			}
 		}
 
 		const effect = actor.data.obsidian.effects.get(evt.currentTarget.dataset.effect);
@@ -920,6 +928,11 @@ export const Rolls = {
 			const data = duplicate(chatData);
 			if (i > 0) {
 				data.sound = null;
+			}
+
+			if (actor.isToken) {
+				msg.flags.obsidian.realToken = actor.token.data._id;
+				msg.flags.obsidian.realScene = actor.token.scene.data._id;
 			}
 
 			msg.flags.obsidian.npc = actor.data.type === 'npc';

@@ -616,12 +616,19 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
 		if (item) {
-			event.dataTransfer.setData('text/plain', JSON.stringify({
+			const dragData = {
 				type: 'Item',
 				actorId: this.actor.id,
 				data: item,
 				effectUUID: target.dataset.uuid
-			}));
+			};
+
+			if (this.actor.isToken) {
+				dragData.tokenID = this.actor.token.data._id;
+				dragData.sceneID = this.actor.token.scene.data._id;
+			}
+
+			event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
 		}
 
 		return Reorder.dragStart(event);

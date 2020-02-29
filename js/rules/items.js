@@ -4,6 +4,7 @@ import {ObsidianActionableDialog} from '../dialogs/actionable.js';
 import {Rolls} from './rolls.js';
 import {Effect} from '../module/effect.js';
 import {OBSIDIAN} from './rules.js';
+import {ObsidianActor} from '../module/actor.js';
 
 export const ObsidianItems = {
 	consumeQuantity: function (actor, item, n = 1) {
@@ -26,8 +27,13 @@ export const ObsidianItems = {
 		}
 	},
 
-	effectMacro: function (actor, effect) {
-		actor = game.actors.get(actor);
+	effectMacro: function ({actor, token, scene, effect}) {
+		if (token && scene) {
+			actor = ObsidianActor.fromSceneTokenPair(scene, token);
+		} else {
+			actor = game.actors.get(actor);
+		}
+
 		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
 			return;
 		}
@@ -35,8 +41,13 @@ export const ObsidianItems = {
 		ObsidianItems.roll(actor, {uuid: effect});
 	},
 
-	itemMacro: function (actor, item) {
-		actor = game.actors.get(actor);
+	itemMacro: function ({actor, token, scene, item}) {
+		if (token && scene) {
+			actor = ObsidianActor.fromSceneTokenPair(scene, token);
+		} else {
+			actor = game.actors.get(actor);
+		}
+
 		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
 			return;
 		}

@@ -21,8 +21,16 @@ async function onHotbarDrop (bar, data, slot) {
 	let command;
 	let name;
 
+	const args = {
+		actor: data.actorId,
+		token: data.tokenID,
+		scene: data.sceneID
+	};
+
 	if (data.effectUUID) {
-		command = `OBSIDIAN.Items.effectMacro('${data.actorId}', '${data.effectUUID}')`;
+		args.effect = data.effectUUID;
+		command = `OBSIDIAN.Items.effectMacro(${JSON.stringify(args)})`;
+
 		const effect =
 			data.data.flags.obsidian.effects.find(effect => effect.uuid === data.effectUUID);
 
@@ -30,7 +38,8 @@ async function onHotbarDrop (bar, data, slot) {
 			name = OBSIDIAN.notDefinedOrEmpty(effect.name) ? data.data.name : effect.name;
 		}
 	} else {
-		command = `OBSIDIAN.Items.itemMacro('${data.actorId}', '${data.data._id}')`;
+		args.item = data.data._id;
+		command = `OBSIDIAN.Items.itemMacro(${JSON.stringify(args)})`;
 		name = data.data.name;
 	}
 
