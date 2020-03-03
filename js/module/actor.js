@@ -407,4 +407,35 @@ export class ObsidianActor extends Actor5e {
 		const token = new Token(tokenData);
 		return token.actor;
 	}
+
+	static duplicateItem (original) {
+		const dupe = duplicate(original);
+
+		// Give all the effects and components new UUIDs, but maintain a
+		// reference to what their original UUID was.
+		const uuidMap = new Map();
+		dupe.flags.obsidian.effects.forEach(effect => {
+			const newUUID = OBSIDIAN.uuid();
+			uuidMap.set(effect.uuid, newUUID);
+			effect.uuid = newUUID;
+
+			effect.components.forEach(component => {
+				const newUUID = OBSIDIAN.uuid();
+				uuidMap.set(component.uuid, newUUID);
+				component.uuid = newUUID;
+			});
+		});
+
+		// Make sure all internal references point to the new UUIDs.
+		dupe.flags.obsidian.effects.flatMap(effect => effect.components).forEach(component => {
+			if (!OBSIDIAN.notDefinedOrEmpty(component.ref)) {
+				const newUUID = uuidMap.get(component.ref);
+				if (newUUID) {
+					component.ref = newUUID;
+				}
+			}
+		});
+
+		return dupe;
+	}
 }

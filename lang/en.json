@@ -722,5 +722,6 @@
 	"OBSIDIAN.Rounds": "Rounds",
 	"OBSIDIAN.Update": "Update",
 	"OBSIDIAN.CastAtLC": "Cast at",
-	"OBSIDIAN.Apply": "Apply"
+	"OBSIDIAN.Apply": "Apply",
+	"OBSIDIAN.Split": "Split"
 }

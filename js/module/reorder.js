@@ -96,6 +96,10 @@ export const Reorder = {
 				src =
 					await actor.createEmbeddedEntity(
 						'OwnedItem', duplicate(game.items.get(data.id).data));
+
+				if (actor.isToken) {
+					src = src.actorData.items.last();
+				}
 			}
 		}
 

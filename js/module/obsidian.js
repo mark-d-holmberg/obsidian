@@ -30,6 +30,7 @@ import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
 import {ObsidianItems} from '../rules/items.js';
+import {ObsidianActor} from './actor.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -316,20 +317,37 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		};
 
-		let menu;
-		let noDelMenu;
+		const split = {
+			name: 'OBSIDIAN.Split',
+			icon: '<i class="fas fa-exchange-alt"></i>',
+			callback: this._splitItem.bind(this),
+			condition: li => {
+				const actor = this.actor || this.parent.actor;
+				if (actor) {
+					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
+					return item.data.quantity > 1;
+				}
+			}
+		};
+
+		let equipment;
+		let containers;
+		let spells;
 
 		if (this.options.editable) {
-			menu = [edit, view, del];
-			noDelMenu = [edit, view];
+			equipment = [edit, view, split, del];
+			containers = [edit, view, del];
+			spells = [edit, view];
 		} else {
-			menu = [view];
-			noDelMenu = [view];
+			equipment = [view];
+			containers = [view];
+			spells = [view];
 		}
 
-		new ContextMenu(html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', menu);
-		new ContextMenu(html, '.obsidian-inv-container', menu);
-		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', noDelMenu);
+		new ContextMenu(html, '.obsidian-inv-container', containers);
+		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', spells);
+		new ContextMenu(
+			html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', equipment);
 	}
 
 	/**
@@ -1065,6 +1083,48 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		this.actor.update(update);
+	}
+
+	/**
+	 * @private
+	 */
+	async _splitItem (li) {
+		const item = this.actor.data.obsidian.itemsByID.get(li.data('item-id'));
+		if (!item) {
+			return;
+		}
+
+		const doSplit = async qty => {
+			const newItem = ObsidianActor.duplicateItem(item);
+			newItem.data.quantity = qty;
+			await this.actor.createEmbeddedEntity('OwnedItem', newItem);
+			this.actor.updateEmbeddedEntity('OwnedItem', {
+				_id: item._id,
+				'data.quantity': item.data.quantity - qty
+			});
+		};
+
+		if (item.data.quantity < 3) {
+			doSplit(1);
+		} else {
+			const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer.html', {
+				max: item.data.quantity - 1,
+				name: item.name
+			});
+
+			new Dialog({
+				title: game.i18n.localize('OBSIDIAN.Split'),
+				content: dlg,
+				default: 'split',
+				buttons: {
+					split: {
+						icon: '<i class="fas fa-exchange-alt"></i>',
+						label: game.i18n.localize('OBSIDIAN.Split'),
+						callback: dlg => doSplit(Number(dlg.find('input').val()))
+					}
+				}
+			}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
+		}
 	}
 
 	/**
