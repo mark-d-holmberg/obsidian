@@ -4,7 +4,7 @@ import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
 import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
-import {createDuration} from '../module/duration.js';
+import {handleDurations} from '../module/duration.js';
 import {DAMAGE_CONVERT} from '../module/migrate.js';
 import {ObsidianActor} from '../module/actor.js';
 
@@ -488,15 +488,12 @@ export const Rolls = {
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
 		const saves = effect.components.filter(c => c.type === 'save');
-		const durations = effect.components.filter(c => c.type === 'duration');
 		const targets =
 			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
-		if (durations.length) {
-			createDuration(actor, durations[0]);
-		}
+		handleDurations(actor, item, effect);
 
 		let scaledTargets = 0;
 		if (scaledAmount > 0 && scaling) {

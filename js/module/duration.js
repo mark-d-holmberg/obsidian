@@ -9,21 +9,48 @@ export function initDurations () {
 	renderDurations();
 }
 
-export function createDuration (actor, component) {
+function createDuration (actor, duration, effect) {
 	const durations = game.settings.get('obsidian', 'durations');
-	const existing = durations.find(duration => duration.effect === component.parentEffect);
+	const existing = durations.find(duration => duration.effect === effect);
 
 	if (existing) {
-		existing.remaining = component.duration;
+		existing.remaining = duration;
 	} else {
 		durations.push({
 			actor: actor.data._id,
-			effect: component.parentEffect,
-			remaining: component.duration
+			effect: effect,
+			remaining: duration
 		});
 	}
 
 	updateDurations(durations);
+}
+
+export function handleDurations (actor, item, effect) {
+	const durations = effect.components.filter(c => c.type === 'duration');
+	const magnitude = getProperty(item, 'flags.obsidian.duration.type');
+	const spellDuration =
+		item.type === 'spell' && ['round', 'min', 'hour', 'day'].includes(magnitude);
+
+	if (!durations.length && !spellDuration) {
+		return;
+	}
+
+	let duration;
+	if (durations.length) {
+		duration = durations[0].duration;
+	} else {
+		duration = item.flags.obsidian.duration.n;
+		if (magnitude === 'min') {
+			duration *= 10;
+		} else if (magnitude === 'hour') {
+			duration *= 60;
+		} else if (magnitude === 'day') {
+			duration *= 60 * 24;
+		}
+	}
+
+	createDuration(actor, duration, effect.uuid);
 }
 
 export function updateDurations (durations) {
@@ -182,11 +209,17 @@ function renderDurations () {
 		}
 
 		const label = effect.name.length ? effect.name : item.name;
+		let remaining = duration.remaining;
+
+		if (remaining > 10) {
+			remaining = '10+';
+		}
+
 		durationBar.append($(`
 			<div class="obsidian-duration" data-actor="${duration.actor}"
 			     data-effect="${effect.uuid}">
 				<img src="${item.img}" alt="${label}">
-				<div class="obsidian-duration-remaining">${duration.remaining}</div>
+				<div class="obsidian-duration-remaining">${remaining}</div>
 				<div class="obsidian-msg-tooltip">${label}</div>
 			</div>
 		`));
