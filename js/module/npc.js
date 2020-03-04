@@ -7,7 +7,9 @@ export function prepareNPC (actorData) {
 
 	if (!actorData.flags.obsidian) {
 		actorData.flags.obsidian = {
-			attributes: {init: {ability: 'dex'}, ac: {ability1: 'dex', base: 10}, speed: {}},
+			attributes: {
+				init: {ability: 'dex'}, ac: {ability1: 'dex', base: 10}, conditions: {}, speed: {}
+			},
 			order: {equipment: {root: [], containers: []}},
 			saves: {},
 			skills: {custom: []},

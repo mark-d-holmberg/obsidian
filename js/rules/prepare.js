@@ -356,6 +356,12 @@ export const Prepare = {
 		}
 	},
 
+	conditions: function (actorData) {
+		actorData.obsidian.conditions = {exhaustion: actorData.data.attributes.exhaustion};
+		Object.entries(actorData.flags.obsidian.attributes.conditions)
+			.forEach(([condition, enabled]) => actorData.obsidian.conditions[condition] = enabled);
+	},
+
 	consumables: function (actorData) {
 		actorData.obsidian.consumables =
 			actorData.items.filter(item => item.type === 'consumable' && item.flags.obsidian);

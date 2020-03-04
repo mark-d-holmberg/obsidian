@@ -16,6 +16,7 @@ import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {initDurations} from './module/duration.js';
+import {patchConditions} from './rules/conditions.js';
 
 runPatches();
 
@@ -54,6 +55,7 @@ Hooks.once('ready', function () {
 	loadSpellData();
 	addSocketListener();
 	initDurations();
+	patchConditions();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {

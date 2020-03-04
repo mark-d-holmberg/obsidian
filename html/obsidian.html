@@ -491,7 +491,7 @@
 						     style="min-height: 128px; margin-bottom: 12px;">
 						{{#each ObsidianRules.CONDITIONS}}
 							<div class="
-							{{~#if (lookup ../actor.flags.obsidian.attributes.conditions this)~}}
+							{{~#if (lookup ../actor.obsidian.conditions this)~}}
 								obsidian-radio-selected
 							{{~/if}} obsidian-radio-label" data-value="{{this}}">
 								<div class="
@@ -507,7 +507,7 @@
 						{{/each}}
 						</div>
 						<div class="
-						{{~#if (gt data.attributes.exhaustion 0)~}}
+						{{~#if (gt actor.obsidian.conditions.exhaustion 0)~}}
 							obsidian-meatballs-active
 						{{~/if}} obsidian-meatballs-title">
 							{{localize 'OBSIDIAN.Exhaustion'}}
