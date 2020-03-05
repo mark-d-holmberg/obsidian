@@ -965,7 +965,9 @@ Migrate.v1 = {
 
 Migrate.v3 = {
 	convertHD: function (data) {
-		data.data.hitDice = `d${data.flags.obsidian.hd}`;
+		if (data.flags.obsidian.hd) {
+			data.data.hitDice = `d${data.flags.obsidian.hd}`;
+		}
 	}
 };
 
