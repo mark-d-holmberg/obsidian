@@ -98,15 +98,15 @@ export const Rolls = {
 			Array.from(damage.entries()).forEach(([type, dmg]) => {
 				const immune =
 					npc ? data.traits.di.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('imm'));
+						: flags.defenses.damage.reduce(reduceDefenses('imm'), []);
 
 				const resist =
 					npc ? data.traits.dr.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('res'));
+						: flags.defenses.damage.reduce(reduceDefenses('res'), []);
 
 				const vuln =
 					npc ? data.traits.dv.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('vuln'));
+						: flags.defenses.damage.reduce(reduceDefenses('vuln'), []);
 
 				if (immune.includes(type)) {
 					return;
