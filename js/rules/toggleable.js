@@ -16,7 +16,9 @@ function filterToggleable (actorData) {
 			effect.filters = [];
 
 			if ((flags.attunement && !item.data.attuned)
-				|| (flags.equippable && !item.data.equipped))
+				|| (flags.equippable && !item.data.equipped)
+				|| item.type === 'spell'
+				|| effect.durationComponent)
 			{
 				continue;
 			}
@@ -25,14 +27,8 @@ function filterToggleable (actorData) {
 				component.parentEffect = effect.uuid;
 				if (component.type === 'roll-mod') {
 					effect.mods.push(component);
-					if (!flags.equippable || item.data.equipped) {
-						toggleable.push(effect);
-					}
 				} else if (component.type === 'bonus') {
 					effect.bonuses.push(component);
-					if (!flags.equippable || item.data.equipped) {
-						toggleable.push(effect);
-					}
 				} else if (component.type === 'filter') {
 					effect.filters.push(component);
 				}

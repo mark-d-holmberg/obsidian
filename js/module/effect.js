@@ -162,7 +162,8 @@ export const Effect = {
 		return {
 			type: 'duration',
 			uuid: OBSIDIAN.uuid(),
-			duration: 1
+			duration: 1,
+			concentration: false
 		}
 	},
 
