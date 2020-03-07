@@ -243,5 +243,14 @@ export const Effect = {
 		}
 
 		return [item, effect, resource];
+	},
+
+	isConcentration: function (actorData, effect) {
+		if (effect.durationComponent && effect.durationComponent.concentration) {
+			return true;
+		}
+
+		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
+		return item && item.type === 'spell' && item.data.components.concentration;
 	}
 };

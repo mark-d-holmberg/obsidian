@@ -1,7 +1,18 @@
 <div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
      data-tab="effects">
-	<h3>{{localize 'OBSIDIAN.Effects'}}</h3>
-	{{#each actor.obsidian.toggleable}}
+	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
+	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
+		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
+			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
+			            obsidian-radio obsidian-radio-negative">
+				<span></span>
+			</div>
+			<div class="obsidian-effect-row-name">{{label}}:</div>
+			<div class="obsidian-effect-row-content">{{{toggle.display}}}</div>
+		</div>
+	{{/each}}
+	<h3>{{localize 'OBSIDIAN.Temporary'}}</h3>
+	{{#each (filter actor.obsidian.toggleable 'activeEffect' true)}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
 			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
 			            obsidian-radio obsidian-radio-negative">

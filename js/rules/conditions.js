@@ -37,7 +37,11 @@ export function patchConditions () {
 				this.data.effects =
 					Object.entries(this.actor.data.obsidian.conditions)
 						.filter(([, enabled]) => enabled)
-						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`);
+						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`)
+						.concat(
+							this.actor.data.obsidian.toggleable
+								.filter(effect => effect.activeEffect && effect.toggle.active)
+								.map(effect => effect.img));
 			}
 
 			cached.apply(this, arguments);
@@ -46,6 +50,14 @@ export function patchConditions () {
 
 	Token.prototype._onUpdate = (function () {
 		const cached = Token.prototype._onUpdate;
+		return function () {
+			cached.apply(this, arguments);
+			this.drawEffects();
+		};
+	})();
+
+	Token.prototype._onUpdateBaseActor = (function () {
+		const cached = Token.prototype._onUpdateBaseActor;
 		return function () {
 			cached.apply(this, arguments);
 			this.drawEffects();

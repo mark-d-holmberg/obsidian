@@ -1,5 +1,6 @@
 import {Filters} from './filters.js';
 import {OBSIDIAN} from './rules.js';
+import {getDurationActor} from '../module/duration.js';
 
 export function applyBonuses (actorData) {
 	const data = actorData.data;
@@ -74,7 +75,55 @@ function bonusName (actorData, bonus) {
 	return item.name;
 }
 
+function getTokenActorDataSafe (duration) {
+	// Try to avoid causing an infinite recursion loop of Actor.prepareData().
+	if (duration.actor) {
+		const actor = game.actors.get(duration.actor);
+		if (actor) {
+			return actor.data;
+		}
+	} else {
+		const scene = game.scenes.get(duration.scene);
+		if (!scene) {
+			return;
+		}
+
+		const tokenData = scene.getEmbeddedEntity('Token', duration.token);
+		if (!tokenData) {
+			return;
+		}
+
+		const actor = game.actors.get(tokenData.actorId);
+		if (!actor) {
+			return;
+		}
+
+		if (!tokenData.actorLink) {
+			return actor.data;
+		}
+
+		return mergeObject(actor.data, tokenData.actorData, {inplace: false});
+	}
+}
+
 export function bonusToParts (actorData, bonus) {
+	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
+	if (effect && effect.activeEffect) {
+		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
+		if (item) {
+			const duration =
+				game.settings.get('obsidian', 'durations')
+					.find(duration => duration.effect === item.flags.obsidian.original);
+
+			if (duration) {
+				const tokenActorData = getTokenActorDataSafe(duration);
+				if (tokenActorData) {
+					actorData = tokenActorData;
+				}
+			}
+		}
+	}
+
 	const parts = [];
 	if (bonus.ndice !== 0) {
 		parts.push({mod: 0, ndice: bonus.ndice, die: bonus.die});

@@ -1,29 +1,80 @@
-export function initDurations () {
-	game.settings.register('obsidian', 'durations', {
-		default: [],
-		scope: 'world',
-		onChange: renderDurations
-	});
+import {ObsidianActor} from './actor.js';
+import {OBSIDIAN} from '../rules/rules.js';
 
+export function initDurations () {
 	Hooks.on('updateCombat', advanceDurations);
 	renderDurations();
 }
 
-function createDuration (actor, duration, effect) {
+async function createDuration (actor, rounds, effect) {
 	const durations = game.settings.get('obsidian', 'durations');
-	const existing = durations.find(duration => duration.effect === effect);
+	let duration = durations.find(duration => duration.effect === effect);
 
-	if (existing) {
-		existing.remaining = duration;
+	if (duration) {
+		duration.remaining = rounds;
 	} else {
-		durations.push({
-			actor: actor.data._id,
+		duration = {
 			effect: effect,
-			remaining: duration
-		});
+			remaining: rounds
+		};
+
+		durations.push(duration);
+		if (actor.isToken) {
+			duration.scene = actor.token.scene.data._id;
+			duration.token = actor.token.data._id;
+		} else {
+			duration.actor = actor.data._id;
+		}
+	}
+
+	duration.active = [];
+	if (game.user.targets.size) {
+		for (const target of game.user.targets) {
+			duration.active.push([target.scene.data._id, target.data._id, effect]);
+			await createActiveEffect(target, effect);
+		}
 	}
 
 	updateDurations(durations);
+}
+
+async function createActiveEffect (target, uuid) {
+	let effect = target.actor.data.obsidian.effects.get(uuid);
+	if (!effect) {
+		return;
+	}
+
+	const originalItem = target.actor.data.obsidian.itemsByID.get(effect.parentItem);
+	effect = duplicate(effect);
+	effect.uuid = OBSIDIAN.uuid();
+	effect.components = effect.components.filter(component => component.type !== 'duration');
+	effect.components.forEach(component => component.uuid = OBSIDIAN.uuid());
+	effect.activeEffect = true;
+	effect.toggle = {active: true};
+	effect.img = originalItem.img;
+
+	const item = {
+		type: 'feat',
+		name: 'ActiveEffect',
+		flags: {
+			obsidian: {
+				activeEffect: true,
+				original: uuid,
+				effects: [effect],
+			}
+		}
+	};
+
+	if (game.user.isGM) {
+		await target.actor.createEmbeddedEntity('OwnedItem', item);
+	} else {
+		await game.socket.emit('module.obsidian', {
+			action: 'CREATE.OWNED',
+			sceneID: target.scene.data._id,
+			tokenID: target.data._id,
+			data: item
+		});
+	}
 }
 
 export function handleDurations (actor, item, effect) {
@@ -55,9 +106,9 @@ export function handleDurations (actor, item, effect) {
 
 export function updateDurations (durations) {
 	if (game.user.isGM) {
-		game.settings.set('obsidian', 'durations', durations);
+		return game.settings.set('obsidian', 'durations', durations);
 	} else {
-		game.socket.emit('module.obsidian', {
+		return game.socket.emit('module.obsidian', {
 			action: 'SET.WORLD',
 			key: 'durations',
 			value: durations
@@ -65,25 +116,62 @@ export function updateDurations (durations) {
 	}
 }
 
-function advanceDurations (combat) {
+async function advanceDurations (combat) {
 	if (!combat.combatant.actor) {
 		return;
 	}
 
-	const actor = combat.combatant.actor.data._id;
 	const durations = game.settings.get('obsidian', 'durations');
-	durations
-		.filter(duration => duration.actor === actor)
-		.forEach(duration => duration.remaining--);
+	const filter = durationFilter(combat.combatant.actor);
+	durations.filter(filter).forEach(duration => duration.remaining--);
 
 	const expired = durations.filter(duration => duration.remaining < 1);
-
-	// Here is where we do something special with the expired durations.
-
-	updateDurations(durations.filter(duration => !expired.includes(duration)));
+	await cleanupExpired(expired);
+	await updateDurations(durations.filter(duration => !expired.includes(duration)));
+	refreshOwners(expired);
 }
 
-function onDelete (html) {
+export function durationFilter (actor) {
+	if (actor.isToken) {
+		return duration =>
+			duration.scene === actor.token.scene.data._id
+			&& duration.token === actor.token.data._id;
+	} else {
+		return duration => duration.actor === actor.data._id;
+	}
+}
+
+async function cleanupExpired (expired) {
+	for (const duration of expired) {
+		for (const [sceneID, tokenID, effect] of duration.active) {
+			const actor = ObsidianActor.fromSceneTokenPair(sceneID, tokenID);
+			if (!actor) {
+				continue;
+			}
+
+			const item =
+				actor.data.items.find(item =>
+					getProperty(item, 'flags.obsidian.original') === effect);
+
+			if (!item) {
+				continue;
+			}
+
+			if (game.user.isGM) {
+				await actor.deleteEmbeddedEntity('OwnedItem', item._id);
+			} else {
+				await game.socket.emit({
+					action: 'DELETE.OWNED',
+					sceneID: sceneID,
+					tokenID: tokenID,
+					itemID: item._id
+				});
+			}
+		}
+	}
+}
+
+async function onDelete (html) {
 	const durations = game.settings.get('obsidian', 'durations');
 	const uuid = html.data('effect');
 	const idx = durations.findIndex(duration => duration.effect === uuid);
@@ -92,8 +180,20 @@ function onDelete (html) {
 		return;
 	}
 
-	durations.splice(idx, 1);
-	updateDurations(durations);
+	const expired = durations.splice(idx, 1);
+	await cleanupExpired(expired);
+	await updateDurations(durations);
+	refreshOwners(expired);
+}
+
+function refreshOwners (expired) {
+	for (const duration of expired) {
+		const actor = getDurationActor(duration);
+		if (actor) {
+			actor.prepareData();
+			actor.getActiveTokens().forEach(token => token.drawEffects());
+		}
+	}
 }
 
 async function onEdit (html) {
@@ -128,6 +228,26 @@ async function onEdit (html) {
 	}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 }
 
+async function onClick (evt) {
+	if (!game.user.targets.size) {
+		return;
+	}
+
+	const effect = evt.currentTarget.dataset.effect;
+	const durations = game.settings.get('obsidian', 'durations');
+	const duration = durations.find(duration => duration.effect === effect);
+
+	if (!duration) {
+		return;
+	}
+
+	duration.active = [];
+	for (const target of game.user.targets) {
+		duration.active.push([target.scene.data._id, target.data._id, effect]);
+		await createActiveEffect(target, effect);
+	}
+}
+
 function onEnter (evt) {
 	if (evt.currentTarget.classList.contains('context')) {
 		return;
@@ -159,11 +279,25 @@ function ownsDuration (duration) {
 		return true;
 	}
 
-	const actor = game.actors.get(duration.data('actor'));
+	let actor;
+	if (duration.data('actor')) {
+		actor = game.actors.get(duration.data('actor'));
+	} else {
+		actor = ObsidianActor.fromSceneTokenPair(duration.data('scene'), duration.data('token'));
+	}
+
 	return actor && actor.owner;
 }
 
-function renderDurations () {
+export function getDurationActor (duration) {
+	if (duration.actor) {
+		return game.actors.get(duration.actor);
+	} else {
+		return ObsidianActor.fromSceneTokenPair(duration.scene, duration.token);
+	}
+}
+
+export function renderDurations () {
 	let durationBar = $('#obsidian-duration-bar');
 	if (!durationBar.length) {
 		durationBar = $('<div></div>');
@@ -193,7 +327,7 @@ function renderDurations () {
 	const durations = game.settings.get('obsidian', 'durations');
 
 	for (const duration of durations) {
-		const actor = game.actors.get(duration.actor);
+		const actor = getDurationActor(duration);
 		if (!actor || !getProperty(actor, 'data.obsidian.effects')) {
 			continue;
 		}
@@ -216,8 +350,10 @@ function renderDurations () {
 		}
 
 		durationBar.append($(`
-			<div class="obsidian-duration" data-actor="${duration.actor}"
-			     data-effect="${effect.uuid}">
+			<div class="obsidian-duration" data-effect="${effect.uuid}"
+			     ${duration.actor ? `data-actor="${duration.actor}"` : ''}
+			     ${duration.scene ? `data-scene="${duration.scene}"` : ''}
+			     ${duration.token ? `data-token="${duration.token}"` : ''}>
 				<img src="${item.img}" alt="${label}">
 				<div class="obsidian-duration-remaining">${remaining}</div>
 				<div class="obsidian-msg-tooltip">${label}</div>
@@ -225,5 +361,5 @@ function renderDurations () {
 		`));
 	}
 
-	durationBar.find('.obsidian-duration').hover(onEnter, onLeave);
+	durationBar.find('.obsidian-duration').hover(onEnter, onLeave).click(onClick);
 }

@@ -27,8 +27,10 @@ function filterToggleable (actorData) {
 				component.parentEffect = effect.uuid;
 				if (component.type === 'roll-mod') {
 					effect.mods.push(component);
+					toggleable.push(effect);
 				} else if (component.type === 'bonus') {
 					effect.bonuses.push(component);
+					toggleable.push(effect)
 				} else if (component.type === 'filter') {
 					effect.filters.push(component);
 				}

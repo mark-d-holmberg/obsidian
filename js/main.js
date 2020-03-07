@@ -15,7 +15,7 @@ import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
-import {initDurations} from './module/duration.js';
+import {initDurations, renderDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
 
 runPatches();
@@ -29,7 +29,14 @@ Hooks.once('init', async function () {
 		makeDefault: true
 	});
 
+	game.settings.register('obsidian', 'durations', {
+		default: [],
+		scope: 'world',
+		onChange: renderDurations
+	});
+
 	patchItem_prepareData();
+	patchConditions();
 
 	// We need to set the game config first, before doing any async work
 	// otherwise we yield execution and the game continues to initialise.
@@ -55,7 +62,6 @@ Hooks.once('ready', function () {
 	loadSpellData();
 	addSocketListener();
 	initDurations();
-	patchConditions();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {
