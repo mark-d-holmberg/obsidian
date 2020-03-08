@@ -15,7 +15,7 @@ export class ObsidianDialog extends BaseEntitySheet {
 		options.classes = ['form', 'dialog', 'obsidian-window'];
 		options.closeOnSubmit = false;
 		options.submitOnClose = true;
-		options.submitOnUnfocus = true;
+		options.submitOnChange = true;
 		options.width = 400;
 		options.modal = true;
 		options.pinnable = false;
@@ -36,7 +36,7 @@ export class ObsidianDialog extends BaseEntitySheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		if (this.options.submitOnUnfocus) {
+		if (this.options.submitOnChange) {
 			html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
 			html.find('select').off('change').change(this._onSubmit.bind(this));
 		}

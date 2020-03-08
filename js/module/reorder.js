@@ -130,6 +130,10 @@ export const Reorder = {
 			}
 		}
 
+		if (!['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot'].includes(src.type)) {
+			return false;
+		}
+
 		Reorder.insert(actor, src, dest, where, update);
 		actor.update(OBSIDIAN.updateArrays(actor.data, update));
 		return false;
@@ -141,7 +145,7 @@ export const Reorder = {
 		let contents;
 		let current = event.target;
 
-		while (current.nodeType !== Node.DOCUMENT_NODE) {
+		while (current && current.nodeType !== Node.DOCUMENT_NODE) {
 			if (current.nodeType !== Node.ELEMENT_NODE) {
 				current = current.parentNode;
 				continue;

@@ -433,10 +433,6 @@ export const Rolls = {
 			rollMod: rollMod
 		});
 
-		const adv =
-			determineAdvantage(
-				flags.sheet.roll, flags.saves.roll, flags.attributes.death.roll, ...rollMod.mode);
-
 		// If no advantage or disadvantage, take the first roll, otherwise find
 		// the highest or lowest roll, respectively.
 		const result = roll.flags.obsidian.results[0].find(r => r.active);
@@ -493,7 +489,7 @@ export const Rolls = {
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
-		handleDurations(actor, item, effect);
+		handleDurations(actor, item, effect, scaledAmount);
 
 		let scaledTargets = 0;
 		if (scaledAmount > 0 && scaling) {

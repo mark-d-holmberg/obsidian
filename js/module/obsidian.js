@@ -497,7 +497,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			type: 'feat',
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			flags: flags
-		}, {displaySheet: true});
+		}, {renderSheet: true});
 	}
 
 	/**
@@ -542,9 +542,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		this.actor.createEmbeddedEntity('OwnedItem', {
 			type: 'spell',
 			name: game.i18n.localize('OBSIDIAN.NewSpell')
-		}, {
-			displaySheet: true
-		});
+		}, {renderSheet: true});
 	}
 
 	/**

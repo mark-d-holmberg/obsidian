@@ -106,7 +106,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			item.flags.obsidian.custom = cls.custom;
 		}
 
-		await this.parent.actor.createEmbeddedEntity('OwnedItem', item, {displaySheet: false});
+		await this.parent.actor.createEmbeddedEntity('OwnedItem', item, {renderSheet: false});
 		this.render(false);
 	}
 

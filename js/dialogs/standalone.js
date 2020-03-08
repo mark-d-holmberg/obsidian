@@ -8,7 +8,6 @@ export class ObsidianStandaloneDialog extends Application {
 		const options = super.defaultOptions;
 		options.classes = ['form', 'dialog', 'obsidian-window'];
 		options.submitOnClose = false;
-		options.submitOnUnfocus = false;
 		options.submitOnChange = false;
 		options.closeOnSubmit = true;
 		options.pinnable = false;

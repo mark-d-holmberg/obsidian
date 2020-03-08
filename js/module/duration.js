@@ -1,12 +1,33 @@
 import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../rules/rules.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export function initDurations () {
 	Hooks.on('updateCombat', advanceDurations);
 	renderDurations();
 }
 
-async function createDuration (actor, rounds, effect) {
+async function applyDuration (duration, actor, uuid, roll) {
+	const effect = actor.data.obsidian.effects.get(uuid);
+	if (!effect) {
+		return;
+	}
+
+	if (getProperty(effect, 'bonuses.length') || getProperty(effect, 'mods.length')) {
+		for (const target of game.user.targets) {
+			duration.active.push([target.scene.data._id, target.data._id, uuid]);
+			await createActiveEffect(target, actor, effect);
+		}
+	}
+
+	if (roll && (!effect.isScaling || effect.selfScaling)) {
+		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const spell = item && item.type === 'spell' ? item : undefined;
+		ObsidianItems.rollEffect(actor, effect, duration.scaledAmount + 1, spell);
+	}
+}
+
+async function createDuration (actor, rounds, effect, scaledAmount) {
 	const durations = game.settings.get('obsidian', 'durations');
 	let duration = durations.find(duration => duration.effect === effect);
 
@@ -15,7 +36,8 @@ async function createDuration (actor, rounds, effect) {
 	} else {
 		duration = {
 			effect: effect,
-			remaining: rounds
+			remaining: rounds,
+			scaledAmount: scaledAmount
 		};
 
 		durations.push(duration);
@@ -28,23 +50,14 @@ async function createDuration (actor, rounds, effect) {
 	}
 
 	duration.active = [];
-	if (game.user.targets.size) {
-		for (const target of game.user.targets) {
-			duration.active.push([target.scene.data._id, target.data._id, effect]);
-			await createActiveEffect(target, effect);
-		}
-	}
-
+	await applyDuration(duration, actor, effect, false);
 	updateDurations(durations);
 }
 
-async function createActiveEffect (target, uuid) {
-	let effect = target.actor.data.obsidian.effects.get(uuid);
-	if (!effect) {
-		return;
-	}
+async function createActiveEffect (target, actor, effect) {
+	const uuid = effect.uuid;
+	const originalItem = actor.data.obsidian.itemsByID.get(effect.parentItem);
 
-	const originalItem = target.actor.data.obsidian.itemsByID.get(effect.parentItem);
 	effect = duplicate(effect);
 	effect.uuid = OBSIDIAN.uuid();
 	effect.components = effect.components.filter(component => component.type !== 'duration');
@@ -77,7 +90,7 @@ async function createActiveEffect (target, uuid) {
 	}
 }
 
-export function handleDurations (actor, item, effect) {
+export function handleDurations (actor, item, effect, scaledAmount) {
 	const durations = effect.components.filter(c => c.type === 'duration');
 	const magnitude = getProperty(item, 'flags.obsidian.duration.type');
 	const spellDuration =
@@ -101,7 +114,7 @@ export function handleDurations (actor, item, effect) {
 		}
 	}
 
-	createDuration(actor, duration, effect.uuid);
+	createDuration(actor, duration, effect.uuid, scaledAmount);
 }
 
 export function updateDurations (durations) {
@@ -229,22 +242,22 @@ async function onEdit (html) {
 }
 
 async function onClick (evt) {
-	if (!game.user.targets.size) {
-		return;
-	}
-
-	const effect = evt.currentTarget.dataset.effect;
+	const uuid = evt.currentTarget.dataset.effect;
 	const durations = game.settings.get('obsidian', 'durations');
-	const duration = durations.find(duration => duration.effect === effect);
+	const duration = durations.find(duration => duration.effect === uuid);
 
 	if (!duration) {
 		return;
 	}
 
-	duration.active = [];
-	for (const target of game.user.targets) {
-		duration.active.push([target.scene.data._id, target.data._id, effect]);
-		await createActiveEffect(target, effect);
+	const actor = getDurationActor(duration);
+	if (!actor) {
+		return;
+	}
+
+	await applyDuration(duration, actor, uuid, true);
+	if (game.user.targets.size) {
+		updateDurations(durations);
 	}
 }
 

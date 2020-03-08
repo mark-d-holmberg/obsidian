@@ -52,7 +52,7 @@ async function onHotbarDrop (bar, data, slot) {
 			type: 'script',
 			img: data.data.img,
 			command: command
-		}, {displaySheet: false});
+		}, {renderSheet: false});
 	}
 
 	game.user.assignHotbarMacro(macro, slot);

@@ -6,7 +6,7 @@ export class ObsidianNewClassDialog extends ObsidianDialog {
 		options.title = game.i18n.localize('OBSIDIAN.AddClass');
 		options.template = 'modules/obsidian/html/dialogs/new-class.html';
 		options.submitOnClose = false;
-		options.submitOnUnfocus = false;
+		options.submitOnChange = false;
 		options.closeOnSubmit = true;
 		return options;
 	}

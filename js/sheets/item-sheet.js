@@ -7,7 +7,7 @@ export class ObsidianItemSheet extends ItemSheet {
 		options.width = 520;
 		options.classes = options.classes.concat(['item', 'dialog', 'obsidian-window']);
 		options.resizable = false;
-		options.submitOnUnfocus = false;
+		options.submitOnChange = false;
 		return options;
 	}
 

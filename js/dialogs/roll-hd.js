@@ -5,7 +5,7 @@ export class ObsidianRollHDDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.submitOnClose = false;
-		options.submitOnUnfocus = false;
+		options.submitOnChange = false;
 		options.width = 150;
 		options.title = game.i18n.localize('OBSIDIAN.RollHD');
 		options.template = 'modules/obsidian/html/dialogs/roll-hd.html';
