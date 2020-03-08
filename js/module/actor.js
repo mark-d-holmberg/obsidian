@@ -32,7 +32,7 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		this.data.obsidian = {classes: []};
 
-		if (this.isPC) {
+		if (this.data.type === 'character') {
 			this.data.obsidian.classes =
 				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
 
@@ -111,7 +111,7 @@ export class ObsidianActor extends Actor5e {
 		Prepare.armour(this.data);
 		prepareSpells(this.data);
 
-		if (this.isPC) {
+		if (this.data.type === 'character') {
 			Prepare.defenses(flags);
 			Prepare.hd(this.data);
 			Prepare.tools(this.data, data, flags);
