@@ -57,7 +57,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 		if (this._item.type === 'spell') {
 			Rolls.create(this._actor, {roll: 'item', id: this._item._id, scaling: level});
 		} else {
-			ObsidianItems.rollEffect(this._actor, this._effect, level);
+			ObsidianItems.rollEffect(this._actor, this._effect, {scaling: level});
 		}
 
 		this.close();

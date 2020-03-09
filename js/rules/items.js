@@ -94,7 +94,7 @@ export const ObsidianItems = {
 				return;
 			}
 
-			ObsidianItems.rollEffect(actor, effect, null, spell);
+			ObsidianItems.rollEffect(actor, effect, {spell: spell});
 			return;
 		}
 
@@ -143,7 +143,7 @@ export const ObsidianItems = {
 		Rolls.create(actor, options);
 	},
 
-	rollEffect: function (actor, effect, scaling, spell) {
+	rollEffect: function (actor, effect, {scaling, spell, withDuration = true}) {
 		if (typeof actor === 'string') {
 			actor = game.actors.get(actor);
 		}
@@ -203,7 +203,13 @@ export const ObsidianItems = {
 			scaledAmount = 0;
 		}
 
-		const options = {roll: 'fx', uuid: effect.uuid, scaling: scaledAmount};
+		const options = {
+			roll: 'fx',
+			uuid: effect.uuid,
+			scaling: scaledAmount,
+			withDuration: withDuration
+		};
+
 		if (spell) {
 			options.roll = 'item';
 			options.id = spell._id;

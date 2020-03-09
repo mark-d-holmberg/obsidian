@@ -1,6 +1,5 @@
 import {Filters} from './filters.js';
 import {OBSIDIAN} from './rules.js';
-import {getDurationActor} from '../module/duration.js';
 
 export function applyBonuses (actorData) {
 	const data = actorData.data;
@@ -75,8 +74,9 @@ function bonusName (actorData, bonus) {
 	return item.name;
 }
 
-function getTokenActorDataSafe (duration) {
+function getTokenActorDataSafe (activeEffect) {
 	// Try to avoid causing an infinite recursion loop of Actor.prepareData().
+	const duration = activeEffect.flags.obsidian.duration;
 	if (duration.actor) {
 		const actor = game.actors.get(duration.actor);
 		if (actor) {
@@ -98,7 +98,7 @@ function getTokenActorDataSafe (duration) {
 			return;
 		}
 
-		if (!tokenData.actorLink) {
+		if (tokenData.actorLink) {
 			return actor.data;
 		}
 
@@ -111,15 +111,9 @@ export function bonusToParts (actorData, bonus) {
 	if (effect && effect.activeEffect) {
 		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
 		if (item) {
-			const duration =
-				game.settings.get('obsidian', 'durations')
-					.find(duration => duration.effect === item.flags.obsidian.original);
-
-			if (duration) {
-				const tokenActorData = getTokenActorDataSafe(duration);
-				if (tokenActorData) {
-					actorData = tokenActorData;
-				}
+			const tokenActorData = getTokenActorDataSafe(item);
+			if (tokenActorData) {
+				actorData = tokenActorData;
 			}
 		}
 	}

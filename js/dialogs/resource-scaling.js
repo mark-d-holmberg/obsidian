@@ -27,8 +27,10 @@ export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(() => {
-			ObsidianItems.rollEffect(
-				this._actor, this._effect, Number(html.find('input').val()), this._spell);
+			ObsidianItems.rollEffect(this._actor, this._effect, {
+				scaling: Number(html.find('input').val()),
+				spell: this._spell
+			});
 
 			this.close();
 		});

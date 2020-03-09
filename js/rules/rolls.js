@@ -228,7 +228,8 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, Number(options.scaling)));
+			Rolls.toChat(actor,
+				...Rolls.itemRoll(actor, item, Number(options.scaling), options.withDuration));
 		} else if (roll === 'fx') {
 			if (options.uuid === undefined) {
 				return;
@@ -239,9 +240,10 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(
-				actor,
-				...Rolls.effectRoll(actor, effect, {scaledAmount: Number(options.scaling)}));
+			Rolls.toChat(actor, ...Rolls.effectRoll(actor, effect, {
+				scaledAmount: Number(options.scaling),
+				withDuration: options.withDuration
+			}));
 		} else if (roll === 'save') {
 			if (!options.save) {
 				return;
@@ -479,7 +481,7 @@ export const Rolls = {
 		return roll;
 	},
 
-	effectRoll: function (actor, effect, {name, scaledAmount, isFirst = true}) {
+	effectRoll: function (actor, effect, {name, scaledAmount, isFirst = true, withDuration = true}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
@@ -489,7 +491,9 @@ export const Rolls = {
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
-		handleDurations(actor, item, effect, scaledAmount);
+		if (withDuration) {
+			handleDurations(actor, item, effect, scaledAmount);
+		}
 
 		let scaledTargets = 0;
 		if (scaledAmount > 0 && scaling) {
@@ -645,7 +649,7 @@ export const Rolls = {
 			[flags.attributes.init.roll], mods, rollMod);
 	},
 
-	itemRoll: function (actor, item, scaling) {
+	itemRoll: function (actor, item, scaling, withDuration) {
 		if (!item.flags.obsidian || !item.flags.obsidian.effects) {
 			return [];
 		}
@@ -680,7 +684,8 @@ export const Rolls = {
 			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
 				name: item.name,
 				scaledAmount: scaledAmount,
-				isFirst: i === 0
+				isFirst: i === 0,
+				withDuration: withDuration
 			}));
 	},
 

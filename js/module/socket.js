@@ -1,4 +1,5 @@
 import {ObsidianActor} from './actor.js';
+import {OBSIDIAN} from '../rules/rules.js';
 
 export function addSocketListener () {
 	game.socket.on('module.obsidian', handleMsg);
@@ -13,6 +14,8 @@ function handleMsg (payload) {
 		createOwned(payload);
 	} else if (payload.action === 'DELETE.OWNED') {
 		deleteOwned(payload);
+	} else if (payload.action === 'DELETE.MANY.OWNED') {
+		deleteManyOwned(payload);
 	} else if (payload.action === 'SET.WORLD') {
 		setWorld(payload);
 	}
@@ -34,6 +37,15 @@ function deleteOwned (payload) {
 	}
 
 	actor.deleteEmbeddedEntity('OwnedItem', payload.itemID);
+}
+
+function deleteManyOwned (payload) {
+	const actor = getActor(payload);
+	if (!actor) {
+		return;
+	}
+
+	OBSIDIAN.deleteManyOwnedItems(actor, payload.ids);
 }
 
 function setWorld (payload) {

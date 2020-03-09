@@ -1068,13 +1068,7 @@ async function beginMigration (html) {
 
 				if (token.actorData.items && token.actorData.items.length) {
 					for (const item of token.actorData.items) {
-						const realItem = actor.getEmbeddedEntity('OwnedItem', item._id);
-						if (!realItem) {
-							continue;
-						}
-
-						items.push(
-							Migrate.convertItem(mergeObject(realItem, item, {inplace: false})));
+						items.push(Migrate.convertItem(item));
 					}
 
 					token.actorData.items = items;

@@ -15,7 +15,7 @@ import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
-import {initDurations, renderDurations} from './module/duration.js';
+import {initDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
 
 runPatches();
@@ -27,12 +27,6 @@ Hooks.once('init', async function () {
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
 		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell'],
 		makeDefault: true
-	});
-
-	game.settings.register('obsidian', 'durations', {
-		default: [],
-		scope: 'world',
-		onChange: renderDurations
 	});
 
 	patchItem_prepareData();

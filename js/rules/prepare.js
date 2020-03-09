@@ -3,7 +3,6 @@ import {Parse} from '../module/parse.js';
 import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
-import {durationFilter} from '../module/duration.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -363,11 +362,11 @@ export const Prepare = {
 		Object.entries(actorData.flags.obsidian.attributes.conditions)
 			.forEach(([condition, enabled]) => actorData.obsidian.conditions[condition] = enabled);
 
-		const filter = durationFilter(actor);
 		actorData.obsidian.conditions.concentrating =
-			game.settings.get('obsidian', 'durations')
-				.filter(filter)
-				.map(duration => actorData.obsidian.effects.get(duration.effect))
+			actorData.items
+				.filter(item =>
+					item.type === 'feat' && getProperty(item, 'flags.obsidian.duration'))
+				.map(duration => actorData.obsidian.effects.get(duration.flags.obsidian.ref))
 				.some(effect => effect && Effect.isConcentration(actorData, effect))
 	},
 
