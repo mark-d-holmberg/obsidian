@@ -144,7 +144,7 @@ export const Prepare = {
 			if (resource.key === 'abl') {
 				resource.max = op(resource.bonus, data.abilities[resource.ability].mod);
 			} else if (resource.key === 'chr') {
-				resource.max = op(resource.bonus, data.details.level.value);
+				resource.max = op(resource.bonus, data.details.level);
 			} else if (resource.key === 'cls') {
 				const cls = classes.find(cls => cls._id === resource.class);
 				if (cls) {

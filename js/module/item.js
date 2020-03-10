@@ -249,7 +249,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 		if (cantripScaling) {
 			// Cantrips are scaled up-front, not when rolled.
-			const extra = Math.round((data.details.level.value + 1) / 6 + .5) - 1;
+			const extra = Math.round((data.details.level + 1) / 6 + .5) - 1;
 			if (extra > 0) {
 				const targetComponent =
 					cantripScaling.components.find(c => c.type === 'target');

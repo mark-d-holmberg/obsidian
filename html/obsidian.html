@@ -59,7 +59,7 @@
 				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level.max}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{actor.obsidian.xpDerivedLevel}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -70,10 +70,10 @@
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{#if (geq data.details.level.max ObsidianRules.MAX_LEVEL)}}
+							{{#if (geq actor.obsidian.xpDerivedLevel ObsidianRules.MAX_LEVEL)}}
 								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
 							{{else}}
-								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add data.details.level.max 1}}
+								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add actor.obsidian.xpDerivedLevel 1}}
 							{{/if}}
 						</span>
 					</div>

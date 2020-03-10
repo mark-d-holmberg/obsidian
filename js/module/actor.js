@@ -37,7 +37,7 @@ export class ObsidianActor extends Actor5e {
 				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
 
 			data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
-			data.details.level = {value: 0};
+			data.details.level = 0;
 
 			for (const cls of this.data.obsidian.classes) {
 				if (!cls.flags.obsidian) {
@@ -49,11 +49,11 @@ export class ObsidianActor extends Actor5e {
 						? cls.flags.obsidian.custom
 						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
 				cls.data.levels = Number(cls.data.levels);
-				data.details.level.value += cls.data.levels;
+				data.details.level += cls.data.levels;
 			}
 
 			if (flags.details.milestone) {
-				data.details.level.max = data.details.level.value;
+				this.data.obsidian.xpDerivedLevel = data.details.level;
 			} else {
 				let i = 0;
 				for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
@@ -63,7 +63,7 @@ export class ObsidianActor extends Actor5e {
 				}
 
 				const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
-				data.details.level.max = i;
+				this.data.obsidian.xpDerivedLevel = i;
 				data.details.xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
 				data.details.xp.pct =
 					Math.floor(
@@ -72,7 +72,7 @@ export class ObsidianActor extends Actor5e {
 			}
 
 			this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
-			data.attributes.prof = Math.floor((data.details.level.value + 7) / 4);
+			data.attributes.prof = Math.floor((data.details.level + 7) / 4);
 
 			data.attributes.ac.min =
 				flags.attributes.ac.base

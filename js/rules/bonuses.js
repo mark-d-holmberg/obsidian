@@ -146,7 +146,7 @@ export function bonusToParts (actorData, bonus) {
 	if (!OBSIDIAN.notDefinedOrEmpty(bonus.level)) {
 		let level;
 		if (bonus.level === 'chr') {
-			level = actorData.data.details.level.value;
+			level = actorData.data.details.level;
 		} else if (bonus.level === 'cls') {
 			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
 			if (cls) {

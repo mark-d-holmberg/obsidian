@@ -151,7 +151,11 @@ export const Parse = {
 				return val;
 			}
 		} else {
-			return getProperty(lookup, prop);
+			try {
+				return getProperty(lookup, prop);
+			} catch {
+				return '';
+			}
 		}
 	},
 
