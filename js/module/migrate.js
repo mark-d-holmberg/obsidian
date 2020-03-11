@@ -1,6 +1,6 @@
 import {Schema} from './schema.js';
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
 
 export const DAMAGE_CONVERT = {

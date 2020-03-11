@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 class ObsidianSpellLists extends Application {
 	static get defaultOptions () {

@@ -1,10 +1,7 @@
 let dnd5eDrop;
 
 export function addMacroHook () {
-	// This function is encapsulated behind dnd5e.js module scope so this
-	// is the only way we can get to it.
-	dnd5eDrop = Hooks._hooks.hotbarDrop[0];
-	Hooks.off('hotbarDrop', dnd5eDrop);
+	Hooks._hooks.hotbarDrop.forEach(hook => Hooks.off('hotbarDrop', hook));
 	Hooks.on('hotbarDrop', onHotbarDrop);
 }
 

@@ -1,4 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../rules/rolls.js';
 

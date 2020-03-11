@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export const Filters = {
 	isAttack: filter => filter.filter === 'roll' && filter.roll === 'attack',

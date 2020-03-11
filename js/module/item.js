@@ -2,7 +2,7 @@ import {Item5e} from '../../../../systems/dnd5e/module/item/entity.js';
 import {Prepare} from '../rules/prepare.js';
 import {Schema} from './schema.js';
 import {spellNotes} from '../rules/spells.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {

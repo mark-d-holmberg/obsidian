@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function prepareInventory (actorData) {
 	actorData.obsidian.itemsByID = new Map();

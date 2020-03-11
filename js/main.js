@@ -2,7 +2,6 @@ import {Obsidian} from './module/obsidian.js';
 import {preloadPartials, preloadTemplates} from './templates.js';
 import {loadSpellData} from './data.js';
 import {runPatches} from './util/patch.js';
-import {OBSIDIAN} from './rules/rules.js';
 import {registerHandlebarHelpers} from './util/helpers.js';
 import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
@@ -12,7 +11,6 @@ import {addSettingsHook} from './rules/spell-lists.js';
 import {checkVersion, Migrate} from './module/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
-import {ObsidianItems} from './rules/items.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {initDurations} from './module/duration.js';
@@ -52,6 +50,7 @@ Hooks.once('ready', function () {
 	link.href = `modules/obsidian/css/${fontSheet}.css`;
 	document.getElementsByTagName('head')[0].appendChild(link);
 
+	addMacroHook();
 	checkVersion();
 	loadSpellData();
 	addSocketListener();
@@ -77,7 +76,6 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 
 addCompendiumContextMenuHook();
 addSettingsHook();
-addMacroHook();
 
 function enrichActorFlags (data) {
 	if (data.type === 'character') {
@@ -102,16 +100,6 @@ Hooks.on('createOwnedItem', (actor, id, data) => {
 	}
 });
 
-OBSIDIAN.notDefinedOrEmpty = function (obj) {
-	return obj == null || obj === '';
-};
-
-OBSIDIAN.uuid = function () {
-	return ([1e7]+-1e3+-4e3+-8e3+-1e11)
-		.replace(/[018]/g, c =>
-			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
-};
-
 // Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {
 	if (!evt.target.parentNode || evt.target.parentNode.nodeType !== Node.ELEMENT_NODE
@@ -121,46 +109,3 @@ document.addEventListener('click', evt => {
 		$('.obsidian-delete.obsidian-alert').removeClass('obsidian-alert');
 	}
 });
-
-String.prototype.capitalise = function () {
-	if (!this.length) {
-		return this;
-	}
-
-	return this[0].toLocaleUpperCase() + this.substring(1);
-};
-
-String.prototype.format = function (...args) {
-	let str = this.toString();
-	if (args.length) {
-		const type = typeof args[0];
-		if (!['string', 'number'].includes(type)) {
-			args = args[0];
-		}
-
-		for (const key in args) {
-			str = str.replace(new RegExp(`\\{${key}\\}`, 'gi'), args[key]);
-		}
-	}
-
-	return str;
-};
-
-Number.prototype.sgn = function () {
-	return this < 0 ? `${this}` : `+${this}`;
-};
-
-Number.prototype.sgnex = function () {
-	return this < 0 ? ` - ${this * -1}` : ` + ${this}`;
-};
-
-Array.range = function (start, end) {
-	return [...Array(end - start + 1).keys()].map(i => i + start);
-};
-
-Array.prototype.last = function () {
-	return this[this.length - 1];
-};
-
-OBSIDIAN.Items = ObsidianItems;
-window.OBSIDIAN = OBSIDIAN;

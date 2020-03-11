@@ -3,7 +3,7 @@ import {ObsidianResourceScalingDialog} from '../dialogs/resource-scaling.js';
 import {ObsidianActionableDialog} from '../dialogs/actionable.js';
 import {Rolls} from './rolls.js';
 import {Effect} from '../module/effect.js';
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 import {ObsidianActor} from '../module/actor.js';
 
 export const ObsidianItems = {

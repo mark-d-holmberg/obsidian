@@ -1,6 +1,6 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {Effect} from '../module/effect.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 

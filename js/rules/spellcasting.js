@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function prepareSpellcasting (actorData, flags) {
 	const data = actorData.data;

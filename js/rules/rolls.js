@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';

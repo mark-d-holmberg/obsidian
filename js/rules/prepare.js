@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Parse} from '../module/parse.js';
 import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';

@@ -1,4 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export const Reorder = {
 	dragStart: function (event) {

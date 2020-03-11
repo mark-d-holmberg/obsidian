@@ -1,4 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Reorder} from './reorder.js';
 import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';

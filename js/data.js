@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules/rules.js';
+import {OBSIDIAN} from './global.js';
 
 OBSIDIAN.Data = {};
 OBSIDIAN.spellComparator = (a, b) => {

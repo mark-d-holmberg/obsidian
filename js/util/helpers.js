@@ -1,4 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Prepare} from '../rules/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';

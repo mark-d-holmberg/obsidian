@@ -1,5 +1,5 @@
 import {Actor5e} from '../../../../systems/dnd5e/module/actor/entity.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {Prepare} from '../rules/prepare.js';
 import {prepareInventory} from '../rules/inventory.js';
 import {prepareSpells} from '../rules/spells.js';

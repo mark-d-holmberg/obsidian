@@ -1,5 +1,5 @@
 import {Filters} from './filters.js';
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function applyBonuses (actorData) {
 	const data = actorData.data;

@@ -1,5 +1,5 @@
 import {ObsidianActor} from './actor.js';
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function addSocketListener () {
 	game.socket.on('module.obsidian', handleMsg);

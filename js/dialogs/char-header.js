@@ -1,4 +1,4 @@
-import {OBSIDIAN} from '../rules/rules.js';
+import {OBSIDIAN} from '../global.js';
 import {ObsidianDialog} from './dialog.js';
 import {ObsidianNewClassDialog} from './new-class.js';
 

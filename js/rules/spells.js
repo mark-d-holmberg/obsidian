@@ -1,4 +1,4 @@
-import {OBSIDIAN} from './rules.js';
+import {OBSIDIAN} from '../global.js';
 
 export function prepareSpells (actorData) {
 	for (let i = 0; i < actorData.items.length; i++) {
