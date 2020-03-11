@@ -188,6 +188,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-char-ability-score')
 			.focus(this._onFocusAbilityScore.bind(this))
 			.focusout(this._onLeaveAbilityScore.bind(this))
+			.off('change')
 			.change(this._onChangeAbilityScore.bind(this));
 
 		this._activateDialogs(html);
@@ -823,8 +824,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onFocusAbilityScore (evt) {
 		const target = $(evt.currentTarget);
-		const positive = target.hasClass('.obsidian-positive');
-		const negative = target.hasClass('.obsidian-negative');
+		const positive = target.hasClass('obsidian-positive');
+		const negative = target.hasClass('obsidian-negative');
 		evt.currentTarget._orig = target.val();
 		evt.currentTarget._positive = positive;
 		evt.currentTarget._negative = negative;
@@ -851,6 +852,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_onChangeAbilityScore (evt) {
 		const target = $(evt.currentTarget);
 		target.next().val(target.val());
+		this._onSubmit(evt);
 	}
 
 	/**
