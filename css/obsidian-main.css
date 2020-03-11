@@ -447,8 +447,16 @@ h3 > div > .obsidian-feature-recharge {
 	margin-right: 3px;
 }
 
+.obsidian-feature-use.obsidian-feature-positive {
+	border-color: var(--positive);
+}
+
 .obsidian-feature-used {
 	background: var(--mid);
+}
+
+.obsidian-feature-used.obsidian-feature-positive {
+	background: var(--positive);
 }
 
 .obsidian-feature-max {

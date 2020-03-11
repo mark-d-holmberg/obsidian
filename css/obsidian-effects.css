@@ -35,6 +35,22 @@
 	padding: 0;
 	top: 30px;
 	left: 560px;
+	overflow: auto;
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
+}
+
+.obsidian-effects-tray::-webkit-scrollbar {
+	height: 6px;
+}
+
+.obsidian-effects-tray::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+.obsidian-effects-tray::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
 }
 
 .obsidian-effects-tray {
@@ -205,10 +221,8 @@
 
 .obsidian-effects-cat summary {
 	padding: 10px 20px 10px 10px;
-}
-
-.obsidian-effects-cat summary {
 	margin-bottom: 5px;
+	width: 160px;
 }
 
 #obsidian-duration-bar {

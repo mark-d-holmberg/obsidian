@@ -551,6 +551,7 @@
 	"OBSIDIAN.Target-line": "Line",
 	"OBSIDIAN.Target-sphere": "Sphere",
 	"OBSIDIAN.ConsumesResource": "Consumes Resource",
+	"OBSIDIAN.ProducesResource": "Produces Resource",
 	"OBSIDIAN.ConsumeTarget-this-effect": "This Effect",
 	"OBSIDIAN.ConsumeTarget-this-item": "This Item",
 	"OBSIDIAN.ConsumeTarget-item": "Item",
@@ -725,5 +726,6 @@
 	"OBSIDIAN.Apply": "Apply",
 	"OBSIDIAN.Split": "Split",
 	"OBSIDIAN.Permanent": "Permanent",
-	"OBSIDIAN.Temporary": "Temporary"
+	"OBSIDIAN.Temporary": "Temporary",
+	"OBSIDIAN.CanExceedMax": "Can exceed maximum"
 }

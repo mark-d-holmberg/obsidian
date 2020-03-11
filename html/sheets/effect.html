@@ -40,6 +40,9 @@
 					{{else if (eq type 'consume')}}
 						{{> modules/obsidian/html/components/effects/consume.html
 							  prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'produce')}}
+						{{> modules/obsidian/html/components/effects/produce.html
+						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{else if (eq type 'spells')}}
 						{{> modules/obsidian/html/components/effects/spells.html
 						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
@@ -97,6 +100,9 @@
 			</li>
 			<li class="obsidian-effects-pill obsidian-icon-consume-resource obsidian-add-consume">
 				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ConsumesResource'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-produce-resource obsidian-add-produce">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ProducesResource'}}</div>
 			</li>
 		</details>
 		<details class="obsidian-effects-cat" data-key="modifiers">

@@ -155,6 +155,7 @@ export const ObsidianItems = {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const resources = effect.components.filter(component => component.type === 'resource');
 		const consumers = effect.components.filter(component => component.type === 'consume');
+		const producers = effect.components.filter(component => component.type === 'produce');
 		let scaledAmount = (scaling || 0) - 1;
 
 		if (spell) {
@@ -179,7 +180,7 @@ export const ObsidianItems = {
 				ObsidianItems.consumeQuantity(actor, consumer, scaling || consumer.fixed);
 			} else if (consumer.target !== 'spell') {
 				const [refItem, refEffect, resource] =
-					Effect.getLinkedResource(actor.data, consumers[0]);
+					Effect.getLinkedResource(actor.data, consumer);
 
 				if (refItem && refEffect && resource) {
 					ObsidianItems.useResource(
@@ -189,6 +190,29 @@ export const ObsidianItems = {
 
 			if (scaling && consumer.target !== 'spell') {
 				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
+			}
+		}
+
+		if (producers.length) {
+			const producer = producers[0];
+			let produced = producer.fixed;
+
+			if (scaling) {
+				produced = Math.floor((scaledAmount + 1) * producer.fixed);
+			}
+
+			if (produced > 0) {
+				if (producer.target === 'qty') {
+					ObsidianItems.consumeQuantity(actor, producer, produced * -1);
+				} else if (producer.target !== 'spell') {
+					const [refItem, refEffect, resource] =
+						Effect.getLinkedResource(actor.data, producer);
+
+					if (refItem && refEffect && resource) {
+						ObsidianItems.useResource(
+							actor, refItem, refEffect, resource, produced * -1, producer.unlimited);
+					}
+				}
 			}
 		}
 
@@ -218,10 +242,14 @@ export const ObsidianItems = {
 		Rolls.create(actor, options);
 	},
 
-	useResource: function (actor, item, effect, resource, n = 1) {
+	useResource: function (actor, item, effect, resource, n = 1, unlimited = false) {
 		let remaining = resource.remaining - n;
 		if (remaining < 0) {
 			remaining = 0;
+		}
+
+		if (!unlimited && resource.max && remaining > resource.max) {
+			remaining = resource.max;
 		}
 
 		const update = {

@@ -94,10 +94,25 @@ export const Effect = {
 			itemID: '',
 			featID: '',
 			ref: '',
-			calc: 'fixed',
 			fixed: 1,
 			slots: 'any',
 			class: ''
+		};
+	},
+
+	newProduce: function () {
+		return {
+			type: 'produce',
+			uuid: OBSIDIAN.uuid(),
+			target: 'this-effect',
+			itemID: '',
+			featID: '',
+			ref: '',
+			calc: 'fixed',
+			fixed: 1,
+			slots: 'any',
+			class: '',
+			unlimited: false
 		};
 	},
 

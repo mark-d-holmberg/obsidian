@@ -52,6 +52,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		versatile: [],
 		resources: [],
 		consumers: [],
+		producers: [],
 		actionable: [],
 		scaling: [],
 		durations: []
@@ -159,7 +160,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				effect.scalingComponent = component;
 			} else if (component.type === 'duration') {
 				effect.durationComponent = component;
-			} else if (component.type === 'consume') {
+			} else if (component.type === 'consume' || component.type === 'produce') {
 				if (component.calc === 'var') {
 					component.fixed = 1;
 				}
@@ -169,7 +170,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				}
 
 				if (!effect.isScaling || effect.selfScaling) {
-					item.obsidian.consumers.push(component);
+					item.obsidian[`${component.type}rs`].push(component);
 				}
 			} else if (component.type === 'spells') {
 				if (component.source === 'individual' && component.method === 'list') {

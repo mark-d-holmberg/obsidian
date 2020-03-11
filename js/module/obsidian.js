@@ -808,7 +808,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
-		const max = resource.max;
+		const max = Math.max(resource.max, resource.remaining);
 		const update = {
 			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:

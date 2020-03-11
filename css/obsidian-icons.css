@@ -217,6 +217,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/consume-resource.svg');
 }
 
+.obsidian-icon-produce-resource {
+	background-image: url('../img/produce-resource.svg');
+}
+
 .obsidian-icon-provides-spells {
 	background-image: url('../img/provides-spells.svg');
 }

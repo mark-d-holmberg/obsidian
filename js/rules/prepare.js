@@ -155,7 +155,7 @@ export const Prepare = {
 			resource.max = Math.max(resource.min, resource.max);
 		}
 
-		if (resource.remaining === undefined || resource.remaining > resource.max) {
+		if (resource.remaining === undefined) {
 			resource.remaining = resource.max;
 		} else if (resource.remaining < 0) {
 			resource.remaining = 0;
@@ -664,16 +664,20 @@ export const Prepare = {
 			return '';
 		}
 
-		let used = resource.max - resource.remaining;
+		const max = Math.max(resource.max, resource.remaining);
+		let used = max - resource.remaining;
+
 		if (used < 0) {
 			used = 0;
 		}
 
 		let out = `<div class="obsidian-feature-uses" data-uuid="${resource.uuid}">`;
-		if (resource.max <= threshold) {
-			for (let i = 0; i < resource.max; i++) {
+		if (max <= threshold) {
+			for (let i = 0; i < max; i++) {
 				out += `
-					<div class="obsidian-feature-use${i < used ? ' obsidian-feature-used' : ''}"
+					<div class="obsidian-feature-use
+                         ${i < used ? 'obsidian-feature-used' : ''}
+                         ${max - i > resource.max ? 'obsidian-feature-positive' : ''}"
 					     data-n="${i + 1}"></div>
 				`;
 			}

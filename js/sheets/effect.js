@@ -15,6 +15,7 @@ const COMPONENT_MAP = {
 	'add-scaling': Effect.newScaling,
 	'add-targets': Effect.newTarget,
 	'add-consume': Effect.newConsume,
+	'add-produce': Effect.newProduce,
 	'add-spells': Effect.newSpells,
 	'add-bonus': Effect.newBonus,
 	'add-filter': Effect.newFilter,
@@ -113,7 +114,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			data.item.flags.obsidian.effects
 				.flatMap(e => e.components)
-				.filter(c => c.type === 'consume')
+				.filter(c => c.type === 'consume' || c.type === 'produce')
 				.forEach(component => {
 					const item =
 						data.actor.data.obsidian.itemsByID.get(
