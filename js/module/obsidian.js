@@ -692,10 +692,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onPipClicked (evt) {
-		if (this._pipTimeout) {
-			clearTimeout(this._pipTimeout);
-		}
-
 		const target = $(evt.currentTarget);
 		const n = Number(target.data('n'));
 		const parent = target.parent();
@@ -714,21 +710,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 			uses--;
 		}
 
-		const pips = parent.children();
-		pips.removeClass('obsidian-feature-used');
-		pips.each((i, el) => {
-			if (Number(el.dataset.n) <= uses) {
-				el.classList.add('obsidian-feature-used');
-			}
-		});
-
-		this._pipTimeout = setTimeout(() => {
-			if (parent.data('spell-level')) {
-				this._onSlotClicked(parent.data('spell-level'), uses);
-			} else {
-				this._onUseClicked(parent.data('uuid'), uses);
-			}
-		}, 250);
+		if (parent.data('spell-level')) {
+			this._onSlotClicked(parent.data('spell-level'), uses);
+		} else {
+			this._onUseClicked(parent.data('uuid'), uses);
+		}
 	}
 
 	/**
@@ -859,10 +845,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	async _render (force = false, options = {}) {
-		if (this._pipTimeout) {
-			clearTimeout(this._pipTimeout);
-		}
-
 		this._saveScrollPositions();
 		await super._render(force, options);
 		this._restoreScrollPositions();

@@ -7,7 +7,7 @@ export class ObsidianItemSheet extends ItemSheet {
 		options.width = 520;
 		options.classes = options.classes.concat(['item', 'dialog', 'obsidian-window']);
 		options.resizable = false;
-		options.submitOnChange = true;
+		options.submitOnChange = false;
 		return options;
 	}
 
@@ -25,6 +25,9 @@ export class ObsidianItemSheet extends ItemSheet {
 		super.activateListeners(html);
 		console.debug(this.item);
 		ObsidianDialog.initialiseComponents(html);
+
+		html.find('input').focusout(this._delaySubmit.bind(this));
+		html.find('select').change(this._onSubmit.bind(this));
 	}
 
 	getData () {
@@ -51,6 +54,14 @@ export class ObsidianItemSheet extends ItemSheet {
 				.filter(app => app.setModal)
 				.forEach(app => app.setModal(false));
 		}
+	}
+
+	_delaySubmit (evt) {
+		setTimeout(() => {
+			if (!this.element.find('input:focus, select:focus').length) {
+				this._onSubmit(evt);
+			}
+		}, 25);
 	}
 
 	_createEditor (target, editorOptions, initialContent) {
