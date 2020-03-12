@@ -129,7 +129,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					}
 				}
 			} else if (component.type === 'save') {
-				Prepare.calculateSave(actorData, component, data, cls);
+				Prepare.calculateSave(actorData, item, component, data, cls);
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.saves.push(component);
 				}

@@ -54,7 +54,7 @@ export const Prepare = {
 		}
 	},
 
-	calculateSave: function (actorData, dc, data, cls) {
+	calculateSave: function (actorData, item, dc, data, cls) {
 		if (dc.calc === 'fixed') {
 			dc.value = dc.fixed;
 			return;
@@ -73,7 +73,17 @@ export const Prepare = {
 		}];
 
 		dc.spellMod = 0;
-		Prepare.spellPart(dc, data, cls);
+		if (getProperty(item, 'flags.obsidian.parentComponent')) {
+			const provider = actorData.obsidian.components.get(item.flags.obsidian.parentComponent);
+			if (provider && provider.method === 'innate') {
+				dc.spellMod = data.abilities[provider.ability].mod;
+				dc.rollParts.push({mod: dc.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
+			} else {
+				Prepare.spellPart(dc, data, cls);
+			}
+		} else {
+			Prepare.spellPart(dc, data, cls);
+		}
 
 		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
 		if (bonuses.length) {
