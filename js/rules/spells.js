@@ -68,14 +68,8 @@ export function prepareSpells (actorData) {
 				flags.visible = flags.book && flags.prepared;
 			}
 
-			if (spell.data.components.ritual) {
-				flags.visible =
-					(spellcasting.rituals === 'prep' && flags.prepared)
-					|| spellcasting.rituals === 'book';
-
-				if (flags.visible) {
-					actorData.obsidian.spellbook.rituals.push(spell);
-				}
+			if (spell.data.components.ritual && flags.visible) {
+				actorData.obsidian.spellbook.rituals.push(spell);
 			}
 		} else {
 			flags.visible = true;
