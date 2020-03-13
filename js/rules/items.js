@@ -55,6 +55,24 @@ export const ObsidianItems = {
 		ObsidianItems.roll(actor, {roll: 'item', id: item});
 	},
 
+	produceSpellSlot: function (actor, slot, unlimited) {
+		const isPact = slot === 'pact';
+		const prop = isPact ? 'data.spells.pact' : `data.spells.spell${slot}`;
+		const spell = getProperty(actor.data, prop);
+		const uses = spell[isPact ? 'uses' : 'value'];
+
+		if (uses > 0) {
+			actor.update({[`${prop}.${isPact ? 'uses' : 'value'}`]: uses - 1});
+		} else {
+			if (!unlimited) {
+				return;
+			}
+
+			const tmp = spell.tmp || 0;
+			actor.update({[`${prop}.tmp`]: tmp + 1});
+		}
+	},
+
 	refreshConsumable: function (actor, item, effect, resource, n) {
 		actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
 			_id: item._id,
@@ -94,7 +112,12 @@ export const ObsidianItems = {
 				return;
 			}
 
-			ObsidianItems.rollEffect(actor, effect, {spell: spell});
+			const params = {spell: spell};
+			if (consumer) {
+				params.consumed = consumer.fixed;
+			}
+
+			ObsidianItems.rollEffect(actor, effect, params);
 			return;
 		}
 
@@ -143,7 +166,7 @@ export const ObsidianItems = {
 		Rolls.create(actor, options);
 	},
 
-	rollEffect: function (actor, effect, {scaling, spell, withDuration = true}) {
+	rollEffect: function (actor, effect, {consumed, spell}) {
 		if (typeof actor === 'string') {
 			actor = game.actors.get(actor);
 		}
@@ -156,54 +179,58 @@ export const ObsidianItems = {
 		const resources = effect.components.filter(component => component.type === 'resource');
 		const consumers = effect.components.filter(component => component.type === 'consume');
 		const producers = effect.components.filter(component => component.type === 'produce');
-		let scaledAmount = (scaling || 0) - 1;
+		let scaledAmount = (consumed || 0);
 
 		if (spell) {
-			scaledAmount += spell.data.level;
-		}
-
-		if (resources.length) {
-			if (resources[0].remaining - (scaling || 1) < 1
-				&& item.type === 'consumable'
-				&& item.data.quantity > 0
-				&& item.data.uses.autoDestroy)
-			{
-				ObsidianItems.refreshConsumable(actor, item, effect, resources[0], scaling || 1);
-			} else {
-				ObsidianItems.useResource(actor, item, effect, resources[0], scaling || 1);
-			}
+			scaledAmount -= spell.data.level;
 		}
 
 		if (consumers.length) {
 			const consumer = consumers[0];
 			if (consumer.target === 'qty') {
-				ObsidianItems.consumeQuantity(actor, consumer, scaling || consumer.fixed);
+				ObsidianItems.consumeQuantity(actor, consumer, consumed);
 			} else if (consumer.target !== 'spell') {
 				const [refItem, refEffect, resource] =
 					Effect.getLinkedResource(actor.data, consumer);
 
 				if (refItem && refEffect && resource) {
 					ObsidianItems.useResource(
-						actor, refItem, refEffect, resource, scaling || consumer.fixed);
+						actor, refItem, refEffect, resource, consumed);
 				}
 			}
 
-			if (scaling && consumer.target !== 'spell') {
-				scaledAmount = Math.floor(scaling / consumer.fixed) - 1;
+			if (consumer.calc === 'var') {
+				scaledAmount -= 1;
+			} else {
+				if (consumer.target === 'spell') {
+					scaledAmount -= consumer.slot;
+				} else {
+					scaledAmount -= consumer.fixed;
+				}
+			}
+		}
+
+		if (resources.length) {
+			if (resources[0].remaining - consumed < 1
+				&& item.type === 'consumable'
+				&& item.data.quantity > 0
+				&& item.data.uses.autoDestroy)
+			{
+				ObsidianItems.refreshConsumable(actor, item, effect, resources[0], consumed);
+			} else {
+				ObsidianItems.useResource(actor, item, effect, resources[0], consumed);
 			}
 		}
 
 		if (producers.length) {
 			const producer = producers[0];
-			let produced = producer.fixed;
-
-			if (scaling) {
-				produced = Math.floor((scaledAmount + 1) * producer.fixed);
-			}
+			const produced = producer.fixed + scaledAmount;
 
 			if (produced > 0) {
 				if (producer.target === 'qty') {
 					ObsidianItems.consumeQuantity(actor, producer, produced * -1);
+				} else if (producer.target === 'spell') {
+					ObsidianItems.produceSpellSlot(actor, producer.slot, producer.unlimited);
 				} else if (producer.target !== 'spell') {
 					const [refItem, refEffect, resource] =
 						Effect.getLinkedResource(actor.data, producer);
@@ -230,8 +257,7 @@ export const ObsidianItems = {
 		const options = {
 			roll: 'fx',
 			uuid: effect.uuid,
-			scaling: scaledAmount,
-			withDuration: withDuration
+			scaling: scaledAmount
 		};
 
 		if (spell) {

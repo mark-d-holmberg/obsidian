@@ -1510,6 +1510,10 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	color: var(--negative);
 }
 
+.obsidian-spell-slot-row > div:first-child.obsidian-positive {
+	color: var(--positive);
+}
+
 .obsidian-spell-slot-row > div:last-child {
 	text-transform: uppercase;
 	font-size: 13px;

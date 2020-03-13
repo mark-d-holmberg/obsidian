@@ -271,6 +271,7 @@
 	"OBSIDIAN.SpellPrep-known": "Spells Known",
 	"OBSIDIAN.SpellPrep-prep": "Spells Prepared",
 	"OBSIDIAN.SpellPrep-book": "Spellbook",
+	"OBSIDIAN.RitualCast-none": "No Rituals",
 	"OBSIDIAN.RitualCast-prep": "Prepared Rituals",
 	"OBSIDIAN.RitualCast-book": "Ritual Book",
 	"OBSIDIAN.SpellName": "Spell name",
@@ -727,5 +728,6 @@
 	"OBSIDIAN.Split": "Split",
 	"OBSIDIAN.Permanent": "Permanent",
 	"OBSIDIAN.Temporary": "Temporary",
-	"OBSIDIAN.CanExceedMax": "Can exceed maximum"
+	"OBSIDIAN.CanExceedMax": "Can exceed maximum",
+	"OBSIDIAN.MinSlotLevel": "Minimum slot level"
 }

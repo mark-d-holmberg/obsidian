@@ -135,7 +135,7 @@ export function prepareSpellcasting (actorData, flags) {
 				spell.value = spell.max;
 			}
 
-			spell.remaining = spell.max - spell.value;
+			spell.remaining = spell.max - spell.value + (spell.tmp || 0);
 		}
 	}
 
@@ -168,7 +168,8 @@ export function prepareSpellcasting (actorData, flags) {
 			data.spells.pact.uses = data.spells.pact.slots;
 		}
 
-		data.spells.pact.remaining = data.spells.pact.slots - data.spells.pact.uses;
+		data.spells.pact.remaining =
+			data.spells.pact.slots - data.spells.pact.uses + (data.spells.pact.tmp || 0);
 	}
 
 	actorData.obsidian.spellbook = {concentration: [], rituals: []};

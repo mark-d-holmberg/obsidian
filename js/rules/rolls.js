@@ -655,16 +655,6 @@ export const Rolls = {
 		}
 
 		const itemFlags = item.flags.obsidian;
-		let scaledAmount = 0;
-
-		if (scaling && item.type === 'spell') {
-			scaledAmount = scaling - item.data.level;
-		}
-
-		if (scaledAmount < 0) {
-			scaledAmount = 0;
-		}
-
 		if (!itemFlags.effects.length) {
 			return [{
 				flags: {
@@ -683,7 +673,7 @@ export const Rolls = {
 			.filter(effect => !effect.isScaling || effect.selfScaling)
 			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
 				name: item.name,
-				scaledAmount: scaledAmount,
+				scaledAmount: scaling,
 				isFirst: i === 0,
 				withDuration: withDuration
 			}));

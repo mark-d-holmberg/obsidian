@@ -741,7 +741,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_onSlotClicked (spellLevel, uses) {
 		const spellKey = spellLevel === 'pact' ? 'pact' : `spell${spellLevel}`;
 		const usesKey = spellLevel === 'pact' ? 'uses' : 'value';
-		this.actor.update({[`data.spells.${spellKey}.${usesKey}`]: uses});
+		const spells = this.actor.data.data.spells[spellKey];
+
+		if ((spells.tmp || 0) > 0) {
+			this.actor.update({[`data.spells.${spellKey}.tmp`]: spells.tmp - 1});
+		} else {
+			this.actor.update({[`data.spells.${spellKey}.${usesKey}`]: uses});
+		}
 	}
 
 	/**

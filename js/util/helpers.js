@@ -133,6 +133,7 @@ export function registerHandlebarHelpers () {
 
 		const slots = data.max == null ? data.slots : data.max;
 		const uses = data.value == null ? data.uses : data.value;
+		const tmp = data.tmp || 0;
 
 		if (slots == null || typeof slots !== 'number' || uses == null || typeof uses !== 'number')
 		{
@@ -140,11 +141,13 @@ export function registerHandlebarHelpers () {
 		}
 
 		let out = `<div class="obsidian-feature-uses" data-spell-level="${level}">`;
-		for (let i = 0; i < slots; i++) {
+		for (let i = 0; i < slots + tmp; i++) {
 			out += `
-			<div class="obsidian-feature-use${i < uses ? ' obsidian-feature-used' : ''}"
-			     data-n="${i + 1}"></div>
-		`;
+				<div class="obsidian-feature-use
+				     ${i < uses ? 'obsidian-feature-used' : ''}
+				     ${slots + tmp - i > slots ? 'obsidian-feature-positive' : ''}"
+				     data-n="${i + 1}"></div>
+			`;
 		}
 
 		out += '</div>';

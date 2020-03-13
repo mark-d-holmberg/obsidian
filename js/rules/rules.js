@@ -164,7 +164,7 @@ Rules.SPELL_SCHOOLS = ['abj', 'con', 'div', 'enc', 'ill', 'trs', 'evo', 'nec'];
 Rules.SPELL_SOURCES = ['class', 'custom'];
 Rules.SPELL_PREP = ['known', 'prep', 'book'];
 Rules.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
-Rules.SPELL_RITUALS = ['prep', 'book'];
+Rules.SPELL_RITUALS = ['none', 'prep', 'book'];
 
 Rules.SPELLS_KNOWN_TABLE = {
 	art: {

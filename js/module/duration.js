@@ -1,6 +1,6 @@
 import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
-import {ObsidianItems} from '../rules/items.js';
+import {Rolls} from '../rules/rolls.js';
 
 export function initDurations () {
 	Hooks.on('updateCombat', advanceDurations);
@@ -26,11 +26,10 @@ async function applyDuration (duration, actor, uuid, roll) {
 	}
 
 	if (roll && (!effect.isScaling || effect.selfScaling)) {
-		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
-		const spell = item && item.type === 'spell' ? item : undefined;
-		ObsidianItems.rollEffect(actor, effect, {
-			scaling: duration.scaledAmount + 1,
-			spell: spell,
+		Rolls.create(actor, {
+			roll: 'fx',
+			uuid: effect.uuid,
+			scaling: duration.scaledAmount,
 			withDuration: false
 		});
 	}

@@ -14,6 +14,21 @@ export function patchItem_prepareData () {
 	})();
 }
 
+export function getSourceClass (actorData, source) {
+	if (source.type === 'class') {
+		return actorData.obsidian.classes.find(cls => cls._id === source.class);
+	} if (source.type === 'item') {
+		const parent = actorData.obsidian.itemsByID.get(source.item);
+		if (parent
+			&& getProperty(parent, 'flags.obsidian.source')
+			&& parent.flags.obsidian.source.type === 'class')
+		{
+			return actorData.obsidian.classes.find(cls =>
+				cls._id === parent.flags.obsidian.source.class);
+		}
+	}
+}
+
 export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
 	if (!item.flags || !item.flags.obsidian || !actor || actor.data.type === 'npc') {
 		return;
@@ -60,18 +75,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 	let cls;
 	if (flags.source) {
-		if (flags.source.type === 'class') {
-			cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
-		} if (flags.source.type === 'item') {
-			const parent = actorData.obsidian.itemsByID.get(flags.source.item);
-			if (parent
-				&& getProperty(parent, 'flags.obsidian.source')
-				&& parent.flags.obsidian.source.type === 'class')
-			{
-				cls = actorData.obsidian.classes.find(cls =>
-					cls._id === parent.flags.obsidian.source.class);
-			}
-		}
+		cls = getSourceClass(actorData, flags.source);
 	}
 
 	for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {

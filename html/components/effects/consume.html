@@ -70,4 +70,19 @@
 			       data-selector-parent="{{prefix}}.calc" data-show="fixed">
 		</div>
 	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.target" data-show="spell">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.MinSlotLevel'}}
+				<select name="{{prefix}}.slot" data-dtype="Number">
+					{{#select slot}}
+						{{#each (range 1 9)}}
+							<option value="{{this}}">{{spell-level-format this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+		</div>
+	</div>
 </fieldset>

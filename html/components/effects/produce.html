@@ -35,29 +35,26 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			<select name="{{prefix}}.slots" data-selector-parent="{{prefix}}.target" data-show="spell"
-			        data-selector="{{prefix}}.slots">
-				{{#select slots}}
-					{{#each @root.ObsidianRules.EFFECT_CONSUME_SLOTS}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumeSlots-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.slots" data-show="class">
-				{{#select class}}
-					{{#each @root.actor.data.obsidian.classes}}
-						<option value="{{_id}}">{{flags.obsidian.label}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
+			<label class="obsidian-inline" data-selector-parent="{{prefix}}.target" data-hide="spell">
 				{{localize 'OBSIDIAN.Amount'}}
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 				       data-dtype="Number" placeholder="0" name="{{prefix}}.fixed" value="{{fixed}}">
+			</label>
+			<label class="obsidian-inline" data-selector-parent="{{prefix}}.target" data-show="spell"
+			       style="margin-left: 0;">
+				{{localize 'OBSIDIAN.Level'}}
+				<select name="{{prefix}}.slot">
+					{{#select slot}}
+						{{#each (range 1 9)}}
+							<option value="{{this}}">{{spell-level-format this}}</option>
+						{{/each}}
+						<option value="pact">{{localize 'OBSIDIAN.Pact'}}</option>
+					{{/select}}
+				</select>
 			</label>
 			{{fancy-checkbox (add prefix '.unlimited') content='OBSIDIAN.CanExceedMax' checked=unlimited}}
 		</div>

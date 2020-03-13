@@ -96,7 +96,8 @@ export const Effect = {
 			ref: '',
 			fixed: 1,
 			slots: 'any',
-			class: ''
+			class: '',
+			slot: 1
 		};
 	},
 
@@ -110,9 +111,8 @@ export const Effect = {
 			ref: '',
 			calc: 'fixed',
 			fixed: 1,
-			slots: 'any',
-			class: '',
-			unlimited: false
+			unlimited: false,
+			slot: 1
 		};
 	},
 

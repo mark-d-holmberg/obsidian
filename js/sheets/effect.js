@@ -75,10 +75,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			this._addedClickHandler = true;
 		}
 
-		if (this._selectedEffect == null) {
-			this._setTrayState(TRAY_STATES.START);
-		} else {
+		if (this._selectedEffect != null) {
 			this._onEffectSelected(this._selectedEffect);
+		} else if (this._selectedComponent != null) {
+			this._onComponentSelected(this._selectedComponent);
+		} else {
+			this._setTrayState(TRAY_STATES.START);
 		}
 	}
 
