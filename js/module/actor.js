@@ -296,7 +296,12 @@ export class ObsidianActor extends Actor5e {
 		for (const level of Object.keys(data.spells)) {
 			if (level.startsWith('spell')) {
 				update[`data.spells.${level}.value`] = 0;
+				update[`data.spells.${level}.tmp`] = 0;
 			}
+		}
+
+		if (data.spells.pact) {
+			update[`data.spells.pact.tmp`] = 0;
 		}
 
 		await this.update(update);
