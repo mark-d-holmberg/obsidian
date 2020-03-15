@@ -23,7 +23,7 @@ Hooks.once('init', async function () {
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
-		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell'],
+		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell', 'tool', 'loot'],
 		makeDefault: true
 	});
 

@@ -170,13 +170,6 @@ export const Migrate = {
 			data.flags.obsidian.effects[0].components.push(component);
 		}
 
-		if (data.type === 'loot') {
-			data.type = 'consumable';
-			data.flags.obsidian =
-				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false});
-			data.flags.obsidian.subtype = 'gear';
-		}
-
 		if (data.type === 'class' && data.flags.obsidian.version < 4 && source !== 'core') {
 			Migrate.v3.convertHD(data);
 		}

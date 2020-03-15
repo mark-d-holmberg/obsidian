@@ -160,9 +160,12 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/weapon.svg');
 }
 
-.obsidian-icon-gear,
-.obsidian-icon-loot {
+.obsidian-icon-gear {
 	background-image: url('../img/gear.svg');
+}
+
+.obsidian-icon-loot {
+	background-image: url('../img/loot.svg');
 }
 
 .obsidian-icon-ammo {

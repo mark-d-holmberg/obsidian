@@ -10,6 +10,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/feature.html',
 		'modules/obsidian/html/components/spell.html',
 		'modules/obsidian/html/components/weapon.html',
+		'modules/obsidian/html/components/tool.html',
+		'modules/obsidian/html/components/loot.html',
 		'modules/obsidian/html/components/effects/resource.html',
 		'modules/obsidian/html/components/effects/attack.html',
 		'modules/obsidian/html/components/effects/damage.html',

@@ -144,6 +144,17 @@ export const ObsidianItems = {
 							.render(true);
 						return;
 					}
+				} else if (item.type === 'tool') {
+					const idx =
+						actor.data.flags.obsidian.skills.tools.findIndex(tool =>
+							tool.label.toLocaleLowerCase() === item.name.toLocaleLowerCase());
+
+					if (idx > -1) {
+						options.roll = 'tool';
+						options.tool = idx;
+						Rolls.create(actor, options);
+						return;
+					}
 				} else if (item.obsidian.actionable.length > 1) {
 					new ObsidianActionableDialog(options.parent, actor, item).render(true);
 					return;

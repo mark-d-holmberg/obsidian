@@ -97,7 +97,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		this._setCollapsed(this.settings.portraitCollapsed);
 		html.find('.obsidian-collapser-container').click(this._togglePortrait.bind(this));
-
 		html.find('.obsidian-tab-bar').each((i, el) => {
 			const bar = $(el);
 			const group = bar.data('group');
@@ -680,7 +679,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			this.actor.updateEmbeddedEntity(
 				'OwnedItem',
 				{_id: id, 'data.equipped': !item.data.equipped});
-		} else if (item.flags.obsidian.consumable) {
+		} else {
 			evt.currentTarget.dataset.roll = 'item';
 			evt.currentTarget.dataset.id = id;
 			this._onRoll(evt);

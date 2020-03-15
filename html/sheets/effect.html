@@ -12,6 +12,10 @@
 			{{> modules/obsidian/html/components/feature.html}}
 		{{else if (eq item.type 'spell')}}
 			{{> modules/obsidian/html/components/spell.html}}
+		{{else if (eq item.type 'tool')}}
+			{{> modules/obsidian/html/components/tool.html}}
+		{{else if (eq item.type 'loot')}}
+			{{> modules/obsidian/html/components/loot.html}}
 		{{/if}}
 		{{#each item.flags.obsidian.effects as |effect effectIndex|}}
 			<div class="obsidian-effect" data-uuid="{{effect.uuid}}">

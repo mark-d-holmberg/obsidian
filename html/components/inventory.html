@@ -4,7 +4,7 @@
 	     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
 	     {{#if (eq type 'weapon')}}data-filter-weapon="true" {{/if}}
 	     {{#if (eq flags.obsidian.subtype 'armour')}}data-filter-armour="true" {{/if}}
-	     {{#if (eq type 'consumable')}}data-filter-consumable="true"{{/if}}
+	     {{#if (eq type 'consumable')}}data-filter-consumable="true" {{/if}}
 	     {{#if flags.obsidian.attunement}}data-filter-attunement="true"{{/if}}>
 		<div class="obsidian-col-action">
 			{{#if flags.obsidian.equippable}}
@@ -16,7 +16,7 @@
 						{{localize 'OBSIDIAN.Equip'}}
 					{{/if}}
 				</button>
-			{{else if flags.obsidian.consumable}}
+			{{else if (or (eq type 'tool') flags.obsidian.consumable)}}
 				<button type="button" class="obsidian-btn-outline obsidian-equip-action">
 					{{localize 'OBSIDIAN.Use'}}
 				</button>
