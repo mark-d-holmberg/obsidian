@@ -330,9 +330,9 @@ export const Migrate = {
 		});
 
 		if (source === 'obsidian' && flags) {
-			traits.armorProf.value = duplicate(flags.armour);
-			traits.weaponProf.value = duplicate(flags.weapons);
-			traits.languages.value = duplicate(flags.langs);
+			traits.armorProf.value = flags.armour ? duplicate(flags.armour) : [];
+			traits.weaponProf.value = flags.weapons ? duplicate(flags.weapons) : [];
+			traits.languages.value = flags.langs ? duplicate(flags.langs) : [];
 		} else if (source === 'core') {
 			traits.armorProf.value =
 				traits.armorProf.value.map(prof =>
@@ -1010,7 +1010,7 @@ async function beginMigration (html) {
 
 	try {
 		const actorUpdates = [];
-		for (actor of game.actors.entities) {
+		for (actor of game.actors.entities.filter(actor => actor.data.type === 'character')) {
 			const itemUpdates = [];
 			for (const item of actor.data.items) {
 				const update = Migrate.convertItem(duplicate(item), actor);
