@@ -206,7 +206,7 @@ export const Prepare = {
 
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 			skill.rollParts = [{
-				mod: data.attributes.prof * prof,
+				mod: Math.floor(data.attributes.prof * prof),
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 				proficiency: true,
 				value: Number(prof)
