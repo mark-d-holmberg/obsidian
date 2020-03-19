@@ -709,12 +709,12 @@ export const Rolls = {
 
 		// Temporarily set the core data to the AoE so we can interface with
 		// AbilityTemplate.
-		if (!item.data.target) {
-			item.data.target = {};
+		if (!item.data.data.target) {
+			item.data.data.target = {};
 		}
 
-		item.data.target.type = aoe.area;
-		item.data.target.value = aoe.distance;
+		item.data.data.target.type = aoe.area;
+		item.data.data.target.value = aoe.distance;
 
 		const template = AbilityTemplate.fromItem(item);
 		template.drawPreview();
