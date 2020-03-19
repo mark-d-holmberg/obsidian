@@ -7,7 +7,7 @@ export function initDurations () {
 	Hooks.on('controlToken', renderDurations);
 }
 
-async function applyDuration (duration, actor, uuid, roll) {
+async function applyDuration (duration, actor, uuid, roll, active) {
 	const effect = actor.data.obsidian.effects.get(uuid);
 	if (!effect) {
 		return;
@@ -19,7 +19,7 @@ async function applyDuration (duration, actor, uuid, roll) {
 					item.flags.obsidian.duration
 					&& item.flags.obsidian.duration.item === duration._id))
 			{
-				duration.flags.obsidian.active.push([target.scene.data._id, target.data._id]);
+				active.push([target.scene.data._id, target.data._id]);
 				await createActiveEffect(target, actor, effect, duration);
 			}
 		}
@@ -62,12 +62,12 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 		}
 	}
 
-	duration.flags.obsidian.active = [];
-	await applyDuration(duration, actor, effect, false);
+	const active = [];
+	await applyDuration(duration, actor, effect, false, active);
 	await actor.updateEmbeddedEntity('OwnedItem', {
 		_id: duration._id,
 		'flags.obsidian.remaining': rounds,
-		'flags.obsidian.active': duplicate(duration.flags.obsidian.active)
+		'flags.obsidian.active': active
 	});
 
 	renderDurations();
@@ -269,11 +269,12 @@ async function onClick (evt) {
 		return;
 	}
 
-	await applyDuration(duration, actor, duration.flags.obsidian.ref, true);
+	const active = [];
+	await applyDuration(duration, actor, duration.flags.obsidian.ref, true, active);
 	if (game.user.targets.size) {
 		actor.updateEmbeddedEntity('OwnedItem', {
 			_id: duration._id,
-			'flags.obsidian.active': duplicate(duration.flags.obsidian.active)
+			'flags.obsidian.active': active
 		});
 	}
 }
