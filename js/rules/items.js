@@ -7,7 +7,33 @@ import {OBSIDIAN} from '../global.js';
 import {ObsidianActor} from '../module/actor.js';
 
 export const ObsidianItems = {
-	consumeQuantity: function (actor, item, n = 1) {
+	consolidateUpdates: function (updates) {
+		const unique = new Map();
+		for (const update of updates) {
+			const existing = unique.get(update._id);
+			if (existing) {
+				for (const prop in update) {
+					if (prop === '_id') {
+						continue;
+					}
+
+					if (existing[prop] !== undefined) {
+						console.warn(
+							`Property collision on '${prop}' when consolidating `
+							+ `updates for '${update._id}'.`);
+					}
+
+					existing[prop] = update[prop];
+				}
+			} else {
+				unique.set(update._id, update);
+			}
+		}
+
+		return Array.from(unique.values());
+	},
+
+	consumeQuantity: function (actor, item, n, updates) {
 		if (item.parentEffect) {
 			const effect = actor.data.obsidian.effects.get(item.parentEffect);
 			if (!effect) {
@@ -23,7 +49,7 @@ export const ObsidianItems = {
 
 		const quantity = item.data.quantity - n;
 		if (quantity >= 0) {
-			actor.updateEmbeddedEntity('OwnedItem', {_id: item._id, 'data.quantity': quantity});
+			updates.push({_id: item._id, 'data.quantity': quantity});
 		}
 	},
 
@@ -73,13 +99,13 @@ export const ObsidianItems = {
 		}
 	},
 
-	refreshConsumable: function (actor, item, effect, resource, n) {
-		actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, {
+	refreshConsumable: function (actor, item, effect, resource, n, updates) {
+		updates.push({
 			_id: item._id,
 			'data.quantity': item.data.quantity - 1,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
 			resource.max - (n - resource.remaining)
-		}));
+		});
 	},
 
 	roll: function (actor, options) {
@@ -190,6 +216,7 @@ export const ObsidianItems = {
 		const resources = effect.components.filter(component => component.type === 'resource');
 		const consumers = effect.components.filter(component => component.type === 'consume');
 		const producers = effect.components.filter(component => component.type === 'produce');
+		const updates = [];
 		let scaledAmount = (consumed || 0);
 
 		if (spell) {
@@ -199,14 +226,14 @@ export const ObsidianItems = {
 		if (consumers.length) {
 			const consumer = consumers[0];
 			if (consumer.target === 'qty') {
-				ObsidianItems.consumeQuantity(actor, consumer, consumed);
+				ObsidianItems.consumeQuantity(actor, consumer, consumed, updates);
 			} else if (consumer.target !== 'spell') {
 				const [refItem, refEffect, resource] =
 					Effect.getLinkedResource(actor.data, consumer);
 
 				if (refItem && refEffect && resource) {
 					ObsidianItems.useResource(
-						actor, refItem, refEffect, resource, consumed);
+						actor, refItem, refEffect, resource, consumed, {updates});
 				}
 			}
 
@@ -227,9 +254,10 @@ export const ObsidianItems = {
 				&& item.data.quantity > 0
 				&& item.data.uses.autoDestroy)
 			{
-				ObsidianItems.refreshConsumable(actor, item, effect, resources[0], consumed);
+				ObsidianItems.refreshConsumable(
+					actor, item, effect, resources[0], consumed, updates);
 			} else {
-				ObsidianItems.useResource(actor, item, effect, resources[0], consumed);
+				ObsidianItems.useResource(actor, item, effect, resources[0], consumed, {updates});
 			}
 		}
 
@@ -239,7 +267,7 @@ export const ObsidianItems = {
 
 			if (produced > 0) {
 				if (producer.target === 'qty') {
-					ObsidianItems.consumeQuantity(actor, producer, produced * -1);
+					ObsidianItems.consumeQuantity(actor, producer, produced * -1, updates);
 				} else if (producer.target === 'spell') {
 					ObsidianItems.produceSpellSlot(actor, producer.slot, producer.unlimited);
 				} else if (producer.target !== 'spell') {
@@ -248,7 +276,8 @@ export const ObsidianItems = {
 
 					if (refItem && refEffect && resource) {
 						ObsidianItems.useResource(
-							actor, refItem, refEffect, resource, produced * -1, producer.unlimited);
+							actor, refItem, refEffect, resource, produced * -1,
+							{unlimited: producer.unlimited, updates});
 					}
 				}
 			}
@@ -257,8 +286,13 @@ export const ObsidianItems = {
 		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
 			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
 			if (ammo) {
-				ObsidianItems.consumeQuantity(actor, ammo);
+				ObsidianItems.consumeQuantity(actor, ammo, 1, updates);
 			}
+		}
+
+		if (updates.length) {
+			const consolidated = ObsidianItems.consolidateUpdates(updates);
+			OBSIDIAN.updateManyOwnedItems(actor, consolidated);
 		}
 
 		if (scaledAmount < 0) {
@@ -279,7 +313,7 @@ export const ObsidianItems = {
 		Rolls.create(actor, options);
 	},
 
-	useResource: function (actor, item, effect, resource, n = 1, unlimited = false) {
+	useResource: function (actor, item, effect, resource, n = 1, {unlimited = false, updates}) {
 		let remaining = resource.remaining - n;
 		if (remaining < 0) {
 			remaining = 0;
@@ -289,11 +323,9 @@ export const ObsidianItems = {
 			remaining = resource.max;
 		}
 
-		const update = {
+		updates.push({
 			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
-		};
-
-		actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
+		});
 	}
 };

@@ -139,5 +139,8 @@ OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 		return actor.token.update({'actorData.items': items});
 	}
 
-	return actor.updateManyEmbeddedEntities('OwnedItem', data);
+	const expanded = data.map(update =>
+		OBSIDIAN.updateArrays(actor.data.obsidian.itemsByID.get(update._id), update));
+
+	return actor.updateManyEmbeddedEntities('OwnedItem', expanded);
 };
