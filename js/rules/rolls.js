@@ -148,6 +148,20 @@ export const Rolls = {
 	compileBreakdown: mods =>
 		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
 
+	compileExpression: function (roll) {
+		return roll.parts.map(part => {
+			if (part instanceof Die) {
+				return part.total;
+			}
+
+			if (part instanceof DicePool) {
+				return `{${part.rolls.map(r => Rolls.compileExpression(r)).join(', ')}}`;
+			}
+
+			return part;
+		}).join(' ');
+	},
+
 	compileRerolls: (rolls, max, min = 1) => {
 		const annotated = [];
 		for (let i = 0; i < rolls.length; i++) {
@@ -857,13 +871,7 @@ export const Rolls = {
 		return {
 			total: roll.total,
 			flavour: expr.flavour,
-			breakdown: `${roll.formula} = ${roll.parts.map(part => {
-				if (part instanceof Die) {
-					return part.total;
-				}
-				
-				return part;
-			}).join(' ')}`
+			breakdown: `${roll.formula} = ${Rolls.compileExpression(roll)}`
 		};
 	},
 
