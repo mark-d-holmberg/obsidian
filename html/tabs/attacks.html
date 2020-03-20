@@ -14,7 +14,7 @@
 			{{/if}}
 		</div>
 		<div class="obsidian-tbody">
-			{{#each actor.obsidian.attacks}}
+			{{#each (attack-sort actor.obsidian.attacks)}}
 				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem._id}}"
 				     draggable="true"
 				     {{#unless (eq parentItem.type 'spell')}}data-uuid="{{parentEffect.uuid}}"{{/unless}}>

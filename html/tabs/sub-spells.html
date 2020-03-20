@@ -32,7 +32,7 @@
 				</div>
 				<div class="obsidian-tbody">
 					{{#with (spellbook-lookup ../spellbook this)}}
-					{{#each spells}}
+					{{#each (sort spells 'name')}}
 					{{#if flags.obsidian.visible}}
 						<div class="obsidian-tr obsidian-spell-tr item" data-item-id="{{_id}}"
 						     data-level="{{data.level}}" data-name="{{name}}" draggable="true"

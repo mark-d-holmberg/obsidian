@@ -4,6 +4,18 @@ import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 
 export function registerHandlebarHelpers () {
+	Handlebars.registerHelper('attack-sort', function (list) {
+		const mapped = list.map((item, i) => {
+			return {
+				idx: i,
+				key: item.parentEffect.name.length ? item.parentEffect.name : item.parentItem.name
+			};
+		});
+
+		mapped.sort((a, b) => a.key === b.key ? 0 : a.key > b.key ? 1 : -1);
+		return mapped.map(item => list[item.idx]);
+	});
+
 	Handlebars.registerHelper('badge', function (badge) {
 		const advantage = badge === 'adv';
 		const colour = `obsidian-css-icon-${advantage ? 'positive' : 'negative'}`;
@@ -315,6 +327,17 @@ export function registerHandlebarHelpers () {
 		}
 
 		return Array.range(start, end);
+	});
+
+	Handlebars.registerHelper('sort', function (list, by) {
+		// Don't use duplicate to avoid trashing things like maps or sets,
+		// or running afoul of circular references.
+		const mapped = list.map((item, i) => {
+			return {idx: i, key: item[by]};
+		});
+
+		mapped.sort((a, b) => a.key === b.key ? 0 : a.key > b.key ? 1 : -1);
+		return mapped.map(item => list[item.idx]);
 	});
 
 	Handlebars.registerHelper('spell-level-format', function (level, options) {

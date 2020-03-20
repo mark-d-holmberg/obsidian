@@ -107,6 +107,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 
 		let targetComponent;
+		let isRollable = false;
+
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
 			if (componentMap) {
@@ -124,6 +126,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					item.obsidian.attacks.push(component);
 				}
 			} else if (component.type === 'damage') {
+				isRollable = true;
 				Prepare.calculateDamage(actorData, component, data, cls);
 				if (!effect.isScaling || effect.selfScaling) {
 					if (component.versatile) {
@@ -133,6 +136,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					}
 				}
 			} else if (component.type === 'save') {
+				isRollable = true;
 				Prepare.calculateSave(actorData, item, component, data, cls);
 				if (!effect.isScaling || effect.selfScaling) {
 					item.obsidian.saves.push(component);
@@ -145,17 +149,16 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				component.label =
 					component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
 
-				if (flags.notes) {
-					flags.notes.push(
-						'<div class="obsidian-table-note-flex">'
+				flags.notes.push(
+					'<div class="obsidian-table-note-flex">'
 						+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
 							+ component.label
 						+ `</div>: ${component.display}`
-						+ '</div>');
-				}
+					+ '</div>');
 			} else if (component.type === 'target') {
+				isRollable = true;
 				targetComponent = component;
-				if (flags.notes && component.target === 'area' && !effect.isScaling) {
+				if (component.target === 'area' && !effect.isScaling) {
 					flags.notes.push(
 						`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
 						+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
@@ -163,8 +166,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			} else if (component.type === 'scaling') {
 				effect.scalingComponent = component;
 			} else if (component.type === 'duration') {
+				isRollable = true;
 				effect.durationComponent = component;
 			} else if (component.type === 'consume' || component.type === 'produce') {
+				isRollable = true;
 				if (component.calc === 'var') {
 					component.fixed = 1;
 				}
@@ -210,10 +215,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 								.filter(spell => !existing.has(spell._id)));
 				}
 
-				if (component.source === 'individual'
-					&& component.method === 'item'
-					&& flags.notes)
-				{
+				if (component.source === 'individual' && component.method === 'item') {
 					flags.notes.push(...component.spells
 						.map(id => actorData.obsidian.itemsByID.get(id))
 						.map(spell =>
@@ -235,6 +237,18 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			&& (!getProperty(effect, 'mods.length') || effect.durationComponent))
 		{
 			item.obsidian.actionable.push(effect);
+		}
+
+		if (isRollable
+			&& item.type !== 'spell'
+			&& !effect.components.some(c => c.type === 'resource' || c.type === 'attack'))
+		{
+			flags.notes.push(
+				'<div class="obsidian-table-note-flex">'
+					+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
+						+ effect.label
+					+ '</div>'
+				+ '</div>');
 		}
 	}
 
@@ -280,7 +294,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		item.obsidian.bestAttack =
 			item.obsidian.attacks.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
 
-		if (item.obsidian.bestAttack.targets > 1 && flags.notes) {
+		if (item.obsidian.bestAttack.targets > 1) {
 			flags.notes.push(
 				`${game.i18n.localize('OBSIDIAN.Count')}: `
 				+ item.obsidian.bestAttack.targets);
@@ -291,7 +305,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				.flatMap(effect => effect.components)
 				.filter(c => c.type === 'target' && c.target === 'individual');
 
-		if (targetComponents.length && flags.notes) {
+		if (targetComponents.length) {
 			flags.notes.push(
 				`${game.i18n.localize('OBSIDIAN.Count')}: ${targetComponents[0].count}`);
 		}
