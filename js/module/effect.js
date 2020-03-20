@@ -179,7 +179,16 @@ export const Effect = {
 			uuid: OBSIDIAN.uuid(),
 			duration: 1,
 			concentration: false
-		}
+		};
+	},
+
+	newExpression: function () {
+		return {
+			type: 'expression',
+			uuid: OBSIDIAN.uuid(),
+			expr: '',
+			flavour: ''
+		};
 	},
 
 	determineMulti: function (filter) {

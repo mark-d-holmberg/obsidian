@@ -168,6 +168,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			} else if (component.type === 'duration') {
 				isRollable = true;
 				effect.durationComponent = component;
+			} else if (component.type === 'expression') {
+				isRollable = true;
 			} else if (component.type === 'consume' || component.type === 'produce') {
 				isRollable = true;
 				if (component.calc === 'var') {

@@ -486,6 +486,7 @@ export const Rolls = {
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
 		const saves = effect.components.filter(c => c.type === 'save');
+		const expr = effect.components.filter(c => c.type === 'expression');
 		const targets =
 			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
 		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
@@ -545,6 +546,10 @@ export const Rolls = {
 
 		if (saves.length) {
 			results[0].saves = saves.map(save => Rolls.compileSave(actor, save));
+		}
+
+		if (expr.length) {
+			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr));
 		}
 
 		if (damage.length && !attacks.length && multiDamage > 0) {
@@ -845,6 +850,21 @@ export const Rolls = {
 				};
 			})
 		}
+	},
+
+	rollExpression: function (actor, expr) {
+		const roll = new Roll(expr.expr, actor.data.data).roll();
+		return {
+			total: roll.total,
+			flavour: expr.flavour,
+			breakdown: `${roll.formula} = ${roll.parts.map(part => {
+				if (part instanceof Die) {
+					return part.total;
+				}
+				
+				return part;
+			}).join(' ')}`
+		};
 	},
 
 	savingThrow: function (actor, save) {

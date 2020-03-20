@@ -244,6 +244,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/duration.svg');
 }
 
+.obsidian-icon-expression {
+	background-image: url('../img/expression.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }

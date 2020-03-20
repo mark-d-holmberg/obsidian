@@ -62,6 +62,9 @@
 					{{else if (eq type 'duration')}}
 						{{> modules/obsidian/html/components/effects/duration.html
 								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'expression')}}
+						{{> modules/obsidian/html/components/effects/expression.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{/if}}
 				{{/each}}
 			</div>
@@ -92,6 +95,9 @@
 			</li>
 			<li class="obsidian-effects-pill obsidian-icon-save obsidian-add-save">
 				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddSave'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-expression obsidian-add-expr">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DiceExpression'}}</div>
 			</li>
 		</details>
 		<details class="obsidian-effects-cat" data-key="resources">

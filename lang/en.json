@@ -733,5 +733,8 @@
 	"OBSIDIAN.Permanent": "Permanent",
 	"OBSIDIAN.Temporary": "Temporary",
 	"OBSIDIAN.CanExceedMax": "Can exceed maximum",
-	"OBSIDIAN.MinSlotLevel": "Minimum slot level"
+	"OBSIDIAN.MinSlotLevel": "Minimum slot level",
+	"OBSIDIAN.DiceExpression": "Dice Expression",
+	"OBSIDIAN.Expression": "Expression",
+	"OBSIDIAN.Flavour": "Flavour"
 }

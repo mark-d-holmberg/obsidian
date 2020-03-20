@@ -27,7 +27,7 @@
 			<div class="obsidian-msg-sub-title">{{message.flags.obsidian.subtitle}}</div>
 		{{/if}}
 	</section>
-	{{#if message.flags.obsidian.results}}
+	{{#if (or message.flags.obsidian.results message.flags.obsidian.exprs)}}
 	<section>
 		{{#each message.flags.obsidian.results}}
 		<div class="obsidian-msg-row">
@@ -44,6 +44,16 @@
 					<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
 				{{/each}}
 			</div>
+		</div>
+		{{/each}}
+		{{#each message.flags.obsidian.exprs}}
+		<div class="obsidian-msg-row">
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-value">
+				<div class="obsidian-msg-roll-box">{{total}}</div>
+				<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
+			</div>
+			<div class="obsidian-msg-flavour">{{flavour}}</div>
 		</div>
 		{{/each}}
 	</section>

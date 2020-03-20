@@ -19,7 +19,8 @@ const COMPONENT_MAP = {
 	'add-spells': Effect.newSpells,
 	'add-bonus': Effect.newBonus,
 	'add-filter': Effect.newFilter,
-	'add-duration': Effect.newDuration
+	'add-duration': Effect.newDuration,
+	'add-expr': Effect.newExpression
 };
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {

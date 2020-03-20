@@ -1346,6 +1346,11 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	flex: 1;
 }
 
+.obsidian-msg-flavour {
+	color: var(--text-subtle);
+	font-style: italic;
+}
+
 .obsidian-msg-tooltip {
 	position: absolute;
 	font-size: 11px;
