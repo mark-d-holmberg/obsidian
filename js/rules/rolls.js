@@ -637,7 +637,7 @@ export const Rolls = {
 				Filters.appliesTo.initiative(flags.attributes.init.ability));
 
 		const rollMod = Effect.combineRollMods(rollMods);
-		const mods = flags.attributes.init.rollParts;
+		const mods = duplicate(flags.attributes.init.rollParts);
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			mods.push({
