@@ -8,7 +8,7 @@ const CONDITION_ICONS = [
 
 export function patchConditions () {
 	CONFIG.statusEffects =
-		CONDITION_ICONS.map(icon => `modules/obsidian/img/conditions/${icon}.svg`);
+		CONDITION_ICONS.map(icon => `modules/obsidian/img/conditions/${icon}.png`);
 
 	Token.prototype.toggleEffect = (function () {
 		const cached = Token.prototype.toggleEffect;
@@ -37,7 +37,7 @@ export function patchConditions () {
 				this.data.effects =
 					Object.entries(this.actor.data.obsidian.conditions)
 						.filter(([, enabled]) => enabled)
-						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`)
+						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.png`)
 						.concat(
 							this.actor.data.obsidian.toggleable
 								.filter(effect => effect.activeEffect && effect.toggle.active)

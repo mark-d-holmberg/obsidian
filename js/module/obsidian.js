@@ -31,6 +31,7 @@ import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 import {ObsidianXPDialog} from '../dialogs/xp.js';
 import {ObsidianItems} from '../rules/items.js';
 import {ObsidianActor} from './actor.js';
+import {ObsidianTabs} from './tabs.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -101,7 +102,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			const bar = $(el);
 			const group = bar.data('group');
 			const active = this.tabs[group];
-			new Tabs(bar, {
+			new ObsidianTabs(bar, {
 				initial: active,
 				callback: clicked => {
 					this.tabs[group] = clicked.data('tab');

@@ -45,7 +45,7 @@ function deleteManyOwned (payload) {
 		return;
 	}
 
-	OBSIDIAN.deleteManyOwnedItems(actor, payload.ids);
+	actor.deleteManyEmbeddedEntities('OwnedItem', payload.ids);
 }
 
 function setWorld (payload) {

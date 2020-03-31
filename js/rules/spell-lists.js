@@ -15,10 +15,10 @@ class ObsidianSpellLists extends Application {
 	constructor (...args) {
 		super(...args);
 		this._lists = JSON.parse(game.settings.get('obsidian', 'spell-class-lists'));
-		this._tabs = {left: [], right: []};
+		this._filters = {left: [], right: []};
 
 		for (let i = 0; i < 10; i++) {
-			['left', 'right'].forEach(k => this._tabs[k][i] = false);
+			['left', 'right'].forEach(k => this._filters[k][i] = false);
 		}
 	}
 
@@ -61,7 +61,7 @@ class ObsidianSpellLists extends Application {
 	_computeDifference () {
 		const matchesFilter = (filter, spell) => {
 			const levels =
-				this._tabs[filter].map((f, i) => [f, i]).filter(([f, _]) => f).map(([_, i]) => i);
+				this._filters[filter].map((f, i) => [f, i]).filter(([f, _]) => f).map(([_, i]) => i);
 			const name =
 				this.element.find(`.obsidian-input-search[data-prop="${filter}"]`)
 					.val().toLowerCase();
@@ -100,12 +100,12 @@ class ObsidianSpellLists extends Application {
 	_onLevelFilter (evt) {
 		const key = evt.currentTarget.dataset.value;
 		const prop = evt.currentTarget.closest('.obsidian-tab-bar').dataset.prop;
-		this._tabs[prop][key] = !this._tabs[prop][key];
+		this._filters[prop][key] = !this._filters[prop][key];
 		this.element.find('.obsidian-spell-level-tab').removeClass('obsidian-active');
 
 		for (let i = 0; i < 10; i++) {
 			['left', 'right'].forEach(k => {
-				if (this._tabs[k][i]) {
+				if (this._filters[k][i]) {
 					this.element
 						.find(`ul[data-prop="${k}"] .obsidian-sub-tab[data-value="${i}"]`)
 						.addClass('obsidian-active');

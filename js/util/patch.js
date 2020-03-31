@@ -113,17 +113,6 @@ OBSIDIAN.updateArrays = function (original, changed) {
 	return Object.keys(expanded).length > 0 ? expanded : changed;
 };
 
-OBSIDIAN.deleteManyOwnedItems = function (actor, ids) {
-	if (actor.isToken) {
-		const items = duplicate(actor.data.items);
-		return actor.token.update({
-			'actorData.items': items.filter(item => !ids.includes(item._id))
-		});
-	}
-
-	return actor.deleteManyEmbeddedEntities('OwnedItem', ids);
-};
-
 OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 	if (actor.isToken) {
 		const byID = new Map(data.map(item => [item._id, item]));

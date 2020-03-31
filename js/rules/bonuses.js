@@ -78,7 +78,7 @@ function getTokenActorDataSafe (activeEffect) {
 	// Try to avoid causing an infinite recursion loop of Actor.prepareData().
 	const duration = activeEffect.flags.obsidian.duration;
 	if (duration.actor) {
-		const actor = game.actors.get(duration.actor);
+		const actor = game.actors?.get(duration.actor);
 		if (actor) {
 			return actor.data;
 		}

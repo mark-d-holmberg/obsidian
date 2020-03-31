@@ -23,14 +23,14 @@ The fonts Roboto and Roboto Condensed found in the `fonts` directory are used an
 
 The font Noto Sans JP found in the `fonts` directory is used and redistributed under the terms of the [OFL 1.1](https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web). A copy of this license is available in the `fonts/OFL.txt` file.
 
-The SVG images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing below:
+The following images found in the `img` directory are used and redistributed under the terms of [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/), with their attributions appearing here:
 
-* [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`, `ammo.svg`, `trinket.svg`, `provides-spells.svg`, `roll-modifier.svg`, `filter.svg`, `petrified.svg`, `produce-resource.svg`
-* [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `weapon.svg`, `tool.svg`, `armour.svg`, `helm.svg`, `consumable.svg`, `amulet.svg`, `effect.svg`, `demolish.svg`, `resource.svg`, `damage.svg`, `save.svg`, `scaling.svg`, `target.svg`, `consume-resource.svg`, `scroll.svg`, `bonus.svg`, `duration.svg`, `npc.svg`, `unconscious.svg`, `burning.svg`, `charmed.svg`, `frightened.svg`, `poisoned.svg`, `restrained.svg`, `stunned.svg`, `exhaustion.svg`, `grappled.svg`, `incapacitated.svg`, `paralysed.svg`, `concentrating.svg`, `surprised.svg`, `loot.svg`, `expression.svg`
-* [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`, `wand.svg`, `blinded.svg`, `deafened.svg`
-* [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.svg`, `marked.svg`, `prone.svg`
+* [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`, `ammo.svg`, `trinket.svg`, `provides-spells.svg`, `roll-modifier.svg`, `filter.svg`, `petrified.png`, `produce-resource.svg`
+* [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `weapon.svg`, `tool.svg`, `armour.svg`, `helm.svg`, `consumable.svg`, `amulet.svg`, `effect.svg`, `demolish.svg`, `resource.svg`, `damage.svg`, `save.svg`, `scaling.svg`, `target.svg`, `consume-resource.svg`, `scroll.svg`, `bonus.svg`, `duration.svg`, `npc.svg`, `unconscious.png`, `burning.png`, `charmed.png`, `frightened.png`, `poisoned.png`, `restrained.png`, `stunned.png`, `exhaustion.png`, `grappled.png`, `incapacitated.png`, `paralysed.png`, `concentrating.png`, `surprised.png`, `loot.svg`, `expression.svg`
+* [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`, `wand.svg`, `blinded.png`, `deafened.png`
+* [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.png`, `marked.png`, `prone.png`
 * [Willdabeast](http://wjbstories.blogspot.com/): `rod.svg`
 
-The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The following images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 The symbols for the schools of magic are © Wizards of the Coast and were assembled into the font file `fonts/SchoolsOfMagic.otf` by [Pjotr Frank](https://www.dmsguild.com/product/217275/Symbols-to-Represent-the-8-Schools-of-Magic).
