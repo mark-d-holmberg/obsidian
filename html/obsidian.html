@@ -142,7 +142,8 @@
 				</div>
 				<div class="obsidian-char-column" style="padding-right: 2px;">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text rollable" data-roll="abl" data-abl="init">
+						<div class="obsidian-char-box-text rollable" data-roll="abl" data-abl="init"
+						     draggable="true">
 							{{localize 'OBSIDIAN.Initiative'}}
 						</div>
 						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
@@ -180,7 +181,7 @@
 				{{#each data.abilities as |ability id|}}
 				<div class="obsidian-char-ability">
 					<div class="obsidian-char-ability-name rollable obsidian-condensed" data-roll="abl"
-					     data-abl="{{id}}">
+					     data-abl="{{id}}" draggable="true">
 						{{i18n-join 'OBSIDIAN.AbilityAbbr-' id}}
 					</div>
 					<div class="obsidian-char-ability-mod">
@@ -349,7 +350,8 @@
 										{{/each}}
 									{{/select}}
 								</select>
-								<div class="obsidian-skill-name rollable" data-roll="skl" data-skl="{{id}}">
+								<div class="obsidian-skill-name rollable" data-roll="skl" data-skl="{{id}}"
+								     draggable="true">
 									{{#if skill.custom}}
 										{{skill.label}}
 									{{else}}
@@ -399,7 +401,8 @@
 										{{/each}}
 									{{/select}}
 								</select>
-								<div class="obsidian-skill-name rollable" data-roll="tool" data-tool="{{id}}">
+								<div class="obsidian-skill-name rollable" data-roll="tool" data-tool="{{id}}"
+								     draggable="true">
 									{{tool.label}}
 								</div>
 								<div class="obsidian-skill-mod obsidian-ptr">
@@ -551,7 +554,8 @@
 								{{~/if~}}">
 									<span></span>
 								</div>
-								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}">
+								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}"
+								     draggable="true">
 									{{i18n-join 'OBSIDIAN.Ability-' id}}
 								</div>
 								<div class="obsidian-save-mod obsidian-ptr">

@@ -736,5 +736,6 @@
 	"OBSIDIAN.MinSlotLevel": "Minimum slot level",
 	"OBSIDIAN.DiceExpression": "Dice Expression",
 	"OBSIDIAN.Expression": "Expression",
-	"OBSIDIAN.Flavour": "Flavour"
+	"OBSIDIAN.Flavour": "Flavour",
+	"OBSIDIAN.Check": "Check"
 }

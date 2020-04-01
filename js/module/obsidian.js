@@ -6,6 +6,9 @@ import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
+import {ObsidianItems} from '../rules/items.js';
+import {ObsidianActor} from './actor.js';
+import {ObsidianTabs} from './tabs.js';
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -29,9 +32,6 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
-import {ObsidianItems} from '../rules/items.js';
-import {ObsidianActor} from './actor.js';
-import {ObsidianTabs} from './tabs.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -631,23 +631,32 @@ export class Obsidian extends ActorSheet5eCharacter {
 			});
 		}
 
-		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
-		if (item) {
-			const dragData = {
-				type: 'Item',
-				actorId: this.actor.id,
-				data: item,
-				effectUUID: target.dataset.uuid
-			};
+		const dragData = {
+			actorId: this.actor.id
+		};
 
-			if (this.actor.isToken) {
-				dragData.tokenID = this.actor.token.data._id;
-				dragData.sceneID = this.actor.token.scene.data._id;
-			}
-
-			event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+		if (this.actor.isToken) {
+			dragData.tokenID = this.actor.token.data._id;
+			dragData.sceneID = this.actor.token.scene.data._id;
 		}
 
+		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
+		if (item) {
+			dragData.type = 'Item';
+			dragData.data = item;
+			dragData.effectUUID = target.dataset.uuid;
+		}
+
+		if (['skl', 'tool', 'save', 'abl'].includes(target.dataset.roll)) {
+			dragData.type = 'obsidian-roll';
+			dragData.data = {};
+
+			for (const prop in target.dataset) {
+				dragData.data[prop] = target.dataset[prop];
+			}
+		}
+
+		event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
 		return Reorder.dragStart(event);
 	}
 

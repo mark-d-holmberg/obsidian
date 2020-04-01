@@ -81,6 +81,20 @@ export const ObsidianItems = {
 		ObsidianItems.roll(actor, {roll: 'item', id: item});
 	},
 
+	rollMacro: function ({actor, token, scene, rollData}) {
+		if (token && scene) {
+			actor = ObsidianActor.fromSceneTokenPair(scene, token);
+		} else {
+			actor = game.actors.get(actor);
+		}
+
+		if (!actor) {
+			return;
+		}
+
+		Rolls.create(actor, rollData);
+	},
+
 	produceSpellSlot: function (actor, slot, unlimited) {
 		const isPact = slot === 'pact';
 		const prop = isPact ? 'data.spells.pact' : `data.spells.spell${slot}`;
