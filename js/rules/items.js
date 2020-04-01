@@ -291,13 +291,6 @@ export const ObsidianItems = {
 			}
 		}
 
-		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
-			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
-			if (ammo) {
-				ObsidianItems.consumeQuantity(actor, ammo, 1, updates);
-			}
-		}
-
 		if (updates.length) {
 			const consolidated = ObsidianItems.consolidateUpdates(updates);
 			OBSIDIAN.updateManyOwnedItems(actor, consolidated);
@@ -319,6 +312,13 @@ export const ObsidianItems = {
 		}
 
 		Rolls.create(actor, options);
+
+		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
+			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
+			if (ammo) {
+				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id});
+			}
+		}
 	},
 
 	useResource: function (actor, item, effect, resource, n = 1, {unlimited = false, updates}) {
