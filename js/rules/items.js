@@ -164,6 +164,14 @@ export const ObsidianItems = {
 						options.spl = item._id;
 						ObsidianItems.roll(actor, options);
 						return;
+					} else if (component && component.method === 'innate') {
+						let scaling = 0;
+						if (component.upcast) {
+							scaling = Math.max(0, component.level - item.data.level);
+						}
+
+						Rolls.create(actor, {roll: 'item', id: item._id, scaling: scaling});
+						return;
 					} else if (item.data.level > 0) {
 						new ObsidianConsumeSlotDialog(
 							options.parent, actor, item, item.flags.obsidian.effects[0])
