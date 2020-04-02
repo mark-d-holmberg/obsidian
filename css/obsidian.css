@@ -1248,6 +1248,14 @@ legend .fancy-checkbox {
 	margin-right: 28px;
 }
 
+#compendium li.compendium-pack .status-icons {
+	top: 0;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
 .obsidian-compendium .window-content {
 	background: var(--bg);
 	font-family: var(--font);

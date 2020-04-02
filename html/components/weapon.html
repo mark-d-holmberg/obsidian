@@ -52,7 +52,7 @@
 		{{~#unless (or item.flags.obsidian.tags.thrown (eq item.flags.obsidian.type 'ranged'))~}}
 			obsidian-hidden
 		{{~/unless}} obsidian-form-row obsidian-range-row obsidian-stacked-row obsidian-inline">
-		<div>
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<label class="obsidian-inline">
 				{{localize 'OBSIDIAN.Range'}}
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
@@ -63,6 +63,10 @@
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
 			       data-dtype="Number" placeholder="0" name="data.range.long"
 			       value="{{item.data.range.long}}">
+			{{#if item.flags.obsidian.tags.thrown}}
+				{{fancy-checkbox 'flags.obsidian.consumeThrown' content='OBSIDIAN.ConsumeWhenThrown'
+				                 checked=item.flags.obsidian.consumeThrown}}
+			{{/if}}
 		</div>
 	</div>
 </fieldset>

@@ -305,6 +305,17 @@ export const ObsidianItems = {
 			}
 		}
 
+		if (item.type === 'weapon'
+			&& item.flags.obsidian.type === 'melee'
+			&& item.flags.obsidian.consumeThrown
+			&& item.flags.obsidian.tags.thrown)
+		{
+			const attack = effect.components.find(c => c.type === 'attack');
+			if (attack && attack.mode === 'ranged') {
+				updates.push({_id: item._id, 'data.quantity': item.data.quantity - 1});
+			}
+		}
+
 		if (updates.length) {
 			const consolidated = ObsidianItems.consolidateUpdates(updates);
 			OBSIDIAN.updateManyOwnedItems(actor, consolidated);
