@@ -4,8 +4,8 @@ import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
-const subMenus = {rollMod: 'roll-modifier'};
-const componentMenus = {attack: ['rollMod'], damage: ['rollMod']};
+const subMenus = {rollMod: 'roll-modifier', extraBonus: 'bonus'};
+const componentMenus = {attack: ['rollMod', 'extraBonus'], damage: ['rollMod', 'extraBonus']};
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
 const COMPONENT_MAP = {
 	'add-resource': Effect.newResource,
@@ -17,7 +17,6 @@ const COMPONENT_MAP = {
 	'add-consume': Effect.newConsume,
 	'add-produce': Effect.newProduce,
 	'add-spells': Effect.newSpells,
-	'add-bonus': Effect.newBonus,
 	'add-filter': Effect.newFilter,
 	'add-duration': Effect.newDuration,
 	'add-expr': Effect.newExpression
@@ -52,8 +51,11 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-add-effect').click(this._onAddEffect.bind(this));
 		html.find('.obsidian-roll-modifier')
 			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
+		html.find('.obsidian-add-bonus')
+			.click(this._onAddComponent.bind(this, Effect.newBonus, 'extraBonus'));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
+		html.find('.obsidian-rm-bonus').click(this._onRemoveSelected.bind(this, 'extraBonus'));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
 		html.find('.obsidian-effect legend').click(evt => {
@@ -682,10 +684,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				}
 
 				if (component[prop] === undefined) {
-					this.element.find(`.obsidian-${css}`).removeClass('obsidian-hidden');
+					this.element.find(`.obsidian-${css}, .obsidian-add-${css}`)
+						.removeClass('obsidian-hidden');
 					this.element.find(`.obsidian-rm-${css}`).addClass('obsidian-hidden');
 				} else {
-					this.element.find(`.obsidian-${css}`).addClass('obsidian-hidden');
+					this.element.find(`.obsidian-${css}, .obsidian-add-${css}`)
+						.addClass('obsidian-hidden');
 					this.element.find(`.obsidian-rm-${css}`).removeClass('obsidian-hidden');
 				}
 			});

@@ -36,6 +36,10 @@
 			                 checked=proficient}}
 		</div>
 	</div>
+	{{#if extraBonus}}
+		{{> modules/obsidian/html/components/effects/bonus-body.html extraBonus stacked=true
+				prefix=(add prefix '.extraBonus') attack=true}}
+	{{/if}}
 	{{#if rollMod}}
 		{{> modules/obsidian/html/components/effects/roll-mod-body.html rollMod stacked=true
 				prefix=(add prefix '.rollMod')}}

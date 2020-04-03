@@ -80,7 +80,7 @@ function formatBonus (actorData, bonus) {
 		if (bonus.level === 'chr') {
 			parts.push(localize('OBSIDIAN.BonusCharLevel'));
 		} else if (bonus.level === 'cls') {
-			const cls = actorData.obsidian.classes(cls => cls._id === bonus.cls);
+			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.cls);
 			if (cls) {
 				parts.push(localize('OBSIDIAN.BonusClassLevel').format(cls.label));
 			}

@@ -56,6 +56,10 @@
 			</select>
 		</div>
 	</div>
+	{{#if extraBonus}}
+		{{> modules/obsidian/html/components/effects/bonus-body.html extraBonus stacked=true damage=true
+				prefix=(add prefix '.extraBonus')}}
+	{{/if}}
 	{{#if rollMod}}
 		{{> modules/obsidian/html/components/effects/roll-mod-body.html rollMod stacked=true
 				damage=true prefix=(add prefix '.rollMod')}}

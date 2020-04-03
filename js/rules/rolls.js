@@ -146,7 +146,8 @@ export const Rolls = {
 	},
 
 	compileBreakdown: mods =>
-		mods.filter(mod => mod.mod).map(mod => `${mod.mod.sgnex()} [${mod.name}]`).join(''),
+		mods.filter(mod => mod.mod)
+			.map(mod => `${mod.mod.sgnex()} ${mod.name.length ? `[${mod.name}]` : ''}`).join(''),
 
 	compileExpression: function (roll) {
 		return roll.parts.map(part => {

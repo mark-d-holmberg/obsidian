@@ -66,6 +66,10 @@ function bonusName (actorData, bonus) {
 	}
 
 	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
+	if (!effect) {
+		return '';
+	}
+
 	if (effect.name.length) {
 		return effect.name;
 	}
@@ -150,7 +154,7 @@ export function bonusToParts (actorData, bonus) {
 		} else if (bonus.level === 'cls') {
 			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
 			if (cls) {
-				level = cls.flags.obsidian.level;
+				level = cls.data.levels;
 			}
 		}
 

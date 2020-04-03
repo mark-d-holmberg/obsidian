@@ -117,6 +117,10 @@ export const Prepare = {
 			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
+		if (hit.extraBonus) {
+			hit.rollParts.push(...bonusToParts(actorData, hit.extraBonus));
+		}
+
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		hit.attackType =
 			game.i18n.localize(
@@ -135,6 +139,10 @@ export const Prepare = {
 
 		if (bonuses.length) {
 			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		}
+
+		if (dmg.extraBonus) {
+			dmg.rollParts.push(...bonusToParts(actorData, dmg.extraBonus));
 		}
 
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
