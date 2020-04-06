@@ -707,7 +707,7 @@ Migrate.core = {
 		}
 
 		const damage = data.data.damage || {};
-		if ((damage.parts && damage.parts.length && damage.parts.some(dmg => dmg[0].length))
+		if ((damage.parts && damage.parts.length && damage.parts.some(dmg => dmg[0]?.length))
 			|| (damage.versatile && damage.versatile.length)
 			|| (data.data.formula && data.data.formula.length))
 		{
@@ -801,7 +801,7 @@ Migrate.core = {
 			formula = dmg[0];
 		}
 
-		if (!formula.length) {
+		if (!formula?.length) {
 			return;
 		}
 
