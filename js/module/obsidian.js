@@ -253,7 +253,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {HTML} html
+	 * @param {JQuery} html
 	 */
 	_activateDialogs (html) {
 		html.find('.obsidian-simple-dialog, [data-dialog]').click(evt => {

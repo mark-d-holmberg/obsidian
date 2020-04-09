@@ -11,15 +11,10 @@ import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
 import {prepareFilters} from '../rules/toggleable.js';
-import {prepareNPC} from './npc.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
 		super.prepareData();
-		if (this.data.type === 'npc') {
-			prepareNPC(this.data);
-		}
-
 		if (!this.data.flags
 			|| !this.data.flags.obsidian
 			|| (this.data.flags.obsidian.version || 0) < Schema.VERSION)
@@ -105,7 +100,7 @@ export class ObsidianActor extends Actor5e {
 		Prepare.skills(this.data, data, flags);
 		Prepare.saves(this.data, data, flags);
 		prepareSpellcasting(this.data, flags);
-		Prepare.features(this.data);
+		Prepare.features(this);
 		Prepare.consumables(this.data);
 		Prepare.weapons(this.data);
 		Prepare.armour(this.data);

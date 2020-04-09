@@ -1,5 +1,4 @@
 import {OBSIDIAN} from '../global.js';
-import {Parse} from '../module/parse.js';
 import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
@@ -483,8 +482,10 @@ export const Prepare = {
 		}
 	},
 
-	features: function (actorData) {
+	features: function (actor) {
+		const actorData = actor.data;
 		actorData.obsidian.feats = [];
+
 		for (let i = 0; i < actorData.items.length; i++) {
 			if (actorData.items[i].type !== 'feat') {
 				continue;
@@ -505,7 +506,11 @@ export const Prepare = {
 				}
 			}
 
-			flags.display = Parse.parse(actorData, feat.data.description.value);
+			flags.display = TextEditor.enrichHTML(feat.data.description.value, {
+				entities: false,
+				links: false,
+				rollData: actor.getRollData()
+			});
 		}
 	},
 

@@ -1,21 +1,16 @@
-import {Schema} from './schema.js';
+import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
 
-export function prepareNPC (actorData) {
-	if (!actorData.flags) {
-		actorData.flags = {};
+export class ObsidianNPC extends ActorSheet5eNPC {
+	get template () {
+		return 'modules/obsidian/html/npc.html';
 	}
 
-	if (!actorData.flags.obsidian) {
-		actorData.flags.obsidian = {
-			attributes: {
-				init: {ability: 'dex'}, ac: {ability1: 'dex', base: 10}, conditions: {}, speed: {}
-			},
-			order: {equipment: {root: [], containers: []}},
-			saves: {},
-			skills: {custom: []},
-			sheet: {roll: 'reg'}
-		};
-	}
+	static get defaultOptions () {
+		const options = super.defaultOptions;
+		mergeObject(options, {
+			classes: options.classes.concat(['obsidian-window'])
+		});
 
-	actorData.flags.obsidian.version = Schema.VERSION;
+		return options;
+	}
 }

@@ -29,7 +29,7 @@ async function convertCompendium (li) {
 	for (const entry of content) {
 		if (original.entity === 'Item') {
 			Migrate.convertItem(entry.data);
-		} else if (original.entity === 'Actor' && entry.data.type === 'character') {
+		} else if (original.entity === 'Actor') {
 			Migrate.convertActor(entry.data);
 		}
 

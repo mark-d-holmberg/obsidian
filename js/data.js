@@ -56,7 +56,5 @@ export async function loadSpellData () {
 
 	await OBSIDIAN.collateSpells(compendium);
 	OBSIDIAN.computeSpellsByClass(spellLists);
-	game.actors.entities
-		.filter(actor => actor.data.type === 'character')
-		.forEach(actor => actor.prepareData());
+	game.actors.entities.forEach(actor => actor.prepareData());
 }

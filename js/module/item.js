@@ -48,10 +48,6 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	const effects = flags.effects || [];
 	flags.notes = [];
 
-	if (item.type === 'spell') {
-		spellNotes(item);
-	}
-
 	if (item.type === 'equipment' && item.flags.obsidian.armour) {
 		Prepare.armourNotes(item);
 	}
@@ -263,6 +259,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			return action;
 		}
 	});
+
+	if (item.type === 'spell') {
+		spellNotes(item);
+	}
 
 	if (item.type === 'spell' && item.data.level === 0) {
 		const cantripScaling =

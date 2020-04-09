@@ -1712,3 +1712,51 @@ select[multiple] option:nth-child(2n) {
 .obsidian-form-row-img > div:last-child {
 	flex: 1;
 }
+
+.obsidian .inline-roll,
+.obsidian-msg .inline-roll {
+	cursor: default;
+	font-weight: bold;
+	color: var(--text-regular);
+	background-color: transparent;
+	border: none;
+}
+
+.obsidian .inline-roll:hover,
+.obsidian-msg .inline-roll:hover {
+	text-shadow: none;
+}
+
+.obsidian .inline-roll i,
+.obsidian-msg .inline-roll i {
+	display: none;
+}
+
+.obsidian .inline-roll.roll,
+.obsidian-msg .inline-roll.roll {
+	display: inline-block;
+	cursor: pointer;
+	font-weight: normal;
+	border: 1px solid var(--highlight);
+	border-radius: 3px;
+	padding: 4px 6px;
+	font-size: 11px;
+}
+
+.obsidian .inline-roll.roll i,
+.obsidian-msg .inline-roll.roll i {
+	display: inline-block;
+	color: var(--text-regular);
+}
+
+.obsidian .inline-roll.roll:hover,
+.obsidian-msg .inline-roll.roll:hover {
+	background: var(--dark);
+	color: var(--text-bright);
+	box-shadow: 0 0 5px red;
+}
+
+.obsidian .inline-roll.roll:hover i,
+.obsidian-msg .inline-roll.roll:hover i {
+	color: var(--text-bright);
+}

@@ -130,96 +130,14 @@ export const ObsidianItems = {
 			}
 		}
 
-		const uuid = options.uuid;
-		const effect = actor.data.obsidian.effects.get(uuid);
-		const spell = actor.data.obsidian.itemsByID.get(options.spl);
-
-		if (effect) {
-			const item = actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-			const consumer = effect.components.find(c => c.type === 'consume');
-			const scaling = item.obsidian.scaling.find(e =>
-				e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
-
-			if (consumer && consumer.target === 'spell') {
-				new ObsidianConsumeSlotDialog(options.parent, actor, item, effect).render(true);
-				return;
-			}
-
-			if (scaling || (consumer && consumer.calc === 'var')) {
-				new ObsidianResourceScalingDialog(options.parent, actor, item, effect, spell)
-					.render(true);
-
-				return;
-			}
-
-			const params = {spell: spell};
-			if (consumer) {
-				params.consumed = consumer.fixed;
-			}
-
-			ObsidianItems.rollEffect(actor, effect, params);
+		if (options.roll === 'fx') {
+			ObsidianItems.rollPromptVariables(actor, options);
 			return;
 		}
 
 		if (options.roll === 'item') {
-			const item = actor.getEmbeddedEntity('OwnedItem', options.id);
-			if (item && item.obsidian) {
-				if (item.type === 'spell') {
-					let component;
-					if (getProperty(item, 'flags.obsidian.parentComponent')) {
-						component =
-							actor.data.obsidian.components.get(item.flags.obsidian.parentComponent);
-					}
-
-					if (component && component.method === 'item') {
-						const effect = actor.data.obsidian.effects.get(component.parentEffect);
-						options.roll = 'fx';
-						options.uuid = effect.uuid;
-						options.spl = item._id;
-						ObsidianItems.roll(actor, options);
-						return;
-					} else if (component && component.method === 'innate') {
-						let scaling = 0;
-						if (component.upcast) {
-							scaling = Math.max(0, component.level - item.data.level);
-						}
-
-						Rolls.create(actor, {roll: 'item', id: item._id, scaling: scaling});
-						return;
-					} else if (item.data.level > 0) {
-						new ObsidianConsumeSlotDialog(
-							options.parent, actor, item, item.flags.obsidian.effects[0])
-							.render(true);
-						return;
-					}
-				} else if (item.type === 'tool') {
-					const idx =
-						actor.data.flags.obsidian.skills.tools.findIndex(tool =>
-							tool.label.toLocaleLowerCase() === item.name.toLocaleLowerCase());
-
-					if (idx > -1) {
-						options.roll = 'tool';
-						options.tool = idx;
-						Rolls.create(actor, options);
-						return;
-					}
-				} else if (item.obsidian.actionable.length > 1) {
-					new ObsidianActionableDialog(options.parent, actor, item).render(true);
-					return;
-				} else if (item.obsidian.actionable.length) {
-					const action = item.obsidian.actionable[0];
-					options.roll = 'fx';
-					options.uuid = action.uuid;
-
-					if (action.type === 'spell') {
-						options.roll = 'item';
-						options.id = action._id;
-					}
-
-					ObsidianItems.roll(actor, options);
-					return;
-				}
-			}
+			ObsidianItems.rollItem(actor, options);
+			return;
 		}
 
 		Rolls.create(actor, options);
@@ -344,6 +262,104 @@ export const ObsidianItems = {
 				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id});
 			}
 		}
+	},
+
+	rollItem: function (actor, options) {
+		const item = actor.getEmbeddedEntity('OwnedItem', options.id);
+		if (!item || !item.obsidian) {
+			Rolls.create(actor, options);
+			return;
+		}
+
+		if (item.type === 'spell') {
+			let component;
+			if (getProperty(item, 'flags.obsidian.parentComponent')) {
+				component =
+					actor.data.obsidian.components.get(item.flags.obsidian.parentComponent);
+			}
+
+			if (component && component.method === 'item') {
+				const effect = actor.data.obsidian.effects.get(component.parentEffect);
+				options.roll = 'fx';
+				options.uuid = effect.uuid;
+				options.spl = item._id;
+				ObsidianItems.roll(actor, options);
+				return;
+			} else if (component && component.method === 'innate') {
+				let scaling = 0;
+				if (component.upcast) {
+					scaling = Math.max(0, component.level - item.data.level);
+				}
+
+				Rolls.create(actor, {roll: 'item', id: item._id, scaling: scaling});
+				return;
+			} else if (item.data.level > 0) {
+				new ObsidianConsumeSlotDialog(
+					options.parent, actor, item, item.flags.obsidian.effects[0])
+					.render(true);
+				return;
+			}
+		} else if (item.type === 'tool') {
+			const idx =
+				actor.data.flags.obsidian.skills.tools.findIndex(tool =>
+					tool.label.toLocaleLowerCase() === item.name.toLocaleLowerCase());
+
+			if (idx > -1) {
+				options.roll = 'tool';
+				options.tool = idx;
+				Rolls.create(actor, options);
+				return;
+			}
+		} else if (item.obsidian.actionable.length > 1) {
+			new ObsidianActionableDialog(options.parent, actor, item).render(true);
+			return;
+		} else if (item.obsidian.actionable.length) {
+			const action = item.obsidian.actionable[0];
+			options.roll = 'fx';
+			options.uuid = action.uuid;
+
+			if (action.type === 'spell') {
+				options.roll = 'item';
+				options.id = action._id;
+			}
+
+			ObsidianItems.roll(actor, options);
+			return;
+		}
+
+		Rolls.create(actor, options);
+	},
+
+	rollPromptVariables: function (actor, options) {
+		const effect = actor.data.obsidian.effects.get(options.uuid);
+		if (!effect) {
+			return;
+		}
+
+		const spell = actor.data.obsidian.itemsByID.get(options.spl);
+		const item = actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
+		const consumer = effect.components.find(c => c.type === 'consume');
+		const scaling = item.obsidian.scaling.find(e =>
+			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
+
+		if (consumer && consumer.target === 'spell') {
+			new ObsidianConsumeSlotDialog(options.parent, actor, item, effect).render(true);
+			return;
+		}
+
+		if (scaling || (consumer && consumer.calc === 'var')) {
+			new ObsidianResourceScalingDialog(options.parent, actor, item, effect, spell)
+				.render(true);
+
+			return;
+		}
+
+		const params = {spell: spell};
+		if (consumer) {
+			params.consumed = consumer.fixed;
+		}
+
+		ObsidianItems.rollEffect(actor, effect, params);
 	},
 
 	useResource: function (actor, item, effect, resource, n = 1, {unlimited = false, updates}) {

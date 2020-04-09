@@ -46,6 +46,10 @@ String.prototype.format = function (...args) {
 	return str;
 };
 
+Math.sgn = function (n) {
+	return n < 0 ? `${n}` : `+${n}`;
+};
+
 Number.prototype.sgn = function () {
 	return this < 0 ? `${this}` : `+${this}`;
 };

@@ -15,12 +15,14 @@ import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {initDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
+import {ObsidianNPC} from './module/npc.js';
 
 runPatches();
 
 Hooks.once('init', async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
+	Actors.registerSheet('dnd5e', ObsidianNPC, {types: ['npc'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
 		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell', 'tool', 'loot'],
@@ -78,9 +80,7 @@ addCompendiumContextMenuHook();
 addSettingsHook();
 
 function enrichActorFlags (data) {
-	if (data.type === 'character') {
-		mergeObject(data, Migrate.convertActor(data));
-	}
+	mergeObject(data, Migrate.convertActor(data));
 }
 
 function enrichItemFlags (data) {

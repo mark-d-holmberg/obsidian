@@ -1040,7 +1040,7 @@ async function beginMigration (html) {
 
 	try {
 		const actorUpdates = [];
-		for (actor of game.actors.entities.filter(actor => actor.data.type === 'character')) {
+		for (actor of game.actors.entities) {
 			const itemUpdates = [];
 			for (const item of actor.data.items) {
 				const update = Migrate.convertItem(duplicate(item), actor);
