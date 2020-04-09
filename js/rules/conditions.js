@@ -1,14 +1,14 @@
 const CONDITION_ICONS = [
-	'dead', 'blinded', 'charmed', 'deafened',
-	'exhaustion', 'frightened', 'grappled', 'incapacitated',
-	'invisible', 'paralysed', 'petrified', 'poisoned',
-	'prone', 'restrained', 'stunned', 'unconscious',
+	'dead', 'bleeding', 'blinded', 'charmed', 'deafened',
+	'dodging', 'exhaustion', 'frightened', 'grappled',
+	'incapacitated', 'invisible', 'paralysed', 'petrified',
+	'poisoned', 'prone', 'restrained', 'stunned', 'unconscious',
 	'burning', 'concentrating', 'marked', 'surprised'
 ];
 
 export function patchConditions () {
 	CONFIG.statusEffects =
-		CONDITION_ICONS.map(icon => `modules/obsidian/img/conditions/${icon}.png`);
+		CONDITION_ICONS.map(icon => `modules/obsidian/img/conditions/${icon}.svg`);
 
 	Token.prototype.toggleEffect = (function () {
 		const cached = Token.prototype.toggleEffect;
@@ -37,7 +37,7 @@ export function patchConditions () {
 				this.data.effects =
 					Object.entries(this.actor.data.obsidian.conditions)
 						.filter(([, enabled]) => enabled)
-						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.png`)
+						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`)
 						.concat(
 							this.actor.data.obsidian.toggleable
 								.filter(effect => effect.activeEffect && effect.toggle.active)
