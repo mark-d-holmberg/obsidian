@@ -33,7 +33,7 @@ export function patchConditions () {
 	Token.prototype.drawEffects = (function () {
 		const cached = Token.prototype.drawEffects;
 		return function () {
-			if (this.actor) {
+			if (this.actor && this.actor.data.obsidian) {
 				this.data.effects =
 					Object.entries(this.actor.data.obsidian.conditions)
 						.filter(([, enabled]) => enabled)

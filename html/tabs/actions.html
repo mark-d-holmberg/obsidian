@@ -4,15 +4,15 @@
 		<li class="obsidian-sub-tab item" data-tab="actions">{{localize 'OBSIDIAN.Actions'}}</li>
 		<li class="obsidian-sub-tab item" data-tab="bonus-actions">{{localize 'OBSIDIAN.BonusActions'}}</li>
 		<li class="obsidian-sub-tab item" data-tab="reactions">{{localize 'OBSIDIAN.Reactions'}}</li>
-		<li class="obsidian-sub-tab item" data-tab="other">{{localize 'OBSIDIAN.Other'}}</li>
+		<li class="obsidian-sub-tab item" data-tab="other">{{localize 'OBSIDIAN.FeatAction-special'}}</li>
 	</ul>
 	{{> modules/obsidian/html/tabs/attacks.html}}
-	{{> modules/obsidian/html/tabs/sub-actions.html group='actions' active='active'
-		action='action' title='OBSIDIAN.Actions'}}
-  {{> modules/obsidian/html/tabs/sub-actions.html group='bonus-actions' active='active'
-	  action='ba' title='OBSIDIAN.BonusActions'}}
-  {{> modules/obsidian/html/tabs/sub-actions.html group='reactions' active='active'
-	  action='react' title='OBSIDIAN.Reactions'}}
-  {{> modules/obsidian/html/tabs/sub-actions.html group='other' active='active'
-	  action='trigger' title='OBSIDIAN.Other'}}
+	{{> modules/obsidian/html/tabs/sub-actions.html group='actions' action='action'
+			title='OBSIDIAN.Actions'}}
+  {{> modules/obsidian/html/tabs/sub-actions.html group='bonus-actions' action='bonus'
+		  title='OBSIDIAN.BonusActions'}}
+  {{> modules/obsidian/html/tabs/sub-actions.html group='reactions' action='reaction'
+		  title='OBSIDIAN.Reactions'}}
+  {{> modules/obsidian/html/tabs/sub-actions.html group='other' action='special'
+		  title='OBSIDIAN.FeatAction-special'}}
 </div>

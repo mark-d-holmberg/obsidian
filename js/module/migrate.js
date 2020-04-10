@@ -10,7 +10,7 @@ export const DAMAGE_CONVERT = {
 };
 
 const CONVERT = {
-	activation: {action: 'action', bonus: 'ba', reaction: 'react'},
+	activation: {action: 'action', ba: 'bonus', react: 'reaction', trigger: 'special'},
 	castTime: {
 		action: 'action', bonus: 'ba', reaction: 'react', minute: 'min', hour: 'hour',
 		special: 'special'
@@ -176,6 +176,10 @@ export const Migrate = {
 
 		if (data.type === 'class' && data.flags.obsidian.version < 4 && source !== 'core') {
 			Migrate.v3.convertHD(data);
+		}
+
+		if (data.type === 'feat' && data.flags.obsidian.version < 6 && source !== 'core') {
+			Migrate.v4.convertActivation(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -594,15 +598,7 @@ export const Migrate = {
 
 Migrate.core = {
 	convertActivation: function (data) {
-		if (data.type === 'feat') {
-			const activation = CONVERT.activation[getProperty(data.data, 'activation.type')];
-			if (activation) {
-				data.flags.obsidian.active = 'active';
-				data.flags.obsidian.action = activation;
-			} else {
-				data.flags.obsidian.active = 'passive';
-			}
-		} else if (data.type === 'spell') {
+		if (data.type === 'spell') {
 			const activation = CONVERT.castTime[getProperty(data.data, 'activation.type')];
 			if (activation) {
 				data.flags.obsidian.time.type = activation;
@@ -990,6 +986,16 @@ Migrate.v4 = {
 			if (!OBSIDIAN.notDefinedOrEmpty(overrides[i])) {
 				spell.override = Number(overrides[i]);
 			}
+		}
+	}
+};
+
+Migrate.v5 = {
+	convertActivation: function (data) {
+		if (data.flags.obsidian.active === 'passive') {
+			data.data.activation.type = 'none';
+		} else {
+			data.data.activation.type = CONVERT.activation[data.flags.obsidian.action];
 		}
 	}
 };

@@ -2,12 +2,12 @@
 	<h3>
 		{{localize title}}
 		<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-edit obsidian-add-feat"
-		   data-active="{{active}}" data-action="{{action}}">
+		   data-action="{{action}}">
 			{{localize 'OBSIDIAN.AddCustom'}}
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each (sort (filter actor.obsidian.feats 'flags.obsidian.active' active 'flags.obsidian.action' action) 'name') as |feat|}}
+		{{#each (sort (filter actor.obsidian.feats 'data.activation.type' action) 'name') as |feat|}}
 			<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
 				<div class="obsidian-feature-header">
 					<div>

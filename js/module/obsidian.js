@@ -475,12 +475,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_onAddFeature (evt) {
 		evt.preventDefault();
-		const flags = {
-			obsidian: {
-				active: evt.currentTarget.dataset.active,
-				action: evt.currentTarget.dataset.action
-			}
-		};
+		const flags = {obsidian: {}};
 
 		if (evt.currentTarget.dataset.source) {
 			flags.obsidian.source = {type: evt.currentTarget.dataset.source};
@@ -497,6 +492,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		this.actor.createEmbeddedEntity('OwnedItem', {
 			type: 'feat',
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
+			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
 		}, {renderSheet: true});
 	}
