@@ -10,7 +10,7 @@
 	"socket": true,
 	"styles": [
 		"css/fonts.css", "css/obsidian.css", "css/obsidian-icons.css", "css/obsidian-main.css",
-		"css/obsidian-effects.css"
+		"css/obsidian-effects.css", "css/obsidian-npc.css"
 	],
 	"packs": [{
 		"name": "spells",

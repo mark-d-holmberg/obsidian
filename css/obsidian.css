@@ -186,6 +186,11 @@
 	overflow: auto;
 }
 
+.dnd5e.sheet.npc form.obsidian {
+	display: block;
+	padding: 12px 8px;
+}
+
 .dnd5e.sheet form.obsidian.obsidian-collapsed {
 	grid-template-columns: 0 auto;
 }
@@ -263,6 +268,11 @@
 	max-width: 400px;
 	padding-bottom: var(--vertical-space);
 	border-bottom: 1px solid var(--mid);
+}
+
+.npc .obsidian img.obsidian-profile-img {
+	padding-bottom: 0;
+	border: none;
 }
 
 .obsidian.locked img.obsidian-profile-img {
@@ -1217,7 +1227,8 @@ legend .fancy-checkbox {
 	display: none !important;
 }
 
-.obsidian-sidebar .obsidian-char-box-stacked {
+.obsidian-sidebar .obsidian-char-box-stacked,
+.npc .obsidian [data-tab="desc"] .obsidian-char-box-stacked {
 	margin-top: 15px;
 }
 

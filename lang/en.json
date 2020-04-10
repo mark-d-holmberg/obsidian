@@ -738,5 +738,6 @@
 	"OBSIDIAN.Flavour": "Flavour",
 	"OBSIDIAN.Check": "Check",
 	"OBSIDIAN.ConsumeWhenThrown": "Consume When Thrown",
-	"OBSIDIAN.RemoveBonus": "Remove Bonus"
+	"OBSIDIAN.RemoveBonus": "Remove Bonus",
+	"OBSIDIAN.Stats": "Stats"
 }

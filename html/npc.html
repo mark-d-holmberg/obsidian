@@ -1,3 +1,56 @@
 <form class="obsidian {{cssClass}}" autocomplete="off">
+	<ul class="obsidian-tab-bar" data-group="main-tabs">
+		<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
+		<li class="obsidian-tab item" data-tab="stats">{{localize 'OBSIDIAN.Stats'}}</li>
+		<li class="obsidian-tab item" data-tab="equip">{{localize 'OBSIDIAN.Equipment'}}</li>
+		<li class="obsidian-tab item" data-tab="spells">{{localize 'OBSIDIAN.Spells'}}</li>
+	</ul>
+	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="desc">
+		<section>
+			<img class="obsidian-profile-img obsidian-ptr" src="{{actor.img}}" title="{{actor.name}}"
+			     alt="{{actor.name}}" data-edit="img">
+			<div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.PersonalityTraits'}}</div>
+					<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.trait">
+						{{{data.details.trait}}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Ideals'}}</div>
+					<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.ideal">
+						{{{data.details.ideal}}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Bonds'}}</div>
+					<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.bond">
+						{{{data.details.bond}}}
+					</div>
+				</div>
+				<div class="obsidian-char-box-container obsidian-char-box-stacked">
+					<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Flaws'}}</div>
+					<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.flaw">
+						{{{data.details.flaw}}}
+					</div>
+				</div>
+			</div>
+		</section>
+		<section>
+			<h3>{{localize 'OBSIDIAN.Notes'}}</h3>
+			<div class="obsidian-rich-text">
+				{{editor content=data.details.biography.value button=true editable=editable
+				         target='data.details.biography.value'}}
+			</div>
+		</section>
+	</div>
+	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="stats">
 
+	</div>
+	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="equip">
+
+	</div>
+	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="spells">
+
+	</div>
 </form>

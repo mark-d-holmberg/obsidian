@@ -1,0 +1,30 @@
+.npc .obsidian [data-tab=desc] section:first-child {
+	display: flex;
+}
+
+.npc .obsidian [data-tab=desc] .obsidian-char-box {
+	width: 350px;
+}
+
+.npc .obsidian [data-tab=desc] h3 {
+	margin: 15px 15px .5rem 15px;
+}
+
+.dnd5e.sheet.npc .window-content .obsidian .tab {
+	height: auto;
+	scrollbar-color: transparent rgba(0, 0, 0, .75);
+	scrollbar-width: thin;
+}
+
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar {
+	height: 6px;
+}
+
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-track {
+	box-shadow: none;
+}
+
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-thumb {
+	border: none;
+	background: rgba(0, 0, 0, .75);
+}

@@ -89,7 +89,8 @@
 	display: block;
 }
 
-.obsidian-tab-contents > h3 {
+.obsidian-tab-contents > h3,
+.npc .obsidian h3 {
 	text-transform: uppercase;
 	font-family: var(--font-condensed);
 	font-size: 13px;
@@ -473,6 +474,12 @@ h3 > div > .obsidian-feature-recharge {
 	min-height: 200px;
 }
 
+.npc .obsidian .editor,
+.npc .obsidian .tox.tox-tinymce {
+	min-height: 300px;
+	max-height: 500px;
+}
+
 .obsidian-2-pane-window .obsidian .editor,
 .obsidian-2-pane-window .obsidian .tox.tox-tinymce {
 	min-height: 400px;
@@ -512,6 +519,10 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian .tox-tbtn[title=Save] {
 	display: none;
+}
+
+.npc .obsidian .tox-tbtn[title=Save] {
+	display: flex;
 }
 
 .app .obsidian .tox-edit-area {
@@ -784,6 +795,12 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-rich-text .editor-content {
 	font-size: 13px;
+}
+
+.obsidian-rich-text .editor-edit {
+	border: none;
+	background: transparent;
+	color: var(--mid);
 }
 
 .obsidian-spell-filter .obsidian-tab-bar {
