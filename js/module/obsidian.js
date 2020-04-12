@@ -661,7 +661,18 @@ export class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	_onDragOver (event) { return Reorder.dragOver(event); }
-	_onDrop (event) { return Reorder.drop(this.actor, event); }
+
+	_onDrop (event) {
+		let data;
+		try {
+			data = JSON.parse(event.dataTransfer.getData('text/plain'));
+			if (data.type === 'Actor') {
+				return super._onDrop(event);
+			}
+		} catch (ignored) {}
+
+		return Reorder.drop(this.actor, event);
+	}
 
 	_onEffectToggled (evt) {
 		const uuid = evt.currentTarget.closest('.obsidian-effect-row').dataset.uuid;
