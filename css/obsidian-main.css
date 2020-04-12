@@ -476,8 +476,8 @@ h3 > div > .obsidian-feature-recharge {
 
 .npc .obsidian .editor,
 .npc .obsidian .tox.tox-tinymce {
-	min-height: 300px;
-	max-height: 500px;
+	min-height: none;
+	max-height: none;
 }
 
 .obsidian-2-pane-window .obsidian .editor,

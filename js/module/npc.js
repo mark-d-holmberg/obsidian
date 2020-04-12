@@ -54,7 +54,20 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		return super.render(force, options);
 	}
 
+	_calculateEditorHeight () {
+		const windowHeight = this.element.find('.window-content').outerHeight(true);
+		const tabBarHeight = this.element.find('.obsidian-tab-bar').outerHeight(true);
+		const topSectionHeight = this.element.find('[data-tab="desc"] section').outerHeight(true);
+		const padding = parseInt($(this.form).css('padding-top'));
+		const headerHeight =
+			this.element.find('[data-tab="desc"] section:last-child h3').outerHeight(true);
+
+		return windowHeight - tabBarHeight - topSectionHeight - headerHeight - padding * 2;
+	}
+
 	_createEditor (target, editorOptions, initialContent) {
+		editorOptions.height = this._calculateEditorHeight();
+		editorOptions.save_enablewhendirty = false;
 		editorOptions.content_css =
 			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
 		super._createEditor(target, editorOptions, initialContent);
@@ -62,6 +75,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_onResize (event) {
 		Obsidian.prototype._onResize.apply(this, event);
+		this.element.find('.tox-tinymce').css('height', `${this._calculateEditorHeight()}px`);
 	}
 
 	_restoreScrollPositions (html, selectors) {
