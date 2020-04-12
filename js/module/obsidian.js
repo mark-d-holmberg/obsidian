@@ -83,6 +83,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	/**
+	 * @param {JQuery} html
 	 * @return undefined
 	 */
 	activateListeners (html) {
