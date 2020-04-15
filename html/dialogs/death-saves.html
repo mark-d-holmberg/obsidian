@@ -1,25 +1,30 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
-	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Formula'}}</label>
-	<div class="obsidian-form-row obsidian-inline">
-		<div>
-			<span class="obsidian-formula-constant">1d20</span>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       name="flags.obsidian.attributes.death.bonus" data-dtype="Number" placeholder="0"
-			       value="{{actor.flags.obsidian.attributes.death.bonus}}">
-			<span class="obsidian-binary-operator">&gt;&equals;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       name="flags.obsidian.attributes.death.threshold" data-dtype="Number"
-			       value="{{actor.flags.obsidian.attributes.death.threshold}}" placeholder="0">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.DeathSaves'}}</legend>
+		<div class="obsidian-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<span class="obsidian-formula-constant">1d20</span>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="flags.obsidian.attributes.death.bonus" data-dtype="Number" placeholder="0"
+				       value="{{actor.flags.obsidian.attributes.death.bonus}}">
+				<span class="obsidian-binary-operator">&gt;&equals;</span>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       name="flags.obsidian.attributes.death.threshold" data-dtype="Number"
+				       value="{{actor.flags.obsidian.attributes.death.threshold}}" placeholder="0">
+			</div>
 		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row">
-		<select name="flags.obsidian.attributes.death.roll">
-			{{#select actor.flags.obsidian.attributes.death.roll}}
-				{{#each ObsidianRules.ROLL}}
-					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-				{{/each}}
-			{{/select}}
-		</select>
-	</div>
+		<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Roll'}}
+				<select name="flags.obsidian.attributes.death.roll">
+					{{#select actor.flags.obsidian.attributes.death.roll}}
+						{{#each ObsidianRules.ROLL}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+		</div>
+	</fieldset>
 </form>

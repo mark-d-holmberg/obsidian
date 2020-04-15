@@ -1,42 +1,45 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
-	<div class="obsidian-form-row obsidian-inline">
-			<select name="flags.obsidian.skills.{{skillID}}.value" data-dtype="Number">
-				{{#select skill.value}}
-					{{#each ObsidianRules.PROFICIENCY_LEVELS}}
-						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Proficiency-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<select name="flags.obsidian.skills.{{skillID}}.roll">
-				{{#select skill.roll}}
-					{{#each ObsidianRules.ROLL}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
-		<div class="obsidian-flex">
+	<fieldset>
+		<legend>{{skill.label}}</legend>
+		<div class="obsidian-form-row obsidian-inline">
+				<select name="flags.obsidian.skills.{{skillID}}.value" data-dtype="Number">
+					{{#select skill.value}}
+						{{#each ObsidianRules.PROFICIENCY_LEVELS}}
+							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Proficiency-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<select name="flags.obsidian.skills.{{skillID}}.roll">
+					{{#select skill.roll}}
+						{{#each ObsidianRules.ROLL}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+		</div>
+		<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+			<div class="obsidian-flex">
+				<label class="obsidian-inline">
+					<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" data-dtype="Number"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
+					       value="{{skill.bonus}}">
+					<span>{{localize 'OBSIDIAN.Bonus'}}</span>
+				</label>
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       name="flags.obsidian.skills.{{skillID}}.override"
+					       value="{{skill.override}}">
+					<span>{{localize 'OBSIDIAN.Override'}}</span>
+				</label>
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-stacked-row">
 			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" data-dtype="Number"
+				<input type="text" name="flags.obsidian.skills.{{skillID}}.passiveBonus" data-dtype="Number"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-				       value="{{skill.bonus}}">
-				<span>{{localize 'OBSIDIAN.Bonus'}}</span>
-			</label>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="flags.obsidian.skills.{{skillID}}.override"
-				       value="{{skill.override}}">
-				<span>{{localize 'OBSIDIAN.Override'}}</span>
+				       value="{{skill.passiveBonus}}">
+				<span>{{localize 'OBSIDIAN.PassiveBonus'}}</span>
 			</label>
 		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row">
-		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.skills.{{skillID}}.passiveBonus" data-dtype="Number"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-			       value="{{skill.passiveBonus}}">
-			<span>{{localize 'OBSIDIAN.PassiveBonus'}}</span>
-		</label>
-	</div>
+	</fieldset>
 </form>

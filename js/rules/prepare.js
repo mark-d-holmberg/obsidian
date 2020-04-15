@@ -321,10 +321,7 @@ export const Prepare = {
 		const acOverride = actorData.flags.obsidian.attributes.ac.override;
 		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
-				data.attributes.ac.min =
-					bestArmour.flags.obsidian.baseAC
-					+ actorData.flags.obsidian.attributes.ac.mod;
-
+				data.attributes.ac.min = bestArmour.flags.obsidian.baseAC;
 				if (bestArmour.flags.obsidian.addDex) {
 					let maxDex = bestArmour.data.armor.dex;
 					if (OBSIDIAN.notDefinedOrEmpty(maxDex)) {

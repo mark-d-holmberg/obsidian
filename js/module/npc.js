@@ -1,5 +1,7 @@
 import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
 import {Obsidian} from './obsidian.js';
+import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
+import {OBSIDIAN} from '../global.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -45,13 +47,27 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	activateListeners (html) {
 		super.activateListeners(html);
 		console.debug(this.actor);
+		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
+		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
 		html.find('[contenteditable]')
 			.focusout(Obsidian.prototype._onContenteditableUnfocus.bind(this));
+
+		Obsidian.prototype._activateDialogs.apply(this, arguments);
+	}
+
+	getData () {
+		const data = super.getData();
+		data.ObsidianRules = OBSIDIAN.Rules;
+		return data;
 	}
 
 	render (force = false, options = {}) {
 		Obsidian.prototype._applySettings.apply(this);
 		return super.render(force, options);
+	}
+
+	setModal () {
+		Obsidian.prototype.setModal.apply(this, arguments);
 	}
 
 	_calculateEditorHeight () {
@@ -73,8 +89,34 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		super._createEditor(target, editorOptions, initialContent);
 	}
 
+	_editDetails () {
+		new ObsidianNPCDetailsDialog(this).render(true);
+	}
+
+	_enterHPFormula (evt) {
+		const target = $(evt.currentTarget);
+		target.off();
+		target.empty();
+		target.append(
+			$('<input type="text" name="data.attributes.hp.formula"'
+				+ ` value="${this.actor.data.data.attributes.hp.formula}"`
+				+ ` placeholder="${game.i18n.localize('OBSIDIAN.Formula')}">`));
+
+		target.find('input').focus().focusout(evt => {
+			this._onSubmit(evt);
+			const target = $(evt.currentTarget);
+			let value = target.val();
+
+			if (value === '') {
+				value = game.i18n.localize('OBSIDIAN.Formula').toLowerCase();
+			}
+
+			target.parent().text(`(${value})`).click(this._enterHPFormula.bind(this));
+		});
+	}
+
 	_onResize (event) {
-		Obsidian.prototype._onResize.apply(this, event);
+		Obsidian.prototype._onResize.apply(this, arguments);
 		this.element.find('.tox-tinymce').css('height', `${this._calculateEditorHeight()}px`);
 	}
 

@@ -134,7 +134,9 @@ export class ObsidianDialog extends BaseEntitySheet {
 	}
 
 	getData () {
-		return this.parent.getData();
+		const data = this.parent.getData();
+		data.dialogOptions = this.options;
+		return data;
 	}
 
 	async maximize () {

@@ -31,7 +31,8 @@ Schema.Actor = {
 	details: {
 		gender: null,
 		subrace: null,
-		milestone: false
+		milestone: false,
+		tags: {}
 	},
 	order: {
 		equipment: {

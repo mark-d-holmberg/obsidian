@@ -2,6 +2,7 @@ import {Schema} from './schema.js';
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
+import {Rules} from '../rules/rules.js';
 
 export const DAMAGE_CONVERT = {
 	bludgeoning: 'blg', piercing: 'prc', slashing: 'slh', acid: 'acd', cold: 'cld', fire: 'fir',
@@ -42,6 +43,8 @@ const OPERATORS = {
 
 export const Migrate = {
 	convertActor: function (data) {
+		lazyConvert();
+
 		if (!data.flags) {
 			data.flags = {};
 		}
@@ -64,8 +67,12 @@ export const Migrate = {
 			Migrate.convertSpecial(data, source);
 		}
 
-		if (source !== 'core' && data.flags.obsidian.version < 5) {
+		if (data.flags.obsidian.version < 5 && source !== 'core') {
 			Migrate.v4.convertSpellcasting(data);
+		}
+
+		if (data.flags.obsidian.version < 6 && source !== 'core') {
+			Migrate.v5.convertProficiencies(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -333,35 +340,11 @@ export const Migrate = {
 		}
 
 		const traits = data.data.traits;
-		const flags = getProperty(data, 'flags.obsidian.traits.profs.custom');
-		const translateOrElseOriginal = (key, original) => {
-			const translation = game.i18n.localize(key);
-			return translation === key ? original : translation;
-		};
+		if (!traits.languages) {
+			traits.languages = {value: []};
+		}
 
-		['armorProf', 'weaponProf', 'languages', 'toolProf'].forEach(prop => {
-			if (!traits[prop]) {
-				traits[prop] = {value: []};
-			}
-		});
-
-		if (source === 'obsidian' && flags) {
-			traits.armorProf.value = flags.armour ? duplicate(flags.armour) : [];
-			traits.weaponProf.value = flags.weapons ? duplicate(flags.weapons) : [];
-			traits.languages.value = flags.langs ? duplicate(flags.langs) : [];
-		} else if (source === 'core') {
-			traits.armorProf.value =
-				traits.armorProf.value.map(prof =>
-					translateOrElseOriginal(`OBSIDIAN.ArmourProf-${prof}`, prof));
-
-			traits.weaponProf.value =
-				traits.weaponProf.value.map(prof =>
-					translateOrElseOriginal(`OBSIDIAN.WeaponProf-${prof}`, prof));
-
-			traits.languages.value =
-				traits.languages.value.map(prof =>
-					translateOrElseOriginal(`OBSIDIAN.Lang-${prof}`, prof));
-
+		if (source === 'core') {
 			data.flags.obsidian.skills.tools.push(...traits.toolProf.value.map(prof => {
 				return {
 					ability: 'str', bonus: 0, value: 0, custom: true,
@@ -997,6 +980,27 @@ Migrate.v5 = {
 		} else {
 			data.data.activation.type = CONVERT.activation[data.flags.obsidian.action];
 		}
+	},
+
+	convertProficiencies: function (data) {
+		const traits = data.data.traits;
+		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
+			const prof = traits[prop].value;
+			if (!Array.isArray(prof)) {
+				return;
+			}
+
+			traits[prop].value = prof.map(prof => {
+				const convert = CONVERT.profs[prop];
+				const key = convert.get(prof.toLowerCase());
+
+				if (key) {
+					return key;
+				}
+
+				return prof;
+			});
+		});
 	}
 };
 
@@ -1236,4 +1240,26 @@ function getTerms (formula) {
 	return terms.map(term => term.trim()).filter(term => term !== '').filter((term, i, arr) => {
 		return !((term === '+') && (arr[i - 1] === '+'));
 	});
+}
+
+function lazyConvert () {
+	if (CONVERT.profs) {
+		return;
+	}
+
+	CONVERT.profs = {};
+
+	[
+		['weaponProf', 'WeaponProf', 'PROF_WEAPON'],
+		['armorProf', 'ArmourProf', 'PROF_ARMOUR'],
+		['languages', 'Lang', 'PROF_LANG']
+	].forEach(([p, t, r]) =>
+		CONVERT.profs[p] =
+			new Map(Rules[r].map(key =>
+				[game.i18n.localize(`OBSIDIAN.${t}-${key}`).toLowerCase(), key])));
+}
+
+function translateOrElseOriginal (key, original) {
+	const translation = game.i18n.localize(key);
+	return translation === key ? original : translation;
 }

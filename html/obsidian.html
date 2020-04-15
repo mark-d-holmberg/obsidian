@@ -34,7 +34,7 @@
 		<div class="obsidian-char-header-container">
 			<div class="obsidian-char-header">
 				<input name="name" type="text" value="{{actor.name}}"
-				       placeholder="{{localize OBSIDIAN.CharacterName}}"
+				       placeholder="{{localize 'OBSIDIAN.CharacterName'}}"
 				       class="obsidian-char-charname obsidian-condensed">
 				<div class="obsidian-char-header-minor obsidian-condensed">
 					{{#if actor.flags.obsidian.details.gender}}
@@ -147,7 +147,7 @@
 							{{localize 'OBSIDIAN.Initiative'}}
 						</div>
 						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
-						     data-title="{{localize 'OBSIDIAN.ManageInitiative'}}" data-width="250"
+						     data-title="{{localize 'OBSIDIAN.ManageInitiative'}}" data-width="320"
 						     data-template="init.html">
 							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
 						</div>
@@ -163,7 +163,8 @@
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.ACAbbr'}}</div>
 						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
-						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html">
+						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html"
+						     data-width="450">
 							{{data.attributes.ac.min}}
 						</div>
 					</div>
@@ -457,6 +458,9 @@
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each data.traits.armorProf.value}}
+									<span>{{i18n-join 'OBSIDIAN.ArmourProf-' this}}</span>
+								{{/each}}
+								{{#each actor.flags.obsidian.traits.profs.custom.armour}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -467,6 +471,9 @@
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each data.traits.weaponProf.value}}
+									<span>{{i18n-join 'OBSIDIAN.WeaponProf-' this}}</span>
+								{{/each}}
+								{{#each actor.flags.obsidian.traits.profs.custom.weapons}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>
@@ -477,6 +484,9 @@
 							</div>
 							<div class="obsidian-horizontal-list obsidian-list-compact">
 								{{#each data.traits.languages.value}}
+									<span>{{i18n-join 'OBSIDIAN.Lang-' this}}</span>
+								{{/each}}
+								{{#each actor.flags.obsidian.traits.profs.custom.langs}}
 									<span>{{this}}</span>
 								{{/each}}
 							</div>

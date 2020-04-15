@@ -1,33 +1,36 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
-	<div class="obsidian-form-row">
-		<label class="obsidian-inline">
-			<select name="flags.obsidian.attributes.speedDisplay">
-				{{#select actor.flags.obsidian.attributes.speedDisplay}}
-					{{#each ObsidianRules.SPEEDS as |id|}}
-						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
-		</label>
-	</div>
-	{{#each ObsidianRules.SPEEDS as |id|}}
-		<div class="obsidian-form-row obsidian-inline">
-			<div class="obsidian-flex">
-				<label class="obsidian-inline">
-					<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md" type="text"
-					       name="flags.obsidian.attributes.speed.{{id}}.override" data-dtype="Number"
-					       value="
-					       {{~#with (lookup ../actor.flags.obsidian.attributes.speed id) as |spd|~}}
-					        {{~spd.override~}}
-					       {{~/with~}}">
-					<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
-				</label>
-				{{#if (eq id 'fly')}}
-					{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
-					                 checked=../actor.flags.obsidian.attributes.speed.fly.hover}}
-				{{/if}}
-			</div>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Speed'}}</legend>
+		<div class="obsidian-form-row">
+			<label class="obsidian-inline">
+				<select name="flags.obsidian.attributes.speedDisplay">
+					{{#select actor.flags.obsidian.attributes.speedDisplay}}
+						{{#each ObsidianRules.SPEEDS as |id|}}
+							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
+			</label>
 		</div>
-	{{/each}}
+		{{#each ObsidianRules.SPEEDS as |id|}}
+			<div class="obsidian-form-row obsidian-inline">
+				<div class="obsidian-flex">
+					<label class="obsidian-inline">
+						<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md" type="text"
+						       name="flags.obsidian.attributes.speed.{{id}}.override" data-dtype="Number"
+						       value="
+						       {{~#with (lookup ../actor.flags.obsidian.attributes.speed id) as |spd|~}}
+						        {{~spd.override~}}
+						       {{~/with~}}">
+						<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
+					</label>
+					{{#if (eq id 'fly')}}
+						{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
+						                 checked=../actor.flags.obsidian.attributes.speed.fly.hover}}
+					{{/if}}
+				</div>
+			</div>
+		{{/each}}
+	</fieldset>
 </form>

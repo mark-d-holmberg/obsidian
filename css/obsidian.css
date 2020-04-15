@@ -529,6 +529,10 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	display: inline-block;
 }
 
+.dnd5e.sheet.npc .obsidian .obsidian-char-header-minor span {
+	margin: 0;
+}
+
 .dnd5e.sheet form.obsidian .obsidian-char-header-minor span.obsidian-joined {
 	margin-right: 0;
 }
@@ -801,6 +805,10 @@ form.obsidian .rollable:hover {
 
 .obsidian .obsidian-form-row input.obsidian-input-lg {
 	max-width: 150px;
+}
+
+.obsidian .obsidian-form-row input.obsidian-input-max {
+	max-width: 100%;
 }
 
 .obsidian .obsidian-form-row.obsidian-mixed-form-row input {
@@ -1316,10 +1324,6 @@ legend .fancy-checkbox {
 
 .obsidian-titlebar-uses span {
 	margin-right: 4px;
-}
-
-.obsidian-max {
-	width: 100%;
 }
 
 .obsidian-checkbox-grid {

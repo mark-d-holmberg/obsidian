@@ -28,3 +28,89 @@
 	border: none;
 	background: rgba(0, 0, 0, .75);
 }
+
+.obsidian-npc-stats {
+	padding: 0 12px;
+}
+
+.obsidian-npc-stats header {
+	border-bottom: 1px solid var(--mid);
+	padding-bottom: 8px;
+	margin-bottom: 8px;
+	width: 100%;
+}
+
+.obsidian-npc-stats header .obsidian-char-charname {
+	margin-bottom: 5px;
+}
+
+.obsidian-npc-stats header .obsidian-char-header-minor {
+	padding-left: 4px;
+	cursor: pointer;
+}
+
+.dnd5e.sheet.npc .obsidian-npc-stats header .obsidian-char-header-minor span {
+	font-size: 16px;
+	font-style: italic;
+}
+
+.obsidian-npc-stats main {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.obsidian-npc-stat-block {
+	width: 350px;
+}
+
+.obsidian-npc-stat-row {
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-npc-stat-key {
+	font-size: 14px;
+	text-transform: uppercase;
+	color: var(--text-secondary);
+	font-family: var(--font-condensed);
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.dnd5e.sheet .obsidian-npc-hp input[type=text] {
+	height: auto;
+	width: 30px;
+	font-weight: bold;
+	font-size: 14px;
+	color: var(--text-regular);
+	display: inline-block;
+	margin: 0;
+}
+
+.dnd5e.sheet .obsidian-npc-hp input[type=text].obsidian-npc-tmp-hp {
+	padding: 0;
+	font-weight: normal;
+	color: var(--text-secondary);
+	text-align: center;
+}
+
+.obsidian-npc-hp-formula {
+	display: inline-block;
+	margin-left: 3px;
+	color: var(--text-subtle);
+}
+
+.dnd5e.sheet .obsidian-npc-hp-formula input[type=text] {
+	width: 75px;
+	font-weight: normal;
+	border: none;
+	border-bottom: 1px solid var(--mid);
+}
+
+.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:hover,
+.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:focus {
+	box-shadow: none;
+	border: none;
+	border-bottom: 1px solid var(--mid);
+}

@@ -8,7 +8,7 @@ export class ObsidianSkillDialog extends ObsidianDialog {
 				`OBSIDIAN.Manage${skillID.startsWith('tools') ? 'Tool' : 'Skill'}`)
 				+ ': '
 				+ (skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${skillID}`)),
-			width: 250
+			width: 300
 		});
 
 		this.skillID = skillID;

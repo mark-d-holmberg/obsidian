@@ -7,6 +7,8 @@ Rules.WEAPON_TAGS = [
 ];
 
 Rules.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
+Rules.ALIGNMENT_PARTS_1 = ['l', 'c'];
+Rules.ALIGNMENT_PARTS_2 = ['g', 'n', 'e', 'u'];
 Rules.ATTACK_TYPES = ['melee', 'ranged'];
 Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 Rules.CARRY_MULTIPLIER = 15;
@@ -88,6 +90,15 @@ Rules.CLASS_RITUALS = {
 	wiz: 'book'
 };
 
+Rules.CREATURE_TAGS = [
+	'angel', 'any', 'demon', 'devil', 'inevitable', 'shapechanger', 'titan', 'yugoloth'
+];
+
+Rules.CREATURE_TYPES = [
+	'aberration', 'beast', 'celestial', 'construct', 'dragon', 'elemental', 'fey', 'fiend', 'giant',
+	'humanoid', 'monstrosity', 'ooze', 'plant', 'undead'
+];
+
 Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
 Rules.EFFECT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'spell'];
 Rules.EFFECT_ADD_SPELLS_METHOD = ['innate', 'known', 'prep', 'list', 'item'];
@@ -132,6 +143,21 @@ Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
 Rules.ITEM_RECHARGE = ['long', 'short', 'dawn', 'dusk', 'never'];
 Rules.MAX_LEVEL = 20;
 Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
+Rules.PROF_ARMOUR = ['lgt', 'med', 'hvy', 'shl'];
+Rules.PROF_WEAPON = [
+	'sim', 'mar', 'club', 'dag', 'gclub', 'haxe', 'jav', 'lham', 'mace', 'staff', 'sickle', 'spear',
+	'lxbow', 'dart', 'sbow', 'sling', 'baxe', 'flail', 'glaive', 'gaxe', 'gsword', 'halb', 'lance',
+	'lsword', 'maul', 'star', 'pike', 'rapier', 'scim', 'ssword', 'tri', 'wpick', 'wham', 'whip',
+	'blow', 'hand', 'hxbow', 'lbow', 'net', 'dscim', 'fire'
+];
+
+Rules.PROF_LANG = [
+	'common', 'all', 'aarakocra', 'abyssal', 'aquan', 'auran', 'celestial', 'daelkyr', 'deep',
+	'draconic', 'druidic', 'dwarvish', 'elvish', 'giant', 'gith', 'gnoll', 'gnomish', 'goblin',
+	'halfling', 'ignan', 'infernal', 'kraul', 'loxodon', 'marquesian', 'minotaur', 'naush', 'orc',
+	'primordial', 'quori', 'riedran', 'sylvan', 'terran', 'cant', 'undercommon', 'vedalken',
+	'zemnian'
+];
 
 Rules.PLUS_PROF = {
 	0.5: 'half',

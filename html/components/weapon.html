@@ -79,10 +79,8 @@
 		{{/each}}
 	</div>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<label class="obsidian-inline obsidian-max">
-			{{localize 'OBSIDIAN.Custom'}}
-			<input type="text" class="obsidian-input-compact obsidian-input-lg"
-			       name="flags.obsidian.tags.custom" value="{{item.flags.obsidian.tags.custom}}">
-		</label>
+		<input type="text" class="obsidian-input-compact obsidian-input-max"
+		       name="flags.obsidian.tags.custom" value="{{item.flags.obsidian.tags.custom}}"
+		       placeholder="{{localize 'OBSIDIAN.Custom'}}">
 	</div>
 </fieldset>

@@ -3,83 +3,46 @@ import {ObsidianDialog} from './dialog.js';
 export class ObsidianProficienciesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.width = 250;
+		options.width = 650;
 		options.title = game.i18n.localize('OBSIDIAN.EditProficiencies');
+		options.template = 'modules/obsidian/html/dialogs/profs.html';
 		return options;
 	}
 
-	get template () {
-		return 'modules/obsidian/html/dialogs/profs.html';
-	}
+	getData () {
+		const data = super.getData();
+		data.profs = {};
+		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
+			data.profs[prop] = {};
+			this.parent.actor.data.data.traits[prop].value.forEach(prof =>
+				data.profs[prop][prof] = true);
+		});
 
-	/**
-	 * @param {JQuery} html
-	 * @return undefined
-	 */
-	activateListeners (html) {
-		super.activateListeners(html);
-		html.find('.obsidian-add-prof').click(this._onAddProficiency.bind(this));
-		html.find('.obsidian-rm-prof').click(this._onRemoveProficiency.bind(this));
-		ObsidianDialog.recalculateHeight(html);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	async _onAddProficiency (evt) {
-		evt.preventDefault();
-		const cat = $(evt.currentTarget).data('cat');
-		const profs = this._profsOfCat(cat);
-		profs.push('');
-		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	async _onRemoveProficiency (evt) {
-		evt.preventDefault();
-		const row = $(evt.currentTarget).closest('.obsidian-form-row');
-		const id = parseInt(row.data('item-id'));
-		const cat = row.data('cat');
-		const profs = this._profsOfCat(cat);
-		profs.splice(id, 1);
-		await this.parent.actor.update({[`data.traits.${cat}.value`]: profs});
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 */
-	_profsOfCat (cat) {
-		const rows = this.element.find(`.obsidian-form-row[data-cat="${cat}"]`);
-		return Array.from(rows).map(row => $(row).find('input').val());
+		return data;
 	}
 
 	/**
 	 * @private
 	 */
 	_updateObject (event, formData) {
-		const profs = {};
-		this.element.find('input').each((i, el) => {
-			const jqel = $(el);
-			const row = jqel.closest('.obsidian-form-row');
-			const cat = row.data('cat');
-
-			if (profs[cat] === undefined) {
-				profs[cat] = [];
-			}
-
-			profs[cat].push(jqel.val());
-		});
-
 		formData = {};
-		for (const cat in profs) {
-			formData[`data.traits.${cat}.value`] = profs[cat];
-		}
+		['weaponProf', 'armorProf', 'languages'].forEach(prop =>
+			formData[`data.traits.${prop}.value`] = []);
+
+		this.element.find('input').each((i, el) => {
+			if (el.type === 'checkbox' && el.checked) {
+				const [prop, key] = el.name.split('.');
+				formData[`data.traits.${prop}.value`].push(key);
+			} else if (el.type === 'text') {
+				const custom = el.value.split(/, ?/);
+				formData[el.name] = el.value;
+				formData[`flags.obsidian.traits.profs.custom.${el.dataset.flag}`] = [];
+
+				if (custom.length > 1 || custom[0].length) {
+					formData[`flags.obsidian.traits.profs.custom.${el.dataset.flag}`] = custom;
+				}
+			}
+		});
 
 		super._updateObject(event, formData);
 	}

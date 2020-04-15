@@ -11,6 +11,7 @@ import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
 import {prepareFilters} from '../rules/toggleable.js';
+import {prepareNPC} from '../rules/npc.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -74,12 +75,13 @@ export class ObsidianActor extends Actor5e {
 				+ data.abilities[flags.attributes.ac.ability1].mod
 				+ (flags.attributes.ac.ability2
 					? data.abilities[flags.attributes.ac.ability2].mod
-					: 0)
-				+ (flags.attributes.ac.mod || 0);
+					: 0);
 
 			if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 				data.attributes.ac.min = Number(flags.attributes.ac.override);
 			}
+		} else {
+			prepareNPC(this.data);
 		}
 
 		Prepare.init(data, flags);

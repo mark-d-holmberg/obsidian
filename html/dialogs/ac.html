@@ -1,39 +1,45 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
-	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Formula'}}</label>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div>
-			<input type="text" name="flags.obsidian.attributes.ac.base" data-dtype="Number"
-			       value="{{actor.flags.obsidian.attributes.ac.base}}" placeholder="10"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
-			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.attributes.ac.ability1">
-				{{#select actor.flags.obsidian.attributes.ac.ability1}}
-					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<select name="flags.obsidian.attributes.ac.ability2">
-				<option value="">&mdash;</option>
-				{{#select actor.flags.obsidian.attributes.ac.ability2}}
-					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<input type="text" name="flags.obsidian.attributes.ac.mod" data-dtype="Number"
-			       value="{{actor.flags.obsidian.attributes.ac.mod}}" placeholder="0"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.AC'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<input type="text" name="flags.obsidian.attributes.ac.base" data-dtype="Number"
+				       value="{{actor.flags.obsidian.attributes.ac.base}}" placeholder="10"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+				<span class="obsidian-binary-operator">&plus;</span>
+				<select name="flags.obsidian.attributes.ac.ability1">
+					{{#select actor.flags.obsidian.attributes.ac.ability1}}
+						{{#each data.abilities as |ability id|}}
+							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<select name="flags.obsidian.attributes.ac.ability2">
+					<option value="">&mdash;</option>
+					{{#select actor.flags.obsidian.attributes.ac.ability2}}
+						{{#each data.abilities as |ability id|}}
+							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<label class="obsidian-inline">
+					<input type="text" name="flags.obsidian.attributes.ac.override"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       value="{{actor.flags.obsidian.attributes.ac.override}}">
+					<span>{{localize 'OBSIDIAN.Override'}}</span>
+				</label>
+			</div>
 		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row">
-		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.attributes.ac.override"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       value="{{actor.flags.obsidian.attributes.ac.override}}">
-			<span>{{localize 'OBSIDIAN.Override'}}</span>
-		</label>
-	</div>
+		{{#if dialogOptions.npc}}
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div class="obsidian-fullwidth">
+				<input type="text" name="flags.obsidian.attributes.ac.note"
+				       placeholder="{{localize 'OBSIDIAN.Note'}}"
+				       class="obsidian-input-compact obsidian-input-max"
+				       value="{{actor.flags.obsidian.attributes.ac.note}}">
+			</div>
+		</div>
+		{{/if}}
+	</fieldset>
 </form>

@@ -1,35 +1,40 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
-	<label class="obsidian-label-lg">Formula</label>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div>
-			<select name="flags.obsidian.attributes.init.ability">
-				{{#select actor.flags.obsidian.attributes.init.ability}}
-					{{#each data.abilities as |ability id|}}
-						<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<span class="obsidian-binary-operator">&plus;</span>
-			<input type="text" name="data.attributes.init.value" value="{{data.attributes.init.value}}"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-			       data-dtype="Number">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Initiative'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<select name="flags.obsidian.attributes.init.ability">
+					{{#select actor.flags.obsidian.attributes.init.ability}}
+						{{#each data.abilities as |ability id|}}
+							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input type="text" name="data.attributes.init.value" value="{{data.attributes.init.value}}"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
+				       data-dtype="Number">
+				<label class="obsidian-inline">
+					<input type="text" name="flags.obsidian.attributes.init.override"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       value="{{actor.flags.obsidian.attributes.init.override}}">
+					<span>{{localize 'OBSIDIAN.Override'}}</span>
+				</label>
+			</div>
 		</div>
-	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-flex">
-			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.attributes.init.override"
-				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       value="{{actor.flags.obsidian.attributes.init.override}}">
-				<span>{{localize 'OBSIDIAN.Override'}}</span>
-			</label>
-			<select name="flags.obsidian.attributes.init.roll">
-				{{#select actor.flags.obsidian.attributes.init.roll}}
-					{{#each ObsidianRules.ROLL}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
+		<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Roll'}}
+					<select name="flags.obsidian.a`ttributes.init.roll">
+						{{#select actor.flags.obsidian.attributes.init.roll}}
+							{{#each ObsidianRules.ROLL}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+			</div>
 		</div>
-	</div>
+	</fieldset>
 </form>

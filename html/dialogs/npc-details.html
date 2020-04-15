@@ -1,0 +1,64 @@
+<form class="obsidian" autocomplete="off">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Creature'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Size'}}
+					<select name="data.traits.size">
+						{{#select data.traits.size}}
+							{{#each config.actorSizes}}
+								<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Size-' @key}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Type'}}
+					<select name="flags.obsidian.details.type">
+						{{#select actor.flags.obsidian.details.type}}
+							{{#each ObsidianRules.CREATURE_TYPES}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.CreatureType-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+				<label class="obsidian-inline">
+					{{localize 'OBSIDIAN.Alignment'}}
+					<select name="flags.obsidian.details.alignment1">
+						{{#select actor.flags.obsidian.details.alignment1}}
+							<option value="">&mdash;</option>
+							{{#each ObsidianRules.ALIGNMENT_PARTS_1}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AlignmentPt1-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<select name="flags.obsidian.details.alignment2">
+						{{#select actor.flags.obsidian.details.alignment2}}
+							<option value="">&mdash;</option>
+							{{#each ObsidianRules.ALIGNMENT_PARTS_2}}
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AlignmentPt2-' this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
+		<div class="obsidian-checkbox-grid">
+			{{#each ObsidianRules.CREATURE_TAGS}}
+				{{fancy-checkbox (add 'flags.obsidian.details.tags.' this)
+				                 content=(add 'OBSIDIAN.CreatureTag-' this)
+				                 checked=(lookup ../actor.flags.obsidian.details.tags this)}}
+			{{/each}}
+		</div>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<input type="text" class="obsidian-input-compact obsidian-input-max"
+			       placeholder="{{localize 'OBSIDIAN.Custom'}}"
+			       name="flags.obsidian.details.tags.custom"
+			       value="{{actor.flags.obsidian.details.tags.custom}}">
+		</div>
+	</fieldset>
+</form>

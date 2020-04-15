@@ -316,6 +316,10 @@
 	margin-top: 4px;
 }
 
+.obsidian-form-row.obsidian-btn-row {
+	justify-content: flex-end;
+}
+
 .obsidian-dmg-component {
 	font-size: 13px;
 	line-height: 1;
