@@ -375,6 +375,10 @@ export function registerHandlebarHelpers () {
 		return haystack.startsWith(needle);
 	});
 
+	Handlebars.registerHelper('uc', function (arg) {
+		return arg.toLocaleUpperCase();
+	});
+
 	Handlebars.registerHelper('which-damage', function (item, attack) {
 		if (item.type === 'spell' && item.data.level < 1) {
 			return item.obsidian.damage;

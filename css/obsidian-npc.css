@@ -78,6 +78,10 @@
 	margin-right: 5px;
 }
 
+.obsidian-npc-stat-value {
+	font-size: 14px;
+}
+
 .dnd5e.sheet .obsidian-npc-hp input[type=text] {
 	height: auto;
 	width: 30px;
@@ -98,7 +102,11 @@
 .obsidian-npc-hp-formula {
 	display: inline-block;
 	margin-left: 3px;
+}
+
+.obsidian-npc-subtle {
 	color: var(--text-subtle);
+	font-size: 13px;
 }
 
 .dnd5e.sheet .obsidian-npc-hp-formula input[type=text] {
@@ -113,4 +121,35 @@
 	box-shadow: none;
 	border: none;
 	border-bottom: 1px solid var(--mid);
+}
+
+.npc .obsidian-char-abilities {
+	padding: 6px 0;
+}
+
+.obsidian fieldset.obsidian-edit-npc-stats {
+	border: none;
+	border-top: 1px solid var(--mid);
+	margin: 0;
+	padding: 0 0 4px 0;
+}
+
+.obsidian-edit-npc-stats legend {
+	text-align: center;
+	font-size: 10px;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: var(--text-regular);
+}
+
+.obsidian-npc-stat-li {
+	display: inline-block;
+}
+
+.obsidian-npc-stat-li:after {
+	content: ', ';
+}
+
+.obsidian-npc-stat-li:last-child:after {
+	content: '';
 }

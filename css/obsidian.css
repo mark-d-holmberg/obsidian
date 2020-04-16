@@ -611,6 +611,10 @@ form.obsidian .rollable:hover {
 	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
 }
 
+.npc .obsidian-char-ability {
+	padding: 0 4px 0 0;
+}
+
 .obsidian-char-ability-name {
 	text-transform: uppercase;
 	color: var(--text-secondary);
@@ -620,6 +624,11 @@ form.obsidian .rollable:hover {
 	text-align: center;
 }
 
+.npc .obsidian-char-ability-name {
+	font-size: 13px;
+	padding-bottom: 2px;
+}
+
 .obsidian-char-ability-mod {
 	border: 4px solid var(--mid);
 	border-bottom-width: 2px;
@@ -627,6 +636,11 @@ form.obsidian .rollable:hover {
 	font-size: 18px;
 	font-weight: bold;
 	text-align: center;
+}
+
+.npc .obsidian-char-ability-mod {
+	padding: 6px 0;
+	font-size: 14px;
 }
 
 .dnd5e.sheet form input[type=text].obsidian-char-ability-score {
@@ -640,6 +654,12 @@ form.obsidian .rollable:hover {
 	text-align: center;
 	font-family: var(--font);
 	line-height: 1;
+}
+
+.dnd5e.sheet.npc form input[type=text].obsidian-char-ability-score {
+	padding: 2px 0;
+	width: 45px;
+	font-size: 13px;
 }
 
 .dnd5e.sheet form input[type=text].obsidian-char-ability-score.obsidian-positive {

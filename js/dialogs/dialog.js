@@ -40,6 +40,7 @@ export class ObsidianDialog extends BaseEntitySheet {
 			html.find('input').off('focusout').focusout(this._onSubmit.bind(this));
 			html.find('select').off('change').change(this._onSubmit.bind(this));
 		}
+
 		ObsidianDialog.initialiseComponents(html);
 	}
 

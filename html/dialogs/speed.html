@@ -1,18 +1,20 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Speed'}}</legend>
-		<div class="obsidian-form-row">
-			<label class="obsidian-inline">
-				<select name="flags.obsidian.attributes.speedDisplay">
-					{{#select actor.flags.obsidian.attributes.speedDisplay}}
-						{{#each ObsidianRules.SPEEDS as |id|}}
-							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
-			</label>
-		</div>
+		{{#unless dialogOptions.npc}}
+			<div class="obsidian-form-row">
+				<label class="obsidian-inline">
+					<select name="flags.obsidian.attributes.speedDisplay">
+						{{#select actor.flags.obsidian.attributes.speedDisplay}}
+							{{#each ObsidianRules.SPEEDS as |id|}}
+								<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
+				</label>
+			</div>
+		{{/unless}}
 		{{#each ObsidianRules.SPEEDS as |id|}}
 			<div class="obsidian-form-row obsidian-inline">
 				<div class="obsidian-flex">

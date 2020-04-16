@@ -83,7 +83,9 @@
 					<div class="obsidian-npc-stat-value">
 						{{data.attributes.ac.min}}
 						{{#if actor.flags.obsidian.attributes.ac.note}}
-							({{actor.flags.obsidian.attributes.ac.note}})
+							<span class="obsidian-npc-subtle">
+								({{actor.flags.obsidian.attributes.ac.note}})
+							</span>
 						{{/if}}
 					</div>
 				</div>
@@ -99,7 +101,7 @@
 						<input type="text" name="data.attributes.hp.temp" data-dtype="Number"
 					         class="obsidian-input-num obsidian-npc-tmp-hp"
 					         placeholder="{{localize 'OBSIDIAN.TempAbbrUC'}}">
-						<div class="obsidian-npc-hp-formula obsidian-ptr">
+						<div class="obsidian-npc-hp-formula obsidian-ptr obsidian-npc-subtle">
 							({{#if data.attributes.hp.formula}}
 								{{~data.attributes.hp.formula~}}
 							{{else}}
@@ -108,10 +110,64 @@
 						</div>
 					</div>
 				</div>
-				<div class="obsidian-npc-stat-row obsidian-npc-speed obsidian-ptr">
+				<div class="obsidian-npc-stat-row obsidian-npc-speed obsidian-ptr obsidian-simple-dialog"
+				     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250" data-npc="true"
+				     data-template="speed.html">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Speed'}}</div>
 					<div class="obsidian-npc-stat-value">{{actor.obsidian.speedDisplay}}</div>
 				</div>
+				<div class="obsidian-char-abilities">
+					{{#each data.abilities}}
+					<div class="obsidian-char-ability">
+						<div class="obsidian-char-ability-name rollable obsidian-condensed"
+						     data-roll="abl" data-abl="{{@key}}" draggable="true">
+							{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+						</div>
+						<div class="obsidian-char-ability-mod">
+							{{numberFormat mod decimals=0 sign=true}}
+						</div>
+						{{#with (lookup ../actor.flags.obsidian.abilities @key)}}
+							<input type="text" value="{{value}}" placeholder="10" class="obsidian-char-ability-score
+								{{#if (gt value ../value)}}
+									obsidian-positive
+								{{else if (lt value ../value)}}
+									obsidian-negative
+								{{/if}}">
+						{{/with}}
+						<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
+						       data-dtype="Number">
+					</div>
+					{{/each}}
+				</div>
+				<fieldset class="obsidian-edit-npc-stats">
+					<legend class="rollable">{{localize 'OBSIDIAN.EditStats'}}</legend>
+				</fieldset>
+				{{#if (not-empty saves)}}
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.SavingThrows'}}</div>
+					<div class="obsidian-npc-stat-value">
+						{{#each saves}}
+							<div class="obsidian-npc-stat-li">
+								<span class="rollable">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</span>
+								{{numberFormat mod decimals=0 sign=true}}
+							</div>
+						{{/each}}
+					</div>
+				</div>
+				{{/if}}
+				{{#if (not-empty skills)}}
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Skills'}}</div>
+					<div class="obsidian-npc-stat-value">
+						{{#each skills}}
+							<div class="obsidian-npc-stat-li">
+								<span class="rollable">{{i18n-join 'OBSIDIAN.Skill-' @key}}</span>
+								{{numberformat mod decimals=0 sign=true}}
+							</div>
+						{{/each}}
+					</div>
+				</div>
+				{{/if}}
 			</section>
 		</main>
 	</div>

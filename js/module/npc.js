@@ -1,6 +1,7 @@
 import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
+import {ObsidianNPCStatsDialog} from '../dialogs/npc-stats.js';
 import {OBSIDIAN} from '../global.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
@@ -49,15 +50,36 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		console.debug(this.actor);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
+		html.find('.obsidian-edit-npc-stats legend').click(this._editStats.bind(this));
 		html.find('[contenteditable]')
 			.focusout(Obsidian.prototype._onContenteditableUnfocus.bind(this));
 
+		Obsidian.prototype._activateAbilityScores.apply(this, arguments);
 		Obsidian.prototype._activateDialogs.apply(this, arguments);
 	}
 
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.saves = {};
+		data.skills = {};
+
+		for (const [id, abl] of Object.entries(data.data.abilities)) {
+			const save = data.actor.flags.obsidian.saves[id];
+			if (abl.proficient || save?.override) {
+				save.mod = abl.save;
+				save.proficient = abl.proficient;
+				data.saves[id] = save;
+			}
+		}
+
+		for (const skl in data.data.skills) {
+			const skill = data.actor.flags.obsidian.skills[skl];
+			if (skill?.value || skill?.override) {
+				data.skills = skill;
+			}
+		}
+
 		return data;
 	}
 
@@ -91,6 +113,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_editDetails () {
 		new ObsidianNPCDetailsDialog(this).render(true);
+	}
+
+	_editStats () {
+		new ObsidianNPCStatsDialog(this).render(true);
 	}
 
 	_enterHPFormula (evt) {

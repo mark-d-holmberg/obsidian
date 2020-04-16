@@ -72,6 +72,10 @@
 	"OBSIDIAN.Speed-climb": "Climbing",
 	"OBSIDIAN.Speed-fly": "Flying",
 	"OBSIDIAN.Speed-swim": "Swimming",
+	"OBSIDIAN.SpeedAbbr-burrow": "burrow",
+	"OBSIDIAN.SpeedAbbr-climb": "climb",
+	"OBSIDIAN.SpeedAbbr-fly": "fly",
+	"OBSIDIAN.SpeedAbbr-swim": "swim",
 	"OBSIDIAN.FeetAbbr": "ft.",
 	"OBSIDIAN.PoundsAbbr": "lb.",
 	"OBSIDIAN.Sense-dark": "Darkvision",
@@ -821,5 +825,6 @@
 	"OBSIDIAN.AlignmentPt2-u": "Unaligned",
 	"OBSIDIAN.AC": "Armour Class",
 	"OBSIDIAN.Note": "Note",
-	"OBSIDIAN.SavesUC": "Saves"
+	"OBSIDIAN.SavesUC": "Saves",
+	"OBSIDIAN.EditStats": "Edit Stats"
 }

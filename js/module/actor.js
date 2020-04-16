@@ -28,13 +28,22 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		this.data.obsidian = {classes: []};
 
+		data.attributes.ac.min =
+			flags.attributes.ac.base
+			+ data.abilities[flags.attributes.ac.ability1].mod
+			+ (flags.attributes.ac.ability2
+				? data.abilities[flags.attributes.ac.ability2].mod
+				: 0);
+
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+			data.attributes.ac.min = Number(flags.attributes.ac.override);
+		}
+
 		if (this.data.type === 'character') {
 			this.data.obsidian.classes =
 				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
 
 			data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
-			data.details.level = 0;
-
 			for (const cls of this.data.obsidian.classes) {
 				if (!cls.flags.obsidian) {
 					continue;
@@ -45,7 +54,6 @@ export class ObsidianActor extends Actor5e {
 						? cls.flags.obsidian.custom
 						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
 				cls.data.levels = Number(cls.data.levels);
-				data.details.level += cls.data.levels;
 			}
 
 			if (flags.details.milestone) {
@@ -68,18 +76,6 @@ export class ObsidianActor extends Actor5e {
 			}
 
 			this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
-			data.attributes.prof = Math.floor((data.details.level + 7) / 4);
-
-			data.attributes.ac.min =
-				flags.attributes.ac.base
-				+ data.abilities[flags.attributes.ac.ability1].mod
-				+ (flags.attributes.ac.ability2
-					? data.abilities[flags.attributes.ac.ability2].mod
-					: 0);
-
-			if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-				data.attributes.ac.min = Number(flags.attributes.ac.override);
-			}
 		} else {
 			prepareNPC(this.data);
 		}

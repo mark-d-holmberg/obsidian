@@ -61,6 +61,10 @@ export const Migrate = {
 			data.flags.obsidian.version = 0;
 		}
 
+		if (source === 'core') {
+			Migrate.convertSpeed(data);
+		}
+
 		if (data.flags.obsidian.version < 2) {
 			Migrate.convertNotes(data, source);
 			Migrate.convertProficiencies(data, source);
@@ -380,6 +384,13 @@ export const Migrate = {
 			if (dndFlags.initiativeAdv) {
 				flags.attributes.init.roll = 'adv';
 			}
+		}
+	},
+
+	convertSpeed: function (data) {
+		if (data.data.attributes.speed.value) {
+			data.flags.obsidian.attributes.speed.walk.override =
+				parseInt(data.data.attributes.speed.value);
 		}
 	},
 
