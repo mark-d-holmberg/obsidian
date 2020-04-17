@@ -76,7 +76,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		for (const skl in data.data.skills) {
 			const skill = data.actor.flags.obsidian.skills[skl];
 			if (skill?.value || skill?.override) {
-				data.skills = skill;
+				data.skills[skl] = skill;
 			}
 		}
 

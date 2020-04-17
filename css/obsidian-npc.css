@@ -7,7 +7,7 @@
 }
 
 .npc .obsidian [data-tab=desc] h3 {
-	margin: 15px 15px .5rem 15px;
+	margin: 15px 8px .5rem 8px;
 }
 
 .dnd5e.sheet.npc .window-content .obsidian .tab {
@@ -78,7 +78,11 @@
 	margin-right: 5px;
 }
 
-.obsidian-npc-stat-value {
+.obsidian-font-13 {
+	font-size: 13px;
+}
+
+.obsidian-font-14 {
 	font-size: 14px;
 }
 
