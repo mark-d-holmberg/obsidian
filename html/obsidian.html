@@ -547,33 +547,7 @@
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
-						{{#each data.abilities as |ability id|}}
-						{{#with (lookup ../actor.flags.obsidian.saves id)}}
-							<div {{#if (eq id 'dex')}}
-								style="grid-row-start: 2;"
-							{{else if (eq id 'con')}}
-								style="grid-row-start: 3;"
-							{{/if}} class="obsidian-save-item" data-value="{{id}}">
-								<div class="obsidian-radio obsidian-ptr
-								{{#if (eq 0.5 proficiency.value)~}}
-									obsidian-half-proficient
-								{{~else if (eq 1 proficiency.value)~}}
-									obsidian-proficient
-								{{~else if (eq 2 proficiency.value)~}}
-									obsidian-expertise
-								{{~/if~}}">
-									<span></span>
-								</div>
-								<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}"
-								     draggable="true">
-									{{i18n-join 'OBSIDIAN.Ability-' id}}
-								</div>
-								<div class="obsidian-save-mod obsidian-ptr">
-									{{numberFormat ability.save decimals=0 sign=true}}
-								</div>
-							</div>
-						{{/with}}
-						{{/each}}
+						{{> modules/obsidian/html/components/saves-part.html}}
 					</div>
 				</div>
 				<div class="obsidian-char-box-container">

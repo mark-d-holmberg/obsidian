@@ -1346,10 +1346,19 @@ legend .fancy-checkbox {
 	margin-right: 4px;
 }
 
-.obsidian-checkbox-grid {
+.obsidian-checkbox-grid,
+.obsidian-npc-grid {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-start;
+}
+
+.obsidian-npc-grid .obsidian-npc-grid-item {
+	flex-basis: 33%;
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+	border-bottom: 1px solid var(--mid);
 }
 
 .obsidian-checkbox-grid .fancy-checkbox {

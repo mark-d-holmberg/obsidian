@@ -32,6 +32,10 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
+// noinspection ES6UnusedImports
+import {ObsidianNPCSavesDialog} from '../dialogs/npc-saves.js';
+// noinspection ES6UnusedImports
+import {ObsidianNPCSkillsDialog} from '../dialogs/npc-skills.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -1030,9 +1034,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			state = 0;
 		}
 
-		const update = {};
-		update[`data.abilities.${save}.proficient`] = state;
-		this.actor.update(update);
+		return this.actor.update({[`data.abilities.${save}.proficient`]: state});
 	}
 
 	/**

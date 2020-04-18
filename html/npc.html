@@ -139,65 +139,59 @@
 					</div>
 					{{/each}}
 				</div>
-				{{#if (not-empty saves)}}
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.SavingThrows'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-14">
-						{{#each saves}}
-							<div class="obsidian-npc-stat-li">
-								<span class="rollable">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</span>
-								{{numberFormat mod decimals=0 sign=true}}
-							</div>
-						{{/each}}
-					</div>
-				</div>
-				{{/if}}
-				{{#if (not-empty skills)}}
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Skills'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13">
-						{{#each skills}}
-							<div class="obsidian-npc-stat-li">
-								<span class="rollable">{{i18n-join 'OBSIDIAN.Skill-' @key}}</span>
-								{{numberFormat mod decimals=0 sign=true}}
-							</div>
-						{{/each}}
-					</div>
-				</div>
-				{{/if}}
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Senses'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13">
-						{{#each actor.flags.obsidian.attributes.senses}}
-							{{#if radius}}
-							<div class="obsidian-npc-stat-li">
-								{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
-								{{radius}}
-								{{localize 'OBSIDIAN.FeetAbbr'}}
-							</div>
-							{{/if}}
-						{{/each}}
+				<div class="obsidian-npc-stat-runon obsidian-font-14">
+					<strong class="obsidian-ptr" data-dialog="NPCSaves">
+						{{localize 'OBSIDIAN.Saves'}}
+					</strong>
+					{{#each data.abilities}}
 						<div class="obsidian-npc-stat-li">
-							{{localize 'OBSIDIAN.PassiveLC'}}
-							{{localize 'OBSIDIAN.Skill-prc'}}
-							{{actor.flags.obsidian.skills.prc.passive}}
+							<span class="rollable">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</span>
+							{{numberFormat save decimals=0 sign=true~}}
 						</div>
+					{{/each}}
+				</div>
+				{{#if (not-empty skills)}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13">
+					<strong class="obsidian-ptr" data-dialog="NPCSkills">
+						{{localize 'OBSIDIAN.Skills'}}
+					</strong>
+					{{#each skills}}
+						<div class="obsidian-npc-stat-li">
+							<span class="rollable">{{i18n-join 'OBSIDIAN.Skill-' @key}}</span>
+							{{numberFormat mod decimals=0 sign=true}}
+						</div>
+					{{/each}}
+				</div>
+				{{/if}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13">
+					<strong class="obsidian-ptr">{{localize 'OBSIDIAN.Senses'}}</strong>
+					{{#each actor.flags.obsidian.attributes.senses}}
+						{{#if radius}}
+						<div class="obsidian-npc-stat-li">
+							{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
+							{{radius}}
+							{{localize 'OBSIDIAN.FeetAbbr'}}
+						</div>
+						{{/if}}
+					{{/each}}
+					<div class="obsidian-npc-stat-li">
+						{{localize 'OBSIDIAN.PassiveLC'}}
+						{{localize 'OBSIDIAN.Skill-prc'}}
+						{{actor.flags.obsidian.skills.prc.passive}}
 					</div>
 				</div>
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Languages'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13">
-						{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
-							{{#each data.traits.languages.value}}
-								<div class="obsidian-npc-stat-li">{{i18n-join 'OBSIDIAN.Lang-' this}}</div>
-							{{/each}}
-							{{#each actor.flags.obsidian.traits.profs.custom.langs}}
-								<div class="obsidian-npc-stat-li">{{this}}</div>
-							{{/each}}
-						{{else}}
-							&mdash;
-						{{/if}}
-					</div>
+				<div class="obsidian-npc-stat-runon obsidian-font-13">
+					<strong class="obsidian-ptr">{{localize 'OBSIDIAN.Languages'}}</strong>
+					{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
+						{{#each data.traits.languages.value}}
+							<div class="obsidian-npc-stat-li">{{i18n-join 'OBSIDIAN.Lang-' this}}</div>
+						{{/each}}
+						{{#each actor.flags.obsidian.traits.profs.custom.langs}}
+							<div class="obsidian-npc-stat-li">{{this}}</div>
+						{{/each}}
+					{{else}}
+						&mdash;
+					{{/if}}
 				</div>
 				<div class="obsidian-npc-stat-row">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Challenge'}}</div>
@@ -207,6 +201,12 @@
 							({{number-format data.details.xp.value}} {{localize 'OBSIDIAN.XP'}})
 						</span>
 					</div>
+				</div>
+				<div class="obsidian-npc-configure">
+					<div data-dialog="NPCSkills">
+						{{localize 'OBSIDIAN.Skills'}} <i class="fas fa-cog"></i>
+					</div>
+					<div>{{localize 'OBSIDIAN.Defenses'}} <i class="fas fa-cog"></i></div>
 				</div>
 			</section>
 		</main>

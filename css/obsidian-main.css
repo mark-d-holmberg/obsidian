@@ -480,7 +480,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .npc .obsidian .editor,
 .npc .obsidian .tox.tox-tinymce {
-	min-height: none;
+	min-height: unset;
 	max-height: none;
 }
 

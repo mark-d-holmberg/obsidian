@@ -1,0 +1,25 @@
+<form class="obsidian" autocomplete="off">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Skills'}}</legend>
+		<div class="obsidian-npc-grid obsidian-npc-skills">
+			{{#each data.skills as |skill id|}}
+			{{#with (lookup ../actor.flags.obsidian.skills id)}}
+				<div class="obsidian-npc-grid-item">
+					<div class="obsidian-prof obsidian-ptr {{#if (eq 1 proficiency.value)}}
+						obsidian-proficient
+					{{else if (eq 2 proficiency.value)}}
+						obsidian-expertise
+					{{else}}
+						obsidian-not-proficient
+					{{/if}}" data-skill="{{id}}">
+						<span></span>
+					</div>
+					<div class="obsidian-skill-name">{{i18n-join 'OBSIDIAN.Skill-' id}}</div>
+					<input type="text" name="flags.obsidian.skills.{{id}}.override" data-dtype="Number"
+					       value="{{override}}" placeholder="&mdash;">
+				</div>
+			{{/with}}
+			{{/each}}
+		</div>
+	</fieldset>
+</form>
