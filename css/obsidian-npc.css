@@ -67,6 +67,7 @@
 .obsidian-npc-stat-row {
 	display: flex;
 	align-items: center;
+	margin-bottom: 4px;
 }
 
 .obsidian-npc-stat-key {
@@ -128,7 +129,7 @@
 }
 
 .npc .obsidian-char-abilities {
-	padding: 6px 0;
+	padding: 2px 0 6px 0;
 }
 
 .obsidian fieldset.obsidian-edit-npc-stats {

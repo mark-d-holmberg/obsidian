@@ -1,7 +1,6 @@
 import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
-import {ObsidianNPCStatsDialog} from '../dialogs/npc-stats.js';
 import {OBSIDIAN} from '../global.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
@@ -50,7 +49,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		console.debug(this.actor);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
-		html.find('.obsidian-edit-npc-stats legend').click(this._editStats.bind(this));
 		html.find('[contenteditable]')
 			.focusout(Obsidian.prototype._onContenteditableUnfocus.bind(this));
 

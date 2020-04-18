@@ -139,9 +139,6 @@
 					</div>
 					{{/each}}
 				</div>
-				<fieldset class="obsidian-edit-npc-stats">
-					<legend class="rollable">{{localize 'OBSIDIAN.EditStats'}}</legend>
-				</fieldset>
 				{{#if (not-empty saves)}}
 				<div class="obsidian-npc-stat-row">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.SavingThrows'}}</div>
@@ -168,6 +165,49 @@
 					</div>
 				</div>
 				{{/if}}
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Senses'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13">
+						{{#each actor.flags.obsidian.attributes.senses}}
+							{{#if radius}}
+							<div class="obsidian-npc-stat-li">
+								{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
+								{{radius}}
+								{{localize 'OBSIDIAN.FeetAbbr'}}
+							</div>
+							{{/if}}
+						{{/each}}
+						<div class="obsidian-npc-stat-li">
+							{{localize 'OBSIDIAN.PassiveLC'}}
+							{{localize 'OBSIDIAN.Skill-prc'}}
+							{{actor.flags.obsidian.skills.prc.passive}}
+						</div>
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Languages'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13">
+						{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
+							{{#each data.traits.languages.value}}
+								<div class="obsidian-npc-stat-li">{{i18n-join 'OBSIDIAN.Lang-' this}}</div>
+							{{/each}}
+							{{#each actor.flags.obsidian.traits.profs.custom.langs}}
+								<div class="obsidian-npc-stat-li">{{this}}</div>
+							{{/each}}
+						{{else}}
+							&mdash;
+						{{/if}}
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Challenge'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-14">
+						{{data.details.cr}}
+						<span class="obsidian-npc-subtle">
+							({{number-format data.details.xp.value}} {{localize 'OBSIDIAN.XP'}})
+						</span>
+					</div>
+				</div>
 			</section>
 		</main>
 	</div>
