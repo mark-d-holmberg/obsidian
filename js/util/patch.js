@@ -51,9 +51,9 @@ export function runPatches () {
 			return this;
 		}
 
-		await this.updateManyEmbeddedEntities('Combatant', updates);
+		await this.updateEmbeddedEntity('Combatant', updates);
 		await this.update({turn: this.turns.findIndex(turn => turn._id === currentID)});
-		await ChatMessage.createMany(messages);
+		await ChatMessage.create(messages);
 		return this;
 	};
 
@@ -131,5 +131,5 @@ OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 	const expanded = data.map(update =>
 		OBSIDIAN.updateArrays(actor.data.obsidian.itemsByID.get(update._id), update));
 
-	return actor.updateManyEmbeddedEntities('OwnedItem', expanded);
+	return actor.updateEmbeddedEntity('OwnedItem', expanded);
 };

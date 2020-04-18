@@ -87,16 +87,16 @@ function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
 }
 
-Hooks.on('preCreateActor', (collection, data) => enrichActorFlags(data));
-Hooks.on('preCreateItem', (constructor, data) => enrichItemFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, id, data) => {
+Hooks.on('preCreateActor', data => enrichActorFlags(data));
+Hooks.on('preCreateItem', data => enrichItemFlags(data));
+Hooks.on('preCreateOwnedItem', (actor, data) => {
 	enrichItemFlags(data);
 	actor.linkClasses(data);
 });
 
-Hooks.on('createOwnedItem', (actor, id, data) => {
+Hooks.on('createOwnedItem', (actor, item) => {
 	if (actor instanceof CONFIG.Actor.entityClass) {
-		actor.importSpells(data);
+		actor.importSpells(item);
 	}
 });
 

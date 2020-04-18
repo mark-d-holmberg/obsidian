@@ -941,7 +941,7 @@ export const Rolls = {
 
 	toChat: function (actor, ...msgs) {
 		const chatData = Rolls.toMessage(actor);
-		ChatMessage.createMany(msgs.map((msg, i) => {
+		ChatMessage.create(msgs.map((msg, i) => {
 			const data = duplicate(chatData);
 			if (i > 0) {
 				data.sound = null;

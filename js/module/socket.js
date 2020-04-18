@@ -1,5 +1,4 @@
 import {ObsidianActor} from './actor.js';
-import {OBSIDIAN} from '../global.js';
 
 export function addSocketListener () {
 	game.socket.on('module.obsidian', handleMsg);
@@ -45,7 +44,7 @@ function deleteManyOwned (payload) {
 		return;
 	}
 
-	actor.deleteManyEmbeddedEntities('OwnedItem', payload.ids);
+	actor.deleteEmbeddedEntity('OwnedItem', payload.ids);
 }
 
 function setWorld (payload) {

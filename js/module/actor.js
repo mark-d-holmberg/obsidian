@@ -131,8 +131,8 @@ export class ObsidianActor extends Actor5e {
 	/**
 	 * @private
 	 */
-	_onDeleteEmbeddedEntity ({embeddedName, deleted, options, userId}) {
-		super._onDeleteEmbeddedEntity({embeddedName, deleted, options, userId});
+	_onDeleteEmbeddedEntity (embeddedName, deleted, options, userId) {
+		super._onDeleteEmbeddedEntity(embeddedName, deleted, options, userId);
 		if (!getProperty(deleted, 'flags.obsidian.effects.length')) {
 			return;
 		}
@@ -144,7 +144,7 @@ export class ObsidianActor extends Actor5e {
 				.flatMap(c => c.spells);
 
 		if (orphaned.length) {
-			this.deleteManyEmbeddedEntities(embeddedName, orphaned);
+			this.deleteEmbeddedEntity(embeddedName, orphaned);
 		}
 	}
 
@@ -163,7 +163,7 @@ export class ObsidianActor extends Actor5e {
 					&& typeof c.spells[0] === 'object')
 				.map(async c => {
 					const ownedSpells =
-						await this.createManyEmbeddedEntities('OwnedItem', c.spells);
+						await this.createEmbeddedEntity('OwnedItem', c.spells);
 					c.spells = ownedSpells.map(spell => spell._id);
 				});
 

@@ -582,7 +582,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		if (orphanedSpells.length && this.actor) {
-			await this.actor.deleteManyEmbeddedEntities('OwnedItem', orphanedSpells);
+			await this.actor.deleteEmbeddedEntity('OwnedItem', orphanedSpells);
 		}
 
 		this.item.update(formData);

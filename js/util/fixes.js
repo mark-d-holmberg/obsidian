@@ -17,7 +17,7 @@ export function fixBackpacks () {
 	game.actors.entities.forEach(async actor => {
 		const updates = getItemUpdates(actor.data);
 		if (updates.length) {
-			await actor.updateManyEmbeddedEntities('OwnedItem', updates.map(id => {
+			await actor.updateEmbeddedEntity('OwnedItem', updates.map(id => {
 				return {
 					_id: id,
 					type: 'backpack'
@@ -49,7 +49,7 @@ export function fixBackpacks () {
 		}
 
 		if (tokenUpdates.length) {
-			await scene.updateManyEmbeddedEntities('Token', tokenUpdates);
+			await scene.updateEmbeddedEntity('Token', tokenUpdates);
 		}
 	});
 }

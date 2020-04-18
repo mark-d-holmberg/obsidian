@@ -1001,7 +1001,7 @@ async function beginMigration (html) {
 			updateProgress();
 		}
 
-		await Item.updateMany(updates);
+		await Item.update(updates);
 	} catch (e) {
 		console.error(item, e);
 		migrationFailed();
@@ -1024,7 +1024,7 @@ async function beginMigration (html) {
 			}
 
 			if (itemUpdates.length) {
-				await actor.updateManyEmbeddedEntities('OwnedItem', itemUpdates);
+				await actor.updateEmbeddedEntity('OwnedItem', itemUpdates);
 			}
 
 			const actorUpdate = Migrate.convertActor(duplicate(actor.data));
@@ -1033,7 +1033,7 @@ async function beginMigration (html) {
 			}
 		}
 
-		await Actor.updateMany(actorUpdates);
+		await Actor.update(actorUpdates);
 	} catch (e) {
 		console.error(actor, e);
 		migrationFailed();
@@ -1077,7 +1077,7 @@ async function beginMigration (html) {
 			updateProgress();
 		}
 
-		await Scene.updateMany(updates);
+		await Scene.update(updates);
 	} catch (e) {
 		console.error(scene, e);
 		migrationFailed();

@@ -165,8 +165,7 @@ async function advanceDurations (combat) {
 	}
 
 	await cleanupExpired(expired);
-	await combat.combatant.actor.deleteManyEmbeddedEntities(
-		'OwnedItem', expired.map(item => item._id));
+	await combat.combatant.actor.deleteEmbeddedEntity('OwnedItem', expired.map(item => item._id));
 	await OBSIDIAN.updateManyOwnedItems(combat.combatant.actor, update);
 	renderDurations();
 }
@@ -191,7 +190,7 @@ async function cleanupExpired (expired) {
 			}
 
 			if (game.user.isGM) {
-				await actor.deleteManyEmbeddedEntities('OwnedItem', items);
+				await actor.deleteEmbeddedEntity('OwnedItem', items);
 			} else {
 				await game.socket.emit({
 					action: 'DELETE.MANY.OWNED',
