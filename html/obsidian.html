@@ -267,7 +267,7 @@
 					<div class="obsidian-char-box-container" data-dialog="Defenses">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses">
-						  {{#if (not-empty actor.flags.obsidian.defenses.vuln)}}
+						  {{#if actor.flags.obsidian.defenses.vulnDisplay}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-negative obsidian-css-icon-diamond">
@@ -276,13 +276,10 @@
 									    {{localize 'OBSIDIAN.VulnerabilityAbbr'}}
 								    </div>
 								  </div>
-
-								  {{#each actor.flags.obsidian.defenses.vuln}}
-									  <span>{{this}}</span>
-								  {{/each}}
+								  <span>{{actor.flags.obsidian.defenses.vulnDisplay}}</span>
 							  </div>
 						  {{/if}}
-						  {{#if (not-empty actor.flags.obsidian.defenses.res)}}
+						  {{#if actor.flags.obsidian.defenses.resDisplay}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond">
@@ -291,12 +288,10 @@
 								      {{localize 'OBSIDIAN.ResistanceAbbr'}}
 								    </div>
 								  </div>
-								  {{#each actor.flags.obsidian.defenses.res}}
-									  <span>{{this}}</span>
-								  {{/each}}
+								  <span>{{actor.flags.obsidian.defenses.resDisplay}}</span>
 							  </div>
 						  {{/if}}
-						  {{#if (not-empty actor.flags.obsidian.defenses.imm)}}
+						  {{#if actor.flags.obsidian.defenses.imm}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond">
@@ -305,9 +300,7 @@
 								      {{localize 'OBSIDIAN.ImmunityAbbr'}}
 								    </div>
 								  </div>
-								  {{#each actor.flags.obsidian.defenses.imm}}
-									  <span>{{this}}</span>
-								  {{/each}}
+								  <span>{{actor.flags.obsidian.defenses.immDisplay}}</span>
 							  </div>
 						  {{/if}}
 						</div>

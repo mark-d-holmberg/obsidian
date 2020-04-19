@@ -49,6 +49,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		console.debug(this.actor);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
+		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
 		html.find('[contenteditable]')
 			.focusout(Obsidian.prototype._onContenteditableUnfocus.bind(this));
 
@@ -103,6 +104,31 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		new ObsidianNPCDetailsDialog(this).render(true);
 	}
 
+	_enterCR (evt) {
+		const target = $(evt.currentTarget);
+		target.off();
+		target.empty();
+		target.append(
+			$(`<input type="text" name="data.details.cr" value="${this.actor.data.data.details.cr}"`
+				+ ` placeholder="${game.i18n.localize('OBSIDIAN.Challenge')}">`));
+
+		target.find('input').focus().focusout(evt => {
+			this._onSubmit(evt);
+			const target = $(evt.currentTarget);
+			let value = target.val();
+
+			if (value === '') {
+				value = '—';
+			} else {
+				value = `${value} <span class="obsidian-npc-subtle">(`
+					+ Intl.NumberFormat().format(this.actor.getCRExp(Number(value)))
+					+ ` ${game.i18n.localize('OBSIDIAN.XP')})</span>`;
+			}
+
+			target.parent().html(value).click(this._enterCR.bind(this));
+		});
+	}
+
 	_enterHPFormula (evt) {
 		const target = $(evt.currentTarget);
 		target.off();
@@ -138,5 +164,9 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 				el[0].scrollTop = positions[sel] || 0;
 			}
 		}
+	}
+
+	_updateObject (event, formData) {
+		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
 	}
 }

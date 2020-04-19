@@ -392,14 +392,18 @@ export const Prepare = {
 				consumable.flags.obsidian.subtype === 'ammo');
 	},
 
-	defenses: function (flags) {
+	defenses: function (isNPC, flags) {
 		flags.defenses.res = [];
-		flags.defenses.imm =
-			flags.defenses.conditions.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`));
 		flags.defenses.vuln = [];
 
-		for (const def of flags.defenses.damage) {
-			flags.defenses[def.level].push(game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`));
+		const conditions =
+			flags.defenses.conditions.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`));
+
+		if (isNPC) {
+			flags.defenses.condDisplay = conditions.join(', ');
+			flags.defenses.imm = [];
+		} else {
+			flags.defenses.imm = conditions;
 		}
 
 		if (flags.defenses.disease) {
@@ -409,6 +413,66 @@ export const Prepare = {
 		if (flags.defenses.sleep) {
 			flags.defenses.imm.push(game.i18n.localize('OBSIDIAN.NonMagicalSleep'));
 		}
+
+		flags.defenses.resDisplay = '';
+		flags.defenses.immDisplay = flags.defenses.imm.join(', ');
+
+		for (const def of flags.defenses.damage) {
+			flags.defenses[def.level].push(game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`));
+		}
+
+		flags.defenses.vulnDisplay = flags.defenses.vuln.join(', ');
+
+		['imm', 'res'].forEach(level => {
+			const noCondition = [];
+			const nonMagical = [];
+			const nonMagicalSil = [];
+			const nonMagicalAdm = [];
+
+			for (const def of flags.defenses.damage) {
+				if (def.level !== level) {
+					continue;
+				}
+
+				const i18n = game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`);
+				if (OBSIDIAN.notDefinedOrEmpty(def.magic)) {
+					noCondition.push(i18n);
+				} else {
+					if (OBSIDIAN.notDefinedOrEmpty(def.material)) {
+						nonMagical.push(i18n);
+					} else if (def.material === 'sil') {
+						nonMagicalSil.push(i18n);
+					} else {
+						nonMagicalAdm.push(i18n);
+					}
+				}
+			}
+
+			const display = `${level}Display`;
+			if (flags.defenses[display].length) {
+				flags.defenses[display] = [flags.defenses[display], ...noCondition].join(', ');
+			} else {
+				flags.defenses[display] = noCondition.join(', ');
+			}
+
+			const parts = [flags.defenses[display]];
+			if (nonMagical.length) {
+				parts[1] =
+					`${nonMagical.join(', ')} ${game.i18n.localize('OBSIDIAN.FromNonmagical')}`;
+			}
+
+			if (nonMagicalSil.length) {
+				parts[2] = nonMagicalSil.join(', ')
+					+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalSil')}`;
+			}
+
+			if (nonMagicalAdm.length) {
+				parts[3] = nonMagicalAdm.join(', ')
+					+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalAdm')}`;
+			}
+
+			flags.defenses[display] = parts.filter(part => part && part.length).join('; ');
+		});
 	},
 
 	weapons: function (actorData) {

@@ -342,7 +342,8 @@ li.context-item .obsidian-icon {
 	height: 20px;
 }
 
-.obsidian-css-icon-circle .obsidian-css-icon-label {
+.obsidian-css-icon-circle .obsidian-css-icon-label,
+.obsidian-css-icon-diamond .obsidian-css-icon-label {
 	font-weight: bold;
 }
 

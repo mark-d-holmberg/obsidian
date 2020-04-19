@@ -92,7 +92,8 @@
 	font-size: 14px;
 }
 
-.dnd5e.sheet .obsidian-npc-hp input[type=text] {
+.dnd5e.sheet .obsidian-npc-hp input[type=text],
+.dnd5e.sheet .obsidian-npc-cr input[type=text] {
 	height: auto;
 	width: 30px;
 	font-weight: bold;
@@ -119,7 +120,8 @@
 	font-size: 13px;
 }
 
-.dnd5e.sheet .obsidian-npc-hp-formula input[type=text] {
+.dnd5e.sheet .obsidian-npc-hp-formula input[type=text],
+.dnd5e.sheet .obsidian-npc-cr input[type=text] {
 	width: 75px;
 	font-weight: normal;
 	border: none;
@@ -127,7 +129,9 @@
 }
 
 .dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:hover,
-.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:focus {
+.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:focus,
+.dnd5e.sheet .obsidian-npc-cr input[type=text]:hover,
+.dnd5e.sheet .obsidian-npc-cr input[type=text]:focus {
 	box-shadow: none;
 	border: none;
 	border-bottom: 1px solid var(--mid);

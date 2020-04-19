@@ -14,6 +14,7 @@
 			</div>
 		{{/each}}
 	</fieldset>
+	{{#unless dialogOptions.npc}}
 	<label class="obsidian-inline obsidian-label-lg">
 		{{localize 'OBSIDIAN.PassiveDisplay'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-passive">
@@ -41,4 +42,5 @@
 			</button>
 		</div>
 	{{/each}}
+	{{/unless}}
 </form>

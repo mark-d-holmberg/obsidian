@@ -439,6 +439,13 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	flex-wrap: wrap;
 }
 
+.obsidian-defenses .obsidian-list-box-row {
+	font-weight: normal;
+	font-size: 12px;
+	font-family: var(--font-condensed);
+	flex-wrap: nowrap;
+}
+
 .obsidian-list-box-row span {
 	font-weight: normal;
 	font-family: var(--font-condensed);

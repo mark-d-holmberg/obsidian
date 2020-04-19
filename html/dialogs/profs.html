@@ -1,4 +1,5 @@
 <form class="obsidian" autocomplete="off">
+	{{#unless dialogOptions.npc}}
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Armour'}}</legend>
 		<div class="obsidian-checkbox-grid">
@@ -27,6 +28,7 @@
 			       value="{{data.traits.weaponProf.custom}}" data-flag="weapons">
 		</div>
 	</fieldset>
+	{{/unless}}
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Languages'}}</legend>
 		<div class="obsidian-checkbox-grid">

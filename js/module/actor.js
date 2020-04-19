@@ -81,6 +81,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		Prepare.init(data, flags);
+		Prepare.defenses(this.data.type === 'npc', flags);
 
 		this.data.obsidian.magicalItems =
 			this.data.items.filter(item =>
@@ -105,7 +106,6 @@ export class ObsidianActor extends Actor5e {
 		prepareSpells(this.data);
 
 		if (this.data.type === 'character') {
-			Prepare.defenses(flags);
 			Prepare.hd(this.data);
 			Prepare.tools(this.data, data, flags);
 		}

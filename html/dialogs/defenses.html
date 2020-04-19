@@ -9,9 +9,17 @@
   </div>
   <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
     {{localize 'OBSIDIAN.Damage'}}
-    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-dmg">
-      {{localize 'OBSIDIAN.Add'}}
-    </button>
+	  <div class="obsidian-flex">
+		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-res">
+			  {{localize 'OBSIDIAN.BPSRes'}}
+		  </button>
+		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-imm">
+			  {{localize 'OBSIDIAN.BPSImm'}}
+		  </button>
+	    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-dmg">
+	      {{localize 'OBSIDIAN.Add'}}
+	    </button>
+	  </div>
   </label>
   {{#each actor.flags.obsidian.defenses.damage as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
@@ -31,6 +39,20 @@
 		        <option value="hlg">{{localize 'OBSIDIAN.Healing'}}</option>
 	        {{/select}}
 	      </select>
+		    <select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic">
+			    {{#select def.magic}}
+				    <option value="">&mdash;</option>
+				    <option value="non">{{localize 'OBSIDIAN.Defense-non'}}</option>
+			    {{/select}}
+		    </select>
+		    <select name="flags.obsidian.defenses.damage.{{id}}.material" data-show="non"
+		            data-selector-parent="{{id}}.magic">
+			    {{#select def.material}}
+				    <option value="">&mdash;</option>
+				    <option value="sil">{{localize 'OBSIDIAN.Defense-sil'}}</option>
+				    <option value="adm">{{localize 'OBSIDIAN.Defense-adm'}}</option>
+			    {{/select}}
+		    </select>
 	    </div>
 	    <button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-dmg">
 	      {{localize 'OBSIDIAN.Remove'}}
@@ -51,6 +73,7 @@
 		        {{#each ../ObsidianRules.CONDITIONS}}
 			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
 		        {{/each}}
+		        <option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
 	        {{/select}}
 	      </select>
 	    </div>

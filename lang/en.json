@@ -90,6 +90,7 @@
 	"OBSIDIAN.Condition-blinded": "Blinded",
 	"OBSIDIAN.Condition-charmed": "Charmed",
 	"OBSIDIAN.Condition-deafened": "Deafened",
+	"OBSIDIAN.Condition-exhaustion": "Exhaustion",
 	"OBSIDIAN.Condition-frightened": "Frightened",
 	"OBSIDIAN.Condition-grappled": "Grappled",
 	"OBSIDIAN.Condition-incapacitated": "Incapacitated",
@@ -826,5 +827,16 @@
 	"OBSIDIAN.AC": "Armour Class",
 	"OBSIDIAN.Note": "Note",
 	"OBSIDIAN.SavesUC": "Saves",
-	"OBSIDIAN.Challenge": "Challenge"
+	"OBSIDIAN.Challenge": "Challenge",
+	"OBSIDIAN.Defense-non": "Nonmagical",
+	"OBSIDIAN.Defense-sil": "Silvered",
+	"OBSIDIAN.Defense-adm": "Adamantine",
+	"OBSIDIAN.FromNonmagical": "from nonmagical attacks",
+	"OBSIDIAN.FromNonmagicalSil": "from nonmagical attacks that aren't silvered",
+	"OBSIDIAN.FromNonmagicalAdm": "from nonmagical attacks that aren't adamantine",
+	"OBSIDIAN.DamageResistances": "Damage Resistances",
+	"OBSIDIAN.DamageImmunities": "Damage Immunities",
+	"OBSIDIAN.DamageVulnerabilities": "Damage Vulnerabilities",
+	"OBSIDIAN.BPSRes": "BPS Res",
+	"OBSIDIAN.BPSImm": "BPS Imm"
 }

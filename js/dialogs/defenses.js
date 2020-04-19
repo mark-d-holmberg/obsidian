@@ -3,7 +3,7 @@ import {ObsidianDialog} from './dialog.js';
 export class ObsidianDefensesDialog extends ObsidianDialog {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
-		options.width = 400;
+		options.width = 500;
 		options.title = game.i18n.localize('OBSIDIAN.ManageDefenses');
 		options.template = 'modules/obsidian/html/dialogs/defenses.html';
 		return options;
@@ -19,7 +19,24 @@ export class ObsidianDefensesDialog extends ObsidianDialog {
 		html.find('.obsidian-rm-dmg').click(this._onRemoveDamage.bind(this));
 		html.find('.obsidian-add-cond').click(this._onAddCondition.bind(this));
 		html.find('.obsidian-rm-cond').click(this._onRemoveCondition.bind(this));
+		html.find('.obsidian-def-bps-res').click(this._addBPS.bind(this, 'res'));
+		html.find('.obsidian-def-bps-imm').click(this._addBPS.bind(this, 'imm'));
 		ObsidianDialog.recalculateHeight(html);
+	}
+
+	async _addBPS (level) {
+		const update = this._formData;
+		this.parent.actor.data.flags.obsidian.defenses.damage.push(...[
+			{level: level, dmg: 'blg', magic: 'non'},
+			{level: level, dmg: 'prc', magic: 'non'},
+			{level: level, dmg: 'slh', magic: 'non'}
+		]);
+
+		update['flags.obsidian.defenses.damage'] =
+			duplicate(this.parent.actor.data.flags.obsidian.defenses.damage);
+
+		await this.parent.actor.update(update);
+		this.render(false);
 	}
 
 	/**
