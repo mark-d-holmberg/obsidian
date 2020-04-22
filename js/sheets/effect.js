@@ -155,6 +155,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		return data;
 	}
 
+	async maximize () {
+		Application.prototype.maximize.apply(this, arguments);
+	}
+
 	/**
 	 * @private
 	 */
