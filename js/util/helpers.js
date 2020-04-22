@@ -69,8 +69,8 @@ export function registerHandlebarHelpers () {
 			${options.hash.show ? ` data-show="${options.hash.show}"` : ''}
 			${options.hash.hide ? ` data-hide="${options.hash.hide}"` : ''}
 			${options.hash.selectorParent
-			? ` data-selector-parent="${options.hash.selectorParent}"`
-			: ''}>
+				? ` data-selector-parent="${options.hash.selectorParent}"`
+				: ''}>
 			<div class="checkbox-container">
 				<div class="checkbox-inner-box"></div>
 				<div class="checkmark-container">

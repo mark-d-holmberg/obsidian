@@ -170,7 +170,7 @@
 
 .obsidian-npc-configure {
 	display: flex;
-	justify-content: center;
+	justify-content: space-evenly;
 	font-size: 12px;
 	color: var(--text-secondary);
 	text-transform: uppercase;
@@ -210,5 +210,14 @@
 .obsidian-npc-skills .obsidian-npc-grid-item:nth-child(17),
 .obsidian-npc-skills .obsidian-npc-grid-item:nth-child(18) {
 	margin: 0;
+	border: none;
+}
+
+.obsidian-npc-stats main > section {
+	padding-bottom: 8px;
+	border-bottom: 2px solid var(--mid);
+}
+
+.obsidian-npc-stats main > section:last-child {
 	border: none;
 }

@@ -131,6 +131,7 @@ Rules.EFFECT_FILTER_MULTI = ['any', 'some'];
 Rules.EFFECT_FILTER_ROLLS = ['attack', 'check', 'save', 'damage'];
 Rules.EFFECT_FILTER_SAVES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'death'];
 Rules.EFFECT_FILTER_SCORES = ['ability', 'ac', 'max-hp', 'passive', 'speed', 'dc'];
+Rules.NPC_FEATURES = ['none', 'attack', 'action', 'reaction', 'legendary', 'lair'];
 Rules.EFFECT_RESOURCE_RECHARGE_CALC = ['all', 'formula'];
 Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];
 Rules.EFFECT_TARGETS = ['individual', 'area'];

@@ -1,0 +1,16 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	<div class="form-group">
+		<label>{{localize 'OBSIDIAN.Feature'}}</label>
+		<select name="feat">
+			{{#each ObsidianRules.NPC_FEATURES}}
+				<option value="{{this}}">{{i18n-join 'OBSIDIAN.Feat-' this}}</option>
+			{{/each}}
+		</select>
+	</div>
+	<div class="obsidian-btn-row">
+		<button type="button" class="obsidian-btn-outline">
+			<i class="fas fa-check"></i>
+			{{localize 'OBSIDIAN.Add'}}
+		</button>
+	</div>
+</form>

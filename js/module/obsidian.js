@@ -36,6 +36,8 @@ import {ObsidianXPDialog} from '../dialogs/xp.js';
 import {ObsidianNPCSavesDialog} from '../dialogs/npc-saves.js';
 // noinspection ES6UnusedImports
 import {ObsidianNPCSkillsDialog} from '../dialogs/npc-skills.js';
+// noinspection ES6UnusedImports
+import {ObsidianNPCFeaturesDialog} from '../dialogs/npc-features.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -510,7 +512,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const dlg = await renderTemplate('modules/obsidian/html/dialogs/new-item.html', {
 			upper: name,
 			lower: name.toLocaleLowerCase(),
-			types: ['weapon', 'equipment', 'consumable', 'loot', 'backpack']
+			types: ['weapon', 'equipment', 'consumable', 'loot', 'tool', 'backpack']
 		});
 
 		new Dialog({

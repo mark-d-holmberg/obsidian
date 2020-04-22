@@ -838,5 +838,12 @@
 	"OBSIDIAN.DamageImmunities": "Damage Immunities",
 	"OBSIDIAN.DamageVulnerabilities": "Damage Vulnerabilities",
 	"OBSIDIAN.BPSRes": "BPS Res",
-	"OBSIDIAN.BPSImm": "BPS Imm"
+	"OBSIDIAN.BPSImm": "BPS Imm",
+	"OBSIDIAN.Features": "Features",
+	"OBSIDIAN.Feat-none": "Passive",
+	"OBSIDIAN.Feat-attack": "Attack",
+	"OBSIDIAN.Feat-action": "Action",
+	"OBSIDIAN.Feat-reaction": "Reaction",
+	"OBSIDIAN.Feat-legendary": "Legendary Action",
+	"OBSIDIAN.Feat-lair": "Lair Action"
 }
