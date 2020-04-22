@@ -30,7 +30,7 @@ export function getSourceClass (actorData, source) {
 }
 
 export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
-	if (!item.flags || !item.flags.obsidian || !actor || actor.data.type === 'npc') {
+	if (!item.flags || !item.flags.obsidian || !actor) {
 		return;
 	}
 

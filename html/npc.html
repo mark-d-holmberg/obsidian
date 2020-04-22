@@ -240,6 +240,32 @@
 					</div>
 				</div>
 			</section>
+			{{#if featCategories.none}}
+			<section>
+				{{#each (sort featCategories.none)}}
+					<div class="obsidian-feature item" data-item-id="{{_id}}" draggable="true">
+						<div class="obsidian-feature-header">
+							<div>
+								<h4 class="rollable" data-roll="item" data-id="{{_id}}">{{name}}</h4>
+								<div class="obsidian-feature-recharge">{{{format-recharge @root.actor this bull=true}}}</div>
+								<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
+								   data-item-id="{{_id}}">
+									<i class="fas fa-eye"></i>
+								</a>
+								<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
+									<i class="fas fa-edit"></i>
+								</a>
+								<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+									<i class="fas fa-trash"></i>
+								</a>
+							</div>
+							{{format-uses @root.actor this}}
+						</div>
+						<div class="obsidian-feature-body">{{{flags.obsidian.display}}}</div>
+					</div>
+				{{/each}}
+			</section>
+			{{/if}}
 		</main>
 	</div>
 	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="equip">

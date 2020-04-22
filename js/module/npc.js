@@ -2,6 +2,7 @@ import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -50,6 +51,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
+		html.find('.obsidian-feature-use').mousedown(Obsidian.prototype._onPipClicked.bind(this));
+		html.find('.obsidian-delete').click(Obsidian.prototype._onDeleteFeature.bind(this));
+		html.find('.obsidian-view')
+			.click(evt => Obsidian.prototype._viewItem.apply(this, [$(evt.currentTarget)]));
 		html.find('[contenteditable]')
 			.focusout(Obsidian.prototype._onContenteditableUnfocus.bind(this));
 
@@ -60,6 +65,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.featCategories = {};
 		data.skills = {};
 
 		for (const skl in data.data.skills) {
@@ -67,6 +73,20 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			if (skill?.value || skill?.override) {
 				data.skills[skl] = skill;
 			}
+		}
+
+		for (const item of data.items) {
+			if (item.type !== 'feat') {
+				continue;
+			}
+
+			let category = data.featCategories[item.data.activation.type];
+			if (!category) {
+				category = [];
+				data.featCategories[item.data.activation.type] = category;
+			}
+
+			category.push(item);
 		}
 
 		return data;
@@ -151,9 +171,25 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		});
 	}
 
+	_onAttune () {
+		Obsidian.prototype._onAttune.apply(this, arguments);
+	}
+
+	_onEquip () {
+		Obsidian.prototype._onEquip.apply(this, arguments);
+	}
+
 	_onResize (event) {
 		Obsidian.prototype._onResize.apply(this, arguments);
 		this.element.find('.tox-tinymce').css('height', `${this._calculateEditorHeight()}px`);
+	}
+
+	_onRoll (evt) {
+		ObsidianItems.roll(this.actor, evt.currentTarget.dataset);
+	}
+
+	_onUseClicked () {
+		Obsidian.prototype._onUseClicked.apply(this, arguments);
 	}
 
 	_restoreScrollPositions (html, selectors) {
