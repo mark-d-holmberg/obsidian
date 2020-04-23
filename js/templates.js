@@ -13,6 +13,7 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/tool.html',
 		'modules/obsidian/html/components/loot.html',
 		'modules/obsidian/html/components/saves-part.html',
+		'modules/obsidian/html/components/features.html',
 		'modules/obsidian/html/components/effects/resource.html',
 		'modules/obsidian/html/components/effects/attack.html',
 		'modules/obsidian/html/components/effects/damage.html',

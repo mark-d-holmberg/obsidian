@@ -388,7 +388,7 @@ export const Migrate = {
 	},
 
 	convertSpeed: function (data) {
-		if (data.data.attributes.speed.value) {
+		if (data.data?.attributes.speed.value) {
 			data.flags.obsidian.attributes.speed.walk.override =
 				parseInt(data.data.attributes.speed.value);
 		}

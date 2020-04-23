@@ -18,7 +18,7 @@
 				</select>
 			</label>
 			<select name="{{prefix}}.recharge.calc" data-selector-parent="{{prefix}}.recharge.time"
-			        data-hide="never" data-selector="{{prefix}}.recharge.calc">
+			        data-hide="never, roll" data-selector="{{prefix}}.recharge.calc">
 				{{#select recharge.calc}}
 					{{#each @root.ObsidianRules.EFFECT_RESOURCE_RECHARGE_CALC}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.RechargeCalc-' this}}</option>
@@ -41,6 +41,9 @@
 			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 			       data-dtype="Number" placeholder="0" name="{{prefix}}.recharge.bonus" data-hide="all"
 			       data-selector-parent="{{prefix}}.recharge.calc" value="{{recharge.bonus}}">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" name="{{prefix}}.recharge.roll" data-show="roll"
+			       data-selector-parent="{{prefix}}.recharge.time" value="{{recharge.roll}}">
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">

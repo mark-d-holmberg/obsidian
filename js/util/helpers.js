@@ -113,12 +113,41 @@ export function registerHandlebarHelpers () {
 		});
 	});
 
+	Handlebars.registerHelper('format-legendary', function (legact) {
+		if (!legact?.max) {
+			return '';
+		}
+
+		let out = '<div class="obsidian-feature-uses obsidian-legendary-actions">';
+		for (let i = 0; i < legact.max; i++) {
+			out += `
+				<div class="obsidian-feature-use ${i < legact.value ? 'obsidian-feature-used' : ''}"
+				     data-n="${i + 1}"></div>
+			`;
+		}
+
+		out += '</div>';
+		return new Handlebars.SafeString(out);
+	});
+
 	Handlebars.registerHelper('format-recharge', function (actor, feature, options) {
+		const parts = [];
+		if (options.hash.bull) {
+			parts.push('');
+		}
+
+		if (feature.data.activation.type === 'legendary'
+			&& feature.data.activation.cost
+			&& feature.data.activation.cost > 1)
+		{
+			parts.push(
+				feature.data.activation.cost
+				+ ` ${game.i18n.localize('OBSIDIAN.Actions').toLocaleLowerCase()}`);
+		}
+
 		if (getProperty(feature, 'obsidian.bestResource.recharge.time')) {
-			return new Handlebars.SafeString(
-				(options.hash.bull ? ' &bull; ' : '')
-				+ game.i18n.localize(
-					`OBSIDIAN.Recharge-${feature.obsidian.bestResource.recharge.time}`));
+			parts.push(formatRecharge(feature.obsidian.bestResource.recharge));
+			return new Handlebars.SafeString(parts.join(' &bull; '));
 		}
 
 		if (feature.obsidian.consumers.length) {
@@ -131,11 +160,12 @@ export function registerHandlebarHelpers () {
 			const [, , resource] = Effect.getLinkedResource(actor.data, consumer);
 
 			if (resource && getProperty(resource, 'recharge.time')) {
-				return new Handlebars.SafeString(
-					(options.hash.bull ? ' &bull; ' : '')
-					+ game.i18n.localize(`OBSIDIAN.Recharge-${resource.recharge.time}`));
+				parts.push(formatRecharge(resource.recharge));
+				return new Handlebars.SafeString(parts.join(' &bull; '));
 			}
 		}
+
+		return parts.join(' &bull; ');
 	});
 
 	Handlebars.registerHelper('format-slots', function (data, level) {
@@ -388,4 +418,12 @@ export function registerHandlebarHelpers () {
 			? attack.parentEffect.versatile
 			: attack.parentEffect.damage;
 	});
+}
+
+function formatRecharge (recharge) {
+	if (recharge.time === 'roll' && recharge.roll) {
+		return `${game.i18n.localize('OBSIDIAN.Recharge')} ${recharge.roll}&mdash;6`;
+	} else {
+		return game.i18n.localize(`OBSIDIAN.Recharge-${recharge.time}`);
+	}
 }

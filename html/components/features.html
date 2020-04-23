@@ -1,0 +1,28 @@
+{{#each (sort feats 'name') as |feat idx|}}
+	<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
+		{{#if (and ../heading (eq idx 0))}}
+			<h3>{{localize ../heading}} {{format-legendary ../legendary}}</h3>
+		{{/if}}
+		{{#if ../subtext}}
+			<div class="obsidian-rules-text">{{../subtext}}</div>
+		{{/if}}
+		<div class="obsidian-feature-header">
+			<div>
+				<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
+				<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat bull=true}}}</div>
+				<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
+				   data-item-id="{{feat._id}}">
+					<i class="fas fa-eye"></i>
+				</a>
+				<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
+					<i class="fas fa-edit"></i>
+				</a>
+				<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+					<i class="fas fa-trash"></i>
+				</a>
+			</div>
+			{{format-uses @root.actor feat}}
+		</div>
+		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
+	</div>
+{{/each}}

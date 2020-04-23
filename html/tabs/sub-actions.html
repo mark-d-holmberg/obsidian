@@ -7,27 +7,7 @@
 		</a>
 	</h3>
 	<div class="obsidian-feature-list">
-		{{#each (sort (filter actor.obsidian.feats 'data.activation.type' action) 'name') as |feat|}}
-			<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
-				<div class="obsidian-feature-header">
-					<div>
-						<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
-						<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat bull=true}}}</div>
-						<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
-						   data-item-id="{{feat._id}}">
-							<i class="fas fa-eye"></i>
-						</a>
-						<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
-							<i class="fas fa-edit"></i>
-						</a>
-						<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
-							<i class="fas fa-trash"></i>
-						</a>
-					</div>
-					{{format-uses @root.actor feat}}
-				</div>
-				<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
-			</div>
-		{{/each}}
+		{{> modules/obsidian/html/components/features.html
+				feats=(filter actor.obsidian.feats 'data.activation.type' action)}}
 	</div>
 </div>

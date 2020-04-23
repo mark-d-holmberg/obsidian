@@ -28,6 +28,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		mergeObject(options, {
+			width: 768,
 			classes: options.classes.concat(['obsidian-window']),
 			scrollY: ['.obsidian'],
 			tabs: [{
@@ -53,6 +54,8 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
 		html.find('.obsidian-feature-use').mousedown(Obsidian.prototype._onPipClicked.bind(this));
 		html.find('.obsidian-delete').click(Obsidian.prototype._onDeleteFeature.bind(this));
+		html.find('.obsidian-legendary-actions .obsidian-feature-use')
+			.click(this._useLegendaryAction.bind(this));
 		html.find('.obsidian-view')
 			.click(evt => Obsidian.prototype._viewItem.apply(this, [$(evt.currentTarget)]));
 		html.find('[contenteditable]')
@@ -204,5 +207,18 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_updateObject (event, formData) {
 		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
+	}
+
+	_useLegendaryAction (evt) {
+		let used = this.actor.data.data.resources.legact.value;
+		const n = Number(evt.currentTarget.dataset.n);
+
+		if (n > used) {
+			used++;
+		} else {
+			used--;
+		}
+
+		this.actor.update({'data.resources.legact.value': used});
 	}
 }

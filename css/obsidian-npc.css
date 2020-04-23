@@ -1,9 +1,15 @@
 .npc .obsidian [data-tab=desc] section:first-child {
-	display: flex;
+	column-width: 350px;
+	text-align: center;
 }
 
 .npc .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 350px;
+	text-align: left;
+	font-weight: normal;
+	color: var(--text-regular);
+	font-size: 13px;
+	padding: 8px;
 }
 
 .npc .obsidian [data-tab=desc] h3 {
@@ -54,9 +60,9 @@
 }
 
 .obsidian-npc-stats main {
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
+	column-width: 350px;
+	column-gap: 20px;
+	padding-top: 8px;
 }
 
 .obsidian-npc-stat-row {
@@ -163,6 +169,10 @@
 	content: '';
 }
 
+.obsidian-npc-saves .obsidian-npc-stat-li {
+	text-transform: uppercase;
+}
+
 .obsidian-npc-configure {
 	display: flex;
 	justify-content: space-evenly;
@@ -208,13 +218,44 @@
 	border: none;
 }
 
-.obsidian-npc-stats main > section {
-	padding-top: 8px;
+.obsidian-npc-stat-block {
 	padding-bottom: 8px;
 	border-bottom: 2px solid var(--mid);
-	width: 350px;
+	break-inside: avoid;
 }
 
-.obsidian-npc-stats main > section:last-child {
+.obsidian-npc-stats .obsidian-feature {
+	margin-bottom: 0;
+	break-inside: avoid;
+}
+
+.obsidian-npc-stats .obsidian-feature p {
+	margin-top: 0;
+}
+
+.obsidian-npc-stats .obsidian-feature-header {
+	align-items: flex-start;
+	margin-top: 12px;
+	margin-bottom: 4px;
+}
+
+.obsidian-npc-stats hr {
+	border: 1px solid var(--mid);
+	margin: 10px 0 0;
+}
+
+.npc .obsidian .obsidian-npc-stats h3 {
 	border: none;
+	text-transform: none;
+	font-size: 20px;
+	font-weight: normal;
+	font-family: var(--font);
+	padding: 0;
+	margin: 4px 0 -6px;
+}
+
+.obsidian-rules-text {
+	padding-top: 4px;
+	color: var(--text-subtle);
+	font-size: 12px;
 }

@@ -1469,3 +1469,15 @@ legend .fancy-checkbox {
 	height: 4px;
 	background-color: var(--positive);
 }
+
+.obsidian-multiline-input {
+	font-size: 14px;
+	font-family: var(--font-condensed);
+	color: var(--text-regular);
+	width: 100%;
+	outline: none;
+}
+
+.obsidian-multiline-input.obsidian-placeholder {
+	color: var(--text-secondary);
+}

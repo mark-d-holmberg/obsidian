@@ -1,13 +1,30 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Features'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       data-dtype="Number" name="data.resources.legact.max" placeholder="0"
+					       value="{{data.resources.legact.max}}">
+					<span>{{localize 'OBSIDIAN.LegendaryActions'}}</span>
+				</label>
+			</div>
+		</div>
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div class="obsidian-multiline-input" data-placeholder="{{localize 'OBSIDIAN.LairRules'}}"
+			     contenteditable="true" data-edit="flags.obsidian.lair">{{{actor.flags.obsidian.lair}}}</div>
+		</div>
+	</fieldset>
 	<div class="form-group">
-		<label>{{localize 'OBSIDIAN.Feature'}}</label>
-		<select name="feat">
+		<label>{{localize 'OBSIDIAN.AddFeature'}}</label>
+		<select>
 			{{#each ObsidianRules.NPC_FEATURES}}
 				<option value="{{this}}">{{i18n-join 'OBSIDIAN.Feat-' this}}</option>
 			{{/each}}
 		</select>
 	</div>
-	<div class="obsidian-btn-row">
+	<div class="obsidian-btn-row" style="margin-top: 8px;">
 		<button type="button" class="obsidian-btn-outline">
 			<i class="fas fa-check"></i>
 			{{localize 'OBSIDIAN.Add'}}

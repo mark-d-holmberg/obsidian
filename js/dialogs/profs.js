@@ -12,10 +12,14 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 	getData () {
 		const data = super.getData();
 		data.profs = {};
+
 		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
+			const trait = this.parent.actor.data.data.traits[prop]?.value;
 			data.profs[prop] = {};
-			this.parent.actor.data.data.traits[prop].value.forEach(prof =>
-				data.profs[prop][prof] = true);
+
+			if (trait) {
+				trait.forEach(prof => data.profs[prop][prof] = true);
+			}
 		});
 
 		return data;

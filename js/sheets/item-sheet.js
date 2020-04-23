@@ -33,6 +33,7 @@ export class ObsidianItemSheet extends ItemSheet {
 	getData () {
 		const data = super.getData();
 		data.actor = this.actor;
+		data.isNPC = this.actor?.data.type === 'npc';
 		data.ObsidianRules = OBSIDIAN.Rules;
 
 		if (data.actor) {

@@ -9,11 +9,19 @@
 		    <div class="obsidian-fullwidth">
 		      <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
 		             value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
-			    <select name="data.activation.type">
+			    <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			           data-dtype="Number" name="data.activation.cost" placeholder="1"
+			           value="{{data.activation.cost}}" data-show="legendary"
+			           data-selector-parent="activation">
+			    <select name="data.activation.type" data-selector="activation">
 				    {{#select item.data.activation.type}}
 					    {{#each ObsidianRules.FEAT_ACTION}}
 						    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
 					    {{/each}}
+					    {{#if isNPC}}
+						    <option value="legendary">{{localize 'OBSIDIAN.FeatAction-legendary'}}</option>
+						    <option value="lair">{{localize 'OBSIDIAN.FeatAction-lair'}}</option>
+					    {{/if}}
 				    {{/select}}
 			    </select>
 		    </div>
