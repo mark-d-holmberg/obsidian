@@ -52,8 +52,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
-		html.find('.obsidian-feature-use').mousedown(Obsidian.prototype._onPipClicked.bind(this));
 		html.find('.obsidian-delete').click(Obsidian.prototype._onDeleteFeature.bind(this));
+		html.find('[data-uuid] .obsidian-feature-use')
+			.click(Obsidian.prototype._onUseClicked.bind(this));
+		html.find('[data-spell-level] .obsidian-feature-use')
+			.click(Obsidian.prototype._onSlotClicked.bind(this));
 		html.find('.obsidian-legendary-actions .obsidian-feature-use')
 			.click(this._useLegendaryAction.bind(this));
 		html.find('.obsidian-view')
@@ -189,10 +192,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_onRoll (evt) {
 		ObsidianItems.roll(this.actor, evt.currentTarget.dataset);
-	}
-
-	_onUseClicked () {
-		Obsidian.prototype._onUseClicked.apply(this, arguments);
 	}
 
 	_restoreScrollPositions (html, selectors) {

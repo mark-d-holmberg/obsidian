@@ -2,9 +2,9 @@
 	<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
 		{{#if (and ../heading (eq idx 0))}}
 			<h3>{{localize ../heading}} {{format-legendary ../legendary}}</h3>
-		{{/if}}
-		{{#if ../subtext}}
-			<div class="obsidian-rules-text">{{../subtext}}</div>
+			{{#if ../subtext}}
+				<div class="obsidian-rules-text">{{../subtext}}</div>
+			{{/if}}
 		{{/if}}
 		<div class="obsidian-feature-header">
 			<div>

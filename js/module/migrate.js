@@ -190,7 +190,7 @@ export const Migrate = {
 		}
 
 		if (data.type === 'feat' && data.flags.obsidian.version < 6 && source !== 'core') {
-			Migrate.v4.convertActivation(data);
+			Migrate.v5.convertActivation(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
