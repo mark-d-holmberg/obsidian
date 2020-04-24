@@ -76,7 +76,7 @@ export function prepareSpellcasting (actorData, flags) {
 	}
 
 	if (data.spells.pact) {
-		const levelOverride = flags.spells.slots.pactLevel;
+		const levelOverride = flags.spells?.slots.pactLevel;
 		if (!OBSIDIAN.notDefinedOrEmpty(levelOverride)) {
 			data.spells.pact.level = Number(levelOverride);
 		}
