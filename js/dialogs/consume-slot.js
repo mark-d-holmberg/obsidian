@@ -62,13 +62,12 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 
 		if (!isRitual) {
 			const spellKey = isPact ? 'data.spells.pact' : `data.spells.spell${level}`;
-			const usesKey = isPact ? 'uses' : 'value';
 			const spells = getProperty(this._actor.data, spellKey);
 
 			if ((spells.tmp || 0) > 0) {
 				this._actor.update({[`${spellKey}.tmp`]: spells.tmp - 1});
 			} else {
-				this._actor.update({[`${spellKey}.${usesKey}`]: spells[usesKey] + 1});
+				this._actor.update({[`${spellKey}.value`]: spells.value - 1});
 			}
 		}
 

@@ -143,21 +143,19 @@ export function registerHandlebarHelpers () {
 			return '';
 		}
 
-		const slots = data.max == null ? data.slots : data.max;
-		const uses = data.value == null ? data.uses : data.value;
+		const used = data.max - data.value;
 		const tmp = data.tmp || 0;
 
-		if (slots == null || typeof slots !== 'number' || uses == null || typeof uses !== 'number')
-		{
+		if (!data.max) {
 			return '';
 		}
 
 		let out = `<div class="obsidian-feature-uses" data-spell-level="${level}">`;
-		for (let i = 0; i < slots + tmp; i++) {
+		for (let i = 0; i < data.max + tmp; i++) {
 			out += `
 				<div class="obsidian-feature-use
-				     ${i < uses ? 'obsidian-feature-used' : ''}
-				     ${slots + tmp - i > slots ? 'obsidian-feature-positive' : ''}"
+				     ${i < used ? 'obsidian-feature-used' : ''}
+				     ${data.max + tmp - i > data.max ? 'obsidian-feature-positive' : ''}"
 				     data-n="${i + 1}"></div>
 			`;
 		}
@@ -237,7 +235,7 @@ export function registerHandlebarHelpers () {
 		let spellbookEntry;
 
 		if (spellbook && spellbook.length) {
-			spellbookEntry = spellbook.find(entry => entry.level === level);
+			spellbookEntry = spellbook.find(entry => entry.prop === `spell${level}`);
 		}
 
 		return (spellbookEntry
@@ -370,7 +368,7 @@ export function registerHandlebarHelpers () {
 			return {spells: []};
 		}
 
-		return spellbook.find(entry => entry.level === level) || {spells: []};
+		return spellbook.find(entry => entry.prop === `spell${level}`) || {spells: []};
 	});
 
 	Handlebars.registerHelper('starts-with', function (haystack, needle) {

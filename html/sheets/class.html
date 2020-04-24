@@ -40,8 +40,8 @@
 					{{/each}}
 				{{/select}}
 			</select>
-			<select name="flags.obsidian.spellcasting.progression">
-				{{#select item.flags.obsidian.spellcasting.progression}}
+			<select name="data.spellcasting">
+				{{#select data.spellcasting}}
 					{{#each ObsidianRules.SPELL_PROGRESSION}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellProg-' this}}</option>
 					{{/each}}

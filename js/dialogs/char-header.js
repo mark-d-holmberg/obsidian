@@ -56,7 +56,6 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		return {
 			enabled: true,
 			spell: OBSIDIAN.Rules.CLASS_SPELL_MODS[cls],
-			progression: OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[cls],
 			preparation: OBSIDIAN.Rules.CLASS_SPELL_PREP[cls],
 			rituals: OBSIDIAN.Rules.CLASS_RITUALS[cls]
 		};

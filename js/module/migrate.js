@@ -64,6 +64,10 @@ export const Migrate = {
 			Migrate.convertSpecial(data, source);
 		}
 
+		if (source !== 'core' && data.flags.obsidian.version < 5) {
+			Migrate.v4.convertSpellcasting(data);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
@@ -199,6 +203,14 @@ export const Migrate = {
 
 		data.flags.obsidian.spellcasting =
 			ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
+
+		if (data.flags.obsidian.spellcasting.progression) {
+			data.data.spellcasting = data.flags.obsidian.spellcasting.progression;
+		}
+
+		if (!data.data.spellcasting || data.data.spellcasting === 'none') {
+			data.data.spellcasting = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[data.name] || 'none';
+		}
 	},
 
 	convertConsumable: function (data, source) {
@@ -960,6 +972,24 @@ Migrate.v3 = {
 	convertHD: function (data) {
 		if (data.flags.obsidian.hd) {
 			data.data.hitDice = `d${data.flags.obsidian.hd}`;
+		}
+	}
+};
+
+Migrate.v4 = {
+	convertSpellcasting: function (data) {
+		const spells = data.data.spells;
+		const overrides = data.flags.obsidian.spells.slots;
+
+		for (let i = 1; i < 10; i++) {
+			const spell = spells[`spell${i}`];
+			if (spell.value != null && spell.max != null) {
+				spell.value = spell.max - spell.value;
+			}
+
+			if (!OBSIDIAN.notDefinedOrEmpty(overrides[i])) {
+				spell.override = Number(overrides[i]);
+			}
 		}
 	}
 };

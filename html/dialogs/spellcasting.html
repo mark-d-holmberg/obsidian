@@ -3,8 +3,8 @@
 	<div class="obsidian-form-row obsidian-inline obsidian-align-labels">
 		{{#each (range 1 5)}}
 			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.spells.slots.{{this}}"
-				       value="{{lookup ../actor.flags.obsidian.spells.slots this}}"
+				<input type="text" name="data.spells.spell{{this}}.override" data-dtype="Number"
+				       value="{{#with (lookup ../data.spells (add 'spell' this))}}{{override}}{{/with}}"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 				<span>
 					{{#if (eq this 1)}}
@@ -23,16 +23,16 @@
 	<div class="obsidian-form-row obsidian-inline obsidian-align-labels">
 		{{#each (range 6 9)}}
 			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.spells.slots.{{this}}"
-				       value="{{lookup ../actor.flags.obsidian.spells.slots this}}"
+				<input type="text" name="data.spells.spell{{this}}.override" data-dtype="Number"
+				       value="{{#with (lookup ../data.spells (add 'spell' this))}}{{override}}{{/with}}"
 				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
 				<span>{{this}}{{localize 'OBSIDIAN.th'}}</span>
 			</label>
 		{{/each}}
 		<label class="obsidian-inline">
-			<input type="text" name="flags.obsidian.spells.slots.pact"
-			       value="{{actor.flags.obsidian.spells.slots.pact}}"
-			       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       name="data.spells.pact.override" value="{{data.spells.pact.override}}"
+			       data-dtype="Number">
 			<span>{{localize 'OBSIDIAN.Pact'}}</span>
 		</label>
 	</div>

@@ -171,8 +171,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
 		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
 		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
-		html.find('[data-uuid] .obsidian-feature-use, [data-spell-level] .obsidian-feature-use')
-			.mousedown(this._onPipClicked.bind(this));
+		html.find('[data-uuid] .obsidian-feature-use').click(this._onUseClicked.bind(this));
+		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
 		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
@@ -709,36 +709,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onPipClicked (evt) {
-		const target = $(evt.currentTarget);
-		const n = Number(target.data('n'));
-		const parent = target.parent();
-		let uses =
-			Math.max(
-				...Array.from(parent.children('.obsidian-feature-used'))
-					.map(el => Number(el.dataset.n)));
-
-		if (uses < 0) {
-			uses = 0;
-		}
-
-		if (n > uses) {
-			uses++;
-		} else {
-			uses--;
-		}
-
-		if (parent.data('spell-level')) {
-			this._onSlotClicked(parent.data('spell-level'), uses);
-		} else {
-			this._onUseClicked(parent.data('uuid'), uses);
-		}
-	}
-
-	/**
-	 * @private
 	 */
 	_onResize (event) {
 		super._onResize(event);
@@ -758,16 +728,20 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_onSlotClicked (spellLevel, uses) {
+	_onSlotClicked (evt) {
+		const target = evt.currentTarget;
+		const spellLevel = target.parentElement.dataset.spellLevel;
+		const n = Number(target.dataset.n);
 		const spellKey = spellLevel === 'pact' ? 'pact' : `spell${spellLevel}`;
-		const usesKey = spellLevel === 'pact' ? 'uses' : 'value';
 		const spells = this.actor.data.data.spells[spellKey];
+		const used = spells.max - spells.value;
 
-		if ((spells.tmp || 0) > 0) {
-			this.actor.update({[`data.spells.${spellKey}.tmp`]: spells.tmp - 1});
-		} else {
-			this.actor.update({[`data.spells.${spellKey}.${usesKey}`]: uses});
+		if (n > used && (spells.tmp || 0) > 0) {
+			return this.actor.update({[`data.spells.${spellKey}.tmp`]: spells.tmp - 1});
 		}
+
+		const newValue = spells.value + (n > used ? -1 : 1);
+		this.actor.update({[`data.spells.${spellKey}.value`]: newValue});
 	}
 
 	/**
@@ -805,8 +779,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_onUseClicked (uuid, used) {
+	_onUseClicked (evt) {
+		const target = evt.currentTarget;
+		const uuid = target.parentElement.dataset.uuid;
+		const n = Number(target.dataset.n);
 		const resource = this.actor.data.obsidian.components.get(uuid);
+
 		if (!resource) {
 			return;
 		}
@@ -821,7 +799,20 @@ export class Obsidian extends ActorSheet5eCharacter {
 			return;
 		}
 
+
 		const max = Math.max(resource.max, resource.remaining);
+		let used = max - resource.remaining;
+
+		if (used < 0) {
+			used = 0;
+		}
+
+		if (n > used) {
+			used++;
+		} else {
+			used--;
+		}
+
 		const update = {
 			_id: item._id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:

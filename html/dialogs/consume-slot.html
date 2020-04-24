@@ -9,9 +9,9 @@
 	<div class="obsidian-spell-slot-row">
 		{{#with (lookup ../actor.data.spells (add 'spell' this))}}
 		<div
-			{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}
-			{{#if (gt remaining max)}} class="obsidian-positive"{{/if}}>
-			({{remaining}} / {{max}})
+			{{#if (lt value 1)}} class="obsidian-negative"{{/if}}
+			{{#if (gt value max)}} class="obsidian-positive"{{/if}}>
+			({{value}} / {{max}})
 		</div>
 		{{/with}}
 		<div class="rollable" data-level="{{this}}">
@@ -23,9 +23,9 @@
 	<div class="obsidian-spell-slot-row">
 	  {{#with actor.data.spells.pact}}
 		<div
-			{{#if (lt remaining 1)}} class="obsidian-negative"{{/if}}
-			{{#if (gt remaining max)}} class="obsidian-positive"{{/if}}>
-			({{remaining}} / {{slots}})
+			{{#if (lt value 1)}} class="obsidian-negative"{{/if}}
+			{{#if (gt value max)}} class="obsidian-positive"{{/if}}>
+			({{value}} / {{slots}})
 		</div>
 	  {{/with}}
 		<div class="rollable" data-level="pact">{{localize 'OBSIDIAN.Pact'}}</div>
