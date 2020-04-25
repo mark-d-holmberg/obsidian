@@ -34,7 +34,11 @@ export const Effect = {
 			ability: '',
 			bonus: 0,
 			crit: 20,
-			proficient: false
+			proficient: false,
+			reach: null,
+			range1: null,
+			range2: null,
+			target: ''
 		};
 	},
 

@@ -37,7 +37,7 @@
 							{{#if (eq parentItem.type 'spell')}}
 								data-roll="item" data-id="{{parentItem._id}}"
 							{{else}}
-							 data-roll="fx" data-uuid="{{parentEffect.uuid}}"
+								data-roll="fx" data-uuid="{{parentEffect.uuid}}"
 							{{/if}}>
 							{{#if (eq parentEffect.name '')}}
 								{{parentItem.name}}
@@ -55,9 +55,7 @@
 									<span class="obsidian-table-number-split">/</span>
 								</div>
 								<div>
-									<span class="obsidian-table-number-minor">
-										{{parentItem.data.range.long}}
-									</span>
+									<span class="obsidian-table-number-minor">{{parentItem.data.range.long}}</span>
 									<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 								</div>
 							</div>

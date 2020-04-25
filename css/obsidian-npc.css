@@ -181,7 +181,9 @@
 	text-transform: uppercase;
 	font-weight: bold;
 	cursor: pointer;
-	margin-top: 5px;
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px dotted var(--mid);
 }
 
 .obsidian-npc-configure i {
@@ -258,4 +260,9 @@
 	padding-top: 4px;
 	color: var(--text-subtle);
 	font-size: 12px;
+}
+
+.obsidian-attack-line {
+	display: flex;
+	align-items: center;
 }

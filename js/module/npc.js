@@ -71,6 +71,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.isNPC = this.actor.data.type === 'npc';
 		data.featCategories = {};
 		data.skills = {};
 
@@ -81,7 +82,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			}
 		}
 
-		for (const item of data.items) {
+		for (const item of data.actor.items) {
 			if (item.type !== 'feat') {
 				continue;
 			}
@@ -93,6 +94,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			}
 
 			category.push(item);
+			item.obsidian.attacks.forEach(atk => {
+				atk.parentEffect = this.actor.data.obsidian.effects.get(atk.parentEffect);
+				atk.parentEffect.damage =
+					atk.parentEffect.components.filter(c => c.type === 'damage');
+			});
 		}
 
 		return data;

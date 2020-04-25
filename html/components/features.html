@@ -23,6 +23,62 @@
 			</div>
 			{{format-uses @root.actor feat}}
 		</div>
+		{{#if @root.isNPC}}
+		{{#each feat.obsidian.attacks}}
+		<div class="obsidian-attack-line">
+			<div class="obsidian-col-icon">
+				<div class="obsidian-icon obsidian-icon-{{attack}}" data-uuid="{{uuid}}"></div>
+			</div>
+			<div class="obsidian-col-range">
+				{{#if (eq mode 'ranged')}}
+					<div class="obsidian-table-number-md">
+						<div>
+							{{range1}}
+							{{#if range2}}
+								<span class="obsidian-table-number-split">&sol;</span>
+							{{else}}
+								<span class="obsidian-table-unit">
+									{{localize 'OBSIDIAN.FeetAbbr'}}
+								</span>
+							{{/if}}
+						</div>
+						{{#if range2}}
+						<div>
+							<span class="obsidian-table-number-minor">{{range2}}</span>
+							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+						</div>
+						{{/if}}
+					</div>
+				{{else}}
+					<div class="obsidian-table-number-md">
+						{{reach}}
+						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+					</div>
+					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
+				{{/if}}
+			</div>
+			<div class="obsidian-col-hit">
+				<div class="obsidian-table-number-lg">
+					{{numberFormat value decimals=0 sign=true}}
+				</div>
+			</div>
+			<div class="obsidian-col-damage">
+				<div class="obsidian-table-dmg">
+					{{#each parentEffect.damage}}
+						<div class="obsidian-dmg-component">
+							{{display}}
+							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
+							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+						</div>
+					{{/each}}
+				</div>
+			</div>
+			<div class="obsidian-col-notes">
+				<div class="obsidian-table-note-text">{{target}}</div>
+			</div>
+		</div>
+		{{/each}}
+		{{/if}}
 		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
 	</div>
 {{/each}}
