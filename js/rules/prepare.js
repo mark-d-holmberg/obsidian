@@ -475,7 +475,8 @@ export const Prepare = {
 		});
 	},
 
-	weapons: function (actorData) {
+	weapons: function (actor) {
+		const actorData = actor.data;
 		for (let i = 0; i < actorData.items.length; i++) {
 			if (actorData.items[i].type !== 'weapon') {
 				continue;
@@ -511,6 +512,12 @@ export const Prepare = {
 							</option>`)}
 					</select>`;
 			}
+
+			flags.display = TextEditor.enrichHTML(weapon.data.description.value, {
+				entities: false,
+				links: false,
+				rollData: actor.getRollData()
+			});
 		}
 	},
 

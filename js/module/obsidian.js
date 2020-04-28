@@ -218,14 +218,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	getData () {
 		const data = super.getData();
 		data.ObsidianRules = OBSIDIAN.Rules;
-		data.actor.obsidian.attacks.forEach(atk => {
-			atk.parentEffect = this.actor.data.obsidian.effects.get(atk.parentEffect);
-			atk.parentEffect.damage =
-				atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
-			atk.parentEffect.versatile =
-				atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
-			atk.parentItem = this.actor.getEmbeddedEntity('OwnedItem', atk.parentEffect.parentItem);
-		});
+		data.actor.obsidian.attacks.forEach(this._reifyAttackLinks, this);
 
 		console.debug(data);
 		return data;
@@ -851,6 +844,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 				target.next().val(target.val());
 				this._onSubmit(evt);
 			});
+	}
+
+	_reifyAttackLinks (atk) {
+		atk.parentEffect = this.actor.data.obsidian.effects.get(atk.parentEffect);
+		atk.parentEffect.damage =
+			atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
+		atk.parentEffect.versatile =
+			atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
+		atk.parentItem = this.actor.getEmbeddedEntity('OwnedItem', atk.parentEffect.parentItem);
 	}
 
 	/**

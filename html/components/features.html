@@ -27,28 +27,52 @@
 		{{#each feat.obsidian.attacks}}
 		<div class="obsidian-attack-line">
 			<div class="obsidian-col-icon">
-				<div class="obsidian-icon obsidian-icon-{{attack}}" data-uuid="{{uuid}}"></div>
+				{{#if (eq parentItem.type 'spell')}}
+					<i class="obsidian-spell-school obsidian-spell-school-{{parentItem.data.school}}"></i>
+				{{else if (eq parentItem.type 'weapon')}}
+					<div class="
+						{{#if (is-attack-toggleable this)}}
+							obsidian-attack-toggle
+						{{/if}} obsidian-icon obsidian-icon-{{mode}}"
+					     data-uuid="{{uuid}}">
+					</div>
+				{{else}}
+					<div class="obsidian-icon obsidian-icon-{{attack}}"></div>
+				{{/if}}
 			</div>
 			<div class="obsidian-col-range">
 				{{#if (eq mode 'ranged')}}
 					<div class="obsidian-table-number-md">
 						<div>
-							{{range1}}
-							{{#if range2}}
-								<span class="obsidian-table-number-split">&sol;</span>
-							{{else}}
-								<span class="obsidian-table-unit">
-									{{localize 'OBSIDIAN.FeetAbbr'}}
-								</span>
-							{{/if}}
+							{{parentItem.data.range.value}}
+							<span class="obsidian-table-number-split">/</span>
 						</div>
-						{{#if range2}}
 						<div>
-							<span class="obsidian-table-number-minor">{{range2}}</span>
+							<span class="obsidian-table-number-minor">{{parentItem.data.range.long}}</span>
 							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 						</div>
-						{{/if}}
 					</div>
+				{{else if (eq parentItem.type 'spell')}}
+					{{#if (or (eq parentItem.flags.obsidian.range.type 'short') (eq parentItem.flags.obsidian.range.type 'long'))}}
+						<div class="obsidian-table-number-md">
+							{{parentItem.flags.obsidian.range.n}}
+							<span class="obsidian-table-unit">
+								{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' parentItem.flags.obsidian.range.type}}
+							</span>
+						</div>
+					{{else if (eq parentItem.flags.obsidian.range.type 'unlimited')}}
+						<div class="obsidian-table-number-md">&infin;</div>
+					{{else}}
+						<div class="obsidian-table-text">
+							{{i18n-join 'OBSIDIAN.SpellRange-' parentItem.flags.obsidian.range.type}}
+						</div>
+					{{/if}}
+				{{else if (eq parentItem.type 'weapon')}}
+					<div class="obsidian-table-number-md">
+						{{parentItem.flags.obsidian.reach}}
+						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+					</div>
+					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
 				{{else}}
 					<div class="obsidian-table-number-md">
 						{{reach}}
@@ -64,7 +88,7 @@
 			</div>
 			<div class="obsidian-col-damage">
 				<div class="obsidian-table-dmg">
-					{{#each parentEffect.damage}}
+					{{#each (which-damage parentItem this)}}
 						<div class="obsidian-dmg-component">
 							{{display}}
 							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"

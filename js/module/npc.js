@@ -53,6 +53,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
 		html.find('.obsidian-delete').click(Obsidian.prototype._onDeleteFeature.bind(this));
+		html.find('.obsidian-attack-toggle').click(Obsidian.prototype._onAttackToggle.bind(this));
 		html.find('[data-uuid] .obsidian-feature-use')
 			.click(Obsidian.prototype._onUseClicked.bind(this));
 		html.find('[data-spell-level] .obsidian-feature-use')
@@ -83,22 +84,23 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 
 		for (const item of data.actor.items) {
-			if (item.type !== 'feat') {
+			let cat;
+			if (item.type === 'feat') {
+				cat = item.data.activation.type;
+			} else if (item.type === 'weapon') {
+				cat = 'action';
+			} else {
 				continue;
 			}
 
-			let category = data.featCategories[item.data.activation.type];
+			let category = data.featCategories[cat];
 			if (!category) {
 				category = [];
 				data.featCategories[item.data.activation.type] = category;
 			}
 
 			category.push(item);
-			item.obsidian.attacks.forEach(atk => {
-				atk.parentEffect = this.actor.data.obsidian.effects.get(atk.parentEffect);
-				atk.parentEffect.damage =
-					atk.parentEffect.components.filter(c => c.type === 'damage');
-			});
+			item.obsidian.attacks.forEach(Obsidian.prototype._reifyAttackLinks, this);
 		}
 
 		return data;

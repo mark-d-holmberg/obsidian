@@ -265,4 +265,11 @@
 .obsidian-attack-line {
 	display: flex;
 	align-items: center;
+	border: 1px dotted var(--mid);
+	padding: 6px 8px;
+	margin-top: 8px;
+}
+
+.obsidian-attack-line + .obsidian-feature-body {
+	margin-top: 8px;
 }
