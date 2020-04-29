@@ -411,10 +411,7 @@ export const Rolls = {
 						type: 'dmg',
 						title: item.name,
 						damage: Rolls.rollDamage(actor, damage, {
-							crit: false, scaledAmount: scaledAmount, scaling: scaling
-						}),
-						crit: Rolls.rollDamage(actor, damage, {
-							crit: true, scaledAmount: scaledAmount, scaling: scaling
+							scaledAmount: scaledAmount, scaling: scaling
 						})
 					}
 				}
@@ -547,13 +544,6 @@ export const Rolls = {
 			results[0].subtitle = game.i18n.localize(attacks[0].attackType);
 		} else if (damage.length && multiDamage < 1) {
 			results[0].damage = Rolls.rollDamage(actor, damage, {
-				crit: false,
-				scaledAmount: scaledAmount,
-				scaling: scaling
-			});
-
-			results[0].crit = Rolls.rollDamage(actor, damage, {
-				crit: true,
 				scaledAmount: scaledAmount,
 				scaling: scaling
 			});
@@ -573,12 +563,6 @@ export const Rolls = {
 					type: item.type === 'spell' ? 'spl' : 'fx',
 					title: name ? name : effect.name.length ? effect.name : item.name,
 					damage: Rolls.rollDamage(actor, damage, {
-						crit: false,
-						scaledAmount: scaledAmount,
-						scaling: scaling
-					}),
-					crit: Rolls.rollDamage(actor, damage, {
-						crit: true,
 						scaledAmount: scaledAmount,
 						scaling: scaling
 					})
@@ -761,7 +745,7 @@ export const Rolls = {
 		};
 	},
 
-	rollDamage: function (actor, damage, {crit = false, scaledAmount = 0, scaling = null}) {
+	rollDamage: function (actor, damage, {scaledAmount = 0, scaling = null}) {
 		damage = damage.concat(
 			damage.flatMap(dmg => dmg.rollParts)
 				.filter(mod => mod.ndice !== undefined)
@@ -808,16 +792,13 @@ export const Rolls = {
 				return null;
 			}
 
-			let ndice = dmg.ndice;
-			if (crit) {
-				ndice += dmg.derived.ncrit || ndice;
-			}
-
-			const roll = new Die(dmg.die).roll(ndice);
-			const rolls = roll.results.map(r => [r]);
+			const hitRoll = new Die(dmg.die).roll(dmg.ndice);
+			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || dmg.ndice);
+			const hitRolls = hitRoll.results.map(r => [r]);
+			const allRolls = hitRolls.concat(critRoll.results.map(r => [r]));
 
 			if (dmg.addMods === false) {
-				return rolls;
+				return {hit: hitRolls, crit: allRolls};
 			}
 
 			const rollMods = Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
@@ -826,45 +807,50 @@ export const Rolls = {
 			}
 
 			const rollMod = Effect.combineRollMods(rollMods);
-			Rolls.applyRollModifiers(roll, rolls, rollMod);
-			return rolls;
+			Rolls.applyRollModifiers(hitRoll, allRolls, rollMod);
+			return {hit: hitRolls, crit: allRolls};
+		});
+
+		const total = mode => rolls.reduce((acc, rolls) => {
+			if (rolls[mode]) {
+				return acc + rolls[mode].reduce((acc, r) => acc + r.last(), 0);
+			}
+
+			return 0;
+		}, 0) + damage.flatMap(dmg => dmg.rollParts).reduce((acc, mod) => acc + mod.mod, 0);
+
+		const results = mode => damage.map((dmg, i) => {
+			let subRolls = rolls[i];
+			if (subRolls) {
+				subRolls = subRolls[mode];
+			}
+
+			const subTotal = dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0);
+			let total = subTotal;
+			let breakdown;
+
+			if (subRolls) {
+				total += subRolls.reduce((acc, r) => acc + r.last(), 0);
+				breakdown =
+					`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(dmg.rollParts)} = `
+					+ `(${subRolls.map(r => Rolls.compileRerolls(r, dmg.die)).join('+')})`
+					+ subTotal.sgnex();
+			} else {
+				breakdown =
+					`${Rolls.compileBreakdown(dmg.rollParts)} = ${total}`.substring(3);
+			}
+
+			return {
+				type: dmg.damage,
+				total: total,
+				breakdown: breakdown
+			};
 		});
 
 		return {
-			total:
-				rolls.reduce((acc, rolls) => {
-					if (rolls) {
-						return acc + rolls.reduce((acc, r) => acc + r.last(), 0);
-					}
-
-					return 0;
-				}, 0)
-				+ damage.flatMap(dmg => dmg.rollParts).reduce((acc, mod) => acc + mod.mod, 0),
-
-			results: damage.map((dmg, i) => {
-				const subRolls = rolls[i];
-				const subTotal = dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0);
-				let total = subTotal;
-				let breakdown;
-
-				if (subRolls) {
-					total += subRolls.reduce((acc, r) => acc + r.last(), 0);
-					breakdown =
-						`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(dmg.rollParts)} = `
-						+ `(${subRolls.map(r => Rolls.compileRerolls(r, dmg.die)).join('+')})`
-						+ subTotal.sgnex();
-				} else {
-					breakdown =
-						`${Rolls.compileBreakdown(dmg.rollParts)} = ${total}`.substring(3);
-				}
-
-				return {
-					type: dmg.damage,
-					total: total,
-					breakdown: breakdown
-				};
-			})
-		}
+			hit: {total: total('hit'), results: results('hit')},
+			crit: {total: total('crit'), results: results('crit')}
+		};
 	},
 
 	rollExpression: function (actor, expr) {

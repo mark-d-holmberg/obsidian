@@ -109,10 +109,18 @@
 	{{#if message.flags.obsidian.damage}}
 	<section class="obsidian-msg-dmg">
 		<div class="obsidian-grid-2-col">
-			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
-					title='OBSIDIAN.Hit'}}
-			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
-					title='OBSIDIAN.Crit'}}
+			<!-- TODO: This handles legacy damage structure and should be removed eventually -->
+			{{#if message.flags.obsidian.damage.hit}}
+				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.hit
+						title='OBSIDIAN.Hit'}}
+				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.crit
+						title='OBSIDIAN.Crit'}}
+			{{else}}
+				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
+						title='OBSIDIAN.Hit'}}
+				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
+						title='OBSIDIAN.Crit'}}
+			{{/if}}
 		</div>
 	</section>
 	{{/if}}
