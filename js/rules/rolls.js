@@ -369,6 +369,7 @@ export const Rolls = {
 
 		const results = rolls.map(r => {
 			return {
+				data3d: {formula: '1d20', results: [r.last()]},
 				roll: r.last(),
 				total: r.last() + total,
 				breakdown: Rolls.d20Breakdown(r, crit, total, mods)
@@ -601,6 +602,10 @@ export const Rolls = {
 					type: 'hd',
 					title: game.i18n.localize('OBSIDIAN.HD'),
 					results: [[{
+						data3d: {
+							formula: results.map(d => `${d.rolls.length}d${d.faces}`).join('+'),
+							results: results.flatMap(d => d.rolls.flatMap(r => r.roll))
+						},
 						total: results.reduce((acc, die) => acc + die.total, 0) + conBonus,
 						breakdown:
 							`${rolls.map(([n, d]) => `${n}d${d}`).join('+')}${conBonus.sgn()} = `
@@ -796,6 +801,7 @@ export const Rolls = {
 			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || dmg.ndice);
 			const hitRolls = hitRoll.results.map(r => [r]);
 			const allRolls = hitRolls.concat(critRoll.results.map(r => [r]));
+            const numRolls = dmg.ndice + (dmg.derived.ncrit || dmg.ndice);
 
 			if (dmg.addMods === false) {
 				return {hit: hitRolls, crit: allRolls};
@@ -808,7 +814,15 @@ export const Rolls = {
 
 			const rollMod = Effect.combineRollMods(rollMods);
 			Rolls.applyRollModifiers(hitRoll, allRolls, rollMod);
-			return {hit: hitRolls, crit: allRolls};
+
+			return {
+				hit: hitRolls,
+				crit: allRolls,
+				data3d: {
+					formula: `${numRolls}d${dmg.die}`,
+					results: allRolls.map(r => r.last())
+				}
+			};
 		});
 
 		const total = mode => rolls.reduce((acc, rolls) => {
@@ -849,7 +863,14 @@ export const Rolls = {
 
 		return {
 			hit: {total: total('hit'), results: results('hit')},
-			crit: {total: total('crit'), results: results('crit')}
+			crit: {total: total('crit'), results: results('crit')},
+			data3d: {
+				formula: rolls.map(r => r.data3d.formula).join('+'),
+				results: rolls.reduce((acc, r) => {
+					acc.push(...r.data3d.results);
+					return acc;
+				}, [])
+			}
 		};
 	},
 
@@ -925,11 +946,36 @@ export const Rolls = {
 			rollMod);
 	},
 
-	toChat: function (actor, ...msgs) {
+	toChat: async function (actor, ...msgs) {
 		const chatData = Rolls.toMessage(actor);
-		ChatMessage.create(msgs.map((msg, i) => {
+		const dice3d = game.modules.get('dice-so-nice')?.active;
+
+        if (dice3d) {
+        	// Collect all the dice data.
+	        const data3d = {formula: [], results: []};
+	        msgs.forEach(msg => {
+		        if (getProperty(msg, 'flags.obsidian.results')) {
+		        	msg.flags.obsidian.results.forEach(result => result.forEach(roll => {
+				        if (roll.data3d) {
+					        data3d.formula.push(roll.data3d.formula);
+					        data3d.results.push(...roll.data3d.results);
+				        }
+			        }))
+		        }
+
+		        if (getProperty(msg, 'flags.obsidian.damage.data3d')) {
+			        data3d.formula.push(msg.flags.obsidian.damage.data3d.formula);
+			        data3d.results.push(...msg.flags.obsidian.damage.data3d.results);
+		        }
+	        });
+
+	        data3d.formula = data3d.formula.join('+');
+	        await game.dice3d.show(data3d);
+        }
+
+	    ChatMessage.create(msgs.map((msg, i) => {
 			const data = duplicate(chatData);
-			if (i > 0) {
+			if (i > 0 || dice3d) {
 				data.sound = null;
 			}
 

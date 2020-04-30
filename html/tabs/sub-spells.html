@@ -42,27 +42,27 @@
 								<i class="obsidian-spell-school obsidian-spell-school-{{data.school}}"></i>
 							</div>
 							<div class="obsidian-col-spell">
-									<div class="obsidian-table-text rollable" data-roll="item" data-id="{{_id}}">
-										{{name}}
-										{{#if data.components.concentration}}
-											<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
-											 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Concentration'}}">
-												<div class="obsidian-css-icon-shape"></div>
-												<div class="obsidian-css-icon-label">
-													{{localize 'OBSIDIAN.ConcentrationAbbr'}}
-												</div>
+								<div class="obsidian-table-text rollable" data-roll="item" data-id="{{_id}}">
+									{{name}}
+									{{#if data.components.concentration}}
+										<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+										 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Concentration'}}">
+											<div class="obsidian-css-icon-shape"></div>
+											<div class="obsidian-css-icon-label">
+												{{localize 'OBSIDIAN.ConcentrationAbbr'}}
 											</div>
-										{{/if}}
-										{{#if data.components.ritual}}
-											<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
-											 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Ritual'}}">
-												<div class="obsidian-css-icon-shape"></div>
-												<div class="obsidian-css-icon-label">
-													{{localize 'OBSIDIAN.RitualAbbr'}}
-												</div>
+										</div>
+									{{/if}}
+									{{#if data.components.ritual}}
+										<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+										 obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Ritual'}}">
+											<div class="obsidian-css-icon-shape"></div>
+											<div class="obsidian-css-icon-label">
+												{{localize 'OBSIDIAN.RitualAbbr'}}
 											</div>
-										{{/if}}
-									</div>
+										</div>
+									{{/if}}
+								</div>
 								<div class="obsidian-table-sub-text">
 									{{flags.obsidian.source.display}}
 									{{#if flags.obsidian.components.display}}
