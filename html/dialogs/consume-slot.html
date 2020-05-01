@@ -25,7 +25,7 @@
 		<div
 			{{#if (lt value 1)}} class="obsidian-negative"{{/if}}
 			{{#if (gt value max)}} class="obsidian-positive"{{/if}}>
-			({{value}} / {{slots}})
+			({{value}} / {{max}})
 		</div>
 	  {{/with}}
 		<div class="rollable" data-level="pact">{{localize 'OBSIDIAN.Pact'}}</div>

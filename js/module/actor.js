@@ -249,7 +249,7 @@ export class ObsidianActor extends Actor5e {
 
 	async shortRest () {
 		if (this.data.data.spells.pact) {
-			await this.update({'data.spells.pact.value': 0});
+			await this.update({'data.spells.pact.value': this.data.data.spells.pact.max});
 		}
 
 		const itemUpdates = this._resourceUpdates(['short']);
@@ -295,7 +295,7 @@ export class ObsidianActor extends Actor5e {
 
 		for (const level of Object.keys(data.spells)) {
 			if (level.startsWith('spell')) {
-				update[`data.spells.${level}.value`] = level.max;
+				update[`data.spells.${level}.value`] = data.spells[level].max;
 				update[`data.spells.${level}.tmp`] = 0;
 			}
 		}

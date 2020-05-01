@@ -67,7 +67,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 			if ((spells.tmp || 0) > 0) {
 				this._actor.update({[`${spellKey}.tmp`]: spells.tmp - 1});
 			} else {
-				this._actor.update({[`${spellKey}.value`]: spells.value - 1});
+				this._actor.update({[`${spellKey}.value`]: Math.max(0, spells.value - 1)});
 			}
 		}
 
