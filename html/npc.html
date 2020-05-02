@@ -2,7 +2,7 @@
 	<ul class="obsidian-tab-bar" data-group="main-tabs">
 		<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
 		<li class="obsidian-tab item" data-tab="stats">{{localize 'OBSIDIAN.Stats'}}</li>
-		<li class="obsidian-tab item" data-tab="equip">{{localize 'OBSIDIAN.Equipment'}}</li>
+		<li class="obsidian-tab item" data-tab="equipment">{{localize 'OBSIDIAN.Equipment'}}</li>
 		<li class="obsidian-tab item" data-tab="spells">{{localize 'OBSIDIAN.Spells'}}</li>
 		<li class="obsidian-tab item" data-tab="effects">{{localize 'OBSIDIAN.Effects'}}</li>
 	</ul>
@@ -265,13 +265,7 @@
 			{{/if}}
 		</main>
 	</div>
-	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="equip">
-
-	</div>
-	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="spells">
-
-	</div>
-	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="effects">
-
-	</div>
+	{{> modules/obsidian/html/tabs/equipment.html}}
+	{{> modules/obsidian/html/tabs/spells.html}}
+	{{> modules/obsidian/html/tabs/effects.html}}
 </form>

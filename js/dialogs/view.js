@@ -13,7 +13,8 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		this.item = item;
 
 		if (item.type === 'backpack') {
-			this._hook = Hooks.on('renderObsidian', () => {
+			const hook = `renderObsidian${parent.actor.data.type === 'npc' ? 'NPC' : ''}`;
+			this._hook = Hooks.on(hook, () => {
 				this.item = this.parent.actor.data.obsidian.itemsByID.get(itemID);
 				this.render(false)
 			});

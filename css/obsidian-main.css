@@ -875,7 +875,8 @@ h3 > div > .obsidian-feature-recharge {
 	align-items: baseline;
 }
 
-.obsidian-table summary > div > h3 {
+.obsidian-table summary > div > h3,
+.npc .obsidian-table summary > div > h3 {
 	text-transform: none;
 	color: var(--text-regular);
 	border: none;

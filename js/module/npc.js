@@ -3,6 +3,7 @@ import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';
 import {ObsidianItems} from '../rules/items.js';
+import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -19,6 +20,8 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		} else {
 			this.settings = JSON.parse(this.settings);
 		}
+
+		this.details = new Map();
 	}
 
 	get template () {
@@ -32,9 +35,17 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			classes: options.classes.concat(['obsidian-window']),
 			scrollY: ['.obsidian'],
 			tabs: [{
-				navSelector: 'ul.obsidian-tab-bar',
+				navSelector: 'ul.obsidian-tab-bar[data-group="main-tabs"]',
 				contentSelector: 'form.obsidian',
 				initial: 'stats'
+			}, {
+				navSelector: 'ul.obsidian-tab-bar[data-group="spells"]',
+				contentSelector: '.obsidian-spell-tabls',
+				initial: 'spell-all'
+			}, {
+				navSelector: 'ul.obsidian-tab-bar[data-group="equipment"]',
+				contentSelector: '.obsidian-inv-table',
+				initial: 'equipment-all'
 			}]
 		});
 
@@ -49,11 +60,57 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	activateListeners (html) {
 		super.activateListeners(html);
 		console.debug(this.actor);
+
+		this.form.ondragover = Obsidian.prototype._onDragOver.bind(this);
+		this.form.ondrop = Obsidian.prototype._onDrop.bind(this);
+
+		if (this.actor.limited) {
+			return;
+		}
+
+		html.find('.obsidian-search-spell-name').keyup(Obsidian.prototype._filterSpells.bind(this));
+		html.find('.obsidian-search-inv-name').keyup(Obsidian.prototype._filterEquipment.bind(this));
+		html.find('.obsidian-clear-inv-name')
+			.click(Obsidian._clearSearch.bind(this, Obsidian.prototype._filterEquipment.bind(this)));
+
+		html.find('.obsidian-clear-spell-name')
+			.click(Obsidian._clearSearch.bind(this, Obsidian.prototype._filterSpells.bind(this)));
+
+		Obsidian.prototype._filterSpells.apply(this);
+		Obsidian.prototype._filterEquipment.apply(this);
+		Obsidian.prototype._contextMenu.apply(this, arguments);
+
+		if (!this.options.editable) {
+			return;
+		}
+
+		html.on('dragend', () => {
+			this.details.forEach((open, el) => el.open = open);
+			if (this.element) {
+				this.element.find('.obsidian-drag-indicator').css('display', 'none');
+				this.element.find('.obsidian-inv-container').removeClass('obsidian-container-drop');
+			}
+		});
+
+		html.find('[draggable]').each((i, el) =>
+			el.addEventListener('dragstart', Obsidian.prototype._onDragItemStart.bind(this), false));
+
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
 		html.find('.obsidian-delete').click(Obsidian.prototype._onDeleteFeature.bind(this));
 		html.find('.obsidian-attack-toggle').click(Obsidian.prototype._onAttackToggle.bind(this));
+		html.find('.obsidian-add-spell').click(Obsidian.prototype._onAddSpell.bind(this));
+		html.find('.obsidian-add-custom-item').click(Obsidian.prototype._onAddItem.bind(this));
+		html.find('.obsidian-equip-action').click(Obsidian.prototype._onEquip.bind(this));
+		html.find('.obsidian-attune').click(Obsidian.prototype._onAttune.bind(this));
+		html.find('[data-roll]').click(Obsidian.prototype._onRoll.bind(this));
+		html.find('.obsidian-manage-spells').click(() =>
+			new ObsidianSpellsDialog(this).render(true));
+		html.find('.obsidian-effect-row .obsidian-radio')
+			.click(Obsidian.prototype._onEffectToggled.bind(this));
+		html.find('.obsidian-inv-container')
+			.click(Obsidian.prototype._saveContainerState.bind(this));
 		html.find('[data-uuid] .obsidian-feature-use')
 			.click(Obsidian.prototype._onUseClicked.bind(this));
 		html.find('[data-spell-level] .obsidian-feature-use')
@@ -87,7 +144,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			let cat;
 			if (item.type === 'feat') {
 				cat = item.data.activation.type;
-			} else if (item.type === 'weapon') {
+			} else if (item.type === 'weapon' && item.data.equipped) {
 				cat = 'action';
 			} else {
 				continue;
@@ -134,8 +191,16 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		super._createEditor(target, editorOptions, initialContent);
 	}
 
+	_deleteItem () {
+		Obsidian.prototype._deleteItem.apply(this, arguments);
+	}
+
 	_editDetails () {
 		new ObsidianNPCDetailsDialog(this).render(true);
+	}
+
+	_editItem () {
+		Obsidian.prototype._editItem.apply(this, arguments);
 	}
 
 	_enterCR (evt) {
@@ -212,6 +277,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 	}
 
+	_splitItem () {
+		Obsidian.prototype._splitItem.apply(this, arguments);
+	}
+
 	_updateObject (event, formData) {
 		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
 	}
@@ -227,5 +296,9 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 
 		this.actor.update({'data.resources.legact.value': used});
+	}
+
+	_viewItem () {
+		Obsidian.prototype._viewItem.apply(this, arguments);
 	}
 }
