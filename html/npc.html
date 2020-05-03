@@ -145,7 +145,9 @@
 					</strong>
 					{{#each data.abilities}}
 						<div class="obsidian-npc-stat-li">
-							<span class="rollable">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</span>
+							<span class="rollable" data-roll="save" data-save="{{@key}}">
+								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+							</span>
 							{{numberFormat save decimals=0 sign=true~}}
 						</div>
 					{{/each}}
@@ -228,6 +230,34 @@
 						</span>
 					</div>
 				</div>
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key rollable" data-roll="save" data-save="death">
+						{{localize 'OBSIDIAN.DeathSaves'}}
+					</div>
+					<div class="obsidian-npc-stat-value obsidian-npc-death">
+						<div class="obsidian-meatballs obsidian-death-successes">
+							{{#each (range 1 3)}}
+								<div class="
+								{{#if (leq this ../data.attributes.death.success)}}
+									obsidian-radio-selected
+								{{/if}} obsidian-radio obsidian-radio-positive" data-value="{{this}}">
+									<span></span>
+								</div>
+							{{/each}}
+						</div>
+						<span class="obsidian-binary-operator">&sol;</span>
+						<div class="obsidian-meatballs obsidian-death-failures">
+							{{#each (range 1 3)}}
+								<div class="
+								{{#if (leq this ../data.attributes.death.failure)}}
+									obsidian-radio-selected
+								{{/if}} obsidian-radio obsidian-radio-negative" data-value="{{this}}">
+									<span></span>
+								</div>
+							{{/each}}
+						</div>
+					</div>
+				</div>
 				<div class="obsidian-npc-configure">
 					<div data-dialog="NPCSkills">
 						{{localize 'OBSIDIAN.Skills'}} <i class="fas fa-cog"></i>
@@ -267,5 +297,5 @@
 	</div>
 	{{> modules/obsidian/html/tabs/equipment.html}}
 	{{> modules/obsidian/html/tabs/spells.html}}
-	{{> modules/obsidian/html/tabs/effects.html}}
+	{{> modules/obsidian/html/tabs/effects.html npc=true}}
 </form>

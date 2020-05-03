@@ -273,3 +273,24 @@
 .obsidian-attack-line + .obsidian-feature-body {
 	margin-top: 8px;
 }
+
+.obsidian-npc-exhaustion .obsidian-exhaustion {
+	text-align: center;
+}
+
+.obsidian-npc-death {
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-npc-death .obsidian-meatballs {
+	display: inline-block;
+}
+
+.obsidian-npc-death .obsidian-radio {
+	width: 16px;
+}
+
+.obsidian-npc-death .obsidian-binary-operator {
+	margin: 0 10px;
+}

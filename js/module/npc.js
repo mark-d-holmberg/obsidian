@@ -105,6 +105,14 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-equip-action').click(Obsidian.prototype._onEquip.bind(this));
 		html.find('.obsidian-attune').click(Obsidian.prototype._onAttune.bind(this));
 		html.find('[data-roll]').click(Obsidian.prototype._onRoll.bind(this));
+		html.find('.obsidian-npc-condition-grid .obsidian-radio-label')
+			.click(Obsidian.prototype._setCondition.bind(this));
+		html.find('.obsidian-exhaustion .obsidian-radio')
+			.click(Obsidian.prototype._setAttributeLevel.bind(this, 'data.attributes.exhaustion'));
+		html.find('.obsidian-death-successes .obsidian-radio')
+			.click(Obsidian.prototype._setAttributeLevel.bind(this, 'data.attributes.death.success'));
+		html.find('.obsidian-death-failures .obsidian-radio')
+			.click(Obsidian.prototype._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-effect-row .obsidian-radio')

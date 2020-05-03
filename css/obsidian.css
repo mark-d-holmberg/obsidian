@@ -1372,6 +1372,11 @@ legend .fancy-checkbox {
 	flex-basis: 25%;
 }
 
+.obsidian-npc-condition-grid .obsidian-npc-grid-item {
+	flex-basis: 20%;
+	border: none;
+}
+
 .obsidian-bg {
 	position: fixed;
 	top: 0;

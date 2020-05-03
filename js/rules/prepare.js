@@ -411,7 +411,7 @@ export const Prepare = {
 		}
 
 		if (flags.defenses.sleep) {
-			flags.defenses.imm.push(game.i18n.localize('OBSIDIAN.NonMagicalSleep'));
+			flags.defenses.imm.push(game.i18n.localize('OBSIDIAN.MagicalSleep'));
 		}
 
 		flags.defenses.resDisplay = '';

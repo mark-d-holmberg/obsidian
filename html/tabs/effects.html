@@ -1,5 +1,45 @@
 <div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
      data-tab="effects">
+	{{#if npc}}
+	<h3>{{localize 'OBSIDIAN.Conditions'}}</h3>
+	<div class="obsidian-npc-grid obsidian-npc-condition-grid">
+		{{#each ObsidianRules.CONDITIONS}}
+			<div class="obsidian-npc-grid-item">
+				<div class="
+				{{#if (lookup ../actor.obsidian.conditions this)}}
+					obsidian-radio-selected
+				{{/if}} obsidian-radio-label" data-value="{{this}}">
+					<div class="
+					{{#if (eq 'invisible' this)}}
+						obsidian-radio-positive
+					{{else}}
+						obsidian-radio-negative
+					{{/if}} obsidian-radio">
+						<span></span>
+					</div>
+					{{i18n-join 'OBSIDIAN.Condition-' this}}
+				</div>
+			</div>
+		{{/each}}
+	</div>
+	{{/if}}
+	<div class="obsidian-npc-exhaustion">
+		<div class="
+		{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
+			obsidian-meatballs-active
+		{{/if}} obsidian-meatballs-title">
+			{{localize 'OBSIDIAN.Exhaustion'}}
+		</div>
+		<div class="obsidian-meatballs obsidian-exhaustion">
+			{{#each (range 1 6)}}
+				<div class="{{#if (leq this ../data.attributes.exhaustion)}}
+					obsidian-radio-selected
+				{{/if}} obsidian-radio obsidian-radio-negative" data-value="{{this}}">
+					<span></span>
+				</div>
+			{{/each}}
+		</div>
+	</div>
 	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
 	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
