@@ -288,11 +288,18 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_contextMenu (html) {
+	_contextMenu (html, npc = false) {
 		const del = {
 			name: 'OBSIDIAN.Delete',
 			icon: '<i class="fas fa-trash"></i>',
-			callback: this._deleteItem.bind(this)
+			callback: this._deleteItem.bind(this),
+			condition: li => {
+				const actor = this.actor || this.parent.actor;
+				if (actor) {
+					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
+					return item.type !== 'spell' || !item.flags.obsidian.parentComponent
+				}
+			}
 		};
 
 		const edit = {
@@ -335,6 +342,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 			equipment = [edit, view, split, del];
 			containers = [edit, view, del];
 			spells = [edit, view];
+
+			if (npc) {
+				spells.push(del);
+			}
 		} else {
 			equipment = [view];
 			containers = [view];

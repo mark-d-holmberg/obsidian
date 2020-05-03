@@ -25,7 +25,7 @@
                        checked=data.components.ritual}}
     </div>
   </div>
-	{{#if (and actor (not item.flags.obsidian.isEmbedded))}}
+	{{#if (and actor (not item.flags.obsidian.isEmbedded) (not isNPC))}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
 	  <div class="obsidian-fullwidth">
 	    <label class="obsidian-inline">
@@ -77,7 +77,7 @@
              style="max-width: 220px;">
     </div>
   </div>
-	{{#if (or (not actor) item.flags.obsidian.isEmbedded)}}</div></div>{{/if}}
+	{{#if (or (not actor) item.flags.obsidian.isEmbedded isNPC)}}</div></div>{{/if}}
   <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
     <div class="obsidian-fullwidth">
       <label class="obsidian-inline">
@@ -127,7 +127,7 @@
                        checked=item.flags.obsidian.components.m}}
       <input type="text" class="obsidian-input-compact obsidian-input-lg"
              name="data.materials.value" value="{{data.materials.value}}"
-             placeholder="{{localize 'OBSIDIAN.Materials'}}" style="max-width: 250px;">
+             placeholder="{{localize 'OBSIDIAN.Materials'}}" style="max-width: none; flex: 1">
     </div>
   </div>
 </fieldset>

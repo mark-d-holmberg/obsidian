@@ -294,3 +294,7 @@
 .obsidian-npc-death .obsidian-binary-operator {
 	margin: 0 10px;
 }
+
+.npc .obsidian-spell-table .obsidian-col-icon {
+	font-size: 18px;
+}

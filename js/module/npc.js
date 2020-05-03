@@ -78,7 +78,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 		Obsidian.prototype._filterSpells.apply(this);
 		Obsidian.prototype._filterEquipment.apply(this);
-		Obsidian.prototype._contextMenu.apply(this, arguments);
+		Obsidian.prototype._contextMenu.apply(this, [html, true]);
 
 		if (!this.options.editable) {
 			return;
@@ -260,6 +260,14 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_onAttune () {
 		Obsidian.prototype._onAttune.apply(this, arguments);
+	}
+
+	_onChangeTab (event, tabs, active) {
+		if (active.startsWith('equipment-')) {
+			Obsidian.prototype._filterEquipment.apply(this);
+		} else if (active.startsWith('spell-')) {
+			Obsidian.prototype._filterSpells.apply(this);
+		}
 	}
 
 	_onEquip () {

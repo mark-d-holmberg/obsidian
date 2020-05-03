@@ -36,10 +36,12 @@
 			<i class="fas fa-search"></i>
 			<span class="obsidian-clear-search obsidian-clear-spell-name">&times;</span>
 		</div>
+		{{#unless isNPC}}
 		<button type="button" class="obsidian-btn-sm obsidian-btn-sheet obsidian-btn-outline
 		        obsidian-manage-spells">
 			{{localize 'OBSIDIAN.ManageSpells'}}
 		</button>
+		{{/unless}}
 	</div>
 	<ul class="obsidian-tab-bar" data-group="spells">
 		<li class="obsidian-sub-tab item" data-tab="spell-all">{{localize 'OBSIDIAN.All'}}</li>
@@ -71,5 +73,5 @@
 			</li>
 		{{/if}}
 	</ul>
-	{{> modules/obsidian/html/tabs/sub-spells.html}}
+	{{> modules/obsidian/html/tabs/sub-spells.html npc=npc}}
 </div>
