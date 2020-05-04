@@ -826,7 +826,7 @@ export const Rolls = {
 		});
 
 		const total = mode => rolls.reduce((acc, rolls) => {
-			if (rolls[mode]) {
+			if (rolls && rolls[mode]) {
 				return acc + rolls[mode].reduce((acc, r) => acc + r.last(), 0);
 			}
 
@@ -865,8 +865,8 @@ export const Rolls = {
 			hit: {total: total('hit'), results: results('hit')},
 			crit: {total: total('crit'), results: results('crit')},
 			data3d: {
-				formula: rolls.map(r => r.data3d.formula).join('+'),
-				results: rolls.reduce((acc, r) => {
+				formula: rolls.filter(_ => _).map(r => r.data3d.formula).join('+'),
+				results: rolls.filter(_ => _).reduce((acc, r) => {
 					acc.push(...r.data3d.results);
 					return acc;
 				}, [])

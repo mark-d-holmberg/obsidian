@@ -245,12 +245,12 @@ export const Prepare = {
 			ndice *= dmg.scaledDice;
 		}
 
-		if (ndice > 0) {
+		if (ndice > 0 && dmg.calc === 'formula') {
 			out += `${ndice}d${dmg.die}`;
 		}
 
 		if (dmg.mod !== 0 && mod) {
-			if (ndice > 0 && dmg.mod > 0) {
+			if (ndice > 0 && dmg.calc === 'formula' && dmg.mod > 0) {
 				out += '+';
 			}
 
