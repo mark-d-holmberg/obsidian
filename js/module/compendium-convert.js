@@ -1,4 +1,4 @@
-import {Migrate} from './migrate.js';
+import {Migrate} from '../migration/migrate.js';
 
 export function addCompendiumContextMenuHook () {
 	Hooks.on('getCompendiumDirectoryEntryContext', (html, entryOptions) => {

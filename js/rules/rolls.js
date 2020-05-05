@@ -5,7 +5,7 @@ import {Filters} from './filters.js';
 import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {handleDurations} from '../module/duration.js';
-import {DAMAGE_CONVERT} from '../module/migrate.js';
+import {DAMAGE_CONVERT} from '../migration/convert.js';
 import {ObsidianActor} from '../module/actor.js';
 
 export const Rolls = {
