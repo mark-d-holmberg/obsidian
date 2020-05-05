@@ -83,13 +83,13 @@
 					<div class="obsidian-npc-stat-value obsidian-font-14">
 						{{data.attributes.ac.min}}
 						{{#if actor.flags.obsidian.attributes.ac.note}}
-							<span class="obsidian-npc-subtle">
-								({{actor.flags.obsidian.attributes.ac.note}})
-							</span>
+							<span class="obsidian-npc-subtle">({{actor.flags.obsidian.attributes.ac.note}})</span>
+						{{else if actor.obsidian.armourDisplay}}
+							<span class="obsidian-npc-subtle">({{actor.obsidian.armourDisplay}})</span>
 						{{/if}}
 					</div>
 				</div>
-				<div class="obsidian-npc-stat-row">
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.HP'}}</div>
 					<div class="obsidian-npc-stat-value obsidian-npc-hp">
 						<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
@@ -108,6 +108,14 @@
 								{{~lc (localize 'OBSIDIAN.Formula')~}}
 							{{/if}})
 						</div>
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key rollable" data-roll="abl" data-abl="init">
+						{{localize 'OBSIDIAN.Initiative'}}
+					</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13">
+						{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
 					</div>
 				</div>
 				<div class="obsidian-npc-stat-row obsidian-npc-speed obsidian-ptr obsidian-simple-dialog"

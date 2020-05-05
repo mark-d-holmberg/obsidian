@@ -41,7 +41,10 @@ export const Prepare = {
 			let i18n;
 
 			if (component.ability === 'spell') {
-				component.spellMod = cls ? cls.flags.obsidian.spellcasting.mod : 0;
+				component.spellMod =
+					cls ? cls.flags.obsidian.spellcasting.mod
+						: data.attributes.spellMod ? data.attributes.spellMod : 0;
+
 				mod = component.spellMod;
 				i18n = 'OBSIDIAN.Spell';
 			} else {
@@ -319,8 +322,11 @@ export const Prepare = {
 		}
 
 		const acOverride = actorData.flags.obsidian.attributes.ac.override;
+		const armourDisplay = [];
+
 		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
+				armourDisplay.push(bestArmour.name.toLocaleLowerCase());
 				data.attributes.ac.min = bestArmour.flags.obsidian.baseAC;
 				if (bestArmour.flags.obsidian.addDex) {
 					let maxDex = bestArmour.data.armor.dex;
@@ -335,9 +341,12 @@ export const Prepare = {
 			}
 
 			if (bestShield) {
+				armourDisplay.push(bestShield.name.toLocaleLowerCase());
 				data.attributes.ac.min += bestShield.flags.obsidian.baseAC;
 			}
 		}
+
+		actorData.obsidian.armourDisplay = armourDisplay.join(', ');
 	},
 
 	armourNotes: function (item) {

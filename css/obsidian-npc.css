@@ -97,11 +97,14 @@
 .dnd5e.sheet .obsidian-npc-cr input[type=text] {
 	height: auto;
 	width: 30px;
-	font-weight: bold;
 	font-size: 14px;
 	color: var(--text-regular);
 	display: inline-block;
 	margin: 0;
+}
+
+.dnd5e.sheet .obsidian-npc-hp input[type=text]:first-child {
+	color: var(--text-subtle);
 }
 
 .dnd5e.sheet .obsidian-npc-hp input[type=text].obsidian-npc-tmp-hp {

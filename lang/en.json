@@ -851,5 +851,9 @@
 	"OBSIDIAN.AddFeature": "Add Feature",
 	"OBSIDIAN.LegendaryActions": "Legendary Actions",
 	"OBSIDIAN.LairActions": "Lair Actions",
-	"OBSIDIAN.LairRules": "Lair rules"
+	"OBSIDIAN.LairRules": "Lair rules",
+	"OBSIDIAN.PactMagic": "Pact Magic",
+	"OBSIDIAN.NPCSpellcaster": "NPC Spellcaster",
+	"OBSIDIAN.AttackOverride": "Attack Override",
+	"OBSIDIAN.SaveOverride": "Save Override"
 }
