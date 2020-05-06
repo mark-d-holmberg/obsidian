@@ -17,6 +17,7 @@ import {initDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
 import {ObsidianNPC} from './module/npc.js';
 import {checkVersion} from './migration/run.js';
+import {refreshLegendaryActions} from './rules/npc.js';
 
 runPatches();
 
@@ -100,6 +101,8 @@ Hooks.on('createOwnedItem', (actor, item) => {
 		actor.importSpells(item);
 	}
 });
+
+Hooks.on('updateCombat', refreshLegendaryActions);
 
 // Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {

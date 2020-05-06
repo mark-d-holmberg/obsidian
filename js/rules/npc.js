@@ -51,3 +51,18 @@ function prepareSpeed (actorData, flags) {
 
 	actorData.obsidian.speedDisplay = speed.join(', ');
 }
+
+export function refreshLegendaryActions (combat) {
+	if (combat.combatant.actor?.data.type !== 'npc') {
+		return;
+	}
+
+	const legact = combat.combatant.actor.data.data.resources.legact;
+	if (!legact) {
+		return;
+	}
+
+	if (legact.max && legact.value) {
+		combat.combatant.actor.update({'data.resources.legact.value': 0});
+	}
+}
