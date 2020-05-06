@@ -68,6 +68,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			return;
 		}
 
+		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		html.find('.obsidian-search-spell-name').keyup(Obsidian.prototype._filterSpells.bind(this));
 		html.find('.obsidian-search-inv-name').keyup(Obsidian.prototype._filterEquipment.bind(this));
 		html.find('.obsidian-clear-inv-name')

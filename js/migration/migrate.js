@@ -48,11 +48,26 @@ export const Migrate = {
 			Migrate.v5.convertProficiencies(data);
 		}
 
+		if (data.items?.length) {
+			data.items = data.items.map(item => {
+				const updated = Migrate.convertItem(item, data);
+				if (data.type === 'npc' && (item.type === 'weapon' || item.flags.obsidian.armour)) {
+					item.data.equipped = true;
+				}
+
+				return updated;
+			});
+		}
+
+		if (source === 'core' && data.type === 'npc') {
+			Migrate.convertAC(data);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
 
-	convertItem: function (data, actor) {
+	convertItem: function (data, actorData) {
 		if (!data.data) {
 			data.data = {};
 		}
@@ -116,9 +131,9 @@ export const Migrate = {
 			} else if (data.type === 'equipment') {
 				Migrate.convertEquipment(data, source);
 			} else if (data.type === 'feat') {
-				Migrate.convertFeature(data, source, actor);
+				Migrate.convertFeature(data, source, actorData);
 			} else if (data.type === 'spell') {
-				Migrate.convertSpell(data, source, actor);
+				Migrate.convertSpell(data, source, actorData);
 			} else if (data.type === 'weapon') {
 				Migrate.convertWeapon(data, source);
 			}
@@ -164,6 +179,12 @@ export const Migrate = {
 
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
+	},
+
+	convertAC: function (data) {
+		if (!data.items.some(item => item.flags.obsidian.armour)) {
+			data.flags.obsidian.attributes.ac.override = data.data.attributes.ac.value.toString();
+		}
 	},
 
 	convertClass: function (data, source) {
@@ -254,6 +275,7 @@ export const Migrate = {
 
 		if (data.data.armor.value) {
 			data.flags.obsidian.armour = true;
+			data.flags.obsidian.subtype = 'armour';
 		}
 
 		if (data.data.armor.dex !== 0 && data.data.armor.type !== 'shield') {
@@ -261,10 +283,10 @@ export const Migrate = {
 		}
 	},
 
-	convertFeature: function (data, source, actor) {
+	convertFeature: function (data, source, actorData) {
 		const classMap = new Map();
-		if (actor) {
-			actor.data.items
+		if (actorData) {
+			actorData.items
 				.filter(item =>
 					item.type === 'class' && item.flags && item.flags.obsidian
 					&& item.flags.obsidian.uuid)
@@ -313,11 +335,21 @@ export const Migrate = {
 		}
 
 		const traits = data.data.traits;
-		if (!traits.languages) {
+		if (traits.languages) {
+			const custom = traits.languages.value?.indexOf('custom');
+			if (custom != null && custom > -1) {
+				traits.languages.value.splice(custom, 1);
+			}
+
+			if (!OBSIDIAN.notDefinedOrEmpty(traits.languages.custom)) {
+				data.flags.obsidian.traits.profs.custom.langs =
+					traits.languages.custom.split(/[,;] ?/g);
+			}
+		} else {
 			traits.languages = {value: []};
 		}
 
-		if (source === 'core') {
+		if (source === 'core' && traits.toolProf) {
 			data.flags.obsidian.skills.tools.push(...traits.toolProf.value.map(prof => {
 				return {
 					ability: 'str', bonus: 0, value: 0, custom: true,
@@ -330,7 +362,10 @@ export const Migrate = {
 	convertNotes: function (data, source) {
 		if (source === 'obsidian' && getProperty(data, 'data.traits') !== undefined) {
 			data.data.traits.size = CONVERT.size[data.flags.obsidian.details.size];
-		} else if (source === 'core' && getProperty(data, 'data.details') !== undefined) {
+		} else if (source === 'core'
+			&& data.type === 'character'
+			&& getProperty(data, 'data.details') !== undefined)
+		{
 			for (const alignment of OBSIDIAN.Rules.ALIGNMENTS) {
 				const translation = game.i18n.localize(`OBSIDIAN.Alignment-${alignment}`);
 				if (translation.toLowerCase() === data.data.details.alignment.toLowerCase()) {
@@ -358,15 +393,16 @@ export const Migrate = {
 
 	convertSpeed: function (data) {
 		if (data.data?.attributes.speed.value) {
-			data.flags.obsidian.attributes.speed.walk.override =
-				parseInt(data.data.attributes.speed.value);
+			data.flags.obsidian.attributes.speed = {
+				walk: {override: parseInt(data.data.attributes.speed.value)}
+			}
 		}
 	},
 
-	convertSpell: function (data, source, actor) {
+	convertSpell: function (data, source, actorData) {
 		const classMap = new Map();
-		if (actor) {
-			actor.data.items
+		if (actorData) {
+			actorData.items
 				.filter(item =>
 					item.type === 'class' && item.flags && item.flags.obsidian
 					&& item.flags.obsidian.uuid)

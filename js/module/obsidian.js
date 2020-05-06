@@ -124,6 +124,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			});
 		});
 
+		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
 		html.find('.obsidian-search-inv-name').keyup(this._filterEquipment.bind(this));
 		html.find('.obsidian-clear-inv-name')

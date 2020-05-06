@@ -7,7 +7,7 @@ async function beginMigration (html) {
 	const bar = html.find('.obsidian-migrate-bar');
 	const totalMigrations =
 		game.items.entities.length
-		+ game.actors.entities.reduce((acc, actor) => acc + actor.items.length, 0)
+		+ game.actors.entities.length
 		+ game.scenes.entities.reduce((acc, scene) => acc + scene.data.tokens.length, 0);
 
 	let item;
@@ -48,22 +48,6 @@ async function beginMigration (html) {
 	try {
 		const actorUpdates = [];
 		for (actor of game.actors.entities) {
-			const itemUpdates = [];
-			for (const item of actor.data.items) {
-				const update = Migrate.convertItem(duplicate(item), actor);
-				if (Object.keys(update).length > 0) {
-					update._id = item._id;
-					itemUpdates.push(update);
-				}
-
-				progress++;
-				updateProgress();
-			}
-
-			if (itemUpdates.length) {
-				await actor.updateEmbeddedEntity('OwnedItem', itemUpdates);
-			}
-
 			const actorUpdate = Migrate.convertActor(duplicate(actor.data));
 			if (Object.keys(actorUpdate).length > 0) {
 				actorUpdates.push(actorUpdate);

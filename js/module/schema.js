@@ -55,6 +55,15 @@ Schema.Actor = {
 	},
 	spells: {
 		slots: {}
+	},
+	traits: {
+		profs: {
+			custom: {
+				armour: [],
+				weapons: [],
+				langs: []
+			}
+		}
 	}
 };
 

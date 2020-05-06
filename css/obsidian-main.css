@@ -1736,7 +1736,9 @@ select[multiple] option:nth-child(2n) {
 }
 
 .obsidian .inline-roll,
-.obsidian-msg .inline-roll {
+.obsidian-msg .inline-roll,
+.obsidian .entity-link,
+.obsidiam-msg .entity-link {
 	cursor: default;
 	font-weight: bold;
 	color: var(--text-regular);
@@ -1745,7 +1747,9 @@ select[multiple] option:nth-child(2n) {
 }
 
 .obsidian .inline-roll:hover,
-.obsidian-msg .inline-roll:hover {
+.obsidian-msg .inline-roll:hover,
+.obsidian .entity-link:hover,
+.obsidiam-msg .entity-link:hover {
 	text-shadow: none;
 }
 
@@ -1755,7 +1759,9 @@ select[multiple] option:nth-child(2n) {
 }
 
 .obsidian .inline-roll.roll,
-.obsidian-msg .inline-roll.roll {
+.obsidian-msg .inline-roll.roll,
+.obsidian .entity-link,
+.obsidiam-msg .entity-link {
 	display: inline-block;
 	cursor: pointer;
 	font-weight: normal;
@@ -1766,19 +1772,25 @@ select[multiple] option:nth-child(2n) {
 }
 
 .obsidian .inline-roll.roll i,
-.obsidian-msg .inline-roll.roll i {
+.obsidian-msg .inline-roll.roll i,
+.obsidian .entity-link i,
+.obsidiam-msg .entity-link i {
 	display: inline-block;
 	color: var(--text-regular);
 }
 
 .obsidian .inline-roll.roll:hover,
-.obsidian-msg .inline-roll.roll:hover {
+.obsidian-msg .inline-roll.roll:hover,
+.obsidian .entity-link:hover,
+.obsidiam-msg .entity-link:hover {
 	background: var(--dark);
 	color: var(--text-bright);
 	box-shadow: 0 0 5px red;
 }
 
 .obsidian .inline-roll.roll:hover i,
-.obsidian-msg .inline-roll.roll:hover i {
+.obsidian-msg .inline-roll.roll:hover i,
+.obsidian .entity-link:hover i,
+.obsidiam-msg .entity-link:hover i {
 	color: var(--text-bright);
 }
