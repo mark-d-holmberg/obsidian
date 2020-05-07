@@ -1,5 +1,7 @@
 import {ObsidianDialog} from './dialog.js';
 import {Reorder} from '../module/reorder.js';
+import {Sheet} from '../module/sheet.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
@@ -63,7 +65,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		this.form.ondrop = () => Reorder.drop(this.parent.actor, event);
 
 		html.find('.obsidian-feature-use').click(async evt => {
-			await this.parent._onUseClicked.bind(this.parent)(evt);
+			await Sheet.onUseClicked(this.parent, evt);
 			this.render(false);
 		});
 
@@ -74,9 +76,10 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		});
 
 		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
-		html.find('[data-roll]').click(this.parent._onRoll.bind(this.parent));
-		html.find('.obsidian-equip-action').click(this.parent._onEquip.bind(this.parent));
-		html.find('.obsidian-attune').click(this.parent._onAttune.bind(this.parent));
+		html.find('.obsidian-equip-action').click(evt => Sheet.onEquip(this.parent, evt));
+		html.find('.obsidian-attune').click(evt => Sheet.onAttune(this.parent, evt));
+		html.find('[data-roll]')
+			.click(evt => ObsidianItems.roll(this.parent.actor, evt.currentTarget.dataset));
 	}
 
 	getData () {

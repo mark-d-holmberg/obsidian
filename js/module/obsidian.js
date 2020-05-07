@@ -5,10 +5,9 @@ import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
-import {ObsidianViewDialog} from '../dialogs/view.js';
-import {ObsidianItems} from '../rules/items.js';
-import {ObsidianActor} from './actor.js';
+import {Sheet} from './sheet.js';
 import {ObsidianTabs} from './tabs.js';
+
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
 import {ObsidianArrayDialog} from '../dialogs/array.js';
@@ -96,8 +95,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		super.activateListeners(html);
 
 		// Allow drag and drop even when limited to allow transferring items.
-		this.form.ondragover = this._onDragOver.bind(this);
-		this.form.ondrop = this._onDrop.bind(this);
+		this.form.ondragover = Reorder.dragOver;
+		this.form.ondrop = evt => Sheet.onDrop(this, evt);
 
 		if (this.actor.limited) {
 			return;
@@ -114,9 +113,9 @@ export class Obsidian extends ActorSheet5eCharacter {
 				callback: clicked => {
 					this.tabs[group] = clicked.data('tab');
 					if (group === 'spells') {
-						this._filterSpells();
+						Sheet.filterSpells(this);
 					} else if (group === 'equipment') {
-						this._filterEquipment();
+						Sheet.filterEquipment(this);
 					}
 
 					Obsidian._resizeTabs(html);
@@ -125,16 +124,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		});
 
 		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
-		html.find('.obsidian-search-spell-name').keyup(this._filterSpells.bind(this));
-		html.find('.obsidian-search-inv-name').keyup(this._filterEquipment.bind(this));
-		html.find('.obsidian-clear-inv-name')
-			.click(Obsidian._clearSearch.bind(this, this._filterEquipment.bind(this)));
-		html.find('.obsidian-clear-spell-name')
-			.click(Obsidian._clearSearch.bind(this, this._filterSpells.bind(this)));
-
-		this._filterSpells();
-		this._filterEquipment();
-		this._contextMenu(html);
+		Sheet.activateFiltering(this, html);
+		Sheet.contextMenu(this, html);
 		Obsidian._resizeMain(html);
 
 		if (!this.options.editable) {
@@ -143,27 +134,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		console.debug(this.actor);
 
-		html.on('dragend', () => {
-			this.details.forEach((open, el) => el.open = open);
-			if (this.element) {
-				this.element.find('.obsidian-drag-indicator').css('display', 'none');
-				this.element.find('.obsidian-inv-container').removeClass('obsidian-container-drop');
-			}
-		});
-
-		html.find('[draggable]').each((i, el) =>
-			el.addEventListener('dragstart', this._onDragItemStart.bind(this), false));
+		Sheet.activateDragging(this, html);
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration'));
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
 		html.find('.obsidian-conditions .obsidian-radio-label')
-			.click(this._setCondition.bind(this));
-		html.find('.obsidian-exhaustion .obsidian-radio').click(
-			this._setAttributeLevel.bind(this, 'data.attributes.exhaustion'));
-		html.find('.obsidian-death-successes .obsidian-radio').click(
-			this._setAttributeLevel.bind(this, 'data.attributes.death.success'));
-		html.find('.obsidian-death-failures .obsidian-radio').click(
-			this._setAttributeLevel.bind(this, 'data.attributes.death.failure'));
+			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>
 			new ObsidianSkillDialog(
@@ -176,25 +152,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
-		html.find('.obsidian-add-spell').click(this._onAddSpell.bind(this));
-		html.find('.obsidian-add-custom-item').click(this._onAddItem.bind(this));
-		html.find('.obsidian-attack-toggle').click(this._onAttackToggle.bind(this));
-		html.find('[data-uuid] .obsidian-feature-use').click(this._onUseClicked.bind(this));
-		html.find('[data-spell-level] .obsidian-feature-use').click(this._onSlotClicked.bind(this));
 		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
 		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
-		html.find('.obsidian-inv-container').click(this._saveContainerState.bind(this));
-		html.find('.obsidian-equip-action').click(this._onEquip.bind(this));
-		html.find('.obsidian-attune').click(this._onAttune.bind(this));
-		html.find('.obsidian-delete').click(this._onDeleteFeature.bind(this));
-		html.find('[data-roll]').click(this._onRoll.bind(this));
 		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
 		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
-		html.find('.obsidian-view').click(evt => this._viewItem($(evt.currentTarget)));
-		html.find('[contenteditable]').focusout(this._onContenteditableUnfocus.bind(this));
-		html.find('.obsidian-effect-row .obsidian-radio').click(this._onEffectToggled.bind(this));
 
-		this._activateAbilityScores(html);
+		Sheet.activateListeners(this, html);
+		Sheet.activateAbilityScores(this, html);
 		this._activateDialogs(html);
 
 		if (this.settings.scrollTop !== undefined) {
@@ -207,13 +171,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 				activeTab[0].scrollTop = this.settings.subScroll;
 			}
 		}
-	}
-
-	static _clearSearch (filter, evt) {
-		const target = $(evt.currentTarget);
-		const search = target.siblings('.obsidian-input-search');
-		search.val('');
-		filter();
 	}
 
 	getData () {
@@ -289,98 +246,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 	/**
 	 * @private
 	 */
-	_contextMenu (html, npc = false) {
-		const del = {
-			name: 'OBSIDIAN.Delete',
-			icon: '<i class="fas fa-trash"></i>',
-			callback: this._deleteItem.bind(this),
-			condition: li => {
-				const actor = this.actor || this.parent.actor;
-				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
-					return item.type !== 'spell' || !item.flags.obsidian.parentComponent
-				}
-			}
-		};
-
-		const edit = {
-			name: 'OBSIDIAN.Edit',
-			icon: '<i class="fas fa-edit"></i>',
-			callback: this._editItem.bind(this)
-		};
-
-		const view = {
-			name: 'OBSIDIAN.View',
-			icon: '<i class="fas fa-eye"></i>',
-			callback: this._viewItem.bind(this),
-			condition: li => {
-				const actor = this.actor || this.parent.actor;
-				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
-					return item.type !== 'tool' && item.type !== 'loot';
-				}
-			}
-		};
-
-		const split = {
-			name: 'OBSIDIAN.Split',
-			icon: '<i class="fas fa-exchange-alt"></i>',
-			callback: this._splitItem.bind(this),
-			condition: li => {
-				const actor = this.actor || this.parent.actor;
-				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
-					return item.data.quantity > 1;
-				}
-			}
-		};
-
-		let equipment;
-		let containers;
-		let spells;
-
-		if (this.options.editable) {
-			equipment = [edit, view, split, del];
-			containers = [edit, view, del];
-			spells = [edit, view];
-
-			if (npc) {
-				spells.push(del);
-			}
-		} else {
-			equipment = [view];
-			containers = [view];
-			spells = [view];
-		}
-
-		new ContextMenu(html, '.obsidian-inv-container', containers);
-		new ContextMenu(html, '.obsidian-spell-tr.item, .obsidian-atk-tr.item', spells);
-		new ContextMenu(
-			html, '.obsidian-tr.item:not(.obsidian-spell-tr):not(.obsidian-atk-tr)', equipment);
-	}
-
-	/**
-	 * @private
-	 * @param el {JQuery}
-	 */
-	async _deleteItem (el) {
-		const id = el.data('item-id');
-		const item = this.actor.data.items.find(item => item._id === id);
-		await this.actor.deleteEmbeddedEntity('OwnedItem', id);
-		this.actor.updateEquipment(item);
-	}
-
-	/**
-	 * @private
-	 * @param el {JQuery}
-	 */
-	_editItem (el) {
-		this.actor.items.find(item => item.id === el.data('item-id')).sheet.render(true);
-	}
-
-	/**
-	 * @private
-	 */
 	_findActiveTab () {
 		if (!this.element) {
 			return [];
@@ -393,71 +258,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		return activeTab;
-	}
-
-	/**
-	 * @private
-	 */
-	_filterEquipment () {
-		const invTab = this.element.find('[data-group="main-tabs"][data-tab="equipment"]');
-		const name = invTab.find('.obsidian-input-search').val();
-		const filter =
-			invTab.find('ul[data-group="equipment"] li.active').data('tab').substring(10);
-
-		invTab.find('.obsidian-tr.item').each((_, el) => {
-			const jqel = $(el);
-			jqel.removeClass('obsidian-hidden');
-
-			const nameMatch = name.length < 1 || el.dataset.name.toLowerCase().includes(name);
-			const categoryMatch =
-				filter === 'all'
-				|| el.dataset[`filter${filter.capitalise()}`] === 'true'
-				|| (filter === 'other'
-					&& !Object.keys(el.dataset).some(key => key.startsWith('filter')));
-
-			if (!categoryMatch || !nameMatch) {
-				jqel.addClass('obsidian-hidden');
-			}
-		});
-	}
-
-	/**
-	 * @private
-	 */
-	_filterSpells () {
-		const spellTab = this.element.find('[data-group="main-tabs"][data-tab="spells"]');
-		const name = spellTab.find('.obsidian-input-search').val();
-		const filter = spellTab.find('ul[data-group="spells"] li.active').data('tab').substring(6);
-
-		spellTab.find('.obsidian-spell-table > h3, .obsidian-spell-table > .obsidian-table')
-			.addClass('obsidian-hidden');
-
-		spellTab.find('.obsidian-spell-table .obsidian-tr.item').each((_, el) => {
-			const jqel = $(el);
-			jqel.removeClass('obsidian-hidden');
-
-			const nameMatch = name.length < 1 || el.dataset.name.toLowerCase().includes(name);
-			const categoryMatch =
-				filter === 'all'
-				|| filter === el.dataset.level
-				|| (filter === 'concentration' && el.dataset.concentration === 'true')
-				|| (filter === 'ritual' && el.dataset.ritual === 'true');
-
-			if (!categoryMatch || !nameMatch) {
-				jqel.addClass('obsidian-hidden');
-			}
-		});
-
-		spellTab.find('.obsidian-spell-table .obsidian-tr.item:not(.obsidian-hidden)')
-			.closest('.obsidian-table').each((i, el) => {
-				const jqel = $(el);
-				jqel.removeClass('obsidian-hidden');
-				jqel.prev().removeClass('obsidian-hidden');
-			});
-
-		if (filter === 'all') {
-			spellTab.find('.obsidian-spell-table > h3').removeClass('obsidian-hidden');
-		}
 	}
 
 	_injectHTML (html) {
@@ -507,245 +307,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	async _onAddItem (evt) {
-		evt.preventDefault();
-		evt.stopPropagation();
-
-		const name = game.i18n.localize('OBSIDIAN.Item');
-		const dlg = await renderTemplate('modules/obsidian/html/dialogs/new-item.html', {
-			upper: name,
-			lower: name.toLocaleLowerCase(),
-			types: ['weapon', 'equipment', 'consumable', 'loot', 'tool', 'backpack']
-		});
-
-		new Dialog({
-			title: game.i18n.localize('OBSIDIAN.NewCustomItem'),
-			content: dlg,
-			buttons: {
-				create: {
-					icon: '<i class="fas fa-check"></i>',
-					label: game.i18n.localize('OBSIDIAN.CreateItem'),
-					callback: dlg =>
-						this.actor.createEmbeddedEntity(
-							'OwnedItem', validateForm(dlg[0].children[0]))
-				}
-			},
-			default: 'create'
-		}, {classes: ['form', 'dialog', 'obsidian-window']}).render(true);
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onAddSpell (evt) {
-		evt.preventDefault();
-		evt.stopPropagation();
-
-		this.actor.createEmbeddedEntity('OwnedItem', {
-			type: 'spell',
-			name: game.i18n.localize('OBSIDIAN.NewSpell')
-		}, {renderSheet: true});
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onAttackToggle (evt) {
-		evt.preventDefault();
-		const uuid = evt.currentTarget.dataset.uuid;
-		const attack = this.actor.data.obsidian.components.get(uuid);
-		const effect = this.actor.data.obsidian.effects.get(attack.parentEffect);
-		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		const tags = item.flags.obsidian.tags;
-		const current = attack.mode;
-		let mode = 'melee';
-
-		if (tags.thrown && tags.versatile) {
-			if (current === 'melee') {
-				mode = 'ranged';
-			} else if (current === 'ranged') {
-				mode = 'versatile';
-			}
-		} else if (current === 'melee') {
-			if (tags.thrown) {
-				mode = 'ranged';
-			} else if (tags.versatile) {
-				mode = 'versatile';
-			}
-		}
-
-		const update = {
-			_id: item._id,
-			[`flags.obsidian.effects.${effect.idx}.components.${attack.idx}.mode`]: mode
-		};
-
-		this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
-	}
-
-	/**
-	 * @private
-	 */
-	_onAttune (evt) {
-		evt.preventDefault();
-		const id = evt.currentTarget.closest('.obsidian-tr.item').dataset.itemId;
-		const item = this.actor.data.obsidian.itemsByID.get(id);
-
-		if (!item) {
-			return;
-		}
-
-		const attuned = !!item.data.attuned;
-		this.actor.updateEmbeddedEntity('OwnedItem', {_id: item._id, 'data.attuned': !attuned});
-	}
-
-	/**
-	 * @private
-	 */
-	_onContenteditableUnfocus (evt) {
-		setTimeout(() => {
-			if (!$(':focus').length) {
-				this._onSubmit(evt);
-			}
-		}, 25);
-	}
-
-	/**
-	 * @private
-	 */
-	async _onDeleteFeature (evt) {
-		const target = $(evt.currentTarget);
-		if (!target.hasClass('obsidian-alert')) {
-			target.addClass('obsidian-alert');
-			return;
-		}
-
-		await this.actor.deleteEmbeddedEntity('OwnedItem', target.closest('.item').data('item-id'));
-	}
-
-	_onDragItemStart (event) {
-		const target = event.currentTarget;
-		if (target.tagName === 'SUMMARY') {
-			$(target).closest('.obsidian-tbody').children('details').each((i, el) => {
-				this.details.set(el, el.open);
-				el.open = false;
-			});
-		}
-
-		const dragData = {
-			actorId: this.actor.id
-		};
-
-		if (this.actor.isToken) {
-			dragData.tokenID = this.actor.token.data._id;
-			dragData.sceneID = this.actor.token.scene.data._id;
-		}
-
-		const item = this.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
-		if (item) {
-			dragData.type = 'Item';
-			dragData.data = item;
-			dragData.effectUUID = target.dataset.uuid;
-		}
-
-		if (['skl', 'tool', 'save', 'abl'].includes(target.dataset.roll)) {
-			dragData.type = 'obsidian-roll';
-			dragData.data = {};
-
-			for (const prop in target.dataset) {
-				dragData.data[prop] = target.dataset[prop];
-			}
-		}
-
-		event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-		return Reorder.dragStart(event);
-	}
-
-	_onDragOver (event) { return Reorder.dragOver(event); }
-
-	_onDrop (event) {
-		let data;
-		try {
-			data = JSON.parse(event.dataTransfer.getData('text/plain'));
-			if (data.type === 'Actor') {
-				return super._onDrop(event);
-			}
-		} catch (ignored) {}
-
-		return Reorder.drop(this.actor, event);
-	}
-
-	_onEffectToggled (evt) {
-		const uuid = evt.currentTarget.closest('.obsidian-effect-row').dataset.uuid;
-		const effect = this.actor.data.obsidian.effects.get(uuid);
-		const item = this.actor.items.find(item => item.data._id === effect.parentItem);
-		const effects = duplicate(item.data.flags.obsidian.effects);
-		const newEffect = effects.find(e => e.uuid === uuid);
-		newEffect.toggle.active = !newEffect.toggle.active;
-		item.update({'flags.obsidian.effects': effects});
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onEquip (evt) {
-		const id = $(evt.currentTarget).closest('.obsidian-tr').data('item-id');
-		const item = this.actor.data.items.find(item => item._id === id);
-
-		if (!item || !item.flags.obsidian) {
-			return;
-		}
-
-		if (item.flags.obsidian.equippable) {
-			this.actor.updateEmbeddedEntity(
-				'OwnedItem',
-				{_id: id, 'data.equipped': !item.data.equipped});
-		} else {
-			evt.currentTarget.dataset.roll = 'item';
-			evt.currentTarget.dataset.id = id;
-			this._onRoll(evt);
-		}
-	}
-
-	/**
-	 * @private
 	 */
 	_onResize (event) {
 		super._onResize(event);
 		this.settings.width = this.position.width;
 		this.settings.height = this.position.height;
 		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_onRoll (evt) {
-		ObsidianItems.roll(this.actor, evt.currentTarget.dataset);
-	}
-
-	/**
-	 * @private
-	 */
-	_onSlotClicked (evt) {
-		const target = evt.currentTarget;
-		const spellLevel = target.parentElement.dataset.spellLevel;
-		const n = Number(target.dataset.n);
-		const spellKey = spellLevel === 'pact' ? 'pact' : `spell${spellLevel}`;
-		const spells = this.actor.data.data.spells[spellKey];
-		const used = spells.max - spells.value;
-
-		if (n > used && (spells.tmp || 0) > 0) {
-			return this.actor.update({[`data.spells.${spellKey}.tmp`]: spells.tmp - 1});
-		}
-
-		const newValue = spells.value + (n > used ? -1 : 1);
-		this.actor.update({[`data.spells.${spellKey}.value`]: newValue});
 	}
 
 	/**
@@ -778,84 +345,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		return super._onSubmit(event, {preventClose: preventClose});
-	}
-
-	/**
-	 * @private
-	 */
-	_onUseClicked (evt) {
-		const target = evt.currentTarget;
-		const uuid = target.parentElement.dataset.uuid;
-		const n = Number(target.dataset.n);
-		const resource = this.actor.data.obsidian.components.get(uuid);
-
-		if (!resource) {
-			return;
-		}
-
-		const effect = this.actor.data.obsidian.effects.get(resource.parentEffect);
-		if (!effect) {
-			return;
-		}
-
-		const item = this.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		if (!item) {
-			return;
-		}
-
-
-		const max = Math.max(resource.max, resource.remaining);
-		let used = max - resource.remaining;
-
-		if (used < 0) {
-			used = 0;
-		}
-
-		if (n > used) {
-			used++;
-		} else {
-			used--;
-		}
-
-		const update = {
-			_id: item._id,
-			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
-			max - used
-		};
-
-		return this.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
-	}
-
-	/**
-	 * @private
-	 */
-	_activateAbilityScores (html) {
-		html.find('.obsidian-char-ability-score')
-			.focus(evt => {
-				const target = $(evt.currentTarget);
-				const positive = target.hasClass('obsidian-positive');
-				const negative = target.hasClass('obsidian-negative');
-				evt.currentTarget._orig = target.val();
-				evt.currentTarget._positive = positive;
-				evt.currentTarget._negative = negative;
-				target.removeClass('obsidian-positive obsidian-negative');
-				target.val(target.next().val());
-			})
-			.focusout(evt => {
-				if (evt.currentTarget._positive) {
-					evt.currentTarget.classList.add('obsidian-positive');
-				} else if (evt.currentTarget._negative) {
-					evt.currentTarget.classList.remove('obsidian-negative');
-				}
-
-				evt.currentTarget.value = evt.currentTarget._orig;
-			})
-			.off('change')
-			.change(evt => {
-				const target = $(evt.currentTarget);
-				target.next().val(target.val());
-				this._onSubmit(evt);
-			});
 	}
 
 	_reifyAttackLinks (atk) {
@@ -939,24 +428,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_saveContainerState (evt) {
-		const target = evt.currentTarget;
-		const id = target.dataset.itemId;
-
-		// Doesn't seem to be a way to do this without re-rendering the sheet,
-		// which is unfortunate as this could easily just be passively saved.
-
-		// The click event fires before the open state is toggled so we invert
-		// it here to represent what the state will be right after this event.
-		this.actor.updateEmbeddedEntity(
-			'OwnedItem',
-			{_id: id, flags: {obsidian: {open: !target.parentNode.open}}});
-	}
-
-	/**
-	 * @private
 	 */
 	_saveScrollPositions () {
 		if (this.form) {
@@ -967,25 +438,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (activeTab.length > 0) {
 			this.scroll.tab = activeTab[0].scrollTop;
 		}
-	}
-
-	/**
-	 * @private
-	 * @param {String} prop
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_setAttributeLevel (prop, evt) {
-		const current = getProperty(this.actor.data, prop);
-		let value = Number($(evt.currentTarget).data('value'));
-		let update = current;
-
-		if (value > current) {
-			update++;
-		} else {
-			update--;
-		}
-
-		this.actor.update({[`${prop}`]: update});
 	}
 
 	/**
@@ -1005,22 +457,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 			jqForm.removeClass('obsidian-collapsed');
 			collapser.addClass('fa-rotate-90');
 		}
-	}
-
-	/**
-	 * @private
-	 * @param {JQuery.TriggeredEvent} evt
-	 */
-	_setCondition (evt) {
-		const id = $(evt.currentTarget).data('value');
-		let state = this.actor.data.flags.obsidian.attributes.conditions[id];
-		if (state === undefined) {
-			state = false;
-		}
-
-		const update = {};
-		update[`flags.obsidian.attributes.conditions.${id}`] = !state;
-		this.actor.update(update);
 	}
 
 	/**
@@ -1093,48 +529,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 */
-	async _splitItem (li) {
-		const item = this.actor.data.obsidian.itemsByID.get(li.data('item-id'));
-		if (!item) {
-			return;
-		}
-
-		const doSplit = async qty => {
-			const newItem = ObsidianActor.duplicateItem(item);
-			newItem.data.quantity = qty;
-			await this.actor.createEmbeddedEntity('OwnedItem', newItem);
-			this.actor.updateEmbeddedEntity('OwnedItem', {
-				_id: item._id,
-				'data.quantity': item.data.quantity - qty
-			});
-		};
-
-		if (item.data.quantity < 3) {
-			doSplit(1);
-		} else {
-			const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer.html', {
-				max: item.data.quantity - 1,
-				name: item.name
-			});
-
-			new Dialog({
-				title: game.i18n.localize('OBSIDIAN.Split'),
-				content: dlg,
-				default: 'split',
-				buttons: {
-					split: {
-						icon: '<i class="fas fa-exchange-alt"></i>',
-						label: game.i18n.localize('OBSIDIAN.Split'),
-						callback: dlg => doSplit(Number(dlg.find('input').val()))
-					}
-				}
-			}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
-		}
-	}
-
-	/**
-	 * @private
 	 * @param {String} property
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
@@ -1168,22 +562,5 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_updateObject (event, formData) {
 		// TODO: Handle tokens.
 		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
-	}
-
-	/**
-	 * @private
-	 * @param el {JQuery}
-	 */
-	_viewItem (el) {
-		const id = el.data('item-id');
-		const existing =
-			Object.values(this.actor.apps).find(app =>
-				app.constructor === ObsidianViewDialog && app.item._id === id);
-
-		if (existing) {
-			existing.render(true);
-		} else {
-			new ObsidianViewDialog(id, this).render(true);
-		}
 	}
 }
