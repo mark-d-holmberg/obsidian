@@ -3,6 +3,7 @@ import {OBSIDIAN} from '../global.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
 import {ObsidianActor} from './actor.js';
 import {ObsidianItems} from '../rules/items.js';
+import {ActorSheet5e} from '../../../../systems/dnd5e/module/actor/sheets/base.js';
 
 export const Sheet = {
 	activateAbilityScores: function (sheet, html) {
@@ -383,7 +384,7 @@ export const Sheet = {
 		try {
 			data = JSON.parse(event.dataTransfer.getData('text/plain'));
 			if (data.type === 'Actor') {
-				return ActorSheet.prototype._onDrop.apply(sheet, [event]);
+				return ActorSheet5e.prototype._onDrop.apply(sheet, [event]);
 			}
 		} catch (ignored) {}
 
