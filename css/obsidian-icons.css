@@ -92,23 +92,23 @@ li.context-item .obsidian-icon {
 }
 
 .obsidian-icon-cp {
-	background-image: url('../img/copper.png');
+	background-image: url('../img/currency/copper.png');
 }
 
 .obsidian-icon-sp {
-	background-image: url('../img/silver.png');
+	background-image: url('../img/currency/silver.png');
 }
 
 .obsidian-icon-ep {
-	background-image: url('../img/electrum.png');
+	background-image: url('../img/currency/electrum.png');
 }
 
 .obsidian-icon-gp {
-	background-image: url('../img/gold.png');
+	background-image: url('../img/currency/gold.png');
 }
 
 .obsidian-icon-pp {
-	background-image: url('../img/platinum.png');
+	background-image: url('../img/currency/platinum.png');
 }
 
 .obsidian-icon-amulet {
@@ -256,46 +256,36 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/obsidian.png');
 }
 
-.obsidian-spell-school {
-	display: inline-block;
-	font-style: normal;
-	font-variant: normal;
-	text-rendering: auto;
-	line-height: 1;
-	font-family: magic, sans-serif;
-	color: var(--text-regular);
+.obsidian-icon-school-abj {
+	background-image: url('../img/magic/abjuration.png');
 }
 
-.obsidian-spell-school-abj:before {
-	content: 'A';
+.obsidian-icon-school-con {
+	background-image: url('../img/magic/conjuration.png');
 }
 
-.obsidian-spell-school-con:before {
-	content: 'C';
+.obsidian-icon-school-div {
+	background-image: url('../img/magic/divination.png');
 }
 
-.obsidian-spell-school-div:before {
-	content: 'D';
+.obsidian-icon-school-enc {
+	background-image: url('../img/magic/enchantment.png');
 }
 
-.obsidian-spell-school-enc:before {
-	content: 'E';
+.obsidian-icon-school-ill {
+	background-image: url('../img/magic/illusion.png');
 }
 
-.obsidian-spell-school-ill:before {
-	content: 'I';
+.obsidian-icon-school-trs {
+	background-image: url('../img/magic/transmutation.png');
 }
 
-.obsidian-spell-school-trs:before {
-	content: 'T';
+.obsidian-icon-school-evo {
+	background-image: url('../img/magic/evocation.png');
 }
 
-.obsidian-spell-school-evo:before {
-	content: 'V';
-}
-
-.obsidian-spell-school-nec:before {
-	content: 'N';
+.obsidian-icon-school-nec {
+	background-image: url('../img/magic/necromancy.png');
 }
 
 .obsidian-css-icon {

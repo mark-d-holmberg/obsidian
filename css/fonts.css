@@ -55,13 +55,6 @@
 }
 
 @font-face {
-	font-family: magic;
-	font-style: normal;
-	font-weight: 400;
-	src: url('../fonts/SchoolsOfMagic.otf') format('opentype');
-}
-
-@font-face {
 	font-family: 'Noto Sans JP';
 	font-style: normal;
 	font-weight: 400;

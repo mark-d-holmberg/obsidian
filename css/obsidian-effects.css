@@ -187,9 +187,11 @@
 	padding: 4px 8px;
 	border-right: 1px solid var(--bg);
 	cursor: pointer;
+	display: flex;
+	align-items: center;
 }
 
-.obsidian-item-drop-pill-body i {
+.obsidian-item-drop-pill-body .obsidian-icon {
 	margin-right: 4px;
 }
 

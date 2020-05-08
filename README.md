@@ -31,6 +31,4 @@ The SVG images found in the `img` directory are used and redistributed under the
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.svg`, `marked.svg`, `prone.svg`
 * [Willdabeast](http://wjbstories.blogspot.com/): `rod.svg`
 
-The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-
-The symbols for the schools of magic are © Wizards of the Coast and were assembled into the font file `fonts/SchoolsOfMagic.otf` by [Pjotr Frank](https://www.dmsguild.com/product/217275/Symbols-to-Represent-the-8-Schools-of-Magic).
+The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`, `abjuration.png`, `conjuration.png`, `divination.png`, `enchantment.png`, `evocation.png`, `illusion.png`, `necromancy.png`, `transmutation.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).

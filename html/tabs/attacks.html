@@ -20,7 +20,7 @@
 				     {{#unless (eq parentItem.type 'spell')}}data-uuid="{{parentEffect.uuid}}"{{/unless}}>
 					<div class="obsidian-col-icon">
 						{{#if (eq parentItem.type 'spell')}}
-							<i class="obsidian-spell-school obsidian-spell-school-{{parentItem.data.school}}"></i>
+							<div class="obsidian-icon obsidian-icon-school-{{parentItem.data.school}}"></div>
 						{{else if (eq parentItem.type 'weapon')}}
 							<div class="
 								{{~#if (is-attack-toggleable this)~}}
