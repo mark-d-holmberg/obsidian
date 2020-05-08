@@ -12,7 +12,7 @@ export const v5 = {
 	convertProficiencies: function (data) {
 		const traits = data.data.traits;
 		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
-			const prof = traits[prop].value;
+			const prof = getProperty(traits, `${prop}.value`);
 			if (!Array.isArray(prof)) {
 				return;
 			}

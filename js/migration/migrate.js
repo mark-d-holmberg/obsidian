@@ -183,7 +183,7 @@ export const Migrate = {
 
 	convertAC: function (data) {
 		if (!data.items.some(item => item.flags.obsidian.armour)) {
-			data.flags.obsidian.attributes.ac.override = data.data.attributes.ac.value.toString();
+			data.flags.obsidian.attributes.ac.override = data.data.attributes.ac.value?.toString();
 		}
 	},
 
