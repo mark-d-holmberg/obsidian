@@ -59,7 +59,7 @@ export const Migrate = {
 			});
 		}
 
-		if (source === 'core' && data.type === 'npc') {
+		if (source === 'core' && data.type === 'npc' && data.items && data.data) {
 			Migrate.convertAC(data);
 		}
 

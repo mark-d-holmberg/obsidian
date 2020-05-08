@@ -163,12 +163,13 @@
 							{{numberFormat mod decimals=0 sign=true}}
 						</div>
 						{{#with (lookup ../actor.flags.obsidian.abilities @key)}}
-							<input type="text" value="{{value}}" placeholder="10" class="obsidian-char-ability-score
-								{{#if (gt value ../value)}}
-									obsidian-positive
-								{{else if (lt value ../value)}}
-									obsidian-negative
-								{{/if}}">
+							<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
+								class="obsidian-char-ability-score
+									{{#if (gt value ../value)}}
+										obsidian-positive
+									{{else if (lt value ../value)}}
+										obsidian-negative
+									{{/if}}">
 						{{/with}}
 						<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
 						       data-dtype="Number">
@@ -181,7 +182,7 @@
 					</strong>
 					{{#each data.abilities}}
 						<div class="obsidian-npc-stat-li">
-							<span class="rollable" data-roll="save" data-save="{{@key}}">
+							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
 								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
 							</span>
 							{{numberFormat save decimals=0 sign=true~}}
@@ -195,7 +196,9 @@
 					</strong>
 					{{#each skills}}
 						<div class="obsidian-npc-stat-li">
-							<span class="rollable">{{i18n-join 'OBSIDIAN.Skill-' @key}}</span>
+							<span class="rollable" data-roll="skl" data-skl="{{@key}}" draggable="true">
+								{{i18n-join 'OBSIDIAN.Skill-' @key}}
+							</span>
 							{{numberFormat mod decimals=0 sign=true~}}
 						</div>
 					{{/each}}
@@ -307,27 +310,33 @@
 				</div>
 			</section>
 			{{#if featCategories.none}}
-				{{> modules/obsidian/html/components/features.html feats=featCategories.none}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.none}}
+				</section>
 			{{/if}}
 			{{#if featCategories.action}}
-				<hr>
-				{{> modules/obsidian/html/components/features.html feats=featCategories.action
-						heading='OBSIDIAN.Actions'}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.action
+							heading='OBSIDIAN.Actions'}}
+				</section>
 			{{/if}}
 			{{#if featCategories.reaction}}
-				<hr>
-				{{> modules/obsidian/html/components/features.html feats=featCategories.reaction
-						heading='OBSIDIAN.Reactions'}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.reaction
+							heading='OBSIDIAN.Reactions'}}
+				</section>
 			{{/if}}
 			{{#if featCategories.legendary}}
-				<hr>
-				{{> modules/obsidian/html/components/features.html feats=featCategories.legendary
-						heading='OBSIDIAN.LegendaryActions' legendary=data.resources.legact}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.legendary
+							heading='OBSIDIAN.LegendaryActions' legendary=data.resources.legact}}
+				</section>
 			{{/if}}
 			{{#if featCategories.lair}}
-				<hr>
-				{{> modules/obsidian/html/components/features.html feats=featCategories.lair
-						heading='OBSIDIAN.LairActions' subtext=actor.flags.obsidian.lair}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.lair
+							heading='OBSIDIAN.LairActions' subtext=actor.flags.obsidian.lair}}
+				</section>
 			{{/if}}
 		</main>
 	</div>

@@ -12,9 +12,7 @@ export function addMacroHook () {
 
 async function onHotbarDrop (bar, data, slot) {
 	const actor = game.actors.get(data.actorId);
-	if ((data.type === 'Item' && !getProperty(data.data, 'flags.obsidian.effects'))
-		|| !actor || actor.data.type === 'npc')
-	{
+	if ((data.type === 'Item' && !getProperty(data.data, 'flags.obsidian.effects')) || !actor) {
 		if (dnd5eDrop) {
 			dnd5eDrop(bar, data, slot);
 		}

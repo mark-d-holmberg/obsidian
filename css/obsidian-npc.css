@@ -230,6 +230,18 @@
 	break-inside: avoid;
 }
 
+.npc main section {
+	border-bottom: 2px solid var(--mid);
+}
+
+.npc main section:last-child {
+	border: none;
+}
+
+.npc main section .obsidian-feature:last-child {
+	margin-bottom: 10px;
+}
+
 .obsidian-npc-stats .obsidian-feature {
 	margin-bottom: 0;
 	break-inside: avoid;
@@ -243,11 +255,6 @@
 	align-items: flex-start;
 	margin-top: 12px;
 	margin-bottom: 4px;
-}
-
-.obsidian-npc-stats hr {
-	border: 1px solid var(--mid);
-	margin: 10px 0 0;
 }
 
 .npc .obsidian .obsidian-npc-stats h3 {

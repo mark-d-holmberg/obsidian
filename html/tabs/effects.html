@@ -22,7 +22,6 @@
 			</div>
 		{{/each}}
 	</div>
-	{{/if}}
 	<div class="obsidian-npc-exhaustion">
 		<div class="
 		{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
@@ -40,6 +39,7 @@
 			{{/each}}
 		</div>
 	</div>
+	{{/if}}
 	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
 	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
