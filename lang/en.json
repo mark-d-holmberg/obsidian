@@ -855,5 +855,6 @@
 	"OBSIDIAN.PactMagic": "Pact Magic",
 	"OBSIDIAN.NPCSpellcaster": "NPC Spellcaster",
 	"OBSIDIAN.AttackOverride": "Attack Override",
-	"OBSIDIAN.SaveOverride": "Save Override"
+	"OBSIDIAN.SaveOverride": "Save Override",
+	"OBSIDIAN.Recharged": "Recharged"
 }

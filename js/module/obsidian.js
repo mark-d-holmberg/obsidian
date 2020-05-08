@@ -152,10 +152,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
-		html.find('.obsidian-global-advantage').click(() => this._setGlobalRoll('adv'));
-		html.find('.obsidian-global-disadvantage').click(() => this._setGlobalRoll('dis'));
-		html.find('.obsidian-short-rest').click(this.actor.shortRest.bind(this.actor));
-		html.find('.obsidian-long-rest').click(this.actor.longRest.bind(this.actor));
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -463,13 +459,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @private
 	 */
 	_setGlobalRoll (roll) {
-		const current = this.actor.data.flags.obsidian.sheet.roll;
-		let result = 'reg';
-		if (roll !== current) {
-			result = roll;
-		}
 
-		this.actor.update({'flags.obsidian.sheet.roll': result});
 	}
 
 	/**

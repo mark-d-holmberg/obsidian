@@ -13,11 +13,11 @@ import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {addMacroHook} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
-import {initDurations} from './module/duration.js';
+import {advanceDurations, initDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
 import {ObsidianNPC} from './module/npc.js';
 import {checkVersion} from './migration/run.js';
-import {refreshLegendaryActions} from './rules/npc.js';
+import {refreshNPC} from './rules/npc.js';
 
 runPatches();
 
@@ -102,7 +102,10 @@ Hooks.on('createOwnedItem', (actor, item) => {
 	}
 });
 
-Hooks.on('updateCombat', refreshLegendaryActions);
+Hooks.on('updateCombat', async combat => {
+	await advanceDurations(combat);
+	refreshNPC(combat);
+});
 
 // Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {

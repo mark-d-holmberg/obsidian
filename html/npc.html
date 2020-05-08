@@ -73,6 +73,34 @@
 					{{/if}}
 				</span>
 			</div>
+			<div class="obsidian-npc-btns">
+				<div class="obsidian-npc-btn-row">
+					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet
+					        obsidian-short-rest">
+						<i class="fas fa-hourglass-half"></i>
+						{{localize 'OBSIDIAN.ShortRest'}}
+					</button>
+					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet
+					        obsidian-long-rest">
+						<i class="fas fa-campground"></i>
+						{{localize 'OBSIDIAN.LongRest'}}
+					</button>
+				</div>
+				<div class="obsidian-npc-btn-row">
+					<button type="button" class="
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
+					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
+					        obsidian-global-advantage">
+						{{localize 'OBSIDIAN.Roll-adv'}}
+					</button>
+					<button type="button" class="
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
+					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
+					        obsidian-global-disadvantage">
+						{{localize 'OBSIDIAN.Roll-dis'}}
+					</button>
+				</div>
+			</div>
 		</header>
 		<main>
 			<section class="obsidian-npc-stat-block">

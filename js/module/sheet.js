@@ -3,7 +3,6 @@ import {OBSIDIAN} from '../global.js';
 import {ObsidianViewDialog} from '../dialogs/view.js';
 import {ObsidianActor} from './actor.js';
 import {ObsidianItems} from '../rules/items.js';
-import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 
 export const Sheet = {
 	activateAbilityScores: function (sheet, html) {
@@ -70,6 +69,10 @@ export const Sheet = {
 		html.find('[data-uuid] .obsidian-feature-use').click(evt => Sheet.onUseClicked(sheet, evt));
 		html.find('.obsidian-view').click(evt => Sheet.viewItem(sheet, $(evt.currentTarget)));
 		html.find('[contenteditable]').focusout(evt => Sheet.onContenteditableUnfocus(sheet, evt));
+		html.find('.obsidian-short-rest').click(sheet.actor.shortRest.bind(sheet.actor));
+		html.find('.obsidian-long-rest').click(sheet.actor.longRest.bind(sheet.actor));
+		html.find('.obsidian-global-advantage').click(() => Sheet.setGlobalRoll(sheet, 'adv'));
+		html.find('.obsidian-global-disadvantage').click(() => Sheet.setGlobalRoll(sheet, 'dis'));
 
 		html.find('.obsidian-exhaustion .obsidian-radio')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.exhaustion', evt));
@@ -513,6 +516,16 @@ export const Sheet = {
 		const update = {};
 		update[`flags.obsidian.attributes.conditions.${id}`] = !state;
 		sheet.actor.update(update);
+	},
+
+	setGlobalRoll: function (sheet, roll) {
+		const current = sheet.actor.data.flags.obsidian.sheet.roll;
+		let result = 'reg';
+		if (roll !== current) {
+			result = roll;
+		}
+
+		sheet.actor.update({'flags.obsidian.sheet.roll': result});
 	},
 
 	splitItem: async function (sheet, li) {

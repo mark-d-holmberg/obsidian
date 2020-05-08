@@ -11,7 +11,6 @@
 				<a class="button message-delete"><i class="fas fa-trash"></i></a>
 			{{/if}}
 		</span>
-
 		{{#if isWhisper}}
 			<span class="whisper-to">{{localize 'CHAT.To'}}: {{whisperTo}}</span>
 		{{/if}}
@@ -24,7 +23,7 @@
 			{{/if}}
 		</div>
 		{{#if message.flags.obsidian.subtitle}}
-			<div class="obsidian-msg-sub-title">{{message.flags.obsidian.subtitle}}</div>
+			<div class="obsidian-msg-sub-title">{{{message.flags.obsidian.subtitle}}}</div>
 		{{/if}}
 	</section>
 	{{#if (or message.flags.obsidian.results message.flags.obsidian.exprs)}}

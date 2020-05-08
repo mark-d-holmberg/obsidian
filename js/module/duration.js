@@ -3,7 +3,6 @@ import {OBSIDIAN} from '../global.js';
 import {Rolls} from '../rules/rolls.js';
 
 export function initDurations () {
-	Hooks.on('updateCombat', advanceDurations);
 	Hooks.on('controlToken', renderDurations);
 }
 
@@ -143,7 +142,7 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 	createDuration(actor, duration, effect.uuid, scaledAmount);
 }
 
-async function advanceDurations (combat) {
+export async function advanceDurations (combat) {
 	if (!combat.combatant.actor) {
 		return;
 	}

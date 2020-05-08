@@ -32,6 +32,32 @@ export const Rolls = {
 		});
 	},
 
+	abilityRecharge: function (item, effect, component) {
+		const recharge = component.recharge;
+		const roll = new Die(6).roll(1);
+		const success = roll.total >= recharge.roll;
+
+		return {
+			flags: {
+				obsidian: {
+					type: 'item',
+					title: component.name.length
+						? component.name
+						: effect.name.length ? effect.name : item.name,
+					subtitle: `${game.i18n.localize('OBSIDIAN.Recharge')} ${recharge.roll}&mdash;6`,
+					results: [[{
+						total: roll.total,
+						breakdown: `1d6 = ${roll.total}`
+					}]],
+					addendum: {
+						success: success,
+						label: game.i18n.localize(`OBSIDIAN.${success ? 'Recharged' : 'Failure'}`)
+					}
+				}
+			}
+		};
+	},
+
 	annotateAdvantage: function (adv, results) {
 		if (adv === 0 || results.length < 2) {
 			results[0].active = true;

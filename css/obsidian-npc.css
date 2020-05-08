@@ -43,6 +43,7 @@
 	border-bottom: 1px solid var(--mid);
 	padding-bottom: 8px;
 	width: 100%;
+	position: relative;
 }
 
 .obsidian-npc-stats header .obsidian-char-charname {
@@ -300,4 +301,14 @@
 
 .npc .obsidian-spell-table .obsidian-col-icon {
 	font-size: 18px;
+}
+
+.obsidian-npc-btns {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.obsidian-npc-btns button.obsidian-btn-sm.obsidian-btn-sheet {
+	margin-bottom: 5px;
 }
