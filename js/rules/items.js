@@ -264,11 +264,19 @@ export const ObsidianItems = {
 		}
 	},
 
-	rollItem: function (actor, options) {
+	rollItem: async function (actor, options) {
 		const item = actor.getEmbeddedEntity('OwnedItem', options.id);
 		if (!item || !item.obsidian) {
 			Rolls.create(actor, options);
 			return;
+		}
+
+		if (item.type === 'feat' && item.data.activation.type === 'legendary') {
+			const legact = actor.data.data.resources.legact;
+			await actor.update({
+				'data.resources.legact.value':
+					Math.min(legact.max, legact.value + item.data.activation.cost)
+			});
 		}
 
 		if (item.type === 'spell') {
