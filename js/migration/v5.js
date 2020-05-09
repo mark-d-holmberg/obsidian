@@ -11,22 +11,30 @@ export const v5 = {
 
 	convertProficiencies: function (data) {
 		const traits = data.data.traits;
-		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
-			const prof = getProperty(traits, `${prop}.value`);
-			if (!Array.isArray(prof)) {
-				return;
-			}
+		const flags = data.flags.obsidian.traits.profs.custom;
 
-			traits[prop].value = prof.map(prof => {
-				const convert = CONVERT.profs[prop];
-				const key = convert.get(prof.toLowerCase());
-
-				if (key) {
-					return key;
+		[['weaponProf', 'weapons'], ['armorProf', 'armour'], ['languages', 'langs']]
+			.forEach(([prop, flag]) => {
+				const prof = getProperty(traits, `${prop}.value`);
+				if (!Array.isArray(prof)) {
+					return;
 				}
 
-				return prof;
+				const convert = CONVERT.profs[prop];
+				traits[prop].value = prof.map(prof => convert.get(prof.toLowerCase())).filter(_ => _);
+
+				if (!traits[prop].custom?.length) {
+					traits[prop].custom = '';
+				}
+
+				const custom = [];
+				if (traits[prop].custom.length) {
+					custom.push(...traits[prop].custom.split(';'));
+				}
+
+				custom.push(...prof.filter(prof => !convert.get(prof.toLowerCase())));
+				traits[prop].custom = custom.join(';');
+				flags[flag] = custom;
 			});
-		});
 	}
 };

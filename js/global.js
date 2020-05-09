@@ -2,11 +2,13 @@ import {ObsidianItems} from './rules/items.js';
 import {Schema} from './module/schema.js';
 import {Rules} from './rules/rules.js';
 import {fixBackpacks} from './util/fixes.js';
+import {Migrate} from './migration/migrate.js';
 
 export const OBSIDIAN = {};
 OBSIDIAN.Items = ObsidianItems;
 OBSIDIAN.Schema = Schema;
 OBSIDIAN.Rules = Rules;
+OBSIDIAN.Migrate = Migrate;
 
 OBSIDIAN.notDefinedOrEmpty = function (obj) {
 	return obj == null || obj === '';

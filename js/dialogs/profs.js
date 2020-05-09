@@ -38,7 +38,7 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 				const [prop, key] = el.name.split('.');
 				formData[`data.traits.${prop}.value`].push(key);
 			} else if (el.type === 'text') {
-				const custom = el.value.split(/, ?/);
+				const custom = el.value.split(/[,;] ?/);
 				formData[el.name] = el.value;
 				formData[`flags.obsidian.traits.profs.custom.${el.dataset.flag}`] = [];
 
