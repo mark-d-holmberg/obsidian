@@ -69,7 +69,7 @@ Hooks.on('renderCompendium', (compendium, html) => {
 		.append($('<span class="obsidian-clear-search">&times;</span>'));
 	html.find('.header-search > span').click(evt => {
 		evt.currentTarget.previousElementSibling.previousElementSibling.value = '';
-		compendium._onSearch('');
+		compendium._onFilterResults({currentTarget: {value: ''}, preventDefault: () => {}});
 	});
 });
 

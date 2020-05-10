@@ -583,9 +583,16 @@ export const Prepare = {
 				}
 			}
 
+			// Check CONFIG is ready first.
+			try {
+				CONFIG.JournalEntry.entityClass.collection;
+			} catch {
+				return;
+			}
+
 			flags.display = TextEditor.enrichHTML(feat.data.description.value, {
-				entities: false,
-				links: false,
+				entities: true,
+				links: true,
 				rollData: actor.getRollData()
 			});
 		}

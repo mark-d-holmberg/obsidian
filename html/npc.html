@@ -38,7 +38,10 @@
 			</div>
 		</section>
 		<section>
-			<h3>{{localize 'OBSIDIAN.Notes'}}</h3>
+			<h3>
+				{{localize 'OBSIDIAN.Notes'}}
+				<a class="obsidian-edit-npc-notes"><i class="fas fa-edit"></i></a>
+			</h3>
 			<div class="obsidian-rich-text">
 				{{editor content=data.details.biography.value button=true editable=editable
 				         target='data.details.biography.value'}}
@@ -231,15 +234,19 @@
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Senses"
 				     data-npc="true">
 					<strong>{{localize 'OBSIDIAN.Senses'}}</strong>
-					{{#each actor.flags.obsidian.attributes.senses}}
-						{{#if radius}}
-						<div class="obsidian-npc-stat-li">
-							{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
-							{{radius}}
-							{{localize 'OBSIDIAN.FeetAbbr'~}}
-						</div>
-						{{/if}}
-					{{/each}}
+					{{#if (not-empty actor.flags.obsidian.attributes.senses)}}
+						{{#each actor.flags.obsidian.attributes.senses}}
+							{{#if radius}}
+							<div class="obsidian-npc-stat-li">
+								{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
+								{{radius}}
+								{{localize 'OBSIDIAN.FeetAbbr'~}}
+							</div>
+							{{/if}}
+						{{/each}}
+					{{else}}
+						<div class="obsidian-npc-stat-li">{{data.traits.senses}}</div>
+					{{/if}}
 					<div class="obsidian-npc-stat-li">
 						{{localize 'OBSIDIAN.PassiveLC'}}
 						{{localize 'OBSIDIAN.Skill-prc'}}

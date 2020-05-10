@@ -271,7 +271,7 @@ export function registerHandlebarHelpers () {
 		return (spellbookEntry
 			&& spellbookEntry.spells.some(spell =>
 				spell.flags.obsidian && spell.flags.obsidian.visible))
-			|| (level > 0 && (Number(spell.max) || actor.data.spells.pact.level === level));
+			|| (level > 0 && (Number(spell.max) || actor.data.spells.pact?.level === level));
 	});
 
 	Handlebars.registerHelper('i18n-class', function (cls) {

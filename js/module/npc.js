@@ -2,10 +2,9 @@ import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';
-import {ObsidianItems} from '../rules/items.js';
-import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {Reorder} from './reorder.js';
 import {Sheet} from './sheet.js';
+import {Migrate} from '../migration/migrate.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -87,6 +86,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		html.find('.obsidian-legendary-actions .obsidian-feature-use')
 			.click(this._useLegendaryAction.bind(this));
 
+		const activateEditor =
+			html.find('[data-edit="data.details.biography.value"]+.editor-edit')[0].onclick;
+
+		html.find('.obsidian-edit-npc-notes').click(activateEditor.bind(this));
+
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
 		Obsidian.prototype._activateDialogs.apply(this, arguments);
@@ -94,8 +98,13 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	getData () {
 		const data = super.getData();
+		if (!this.actor.data.flags?.obsidian) {
+			this.actor.data = Migrate.convertActor(this.actor.data);
+			this.actor.prepareData();
+			data.actor = duplicate(this.actor.data);
+		}
+
 		data.ObsidianRules = OBSIDIAN.Rules;
-		data.isNPC = this.actor.data.type === 'npc';
 		data.featCategories = {};
 		data.skills = {};
 
