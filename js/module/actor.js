@@ -157,7 +157,7 @@ export class ObsidianActor extends Actor5e {
 				.map(async c => {
 					const ownedSpells =
 						await this.createEmbeddedEntity('OwnedItem', c.spells);
-					c.spells = ownedSpells.map(spell => spell._id);
+					c.spells = [].concat(ownedSpells).map(spell => spell._id);
 				});
 
 		if (pending.length) {

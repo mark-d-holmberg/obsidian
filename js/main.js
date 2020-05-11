@@ -103,6 +103,10 @@ Hooks.on('createOwnedItem', (actor, item) => {
 });
 
 Hooks.on('updateCombat', async combat => {
+	if (!game.user.isGM) {
+		return;
+	}
+
 	await advanceDurations(combat);
 	refreshNPC(combat);
 });
