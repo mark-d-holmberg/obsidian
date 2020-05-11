@@ -160,6 +160,13 @@ export const ObsidianItems = {
 		let scaledAmount = (consumed || 0);
 
 		if (spell) {
+			const component =
+				actor.data.obsidian.components.get(spell.flags.obsidian.parentComponent);
+
+			if (component && component.method === 'innate' && component.upcast) {
+				scaledAmount += Math.max(0, component.level - spell.data.level);
+			}
+
 			scaledAmount -= spell.data.level;
 		}
 
@@ -286,20 +293,12 @@ export const ObsidianItems = {
 					actor.data.obsidian.components.get(item.flags.obsidian.parentComponent);
 			}
 
-			if (component && component.method === 'item') {
+			if (component && ['item', 'innate'].includes(component.method)) {
 				const effect = actor.data.obsidian.effects.get(component.parentEffect);
 				options.roll = 'fx';
 				options.uuid = effect.uuid;
 				options.spl = item._id;
 				ObsidianItems.roll(actor, options);
-				return;
-			} else if (component && component.method === 'innate') {
-				let scaling = 0;
-				if (component.upcast) {
-					scaling = Math.max(0, component.level - item.data.level);
-				}
-
-				Rolls.create(actor, {roll: 'item', id: item._id, scaling: scaling});
 				return;
 			} else if (item.data.level > 0) {
 				new ObsidianConsumeSlotDialog(

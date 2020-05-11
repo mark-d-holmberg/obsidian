@@ -71,6 +71,10 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 
 			if (flags.source.type === 'item') {
+				if (!this.parent.actor.data.obsidian.itemsByID.get(flags.source.item)) {
+					data.actor.obsidian.spells.custom.push(spell);
+				}
+
 				continue;
 			}
 
