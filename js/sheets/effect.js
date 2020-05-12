@@ -135,22 +135,20 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			data.item.flags.obsidian.effects
 				.flatMap(e => e.components)
-				.filter(c => c.type === 'filter')
-				.forEach(component => {
-					component.isMulti = Effect.determineMulti(component);
-					component.isCollection = component.isMulti && component.multi === 'some';
-					component.availableSelections = this._generateFilterSelections(component);
-				});
-
-			if (this.actor) {
-				data.item.flags.obsidian.effects
-					.flatMap(e => e.components)
-					.filter(c => c.type === 'spells')
-					.forEach(component =>
-						component.spells = component.spells.map(id =>
-							this.actor.data.obsidian.itemsByID.get(id)));
-			}
+				.filter(c => c.type === 'spells')
+				.forEach(component =>
+					component.spells = component.spells.map(id =>
+						this.actor.data.obsidian.itemsByID.get(id)));
 		}
+
+		data.item.flags.obsidian.effects
+			.flatMap(e => e.components)
+			.filter(c => c.type === 'filter')
+			.forEach(component => {
+				component.isMulti = Effect.determineMulti(component);
+				component.isCollection = component.isMulti && component.multi === 'some';
+				component.availableSelections = this._generateFilterSelections(component);
+			});
 
 		return data;
 	}

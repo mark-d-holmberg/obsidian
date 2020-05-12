@@ -5,10 +5,6 @@ let localize;
 export function prepareToggleableEffects (actorData) {
 	localize = game.i18n.localize.bind(game.i18n);
 	for (const effect of actorData.obsidian.toggleable) {
-		if (!effect.toggle) {
-			effect.toggle = {active: true, display: ''};
-		}
-
 		if (!effect.mods.length && !effect.bonuses.length) {
 			continue;
 		}
