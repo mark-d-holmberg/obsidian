@@ -295,17 +295,19 @@ export function addSettingsHook () {
 		}
 
 		const parent = html.find('[data-tab="modules"] .settings-list');
-		const children = parent.children();
+		let header;
 
-		if (children.length > 0
-			&& children[0].tagName === 'p'
-			&& children[0].className === 'notes')
-		{
-			parent.empty();
+		parent.find('h2').each((i, el) => {
+			if (el.innerText === 'Obsidian Character Sheets') {
+				header = $(el);
+			}
+		});
+
+		if (!header) {
+			return;
 		}
 
-		parent.append($(`
-			<h2 class="module-header">Obsidian</h2>
+		header.after($(`
 			<div class="form-group">
 				<label>${game.i18n.localize('OBSIDIAN.SettingsConfSpellLists')}</label>
 				<button type="button" class="obsidian-btn-outline" id="obsidian-config-spell-lists">

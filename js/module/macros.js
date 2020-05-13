@@ -1,6 +1,15 @@
 let dnd5eDrop;
 
 export function addMacroHook () {
+	game.settings.register('obsidian', 'hotbar', {
+		scope: 'world',
+		type: Boolean,
+		default: true,
+		config: true,
+		name: game.i18n.localize('OBSIDIAN.ConfigHotbarTitle'),
+		hint: game.i18n.localize('OBSIDIAN.ConfigHotbarHint')
+	});
+
 	const hooks = Hooks._hooks.hotbarDrop;
 	if (hooks.length) {
 		dnd5eDrop = hooks[0];
@@ -12,7 +21,9 @@ export function addMacroHook () {
 
 async function onHotbarDrop (bar, data, slot) {
 	const actor = game.actors.get(data.actorId);
-	if ((data.type === 'Item' && !getProperty(data.data, 'flags.obsidian.effects')) || !actor) {
+	if ((data.type === 'Item' && !getProperty(data.data, 'flags.obsidian.effects'))
+		|| !actor || !game.settings.get('obsidian', 'hotbar'))
+	{
 		if (dnd5eDrop) {
 			dnd5eDrop(bar, data, slot);
 		}
