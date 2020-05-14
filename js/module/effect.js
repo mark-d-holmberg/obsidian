@@ -220,9 +220,15 @@ export const Effect = {
 			min: Math.max(...mods.map(mod => mod.min)),
 			reroll: Math.max(...mods.map(mod => mod.reroll)),
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
-			mode: mods.map(mod => mod.mode)
+			mode: mods.reduce((acc, mod) => acc.concat(mod.mode), [])
 		};
 	},
+
+	makeModeRollMod: modes => {
+		return {min: 1, reroll: 1, ndice: 0, mode: [].concat(modes)}
+	},
+
+	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),
 
 	filterDamage: (actorData, filter, dmg) => {
 		let attackPred = filter => !Filters.damage.isAttack(filter);

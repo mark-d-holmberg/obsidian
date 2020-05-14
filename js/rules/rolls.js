@@ -9,7 +9,7 @@ import {DAMAGE_CONVERT} from '../migration/convert.js';
 import {ObsidianActor} from '../module/actor.js';
 
 export const Rolls = {
-	abilityCheck: function (actor, ability, skill, adv = [], mods = [], rollMod) {
+	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
 		if (!skill) {
 			const rollMods =
 				actor.data.obsidian.filters.mods(Filters.appliesTo.abilityChecks(ability));
@@ -26,7 +26,6 @@ export const Rolls = {
 			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
 			parens: skill,
 			subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
-			adv: adv,
 			mods: mods,
 			rollMod: rollMod
 		});
@@ -303,7 +302,9 @@ export const Rolls = {
 			if (options.abl === 'init') {
 				Rolls.toChat(actor, Rolls.initiative(actor));
 			} else {
-				Rolls.toChat(actor, Rolls.abilityCheck(actor, options.abl));
+				Rolls.toChat(actor,
+					Rolls.abilityCheck(
+						actor, options.abl, false, [], Effect.sheetGlobalRollMod(actor)));
 			}
 		} else if (roll === 'skl') {
 			if (!options.skl) {
@@ -360,7 +361,7 @@ export const Rolls = {
 			+ (total - rollsTotal).sgnex();
 	},
 
-	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1, rollMod) {
+	d20Roll: function (actor, mods = [], crit = 20, fail = 1, rollMod) {
 		let n = 2;
 		if (rollMod) {
 			n += rollMod.ndice;
@@ -368,14 +369,11 @@ export const Rolls = {
 
 		const roll = new Die(20).roll(n);
 		const rolls = roll.results.map(r => [r]);
+		let adv = [];
 
 		if (rollMod) {
 			Rolls.applyRollModifiers(roll, rolls, rollMod);
-			if (Array.isArray(rollMod.mode)) {
-				adv.push(...rollMod.mode);
-			} else {
-				adv.push(rollMod.mode);
-			}
+			adv = adv.concat(rollMod.mode);
 		}
 
 		const total = mods.reduce((acc, mod) => {
@@ -452,7 +450,6 @@ export const Rolls = {
 	death: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
-		const advantageComponents = [flags.saves.roll, flags.attributes.death.roll];
 		let mods = [{
 			mod: (flags.saves.bonus || 0) + (flags.attributes.death.bonus || 0),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -465,12 +462,15 @@ export const Rolls = {
 		}
 
 		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.deathSaves);
-		const rollMod = Effect.combineRollMods(rollMods);
+		const rollMod =
+			Effect.combineRollMods(
+				rollMods.concat(
+					Effect.makeModeRollMod([flags.saves.roll, flags.attributes.death.roll])));
+
 		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-			adv: advantageComponents,
 			mods: mods,
 			rollMod: rollMod
 		});
@@ -653,7 +653,12 @@ export const Rolls = {
 			actor.data.obsidian.filters.mods(
 				Filters.appliesTo.initiative(flags.attributes.init.ability));
 
-		const rollMod = Effect.combineRollMods(rollMods);
+		const rollMod =
+			Effect.combineRollMods(
+				rollMods.concat(
+					Effect.makeModeRollMod(flags.attributes.init.roll),
+					Effect.sheetGlobalRollMod(actor)));
+
 		const mods = duplicate(flags.attributes.init.rollParts);
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
@@ -681,8 +686,8 @@ export const Rolls = {
 		}
 
 		return Rolls.abilityCheck(
-			actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'),
-			[flags.attributes.init.roll], mods, rollMod);
+			actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'), mods,
+			rollMod);
 	},
 
 	itemRoll: function (actor, item, scaling, withDuration) {
@@ -920,17 +925,19 @@ export const Rolls = {
 		}
 
 		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.savingThrows(save));
-		const rollMod = Effect.combineRollMods(rollMods);
+		const rollMod =
+			Effect.combineRollMods(
+				rollMods.concat(Effect.makeModeRollMod(adv), Effect.sheetGlobalRollMod(actor)));
 
 		return Rolls.simpleRoll(actor, {
 			type: 'save',
 			title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-			adv: adv, mods: saveData.rollParts, rollMod: rollMod
+			mods: saveData.rollParts, rollMod: rollMod
 		});
 	},
 
-	simpleRoll: function (actor, {type, title, parens, subtitle, adv = [], mods = [], rollMod}) {
+	simpleRoll: function (actor, {type, title, parens, subtitle, mods = [], rollMod}) {
 		return {
 			flags: {
 				obsidian: {
@@ -938,7 +945,7 @@ export const Rolls = {
 					title: title,
 					parens: parens,
 					subtitle: subtitle,
-					results: [Rolls.d20Roll(actor, adv, mods, 20, 1, rollMod)]
+					results: [Rolls.d20Roll(actor, mods, 20, 1, rollMod)]
 				}
 			}
 		}
@@ -967,10 +974,13 @@ export const Rolls = {
 			actor.data.obsidian.filters.mods(
 				Filters.appliesTo.skillChecks(tool, key, skill.ability));
 
-		const rollMod = Effect.combineRollMods(rollMods);
-		return Rolls.abilityCheck(
-			actor, skill.ability, skillName, [flags.skills.roll, skill.roll], skill.rollParts,
-			rollMod);
+		const rollMod =
+			Effect.combineRollMods(
+				rollMods.concat(
+					Effect.makeModeRollMod([flags.skills.roll, skill.roll]),
+					Effect.sheetGlobalRollMod(actor)));
+
+		return Rolls.abilityCheck(actor, skill.ability, skillName, skill.rollParts, rollMod);
 	},
 
 	toChat: async function (actor, ...msgs) {
@@ -1046,12 +1056,12 @@ export const Rolls = {
 
 	toHitRoll: function (actor, hit, extraMods = []) {
 		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.attackRolls(hit));
-		let rollMod = Effect.combineRollMods(rollMods);
+		let rollMod = Effect.combineRollMods(rollMods.concat(Effect.sheetGlobalRollMod(actor)));
 
 		if (hit.rollMod) {
 			rollMod = Effect.combineRollMods([rollMod, hit.rollMod]);
 		}
 
-		return Rolls.d20Roll(actor, [], [...hit.rollParts, ...extraMods], hit.crit, 1, rollMod);
+		return Rolls.d20Roll(actor, [...hit.rollParts, ...extraMods], hit.crit, 1, rollMod);
 	}
 };
