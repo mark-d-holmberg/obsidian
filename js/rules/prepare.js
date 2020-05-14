@@ -123,6 +123,7 @@ export const Prepare = {
 			hit.rollParts.push(...bonusToParts(actorData, hit.extraBonus));
 		}
 
+		hit.rollParts = highestProficiency(hit.rollParts);
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		hit.attackType =
 			game.i18n.localize(

@@ -105,6 +105,7 @@ Rules.EFFECT_ADD_SPELLS_METHOD = ['innate', 'known', 'prep', 'list', 'item'];
 Rules.EFFECT_ADD_SPELLS_SOURCE = ['list', 'individual'];
 Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
 Rules.EFFECT_BONUS_LEVEL = ['chr', 'cls'];
+Rules.EFFECT_BONUS_VALUES = ['abl', 'prof', 'chr', 'cls'];
 Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
 Rules.EFFECT_CONSUME_TARGETS = [
 	'this-effect', 'this-item', 'item', 'feat', 'spell', 'qty'

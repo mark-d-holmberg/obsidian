@@ -158,7 +158,11 @@ export const Effect = {
 			class: '',
 			text: '',
 			ndice: 0,
-			die: 4
+			die: 4,
+			constant: 0,
+			operator: 'plus',
+			value: '',
+			formula: false
 		};
 	},
 

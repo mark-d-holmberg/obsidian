@@ -127,8 +127,21 @@ export function bonusToParts (actorData, bonus) {
 		parts.push({mod: 0, ndice: bonus.ndice, die: bonus.die});
 	}
 
-	if (bonus.bonus !== 0) {
-		parts.push({mod: bonus.bonus, name: bonusName(actorData, bonus)});
+	let constant = bonus.bonus || 0;
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.constant)
+		&& bonus.constant !== 0
+		&& bonus.operator === 'plus')
+	{
+		constant += bonus.constant;
+	}
+
+	if (constant !== 0) {
+		parts.push({mod: constant, name: bonusName(actorData, bonus)});
+	}
+
+	let multiplier = 1;
+	if (bonus.operator === 'mult') {
+		multiplier = bonus.constant || 0;
 	}
 
 	if (!OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
@@ -140,18 +153,28 @@ export function bonusToParts (actorData, bonus) {
 		});
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability)) {
+	if (bonus.formula && bonus.value === 'prof') {
 		parts.push({
-			mod: actorData.data.abilities[bonus.ability].mod,
+			mod: Math.floor(multiplier * actorData.data.attributes.prof),
+			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
+			proficiency: true,
+			value: multiplier
+		});
+	}
+
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability) && (!bonus.formula || bonus.value === 'abl')) {
+		parts.push({
+			mod: Math.floor(multiplier * actorData.data.abilities[bonus.ability].mod),
 			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
 		});
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.level)) {
+	const levelKey = bonus.formula ? bonus.value : bonus.level;
+	if (['chr', 'cls'].includes(levelKey)) {
 		let level;
-		if (bonus.level === 'chr') {
+		if (levelKey === 'chr') {
 			level = actorData.data.details.level;
-		} else if (bonus.level === 'cls') {
+		} else if (levelKey === 'cls') {
 			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
 			if (cls) {
 				level = cls.data.levels;
@@ -159,7 +182,7 @@ export function bonusToParts (actorData, bonus) {
 		}
 
 		if (level !== undefined) {
-			parts.push({mod: level, name: bonusName(actorData, bonus)});
+			parts.push({mod: Math.floor(multiplier * level), name: bonusName(actorData, bonus)});
 		}
 	}
 

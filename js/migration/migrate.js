@@ -9,6 +9,7 @@ import {v1} from './v1.js';
 import {v3} from './v3.js';
 import {v4} from './v4.js';
 import {v5} from './v5.js';
+import {v6} from './v6.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -175,6 +176,10 @@ export const Migrate = {
 
 		if (data.type === 'feat' && data.flags.obsidian.version < 6 && source !== 'core') {
 			Migrate.v5.convertActivation(data);
+		}
+
+		if (data.flags.obsidian.version < 7 && source !== 'core') {
+			Migrate.v6.convertBonuses(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -600,6 +605,7 @@ Migrate.v1 = v1;
 Migrate.v3 = v3;
 Migrate.v4 = v4;
 Migrate.v5 = v5;
+Migrate.v6 = v6;
 
 function lazyConvert () {
 	if (CONVERT.profs) {

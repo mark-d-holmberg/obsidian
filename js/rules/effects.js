@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 
 let localize;
+const multipliers = {0.5: 'OBSIDIAN.Half', 2: 'OBSIDIAN.Twice'}
 
 export function prepareToggleableEffects (actorData) {
 	localize = game.i18n.localize.bind(game.i18n);
@@ -49,9 +50,17 @@ function formatBonus (actorData, bonus) {
 		parts.push(`${localize(i18n)} ${ndice}d${bonus.die}`);
 	}
 
-	if (bonus.bonus !== 0) {
+	let constant = bonus.bonus || 0;
+	if (!OBSIDIAN.notDefinedOrEmpty(bonus.constant)
+		&& bonus.constant !== 0
+		&& bonus.operator === 'plus')
+	{
+		constant += bonus.constant;
+	}
+
+	if (constant !== 0) {
 		let operator = '&plus;';
-		let mod = bonus.bonus;
+		let mod = constant;
 
 		if (mod < 0) {
 			operator = '&minus;';
@@ -61,25 +70,43 @@ function formatBonus (actorData, bonus) {
 		parts.push(`<strong>${operator}${mod}</strong>`);
 	}
 
-	if (bonus.prof > 0) {
-		const key = OBSIDIAN.Rules.PLUS_PROF[bonus.prof];
-		parts.push(localize(`OBSIDIAN.BonusProf-${key}`));
+	const bonusApplies = bonus.operator === 'plus' || bonus.constant !== 0;
+	let multiplier = '';
+
+	if (bonus.operator === 'mult') {
+		const naturalLang = multipliers[bonus.constant];
+		if (naturalLang) {
+			multiplier = localize(naturalLang);
+		} else if (bonus.constant !== 1) {
+			multiplier = localize(`${bonus.constant} &times;`);
+		}
+
+		multiplier += ' ';
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability)) {
-		parts.push(
-			localize('OBSIDIAN.BonusAbilityMod')
-				.format(localize(`OBSIDIAN.Ability-${bonus.ability}`)));
+	let addOrSubtract = localize('OBSIDIAN.AddLC');
+	if (bonusApplies && bonus.constant < 0) {
+		addOrSubtract = localize('OBSIDIAN.Subtract');
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.level)) {
-		if (bonus.level === 'chr') {
-			parts.push(localize('OBSIDIAN.BonusCharLevel'));
-		} else if (bonus.level === 'cls') {
-			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.cls);
-			if (cls) {
-				parts.push(localize('OBSIDIAN.BonusClassLevel').format(cls.label));
-			}
+	if (bonusApplies && bonus.value === 'prof') {
+		parts.push(localize('OBSIDIAN.BonusProf').format(addOrSubtract, multiplier));
+	}
+
+	if (bonusApplies && bonus.value === 'abl') {
+		parts.push(localize('OBSIDIAN.BonusAbilityMod')
+			.format(addOrSubtract, multiplier, localize(`OBSIDIAN.Ability-${bonus.ability}`)));
+	}
+
+	if (bonusApplies && bonus.value === 'chr') {
+		parts.push(localize('OBSIDIAN.BonusCharLevel').format(addOrSubtract, multiplier));
+	}
+
+	if (bonusApplies && bonus.value === 'cls') {
+		const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
+		if (cls) {
+			parts.push(localize('OBSIDIAN.BonusClassLevel')
+				.format(addOrSubtract, multiplier, cls.flags.obsidian.label));
 		}
 	}
 

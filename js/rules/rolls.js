@@ -351,12 +351,13 @@ export const Rolls = {
 			return Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods);
 		}
 
+		const rollsTotal = extraRolls.reduce((acc, mod) => acc + mod.roll.total, 0);
 		return '1d20 '
 			+ extraRolls.map(mod => `${mod.sgn} ${mod.ndice}d${mod.die}`).join(' ')
 			+ Rolls.compileBreakdown(mods) + ' = '
 			+ Rolls.compileRerolls(r, crit)
 			+ extraRolls.map(mod => ` ${mod.sgn} (${mod.roll.results.join('+')})`).join('')
-			+ total.sgnex();
+			+ (total - rollsTotal).sgnex();
 	},
 
 	d20Roll: function (actor, adv = [], mods = [], crit = 20, fail = 1, rollMod) {
