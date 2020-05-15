@@ -11,10 +11,9 @@ import {ObsidianActor} from '../module/actor.js';
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
 		if (!skill) {
-			const rollMods =
-				actor.data.obsidian.filters.mods(Filters.appliesTo.abilityChecks(ability));
+			rollMod = Effect.determineRollMods(actor, rollMod, mode =>
+				Filters.appliesTo.abilityChecks(ability, mode));
 
-			rollMod = Effect.combineRollMods(rollMods);
 			mods.push({
 				mod: actor.data.data.abilities[ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
@@ -402,9 +401,7 @@ export const Rolls = {
 		});
 
 		Rolls.annotateCrits(crit, fail, results);
-		Rolls.annotateAdvantage(
-			determineAdvantage(actor.data.flags.obsidian.sheet.roll, ...adv),
-			results);
+		Rolls.annotateAdvantage(determineAdvantage(...adv), results);
 
 		return results;
 	},
@@ -461,11 +458,12 @@ export const Rolls = {
 			mods = highestProficiency(mods);
 		}
 
-		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.deathSaves);
 		const rollMod =
-			Effect.combineRollMods(
-				rollMods.concat(
-					Effect.makeModeRollMod([flags.saves.roll, flags.attributes.death.roll])));
+			Effect.determineRollMods(
+				actor,
+				Effect.makeModeRollMod([
+					flags.sheet.roll, flags.saves.roll, flags.attributes.death.roll]),
+				mode => Filters.appliesTo.deathSaves(mode));
 
 		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',
@@ -649,17 +647,12 @@ export const Rolls = {
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
-		const rollMods =
-			actor.data.obsidian.filters.mods(
-				Filters.appliesTo.initiative(flags.attributes.init.ability));
-
-		const rollMod =
-			Effect.combineRollMods(
-				rollMods.concat(
-					Effect.makeModeRollMod(flags.attributes.init.roll),
-					Effect.sheetGlobalRollMod(actor)));
-
 		const mods = duplicate(flags.attributes.init.rollParts);
+		const rollMod =
+			Effect.determineRollMods(
+				actor,
+				Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
+				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			mods.push({
@@ -924,10 +917,11 @@ export const Rolls = {
 			adv.push(saveData.roll);
 		}
 
-		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.savingThrows(save));
 		const rollMod =
-			Effect.combineRollMods(
-				rollMods.concat(Effect.makeModeRollMod(adv), Effect.sheetGlobalRollMod(actor)));
+			Effect.determineRollMods(
+				actor,
+				Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
+				mode => Filters.appliesTo.savingThrows(save, mode));
 
 		return Rolls.simpleRoll(actor, {
 			type: 'save',
@@ -970,15 +964,11 @@ export const Rolls = {
 			key = `${list}.${idx}`;
 		}
 
-		const rollMods =
-			actor.data.obsidian.filters.mods(
-				Filters.appliesTo.skillChecks(tool, key, skill.ability));
-
 		const rollMod =
-			Effect.combineRollMods(
-				rollMods.concat(
-					Effect.makeModeRollMod([flags.skills.roll, skill.roll]),
-					Effect.sheetGlobalRollMod(actor)));
+			Effect.determineRollMods(
+				actor,
+				Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
+				mode => Filters.appliesTo.skillChecks(tool, key, skill.ability, mode));
 
 		return Rolls.abilityCheck(actor, skill.ability, skillName, skill.rollParts, rollMod);
 	},
@@ -1055,12 +1045,13 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraMods = []) {
-		const rollMods = actor.data.obsidian.filters.mods(Filters.appliesTo.attackRolls(hit));
-		let rollMod = Effect.combineRollMods(rollMods.concat(Effect.sheetGlobalRollMod(actor)));
-
+		const rollMods = [Effect.sheetGlobalRollMod(actor)];
 		if (hit.rollMod) {
-			rollMod = Effect.combineRollMods([rollMod, hit.rollMod]);
+			rollMods.push(hit.rollMod);
 		}
+
+		const rollMod = Effect.determineRollMods(actor, Effect.combineRollMods(rollMods), mode =>
+			Filters.appliesTo.attackRolls(hit, mode));
 
 		return Rolls.d20Roll(actor, [...hit.rollParts, ...extraMods], hit.crit, 1, rollMod);
 	}

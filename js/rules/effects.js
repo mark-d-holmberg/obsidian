@@ -209,6 +209,12 @@ function formatFilter (filter) {
 		}
 	}
 
+	if (parts.length && !OBSIDIAN.notDefinedOrEmpty(filter.mode)) {
+		parts[parts.length - 1] += ' ' +
+			localize('OBSIDIAN.WhenRollingAt')
+				.format(localize(`OBSIDIAN.Roll-${filter.mode}`).toLowerCase());
+	}
+
 	return oxfordComma(parts);
 }
 

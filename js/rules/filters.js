@@ -21,6 +21,8 @@ export const Filters = {
 	isSpeed: filter => filter.filter === 'score' && filter.score === 'speed',
 	isDC: filter => filter.filter === 'score' && filter.score === 'dc',
 
+	rollingAt: (filter, mode) => OBSIDIAN.notDefinedOrEmpty(filter.mode) || filter.mode === mode,
+
 	filterEffects: (effects, collection, pred) =>
 		effects.filter(effect => effect.toggle && effect.toggle.active && effect[collection].length)
 			.filter(effect => !effect.filters.length || effect.filters.some(pred))
@@ -30,23 +32,31 @@ export const Filters = {
 	bonuses: effects => pred => Filters.filterEffects(effects, 'bonuses', pred),
 
 	appliesTo: {
-		abilityChecks: ability => filter =>
+		abilityChecks: (ability, mode) => filter =>
 			Filters.isCheck(filter)
 			&& Filters.isAbility(filter)
-			&& Filters.inCollection(filter, ability),
+			&& Filters.inCollection(filter, ability)
+			&& Filters.rollingAt(filter, mode),
 
 		abilityScores: ability => filter =>
 			Filters.isAbilityScore(filter) && Filters.inCollection(filter, ability),
 
-		attackRolls: attack => {
+		attackRolls: (attack, mode) => {
 			const key = attack.attack[0] + attack.category[0];
-			return filter => Filters.isAttack(filter) && Filters.inCollection(filter, key);
+			return filter =>
+				Filters.isAttack(filter)
+				&& Filters.inCollection(filter, key)
+				&& Filters.rollingAt(filter, mode);
 		},
 
-		deathSaves: filter => Filters.isSave(filter) && Filters.inCollection(filter, 'death'),
+		deathSaves: mode => filter =>
+			Filters.isSave(filter)
+			&& Filters.inCollection(filter, 'death')
+			&& Filters.rollingAt(filter, mode),
 
-		initiative: ability => filter =>
+		initiative: (ability, mode) => filter =>
 			Filters.isCheck(filter)
+			&& Filters.rollingAt(filter, mode)
 			&& (Filters.isInit(filter)
 				|| (Filters.isAbility(filter) && Filters.inCollection(filter, ability))),
 
@@ -62,16 +72,20 @@ export const Filters = {
 			return filter => Filters.isDC(filter) && pred(filter);
 		},
 
-		savingThrows: save => filter =>
-			Filters.isSave(filter) && Filters.inCollection(filter, save),
+		savingThrows: (save, mode) => filter =>
+			Filters.isSave(filter)
+			&& Filters.inCollection(filter, save)
+			&& Filters.rollingAt(filter, mode),
 
-		skillChecks: (tool, key, ability) => filter =>
+		skillChecks: (tool, key, ability, mode) => filter =>
 			Filters.isCheck(filter)
+			&& Filters.rollingAt(filter, mode)
 			&& ((Filters.isSkillOrTool(filter, tool) && Filters.inCollection(filter, key))
 			|| (Filters.isAbility(filter) && Filters.inCollection(filter, ability))),
 
-		spellAttacks: filter =>
+		spellAttacks: (filter, mode) =>
 			Filters.isAttack(filter)
+			&& Filters.rollingAt(filter, mode)
 			&& filter.multi === 'some'
 			&& filter.collection.every(item => item.key[1] === 's'),
 

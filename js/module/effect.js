@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {Filters} from '../rules/filters.js';
+import {determineAdvantage} from '../rules/prepare.js';
 
 export const Effect = {
 	create: function () {
@@ -177,7 +178,8 @@ export const Effect = {
 			dmg: 'damage',
 			multi: 'any',
 			some: '',
-			collection: []
+			collection: [],
+			mode: ''
 		};
 	},
 
@@ -222,6 +224,22 @@ export const Effect = {
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
 			mode: mods.reduce((acc, mod) => acc.concat(mod.mode), [])
 		};
+	},
+
+	determineRollMods: (actor, globalMod, pred) => {
+		// Because roll mods themselves can change the mode of a roll, we have
+		// to do two passes over the available modifiers. The first pass
+		// collects all the mods that aren't contingent on the mode of the
+		// roll. Then, in case one of those roll mods then results in changing
+		// the mode of the roll, we do another pass with the updated mode to
+		// collect any roll mods that might be contingent on that mode too.
+
+		const mods = actor.data.obsidian.filters.mods;
+		const firstPass = mods(pred());
+		const adv = determineAdvantage(...Effect.combineRollMods(firstPass.concat(globalMod)).mode);
+		const mode = adv > 0 ? 'adv' : adv === 0 ? 'reg' : 'dis';
+		const secondPass = mods(pred(mode));
+		return Effect.combineRollMods(secondPass.concat(globalMod));
 	},
 
 	makeModeRollMod: modes => {

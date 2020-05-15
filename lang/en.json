@@ -862,5 +862,7 @@
 	"OBSIDIAN.BonusValue-abl": "Ability",
 	"OBSIDIAN.BonusValue-prof": "Proficiency",
 	"OBSIDIAN.BonusValue-chr": "Character Level",
-	"OBSIDIAN.BonusValue-cls": "Class Level"
+	"OBSIDIAN.BonusValue-cls": "Class Level",
+	"OBSIDIAN.RollingAt": "Rolling At",
+	"OBSIDIAN.WhenRollingAt": "when rolling at {0}"
 }
