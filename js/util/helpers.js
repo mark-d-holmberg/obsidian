@@ -33,6 +33,16 @@ export function registerHandlebarHelpers () {
 		return str ? str.capitalise() : '';
 	});
 
+	Handlebars.registerHelper('checkbox-grid', function (selections, selected, ...prefix) {
+		selected = new Set(selected.map(item => item.key));
+		prefix.pop();
+
+		return new Handlebars.SafeString(Object.entries(selections).map(([key, val]) => {
+			const options = {hash: {content: val, checked: selected.has(key)}};
+			return fancyCheckbox(...prefix, key, options);
+		}).join(''));
+	});
+
 	Handlebars.registerHelper('count', function (ar) {
 		return ar.length;
 	});
@@ -60,32 +70,7 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('fancy-checkbox', function (...args) {
-		const options = args.pop();
-		const prop = args.join('.');
-
-		return new Handlebars.SafeString(`
-		<div class="fancy-checkbox" data-bound="${prop}"
-			${options.hash.style ? ` style="${options.hash.style}"` : ''}
-			${options.hash.show ? ` data-show="${options.hash.show}"` : ''}
-			${options.hash.hide ? ` data-hide="${options.hash.hide}"` : ''}
-			${options.hash.selectorParent
-				? ` data-selector-parent="${options.hash.selectorParent}"`
-				: ''}>
-			<div class="checkbox-container">
-				<div class="checkbox-inner-box"></div>
-				<div class="checkmark-container">
-					<div class="checkmark">
-						<div class="checkmark-short"></div>
-						<div class="checkmark-long"></div>
-					</div>
-				</div>
-			</div>
-			<div class="checkbox-content">${game.i18n.localize(options.hash.content)}</div>
-		</div>
-		<input type="checkbox" name="${prop}" class="obsidian-hidden"
-		       ${options.hash.checked ? 'checked' : ''}
-		       ${options.hash.selector ? `data-selector="${options.hash.selector}"` : ''}>
-	`);
+		return new Handlebars.SafeString(fancyCheckbox(...args));
 	});
 
 	Handlebars.registerHelper('filter', function (...args) {
@@ -426,4 +411,33 @@ function formatRecharge (recharge) {
 	} else {
 		return game.i18n.localize(`OBSIDIAN.Recharge-${recharge.time}`);
 	}
+}
+
+function fancyCheckbox (...args) {
+	const options = args.pop();
+	const prop = args.join('.');
+
+	return `
+	<div class="fancy-checkbox" data-bound="${prop}"
+		${options.hash.style ? ` style="${options.hash.style}"` : ''}
+		${options.hash.show ? ` data-show="${options.hash.show}"` : ''}
+		${options.hash.hide ? ` data-hide="${options.hash.hide}"` : ''}
+		${options.hash.selectorParent
+			? ` data-selector-parent="${options.hash.selectorParent}"`
+			: ''}>
+		<div class="checkbox-container">
+			<div class="checkbox-inner-box"></div>
+			<div class="checkmark-container">
+				<div class="checkmark">
+					<div class="checkmark-short"></div>
+					<div class="checkmark-long"></div>
+				</div>
+			</div>
+		</div>
+		<div class="checkbox-content">${game.i18n.localize(options.hash.content)}</div>
+	</div>
+	<input type="checkbox" name="${prop}" class="obsidian-hidden"
+	       ${options.hash.checked ? 'checked' : ''}
+	       ${options.hash.selector ? `data-selector="${options.hash.selector}"` : ''}>
+	`;
 }

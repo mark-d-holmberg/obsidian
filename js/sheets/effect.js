@@ -69,8 +69,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-spell-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
 		html.find('.obsidian-rm-provide-spell').click(this._onRemoveSpell.bind(this));
 		html.find('.obsidian-provide-spell-body').click(this._onEditSpell.bind(this));
-		html.find('.obsidian-add-filter-collection').click(this._onAddToFilterCollection.bind(this));
-		html.find('.obsidian-rm-filter-collection').click(this._onRemoveFromFilterCollection.bind(this));
 		html.find('summary').click(this._saveCategoryStates.bind(this));
 
 		if (!this._addedClickHandler) {
@@ -168,14 +166,31 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	}
 
 	get _formData () {
-		const formData = super._formData;
-		const expanded = OBSIDIAN.updateArrays(this.item.data, formData);
+		const expanded = OBSIDIAN.updateArrays(this.item.data, super._formData);
+		for (const effect of expanded['flags.obsidian.effects']) {
+			for (const component of effect.components) {
+				if (component.type !== 'filter' || !component.collection) {
+					continue;
+				}
 
-		if (Object.keys(expanded).length > 0) {
-			return expanded;
+				const collection = [];
+				for (const prop in component.collection) {
+					if (component.collection.hasOwnProperty(prop)
+						&& !Number.isNumeric(prop)
+						&& component.collection[prop])
+					{
+						// TODO: Migration to either convert collections to
+						// objects or to just store the key as a string in the
+						// array, rather than an object.
+						collection.push({key: prop});
+					}
+				}
+
+				component.collection = collection;
+			}
 		}
 
-		return formData;
+		return expanded;
 	}
 
 	/**
@@ -702,17 +717,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	async _updateObject (event, formData) {
+		formData = this._formData;
 		if (getProperty(this.item, 'data.flags.obsidian.isEmbedded')
 			&& this.item.options.parentItem
 			&& this.item.options.parentComponent
 			&& !this.actor)
 		{
-			const newData =
-				mergeObject(
-					this.item.data,
-					expandObject(OBSIDIAN.updateArrays(this.item.data, formData)),
-					{inplace: false});
-
+			const newData = mergeObject(this.item.data, expandObject(formData), {inplace: false});
 			const effects = duplicate(this.item.options.parentItem.data.flags.obsidian.effects);
 			const component =
 				effects

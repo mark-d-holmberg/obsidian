@@ -72,18 +72,23 @@ export class ObsidianItemSheet extends ItemSheet {
 	}
 
 	get _formData () {
-		const form = this.element.find('form')[0];
-		const formData = validateForm(form);
+		const formData = this._getFormData(this.element.find('form')[0]);
+		const types = formData._dtypes;
 
-		Object.values(this.editors).forEach(ed => {
-			if (ed.mce && ed.changed) {
-				formData[ed.target] = ed.mce.getContent();
+		return Array.from(formData).reduce((data, [key, val]) => {
+			const type = types[key];
+			if (type === 'Number') {
+				data[key] = val === '' ? null : Number(val);
+			} else if (type === 'Boolean') {
+				data[key] = val === 'true';
+			} else if (type === 'Radio') {
+				data[key] = JSON.parse(val);
 			} else {
-				delete formData[ed.target];
+				data[key] = val;
 			}
-		});
 
-		return formData;
+			return data;
+		}, {});
 	}
 
 	/**

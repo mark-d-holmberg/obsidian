@@ -53,7 +53,13 @@
 			{{/if}}
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	{{#if isCollection}}
+	<div class="obsidian-checkbox-grid obsidian-stacked-row">
+		{{checkbox-grid availableSelections collection prefix 'collection'}}
+	</div>
+	{{/if}}
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline
+	     {{#unless isCollection}}obsidian-stacked-row{{/unless}}"
 	     data-selector-parent="{{prefix}}.filter" data-show="roll">
 		<div class="obsidian-fullwidth">
 			<label class="obsidian-inline">
@@ -69,31 +75,4 @@
 			</label>
 		</div>
 	</div>
-	{{#if isCollection}}
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
-			<button class="obsidian-btn-positive obsidian-btn-sm obsidian-add-filter-collection"
-			        type="button">
-				{{localize 'OBSIDIAN.Add'}}
-			</button>
-			<select name="{{prefix}}.some" data-selector="{{prefix}}.some">
-				{{#select some}}
-					{{#each availableSelections}}
-						<option value="{{@key}}">{{this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<input type="text" class="obsidian-input-compact" data-selector-parent="{{prefix}}.some"
-			       data-show="custom">
-		</div>
-	</div>
-	<div class="obsidian-item-drop{{#unless collection.length}} obsidian-empty{{/unless}}">
-		{{#each collection}}
-			<div class="obsidian-item-drop-pill" data-key="{{key}}">
-				<div class="obsidian-item-drop-pill-body">{{label}}</div>
-				<div class="obsidian-item-drop-pill-rm obsidian-rm-filter-collection">&times;</div>
-			</div>
-		{{/each}}
-	</div>
-	{{/if}}
 </fieldset>
