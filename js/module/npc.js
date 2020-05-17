@@ -1,4 +1,4 @@
-import {ActorSheet5eNPC} from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
+import ActorSheet5eNPC from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';

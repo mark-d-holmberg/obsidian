@@ -1,6 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {Reorder} from './reorder.js';
-import {ActorSheet5eCharacter} from '../../../../systems/dnd5e/module/actor/sheets/character.js';
+import ActorSheet5eCharacter from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';

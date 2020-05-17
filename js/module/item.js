@@ -1,4 +1,4 @@
-import {Item5e} from '../../../../systems/dnd5e/module/item/entity.js';
+import Item5e from '../../../../systems/dnd5e/module/item/entity.js';
 import {Prepare} from '../rules/prepare.js';
 import {Schema} from './schema.js';
 import {spellNotes} from '../rules/spells.js';

@@ -2,7 +2,7 @@ import {OBSIDIAN} from '../global.js';
 import {determineAdvantage} from './prepare.js';
 import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
-import {AbilityTemplate} from '../../../../systems/dnd5e/module/pixi/ability-template.js';
+import AbilityTemplate from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {handleDurations} from '../module/duration.js';
 import {DAMAGE_CONVERT} from '../migration/convert.js';
