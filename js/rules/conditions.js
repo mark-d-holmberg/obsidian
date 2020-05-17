@@ -47,20 +47,4 @@ export function patchConditions () {
 			cached.apply(this, arguments);
 		};
 	})();
-
-	Token.prototype._onUpdate = (function () {
-		const cached = Token.prototype._onUpdate;
-		return function () {
-			cached.apply(this, arguments);
-			this.drawEffects();
-		};
-	})();
-
-	Token.prototype._onUpdateBaseActor = (function () {
-		const cached = Token.prototype._onUpdateBaseActor;
-		return function () {
-			cached.apply(this, arguments);
-			this.drawEffects();
-		};
-	})();
 }

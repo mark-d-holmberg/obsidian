@@ -1,6 +1,7 @@
 import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
 import {Rolls} from '../rules/rolls.js';
+import {Schema} from './schema.js';
 
 export function initDurations () {
 	Hooks.on('controlToken', renderDurations);
@@ -50,7 +51,8 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 					duration: true,
 					ref: effect,
 					remaining: rounds,
-					scaledAmount: scaledAmount
+					scaledAmount: scaledAmount,
+					version: Schema.VERSION
 				}
 			}
 		};

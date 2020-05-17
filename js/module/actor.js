@@ -118,6 +118,13 @@ export class ObsidianActor extends Actor5e {
 
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data);
+
+		if (this.isToken) {
+			this.token.drawEffects();
+		} else if (canvas) {
+			this.getActiveTokens(true).forEach(token => token.drawEffects());
+		}
+
 		return this.data;
 	}
 
