@@ -167,6 +167,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 	get _formData () {
 		const expanded = OBSIDIAN.updateArrays(this.item.data, super._formData);
+		if (!expanded['flags.obsidian.effects']) {
+			return expanded;
+		}
+
 		for (const effect of expanded['flags.obsidian.effects']) {
 			for (const component of effect.components) {
 				if (component.type !== 'filter' || !component.collection) {
