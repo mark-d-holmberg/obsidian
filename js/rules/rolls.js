@@ -855,7 +855,7 @@ export const Rolls = {
 				return acc + rolls[mode].reduce((acc, r) => acc + r.last(), 0);
 			}
 
-			return 0;
+			return acc;
 		}, 0) + damage.flatMap(dmg => dmg.rollParts).reduce((acc, mod) => acc + mod.mod, 0);
 
 		const results = mode => damage.map((dmg, i) => {
