@@ -8,6 +8,7 @@ export class ObsidianItemSheet extends ItemSheet {
 		options.classes = options.classes.concat(['item', 'dialog', 'obsidian-window']);
 		options.resizable = false;
 		options.submitOnChange = false;
+		options.scrollY = (options.scrollY || []).concat('.window-content');
 		return options;
 	}
 
@@ -89,33 +90,6 @@ export class ObsidianItemSheet extends ItemSheet {
 
 			return data;
 		}, {});
-	}
-
-	/**
-	 * @private
-	 */
-	_saveScrollPosition () {
-		if (this.element) {
-			this._scroll = this.element.find('.window-content').prop('scrollTop');
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	async _render (force = false, options = {}) {
-		this._saveScrollPosition();
-		await super._render(force, options);
-		this._restoreScrollPosition();
-	}
-
-	/**
-	 * @private
-	 */
-	_restoreScrollPosition () {
-		if (this.element) {
-			this.element.find('.window-content').prop('scrollTop', this._scroll);
-		}
 	}
 
 	/**

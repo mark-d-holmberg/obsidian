@@ -36,6 +36,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		options.width = 560;
 		options.height = 768;
 		options.template = 'modules/obsidian/html/sheets/effect.html';
+		options.scrollY = options.scrollY.concat('.obsidian-effects-tray');
 		return options;
 	}
 
