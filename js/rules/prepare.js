@@ -209,10 +209,14 @@ export const Prepare = {
 		}
 	},
 
-	calculateSkill: function (data, flags, skill) {
+	calculateSkill: function (data, flags, skill, original) {
 		let prof = skill.value;
 		if (prof === 0 && flags.skills.joat) {
 			prof = .5;
+		}
+
+		if (prof > 0.5 && original && original.value > prof) {
+			prof = original.value;
 		}
 
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
@@ -646,10 +650,15 @@ export const Prepare = {
 		}
 	},
 
-	saves: function (actorData, data, flags) {
+	saves: function (actorData, data, flags, originalSaves) {
 		for (const [id, save] of Object.entries(data.abilities)) {
 			if (!flags.saves[id]) {
 				flags.saves[id] = {};
+			}
+
+			let original;
+			if (originalSaves) {
+				original = originalSaves[id];
 			}
 
 			if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
@@ -685,10 +694,15 @@ export const Prepare = {
 			}
 
 			save.save = flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0);
+			if (flags.saves[id].rollParts.find(p => p.proficiency).value > 0
+				&& original && original.save > save.save)
+			{
+				save.save = original.save;
+			}
 		}
 	},
 
-	skills: function (actorData, data, flags) {
+	skills: function (actorData, data, flags, originalSkills) {
 		actorData.obsidian.skills = {};
 		for (let [id, skill] of
 			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
@@ -705,9 +719,15 @@ export const Prepare = {
 				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 			}
 
+			let original;
 			const key = custom ? `custom.${id}` : id;
+
+			if (originalSkills) {
+				original = originalSkills[key];
+			}
+
 			actorData.obsidian.skills[key] = skill;
-			Prepare.calculateSkill(data, flags, skill);
+			Prepare.calculateSkill(data, flags, skill, original);
 
 			if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 				const bonuses =
@@ -731,6 +751,12 @@ export const Prepare = {
 			}
 
 			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			if (skill.rollParts.find(p => p.proficiency).value > 0.5
+				&& original && original.mod > skill.mod)
+			{
+				skill.mod = original.mod;
+			}
+
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 			skill.proficiency = skill.rollParts.find(part => part.proficiency);

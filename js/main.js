@@ -18,6 +18,7 @@ import {patchConditions} from './rules/conditions.js';
 import {ObsidianNPC} from './module/npc.js';
 import {checkVersion} from './migration/run.js';
 import {refreshNPC} from './rules/npc.js';
+import {addTransformHook} from './rules/transform.js';
 
 runPatches();
 
@@ -59,6 +60,7 @@ Hooks.once('ready', function () {
 	loadSpellData();
 	addSocketListener();
 	initDurations();
+	addTransformHook();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {

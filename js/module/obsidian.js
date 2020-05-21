@@ -457,13 +457,6 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 */
-	_setGlobalRoll (roll) {
-
-	}
-
-	/**
-	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setSaveProficiency (evt) {

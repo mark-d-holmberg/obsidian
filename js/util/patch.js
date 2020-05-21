@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../rules/rolls.js';
+import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 
 export function runPatches () {
 	Draggable.prototype._onDragMouseDown = (function () {
@@ -57,7 +58,18 @@ export function runPatches () {
 		return this;
 	};
 
+	patchTransformInto();
 	patchChatMessage();
+}
+
+function patchTransformInto () {
+	let fn = Actor5e.prototype.transformInto.toString();
+	fn = '(async function' + fn.substring(5) + ')';
+	fn = fn.replace(
+		'const newActor =',
+		'Hooks.callAll(\'transformActor\', this, target, d);const newActor =');
+
+	Actor5e.prototype.transformInto = eval(fn);
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {

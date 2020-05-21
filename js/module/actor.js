@@ -92,12 +92,30 @@ export class ObsidianActor extends Actor5e {
 		this.data.obsidian.effects = new Map();
 		this.data.obsidian.components = new Map();
 
+		let originalSkills;
+		let originalSaves;
+
+		if (this.isPolymorphed) {
+			const transformOptions = this.getFlag('dnd5e', 'transformOptions');
+			const original = game.actors?.get(this.getFlag('dnd5e', 'originalActor'));
+
+			if (original) {
+				if (transformOptions.mergeSaves) {
+					originalSaves = original.data.data.abilities;
+				}
+
+				if (transformOptions.mergeSkills) {
+					originalSkills = original.data.obsidian.skills;
+				}
+			}
+		}
+
 		prepareFilters(this.data);
 		prepareInventory(this.data);
 		Prepare.abilities(this.data);
 		Prepare.conditions(this);
-		Prepare.skills(this.data, data, flags);
-		Prepare.saves(this.data, data, flags);
+		Prepare.skills(this.data, data, flags, originalSkills);
+		Prepare.saves(this.data, data, flags, originalSaves);
 		prepareSpellcasting(this.data, flags);
 		Prepare.features(this);
 		Prepare.consumables(this.data);
