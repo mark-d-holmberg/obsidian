@@ -163,11 +163,13 @@ export const ObsidianItems = {
 			const component =
 				actor.data.obsidian.components.get(spell.flags.obsidian.parentComponent);
 
-			if (component && component.method === 'innate' && component.upcast) {
-				scaledAmount += Math.max(0, component.level - spell.data.level);
+			if (component && ['innate', 'item'].includes(component.method)) {
+				if (component.upcast) {
+					scaledAmount += Math.max(0, component.level - spell.data.level);
+				}
+			} else {
+				scaledAmount -= spell.data.level;
 			}
-
-			scaledAmount -= spell.data.level;
 		}
 
 		if (consumers.length) {
