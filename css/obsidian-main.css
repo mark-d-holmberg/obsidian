@@ -361,6 +361,7 @@
 .obsidian-table-note-text .obsidian-feature-use {
 	height: 13px;
 	width: 13px;
+	font-size: 17px;
 }
 
 .dnd5e.sheet form .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet,
@@ -448,8 +449,13 @@ h3 > div > .obsidian-feature-recharge {
 	border: 2px solid var(--mid);
 	border-radius: 3px;
 	cursor: pointer;
-	display: inline-block;
+	display: inline-flex;
 	margin-right: 3px;
+	align-items: center;
+	justify-content: center;
+	color: var(--bg);
+	font-size: 21px;
+	font-family: var(--font);
 }
 
 .obsidian-feature-use.obsidian-feature-positive {
@@ -764,15 +770,23 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-spell-level-tab.obsidian-icon-tab {
 	min-width: 24px;
-	padding: 4px 0 4px 4px;
+	max-height: 24px;
+	padding: 2px;
 }
 
-.obsidian-icon-tab .obsidian-css-icon-shape {
+.dnd5e.sheet.actor .obsidian .spell-component {
+	color: var(--bg);
+	background: var(--text-regular);
+	font-weight: bold;
+	transform: scale(.75);
+}
+
+.dnd5e.sheet.actor .obsidian .obsidian-icon-tab .spell-component {
 	background: var(--text-secondary);
 }
 
-.obsidian-icon-tab:hover .obsidian-css-icon-shape,
-.obsidian-icon-tab.active .obsidian-css-icon-shape {
+.dnd5e.sheet.actor .obsidian .obsidian-icon-tab:hover .spell-component,
+.dnd5e.sheet.actor .obsidian .obsidian-icon-tab.active .spell-component {
 	background: var(--text-regular);
 }
 

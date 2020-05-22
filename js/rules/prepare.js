@@ -812,7 +812,7 @@ export const Prepare = {
 					<div class="obsidian-feature-use
                          ${i < used ? 'obsidian-feature-used' : ''}
                          ${max - i > resource.max ? 'obsidian-feature-positive' : ''}"
-					     data-n="${i + 1}"></div>
+					     data-n="${i + 1}">&times;</div>
 				`;
 			}
 		} else {

@@ -107,7 +107,7 @@ export function registerHandlebarHelpers () {
 		for (let i = 0; i < legact.max; i++) {
 			out += `
 				<div class="obsidian-feature-use ${i < legact.value ? 'obsidian-feature-used' : ''}"
-				     data-n="${i + 1}"></div>
+				     data-n="${i + 1}">&times;</div>
 			`;
 		}
 
@@ -171,7 +171,7 @@ export function registerHandlebarHelpers () {
 				<div class="obsidian-feature-use
 				     ${i < used ? 'obsidian-feature-used' : ''}
 				     ${data.max + tmp - i > data.max ? 'obsidian-feature-positive' : ''}"
-				     data-n="${i + 1}"></div>
+				     data-n="${i + 1}">&times;</div>
 			`;
 		}
 
