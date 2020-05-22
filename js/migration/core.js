@@ -215,6 +215,17 @@ export const core = {
 		}
 	},
 
+	convertClassFeature: function (data) {
+		const reqs = data.data.requirements.replace(/\d+/g, '').trim();
+		const cls = OBSIDIAN.Rules.CLASSES.find(cls =>
+			game.i18n.localize(`OBSIDIAN.Class-${cls}`) === reqs);
+
+		if (cls) {
+			data.flags.obsidian.source.type = 'class';
+			data.flags.obsidian.source.class = cls;
+		}
+	},
+
 	convertDamage: function (dmg, ability, spell = false) {
 		let formula = dmg;
 		if (Array.isArray(dmg)) {

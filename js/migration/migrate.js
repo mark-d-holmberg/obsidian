@@ -145,6 +145,10 @@ export const Migrate = {
 			}
 		}
 
+		if (data.type === 'feat' && source === 'core') {
+			Migrate.core.convertClassFeature(data);
+		}
+
 		if (data.type === 'weapon' && data.flags.obsidian.version < 2
 			&& (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length))
 		{
