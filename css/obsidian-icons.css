@@ -248,6 +248,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/expression.svg');
 }
 
+.obsidian-icon-applied-effect {
+	background-image: url('../img/applied-effect.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }

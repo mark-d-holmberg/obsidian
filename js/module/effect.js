@@ -201,6 +201,14 @@ export const Effect = {
 		};
 	},
 
+	newApplied: function () {
+		return {
+			type: 'applied',
+			uuid: OBSIDIAN.uuid(),
+			ref: ''
+		};
+	},
+
 	determineMulti: function (filter) {
 		let prop = 'filter';
 		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;

@@ -53,13 +53,16 @@
 	{{/each}}
 	<h3>{{localize 'OBSIDIAN.Temporary'}}</h3>
 	{{#each (filter actor.obsidian.toggleable 'activeEffect' true)}}
-		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
+		<div class="obsidian-effect-row item" data-item-id="{{parentItem}}">
 			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
 			            obsidian-radio obsidian-radio-negative">
 				<span></span>
 			</div>
 			<div class="obsidian-effect-row-name">{{label}}:</div>
 			<div class="obsidian-effect-row-content">{{{toggle.display}}}</div>
+			<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+				<i class="fas fa-trash"></i>
+			</a>
 		</div>
 	{{/each}}
 </div>

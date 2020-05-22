@@ -1,5 +1,5 @@
 export function addTransformHook () {
-	Hooks.on('transformActor', transform);
+	Hooks.on('dnd5e.transformActor', transform);
 }
 
 function transform (original, target, data) {

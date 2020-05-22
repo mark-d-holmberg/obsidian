@@ -173,7 +173,7 @@ export async function advanceDurations (combat) {
 
 async function cleanupExpired (expired) {
 	for (const duration of expired) {
-		for (const [sceneID, tokenID] of duration.flags.obsidian.active) {
+		for (const [sceneID, tokenID] of duration.flags.obsidian.active || []) {
 			const actor = ObsidianActor.fromSceneTokenPair(sceneID, tokenID);
 			if (!actor) {
 				continue;

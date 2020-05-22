@@ -1,7 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../rules/rolls.js';
-import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 
 export function runPatches () {
 	Draggable.prototype._onDragMouseDown = (function () {
@@ -58,18 +57,20 @@ export function runPatches () {
 		return this;
 	};
 
-	patchTransformInto();
+	patchDeleteEmbeddedEntity();
 	patchChatMessage();
 }
 
-function patchTransformInto () {
-	let fn = Actor5e.prototype.transformInto.toString();
+function patchDeleteEmbeddedEntity () {
+	let fn = ActorTokenHelpers.prototype.deleteEmbeddedEntity.toString();
 	fn = '(async function' + fn.substring(5) + ')';
 	fn = fn.replace(
-		'const newActor =',
-		'Hooks.callAll(\'transformActor\', this, target, d);const newActor =');
+		'const items = duplicate(this.data.items);',
+		'id = id instanceof Array ? id : [id];'
+		+ 'const items = duplicate(this.data.items).filter(i => !id.includes(i._id));')
+		.replace('items.findSplice(i => i._id === id);', '');
 
-	Actor5e.prototype.transformInto = eval(fn);
+	ActorTokenHelpers.prototype.deleteEmbeddedEntity = eval(fn);
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {

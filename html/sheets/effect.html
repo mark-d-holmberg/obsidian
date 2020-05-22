@@ -65,6 +65,9 @@
 					{{else if (eq type 'expression')}}
 						{{> modules/obsidian/html/components/effects/expression.html
 								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'applied')}}
+						{{> modules/obsidian/html/components/effects/applied.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{/if}}
 				{{/each}}
 			</div>
@@ -152,6 +155,9 @@
 			</li>
 			<li class="obsidian-effects-pill obsidian-icon-duration obsidian-add-duration">
 				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.CombatDuration'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-applied-effect obsidian-add-applied">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AppliedEffect'}}</div>
 			</li>
 		</details>
 	</ul>

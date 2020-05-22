@@ -2,6 +2,10 @@ import {CONVERT} from './convert.js';
 
 export const v5 = {
 	convertActivation: function (data) {
+		if (!data.data.activation) {
+			return;
+		}
+
 		if (data.flags.obsidian.active === 'passive') {
 			data.data.activation.type = 'none';
 		} else {

@@ -138,7 +138,10 @@ export class ObsidianActor extends Actor5e {
 		applyBonuses(this.data);
 
 		if (this.isToken) {
-			this.token.drawEffects();
+			// If we are preparing data right after an update, this.token
+			// points to the old token that has since been replaced on the
+			// canvas. We need to make sure we get the new token.
+			canvas.tokens.get(this.token.data._id)?.drawEffects();
 		} else if (canvas) {
 			this.getActiveTokens(true).forEach(token => token.drawEffects());
 		}

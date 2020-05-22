@@ -116,7 +116,7 @@ Hooks.on('updateCombat', async combat => {
 // Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {
 	if (!evt.target.classList.contains('obsidian-delete')
-		&& !evt.target.parentElement.classList.contains('obsidian-delete'))
+		&& !evt.target.parentElement?.classList.contains('obsidian-delete'))
 	{
 		$('.obsidian-delete.obsidian-alert').removeClass('obsidian-alert');
 	}

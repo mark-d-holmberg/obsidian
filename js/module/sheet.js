@@ -329,16 +329,14 @@ export const Sheet = {
 		}, 25);
 	},
 
-	onDeleteFeature: async function (sheet, evt) {
-		const target = $(evt.currentTarget);
-		if (!target.hasClass('obsidian-alert')) {
-			target.addClass('obsidian-alert');
+	onDeleteFeature: function (sheet, evt) {
+		const target = evt.currentTarget;
+		if (!target.classList.contains('obsidian-alert')) {
+			target.classList.add('obsidian-alert');
 			return;
 		}
 
-		await sheet.actor.deleteEmbeddedEntity(
-			'OwnedItem',
-			target.closest('.item').data('item-id'));
+		sheet.actor.deleteEmbeddedEntity('OwnedItem', target.closest('.item').dataset.itemId);
 	},
 
 	onDragItemStart: function (sheet, event) {
