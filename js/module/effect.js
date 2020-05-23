@@ -217,6 +217,18 @@ export const Effect = {
 		};
 	},
 
+	newDefense: function () {
+		return {
+			type: 'defense',
+			uuid: OBSIDIAN.uuid(),
+			disease: false,
+			sleep: false,
+			defense: '',
+			damage: {level: 'res', dmg: 'acid', magic: '', material: ''},
+			condition: 'charmed'
+		};
+	},
+
 	determineMulti: function (filter) {
 		let prop = 'filter';
 		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;

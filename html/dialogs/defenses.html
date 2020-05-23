@@ -26,7 +26,7 @@
 	    <div>
 	      <select name="flags.obsidian.defenses.damage.{{id}}.level">
 	        {{#select def.level}}
-	            {{#each ../ObsidianRules.DEFENSE_LEVELS}}
+            {{#each ../ObsidianRules.DEFENSE_LEVELS}}
 			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
 		        {{/each}}
 	        {{/select}}

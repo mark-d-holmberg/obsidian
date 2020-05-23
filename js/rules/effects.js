@@ -6,14 +6,15 @@ const multipliers = {0.5: 'OBSIDIAN.Half', 2: 'OBSIDIAN.Twice'}
 export function prepareToggleableEffects (actorData) {
 	localize = game.i18n.localize.bind(game.i18n);
 	for (const effect of actorData.obsidian.toggleable) {
-		if (!effect.mods.length && !effect.bonuses.length) {
+		if (!effect.mods.length && !effect.bonuses.length && !effect.defenses.length) {
 			continue;
 		}
 
 		effect.toggle.display =
 			oxfordComma(
 				effect.bonuses.map(bonus => formatBonus(actorData, bonus))
-					.concat(effect.mods.map(formatRollMod)))
+					.concat(effect.mods.map(formatRollMod))
+					.concat(formatDefenses(effect.defenses)))
 				.capitalise();
 
 		if (effect.filters.length) {
@@ -246,6 +247,106 @@ function formatRollMod (mod) {
 	if (mod.mode !== 'reg') {
 		parts.push(localize(`OBSIDIAN.Roll-${mod.mode}`));
 	}
+
+	return oxfordComma(parts);
+}
+
+function formatDefenses (defs) {
+	const dmg = dmg => localize(`OBSIDIAN.Damage-${dmg}`);
+	const res = {
+		noCondition: new Set(),
+		nonMagical: new Set(),
+		nonMagicalSil: new Set(),
+		nonMagicalAdm: new Set()
+	};
+
+	const imm = {
+		noCondition: new Set(),
+		nonMagical: new Set(),
+		nonMagicalSil: new Set(),
+		nonMagicalAdm: new Set()
+	};
+
+	const vuln = new Set();
+	const conds = new Set();
+
+	defs.forEach(def => {
+		if (def.sleep) {
+			conds.add('sleep');
+		}
+
+		if (def.disease) {
+			conds.add('disease');
+		}
+
+		if (def.defense === 'condition') {
+			conds.add(def.condition);
+		} else if (def.defense === 'damage') {
+			if (def.damage.level === 'vuln') {
+				vuln.add(def.damage.dmg);
+			} else {
+				const level = def.damage.level === 'res' ? res : imm;
+				if (OBSIDIAN.notDefinedOrEmpty(def.damage.magic)) {
+					level.noCondition.add(def.damage.dmg);
+				} else {
+					if (OBSIDIAN.notDefinedOrEmpty(def.damage.material)) {
+						level.nonMagical.add(def.damage.dmg);
+					} else if (def.damage.material === 'sil') {
+						level.nonMagicalSil.add(def.damage.dmg);
+					} else {
+						level.nonMagicalAdm.add(def.damage.dmg);
+					}
+				}
+			}
+		}
+	});
+
+	const parts = [];
+	if (vuln.size) {
+		parts.push(
+			localize('OBSIDIAN.VulnTo').format(oxfordComma(Array.from(vuln.values()).map(dmg))));
+	}
+
+	if (conds.size) {
+		parts.push(
+			localize('OBSIDIAN.ImmuneTo').format(
+				oxfordComma(
+					Array.from(conds.values())
+						.map(cond => localize(`OBSIDIAN.Condition-${cond}`)))));
+	}
+
+	[res, imm].forEach(level => {
+		const subParts = [];
+		[
+			['noCondition', ''],
+			['nonMagical', 'FromNonmagical'],
+			['nonMagicalSil', 'FromNonmagicalSil'],
+			['nonMagicalAdm', 'FromNonmagicalAdm']
+		].forEach(([p, t]) => {
+			if (!level[p].size) {
+				return;
+			}
+
+			let s =
+				oxfordComma(Array.from(level[p].values()).map(dmg))
+				+ ` ${localize('OBSIDIAN.DamageLC')}`;
+
+			if (t.length) {
+				s += ` ${localize(`OBSIDIAN.${t}`)}`;
+			}
+
+			subParts.push(s);
+		});
+
+		if (!subParts.length) {
+			return;
+		}
+
+		parts.push(
+			localize('OBSIDIAN.DefString').format(
+				localize(`OBSIDIAN.${level === res ? 'Resistant' : 'Immune'}`),
+				oxfordComma(subParts)));
+	});
 
 	return oxfordComma(parts);
 }

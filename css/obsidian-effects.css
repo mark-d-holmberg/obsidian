@@ -207,6 +207,7 @@
 	margin-bottom: 5px;
 	position: relative;
 	padding-right: 20px;
+	align-items: center;
 }
 
 .obsidian-effect-row .obsidian-delete {
@@ -220,6 +221,7 @@
 
 .obsidian-effect-row-content {
 	font-weight: normal;
+	flex: 1;
 }
 
 .obsidian-effect-row .obsidian-radio {

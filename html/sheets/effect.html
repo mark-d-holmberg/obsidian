@@ -68,6 +68,9 @@
 					{{else if (eq type 'applied')}}
 						{{> modules/obsidian/html/components/effects/applied.html
 								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
+					{{else if (eq type 'defense')}}
+						{{> modules/obsidian/html/components/effects/defense.html
+								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 					{{/if}}
 				{{/each}}
 			</div>
@@ -143,6 +146,9 @@
 			</li>
 			<li class="obsidian-effects-pill obsidian-icon-filter obsidian-add-filter">
 				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddFilter'}}</div>
+			</li>
+			<li class="obsidian-effects-pill obsidian-icon-defense obsidian-add-defense">
+				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddDefense'}}</div>
 			</li>
 		</details>
 		<details class="obsidian-effects-cat" data-key="special">

@@ -256,6 +256,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/uses-ability.svg');
 }
 
+.obsidian-icon-defense {
+	background-image: url('../img/defense.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }

@@ -232,7 +232,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 		if ((!effect.isScaling || effect.selfScaling)
 			&& (!getProperty(effect, 'bonuses.length') || effect.durationComponent)
-			&& (!getProperty(effect, 'mods.length') || effect.durationComponent))
+			&& (!getProperty(effect, 'mods.length') || effect.durationComponent)
+			&& (!getProperty(effect, 'defenses.length') || effect.durationComponent))
 		{
 			item.obsidian.actionable.push(effect);
 		}

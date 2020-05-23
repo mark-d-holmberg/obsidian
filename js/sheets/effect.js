@@ -25,7 +25,8 @@ const COMPONENT_MAP = {
 	'add-filter': Effect.newFilter,
 	'add-duration': Effect.newDuration,
 	'add-expr': Effect.newExpression,
-	'add-applied': Effect.newApplied
+	'add-applied': Effect.newApplied,
+	'add-defense': Effect.newDefense
 };
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
@@ -335,33 +336,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	_onAddToFilterCollection (evt) {
-		const uuid = evt.currentTarget.closest('fieldset').dataset.uuid;
-		const target = $(evt.currentTarget);
-		const selection = target.next();
-		const formData = this._formData;
-		const effects = formData['flags.obsidian.effects'];
-
-		if (!effects) {
-			return;
-		}
-
-		const component = effects.flatMap(e => e.components).find(c => c.uuid === uuid);
-		if (!component) {
-			return;
-		}
-
-		component.collection.push({
-			key: selection.val(),
-			label: selection.find('option:selected').text()
-		});
-
-		this.item.update(formData);
-	}
-
-	/**
-	 * @private
-	 */
 	_onClickAnywhere (evt) {
 		const closestEffect = evt.target.closest('.obsidian-effect');
 		const closestPill = evt.target.closest('.obsidian-effects-pill');
@@ -543,29 +517,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	_onRemoveFromFilterCollection (evt) {
-		const uuid = evt.currentTarget.closest('fieldset').dataset.uuid;
-		const key = evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.key;
-		const formData = this._formData;
-		const effects = formData['flags.obsidian.effects'];
-
-		if (!effects) {
-			return;
-		}
-
-		const component = effects.flatMap(e => e.components).find(c => c.uuid === uuid);
-		if (!component) {
-			return;
-		}
-
-		const idx = component.collection.findIndex(element => element.key === key);
-		component.collection.splice(idx, 1);
-		this.item.update(formData);
-	}
-
-	/**
-	 * @private
-	 */
 	async _onRemoveSelected (prop) {
 		if (this._selectedEffect == null && this._selectedComponent == null) {
 			return;
@@ -693,7 +644,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		if (newState === TRAY_STATES.EFFECT) {
 			this.element.find('summary').removeClass('obsidian-hidden');
-			this.element.find('.obsidian-effects-pill:not(.obsidian-effects-pill-rm)')
+			this.element.find('details .obsidian-effects-pill:not(.obsidian-effects-pill-rm)')
 				.removeClass('obsidian-hidden');
 			this.element.find('.obsidian-rm-effect').removeClass('obsidian-hidden');
 			this._restoreCategoryStates();

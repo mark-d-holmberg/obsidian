@@ -102,6 +102,8 @@
 	"OBSIDIAN.Condition-restrained": "Restrained",
 	"OBSIDIAN.Condition-stunned": "Stunned",
 	"OBSIDIAN.Condition-unconscious": "Unconscious",
+	"OBSIDIAN.Condition-disease": "disease",
+	"OBSIDIAN.Condition-sleep": "magical sleep",
 	"OBSIDIAN.Exhaustion": "Exhaustion",
 	"OBSIDIAN.SavingThrows": "Saving Throws",
 	"OBSIDIAN.ManageSaves": "Manage Saves",
@@ -869,5 +871,15 @@
 	"OBSIDIAN.RollingAt": "Rolling At",
 	"OBSIDIAN.WhenRollingAt": "when rolling at {0}",
 	"OBSIDIAN.Using": "using",
-	"OBSIDIAN.Or": "or"
+	"OBSIDIAN.Or": "or",
+	"OBSIDIAN.AddDefense": "Add Defense",
+	"OBSIDIAN.Defense": "Defense",
+	"OBSIDIAN.Defense-damage": "Damage",
+	"OBSIDIAN.Defense-condition": "Condition",
+	"OBSIDIAN.VulnTo": "Vulnerability to {0} damage",
+	"OBSIDIAN.ImmuneTo": "Immunity to {0}",
+	"OBSIDIAN.DefString": "{0} to {1}",
+	"OBSIDIAN.Immune": "Immunity",
+	"OBSIDIAN.Resistant": "Resistance",
+	"OBSIDIAN.DamageLC": "damage"
 }

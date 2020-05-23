@@ -116,6 +116,7 @@ Rules.EFFECT_DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn', 'hlg'
 ];
 
+Rules.EFFECT_DEFENSES = ['damage', 'condition'];
 Rules.EFFECT_FILTERS = ['roll', 'score'];
 Rules.EFFECT_FILTER_ATTACKS = ['mw', 'rw', 'ms', 'rs'];
 Rules.EFFECT_FILTER_CHECKS = ['ability', 'skill', 'tool', 'init'];

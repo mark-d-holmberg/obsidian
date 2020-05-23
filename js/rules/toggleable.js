@@ -13,6 +13,7 @@ function filterToggleable (actorData) {
 			effect.parentItem = item._id;
 			effect.mods = [];
 			effect.bonuses = [];
+			effect.defenses = [];
 			effect.filters = [];
 
 			if ((flags.attunement && !item.data.attuned)
@@ -31,6 +32,9 @@ function filterToggleable (actorData) {
 					isToggleable = true;
 				} else if (component.type === 'bonus') {
 					effect.bonuses.push(component);
+					isToggleable = true;
+				} else if (component.type === 'defense') {
+					effect.defenses.push(component);
 					isToggleable = true;
 				} else if (component.type === 'filter') {
 					effect.filters.push(component);

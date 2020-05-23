@@ -12,6 +12,7 @@ import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses} from '../rules/bonuses.js';
 import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from '../rules/npc.js';
+import {prepareDefenses} from '../rules/defenses.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -81,7 +82,6 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		Prepare.init(data, flags);
-		Prepare.defenses(this.data.type === 'npc', flags);
 
 		this.data.obsidian.magicalItems =
 			this.data.items.filter(item =>
@@ -136,6 +136,7 @@ export class ObsidianActor extends Actor5e {
 
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data);
+		prepareDefenses(this.data, flags);
 
 		if (this.isToken) {
 			// If we are preparing data right after an update, this.token

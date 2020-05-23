@@ -1,0 +1,66 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.Defense'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			{{fancy-checkbox prefix 'disease' content='OBSIDIAN.ImmuneDisease' checked=disease}}
+			{{fancy-checkbox prefix 'sleep' content='OBSIDIAN.ImmuneSleep' checked=sleep}}
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Defense'}}
+				<select name="{{prefix}}.defense" data-selector="{{prefix}}.defense">
+					{{#select defense}}
+						<option value="">&mdash;</option>
+						{{#each @root.ObsidianRules.EFFECT_DEFENSES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Defense-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<select name="{{prefix}}.condition" data-selector-parent="{{prefix}}.defense"
+			        data-show="condition">
+				{{#select condition}}
+					{{#each @root.ObsidianRules.CONDITIONS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
+					{{/each}}
+					<option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
+				{{/select}}
+			</select>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.defense" data-show="damage">
+		<div class="obsidian-fullwidth">
+			<select name="{{prefix}}.damage.level">
+				{{#select damage.level}}
+					{{#each @root.ObsidianRules.DEFENSE_LEVELS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.damage.dmg">
+				{{#select damage.dmg}}
+					{{#each @root.ObsidianRules.DAMAGE_TYPES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.damage.magic" data-selector="{{prefix}}.damage.magic">
+				{{#select damage.magic}}
+					<option value="">&mdash;</option>
+					<option value="non">{{localize 'OBSIDIAN.Defense-non'}}</option>
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.damage.material" data-show="non"
+			        data-selector-parent="{{prefix}}.damage.magic">
+				{{#select damage.material}}
+					<option value="">&mdash;</option>
+					<option value="sil">{{localize 'OBSIDIAN.Defense-sil'}}</option>
+					<option value="adm">{{localize 'OBSIDIAN.Defense-adm'}}</option>
+				{{/select}}
+			</select>
+		</div>
+	</div>
+</fieldset>
