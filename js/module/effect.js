@@ -209,6 +209,14 @@ export const Effect = {
 		};
 	},
 
+	newUsesAbility: function () {
+		return {
+			type: 'uses-ability',
+			uuid: OBSIDIAN.uuid(),
+			abilities: {}
+		};
+	},
+
 	determineMulti: function (filter) {
 		let prop = 'filter';
 		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;
@@ -265,7 +273,9 @@ export const Effect = {
 			if (attack) {
 				const key = attack.attack[0] + attack.category[0];
 				attackPred = filter =>
-					Filters.damage.isAttack(filter) && Filters.inCollection(filter, key);
+					Filters.damage.isAttack(filter)
+					&& Filters.inCollection(filter, key)
+					&& Filters.usesAbility(filter, attack.ability);
 			}
 		}
 

@@ -34,7 +34,20 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('checkbox-grid', function (selections, selected, ...prefix) {
-		selected = new Set(selected.map(item => item.key));
+		if (Array.isArray(selected)) {
+			if (selected.length) {
+				if (selected[0].hasOwnProperty('key')) {
+					selected = new Set(selected.map(item => item.key));
+				} else {
+					selected = new Set(selected);
+				}
+			} else {
+				selected = new Set();
+			}
+		} else {
+			selected = new Set(Object.entries(selected).filter(([_, v]) => v).map(([k, _]) => k));
+		}
+
 		prefix.pop();
 
 		return new Handlebars.SafeString(Object.entries(selections).map(([key, val]) => {

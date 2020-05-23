@@ -1,0 +1,16 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.AppliedEffect'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.Effect'}}
+			<select name="{{prefix}}.ref">
+				{{#select ref}}
+					<option value="">&mdash;</option>
+					{{#each @root.item.flags.obsidian.effects}}
+						<option value="{{uuid}}">{{effect-label this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</label>
+	</div>
+</fieldset>

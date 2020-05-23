@@ -4,9 +4,14 @@ import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 
-const subMenus = {rollMod: 'roll-modifier', extraBonus: 'bonus'};
-const componentMenus = {attack: ['rollMod', 'extraBonus'], damage: ['rollMod', 'extraBonus']};
+const subMenus = {rollMod: 'roll-modifier', extraBonus: 'bonus', usesAbility: 'uses-ability'};
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
+const componentMenus = {
+	attack: ['rollMod', 'extraBonus'],
+	damage: ['rollMod', 'extraBonus'],
+	filter: ['usesAbility']
+};
+
 const COMPONENT_MAP = {
 	'add-resource': Effect.newResource,
 	'add-attack': Effect.newAttack,
@@ -55,9 +60,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
 		html.find('.obsidian-add-bonus')
 			.click(this._onAddComponent.bind(this, Effect.newBonus, 'extraBonus'));
+		html.find('.obsidian-add-uses-ability')
+			.click(this._onAddComponent.bind(this, Effect.newUsesAbility, 'usesAbility'));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
 		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
 		html.find('.obsidian-rm-bonus').click(this._onRemoveSelected.bind(this, 'extraBonus'));
+		html.find('.obsidian-rm-uses-ability')
+			.click(this._onRemoveSelected.bind(this, 'usesAbility'));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
 		html.find('.obsidian-effect legend').click(evt => {
@@ -149,6 +158,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				component.isCollection = component.isMulti && component.multi === 'some';
 				component.availableSelections = this._generateFilterSelections(component);
 			});
+
+		data.usesAbilities = {};
+		OBSIDIAN.Rules.ABILITIES.forEach(abl =>
+			data.usesAbilities[abl] = `OBSIDIAN.Ability-${abl}`);
 
 		return data;
 	}

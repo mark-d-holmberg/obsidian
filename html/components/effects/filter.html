@@ -75,4 +75,13 @@
 			</label>
 		</div>
 	</div>
+	{{#if usesAbility}}
+	<fieldset class="obsidian-sub-group">
+		<legend>{{localize 'OBSIDIAN.UsesAbility'}}</legend>
+		<div class="obsidian-checkbox-grid obsidian-stacked-row">
+			{{checkbox-grid @root.usesAbilities (lookup usesAbility 'abilities') prefix
+			                'usesAbility.abilities'}}
+		</div>
+	</fieldset>
+	{{/if}}
 </fieldset>

@@ -305,3 +305,22 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.obsidian-effect .obsidian-sub-group {
+	border: none;
+	border-top: 1px solid var(--mid);
+	padding: 0;
+	margin-top: 10px;
+}
+
+.obsidian-effect .obsidian-sub-group:last-child {
+	margin-top: 10px;
+}
+
+.obsidian-effect .obsidian-sub-group legend {
+	font-size: 13px;
+	text-align: center;
+	text-transform: uppercase;
+	font-family: var(--font);
+	cursor: default;
+}

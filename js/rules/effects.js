@@ -215,6 +215,15 @@ function formatFilter (filter) {
 				.format(localize(`OBSIDIAN.Roll-${filter.mode}`).toLowerCase());
 	}
 
+	if (parts.length && !OBSIDIAN.notDefinedOrEmpty(filter.usesAbility)) {
+		parts[parts.length - 1] += ` ${localize('OBSIDIAN.Using')} `
+			+ oxfordComma(
+				Object.entries(filter.usesAbility.abilities)
+					.filter(([_, v]) => v)
+					.map(([k, _]) => localize(`OBSIDIAN.Ability-${k}`)),
+				true);
+	}
+
 	return oxfordComma(parts);
 }
 
@@ -241,7 +250,7 @@ function formatRollMod (mod) {
 	return oxfordComma(parts);
 }
 
-function oxfordComma (parts) {
+function oxfordComma (parts, or) {
 	if (parts.length) {
 		if (parts.length < 2) {
 			return parts[0];
@@ -252,7 +261,8 @@ function oxfordComma (parts) {
 			}
 
 			const last = parts.pop();
-			return `${parts.join(', ')}${comma} ${localize('OBSIDIAN.And')} ${last}`;
+			const conjunction = localize(or ? 'OBSIDIAN.Or' : 'OBSIDIAN.And');
+			return `${parts.join(', ')}${comma} ${conjunction} ${last}`;
 		}
 	}
 

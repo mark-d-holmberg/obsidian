@@ -29,7 +29,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/bonus.html',
 		'modules/obsidian/html/components/effects/bonus-body.html',
 		'modules/obsidian/html/components/effects/duration.html',
-		'modules/obsidian/html/components/effects/expression.html'
+		'modules/obsidian/html/components/effects/expression.html',
+		'modules/obsidian/html/components/effects/applied.html'
 	]);
 };
 

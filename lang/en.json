@@ -784,6 +784,7 @@
 	"OBSIDIAN.Special": "Special",
 	"OBSIDIAN.CombatDuration": "Combat Duration",
 	"OBSIDIAN.AppliedEffect": "Applied Effect",
+	"OBSIDIAN.UsesAbility": "Uses Ability",
 	"OBSIDIAN.Rounds": "Rounds",
 	"OBSIDIAN.Update": "Update",
 	"OBSIDIAN.CastAtLC": "Cast at",
@@ -866,5 +867,7 @@
 	"OBSIDIAN.BonusValue-chr": "Character Level",
 	"OBSIDIAN.BonusValue-cls": "Class Level",
 	"OBSIDIAN.RollingAt": "Rolling At",
-	"OBSIDIAN.WhenRollingAt": "when rolling at {0}"
+	"OBSIDIAN.WhenRollingAt": "when rolling at {0}",
+	"OBSIDIAN.Using": "using",
+	"OBSIDIAN.Or": "or"
 }

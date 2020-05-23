@@ -22,6 +22,8 @@ export const Filters = {
 	isDC: filter => filter.filter === 'score' && filter.score === 'dc',
 
 	rollingAt: (filter, mode) => OBSIDIAN.notDefinedOrEmpty(filter.mode) || filter.mode === mode,
+	usesAbility: (filter, abl) =>
+		OBSIDIAN.notDefinedOrEmpty(filter.usesAbility) || filter.usesAbility.abilities[abl],
 
 	filterEffects: (effects, collection, pred) =>
 		effects.filter(effect => effect.toggle && effect.toggle.active && effect[collection].length)
@@ -46,7 +48,8 @@ export const Filters = {
 			return filter =>
 				Filters.isAttack(filter)
 				&& Filters.inCollection(filter, key)
-				&& Filters.rollingAt(filter, mode);
+				&& Filters.rollingAt(filter, mode)
+				&& Filters.usesAbility(filter, attack.ability);
 		},
 
 		deathSaves: mode => filter =>
