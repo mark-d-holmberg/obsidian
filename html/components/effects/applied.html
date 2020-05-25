@@ -5,7 +5,6 @@
 			{{localize 'OBSIDIAN.Effect'}}
 			<select name="{{prefix}}.ref">
 				{{#select ref}}
-					<option value="">&mdash;</option>
 					{{#each @root.item.flags.obsidian.effects}}
 						<option value="{{uuid}}">{{effect-label this}}</option>
 					{{/each}}

@@ -19,7 +19,7 @@ function filterToggleable (actorData) {
 			if ((flags.attunement && !item.data.attuned)
 				|| (flags.equippable && !item.data.equipped)
 				|| item.type === 'spell'
-				|| effect.durationComponent)
+				|| effect.isApplied)
 			{
 				continue;
 			}

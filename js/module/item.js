@@ -66,7 +66,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		producers: [],
 		actionable: [],
 		scaling: [],
-		durations: []
+		durations: [],
+		applied: []
 	};
 
 	let cls;
@@ -84,6 +85,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.parentItem = item._id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
+		effect.applies = [];
 
 		const scalingComponent = effect.components.find(c => c.type === 'scaling');
 		if (scalingComponent) {
@@ -96,6 +98,17 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			effect.scalingComponent = null;
 		}
 
+		const appliedComponent = effect.components.find(c => c.type === 'applied');
+		if (appliedComponent) {
+			effect.isApplied = true;
+			effect.selfApplied = appliedComponent.ref === effect.uuid;
+			item.obsidian.applied.push(effect);
+		} else {
+			effect.isApplied = false;
+			effect.selfApplied = false;
+			effect.appliedComponent = null;
+		}
+
 		if (effect.components.some(c => c.type === 'duration')) {
 			item.obsidian.durations.push(effect);
 		} else {
@@ -104,6 +117,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 		let targetComponent;
 		let isRollable = false;
+
+		if (effect.selfApplied) {
+			isRollable = true;
+		}
 
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
@@ -161,6 +178,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				}
 			} else if (component.type === 'scaling') {
 				effect.scalingComponent = component;
+			} else if (component.type === 'applied') {
+				effect.appliedComponent = component;
 			} else if (component.type === 'duration') {
 				isRollable = true;
 				effect.durationComponent = component;
@@ -231,9 +250,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 
 		if ((!effect.isScaling || effect.selfScaling)
-			&& (!getProperty(effect, 'bonuses.length') || effect.durationComponent)
-			&& (!getProperty(effect, 'mods.length') || effect.durationComponent)
-			&& (!getProperty(effect, 'defenses.length') || effect.durationComponent))
+			&& (!effect.isApplied || effect.selfApplied)
+			&& !getProperty(effect, 'bonuses.length')
+			&& !getProperty(effect, 'mods.length')
+			&& !getProperty(effect, 'defenses.length'))
 		{
 			item.obsidian.actionable.push(effect);
 		}
@@ -251,6 +271,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 	}
 
+	item.obsidian.applied.forEach(e => effectMap?.get(e.appliedComponent.ref).applies.push(e));
 	item.obsidian.actionable = item.obsidian.actionable.flatMap(action => {
 		const spells = action.components.filter(c => c.type === 'spells');
 		if (spells.length) {
