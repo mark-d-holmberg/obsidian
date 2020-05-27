@@ -148,8 +148,8 @@ export function registerHandlebarHelpers () {
 			return new Handlebars.SafeString(parts.join(' &bull; '));
 		}
 
-		if (feature.obsidian.consumers.length) {
-			const consumer = feature.obsidian.consumers[0];
+		if (feature.obsidian.collection.consume.length) {
+			const consumer = feature.obsidian.collection.consume[0];
 			if (consumer.target === 'spell' || consumer.target === 'qty') {
 				return;
 			}
@@ -225,8 +225,8 @@ export function registerHandlebarHelpers () {
 				Prepare.usesFormat(feature, effect, feature.obsidian.bestResource));
 		}
 
-		if (feature.obsidian.consumers.length) {
-			const consumer = feature.obsidian.consumers[0];
+		if (feature.obsidian.collection.consume.length) {
+			const consumer = feature.obsidian.collection.consume[0];
 			if (consumer.target === 'spell' || consumer.target === 'qty') {
 				return;
 			}

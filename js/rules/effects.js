@@ -6,20 +6,17 @@ const multipliers = {0.5: 'OBSIDIAN.Half', 2: 'OBSIDIAN.Twice'}
 export function prepareToggleableEffects (actorData) {
 	localize = game.i18n.localize.bind(game.i18n);
 	for (const effect of actorData.obsidian.toggleable) {
-		if (!effect.mods.length && !effect.bonuses.length && !effect.defenses.length) {
-			continue;
-		}
-
 		effect.toggle.display =
 			oxfordComma(
-				effect.bonuses.map(bonus => formatBonus(actorData, bonus))
-					.concat(effect.mods.map(formatRollMod))
-					.concat(formatDefenses(effect.defenses)))
+				effect.active.bonus.map(bonus => formatBonus(actorData, bonus))
+					.concat(effect.active['roll-mod'].map(formatRollMod))
+					.concat(formatDefenses(effect.active.defense))
+					.filter(part => part.length))
 				.capitalise();
 
 		if (effect.filters.length) {
 			let preposition = 'OBSIDIAN.On';
-			if (!effect.mods.length) {
+			if (!effect.active['roll-mod'].length) {
 				preposition = 'OBSIDIAN.To';
 			}
 

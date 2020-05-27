@@ -420,7 +420,8 @@ export const Rolls = {
 			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
 		const damage =
 			effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile);
-		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
+		const scaling =
+			item.obsidian.collection.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 
 		if (!item || !damage.length) {
 			return [];
@@ -527,7 +528,8 @@ export const Rolls = {
 		const expr = effect.components.filter(c => c.type === 'expression');
 		const targets =
 			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
-		const scaling = item.obsidian.scaling.find(e => e.scalingComponent.ref === effect.uuid);
+		const scaling =
+			item.obsidian.collection.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
 		if (withDuration) {
@@ -704,7 +706,7 @@ export const Rolls = {
 
 
 		return itemFlags.effects
-			.filter(effect => !effect.isScaling || effect.selfScaling)
+			.filter(effect => !effect.isLinked)
 			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
 				name: item.name,
 				scaledAmount: scaling,

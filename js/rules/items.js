@@ -99,10 +99,9 @@ export const ObsidianItems = {
 		const isPact = slot === 'pact';
 		const prop = isPact ? 'data.spells.pact' : `data.spells.spell${slot}`;
 		const spell = getProperty(actor.data, prop);
-		const uses = spell[isPact ? 'uses' : 'value'];
 
-		if (uses > 0) {
-			actor.update({[`${prop}.${isPact ? 'uses' : 'value'}`]: uses - 1});
+		if (spell.value < spell.max) {
+			actor.update({[`${prop}.value`]: spell.value + 1});
 		} else {
 			if (!unlimited) {
 				return;
@@ -113,7 +112,7 @@ export const ObsidianItems = {
 		}
 	},
 
-	refreshConsumable: function (actor, item, effect, resource, n, updates) {
+	refreshConsumable: function (actor, item, effect, resource, n = 1, updates) {
 		updates.push({
 			_id: item._id,
 			'data.quantity': item.data.quantity - 1,
@@ -198,7 +197,7 @@ export const ObsidianItems = {
 		}
 
 		if (resources.length) {
-			if (resources[0].remaining - consumed < 1
+			if (resources[0].remaining - (consumed || 1) < 1
 				&& item.type === 'consumable'
 				&& item.data.quantity > 0
 				&& item.data.uses.autoDestroy)
@@ -348,7 +347,7 @@ export const ObsidianItems = {
 		const spell = actor.data.obsidian.itemsByID.get(options.spl);
 		const item = actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
 		const consumer = effect.components.find(c => c.type === 'consume');
-		const scaling = item.obsidian.scaling.find(e =>
+		const scaling = item.obsidian.collection.scaling.find(e =>
 			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
 		if (consumer && consumer.target === 'spell') {

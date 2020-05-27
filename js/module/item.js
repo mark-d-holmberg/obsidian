@@ -3,6 +3,7 @@ import {Prepare} from '../rules/prepare.js';
 import {Schema} from './schema.js';
 import {spellNotes} from '../rules/spells.js';
 import {OBSIDIAN} from '../global.js';
+import {Effect} from './effect.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
@@ -57,18 +58,11 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	}
 
 	item.obsidian = {
-		attacks: [],
-		saves: [],
-		damage: [],
-		versatile: [],
-		resources: [],
-		consumers: [],
-		producers: [],
 		actionable: [],
-		scaling: [],
-		durations: [],
-		applied: []
+		collection: {versatile: []}
 	};
+
+	Effect.metadata.components.forEach(c => item.obsidian.collection[c] = []);
 
 	let cls;
 	if (flags.source) {
@@ -86,41 +80,23 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
+		effect.isLinked = false;
 
-		const scalingComponent = effect.components.find(c => c.type === 'scaling');
-		if (scalingComponent) {
-			effect.isScaling = true;
-			effect.selfScaling = scalingComponent.ref === effect.uuid;
-			item.obsidian.scaling.push(effect);
-		} else {
-			effect.isScaling = false;
-			effect.selfScaling = false;
-			effect.scalingComponent = null;
-		}
+		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
+		Effect.metadata.linked.forEach(linked => {
+			const found = effect.components.find(c => c.type === linked);
+			const bool = `is${linked.capitalise()}`;
+			const self = `self${linked.capitalise()}`;
+			const component = `${linked}Component`;
+			effect[bool] = !!found;
+			effect[self] = found && found.ref === effect.uuid;
+			effect[component] = found;
+			effect.isLinked |= effect[bool] && !effect[self];
 
-		const appliedComponent = effect.components.find(c => c.type === 'applied');
-		if (appliedComponent) {
-			effect.isApplied = true;
-			effect.selfApplied = appliedComponent.ref === effect.uuid;
-			item.obsidian.applied.push(effect);
-		} else {
-			effect.isApplied = false;
-			effect.selfApplied = false;
-			effect.appliedComponent = null;
-		}
-
-		if (effect.components.some(c => c.type === 'duration')) {
-			item.obsidian.durations.push(effect);
-		} else {
-			effect.durationComponent = null;
-		}
-
-		let targetComponent;
-		let isRollable = false;
-
-		if (effect.selfApplied) {
-			isRollable = true;
-		}
+			if (found) {
+				item.obsidian.collection[linked].push(effect);
+			}
+		});
 
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
@@ -131,34 +107,28 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			component.parentEffect = effect.uuid;
 			component.idx = componentIdx;
 
+			if (Effect.metadata.single.has(component.type)) {
+				effect[`${component.type}Component`] = component;
+			} else if (!effect.isLinked) {
+				let collection = component.type;
+				if (component.type === 'damage' && component.versatile) {
+					collection = 'versatile';
+				}
+
+				item.obsidian.collection[collection].push(component);
+			}
+
 			if (component.type === 'attack') {
 				Prepare.calculateHit(actorData, component, data, cls);
 				Prepare.calculateAttackType(flags, component);
-
-				if (!effect.isScaling || effect.selfScaling) {
-					item.obsidian.attacks.push(component);
-				}
 			} else if (component.type === 'damage') {
-				isRollable = true;
 				Prepare.calculateDamage(actorData, component, data, cls);
-				if (!effect.isScaling || effect.selfScaling) {
-					if (component.versatile) {
-						item.obsidian.versatile.push(component);
-					} else {
-						item.obsidian.damage.push(component);
-					}
-				}
 			} else if (component.type === 'save') {
-				isRollable = true;
 				Prepare.calculateSave(actorData, item, component, data, cls);
-				if (!effect.isScaling || effect.selfScaling) {
-					item.obsidian.saves.push(component);
-				}
 			} else if (component.type === 'resource') {
 				Prepare.calculateResources(
 					data, item, effect, component, actorData.obsidian.classes);
 
-				item.obsidian.resources.push(component);
 				component.label =
 					component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
 
@@ -169,34 +139,18 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 						+ `</div>: ${component.display}`
 					+ '</div>');
 			} else if (component.type === 'target') {
-				isRollable = true;
-				targetComponent = component;
-				if (component.target === 'area' && !effect.isScaling) {
+				if (component.target === 'area' && !effect.isLinked) {
 					flags.notes.push(
 						`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
 						+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
 				}
-			} else if (component.type === 'scaling') {
-				effect.scalingComponent = component;
-			} else if (component.type === 'applied') {
-				effect.appliedComponent = component;
-			} else if (component.type === 'duration') {
-				isRollable = true;
-				effect.durationComponent = component;
-			} else if (component.type === 'expression') {
-				isRollable = true;
 			} else if (component.type === 'consume' || component.type === 'produce') {
-				isRollable = true;
 				if (component.calc === 'var') {
 					component.fixed = 1;
 				}
 
 				if (component.target === 'this-item' || component.target === 'this-effect') {
 					component.itemID = item._id;
-				}
-
-				if (!effect.isScaling || effect.selfScaling) {
-					item.obsidian[`${component.type}rs`].push(component);
 				}
 			} else if (component.type === 'spells') {
 				if (component.source === 'individual' && component.method === 'list') {
@@ -243,20 +197,18 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			}
 		}
 
-		if (targetComponent && targetComponent.target === 'individual') {
+		if (effect.targetComponent && effect.targetComponent.target === 'individual') {
 			effect.components
 				.filter(c => c.type === 'attack')
-				.forEach(atk => atk.targets = targetComponent.count);
+				.forEach(atk => atk.targets = effect.targetComponent.count);
 		}
 
-		if ((!effect.isScaling || effect.selfScaling)
-			&& (!effect.isApplied || effect.selfApplied)
-			&& !getProperty(effect, 'bonuses.length')
-			&& !getProperty(effect, 'mods.length')
-			&& !getProperty(effect, 'defenses.length'))
-		{
+		if (!effect.isLinked && !effect.components.some(c => Effect.metadata.active.has(c.type))) {
 			item.obsidian.actionable.push(effect);
 		}
+
+		const isRollable =
+			effect.selfApplied || effect.components.some(c => Effect.metadata.rollable.has(c.type));
 
 		if (isRollable
 			&& item.type !== 'spell'
@@ -271,7 +223,9 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 	}
 
-	item.obsidian.applied.forEach(e => effectMap?.get(e.appliedComponent.ref).applies.push(e));
+	item.obsidian.collection.applied.forEach(e =>
+		effectMap?.get(e.appliedComponent.ref).applies.push(e));
+
 	item.obsidian.actionable = item.obsidian.actionable.flatMap(action => {
 		const spells = action.components.filter(c => c.type === 'spells');
 		if (spells.length) {
@@ -288,7 +242,8 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 	if (item.type === 'spell' && item.data.level === 0) {
 		const cantripScaling =
-			item.obsidian.scaling.find(effect => effect.scalingComponent.method === 'cantrip');
+			item.obsidian.collection.scaling.find(effect =>
+				effect.scalingComponent.method === 'cantrip');
 
 		if (cantripScaling) {
 			// Cantrips are scaled up-front, not when rolled.
@@ -300,32 +255,33 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					cantripScaling.components.filter(c => c.type === 'damage');
 
 				if (targetComponent) {
-					item.obsidian.attacks.forEach(atk =>
+					item.obsidian.collection.attack.forEach(atk =>
 						atk.targets += targetComponent.count * extra);
 				} else if (damageComponents.length) {
 					damageComponents.forEach(dmg => dmg.scaledDice = extra);
-					item.obsidian.damage = item.obsidian.damage.concat(damageComponents);
+					item.obsidian.collection.damage =
+						item.obsidian.collection.damage.concat(damageComponents);
 				}
 			}
 		}
 	}
 
-	if (item.obsidian.attacks.length) {
+	if (item.obsidian.collection.attack.length) {
 		if (attackList && (item.type !== 'weapon' || item.data.equipped)) {
-			attackList.push(...item.obsidian.attacks);
+			attackList.push(...item.obsidian.collection.attack);
 		}
 
 		item.obsidian.bestAttack =
-			item.obsidian.attacks.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
+			item.obsidian.collection.attack.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
 
 		if (item.obsidian.bestAttack.targets > 1) {
 			flags.notes.push(
 				`${game.i18n.localize('OBSIDIAN.Count')}: `
 				+ item.obsidian.bestAttack.targets);
 		}
-	} else if (item.obsidian.damage.length) {
+	} else if (item.obsidian.collection.damage.length) {
 		const targetComponents =
-			effects.filter(effect => !effect.isScaling || effect.selfScaling)
+			effects.filter(effect => !effect.isLinked)
 				.flatMap(effect => effect.components)
 				.filter(c => c.type === 'target' && c.target === 'individual');
 
@@ -335,14 +291,15 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 	}
 
-	if (item.obsidian.saves.length) {
+	if (item.obsidian.collection.save.length) {
 		item.obsidian.bestSave =
-			item.obsidian.saves.reduce((acc, save) => save.value > acc.value ? save : acc);
+			item.obsidian.collection.save.reduce((acc, save) =>
+				save.value > acc.value ? save : acc);
 	}
 
-	if (item.obsidian.resources.length) {
+	if (item.obsidian.collection.resource.length) {
 		item.obsidian.bestResource =
-			item.obsidian.resources.reduce((acc, resource) =>
+			item.obsidian.collection.resource.reduce((acc, resource) =>
 				resource.max > acc.max ? resource: acc);
 	}
 }

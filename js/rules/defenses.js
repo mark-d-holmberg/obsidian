@@ -17,8 +17,8 @@ export function prepareDefenses (actorData, flags) {
 function prepareActiveDefenses (actorData, flags) {
 	actorData.obsidian.toggleable
 		.filter(effect => effect.toggle.active)
-		.filter(effect => effect.defenses.length)
-		.flatMap(effect => effect.defenses)
+		.filter(effect => effect.active.defense.length)
+		.flatMap(effect => effect.active.defense)
 		.forEach(def => {
 			if (def.sleep) {
 				flags.defenses.conds.add('sleep');

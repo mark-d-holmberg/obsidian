@@ -3,6 +3,20 @@ import {Filters} from '../rules/filters.js';
 import {determineAdvantage} from '../rules/prepare.js';
 
 export const Effect = {
+	metadata: {
+		active: new Set(['roll-mod', 'bonus', 'defense']),
+		linked: ['applied', 'scaling'],
+		single: new Set(['applied', 'scaling', 'duration', 'target']),
+		rollable: new Set([
+			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce'
+		]),
+		components: [
+			'resource', 'attack', 'damage', 'save', 'scaling', 'target', 'consume', 'produce',
+			'spells', 'roll-mod', 'bonus', 'filter', 'duration', 'expression', 'applied',
+			'uses-ability', 'defense'
+		]
+	},
+
 	create: function () {
 		return {
 			name: '',

@@ -1,4 +1,5 @@
 import {Filters} from './filters.js';
+import {Effect} from '../module/effect.js';
 
 function filterToggleable (actorData) {
 	const toggleable = [];
@@ -11,10 +12,9 @@ function filterToggleable (actorData) {
 		for (const effect of flags.effects) {
 			actorData.obsidian.effects.set(effect.uuid, effect);
 			effect.parentItem = item._id;
-			effect.mods = [];
-			effect.bonuses = [];
-			effect.defenses = [];
 			effect.filters = [];
+			effect.active = {};
+			Effect.metadata.active.forEach(c => effect.active[c] = []);
 
 			if ((flags.attunement && !item.data.attuned)
 				|| (flags.equippable && !item.data.equipped)
@@ -24,23 +24,16 @@ function filterToggleable (actorData) {
 				continue;
 			}
 
-			let isToggleable = false;
 			for (const component of effect.components) {
 				component.parentEffect = effect.uuid;
-				if (component.type === 'roll-mod') {
-					effect.mods.push(component);
-					isToggleable = true;
-				} else if (component.type === 'bonus') {
-					effect.bonuses.push(component);
-					isToggleable = true;
-				} else if (component.type === 'defense') {
-					effect.defenses.push(component);
-					isToggleable = true;
+				if (Effect.metadata.active.has(component.type)) {
+					effect.active[component.type].push(component);
 				} else if (component.type === 'filter') {
 					effect.filters.push(component);
 				}
 			}
 
+			const isToggleable = Object.values(effect.active).some(list => list.length);
 			if (isToggleable) {
 				toggleable.push(effect);
 				if (!effect.toggle) {

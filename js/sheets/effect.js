@@ -3,6 +3,7 @@ import {Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
+import {Rules} from '../rules/rules.js';
 
 const subMenus = {rollMod: 'roll-modifier', extraBonus: 'bonus', usesAbility: 'uses-ability'};
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
@@ -12,21 +13,45 @@ const componentMenus = {
 	filter: ['usesAbility']
 };
 
-const COMPONENT_MAP = {
-	'add-resource': Effect.newResource,
-	'add-attack': Effect.newAttack,
-	'add-damage': Effect.newDamage,
-	'add-save': Effect.newSave,
-	'add-scaling': Effect.newScaling,
-	'add-targets': Effect.newTarget,
-	'add-consume': Effect.newConsume,
-	'add-produce': Effect.newProduce,
-	'add-spells': Effect.newSpells,
-	'add-filter': Effect.newFilter,
-	'add-duration': Effect.newDuration,
-	'add-expr': Effect.newExpression,
-	'add-applied': Effect.newApplied,
-	'add-defense': Effect.newDefense
+const COMPONENT_MAP = [
+	['add-resource', Effect.newResource],
+	['add-attack', Effect.newAttack],
+	['add-damage', Effect.newDamage],
+	['add-save', Effect.newSave],
+	['add-scaling', Effect.newScaling],
+	['add-targets', Effect.newTarget],
+	['add-consume', Effect.newConsume],
+	['add-produce', Effect.newProduce],
+	['add-spells', Effect.newSpells],
+	['add-filter', Effect.newFilter],
+	['add-duration', Effect.newDuration],
+	['add-expr', Effect.newExpression],
+	['add-applied', Effect.newApplied],
+	['add-defense', Effect.newDefense],
+	['roll-modifier', Effect.newRollMod, 'rollMod'],
+	['bonus', Effect.newBonus, 'extraBonus'],
+	['uses-ability', Effect.newUsesAbility, 'usesAbility']
+];
+
+const FILTER_SELECTIONS = {
+	score: {
+		ability: ['ABILITIES', 'Ability'],
+		speed: ['SPEEDS', 'Speed'],
+		passive: ['SKILLS', 'Skill'],
+		dc: ['EFFECT_ABILITIES', 'Ability']
+	},
+	roll: {
+		attack: ['EFFECT_FILTER_ATTACKS', 'Attack'],
+		save: ['EFFECT_FILTER_SAVES', 'Ability'],
+		check: {
+			ability: ['ABILITIES', 'Ability'],
+			skill: ['SKILLS', 'Skill']
+		},
+		damage: {
+			damage: ['EFFECT_DAMAGE_TYPES', 'Damage'],
+			attack: ['EFFECT_FILTER_ATTACKS', 'Attack']
+		}
+	}
 };
 
 export class ObsidianEffectSheet extends ObsidianItemSheet {
@@ -53,21 +78,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		Object.entries(COMPONENT_MAP).forEach(([cls, fn]) =>
-			html.find(`.obsidian-${cls}`).click(this._onAddComponent.bind(this, fn)));
+		COMPONENT_MAP.forEach(([cls, fn, sub]) => {
+			if (sub) {
+				html.find(`.obsidian-rm-${cls}`).click(this._onRemoveSelected.bind(this, sub));
+				cls = `add-${cls}`;
+			}
+
+			html.find(`.obsidian-${cls}`).click(this._onAddComponent.bind(this, fn, sub));
+		});
 
 		html.find('.obsidian-add-effect').click(this._onAddEffect.bind(this));
-		html.find('.obsidian-roll-modifier')
-			.click(this._onAddComponent.bind(this, Effect.newRollMod, 'rollMod'));
-		html.find('.obsidian-add-bonus')
-			.click(this._onAddComponent.bind(this, Effect.newBonus, 'extraBonus'));
-		html.find('.obsidian-add-uses-ability')
-			.click(this._onAddComponent.bind(this, Effect.newUsesAbility, 'usesAbility'));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
-		html.find('.obsidian-rm-roll-modifier').click(this._onRemoveSelected.bind(this, 'rollMod'));
-		html.find('.obsidian-rm-bonus').click(this._onRemoveSelected.bind(this, 'extraBonus'));
-		html.find('.obsidian-rm-uses-ability')
-			.click(this._onRemoveSelected.bind(this, 'usesAbility'));
 		html.find('.obsidian-effect').click(evt =>
 			this._onEffectSelected(evt.currentTarget.dataset.uuid));
 		html.find('.obsidian-effect legend').click(evt => {
@@ -161,7 +182,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			});
 
 		data.usesAbilities = {};
-		OBSIDIAN.Rules.ABILITIES.forEach(abl =>
+		Rules.ABILITIES.forEach(abl =>
 			data.usesAbilities[abl] = `OBSIDIAN.Ability-${abl}`);
 
 		return data;
@@ -217,52 +238,18 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	_generateFilterSelections (component) {
-		let rule;
-		let i18n;
 		const selections = {};
+		let current = FILTER_SELECTIONS;
+		let filter = component.filter;
 
-		if (component.filter === 'score') {
-			if (component.score === 'ability') {
-				rule = OBSIDIAN.Rules.ABILITIES;
-				i18n = 'OBSIDIAN.Ability';
-			} else if (component.score === 'speed') {
-				rule = OBSIDIAN.Rules.SPEEDS;
-				i18n = 'OBSIDIAN.Speed';
-			} else if (component.score === 'passive') {
-				rule = OBSIDIAN.Rules.SKILLS;
-				i18n = 'OBSIDIAN.Skill';
-			} else if (component.score === 'dc') {
-				rule = OBSIDIAN.Rules.EFFECT_ABILITIES;
-				i18n = 'OBSIDIAN.Ability';
-			}
-		} else {
-			if (component.roll === 'attack') {
-				rule = OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS;
-				i18n = 'OBSIDIAN.Attack';
-			} else if (component.roll === 'check') {
-				if (component.check === 'ability') {
-					rule = OBSIDIAN.Rules.ABILITIES;
-					i18n = 'OBSIDIAN.Ability';
-				} else if (component.check === 'skill') {
-					rule = OBSIDIAN.Rules.SKILLS;
-					i18n = 'OBSIDIAN.Skill';
-				}
-			} else if (component.roll === 'save') {
-				rule = OBSIDIAN.Rules.EFFECT_FILTER_SAVES;
-				i18n = 'OBSIDIAN.Ability';
-			} else if (component.roll === 'damage') {
-				if (component.dmg === 'damage') {
-					rule = OBSIDIAN.Rules.EFFECT_DAMAGE_TYPES;
-					i18n = 'OBSIDIAN.Damage';
-				} else if (component.dmg === 'attack') {
-					rule = OBSIDIAN.Rules.EFFECT_FILTER_ATTACKS;
-					i18n = 'OBSIDIAN.Attack';
-				}
-			}
-		}
+		do {
+			current = current[filter];
+			filter = component[filter] || component.dmg;
+		} while (!Array.isArray(current) && current !== undefined);
 
+		const [rule, i18n] = current || [];
 		if (rule && i18n) {
-			rule.forEach(k => selections[k] = game.i18n.localize(`${i18n}-${k}`));
+			Rules[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}-${k}`));
 		}
 
 		if (this.actor
