@@ -1,3 +1,5 @@
+import {OBSIDIAN} from '../global.js';
+
 export function addTransformHook () {
 	Hooks.on('dnd5e.transformActor', transform);
 }
@@ -21,5 +23,26 @@ function transform (original, target, data) {
 				data.flags.obsidian.saves[id].bonus += ta.save - newSave;
 			}
 		}
+	}
+
+	const hdFormula = target.data.data.attributes.hp.formula;
+	if (!OBSIDIAN.notDefinedOrEmpty(hdFormula) && hdFormula.includes('d')) {
+		const [n, d] = hdFormula.split('d');
+		const hd = data.flags.obsidian.attributes.hd;
+		data.items.filter(i => i.type === 'class')
+			.concat({data: {hitDice: `d${d}`}})
+			.forEach(cls => {
+				let existing = hd[cls.data.hitDice || 'd6'];
+				if (!existing) {
+					existing = {value: 0, max: 0};
+					hd[cls.data.hitDice || 'd6'] = existing;
+				}
+
+				existing.override = 0;
+				if (`d${d}` === cls.data.hitDice) {
+					existing.override = Number(n);
+					existing.value = Number(n);
+				}
+			});
 	}
 }
