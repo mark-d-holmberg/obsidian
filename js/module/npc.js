@@ -132,7 +132,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			}
 
 			category.push(item);
-			item.obsidian.attacks.forEach(Obsidian.prototype._reifyAttackLinks, this);
+			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
 		}
 
 		return data;

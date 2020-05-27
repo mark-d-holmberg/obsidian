@@ -56,7 +56,8 @@ export const Prepare = {
 		}
 	},
 
-	calculateSave: function (actorData, item, dc, data, cls) {
+	calculateSave: function (actorData, item, dc, cls) {
+		const data = actorData.data;
 		if (dc.calc === 'fixed') {
 			dc.value = dc.fixed;
 			return;
@@ -95,7 +96,8 @@ export const Prepare = {
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
 
-	calculateHit: function (actorData, hit, data, cls) {
+	calculateHit: function (actorData, hit, cls) {
+		const data = actorData.data;
 		hit.rollParts = [{
 			mod: hit.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -130,7 +132,8 @@ export const Prepare = {
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
-	calculateDamage: function (actorData, dmg, data, cls) {
+	calculateDamage: function (actorData, dmg, cls) {
+		const data = actorData.data;
 		dmg.rollParts = [{
 			mod: dmg.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus'),
@@ -157,7 +160,10 @@ export const Prepare = {
 		}
 	},
 
-	calculateResources: function (data, item, effect, resource, classes) {
+	calculateResources: function (actorData, item, effect, resource) {
+		const data = actorData.data;
+		const classes = actorData.obsidian.classes;
+
 		if (resource.calc === 'fixed') {
 			resource.max = resource.fixed;
 		} else {

@@ -30,6 +30,99 @@ export function getSourceClass (actorData, source) {
 	}
 }
 
+const prepareComponents = {
+	attack: function (actorData, item, effect, component, cls) {
+		Prepare.calculateHit(actorData, component, cls);
+		Prepare.calculateAttackType(item.flags.obsidian, component);
+	},
+
+	damage: function (actorData, item, effect, component, cls) {
+		Prepare.calculateDamage(actorData, component, cls);
+	},
+
+	save: function (actorData, item, effect, component, cls) {
+		Prepare.calculateSave(actorData, item, component, cls);
+	},
+
+	resource: function (actorData, item, effect, component) {
+		Prepare.calculateResources(actorData, item, effect, component);
+
+		component.label =
+			component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
+
+		item.flags.obsidian.notes.push(
+			'<div class="obsidian-table-note-flex">'
+				+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
+					+ component.label
+				+ `</div>: ${component.display}`
+			+ '</div>');
+	},
+
+	target: function (actorData, item, effect, component) {
+		if (component.target === 'area' && !effect.isLinked) {
+			item.flags.obsidian.notes.push(
+				`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
+				+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
+		}
+	},
+
+	consume: function (actorData, item, effect, component) {
+		if (component.calc === 'var') {
+			component.fixed = 1;
+		}
+
+		if (component.target === 'this-item' || component.target === 'this-effect') {
+			component.itemID = item._id;
+		}
+	},
+
+	spells: function (actorData, item, effect, component) {
+		if (component.source === 'individual' && component.method === 'list') {
+			const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
+			component.spells.forEach(id => {
+				const spell = actorData.obsidian.itemsByID.get(id);
+				if (!spell) {
+					return;
+				}
+
+				spell.flags.obsidian.visible = false;
+				if (cls && getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+					cls.flags.obsidian.spellcasting.spellList.push(spell);
+				}
+			});
+		} else if (component.source === 'list'
+			&& getProperty(item, 'flags.obsidian.source.type') === 'class'
+			&& OBSIDIAN.Data.SPELLS_BY_CLASS[component.list])
+		{
+			const cls = actorData.obsidian.classes.find(cls =>
+				cls._id === item.flags.obsidian.source.class);
+
+			if (!cls || !getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+				return;
+			}
+
+			const list = cls.flags.obsidian.spellcasting.spellList;
+			const existing = new Set(list.map(spell => spell._id));
+
+			cls.flags.obsidian.spellcasting.spellList =
+				list.concat(
+					OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
+						.filter(spell => !existing.has(spell._id)));
+		}
+
+		if (component.source === 'individual' && component.method === 'item') {
+			item.flags.obsidian.notes.push(...component.spells
+				.map(id => actorData.obsidian.itemsByID.get(id))
+				.map(spell =>
+					'<div class="obsidian-table-note-flex">'
+					+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
+					+ `${spell.name}</div></div>`));
+		}
+	}
+};
+
+prepareComponents.produce = prepareComponents.consume;
+
 export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
 	if (!item.flags || !item.flags.obsidian || !actor) {
 		return;
@@ -118,82 +211,9 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				item.obsidian.collection[collection].push(component);
 			}
 
-			if (component.type === 'attack') {
-				Prepare.calculateHit(actorData, component, data, cls);
-				Prepare.calculateAttackType(flags, component);
-			} else if (component.type === 'damage') {
-				Prepare.calculateDamage(actorData, component, data, cls);
-			} else if (component.type === 'save') {
-				Prepare.calculateSave(actorData, item, component, data, cls);
-			} else if (component.type === 'resource') {
-				Prepare.calculateResources(
-					data, item, effect, component, actorData.obsidian.classes);
-
-				component.label =
-					component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
-
-				flags.notes.push(
-					'<div class="obsidian-table-note-flex">'
-						+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
-							+ component.label
-						+ `</div>: ${component.display}`
-					+ '</div>');
-			} else if (component.type === 'target') {
-				if (component.target === 'area' && !effect.isLinked) {
-					flags.notes.push(
-						`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
-						+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
-				}
-			} else if (component.type === 'consume' || component.type === 'produce') {
-				if (component.calc === 'var') {
-					component.fixed = 1;
-				}
-
-				if (component.target === 'this-item' || component.target === 'this-effect') {
-					component.itemID = item._id;
-				}
-			} else if (component.type === 'spells') {
-				if (component.source === 'individual' && component.method === 'list') {
-					const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
-					component.spells.forEach(id => {
-						const spell = actorData.obsidian.itemsByID.get(id);
-						if (!spell) {
-							return;
-						}
-
-						spell.flags.obsidian.visible = false;
-						if (cls && getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
-							cls.flags.obsidian.spellcasting.spellList.push(spell);
-						}
-					});
-				} else if (component.source === 'list'
-					&& getProperty(item, 'flags.obsidian.source.type') === 'class'
-					&& OBSIDIAN.Data.SPELLS_BY_CLASS[component.list])
-				{
-					const cls = actorData.obsidian.classes.find(cls =>
-						cls._id === item.flags.obsidian.source.class);
-
-					if (!cls || !getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
-						return;
-					}
-
-					const list = cls.flags.obsidian.spellcasting.spellList;
-					const existing = new Set(list.map(spell => spell._id));
-
-					cls.flags.obsidian.spellcasting.spellList =
-						list.concat(
-							OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
-								.filter(spell => !existing.has(spell._id)));
-				}
-
-				if (component.source === 'individual' && component.method === 'item') {
-					flags.notes.push(...component.spells
-						.map(id => actorData.obsidian.itemsByID.get(id))
-						.map(spell =>
-							'<div class="obsidian-table-note-flex">'
-							+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
-							+ `${spell.name}</div></div>`));
-				}
+			const prepare = prepareComponents[component.type];
+			if (prepare) {
+				prepare(actorData, item, effect, component, cls);
 			}
 		}
 

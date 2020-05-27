@@ -24,7 +24,7 @@
 			{{format-uses @root.actor feat}}
 		</div>
 		{{#if @root.isNPC}}
-		{{#each feat.obsidian.attacks}}
+		{{#each feat.obsidian.collection.attack}}
 		<div class="obsidian-attack-line">
 			<div class="obsidian-col-icon">
 				{{#if (eq parentItem.type 'spell')}}
