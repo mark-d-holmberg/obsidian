@@ -171,11 +171,13 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	}
 
 	_enterCR (evt) {
+		const crs = {0: '0', .125: '1/8', .25: '1/4', .5: '1/2'};
+		const cr = this.actor.data.data.details.cr;
 		const target = $(evt.currentTarget);
 		target.off();
 		target.empty();
 		target.append(
-			$(`<input type="text" name="data.details.cr" value="${this.actor.data.data.details.cr}"`
+			$(`<input type="text" name="data.details.cr" value="${crs[cr] || cr}"`
 				+ ` placeholder="${game.i18n.localize('OBSIDIAN.Challenge')}">`));
 
 		target.find('input').focus().focusout(evt => {
@@ -186,8 +188,14 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			if (value === '') {
 				value = '—';
 			} else {
+				let cr = Number(value);
+				if (isNaN(cr) && value.includes('/')) {
+					const [nom, denom] = value.split('/');
+					cr = nom / denom;
+				}
+
 				value = `${value} <span class="obsidian-npc-subtle">(`
-					+ Intl.NumberFormat().format(this.actor.getCRExp(Number(value)))
+					+ Intl.NumberFormat().format(this.actor.getCRExp(cr))
 					+ ` ${game.i18n.localize('OBSIDIAN.XP')})</span>`;
 			}
 

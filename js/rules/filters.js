@@ -26,12 +26,13 @@ export const Filters = {
 		OBSIDIAN.notDefinedOrEmpty(filter.usesAbility) || filter.usesAbility.abilities[abl],
 
 	filterEffects: (effects, collection, pred) =>
-		effects.filter(effect => effect.toggle && effect.toggle.active && effect[collection].length)
+		effects.filter(effect =>
+			effect.toggle && effect.toggle.active && effect.active[collection].length)
 			.filter(effect => !effect.filters.length || effect.filters.some(pred))
-			.flatMap(effect => effect[collection]),
+			.flatMap(effect => effect.active[collection]),
 
-	mods: effects => pred => Filters.filterEffects(effects, 'mods', pred),
-	bonuses: effects => pred => Filters.filterEffects(effects, 'bonuses', pred),
+	mods: effects => pred => Filters.filterEffects(effects, 'roll-mod', pred),
+	bonuses: effects => pred => Filters.filterEffects(effects, 'bonus', pred),
 
 	appliesTo: {
 		abilityChecks: (ability, mode) => filter =>
