@@ -9,7 +9,7 @@
 				<div class="obsidian-fullwidth obsidian-checkbox-row">
 					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
 					       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
-					<select name="flags.obsidian.subtype">
+					<select name="flags.obsidian.subtype" data-selector="subtype">
 						{{#select item.flags.obsidian.subtype}}
 							{{#each ObsidianRules.CONSUMABLE_TYPES}}
 								<option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumableType-' this}}</option>
@@ -39,6 +39,16 @@
 					                 checked=item.flags.obsidian.attunement}}
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline"
+	     data-selector-parent="subtype" data-show="ammo">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical' selector='magic'
+			                 checked=item.flags.obsidian.magical}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-selector-parent="magic" data-dtype="Number" name="flags.obsidian.magicBonus"
+			       value="{{item.flags.obsidian.magicBonus}}">
 		</div>
 	</div>
 </fieldset>

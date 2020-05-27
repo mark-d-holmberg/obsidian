@@ -96,10 +96,10 @@ export const Prepare = {
 		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
 	},
 
-	calculateHit: function (actorData, hit, cls) {
+	calculateHit: function (actorData, item, hit, cls) {
 		const data = actorData.data;
 		hit.rollParts = [{
-			mod: hit.bonus || 0,
+			mod: weaponBonus(actorData, item, hit),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
@@ -132,10 +132,10 @@ export const Prepare = {
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
-	calculateDamage: function (actorData, dmg, cls) {
+	calculateDamage: function (actorData, item, dmg, cls) {
 		const data = actorData.data;
 		dmg.rollParts = [{
-			mod: dmg.bonus || 0,
+			mod: weaponBonus(actorData, item, dmg),
 			name: game.i18n.localize('OBSIDIAN.Bonus'),
 			constant: true
 		}];
@@ -752,3 +752,25 @@ export const Prepare = {
 		return out;
 	}
 };
+
+function weaponBonus (actorData, item, component) {
+	let bonus = component.bonus || 0;
+	if (item.type !== 'weapon') {
+		return bonus;
+	}
+
+	if (item.flags.obsidian.magical && item.flags.obsidian.magicBonus) {
+		bonus += item.flags.obsidian.magicBonus;
+	}
+
+	if (item.flags.obsidian.tags?.ammunition
+		&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.ammo?.id))
+	{
+		const ammo = actorData.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
+		if (ammo && ammo.flags.obsidian.magical && ammo.flags.obsidian.magicBonus) {
+			bonus += ammo.flags.obsidian.magicBonus;
+		}
+	}
+
+	return bonus;
+}

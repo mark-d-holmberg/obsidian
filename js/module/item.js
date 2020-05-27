@@ -32,12 +32,12 @@ export function getSourceClass (actorData, source) {
 
 const prepareComponents = {
 	attack: function (actorData, item, effect, component, cls) {
-		Prepare.calculateHit(actorData, component, cls);
+		Prepare.calculateHit(actorData, item, component, cls);
 		Prepare.calculateAttackType(item.flags.obsidian, component);
 	},
 
 	damage: function (actorData, item, effect, component, cls) {
-		Prepare.calculateDamage(actorData, component, cls);
+		Prepare.calculateDamage(actorData, item, component, cls);
 	},
 
 	save: function (actorData, item, effect, component, cls) {

@@ -23,8 +23,6 @@
 							{{/each}}
 						{{/select}}
 					</select>
-					{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical'
-					                 checked=item.flags.obsidian.magical}}
 				</div>
 			</div>
 			<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
@@ -48,25 +46,25 @@
 			</div>
 		</div>
 	</div>
-	<div class="
-		{{~#unless (or item.flags.obsidian.tags.thrown (eq item.flags.obsidian.type 'ranged'))~}}
-			obsidian-hidden
-		{{~/unless}} obsidian-form-row obsidian-range-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
+			<label class="obsidian-inline obsidian-range-part">
 				{{localize 'OBSIDIAN.Range'}}
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-				       data-dtype="Number" placeholder="0" name="data.range.value"
+				       data-dtype="Number" placeholder="&mdash;" name="data.range.value"
 				       value="{{item.data.range.value}}">
 			</label>
-			<span class="obsidian-binary-operator">&sol;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-			       data-dtype="Number" placeholder="0" name="data.range.long"
+			<span class="obsidian-binary-operator obsidian-range-part">&sol;</span>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md obsidian-range-part"
+			       data-dtype="Number" placeholder="&mdash;" name="data.range.long"
 			       value="{{item.data.range.long}}">
-			{{#if item.flags.obsidian.tags.thrown}}
-				{{fancy-checkbox 'flags.obsidian.consumeThrown' content='OBSIDIAN.ConsumeWhenThrown'
-				                 checked=item.flags.obsidian.consumeThrown}}
-			{{/if}}
+			{{fancy-checkbox 'flags.obsidian.consumeThrown' content='OBSIDIAN.ConsumeWhenThrown'
+			                 checked=item.flags.obsidian.consumeThrown}}
+			{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical' selector='magic'
+			                 checked=item.flags.obsidian.magical}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-selector-parent="magic" data-dtype="Number" name="flags.obsidian.magicBonus"
+			       value="{{item.flags.obsidian.magicBonus}}">
 		</div>
 	</div>
 </fieldset>

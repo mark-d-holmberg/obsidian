@@ -104,6 +104,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-provide-spell-body').click(this._onEditSpell.bind(this));
 		html.find('summary').click(this._saveCategoryStates.bind(this));
 
+		this._onCheckBoxClicked();
 		if (!this._addedClickHandler) {
 			document.addEventListener('click', this._anywhereClickHandler);
 			this._addedClickHandler = true;
@@ -347,16 +348,28 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
-		const range = this.element.find('.obsidian-range-row');
-		if (!range.length) {
+		const range = this.element.find('.obsidian-range-part');
+		const consume = this.element.find('[data-bound="flags.obsidian.consumeThrown"]');
+		const magic = this.element.find('[data-bound="flags.obsidian.magical"]');
+
+		if (!range.length || !consume.length) {
 			return;
 		}
 
+		range.addClass('obsidian-hidden');
+		consume.addClass('obsidian-hidden');
+		magic.attr('style', 'margin-left: 0;')
 		const thrown = this.element.find('input[name="flags.obsidian.tags.thrown"]');
+
 		if (thrown.length && thrown.prop('checked')) {
 			range.removeClass('obsidian-hidden');
-		} else if (this.item.data.flags.obsidian.type !== 'ranged') {
-			range.addClass('obsidian-hidden');
+			consume.removeClass('obsidian-hidden');
+			magic.attr('style', '');
+		}
+
+		if (this.item.data.flags.obsidian.type === 'ranged') {
+			range.removeClass('obsidian-hidden');
+			magic.attr('style', '');
 		}
 	}
 
