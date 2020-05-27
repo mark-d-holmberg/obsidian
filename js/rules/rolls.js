@@ -582,7 +582,7 @@ export const Rolls = {
 		}
 
 		if (expr.length) {
-			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr));
+			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr, scaledAmount));
 		}
 
 		if (damage.length && !attacks.length && multiDamage > 0) {
@@ -901,8 +901,12 @@ export const Rolls = {
 		};
 	},
 
-	rollExpression: function (actor, expr) {
-		const roll = new Roll(expr.expr, actor.data.data).roll();
+	rollExpression: function (actor, expr, scaledAmount) {
+		const data = actor.getRollData();
+		data.scaling = scaledAmount || 0;
+
+		const roll = new Roll(expr.expr, data).roll();
+
 		return {
 			total: roll.total,
 			flavour: expr.flavour,

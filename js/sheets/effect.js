@@ -352,10 +352,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const consume = this.element.find('[data-bound="flags.obsidian.consumeThrown"]');
 		const magic = this.element.find('[data-bound="flags.obsidian.magical"]');
 
-		if (!range.length || !consume.length) {
-			return;
-		}
-
 		range.addClass('obsidian-hidden');
 		consume.addClass('obsidian-hidden');
 		magic.attr('style', 'margin-left: 0;')
