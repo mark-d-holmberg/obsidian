@@ -7,6 +7,7 @@ import {bonusToParts, highestProficiency} from './bonuses.js';
 import {handleDurations} from '../module/duration.js';
 import {DAMAGE_CONVERT} from '../migration/convert.js';
 import {ObsidianActor} from '../module/actor.js';
+import {hasDefenseAgainst} from './defenses.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
@@ -98,13 +99,6 @@ export const Rolls = {
 		const target = $(evt.currentTarget);
 		const damage = new Map();
 		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + Number(value));
-		const reduceDefenses = level => (acc, def) => {
-			if (def.level === level) {
-				acc.push(def.dmg);
-			}
-
-			return acc;
-		};
 
 		if (target.data('apply-all')) {
 			target.closest('.obsidian-msg-row-dmg').prev().find('[data-dmg]').each((i, el) =>
@@ -113,38 +107,36 @@ export const Rolls = {
 			accumulate(target.data('type'), target.data('dmg'));
 		}
 
+		let attack;
+		const message = game.messages.get(target.closest('.message').data('message-id'));
+
+		if (message) {
+			attack = message.data.flags.obsidian.damage?.attack;
+		}
+
 		game.user.targets.forEach(async token => {
 			const data = token.actor.data.data;
-			const flags = token.actor.data.flags.obsidian;
-			const npc = token.actor.data.type === 'npc';
+			const defenses = token.actor.data.flags.obsidian.defenses;
 			let hp = data.attributes.hp.value;
 
 			Array.from(damage.entries()).forEach(([type, dmg]) => {
-				const immune =
-					npc ? data.traits.di.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('imm'), []);
+				const isImmune = hasDefenseAgainst(defenses, attack, type, 'imm');
+				const isResistant = hasDefenseAgainst(defenses, attack, type, 'res');
+				const isVulnerable = defenses.vuln.includes(type);
 
-				const resist =
-					npc ? data.traits.dr.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('res'), []);
-
-				const vuln =
-					npc ? data.traits.dv.value.map(d => DAMAGE_CONVERT[d])
-						: flags.defenses.damage.reduce(reduceDefenses('vuln'), []);
-
-				if (immune.includes(type)) {
+				if (isImmune) {
 					return;
 				}
 
-				if (resist.includes(type)) {
+				if (isResistant) {
 					dmg /= 2;
 				}
 
-				if (vuln.includes(type)) {
+				if (isVulnerable) {
 					dmg *= 2;
 				}
 
-				hp -= Math.clamped(Math.floor(dmg), 1, Infinity);
+				hp -= Math.max(1, Math.floor(dmg));
 			});
 
 			await token.actor.update({'data.attributes.hp.value': hp});
@@ -435,6 +427,7 @@ export const Rolls = {
 						type: 'dmg',
 						title: item.name,
 						damage: Rolls.rollDamage(actor, damage, {
+							item: item,
 							scaledAmount: scaledAmount, scaling: scaling
 						})
 					}
@@ -573,7 +566,8 @@ export const Rolls = {
 		} else if (damage.length && multiDamage < 1) {
 			results[0].damage = Rolls.rollDamage(actor, damage, {
 				scaledAmount: scaledAmount,
-				scaling: scaling
+				scaling: scaling,
+				item: item
 			});
 		}
 
@@ -592,7 +586,8 @@ export const Rolls = {
 					title: name ? name : effect.name.length ? effect.name : item.name,
 					damage: Rolls.rollDamage(actor, damage, {
 						scaledAmount: scaledAmount,
-						scaling: scaling
+						scaling: scaling,
+						item: item
 					})
 				});
 			}
@@ -777,7 +772,7 @@ export const Rolls = {
 		};
 	},
 
-	rollDamage: function (actor, damage, {scaledAmount = 0, scaling = null}) {
+	rollDamage: function (actor, damage, {scaledAmount = 0, scaling = null, item = null}) {
 		damage = damage.concat(
 			damage.flatMap(dmg => dmg.rollParts)
 				.filter(mod => mod.ndice !== undefined)
@@ -888,7 +883,20 @@ export const Rolls = {
 			};
 		});
 
+		let attack;
+		if (item) {
+			attack = {};
+			if (item.type === 'spell') {
+				attack.magical = true;
+			} else if (item.type === 'weapon') {
+				attack.magical = item.flags.obsidian.magical;
+				attack.silver = item.flags.obsidian.tags.silver;
+				attack.adamantine = item.flags.obsidian.tags.adamantine;
+			}
+		}
+
 		return {
+			attack: attack,
 			hit: {total: total('hit'), results: results('hit')},
 			crit: {total: total('crit'), results: results('crit')},
 			data3d: {

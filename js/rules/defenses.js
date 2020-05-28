@@ -11,7 +11,7 @@ export function prepareDefenses (actorData, flags) {
 
 	// Convert to normal arrays to avoid being nuked during duplication.
 	['vuln', 'conds'].forEach(def =>
-		flags.defenses[def] = flags.defenses[def].values());
+		flags.defenses[def] = Array.from(flags.defenses[def].values()));
 }
 
 function prepareActiveDefenses (actorData, flags) {
@@ -59,7 +59,15 @@ function prepareManualDefenses (flags) {
 	flags.defenses.resDisplay = '';
 	flags.defenses.immDisplay = '';
 	flags.defenses.condDisplay = conditions.join(', ');
-	flags.defenses.damage.forEach(def => flags.defenses[def.level].push(def));
+	flags.defenses.damage.forEach(def => {
+		const collection = flags.defenses[def.level];
+		if (collection instanceof Set) {
+			collection.add(def.dmg);
+		} else {
+			collection.push(def);
+		}
+	});
+
 	flags.defenses.vulnDisplay =
 		Array.from(flags.defenses.vuln.values())
 			.map(dmg => game.i18n.localize(`OBSIDIAN.Damage-${dmg}`))
@@ -118,4 +126,28 @@ function prepareManualDefenses (flags) {
 	}
 
 	flags.defenses.pcImmDisplay = flags.defenses.pcImmDisplay.join(', ');
+}
+
+export function hasDefenseAgainst (defenses, attack, type, level) {
+	for (const def of defenses[level]) {
+		if (def.dmg !== type) {
+			continue;
+		}
+
+		if (def.magic === 'non' && attack?.magical) {
+			continue;
+		}
+
+		if (def.material === 'adm' && attack?.adamantine) {
+			continue;
+		}
+
+		if (def.material === 'sil' && attack?.silver) {
+			continue;
+		}
+
+		return true;
+	}
+
+	return false;
 }
