@@ -32,7 +32,7 @@ function prepareSpeed (actorData, flags) {
 	const hover = game.i18n.localize('OBSIDIAN.Hover').toLowerCase();
 	const walk = flags.attributes.speed.walk?.override;
 
-	if (walk) {
+	if (!OBSIDIAN.notDefinedOrEmpty(walk)) {
 		speed.push(`${walk} ${feet}`);
 	}
 

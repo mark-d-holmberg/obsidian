@@ -32,7 +32,8 @@ export const Migrate = {
 		}
 
 		if (source === 'core') {
-			Migrate.convertSpeed(data);
+			Migrate.core.convertSpeed(data);
+			Migrate.core.convertDefenses(data);
 		}
 
 		if (data.flags.obsidian.version < 2) {
@@ -400,14 +401,6 @@ export const Migrate = {
 		}
 	},
 
-	convertSpeed: function (data) {
-		if (data.data?.attributes.speed.value) {
-			data.flags.obsidian.attributes.speed = {
-				walk: {override: parseInt(data.data.attributes.speed.value)}
-			}
-		}
-	},
-
 	convertSpell: function (data, source, actorData) {
 		const classMap = new Map();
 		if (actorData) {
@@ -612,20 +605,42 @@ Migrate.v5 = v5;
 Migrate.v6 = v6;
 
 function lazyConvert () {
-	if (CONVERT.profs) {
-		return;
-	}
+	const convert = (key, convert) => {
+		if (CONVERT[key]) {
+			return;
+		}
 
-	CONVERT.profs = {};
+		CONVERT[key] = {};
+		convert.forEach(([p, t, r]) =>
+			CONVERT[key][p] =
+				new Map(Rules[r].map(key =>
+					[game.i18n.localize(`OBSIDIAN.${t}-${key}`).toLowerCase(), key])));
+	};
 
-	[
+	convert('profs', [
 		['weaponProf', 'WeaponProf', 'PROF_WEAPON'],
 		['armorProf', 'ArmourProf', 'PROF_ARMOUR'],
 		['languages', 'Lang', 'PROF_LANG']
-	].forEach(([p, t, r]) =>
-		CONVERT.profs[p] =
-			new Map(Rules[r].map(key =>
-				[game.i18n.localize(`OBSIDIAN.${t}-${key}`).toLowerCase(), key])));
+	]);
+
+	convert('defs', [
+		['conditions', 'Condition', 'CONVERT_CONDITIONS'],
+		['damage', 'Damage', 'CONVERT_DAMAGE_TYPES']
+	]);
+
+	convertSpeeds();
+}
+
+function convertSpeeds () {
+	if (CONVERT.speeds) {
+		return;
+	}
+
+	CONVERT.speeds =
+		new Map(Rules.SPEEDS.map(key =>
+			[game.i18n.localize(`OBSIDIAN.SpeedAbbr-${key}`).toLowerCase(), key]));
+
+	CONVERT.speeds.hover = new RegExp(`\(${game.i18n.localize('OBSIDIAN.Hover')}\)`);
 }
 
 function translateOrElseOriginal (key, original) {

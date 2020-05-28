@@ -90,17 +90,17 @@ function prepareManualDefenses (flags) {
 		flags.defenses[display] = Array.from(noCondition.values()).join(', ');
 
 		const parts = [flags.defenses[display]];
-		if (nonMagical.length) {
+		if (nonMagical.size) {
 			parts[1] = Array.from(nonMagical.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagical')}`;
 		}
 
-		if (nonMagicalSil.length) {
+		if (nonMagicalSil.size) {
 			parts[2] = Array.from(nonMagicalSil.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalSil')}`;
 		}
 
-		if (nonMagicalAdm.length) {
+		if (nonMagicalAdm.size) {
 			parts[3] = Array.from(nonMagicalAdm.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalAdm')}`;
 		}

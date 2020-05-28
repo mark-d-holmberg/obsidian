@@ -30,6 +30,9 @@ Rules.CONDITIONS = [
 	'paralysed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'
 ];
 
+Rules.CONVERT_CONDITIONS = Rules.CONDITIONS.concat('exhaustion');
+Rules.CONVERT_DAMAGE_TYPES = Rules.DAMAGE_TYPES.concat('nonmagical');
+
 Rules.CLASS_HIT_DICE = {
 	art: 8,
 	brb: 12,

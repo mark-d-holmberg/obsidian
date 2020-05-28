@@ -281,6 +281,72 @@ export const core = {
 
 		component.bonus = total;
 		return component;
+	},
+
+	convertDefenses: function (data) {
+		const defenses = data.flags.obsidian.defenses;
+		data.data.traits.ci.value.forEach(condition => {
+			const key = CONVERT.defs.conditions.get(condition.toLowerCase());
+			defenses.conditions.push(key || condition);
+		});
+
+		[['di', 'imm'], ['dr', 'res'], ['dv', 'vuln']].forEach(([key, level]) => {
+			const def = data.data.traits[key];
+			defenses.damage.push(...def.value.map(def => {
+				return {
+					level: level,
+					dmg: CONVERT.defs.damage.get(def.toLowerCase()) || def,
+					magic: '',
+					material: ''
+				};
+			}));
+
+			def.custom.split(';').forEach(def => {
+				if (CONVERT.defs.damage.get(def.trim().toLowerCase()) === 'nonmagical') {
+					defenses.damage.push(...['blg', 'prc', 'slh'].map(dmg => {
+						return {level: level, dmg: dmg, magic: 'non'};
+					}));
+				}
+			});
+		});
+	},
+
+	convertSpeed: function (data) {
+		if (data.data?.attributes.speed.value) {
+			const value = /\d+/.exec(data.data.attributes.speed.value);
+			if (!OBSIDIAN.notDefinedOrEmpty(value)) {
+				data.flags.obsidian.attributes.speed = {
+					walk: {override: Number(value)}
+				};
+			}
+		}
+
+		if (data.data?.attributes.speed.special) {
+			data.data.attributes.speed.special.split(';').forEach(speedString => {
+				speedString = speedString.trim();
+				const value = /\d+/.exec(speedString);
+
+				if (value === null) {
+					return;
+				}
+
+				let spd;
+				speedString.split(' ').forEach(word => {
+					const convert = CONVERT.speeds.get(word.toLowerCase());
+					if (convert) {
+						spd = convert;
+					}
+				});
+
+				if (spd) {
+					data.flags.obsidian.attributes.speed[spd] = {override: Number(value[0])};
+					if (spd === 'fly') {
+						data.flags.obsidian.attributes.speed.fly.hover =
+							CONVERT.speeds.hover.test(speedString);
+					}
+				}
+			});
+		}
 	}
 };
 
