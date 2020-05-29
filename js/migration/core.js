@@ -284,6 +284,10 @@ export const core = {
 	},
 
 	convertDefenses: function (data) {
+		if (!data.data) {
+			return;
+		}
+
 		const defenses = data.flags.obsidian.defenses;
 		data.data.traits.ci.value.forEach(condition => {
 			const key = CONVERT.defs.conditions.get(condition.toLowerCase());
