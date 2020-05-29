@@ -244,7 +244,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	}
 
 	item.obsidian.collection.applied.forEach(e =>
-		effectMap?.get(e.appliedComponent.ref).applies.push(e));
+		effectMap?.get(e.appliedComponent.ref)?.applies.push(e.uuid));
 
 	item.obsidian.actionable = item.obsidian.actionable.flatMap(action => {
 		const spells = action.components.filter(c => c.type === 'spells');

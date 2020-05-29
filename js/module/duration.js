@@ -76,7 +76,7 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 
 async function createActiveEffect (target, actor, effect, duration) {
 	const originalItem = actor.data.obsidian.itemsByID.get(effect.parentItem);
-	const effects = duplicate(effect.applies);
+	const effects = duplicate(effect.applies.map(uuid => actor.data.obsidian.effects.get(uuid)));
 	effects.forEach(e => {
 		e.uuid = OBSIDIAN.uuid();
 		e.components = e.components.filter(c => c.type !== 'duration' && c.type !== 'applied');
