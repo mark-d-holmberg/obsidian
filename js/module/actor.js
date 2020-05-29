@@ -266,7 +266,7 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	getItemParent (item) {
-		return this.data.items.find(other => other._id === item.flags.obsidian.parent);
+		return this.data.items.find(other => other._id === item?.flags.obsidian.parent);
 	}
 
 	async shortRest () {

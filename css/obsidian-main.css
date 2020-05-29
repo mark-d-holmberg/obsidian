@@ -148,6 +148,11 @@
 	border: none;
 }
 
+.obsidian .obsidian-tr #context-menu.expand-up {
+	bottom: unset;
+	top: calc(100% + 2px);
+}
+
 .obsidian-col-icon {
 	width: 27px;
 }

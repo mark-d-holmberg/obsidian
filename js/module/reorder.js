@@ -103,21 +103,17 @@ export const Reorder = {
 			}
 		}
 
-		const [row, container] = Reorder.detectElementBeneath(event);
-		if (!row && !container) {
+		const [row, container, contents] = Reorder.detectElementBeneath(event);
+		if (!row && !container && !contents) {
 			return false;
 		}
 
 		const target = row ? row : container;
 		const half = Reorder.whichHalf(event, target);
 		const where = half === 'bottom' ? 'after' : 'before';
-		const destID = target.dataset.itemId;
+		const destID = target?.dataset.itemId;
 		const dest = items.find(item => item._id === destID);
 		const update = {};
-
-		if (!dest) {
-			return false;
-		}
 
 		if (idData) {
 			if (srcID === destID) {
@@ -151,11 +147,11 @@ export const Reorder = {
 				continue;
 			}
 
-			if (current.className.includes('obsidian-tr')) {
+			if (current.classList.contains('obsidian-tr')) {
 				row = current;
-			} else if (current.className.includes('obsidian-inv-container')) {
+			} else if (current.classList.contains('obsidian-inv-container')) {
 				container = current;
-			} else if (current.className.includes('obsidian-tab-contents')) {
+			} else if (current.classList.contains('obsidian-tab-contents')) {
 				contents = current;
 				break;
 			}
@@ -178,12 +174,12 @@ export const Reorder = {
 		if (src.type === 'backpack') {
 			fromOrder = containers;
 			toOrder = containers;
-		} else if (dest.type === 'backpack') {
+		} else if (dest?.type === 'backpack') {
 			toOrder = dest.flags.obsidian.order;
 		}
 
 		const oldPos = fromOrder.indexOf(src._id);
-		let newPos = toOrder.indexOf(dest._id);
+		let newPos = toOrder.indexOf(dest?._id);
 
 		if (fromOrder === toOrder) {
 			if (oldPos < newPos && where === 'before') {
@@ -195,7 +191,7 @@ export const Reorder = {
 			newPos++;
 		}
 
-		if (src.type !== 'backpack' && dest.type === 'backpack') {
+		if (src.type !== 'backpack' && dest?.type === 'backpack') {
 			newPos = toOrder.length;
 		}
 
@@ -210,15 +206,15 @@ export const Reorder = {
 
 		update['flags.obsidian.order.equipment'] = duplicate(data.flags.obsidian.order.equipment);
 		update[`items.${src.idx}.flags.obsidian.parent`] =
-			src.type !== 'backpack' && dest.type === 'backpack'
+			src.type !== 'backpack' && dest?.type === 'backpack'
 				? dest._id
-				: dest.flags.obsidian.parent === undefined ? null : dest.flags.obsidian.parent;
+				: dest?.flags.obsidian.parent === undefined ? null : dest.flags.obsidian.parent;
 
 		if (srcParent != null) {
 			update[`items.${srcParent.idx}.flags.obsidian.order`] = duplicate(fromOrder);
 		}
 
-		if (src.type !== 'backpack' && dest.type === 'backpack') {
+		if (src.type !== 'backpack' && dest?.type === 'backpack') {
 			update[`items.${dest.idx}.flags.obsidian.order`] = duplicate(toOrder);
 		} else if (destParent != null) {
 			update[`items.${destParent.idx}.flags.obsidian.order`] = duplicate(toOrder);
@@ -286,6 +282,10 @@ export const Reorder = {
 	},
 
 	whichHalf: function (event, target) {
+		if (!target) {
+			return '';
+		}
+
 		if (!(target instanceof DOMRect)) {
 			target = target.getBoundingClientRect();
 		}
