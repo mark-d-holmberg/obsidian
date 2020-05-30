@@ -13,6 +13,7 @@ import {applyBonuses} from '../rules/bonuses.js';
 import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
+import {Rules} from '../rules/rules.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -91,6 +92,8 @@ export class ObsidianActor extends Actor5e {
 		this.data.obsidian.attacks = [];
 		this.data.obsidian.effects = new Map();
 		this.data.obsidian.components = new Map();
+		this.data.obsidian.triggers = {};
+		Rules.FEAT_TRIGGERS.forEach(t => this.data.obsidian.triggers[t] = []);
 
 		let originalSkills;
 		let originalSaves;
@@ -129,6 +132,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		for (const item of this.data.items) {
+			this._partitionTriggers(this.data.obsidian.triggers, item);
 			prepareEffects(
 				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
 				this.data.obsidian.components);
@@ -148,6 +152,15 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		return this.data;
+	}
+
+	_partitionTriggers (triggers, item) {
+		if (item.type === 'feat'
+			&& item.data.activation.type === 'special'
+			&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.trigger))
+		{
+			triggers[item.flags.obsidian.trigger].push(item);
+		}
 	}
 
 	/**

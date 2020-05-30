@@ -72,7 +72,7 @@
 		{{/each}}
 	</section>
 	{{/if}}
-	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe))
+	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe) message.flags.obsidian.start)
 			      (or user.isGM (eq user.id author.id)))}}
 	<section class="obsidian-msg-btn-row">
 		{{#if (defined message.flags.obsidian.dmgBtn)}}
@@ -102,6 +102,34 @@
 			<i class="fas fa-bullseye"></i>
 			{{localize 'OBSIDIAN.AreaOfEffect'}}
 		</button>
+		{{/if}}
+		{{#if (and (not-empty triggers.hit) message.flags.obsidian.hit)}}
+		{{#each triggers.hit}}
+		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}"
+		        {{#if ../message.flags.obsidian.realToken}}
+			        data-scene="{{../message.flags.obsidian.realScene}}"
+			        data-token="{{../message.flags.obsidian.realToken}}"
+		        {{else}}
+			        data-actor="{{../message.speaker.actor}}"
+		        {{/if}}>
+			<i class="fas fa-dice-d20"></i>
+			{{name}}
+		</button>
+		{{/each}}
+		{{/if}}
+		{{#if (and (not-empty triggers.start) message.flags.obsidian.start)}}
+		{{#each triggers.start}}
+		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}"
+			      {{#if ../message.flags.obsidian.realToken}}
+			        data-scene="{{../message.flags.obsidian.realScene}}"
+			        data-token="{{../message.flags.obsidian.realToken}}"
+			      {{else}}
+			        data-actor="{{../message.speaker.actor}}"
+			      {{/if}}>
+			<i class="fas fa-dice-d20"></i>
+			{{name}}
+		</button>
+		{{/each}}
 		{{/if}}
 	</section>
 	{{/if}}

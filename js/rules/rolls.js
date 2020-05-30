@@ -559,6 +559,7 @@ export const Rolls = {
 				results[0].results.push(Rolls.toHitRoll(actor, attacks[0]));
 			}
 
+			results[0].hit = true;
 			results[0].dmgBtn = effect.uuid;
 			results[0].dmgCount = count;
 			results[0].dmgScaling = scaledAmount;

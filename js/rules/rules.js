@@ -142,6 +142,7 @@ Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource'];
 Rules.EFFECT_TARGETS = ['self', 'individual', 'area'];
 Rules.EFFECT_TARGETS_AREA = ['cone', 'cube', 'cylinder', 'line', 'sphere'];
 Rules.FEAT_ACTION = ['none', 'action', 'bonus', 'reaction', 'special'];
+Rules.FEAT_TRIGGERS = ['hit', 'start'];
 Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
 Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
 Rules.HD = [2, 4, 6, 8, 10, 12, 20];

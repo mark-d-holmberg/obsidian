@@ -1,6 +1,7 @@
 // Is monkey-patching better than extending ChatMessage and changing the
 // entityClass? ¯\_(ツ)_/¯
 import {Rolls} from '../rules/rolls.js';
+import {ObsidianActor} from './actor.js';
 
 export function patchChatMessage () {
 	ChatMessage.prototype.render = (function () {
@@ -10,12 +11,29 @@ export function patchChatMessage () {
 				return cached.apply(this, arguments);
 			}
 
+			let actor;
+			let triggers;
+
+			if (this.data.flags?.obsidian?.realToken) {
+				actor =
+					ObsidianActor.fromSceneTokenPair(
+						this.data.flags.obsidian.realScene,
+						this.data.flags.obsidian.realToken);
+			} else {
+				actor = game.actors.get(this.data.speaker.actor);
+			}
+
+			if (actor && actor.data.obsidian?.triggers) {
+				triggers = duplicate(actor.data.obsidian.triggers);
+			}
+
 			const messageData = {
 				user: game.user,
 				author: this.user,
 				alias: this.alias,
 				message: duplicate(this.data),
 				isWhisper: this.data.whisper.length,
+				triggers: triggers,
 				whisperTo:
 					this.data.whisper
 						.map(user => game.users.get(user))

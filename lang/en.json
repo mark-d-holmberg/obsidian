@@ -883,5 +883,8 @@
 	"OBSIDIAN.DefString": "{0} to {1}",
 	"OBSIDIAN.Immune": "Immunity",
 	"OBSIDIAN.Resistant": "Resistance",
-	"OBSIDIAN.DamageLC": "damage"
+	"OBSIDIAN.DamageLC": "damage",
+	"OBSIDIAN.Trigger-hit": "On Hit",
+	"OBSIDIAN.Trigger-start": "Start of Turn",
+	"OBSIDIAN.TurnStart": "Turn Start"
 }

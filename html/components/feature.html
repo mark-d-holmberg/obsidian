@@ -24,6 +24,15 @@
 					    {{/if}}
 				    {{/select}}
 			    </select>
+			    <select name="flags.obsidian.trigger" data-selector-parent="activation"
+			            data-show="special">
+				    {{#select item.flags.obsidian.trigger}}
+					    <option value="">&mdash;</option>
+					    {{#each ObsidianRules.FEAT_TRIGGERS}}
+						    <option value="{{this}}">{{i18n-join 'OBSIDIAN.Trigger-' this}}</option>
+					    {{/each}}
+				    {{/select}}
+			    </select>
 		    </div>
 		  </div>
 			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">

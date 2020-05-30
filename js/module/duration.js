@@ -13,8 +13,20 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 		return;
 	}
 
+	const targets = game.user.targets;
+	if (targets.size < 1 && effect.targetComponent && effect.targetComponent.target === 'self') {
+		if (actor.isToken) {
+			targets.add(actor.token);
+		} else {
+			const tokens = actor.getActiveTokens(true);
+			if (tokens.length) {
+				targets.add(tokens[0]);
+			}
+		}
+	}
+
 	if (effect.applies.length) {
-		for (const target of game.user.targets) {
+		for (const target of targets) {
 			if (!target.actor.data.items.some(item =>
 					item.flags.obsidian.duration
 					&& item.flags.obsidian.duration.item === duration._id))
@@ -155,7 +167,7 @@ export async function advanceDurations (combat) {
 
 	const durations =
 		combat.combatant.actor.data.items.filter(item =>
-			item.type === 'feat' && getProperty(item, 'flags.obsidian.duration'));
+			item.type === 'feat' && getProperty(item, 'flags.obsidian.duration') === true);
 
 	const update = [];
 	const expired = [];

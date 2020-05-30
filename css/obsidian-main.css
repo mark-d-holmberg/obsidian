@@ -1435,6 +1435,14 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	margin-bottom: 5px;
 }
 
+.obsidian-msg section.obsidian-msg-btn-row {
+	padding-bottom: 0;
+}
+
+.obsidian-msg section.obsidian-msg-btn-row:last-child {
+	margin-bottom: -5px;
+}
+
 .obsidian-msg section:last-child {
 	border: none;
 	padding-bottom: 0;
@@ -1497,6 +1505,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 12px;
 	padding: 6px 8px;
 	line-height: 1;
+	margin-bottom: 5px;
 }
 
 .obsidian-msg button.obsidian-btn-outline i.fas {

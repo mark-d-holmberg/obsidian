@@ -19,6 +19,7 @@ import {ObsidianNPC} from './module/npc.js';
 import {checkVersion} from './migration/run.js';
 import {refreshNPC} from './rules/npc.js';
 import {addTransformHook} from './rules/transform.js';
+import {sendTriggers} from './module/triggers.js';
 
 runPatches();
 
@@ -109,6 +110,7 @@ Hooks.on('updateCombat', async combat => {
 		return;
 	}
 
+	sendTriggers(combat);
 	await advanceDurations(combat);
 	refreshNPC(combat);
 });
