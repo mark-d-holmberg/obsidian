@@ -71,6 +71,20 @@ export function patchChatMessage () {
 				}
 			});
 
+			html.hover(() => {
+				if (canvas.scene.id !== this.data.speaker.scene) {
+					return;
+				}
+
+				canvas.tokens.get(this.data.speaker.token)._onHoverIn(null, true);
+			}, () => {
+				if (canvas.scene.id !== this.data.speaker.scene) {
+					return;
+				}
+
+				canvas.tokens.get(this.data.speaker.token)._onHoverOut();
+			});
+
 			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));
 			html.find('.obsidian-place-template').click(Rolls.placeTemplate);
 			html.find('[data-dmg], [data-apply-all]').click(Rolls.applyDamage);
