@@ -326,22 +326,48 @@ function onLeave (evt) {
 	}
 }
 
+function initContextMenu (durationBar) {
+	const render = target => {
+		const menu = $('#obsidian-duration-menu');
+		const html = menu.length ? menu : $('<nav id="obsidian-duration-menu"></nav>');
+		const ol = $('<ol class="context-items"></ol>');
+		html.html(ol);
+
+		[['trash', onDelete], ['edit', onEdit]].forEach(([icon, callback]) => {
+			const li = $(`<li class="context-item"><i class="fas fa-${icon} fa-fw"></i></li>`);
+			ol.append(li);
+			li.click(evt => {
+				evt.preventDefault();
+				evt.stopPropagation();
+				callback(target);
+				menu.remove();
+				$('.context').removeClass('context');
+			});
+		});
+
+		target.append(html).addClass('context');
+	};
+
+	durationBar.on('contextmenu', '.obsidian-duration', evt => {
+		evt.preventDefault();
+		const menu = document.getElementById('obsidian-duration-menu');
+		$('.context').removeClass('context');
+
+		if ($.contains(evt.currentTarget, menu)) {
+			$(menu).remove();
+		} else {
+			render($(evt.currentTarget));
+		}
+	});
+}
+
 export function renderDurations () {
 	let durationBar = $('#obsidian-duration-bar');
 	if (!durationBar.length) {
 		durationBar = $('<div></div>');
 		durationBar.attr('id', 'obsidian-duration-bar');
 		$(document.body).append(durationBar);
-
-		new ContextMenu(durationBar, '.obsidian-duration', [{
-			name: '',
-			icon: '<i class="fas fa-trash"></i>',
-			callback: onDelete
-		}, {
-			name: '',
-			icon: '<i class="fas fa-edit"></i>',
-			callback: onEdit
-		}]);
+		initContextMenu(durationBar);
 	}
 
 	durationBar.find('.obsidian-duration').each((i, el) => {

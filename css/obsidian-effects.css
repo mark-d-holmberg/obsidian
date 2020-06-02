@@ -256,39 +256,52 @@
 	border-radius: 50%;
 }
 
-.obsidian-duration #context-menu {
-	width: 50px;
-	min-width: unset;
-	font-size: 12px;
-	color: var(--text-regular);
-	background: var(--bg);
-	border: none;
-	left: -5px;
+#obsidian-duration-menu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40px;
+	height: 40px;
 }
 
-.obsidian-duration #context-menu.expand-down {
-	top: unset;
-	bottom: calc(100% + 2px);
-}
-
-.obsidian-duration #context-menu .context-items {
+#obsidian-duration-menu .context-items {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
+	color: var(--text-regular);
+	font-size: 11px;
+	border-radius: 50%;
 }
 
-.obsidian-duration #context-menu .context-item {
-	padding: 0 5px;
-	line-height: 24px;
-	border-right: 1px solid var(--dark);
+#obsidian-duration-menu .context-item {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, .75);
 }
 
-.obsidian-duration #context-menu .context-item:last-child {
-	border: none;
+#obsidian-duration-menu .context-item:hover {
+	color: var(--text-bright);
+	background: rgba(255, 255, 255, .25);
 }
 
-.obsidian-duration #context-menu .context-item > i {
-	margin: 0;
+#obsidian-duration-menu .context-item:first-child {
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	margin-right: 1px;
+}
+
+#obsidian-duration-menu .context-item:last-child {
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	margin-left: 1px;
 }
 
 .obsidian-duration-remaining {
@@ -306,6 +319,10 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.obsidian-duration.context .obsidian-duration-remaining {
+	display: none;
 }
 
 .obsidian-effect .obsidian-sub-group {

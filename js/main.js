@@ -115,11 +115,18 @@ Hooks.on('updateCombat', async combat => {
 	refreshNPC(combat);
 });
 
-// Click anywhere to clear the 'delete prompt' on delete icons.
 document.addEventListener('click', evt => {
+	// Click anywhere to clear the 'delete prompt' on delete icons.
 	if (!evt.target.classList.contains('obsidian-delete')
 		&& !evt.target.parentElement?.classList.contains('obsidian-delete'))
 	{
 		$('.obsidian-delete.obsidian-alert').removeClass('obsidian-alert');
+	}
+
+	// Remove the duration context menu if appropriate.
+	const nav = evt.target.closest('nav');
+	if (nav?.id !== 'obsidian-duration-menu') {
+		$('#obsidian-duration-menu').remove();
+		$('.context').removeClass('context');
 	}
 });
