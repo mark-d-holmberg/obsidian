@@ -232,7 +232,7 @@ export const Rolls = {
 	},
 
 	create: function (actor, options) {
-		if (!options.roll) {
+		if (!options.roll || options.suppressCard) {
 			return;
 		}
 

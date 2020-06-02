@@ -142,7 +142,7 @@ export const ObsidianItems = {
 		Rolls.create(actor, options);
 	},
 
-	rollEffect: function (actor, effect, {consumed, spell}) {
+	rollEffect: function (actor, effect, {consumed, spell, suppressCard}) {
 		if (typeof actor === 'string') {
 			actor = game.actors.get(actor);
 		}
@@ -254,7 +254,8 @@ export const ObsidianItems = {
 		const options = {
 			roll: 'fx',
 			uuid: effect.uuid,
-			scaling: scaledAmount
+			scaling: scaledAmount,
+			suppressCard: suppressCard
 		};
 
 		if (spell) {
@@ -266,8 +267,12 @@ export const ObsidianItems = {
 
 		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
 			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
+			const collection = ammo.obsidian.collection;
+			const suppressCard =
+				(collection.attack.length + collection.damage.length + collection.save.length) < 1;
+
 			if (ammo) {
-				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id});
+				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id, suppressCard: suppressCard});
 			}
 		}
 	},
@@ -362,7 +367,7 @@ export const ObsidianItems = {
 			return;
 		}
 
-		const params = {spell: spell};
+		const params = {spell: spell, suppressCard: options.suppressCard};
 		if (consumer) {
 			params.consumed = consumer.fixed;
 		}
