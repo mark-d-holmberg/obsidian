@@ -152,6 +152,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-manage-spells').click(() =>
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
+		html.find('h3[data-notes]').mouseup(this._onCollapseNotes.bind(this));
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -299,6 +300,16 @@ export class Obsidian extends ActorSheet5eCharacter {
 			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
 		}, {renderSheet: true});
+	}
+
+	_onCollapseNotes (evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+
+		const note = evt.currentTarget.dataset.notes;
+		const collapsed = !!getProperty(this.actor.data, `flags.obsidian.notes.${note}`);
+		this.actor.update({[`flags.obsidian.notes.${note}`]: !collapsed});
 	}
 
 	/**

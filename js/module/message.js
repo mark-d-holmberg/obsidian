@@ -76,13 +76,13 @@ export function patchChatMessage () {
 					return;
 				}
 
-				canvas.tokens.get(this.data.speaker.token)._onHoverIn(null, true);
+				canvas.tokens.get(this.data.speaker.token)?._onHoverIn(null, true);
 			}, () => {
 				if (canvas.scene.id !== this.data.speaker.scene) {
 					return;
 				}
 
-				canvas.tokens.get(this.data.speaker.token)._onHoverOut();
+				canvas.tokens.get(this.data.speaker.token)?._onHoverOut();
 			});
 
 			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));

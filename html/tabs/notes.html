@@ -56,7 +56,7 @@
 			</div>
 		</div>
 	</div>
-	<h3>
+	<h3 data-notes="appearance">
 		{{localize 'OBSIDIAN.Appearance'}}
 		<a title="{{localize 'OBSIDIAN.EditAppearance'}}" data-template="appearance.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -64,8 +64,10 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.appearance}}
 	<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.appearance}}}</div>
-	<h3>
+	{{/unless}}
+	<h3 data-notes="backstory">
 		{{localize 'OBSIDIAN.Backstory'}}
 		<a title="{{localize 'OBSIDIAN.EditBackstory'}}" data-template="backstory.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -73,8 +75,10 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.backstory}}
 	<div class="obsidian-feature-body">{{{data.details.biography.value}}}</div>
-	<h3>
+	{{/unless}}
+	<h3 data-notes="organisations">
 		{{localize 'OBSIDIAN.Organisations'}}
 		<a title="{{localize 'OBSIDIAN.EditOrganisations'}}" data-template="organisations.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -82,8 +86,10 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.organisations}}
 	<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.organisations}}}</div>
-	<h3>
+	{{/unless}}
+	<h3 data-notes="allies">
 		{{localize 'OBSIDIAN.Allies'}}
 		<a title="{{localize 'OBSIDIAN.EditAllies'}}" data-template="allies.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -91,8 +97,10 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.allies}}
 	<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.allies}}}</div>
-	<h3>
+	{{/unless}}
+	<h3 data-notes="enemies">
 		{{localize 'OBSIDIAN.Enemies'}}
 		<a title="{{localize 'OBSIDIAN.EditEnemies'}}" data-template="enemies.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -100,8 +108,10 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.enemies}}
 	<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.enemies}}}</div>
-	<h3>
+	{{/unless}}
+	<h3 data-notes="other">
 		{{localize 'OBSIDIAN.Other'}}
 		<a title="{{localize 'OBSIDIAN.EditOther'}}" data-template="other.html"
 		   class="obsidian-edit obsidian-simple-dialog" data-width="578"
@@ -109,5 +119,7 @@
 			{{localize 'OBSIDIAN.Edit'}}
 		</a>
 	</h3>
+	{{#unless actor.flags.obsidian.notes.other}}
 	<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.other}}}</div>
+	{{/unless}}
 </div>
