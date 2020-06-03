@@ -74,6 +74,7 @@ export const Sheet = {
 		html.find('.obsidian-long-rest').click(sheet.actor.longRest.bind(sheet.actor));
 		html.find('.obsidian-global-advantage').click(() => Sheet.setGlobalRoll(sheet, 'adv'));
 		html.find('.obsidian-global-disadvantage').click(() => Sheet.setGlobalRoll(sheet, 'dis'));
+		html.find('.obsidian-feature-header').mouseup(evt => Sheet.collapseFeature(sheet, evt));
 
 		html.find('.obsidian-exhaustion .obsidian-radio')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.exhaustion', evt));
@@ -97,6 +98,25 @@ export const Sheet = {
 		const search = target.siblings('.obsidian-input-search');
 		search.val('');
 		filter();
+	},
+
+	collapseFeature: function (sheet, evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+
+		const id = evt.currentTarget.parentElement.dataset.itemId;
+		const item = sheet.actor.getEmbeddedEntity('OwnedItem', id);
+
+		if (!item) {
+			return;
+		}
+
+		const collapsed = !!item.flags.obsidian.collapsed;
+		sheet.actor.updateEmbeddedEntity('OwnedItem', {
+			_id: id,
+			'flags.obsidian.collapsed': !collapsed
+		});
 	},
 
 	contextMenu: function (sheet, html, npc = false) {

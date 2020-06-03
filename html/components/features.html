@@ -103,6 +103,8 @@
 		</div>
 		{{/each}}
 		{{/if}}
+		{{#unless feat.flags.obsidian.collapsed}}
 		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
+		{{/unless}}
 	</div>
 {{/each}}
