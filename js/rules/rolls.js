@@ -4,7 +4,7 @@ import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
 import AbilityTemplate from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
-import {handleDurations} from '../module/duration.js';
+import {applyEffects, handleDurations} from '../module/duration.js';
 import {DAMAGE_CONVERT} from '../migration/convert.js';
 import {ObsidianActor} from '../module/actor.js';
 import {hasDefenseAgainst} from './defenses.js';
@@ -418,6 +418,8 @@ export const Rolls = {
 		if (!item || !damage.length) {
 			return [];
 		}
+
+		applyEffects(actor, effect, 'hit');
 
 		const msgs = [];
 		for (let i = 0; i < count; i++) {

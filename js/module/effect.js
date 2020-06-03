@@ -81,7 +81,8 @@ export const Effect = {
 			prof: 1,
 			ability: '',
 			target: 'con',
-			effect: ''
+			effect: '',
+			save: 'half'
 		};
 	},
 
@@ -219,7 +220,8 @@ export const Effect = {
 		return {
 			type: 'applied',
 			uuid: OBSIDIAN.uuid(),
-			ref: ''
+			ref: '',
+			on: 'target'
 		};
 	},
 

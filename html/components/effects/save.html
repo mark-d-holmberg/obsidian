@@ -56,6 +56,16 @@
 			</label>
 			<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.effect"
 			       value="{{effect}}" placeholder="{{localize 'OBSIDIAN.Effect'}}">
+			<label class="obsidian-inline" style="margin: 0;">
+				{{localize 'OBSIDIAN.OnSave'}}
+				<select name="{{prefix}}.save">
+					{{#select save}}
+						{{#each @root.ObsidianRules.EFFECT_SAVE}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.OnSave-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
 		</div>
 	</div>
 </fieldset>

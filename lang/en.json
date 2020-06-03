@@ -886,5 +886,12 @@
 	"OBSIDIAN.DamageLC": "damage",
 	"OBSIDIAN.Trigger-hit": "On Hit",
 	"OBSIDIAN.Trigger-start": "Start of Turn",
-	"OBSIDIAN.TurnStart": "Turn Start"
+	"OBSIDIAN.TurnStart": "Turn Start",
+	"OBSIDIAN.AppliedOn": "Applied On",
+	"OBSIDIAN.AppliedOn-target": "Target",
+	"OBSIDIAN.AppliedOn-hit": "Hit",
+	"OBSIDIAN.AppliedOn-save": "Failed Save",
+	"OBSIDIAN.OnSave": "On Save",
+	"OBSIDIAN.OnSave-half": "Half Damage",
+	"OBSIDIAN.OnSave-none": "No Damage"
 }

@@ -1,15 +1,27 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.AppliedEffect'}}</legend>
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<label class="obsidian-inline">
-			{{localize 'OBSIDIAN.Effect'}}
-			<select name="{{prefix}}.ref">
-				{{#select ref}}
-					{{#each @root.item.flags.obsidian.effects}}
-						<option value="{{uuid}}">{{effect-label this}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-		</label>
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Effect'}}
+				<select name="{{prefix}}.ref">
+					{{#select ref}}
+						{{#each @root.item.flags.obsidian.effects}}
+							<option value="{{uuid}}">{{effect-label this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.AppliedOn'}}
+				<select name="{{prefix}}.on">
+					{{#select on}}
+						{{#each @root.ObsidianRules.EFFECT_APPLIED_ON}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AppliedOn-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+		</div>
 	</div>
 </fieldset>
