@@ -17,9 +17,8 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Weapons'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_WEAPON}}
-				{{fancy-checkbox (add 'weaponProf.' this) content=(add 'OBSIDIAN.WeaponProf-' this)
-				                 checked=(lookup ../profs.weaponProf this)}}
+			{{#each weapons}}
+				{{fancy-checkbox 'weaponProf' key label=label checked=(lookup ../profs.weaponProf key)}}
 			{{/each}}
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -32,9 +31,8 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Languages'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_LANG}}
-				{{fancy-checkbox (add 'languages.' this) content=(add 'OBSIDIAN.Lang-' this)
-				                 checked=(lookup ../profs.languages this)}}
+			{{#each langs}}
+				{{fancy-checkbox 'languages' key label=label checked=(lookup ../profs.languages key)}}
 			{{/each}}
 		</div>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">

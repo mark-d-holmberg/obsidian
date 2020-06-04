@@ -128,7 +128,34 @@ function prepareManualDefenses (flags) {
 	flags.defenses.pcImmDisplay = flags.defenses.pcImmDisplay.join(', ');
 }
 
-export function hasDefenseAgainst (defenses, attack, type, level) {
+export function hpAfterDamage (actor, damage, attack) {
+	let hp = actor.data.data.attributes.hp.value;
+	const defenses = actor.data.flags.obsidian.defenses;
+
+	for (let [type, dmg] of damage.entries()) {
+		const isImmune = hasDefenseAgainst(defenses, attack, type, 'imm');
+		const isResistant = hasDefenseAgainst(defenses, attack, type, 'res');
+		const isVulnerable = defenses.vuln.includes(type);
+
+		if (isImmune) {
+			continue;
+		}
+
+		if (isResistant) {
+			dmg /= 2;
+		}
+
+		if (isVulnerable) {
+			dmg *= 2;
+		}
+
+		hp -= Math.max(1, Math.floor(dmg));
+	}
+
+	return hp;
+}
+
+function hasDefenseAgainst (defenses, attack, type, level) {
 	for (const def of defenses[level]) {
 		if (def.dmg !== type) {
 			continue;

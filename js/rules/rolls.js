@@ -5,9 +5,8 @@ import {Filters} from './filters.js';
 import AbilityTemplate from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {applyEffects, handleDurations} from '../module/duration.js';
-import {DAMAGE_CONVERT} from '../migration/convert.js';
 import {ObsidianActor} from '../module/actor.js';
-import {hasDefenseAgainst} from './defenses.js';
+import {hpAfterDamage} from './defenses.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
@@ -95,13 +94,13 @@ export const Rolls = {
 		}
 	},
 
-	applyDamage: function (evt) {
+	applyDamage: async function (evt) {
 		const target = $(evt.currentTarget);
 		const damage = new Map();
 		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + Number(value));
 
 		if (target.data('apply-all')) {
-			target.closest('.obsidian-msg-row-dmg').prev().find('[data-dmg]').each((i, el) =>
+			target.closest('.obsidian-msg-row-dmg').parent().find('[data-dmg]').each((i, el) =>
 				accumulate(el.dataset.type, el.dataset.dmg));
 		} else {
 			accumulate(target.data('type'), target.data('dmg'));
@@ -114,51 +113,96 @@ export const Rolls = {
 			attack = message.data.flags.obsidian.damage?.attack;
 		}
 
-		game.user.targets.forEach(async token => {
-			const data = token.actor.data.data;
-			const defenses = token.actor.data.flags.obsidian.defenses;
-			let hp = data.attributes.hp.value;
-
-			Array.from(damage.entries()).forEach(([type, dmg]) => {
-				const isImmune = hasDefenseAgainst(defenses, attack, type, 'imm');
-				const isResistant = hasDefenseAgainst(defenses, attack, type, 'res');
-				const isVulnerable = defenses.vuln.includes(type);
-
-				if (isImmune) {
-					return;
-				}
-
-				if (isResistant) {
-					dmg /= 2;
-				}
-
-				if (isVulnerable) {
-					dmg *= 2;
-				}
-
-				hp -= Math.max(1, Math.floor(dmg));
-			});
-
-			await token.actor.update({'data.attributes.hp.value': hp});
-		});
+		for (const token of game.user.targets) {
+			await token.actor.update(
+				{'data.attributes.hp.value': hpAfterDamage(token.actor, damage, attack)});
+		}
 	},
 
 	applyRollModifiers: function (roll, rolls, rollMod) {
+		const mult = rolls[0][0] < 0 ? -1 : 1;
 		if (rollMod.reroll > 1) {
 			rolls.forEach(r => {
-				if (r.last() < rollMod.reroll) {
-					r.push(roll._roll().roll);
+				if (Math.abs(r.last()) < rollMod.reroll) {
+					r.push(roll._roll().roll * mult);
 				}
 			});
 		}
 
 		if (rollMod.min > 1) {
 			rolls.forEach(r => {
-				if (r.last() < rollMod.min) {
-					r.push(rollMod.min);
+				if (Math.abs(r.last()) < rollMod.min) {
+					r.push(rollMod.min * mult);
 				}
 			});
 		}
+	},
+
+	applySave: async function (evt) {
+		const idx = Number(evt.currentTarget.dataset.index);
+		const msgID = evt.currentTarget.closest('[data-message-id]').dataset.messageId;
+		const msg = game.messages.get(msgID);
+
+		if (!msg) {
+			return;
+		}
+
+		// Only apply effects if there are targeted tokens. Otherwise we just
+		// roll for the selected tokens and do nothing else.
+		const apply = game.user.targets.size > 0;
+		const flags = msg.data.flags.obsidian;
+		const tokens = apply ? Array.from(game.user.targets) : canvas.tokens.controlled;
+		const save = flags.saves[idx];
+		const rolls = tokens.map(t => Rolls.savingThrow(t.actor, save.ability));
+		Rolls.sendMessages(tokens.map((t, i) => [rolls[i], t.actor]));
+
+		if (!apply) {
+			return;
+		}
+
+		const attack = flags.damage?.hit.attack;
+		const totalDamage = Rolls.getDamageFromMessage(msg, 'hit');
+		let actor;
+
+		if (flags.realToken) {
+			actor = ObsidianActor.fromSceneTokenPair(flags.realScene, flags.realToken);
+		} else {
+			actor = game.actors.get(msg.data.speaker.actor);
+		}
+
+		if (!actor) {
+			return;
+		}
+
+		const effect = actor.data.obsidian.effects.get(flags.uuid);
+		if (!effect) {
+			return;
+		}
+
+		const targets = [];
+		for (let i = 0; i < tokens.length; i++) {
+			const token = tokens[i];
+			const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
+			const failed = roll < save.dc;
+			const damage = new Map(Array.from(totalDamage.entries()));
+
+			if (failed) {
+				targets.push(token);
+			} else {
+				if (save.save === 'none') {
+					continue;
+				}
+
+				for (const [type, dmg] of damage.entries()) {
+					damage.set(type, Math.max(1, Math.floor(dmg / 2)));
+				}
+			}
+
+			await token.actor.update(
+				{'data.attributes.hp.value': hpAfterDamage(token.actor, damage, attack)});
+		}
+
+		await applyEffects(actor, effect, targets, 'save');
 	},
 
 	compileBreakdown: mods =>
@@ -212,6 +256,8 @@ export const Rolls = {
 	compileSave: function (actor, save) {
 		const result = {
 			effect: save.effect,
+			ability: save.target,
+			save: save.save,
 			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.target}`)
 		};
 
@@ -343,9 +389,11 @@ export const Rolls = {
 			return Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods);
 		}
 
-		const rollsTotal = extraRolls.reduce((acc, mod) => acc + mod.roll.total, 0);
+		const rollsTotal = extraRolls.reduce((acc, mod) =>
+			acc + mod.roll.total * (mod.sgn === '-' ? -1 : 1), 0);
+
 		return '1d20 '
-			+ extraRolls.map(mod => `${mod.sgn} ${mod.ndice}d${mod.die}`).join(' ')
+			+ extraRolls.map(mod => `${mod.ndice.sgnex()}d${mod.die}`).join(' ')
 			+ Rolls.compileBreakdown(mods) + ' = '
 			+ Rolls.compileRerolls(r, crit)
 			+ extraRolls.map(mod => ` ${mod.sgn} (${mod.roll.results.join('+')})`).join('')
@@ -369,15 +417,16 @@ export const Rolls = {
 
 		const total = mods.reduce((acc, mod) => {
 			if (mod.ndice !== undefined) {
+				let mult = 1;
 				if (mod.ndice < 0) {
 					mod.sgn = '-';
-					mod.ndice *= -1;
+					mult = -1;
 				} else {
 					mod.sgn = '+';
 				}
 
-				mod.roll = new Die(mod.die).roll(mod.ndice);
-				return acc + mod.roll.results.reduce((acc, r) => acc + r, 0);
+				mod.roll = new Die(mod.die).roll(mod.ndice * mult);
+				return acc + mod.roll.total * mult;
 			}
 
 			return acc + mod.mod;
@@ -419,7 +468,7 @@ export const Rolls = {
 			return [];
 		}
 
-		applyEffects(actor, effect, 'hit');
+		applyEffects(actor, effect, game.user.targets, 'hit');
 
 		const msgs = [];
 		for (let i = 0; i < count; i++) {
@@ -549,7 +598,8 @@ export const Rolls = {
 		if (!damage.length || attacks.length || multiDamage < 1 || saves.length) {
 			results.push({
 				type: item.type === 'spell' ? 'spl' : 'fx',
-				title: name ? name : effect.name.length ? effect.name : item.name
+				title: name ? name : effect.name.length ? effect.name : item.name,
+				uuid: effect.uuid
 			});
 		}
 
@@ -617,6 +667,17 @@ export const Rolls = {
 		}
 
 		Rolls.create(actor, evt.currentTarget.dataset);
+	},
+
+	getDamageFromMessage: function (msg, hit) {
+		const damage = new Map();
+		if (!getProperty(msg.data, `flags.obsidian.damage.${hit}`)?.results.length) {
+			return damage;
+		}
+
+		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + value);
+		msg.data.flags.obsidian.damage[hit].results.forEach(dmg => accumulate(dmg.type, dmg.total));
+		return damage;
 	},
 
 	hd: function (actor, rolls, conBonus) {
@@ -780,10 +841,11 @@ export const Rolls = {
 			damage.flatMap(dmg => dmg.rollParts)
 				.filter(mod => mod.ndice !== undefined)
 				.map(mod => {
-					mod.derived = {ncrit: mod.ndice};
+					mod.derived = {ncrit: Math.abs(mod.ndice)};
 					mod.calc = 'formula';
 					mod.addMods = false;
 					mod.rollParts = [];
+					mod.damage = damage[0].damage;
 					return mod;
 				}));
 
@@ -822,14 +884,23 @@ export const Rolls = {
 				return null;
 			}
 
-			const hitRoll = new Die(dmg.die).roll(dmg.ndice);
-			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || dmg.ndice);
-			const hitRolls = hitRoll.results.map(r => [r]);
-			const allRolls = hitRolls.concat(critRoll.results.map(r => [r]));
-            const numRolls = dmg.ndice + (dmg.derived.ncrit || dmg.ndice);
+			const mult = dmg.ndice < 0 ? -1 : 1;
+			const ndice = Math.abs(dmg.ndice);
+			const hitRoll = new Die(dmg.die).roll(ndice);
+			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || ndice);
+			const hitRolls = hitRoll.results.map(r => [r * mult]);
+			const allRolls = hitRolls.concat(critRoll.results.map(r => [r * mult]));
+            const numRolls = ndice + (dmg.derived.ncrit || ndice);
 
 			if (dmg.addMods === false) {
-				return {hit: hitRolls, crit: allRolls};
+				return {
+					hit: hitRolls,
+					crit: allRolls,
+					data3d: {
+						formula: `${numRolls}d${dmg.die}`,
+						results: allRolls.map(r => Math.abs(r.last()))
+					}
+				};
 			}
 
 			const rollMods = Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
@@ -845,7 +916,7 @@ export const Rolls = {
 				crit: allRolls,
 				data3d: {
 					formula: `${numRolls}d${dmg.die}`,
-					results: allRolls.map(r => r.last())
+					results: allRolls.map(r => Math.abs(r.last()))
 				}
 			};
 		});
@@ -948,6 +1019,23 @@ export const Rolls = {
 		});
 	},
 
+	sendMessages: function (messageActorTuple, dice3d = false) {
+		ChatMessage.create(messageActorTuple.map(([msg, actor], i) => {
+			const data = Rolls.toMessage(actor);
+			if (i > 0 || dice3d) {
+				data.sound = null;
+			}
+
+			if (actor.isToken) {
+				msg.flags.obsidian.realToken = actor.token.data._id;
+				msg.flags.obsidian.realScene = actor.token.scene.data._id;
+			}
+
+			msg.flags.obsidian.npc = actor.data.type === 'npc';
+			return mergeObject(data, msg);
+		}));
+	},
+
 	simpleRoll: function (actor, {type, title, parens, subtitle, mods = [], rollMod}) {
 		return {
 			flags: {
@@ -991,9 +1079,7 @@ export const Rolls = {
 	},
 
 	toChat: async function (actor, ...msgs) {
-		const chatData = Rolls.toMessage(actor);
 		const dice3d = game.modules.get('dice-so-nice')?.active;
-
         if (dice3d) {
         	// Collect all the dice data.
 	        const data3d = {formula: [], results: []};
@@ -1017,20 +1103,7 @@ export const Rolls = {
 	        await game.dice3d.show(data3d);
         }
 
-	    ChatMessage.create(msgs.map((msg, i) => {
-			const data = duplicate(chatData);
-			if (i > 0 || dice3d) {
-				data.sound = null;
-			}
-
-			if (actor.isToken) {
-				msg.flags.obsidian.realToken = actor.token.data._id;
-				msg.flags.obsidian.realScene = actor.token.scene.data._id;
-			}
-
-			msg.flags.obsidian.npc = actor.data.type === 'npc';
-			return mergeObject(data, msg);
-		}));
+		Rolls.sendMessages(msgs.map(msg => [msg, actor]), dice3d);
 	},
 
 	toMessage: function (actor, rollMode) {

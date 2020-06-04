@@ -46,7 +46,7 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 	}
 }
 
-export async function applyEffects (actor, effect, on) {
+export async function applyEffects (actor, effect, targets, on) {
 	if (!effect.applies.length) {
 		return;
 	}
@@ -62,7 +62,7 @@ export async function applyEffects (actor, effect, on) {
 		active = duplicate(duration.flags.obsidian.active);
 	}
 
-	for (const target of game.user.targets) {
+	for (const target of targets) {
 		active.push([target.scene.data._id, target.data._id]);
 		await createActiveEffect(target, actor, effect, duration, on);
 	}

@@ -154,10 +154,10 @@ Rules.MAX_LEVEL = 20;
 Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
 Rules.PROF_ARMOUR = ['lgt', 'med', 'hvy', 'shl'];
 Rules.PROF_WEAPON = [
-	'sim', 'mar', 'club', 'dag', 'gclub', 'haxe', 'jav', 'lham', 'mace', 'staff', 'sickle', 'spear',
-	'lxbow', 'dart', 'sbow', 'sling', 'baxe', 'flail', 'glaive', 'gaxe', 'gsword', 'halb', 'lance',
-	'lsword', 'maul', 'star', 'pike', 'rapier', 'scim', 'ssword', 'tri', 'wpick', 'wham', 'whip',
-	'blow', 'hand', 'hxbow', 'lbow', 'net', 'dscim', 'fire'
+	'sim', 'mar', 'fire', 'club', 'dag', 'gclub', 'haxe', 'jav', 'lham', 'mace', 'staff', 'sickle',
+	'spear', 'lxbow', 'dart', 'sbow', 'sling', 'baxe', 'flail', 'glaive', 'gaxe', 'gsword', 'halb',
+	'lance', 'lsword', 'maul', 'star', 'pike', 'rapier', 'scim', 'ssword', 'tri', 'wpick', 'wham',
+	'whip', 'blow', 'hand', 'hxbow', 'lbow', 'net', 'dscim'
 ];
 
 Rules.PROF_LANG = [

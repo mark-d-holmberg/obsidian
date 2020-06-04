@@ -447,7 +447,9 @@ function fancyCheckbox (...args) {
 				</div>
 			</div>
 		</div>
-		<div class="checkbox-content">${game.i18n.localize(options.hash.content)}</div>
+		<div class="checkbox-content">
+			${options.hash.label ? options.hash.label : game.i18n.localize(options.hash.content)}
+		</div>
 	</div>
 	<input type="checkbox" name="${prop}" class="obsidian-hidden"
 	       ${options.hash.checked ? 'checked' : ''}

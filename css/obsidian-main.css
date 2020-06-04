@@ -1330,7 +1330,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	justify-content: center;
 }
 
-.obsidian-msg-row-dmg > div:last-child {
+.obsidian-msg-row-dmg > div:last-child,
+.obsidian-apply-save {
 	width: 20px;
 	height: 20px;
 	margin-left: 5px;
@@ -1344,7 +1345,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 9px;
 }
 
-.obsidian-msg-row-dmg > div:last-child:hover {
+.obsidian-msg-row-dmg > div:last-child:hover,
+.obsidian-apply-save:hover {
 	background: var(--dark);
 	color: var(--text-bright);
 }
@@ -1482,6 +1484,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	text-transform: uppercase;
 	font-weight: bold;
 	font-size: 12px;
+	display: flex;
+	align-items: center;
 }
 
 .obsidian-msg-save-effect {
@@ -1489,7 +1493,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-save-dc .obsidian-msg-roll-box {
-	margin: 0 4px;
+	margin: 0 6px;
 }
 
 .obsidian-msg-save-effect {

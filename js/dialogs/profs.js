@@ -1,4 +1,5 @@
 import {ObsidianDialog} from './dialog.js';
+import {Rules} from '../rules/rules.js';
 
 export class ObsidianProficienciesDialog extends ObsidianDialog {
 	static get defaultOptions () {
@@ -11,6 +12,8 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
+		data.langs = Rules.PROF_LANG;
+		data.weapons = Rules.PROF_WEAPON;
 		data.profs = {};
 
 		['weaponProf', 'armorProf', 'languages'].forEach(prop => {
@@ -20,6 +23,20 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 			if (trait) {
 				trait.forEach(prof => data.profs[prop][prof] = true);
 			}
+		});
+
+		[['langs', 'Lang', 2], ['weapons', 'WeaponProf', 3]].forEach(([prop, pref, take]) => {
+			data[prop] = data[prop].map(k => {
+				return {
+					key: k,
+					label: game.i18n.localize(`OBSIDIAN.${pref}-${k}`)
+				}
+			});
+
+			// Head values stay at the top for easy access.
+			const head = data[prop].splice(0, take);
+			data[prop].sort((a, b) => a.label === b.label ? 0 : a.label < b.label ? -1 : 1);
+			data[prop].unshift(...head);
 		});
 
 		return data;

@@ -88,6 +88,7 @@ export function patchChatMessage () {
 			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));
 			html.find('.obsidian-place-template').click(Rolls.placeTemplate);
 			html.find('[data-dmg], [data-apply-all]').click(Rolls.applyDamage);
+			html.find('.obsidian-apply-save').click(Rolls.applySave);
 			return html;
 		};
 	})();
