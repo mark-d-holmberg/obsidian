@@ -702,7 +702,7 @@ export const Prepare = {
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
 				const bonuses =
 					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.skillChecks(true, `tool.${tool.id}`, tool.ability));
+						Filters.appliesTo.skillChecks(true, `tools.${tool.id}`, tool.ability));
 
 				if (bonuses.length) {
 					tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));

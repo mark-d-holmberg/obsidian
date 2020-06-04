@@ -133,7 +133,13 @@ function formatFilter (filter) {
 				if (filter.multi === 'any') {
 					parts.push(localize('OBSIDIAN.SkillChecks'));
 				} else if (filter.collection.length) {
-					parts.push(...filter.collection.map(item => item.label));
+					parts.push(...filter.collection.map(item => {
+						if (item.label) {
+							return item.label;
+						} else {
+							return localize(`OBSIDIAN.Skill-${item.key}`);
+						}
+					}));
 					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
 				}
 			} else if (filter.check === 'tool') {
@@ -182,7 +188,13 @@ function formatFilter (filter) {
 			if (filter.multi === 'any') {
 				parts.push(localize('OBSIDIAN.PassiveChecks'));
 			} else {
-				parts.push(...filter.collection.map(item => item.label));
+				parts.push(...filter.collection.map(item => {
+					if (item.label) {
+						return item.label;
+					} else {
+						return localize(`OBSIDIAN.Skill-${item.key}`);
+					}
+				}));
 				parts[0] = `${localize('OBSIDIAN.PassiveLC')} ${parts[0]}`;
 				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
 			}

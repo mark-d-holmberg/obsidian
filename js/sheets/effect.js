@@ -221,10 +221,19 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 						&& !Number.isNumeric(prop)
 						&& component.collection[prop])
 					{
-						// TODO: Migration to either convert collections to
-						// objects or to just store the key as a string in the
-						// array, rather than an object.
-						collection.push({key: prop});
+						if (prop === 'tools' || prop === 'custom') {
+							collection.push(
+								...Object.entries(component.collection[prop])
+								.filter(([_, v]) => v)
+								.map(([k, _]) => {
+									return {
+										key: `${prop}.${k}`,
+										label: this.actor.data.flags.obsidian.skills[prop][k].label
+									};
+								}));
+						} else {
+							collection.push({key: prop});
+						}
 					}
 				}
 
