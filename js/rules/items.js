@@ -143,6 +143,11 @@ export const ObsidianItems = {
 	},
 
 	rollEffect: function (actor, effect, {consumed, spell, suppressCard}) {
+		consumed = Number(consumed);
+		if (isNaN(consumed)) {
+			consumed = undefined;
+		}
+
 		if (typeof actor === 'string') {
 			actor = game.actors.get(actor);
 		}
@@ -261,9 +266,12 @@ export const ObsidianItems = {
 		if (spell) {
 			options.roll = 'item';
 			options.id = spell._id;
+			options.consumed = scaledAmount;
+			options.parentResolved = true;
+			ObsidianItems.roll(actor, options);
+		} else {
+			Rolls.create(actor, options);
 		}
-
-		Rolls.create(actor, options);
 
 		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
 			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
@@ -292,14 +300,17 @@ export const ObsidianItems = {
 			});
 		}
 
-		if (item.type === 'spell') {
+		if (item.type === 'spell' && options.consumed === undefined) {
 			let component;
 			if (getProperty(item, 'flags.obsidian.parentComponent')) {
 				component =
 					actor.data.obsidian.components.get(item.flags.obsidian.parentComponent);
 			}
 
-			if (component && ['item', 'innate'].includes(component.method)) {
+			if (component
+				&& !options.parentResolved
+				&& ['item', 'innate'].includes(component.method))
+			{
 				const effect = actor.data.obsidian.effects.get(component.parentEffect);
 				options.roll = 'fx';
 				options.uuid = effect.uuid;
@@ -324,7 +335,9 @@ export const ObsidianItems = {
 				return;
 			}
 		} else if (item.obsidian.actionable.length > 1) {
-			new ObsidianActionableDialog(options.parent, actor, item).render(true);
+			new ObsidianActionableDialog(options.parent, actor, item, options.consumed)
+				.render(true);
+
 			return;
 		} else if (item.obsidian.actionable.length) {
 			const action = item.obsidian.actionable[0];
@@ -370,6 +383,8 @@ export const ObsidianItems = {
 		const params = {spell: spell, suppressCard: options.suppressCard};
 		if (consumer) {
 			params.consumed = consumer.fixed;
+		} else if (options.consumed) {
+			params.consumed = options.consumed;
 		}
 
 		ObsidianItems.rollEffect(actor, effect, params);

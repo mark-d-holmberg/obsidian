@@ -2,10 +2,11 @@ import {ObsidianItems} from '../rules/items.js';
 import {ObsidianStandaloneDialog} from './standalone.js';
 
 export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
-	constructor (parent, actor, item) {
+	constructor (parent, actor, item, consumed) {
 		super({parent: parent, actor: actor});
 		this._actor = actor;
 		this._item = item;
+		this._consumed = consumed;
 	}
 
 	static get defaultOptions () {
@@ -30,6 +31,7 @@ export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 	getData () {
 		const data = super.getData();
 		data.item = this._item;
+		data.consumed = this._consumed;
 		return data;
 	}
 }

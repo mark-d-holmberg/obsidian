@@ -3,7 +3,7 @@
 		<div class="obsidian-action-row">
 			<button type="button" class="obsidian-btn-outline obsidian-btn-compact"
 			        {{#if (eq type 'spell')}}data-roll="item" data-id="{{_id}}"
-			        {{~else}}data-roll="fx" data-uuid="{{uuid}}"{{/if}}>
+			        {{~else}}data-roll="fx" data-uuid="{{uuid}}"{{/if}} data-consumed="{{consumed}}">
 				{{localize 'OBSIDIAN.Use'}}
 			</button>
 			{{#if (eq type 'spell')}}{{name}}{{else}}{{label}}{{/if}}

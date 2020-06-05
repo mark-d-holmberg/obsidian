@@ -73,27 +73,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 		}
 
 		if (this._item.type === 'spell') {
-			// This is a bit of a hack purely to support having a limited use
-			// resource on the spell itself rather than as a feature. The main
-			// use case is NPCs where we don't want to have to create a whole
-			// feature for each spell.
-
-			if (this._effect) {
-				const resource = this._effect.components.find(c => c.type === 'resource');
-				if (resource) {
-					const updates = [];
-					ObsidianItems.useResource(
-						this._actor, this._item, this._effect, resource, 1, {updates});
-
-					OBSIDIAN.updateManyOwnedItems(this._actor, updates);
-				}
-			}
-
-			Rolls.create(this._actor, {
-				roll: 'item',
-				id: this._item._id,
-				scaling: level - this._item.data.level
-			});
+			ObsidianItems.rollItem(this._actor, {roll: 'item', id: this._item._id, consumed: level});
 		} else {
 			ObsidianItems.rollEffect(this._actor, this._effect, {consumed: level});
 		}

@@ -112,7 +112,7 @@ export const Rolls = {
 		}
 
 		let attack;
-		const message = game.messages.get(target.closest('.message').data('message-id'));
+		const message = game.messages.get(target.closest('.message').data('message-id'));0
 
 		if (message) {
 			attack = message.data.flags.obsidian.damage?.attack;
