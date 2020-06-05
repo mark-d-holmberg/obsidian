@@ -1345,6 +1345,10 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 9px;
 }
 
+.obsidian-apply-save {
+	padding: 0 1px 1px 0;
+}
+
 .obsidian-msg-row-dmg > div:last-child:hover,
 .obsidian-apply-save:hover {
 	background: var(--dark);

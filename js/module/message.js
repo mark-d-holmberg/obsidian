@@ -142,16 +142,19 @@ export function updateApplyIcons (evt) {
 		return;
 	}
 
-	let icon = '<i class="fas fa-check"></i>';
+	let dmg = '<i class="fas fa-check"></i>';
+	let save = dmg;
+
 	if (evt.type === 'keydown') {
 		if (evt.key === 'Control') {
-			icon = '&frac12;';
+			dmg = '&frac12;';
+			save = '<i class="fas fa-times"></i>'
 		} else if (evt.key === 'Shift') {
-			icon = '&times;2';
+			dmg = '&times;2';
 		}
 	}
 
-	document.getElementById('chat-log')
-		.querySelectorAll('[data-dmg], [data-apply-all]')
-		.forEach(el => el.innerHTML = icon);
+	const chat = document.getElementById('chat-log');
+	chat.querySelectorAll('[data-dmg], [data-apply-all]').forEach(el => el.innerHTML = dmg);
+	chat.querySelectorAll('.obsidian-apply-save').forEach(el => el.innerHTML = save);
 }

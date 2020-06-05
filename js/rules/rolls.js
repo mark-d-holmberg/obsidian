@@ -144,6 +144,7 @@ export const Rolls = {
 	},
 
 	applySave: async function (evt) {
+		const autoFail = evt.ctrlKey;
 		const idx = Number(evt.currentTarget.dataset.index);
 		const msgID = evt.currentTarget.closest('[data-message-id]').dataset.messageId;
 		const msg = game.messages.get(msgID);
@@ -158,8 +159,12 @@ export const Rolls = {
 		const flags = msg.data.flags.obsidian;
 		const tokens = apply ? Array.from(game.user.targets) : canvas.tokens.controlled;
 		const save = flags.saves[idx];
-		const rolls = tokens.map(t => Rolls.savingThrow(t.actor, save.ability));
-		Rolls.sendMessages(tokens.map((t, i) => [rolls[i], t.actor]));
+		const rolls = [];
+
+		if (!autoFail) {
+			rolls.push(...tokens.map(t => Rolls.savingThrow(t.actor, save.ability)));
+			Rolls.sendMessages(tokens.map((t, i) => [rolls[i], t.actor]));
+		}
 
 		if (!apply) {
 			return;
@@ -187,9 +192,13 @@ export const Rolls = {
 		const targets = [];
 		for (let i = 0; i < tokens.length; i++) {
 			const token = tokens[i];
-			const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
-			const failed = roll < save.dc;
 			const damage = new Map(Array.from(totalDamage.entries()));
+
+			let failed = true;
+			if (!autoFail) {
+				const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
+				failed = roll < save.dc;
+			}
 
 			if (failed) {
 				targets.push(token);
