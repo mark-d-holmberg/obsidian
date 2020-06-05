@@ -284,24 +284,22 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(0, 0, 0, .75);
+	background: black;
 }
 
 #obsidian-duration-menu .context-item:hover {
 	color: var(--text-bright);
-	background: rgba(255, 255, 255, .25);
+	background: rgba(0, 0, 0, .75);
 }
 
 #obsidian-duration-menu .context-item:first-child {
 	border-top-left-radius: 20px;
 	border-bottom-left-radius: 20px;
-	margin-right: 1px;
 }
 
 #obsidian-duration-menu .context-item:last-child {
 	border-top-right-radius: 20px;
 	border-bottom-right-radius: 20px;
-	margin-left: 1px;
 }
 
 .obsidian-duration-remaining {
