@@ -106,6 +106,11 @@ export const Rolls = {
 			accumulate(target.data('type'), target.data('dmg'));
 		}
 
+		const mult = evt.ctrlKey ? .5 : evt.shiftKey ? 2 : 1;
+		for (const [type, dmg] of damage.entries()) {
+			damage.set(type, Math.floor(dmg * mult));
+		}
+
 		let attack;
 		const message = game.messages.get(target.closest('.message').data('message-id'));
 

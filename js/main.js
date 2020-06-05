@@ -20,6 +20,7 @@ import {checkVersion} from './migration/run.js';
 import {refreshNPC} from './rules/npc.js';
 import {addTransformHook} from './rules/transform.js';
 import {sendTriggers} from './module/triggers.js';
+import {updateApplyIcons} from './module/message.js';
 
 runPatches();
 
@@ -130,3 +131,6 @@ document.addEventListener('click', evt => {
 		$('.context').removeClass('context');
 	}
 });
+
+document.addEventListener('keydown', updateApplyIcons);
+document.addEventListener('keyup', updateApplyIcons);

@@ -136,3 +136,22 @@ export function patchChatMessage () {
 		};
 	})();
 }
+
+export function updateApplyIcons (evt) {
+	if (evt.key !== 'Control' && evt.key !== 'Shift') {
+		return;
+	}
+
+	let icon = '<i class="fas fa-check"></i>';
+	if (evt.type === 'keydown') {
+		if (evt.key === 'Control') {
+			icon = '&frac12;';
+		} else if (evt.key === 'Shift') {
+			icon = '&times;2';
+		}
+	}
+
+	document.getElementById('chat-log')
+		.querySelectorAll('[data-dmg], [data-apply-all]')
+		.forEach(el => el.innerHTML = icon);
+}
