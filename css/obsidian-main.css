@@ -461,6 +461,7 @@ h3 > div > .obsidian-feature-recharge {
 	color: var(--bg);
 	font-size: 21px;
 	font-family: var(--font);
+	font-weight: bold;
 }
 
 .obsidian-feature-use.obsidian-feature-positive {

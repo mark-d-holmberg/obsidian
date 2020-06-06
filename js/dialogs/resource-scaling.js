@@ -1,16 +1,16 @@
 import {Effect} from '../module/effect.js';
-import {ObsidianItems} from '../rules/items.js';
 import {ObsidianStandaloneDialog} from './standalone.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
-	constructor (parent, actor, item, effect, spell) {
-		super({parent: parent, actor: actor});
+	constructor (actor, options) {
+		super({parent: options.parent, actor: actor});
 		this._actor = actor;
-		this._item = item;
-		this._effect = effect;
-		this._spell = spell;
-		this._resources = effect.components.filter(c => c.type === 'resource');
-		this._consumers = effect.components.filter(c => c.type === 'consume');
+		this._options = options;
+		this._item = actor.data.obsidian.itemsByID.get(options.id);
+		this._effect = actor.data.obsidian.effects.get(options.uuid);
+		this._resources = this._effect.components.filter(c => c.type === 'resource');
+		this._consumers = this._effect.components.filter(c => c.type === 'consume');
 	}
 
 	static get defaultOptions () {
@@ -27,11 +27,8 @@ export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(() => {
-			ObsidianItems.rollEffect(this._actor, this._effect, {
-				consumed: Number(html.find('input').val()),
-				spell: this._spell
-			});
-
+			this._options.consumed = Number(html.find('input').val());
+			ObsidianItems.roll(this._actor, this._options);
 			this.close();
 		});
 	}

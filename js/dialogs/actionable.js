@@ -1,12 +1,12 @@
-import {ObsidianItems} from '../rules/items.js';
 import {ObsidianStandaloneDialog} from './standalone.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
-	constructor (parent, actor, item, consumed) {
-		super({parent: parent, actor: actor});
+	constructor (actor, options) {
+		super({parent: options.parent, actor: actor});
 		this._actor = actor;
-		this._item = item;
-		this._consumed = consumed;
+		this._options = options;
+		this._item = actor.data.obsidian.itemsByID.get(options.id);
 	}
 
 	static get defaultOptions () {
@@ -23,7 +23,9 @@ export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('button').click(evt => {
-			ObsidianItems.roll(this._actor, evt.currentTarget.dataset);
+			ObsidianItems.rollActionable(
+				this._actor, Number(evt.currentTarget.dataset.index), this._options);
+
 			this.close();
 		});
 	}
@@ -31,7 +33,6 @@ export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 	getData () {
 		const data = super.getData();
 		data.item = this._item;
-		data.consumed = this._consumed;
 		return data;
 	}
 }

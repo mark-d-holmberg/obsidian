@@ -320,8 +320,7 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(actor,
-				...Rolls.itemRoll(actor, item, Number(options.scaling), options.withDuration));
+			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, options));
 		} else if (roll === 'fx') {
 			if (options.uuid === undefined) {
 				return;
@@ -332,10 +331,7 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(actor, ...Rolls.effectRoll(actor, effect, {
-				scaledAmount: Number(options.scaling),
-				withDuration: options.withDuration
-			}));
+			Rolls.toChat(actor, ...Rolls.effectRoll(actor, effect, options));
 		} else if (roll === 'save') {
 			if (!options.save) {
 				return;
@@ -579,7 +575,7 @@ export const Rolls = {
 		return roll;
 	},
 
-	effectRoll: function (actor, effect, {name, scaledAmount, isFirst = true, withDuration = true}) {
+	effectRoll: function (actor, effect, options, {name, isFirst = true} = {}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const damage = effect.components.filter(c => c.type === 'damage');
@@ -591,7 +587,12 @@ export const Rolls = {
 			item.obsidian.collection.scaling.find(e => e.scalingComponent.ref === effect.uuid);
 		const results = [];
 
-		if (withDuration) {
+		let scaledAmount = options.scaling || 0;
+		if (item.type === 'spell') {
+			scaledAmount = Math.max(0, options.spellLevel - item.data.level);
+		}
+
+		if (options.withDuration !== false) {
 			handleDurations(actor, item, effect, scaledAmount);
 		}
 
@@ -763,9 +764,14 @@ export const Rolls = {
 		return initiative;
 	},
 
-	itemRoll: function (actor, item, scaling, withDuration) {
+	itemRoll: function (actor, item, options) {
 		if (!item.flags.obsidian || !item.flags.obsidian.effects) {
 			return [];
+		}
+
+		let upcast;
+		if (item.type === 'spell') {
+			upcast = Math.max(0, options.spellLevel - item.data.level);
 		}
 
 		const itemFlags = item.flags.obsidian;
@@ -776,7 +782,8 @@ export const Rolls = {
 						type: item.type === 'spell' ? 'spl' : 'fx',
 						title: item.name,
 						details: item,
-						open: true
+						open: true,
+						upcast: upcast
 					}
 				}
 			}];
@@ -785,11 +792,9 @@ export const Rolls = {
 
 		return itemFlags.effects
 			.filter(effect => !effect.isLinked)
-			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, {
+			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, options, {
 				name: item.name,
-				scaledAmount: scaling,
-				isFirst: i === 0,
-				withDuration: withDuration
+				isFirst: i === 0
 			}));
 	},
 

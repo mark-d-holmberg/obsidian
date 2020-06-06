@@ -1,16 +1,14 @@
-import {Rolls} from '../rules/rolls.js';
 import {ObsidianStandaloneDialog} from './standalone.js';
-import {ObsidianItems} from '../rules/items.js';
 import {getSourceClass} from '../module/item.js';
-import {OBSIDIAN} from '../global.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
-	constructor (parent, actor, item, effect, min) {
-		super({parent: parent, actor: actor});
+	constructor (actor, options, min) {
+		super({parent: options.parent, actor: actor});
 		this._actor = actor;
-		this._item = item;
-		this._effect = effect;
+		this._options = options;
 		this._min = min;
+		this._item = actor.data.obsidian.itemsByID.get(options.id);
 	}
 
 	static get defaultOptions () {
@@ -32,11 +30,11 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 
 	getData () {
 		const data = super.getData();
-		data.min = this._min ? this._min : this._item.type === 'spell' ? this._item.data.level : 1;
+		data.min = this._min;
 		data.ritual = false;
 		data.pactAllowed =
-			!this._actor.data.data.spells.pact
-			|| this._actor.data.data.spells.pact.level >= data.min;
+			this._actor.data.data.spells.pact
+			&& this._actor.data.data.spells.pact.level >= data.min;
 
 		if (this._item.type === 'spell' && getProperty(this._item, 'flags.obsidian.source')) {
 			const cls = getSourceClass(this._actor.data, this._item.flags.obsidian.source);
@@ -65,6 +63,8 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 			const spellKey = isPact ? 'data.spells.pact' : `data.spells.spell${level}`;
 			const spells = getProperty(this._actor.data, spellKey);
 
+			// Maybe this should be moved out into the final resolution stage
+			// where other resources are consumed.
 			if ((spells.tmp || 0) > 0) {
 				this._actor.update({[`${spellKey}.tmp`]: spells.tmp - 1});
 			} else {
@@ -72,12 +72,8 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 			}
 		}
 
-		if (this._item.type === 'spell') {
-			ObsidianItems.rollItem(this._actor, {roll: 'item', id: this._item._id, consumed: level});
-		} else {
-			ObsidianItems.rollEffect(this._actor, this._effect, {consumed: level});
-		}
-
+		this._options.spellLevel = level;
+		ObsidianItems.roll(this._actor, this._options);
 		this.close();
 	}
 }

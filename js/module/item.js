@@ -233,7 +233,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 		if (isRollable
 			&& item.type !== 'spell'
-			&& !effect.components.some(c => c.type === 'resource' || c.type === 'attack'))
+			&& !effect.components.some(c =>
+				c.type === 'resource'
+				|| c.type === 'attack'
+				|| (c.type === 'spells' && c.source === 'individual' && c.method === 'item')))
 		{
 			flags.notes.push(
 				'<div class="obsidian-table-note-flex">'

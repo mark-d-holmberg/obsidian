@@ -121,96 +121,79 @@ export const ObsidianItems = {
 		});
 	},
 
-	roll: function (actor, options) {
-		if (actor == null) {
-			actor = game.actors.get(options.actor);
-			if (actor == null) {
-				return;
-			}
-		}
-
-		if (options.roll === 'fx') {
-			ObsidianItems.rollPromptVariables(actor, options);
-			return;
-		}
-
-		if (options.roll === 'item') {
-			ObsidianItems.rollItem(actor, options);
-			return;
-		}
-
-		Rolls.create(actor, options);
-	},
-
-	rollEffect: function (actor, effect, {consumed, spell, suppressCard}) {
-		consumed = Number(consumed);
-		if (isNaN(consumed)) {
-			consumed = undefined;
-		}
-
-		if (typeof actor === 'string') {
-			actor = game.actors.get(actor);
-		}
-
-		if (!actor) {
-			return;
-		}
-
-		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
-		const resources = effect.components.filter(component => component.type === 'resource');
-		const consumers = effect.components.filter(component => component.type === 'consume');
-		const producers = effect.components.filter(component => component.type === 'produce');
+	resolveEffect: function (actor, options) {
 		const updates = [];
-		let scaledAmount = (consumed || 0);
+		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const effect = actor.data.obsidian.effects.get(options.uuid);
+		const resources = effect.components.filter(c => c.type === 'resource');
+		const consumers = effect.components.filter(c => c.type === 'consume');
+		const producers = effect.components.filter(c => c.type === 'produce');
+		const scaling = item.obsidian.collection.scaling.find(e =>
+			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
-		if (spell) {
-			const component =
-				actor.data.obsidian.components.get(spell.flags.obsidian.parentComponent);
+		let scaledAmount = 0;
+		if (scaling && consumers.length) {
+			const consumer = consumers[0];
+			const consumed = options.consumed || 0;
+			let base;
 
-			if (component && ['innate', 'item'].includes(component.method)) {
-				if (component.upcast) {
-					scaledAmount += Math.max(0, component.level - spell.data.level);
-				}
+			if (consumer.calc === 'var') {
+				base = 1;
 			} else {
-				scaledAmount -= spell.data.level;
+				if (consumer.target === 'spell') {
+					base = consumer.slot;
+				} else {
+					base = consumer.fixed;
+				}
+			}
+
+			scaledAmount = Math.max(0, consumed - base);
+		}
+
+		if (options.spell && options.spellLevel == null) {
+			const spell = actor.data.obsidian.itemsByID.get(options.spell);
+			const component =
+				actor.data.obsidian.components.get(spell.flags?.obsidian?.parentComponent);
+
+			if (component.source === 'individual'
+				&& ['innate', 'item'].includes(component.method))
+			{
+				options.spellLevel = spell.data.level;
+				if (component.upcast) {
+					options.spellLevel = component.level;
+				}
+
+				options.spellLevel += scaledAmount;
 			}
 		}
 
 		if (consumers.length) {
 			const consumer = consumers[0];
 			if (consumer.target === 'qty') {
-				ObsidianItems.consumeQuantity(actor, consumer, consumed, updates);
+				ObsidianItems.consumeQuantity(actor, consumer, options.consumed, updates);
 			} else if (consumer.target !== 'spell') {
 				const [refItem, refEffect, resource] =
 					Effect.getLinkedResource(actor.data, consumer);
 
 				if (refItem && refEffect && resource) {
 					ObsidianItems.useResource(
-						actor, refItem, refEffect, resource, consumed, {updates});
-				}
-			}
-
-			if (consumer.calc === 'var') {
-				scaledAmount -= 1;
-			} else {
-				if (consumer.target === 'spell') {
-					scaledAmount -= consumer.slot;
-				} else {
-					scaledAmount -= consumer.fixed;
+						actor, refItem, refEffect, resource, options.consumed, {updates});
 				}
 			}
 		}
 
 		if (resources.length) {
-			if (resources[0].remaining - (consumed || 1) < 1
+			const resource = resources[0];
+			const used = options.consumed || 1;
+
+			if (resource.remaining - used < 1
 				&& item.type === 'consumable'
 				&& item.data.quantity > 0
 				&& item.data.uses.autoDestroy)
 			{
-				ObsidianItems.refreshConsumable(
-					actor, item, effect, resources[0], consumed, updates);
+				ObsidianItems.refreshConsumable(actor, item, effect, resource, used, updates);
 			} else {
-				ObsidianItems.useResource(actor, item, effect, resources[0], consumed, {updates});
+				ObsidianItems.useResource(actor, item, effect, resource, used, {updates});
 			}
 		}
 
@@ -220,10 +203,10 @@ export const ObsidianItems = {
 
 			if (produced > 0) {
 				if (producer.target === 'qty') {
-					ObsidianItems.consumeQuantity(actor, producer, produced * -1, updates);
+					ObsidianItems.consumeQuantity(actor, producer, produced + -1, updates);
 				} else if (producer.target === 'spell') {
 					ObsidianItems.produceSpellSlot(actor, producer.slot, producer.unlimited);
-				} else if (producer.target !== 'spell') {
+				} else {
 					const [refItem, refEffect, resource] =
 						Effect.getLinkedResource(actor.data, producer);
 
@@ -252,21 +235,10 @@ export const ObsidianItems = {
 			OBSIDIAN.updateManyOwnedItems(actor, consolidated);
 		}
 
-		if (scaledAmount < 0) {
-			scaledAmount = 0;
-		}
-
-		const options = {
-			roll: 'fx',
-			uuid: effect.uuid,
-			scaling: scaledAmount,
-			suppressCard: suppressCard
-		};
-
-		if (spell) {
+		options.scaling = scaledAmount;
+		if (options.parentResolved === false) {
 			options.roll = 'item';
-			options.id = spell._id;
-			options.consumed = scaledAmount;
+			options.id = options.spell;
 			options.parentResolved = true;
 			ObsidianItems.roll(actor, options);
 		} else {
@@ -285,6 +257,75 @@ export const ObsidianItems = {
 		}
 	},
 
+	roll: function (actor, options) {
+		// Make sure this isn't a live DOMStringMap.
+		options = duplicate(options);
+
+		if (actor == null) {
+			actor = game.actors.get(options.actor);
+		}
+
+		if (actor == null) {
+			return;
+		}
+
+		if (options.roll === 'fx') {
+			ObsidianItems.rollEffect(actor, options);
+			return;
+		}
+
+		if (options.roll === 'item') {
+			ObsidianItems.rollItem(actor, options);
+			return;
+		}
+
+		Rolls.create(actor, options);
+	},
+
+	rollActionable: function (actor, index, options) {
+		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const action = item.obsidian.actionable[index];
+
+		if (action.type === 'spell') {
+			options.roll = 'item';
+			options.id = action._id;
+		} else {
+			options.roll = 'fx';
+			options.uuid = action.uuid;
+		}
+
+		ObsidianItems.roll(actor, options);
+	},
+
+	rollEffect: function (actor, options) {
+		const effect = actor.data.obsidian.effects.get(options.uuid);
+		options.id = effect.parentItem;
+
+		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const consumer = effect.components.find(c => c.type === 'consume');
+		const scaling = item.obsidian.collection.scaling.find(e =>
+			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
+
+		if (consumer?.target === 'spell' && options.spellLevel == null) {
+			ObsidianItems.selectSpellLevel(actor, options, consumer.slot);
+			return;
+		}
+
+		if (options.consumed == null && (scaling || consumer?.calc === 'var')) {
+			ObsidianItems.selectConsumption(actor, options);
+			return;
+		}
+
+		if (consumer?.target !== 'spell'
+			&& consumer?.calc === 'fixed'
+			&& options.consumed == null)
+		{
+			options.consumed = consumer.fixed;
+		}
+
+		ObsidianItems.resolveEffect(actor, options);
+	},
+
 	rollItem: async function (actor, options) {
 		const item = actor.getEmbeddedEntity('OwnedItem', options.id);
 		if (!item || !item.obsidian) {
@@ -300,94 +341,94 @@ export const ObsidianItems = {
 			});
 		}
 
-		if (item.type === 'spell' && options.consumed === undefined) {
-			let component;
-			if (getProperty(item, 'flags.obsidian.parentComponent')) {
-				component =
-					actor.data.obsidian.components.get(item.flags.obsidian.parentComponent);
-			}
-
-			if (component
-				&& !options.parentResolved
-				&& ['item', 'innate'].includes(component.method))
-			{
-				const effect = actor.data.obsidian.effects.get(component.parentEffect);
-				options.roll = 'fx';
-				options.uuid = effect.uuid;
-				options.spl = item._id;
-				ObsidianItems.roll(actor, options);
-				return;
-			} else if (item.data.level > 0) {
-				new ObsidianConsumeSlotDialog(
-					options.parent, actor, item, item.flags.obsidian.effects[0])
-					.render(true);
-				return;
-			}
-		} else if (item.type === 'tool') {
-			const idx =
-				actor.data.flags.obsidian.skills.tools.findIndex(tool =>
-					tool.label.toLocaleLowerCase() === item.name.toLocaleLowerCase());
-
-			if (idx > -1) {
-				options.roll = 'tool';
-				options.tool = idx;
-				Rolls.create(actor, options);
-				return;
-			}
-		} else if (item.obsidian.actionable.length > 1) {
-			new ObsidianActionableDialog(options.parent, actor, item, options.consumed)
-				.render(true);
-
+		if (item.type === 'tool') {
+			ObsidianItems.rollToolItem(actor, options);
 			return;
-		} else if (item.obsidian.actionable.length) {
-			const action = item.obsidian.actionable[0];
-			options.roll = 'fx';
-			options.uuid = action.uuid;
+		}
 
-			if (action.type === 'spell') {
-				options.roll = 'item';
-				options.id = action._id;
-			}
+		if (item.type === 'spell') {
+			ObsidianItems.rollSpellItem(actor, options);
+			return;
+		}
 
-			ObsidianItems.roll(actor, options);
+		if (item.obsidian.actionable.length) {
+			ObsidianItems.selectActionable(actor, options);
 			return;
 		}
 
 		Rolls.create(actor, options);
 	},
 
-	rollPromptVariables: function (actor, options) {
-		const effect = actor.data.obsidian.effects.get(options.uuid);
-		if (!effect) {
+	rollSpellItem: function (actor, options) {
+		const spell = actor.data.obsidian.itemsByID.get(options.id);
+		let component;
+
+		if (getProperty(spell, 'flags.obsidian.parentComponent')) {
+			component = actor.data.obsidian.components.get(spell.flags.obsidian.parentComponent);
+		}
+
+		if (component && ['item', 'innate'].includes(component.method) && !options.parentResolved) {
+			const effect = actor.data.obsidian.effects.get(component.parentEffect);
+			options.roll = 'fx';
+			options.uuid = effect.uuid;
+			options.id = effect.parentItem;
+			options.spell = spell._id;
+			options.parentResolved = false;
+			ObsidianItems.roll(actor, options);
 			return;
 		}
 
-		const spell = actor.data.obsidian.itemsByID.get(options.spl);
-		const item = actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		const consumer = effect.components.find(c => c.type === 'consume');
-		const scaling = item.obsidian.collection.scaling.find(e =>
-			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
+		if (options.spellLevel == null) {
+			if (spell.data.level > 0) {
+				ObsidianItems.selectSpellLevel(actor, options, spell.data.level);
+				return;
+			} else {
+				options.spellLevel = 0;
+			}
+		}
 
-		if (consumer && consumer.target === 'spell') {
-			new ObsidianConsumeSlotDialog(options.parent, actor, item, effect).render(true);
+		if (spell.obsidian.actionable.length) {
+			ObsidianItems.selectActionable(actor, options);
 			return;
 		}
 
-		if (scaling || (consumer && consumer.calc === 'var')) {
-			new ObsidianResourceScalingDialog(options.parent, actor, item, effect, spell)
-				.render(true);
+		Rolls.create(actor, options);
+	},
 
+	rollToolItem: function (actor, options) {
+		const tool = actor.data.obsidian.itemsByID.get(options.id);
+		if (tool.obsidian.actionable.length) {
+			ObsidianItems.selectActionable(actor, options);
 			return;
 		}
 
-		const params = {spell: spell, suppressCard: options.suppressCard};
-		if (consumer) {
-			params.consumed = consumer.fixed;
-		} else if (options.consumed) {
-			params.consumed = options.consumed;
+		const idx =
+			actor.data.flags.obsidian.skills.tools.findIndex(t =>
+				t.label.toLocaleLowerCase() === tool.name.toLocaleLowerCase());
+
+		if (idx > -1) {
+			options.roll = 'tool';
+			options.tool = idx;
 		}
 
-		ObsidianItems.rollEffect(actor, effect, params);
+		Rolls.create(actor, options);
+	},
+
+	selectActionable: function (actor, options) {
+		const item = actor.data.obsidian.itemsByID.get(options.id);
+		if (item.obsidian.actionable.length > 1) {
+			new ObsidianActionableDialog(actor, options).render(true);
+		} else {
+			ObsidianItems.rollActionable(actor, 0, options);
+		}
+	},
+
+	selectConsumption: function (actor, options) {
+		new ObsidianResourceScalingDialog(actor, options).render(true);
+	},
+
+	selectSpellLevel: function (actor, options, min) {
+		new ObsidianConsumeSlotDialog(actor, options, min).render(true);
 	},
 
 	useResource: function (actor, item, effect, resource, n = 1, {unlimited = false, updates}) {
