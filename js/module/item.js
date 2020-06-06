@@ -113,6 +113,7 @@ const prepareComponents = {
 		if (component.source === 'individual' && component.method === 'item') {
 			item.flags.obsidian.notes.push(...component.spells
 				.map(id => actorData.obsidian.itemsByID.get(id))
+				.filter(_ => _)
 				.map(spell =>
 					'<div class="obsidian-table-note-flex">'
 					+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`

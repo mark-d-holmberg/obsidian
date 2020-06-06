@@ -54,7 +54,7 @@ function prepareSpeed (actorData, flags) {
 }
 
 export async function refreshNPC (combat) {
-	const actor = combat.combatant.actor;
+	const actor = combat.combatant?.actor;
 	if (actor?.data.type !== 'npc') {
 		return;
 	}

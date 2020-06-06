@@ -1,7 +1,7 @@
 import {Rolls} from '../rules/rolls.js';
 
 export function sendTriggers (combat) {
-	const actor = combat.combatant.actor;
+	const actor = combat.combatant?.actor;
 	if (!actor || !actor.data.obsidian?.triggers?.start?.length) {
 		return;
 	}

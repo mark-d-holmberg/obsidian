@@ -7,6 +7,7 @@ import {bonusToParts, highestProficiency} from './bonuses.js';
 import {applyEffects, handleDurations} from '../module/duration.js';
 import {ObsidianActor} from '../module/actor.js';
 import {hpAfterDamage} from './defenses.js';
+import {rollInitiative} from './combat.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
@@ -753,9 +754,13 @@ export const Rolls = {
 			});
 		}
 
-		return Rolls.abilityCheck(
-			actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'), mods,
-			rollMod);
+		const initiative =
+			Rolls.abilityCheck(
+				actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'),
+				mods, rollMod);
+
+		rollInitiative(actor, initiative.flags.obsidian.results[0].find(r => r.active).total);
+		return initiative;
 	},
 
 	itemRoll: function (actor, item, scaling, withDuration) {

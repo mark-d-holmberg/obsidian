@@ -202,7 +202,7 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 }
 
 export async function advanceDurations (combat) {
-	if (!combat.combatant.actor) {
+	if (!combat.combatant?.actor) {
 		return;
 	}
 
