@@ -57,6 +57,7 @@ const FILTER_SELECTIONS = {
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
+		this._interacting = false;
 		this._addedClickHandler = false;
 		this._anywhereClickHandler = evt => this._onClickAnywhere(evt);
 		game.settings.register('obsidian', 'effects-categories', {default: [], scope: 'client'});
@@ -80,12 +81,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		super.activateListeners(html);
 		COMPONENT_MAP.forEach(([cls, fn, sub]) => {
 			if (sub) {
+				html.find(`.obsidian-rm-${cls}`).mousedown(this._preventSubmit.bind(this));
 				html.find(`.obsidian-rm-${cls}`).click(this._onRemoveSelected.bind(this, sub));
 				cls = `add-${cls}`;
 			}
 
+			html.find(`.obsidian-${cls}`).mousedown(this._preventSubmit.bind(this));
 			html.find(`.obsidian-${cls}`).click(this._onAddComponent.bind(this, fn, sub));
 		});
+
+		html.find('.obsidian-add-effect, .obsidian-rm-effect')
+			.mousedown(this._preventSubmit.bind(this));
 
 		html.find('.obsidian-add-effect').click(this._onAddEffect.bind(this));
 		html.find('.obsidian-rm-effect').click(this._onRemoveSelected.bind(this));
@@ -96,7 +102,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			this._onComponentSelected(evt.currentTarget.parentNode.dataset.uuid);
 		});
 
-		html.find('.fancy-checkbox').click(this._onCheckBoxClicked.bind(this));
+		html.find('.fancy-checkbox').mousedown(this._preventSubmit.bind(this));
+		html.find('.fancy-checkbox').click(() => {
+			this._onCheckBoxClicked(this);
+			this._interacting = false;
+		});
+
 		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
 		html.find('.obsidian-spell-drop').on('dragover', evt => evt.preventDefault());
 		html.find('.obsidian-spell-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
@@ -203,6 +214,18 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			.then(mce => mce[0].on('change', () => this.editors[target].changed = true));
 	}
 
+	_delaySubmit (evt) {
+		if (this._interacting) {
+			return;
+		}
+
+		this._submitTimeout = setTimeout(() => {
+			if (!this.element.find('input:focus, select:focus').length) {
+				this._onSubmit(evt);
+			}
+		}, 50);
+	}
+
 	get _formData () {
 		const expanded = OBSIDIAN.updateArrays(this.item.data, super._formData);
 		if (!expanded['flags.obsidian.effects']) {
@@ -300,6 +323,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		effects.push(Effect.create());
 		this.item.update(formData);
+		this._interacting = false;
 	}
 
 	/**
@@ -328,6 +352,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		this.item.update(formData);
+		this._interacting = false;
 	}
 
 	/**
@@ -578,6 +603,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		this.item.update(formData);
+		this._interacting = false;
 	}
 
 	/**
@@ -602,6 +628,11 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		if (this.actor) {
 			this.actor.deleteEmbeddedEntity('OwnedItem', pill.dataset.id);
 		}
+	}
+
+	_preventSubmit () {
+		clearTimeout(this._submitTimeout);
+		this._interacting = true;
 	}
 
 	/**
