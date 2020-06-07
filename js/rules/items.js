@@ -134,13 +134,14 @@ export const ObsidianItems = {
 		let scaledAmount = 0;
 		if (scaling && consumers.length) {
 			const consumer = consumers[0];
-			const consumed = options.consumed || 0;
+			let consumed = options.consumed || 0;
 			let base;
 
 			if (consumer.calc === 'var') {
 				base = 1;
 			} else {
 				if (consumer.target === 'spell') {
+					consumed = options.spellLevel;
 					base = consumer.slot;
 				} else {
 					base = consumer.fixed;
@@ -311,7 +312,10 @@ export const ObsidianItems = {
 			return;
 		}
 
-		if (options.consumed == null && (scaling || consumer?.calc === 'var')) {
+		if (options.consumed == null
+			&& consumer?.target !== 'spell'
+			&& (scaling || consumer?.calc === 'var'))
+		{
 			ObsidianItems.selectConsumption(actor, options);
 			return;
 		}
