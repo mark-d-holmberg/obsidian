@@ -57,20 +57,7 @@ export function runPatches () {
 		return this;
 	};
 
-	patchDeleteEmbeddedEntity();
 	patchChatMessage();
-}
-
-function patchDeleteEmbeddedEntity () {
-	let fn = ActorTokenHelpers.prototype.deleteEmbeddedEntity.toString();
-	fn = '(async function' + fn.substring(5) + ')';
-	fn = fn.replace(
-		'const items = duplicate(this.data.items);',
-		'id = id instanceof Array ? id : [id];'
-		+ 'const items = duplicate(this.data.items).filter(i => !id.includes(i._id));')
-		.replace('items.findSplice(i => i._id === id);', '');
-
-	ActorTokenHelpers.prototype.deleteEmbeddedEntity = eval(fn);
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {
