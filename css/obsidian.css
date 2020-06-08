@@ -25,7 +25,7 @@
 	--vertical-space: 20px;
 }
 
-.dnd5e.actor.obsidian-window {
+.dnd5e.sheet.actor.obsidian-window {
 	min-width: 880px;
 	min-height: 625px;
 }
