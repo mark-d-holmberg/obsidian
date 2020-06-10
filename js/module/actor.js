@@ -14,16 +14,16 @@ import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
+import {Migrate} from '../migration/migrate.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
 		super.prepareData();
-		if (!this.data.flags
-			|| !this.data.flags.obsidian
+		if (!this.data.flags?.obsidian
 			|| (this.data.flags.obsidian.version || 0) < Schema.VERSION)
 		{
 			// This actor needs migrating.
-			return this.data;
+			Migrate.convertActor(this.data);
 		}
 
 		const data = this.data.data;

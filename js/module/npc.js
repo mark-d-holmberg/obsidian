@@ -4,7 +4,6 @@ import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';
 import {Reorder} from './reorder.js';
 import {Sheet} from './sheet.js';
-import {Migrate} from '../migration/migrate.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -98,12 +97,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	getData () {
 		const data = super.getData();
-		if (!this.actor.data.flags?.obsidian) {
-			this.actor.data = Migrate.convertActor(this.actor.data);
-			this.actor.prepareData();
-			data.actor = duplicate(this.actor.data);
-		}
-
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.featCategories = {};
 		data.skills = {};
