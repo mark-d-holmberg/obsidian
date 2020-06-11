@@ -17,7 +17,13 @@ In addition to the above information, it can be useful if you are able to do the
 2. Zip up your `actors.db` file and attach it to the report. It can be found in your foundry data directory under `Data/worlds/yourworld/data/actors.db`.
 
 ## License
-All source code (`*.html`, `*.css`, `*.js`, `*.json`) is made available under the terms of the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html). A copy of this license is available in the `LICENSE` file.
+All source code (`*.html`, `*.css`, `*.js`, `*.json`) is copyright 2019-2020 Kim Mantas, with the exception of individual contributions that are copyright their respective contributors, as specified in the `CONTRIBUTORS` file.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+A copy of this license is available in the `LICENSE` file, or can alternatively be found here: [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 The fonts Roboto and Roboto Condensed found in the `fonts` directory are used and redistributed under the terms of the [Apache License v2](http://www.apache.org/licenses/LICENSE-2.0). A copy of this license is available in the `fonts/LICENSE-2.0.txt` file.
 
@@ -31,4 +37,4 @@ The SVG images found in the `img` directory are used and redistributed under the
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.svg`, `marked.svg`, `prone.svg`
 * [Willdabeast](http://wjbstories.blogspot.com/): `rod.svg`
 
-The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`, `abjuration.png`, `conjuration.png`, `divination.png`, `enchantment.png`, `evocation.png`, `illusion.png`, `necromancy.png`, `transmutation.png`) are © [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`, `abjuration.png`, `conjuration.png`, `divination.png`, `enchantment.png`, `evocation.png`, `illusion.png`, `necromancy.png`, `transmutation.png`) are copyright 2019-2020 [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
