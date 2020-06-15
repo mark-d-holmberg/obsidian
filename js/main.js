@@ -50,6 +50,22 @@ Hooks.once('ready', function () {
 	if (game.i18n.lang === 'ja') {
 		fontSheet = 'ja';
 	}
+	game.settings.register('obsidian', 'rollTwoDice', {
+        name: "OBSIDIAN.ConfigNumDiceHead",
+        hint: "OBSIDIAN.ConfigNumDiceMessage",
+        scope: "user",
+        config: true,
+        default: false,
+        type: Boolean
+    });
+	game.settings.register('obsidian', 'toggleHotkey', {
+        name: "OBSIDIAN.ConfigHotkeyToggleHead",
+        hint: "OBSIDIAN.ConfigHotkeyToggleMessage",
+        scope: "user",
+        config: true,
+        default: true,
+        type: Boolean
+    });
 
 	const link = document.createElement('link');
 	link.type = 'text/css';

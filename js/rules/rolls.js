@@ -412,7 +412,7 @@ export const Rolls = {
 	},
 
 	d20Roll: function (actor, mods = [], crit = 20, fail = 1, rollMod) {
-		let n = 2;
+		let n  = (!game.settings.get('obsidian','rollTwoDice') && determineAdvantage(rollMod.mode) == 0) ? 1 : 2;
 		if (rollMod) {
 			n += rollMod.ndice;
 		}
