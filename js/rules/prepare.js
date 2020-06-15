@@ -674,7 +674,7 @@ export const Prepare = {
 			}
 
 			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
-			if (skill.rollParts.find(p => p.proficiency).value > 0.5
+			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5
 				&& original && original.mod > skill.mod)
 			{
 				skill.mod = original.mod;
