@@ -51,21 +51,21 @@ Hooks.once('ready', function () {
 		fontSheet = 'ja';
 	}
 	game.settings.register('obsidian', 'rollTwoDice', {
-        name: "OBSIDIAN.ConfigNumDiceHead",
-        hint: "OBSIDIAN.ConfigNumDiceMessage",
-        scope: "user",
-        config: true,
-        default: false,
-        type: Boolean
-    });
+		name: 'OBSIDIAN.ConfigNumDiceHead',
+		hint: 'OBSIDIAN.ConfigNumDiceMessage',
+		scope: 'user',
+		config: true,
+		default: true,
+		type: Boolean
+	});
 	game.settings.register('obsidian', 'toggleHotkey', {
-        name: "OBSIDIAN.ConfigHotkeyToggleHead",
-        hint: "OBSIDIAN.ConfigHotkeyToggleMessage",
-        scope: "user",
-        config: true,
-        default: true,
-        type: Boolean
-    });
+		name: 'OBSIDIAN.ConfigHotkeyToggleHead',
+		hint: 'OBSIDIAN.ConfigHotkeyToggleMessage',
+		scope: 'user',
+		config: true,
+		default: true,
+		type: Boolean
+	});
 
 	const link = document.createElement('link');
 	link.type = 'text/css';
