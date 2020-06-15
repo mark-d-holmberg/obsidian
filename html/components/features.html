@@ -74,11 +74,24 @@
 					</div>
 					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
 				{{else}}
+					{{#if (eq attack 'ranged')}}
+					<div class="obsidian-table-number-md">
+						<div>
+							{{range1}}
+							<span class="obsidian-table-number-split">&sol;</span>
+						</div>
+						<div>
+							<span class="obsidian-table-number-minor">{{range2}}</span>
+							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+						</div>
+					</div>
+					{{else}}
 					<div class="obsidian-table-number-md">
 						{{reach}}
 						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
 					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
+					{{/if}}
 				{{/if}}
 			</div>
 			<div class="obsidian-col-hit">

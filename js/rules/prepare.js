@@ -634,7 +634,7 @@ export const Prepare = {
 			if (!custom && flags.skills[id] === undefined) {
 				flags.skills[id] = duplicate(skill);
 			} else if (!custom) {
-				flags.skills[id] = mergeObject(skill, flags.skills[id]);
+				flags.skills[id] = mergeObject(skill, flags.skills[id], {inplace: false});
 			}
 
 			if (!custom) {
