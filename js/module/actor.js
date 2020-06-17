@@ -101,21 +101,19 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		prepareFilters(this.data);
+		prepareInventory(this.data);
 		Prepare.abilities(this.data);
 
 		data.attributes.ac.min =
 			flags.attributes.ac.base
 			+ data.abilities[flags.attributes.ac.ability1].mod
-			+ (flags.attributes.ac.ability2
-			? data.abilities[flags.attributes.ac.ability2].mod
-			: 0);
+			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0);
 
 		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 			data.attributes.ac.min = Number(flags.attributes.ac.override);
 		}
 
 		Prepare.init(data, flags);
-		prepareInventory(this.data);
 		Prepare.conditions(this);
 		Prepare.skills(this.data, data, flags, originalSkills);
 		Prepare.saves(this.data, data, flags, originalSaves);
