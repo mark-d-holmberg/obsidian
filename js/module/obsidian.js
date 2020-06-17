@@ -488,19 +488,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setSkillProficiency (evt) {
-		let id = $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id');
-		let skillKey;
-
-		if (id.includes('.')) {
-			const split = id.split('.');
-			skillKey = split[0];
-			id = parseInt(split[1]);
-		}
-
-		const skill =
-			skillKey
-				? this.actor.data.flags.obsidian.skills[skillKey][id]
-				: this.actor.data.data.skills[id];
+		const id = $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id');
+		const skill = getProperty(this.actor.data.flags.obsidian.skills, id);
 
 		let newValue = 0;
 		if (skill.value === 0) {
@@ -510,12 +499,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const update = {};
-		if (skillKey) {
-			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[skillKey]);
-			newSkills[id].value = newValue;
-			update[`flags.obsidian.skills.${skillKey}`] = newSkills;
+		if (id.includes('.')) {
+			const [key, idx] = id.split('.');
+			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[key]);
+			newSkills[idx].value = newValue;
+			update[`flags.obsidian.skills.${key}`] = newSkills;
 		} else {
-			update[`data.skills.${id}.value`] = newValue;
+			update[`flags.obsidian.skills.${id}.value`] = newValue;
 		}
 
 		this.actor.update(update);
