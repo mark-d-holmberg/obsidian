@@ -17,6 +17,9 @@ export function applyBonuses (actorData) {
 				+ bonuses.reduce((acc, bonus) =>
 					acc + bonusToParts(actorData, bonus)
 						.reduce((acc, part) => acc + part.mod, 0), 0);
+
+			flags.attributes.speed[speed].derived =
+				Math.floor(flags.attributes.speed[speed].derived);
 		} else {
 			delete flags.attributes.speed[speed].derived;
 		}
@@ -31,6 +34,7 @@ export function applyBonuses (actorData) {
 			...initBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		data.attributes.init.mod +=
 			flags.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		data.attributes.init.mod = Math.floor(data.attributes.init.mod);
 	}
 
 	const acBonuses = actorData.obsidian.filters.bonuses(Filters.isAC);
@@ -38,6 +42,8 @@ export function applyBonuses (actorData) {
 		data.attributes.ac.min +=
 			acBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
+
+		data.attributes.ac.min = Math.floor(data.attributes.ac.min);
 	}
 
 	const hpBonuses = actorData.obsidian.filters.bonuses(Filters.isHP);
@@ -45,15 +51,18 @@ export function applyBonuses (actorData) {
 		data.attributes.hp.maxAdjusted +=
 			hpBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
+
+		data.attributes.hp.maxAdjusted = Math.floor(data.attributes.hp.maxAdjusted);
 	}
 
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
 		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo[filter]);
 		if (bonuses.length) {
-			const total =
+			let total =
 				bonuses.flatMap(bonus => bonusToParts(actorData, bonus))
 					.reduce((acc, part) => acc + part.mod, 0);
 
+			total = Math.floor(total);
 			flags.attributes.spellcasting[key] =
 				flags.attributes.spellcasting[key].map(val => val + total);
 		}

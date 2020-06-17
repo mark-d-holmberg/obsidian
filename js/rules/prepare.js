@@ -300,6 +300,9 @@ export const Prepare = {
 					scoreBonuses.reduce((acc, bonus) =>
 						acc + bonusToParts(actorData, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
+
+				flags.abilities[id].value = Math.floor(flags.abilities[id].value);
+				ability.mod = Math.floor((flags.abilities[id].value - 10) / 2);
 			}
 		}
 	},
@@ -616,7 +619,9 @@ export const Prepare = {
 				}];
 			}
 
-			save.save = flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0);
+			save.save =
+				Math.floor(flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0));
+
 			if (flags.saves[id].rollParts.find(p => p.proficiency).value > 0
 				&& original && original.save > save.save)
 			{
@@ -673,7 +678,7 @@ export const Prepare = {
 				rollMod = Effect.combineRollMods(rollMods);
 			}
 
-			skill.mod = skill.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
 			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5
 				&& original && original.mod > skill.mod)
 			{
@@ -692,6 +697,8 @@ export const Prepare = {
 					passiveBonuses.reduce((acc, bonus) =>
 						acc + bonusToParts(actorData, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
+
+				skill.passive = Math.floor(skill.passive);
 			}
 		}
 	},

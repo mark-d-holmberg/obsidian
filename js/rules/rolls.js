@@ -426,7 +426,7 @@ export const Rolls = {
 			adv = adv.concat(rollMod.mode);
 		}
 
-		const total = mods.reduce((acc, mod) => {
+		let total = mods.reduce((acc, mod) => {
 			if (mod.ndice !== undefined) {
 				let mult = 1;
 				if (mod.ndice < 0) {
@@ -443,6 +443,7 @@ export const Rolls = {
 			return acc + mod.mod;
 		}, 0);
 
+		total = Math.floor(total);
 		const results = rolls.map(r => {
 			return {
 				data3d: {formula: '1d20', results: [r.last()]},
@@ -959,7 +960,7 @@ export const Rolls = {
 				subRolls = subRolls[mode];
 			}
 
-			const subTotal = dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0);
+			const subTotal = Math.floor(dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0));
 			let total = subTotal;
 			let breakdown;
 
@@ -995,8 +996,8 @@ export const Rolls = {
 
 		return {
 			attack: attack,
-			hit: {total: total('hit'), results: results('hit')},
-			crit: {total: total('crit'), results: results('crit')},
+			hit: {total: Math.floor(total('hit')), results: results('hit')},
+			crit: {total: Math.floor(total('crit')), results: results('crit')},
 			data3d: {
 				formula: rolls.filter(_ => _).map(r => r.data3d.formula).join('+'),
 				results: rolls.filter(_ => _).reduce((acc, r) => {
