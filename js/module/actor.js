@@ -30,17 +30,6 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		this.data.obsidian = {classes: []};
 
-		data.attributes.ac.min =
-			flags.attributes.ac.base
-			+ data.abilities[flags.attributes.ac.ability1].mod
-			+ (flags.attributes.ac.ability2
-				? data.abilities[flags.attributes.ac.ability2].mod
-				: 0);
-
-		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-			data.attributes.ac.min = Number(flags.attributes.ac.override);
-		}
-
 		if (this.data.type === 'character') {
 			this.data.obsidian.classes =
 				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
@@ -82,8 +71,6 @@ export class ObsidianActor extends Actor5e {
 			prepareNPC(this.data);
 		}
 
-		Prepare.init(data, flags);
-
 		this.data.obsidian.magicalItems =
 			this.data.items.filter(item =>
 				(item.type === 'weapon' || item.type === 'equipment')
@@ -114,8 +101,21 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		prepareFilters(this.data);
-		prepareInventory(this.data);
 		Prepare.abilities(this.data);
+
+		data.attributes.ac.min =
+			flags.attributes.ac.base
+			+ data.abilities[flags.attributes.ac.ability1].mod
+			+ (flags.attributes.ac.ability2
+			? data.abilities[flags.attributes.ac.ability2].mod
+			: 0);
+
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+			data.attributes.ac.min = Number(flags.attributes.ac.override);
+		}
+
+		Prepare.init(data, flags);
+		prepareInventory(this.data);
 		Prepare.conditions(this);
 		Prepare.skills(this.data, data, flags, originalSkills);
 		Prepare.saves(this.data, data, flags, originalSaves);
