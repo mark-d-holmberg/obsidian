@@ -1,4 +1,5 @@
 import {OBSIDIAN} from '../global.js';
+import {ObsidianActor} from './actor.js';
 
 export const Reorder = {
 	dragStart: function (event) {
@@ -86,7 +87,17 @@ export const Reorder = {
 
 		if (data && !idData) {
 			if (data.pack) {
-				const item = await actor.importItemFromCollection(data.pack, data.id);
+				const pack = game.packs.get(data.pack);
+				if (pack.metadata.entity !== 'Item') {
+					return false;
+				}
+
+				const packItem = await pack.getEntity(data.id);
+				delete packItem.data._id;
+				const item =
+					await actor.createEmbeddedEntity(
+						'OwnedItem', ObsidianActor.duplicateItem(packItem.data));
+
 				if (item) {
 					src = item;
 				} else {
@@ -95,7 +106,7 @@ export const Reorder = {
 			} else {
 				src =
 					await actor.createEmbeddedEntity(
-						'OwnedItem', duplicate(game.items.get(data.id).data));
+						'OwnedItem', ObsidianActor.duplicateItem(game.items.get(data.id).data));
 
 				if (actor.isToken) {
 					src = src.actorData.items.last();
@@ -247,13 +258,14 @@ export const Reorder = {
 				delete transfer.data.flags.obsidian.parent;
 			}
 
+			const item = ObsidianActor.duplicateItem(transfer.data);
 			if (actor.owner) {
-				actor.createEmbeddedEntity('OwnedItem', transfer.data);
+				actor.createEmbeddedEntity('OwnedItem', item);
 			} else {
 				game.socket.emit('module.obsidian', {
 					action: 'CREATE.OWNED',
 					actorID: actor.id,
-					data: transfer.data
+					data: item
 				});
 			}
 		};

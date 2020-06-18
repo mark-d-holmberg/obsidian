@@ -72,13 +72,13 @@ export function patchChatMessage () {
 			});
 
 			html.hover(() => {
-				if (canvas.scene.id !== this.data.speaker.scene) {
+				if (canvas.scene && canvas.scene.id !== this.data.speaker.scene) {
 					return;
 				}
 
 				canvas.tokens.get(this.data.speaker.token)?._onHoverIn(null, true);
 			}, () => {
-				if (canvas.scene.id !== this.data.speaker.scene) {
+				if (canvas.scene && canvas.scene.id !== this.data.speaker.scene) {
 					return;
 				}
 
