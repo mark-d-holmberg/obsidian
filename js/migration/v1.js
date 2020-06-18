@@ -3,7 +3,7 @@ import {Effect} from '../module/effect.js';
 
 export const v1 = {
 	convertAttack: function (attack, type, category, magic = 0) {
-		const component = Effect.newAttack();
+		const component = Effect.createComponent('attack');
 		component.attack = type;
 		component.category = category;
 		component.ability = attack.stat;
@@ -17,7 +17,7 @@ export const v1 = {
 		if (uses.limit === 'unlimited') {
 			data.flags.obsidian.unlimited = true;
 		} else {
-			const component = Effect.newResource();
+			const component = Effect.createComponent('resource');
 			component.calc = 'formula';
 			component.key = uses.ability;
 			component.bonus = uses.bonus;
@@ -28,7 +28,7 @@ export const v1 = {
 	},
 
 	convertCharges: function (charges) {
-		const component = Effect.newResource();
+		const component = Effect.createComponent('resource');
 		component.fixed = charges.max;
 		component.recharge.time = charges.recharge;
 		component.recharge.calc = charges.rechargeType;
@@ -41,7 +41,7 @@ export const v1 = {
 	},
 
 	convertDamage: function (dmg, versatile = false, magic = 0) {
-		const component = Effect.newDamage();
+		const component = Effect.createComponent('damage');
 		component.ndice = dmg.ndice;
 		component.ncrit = dmg.ncrit;
 		component.die = dmg.die;
@@ -54,7 +54,7 @@ export const v1 = {
 	},
 
 	convertSave: function (save) {
-		const component = Effect.newSave();
+		const component = Effect.createComponent('save');
 		component.target = save.target;
 		component.effect = save.effect;
 
@@ -73,7 +73,7 @@ export const v1 = {
 	convertUses: function (uses, classMap) {
 		let component;
 		if (uses.type === 'formula') {
-			component = Effect.newResource();
+			component = Effect.createComponent('resource');
 			component.recharge.time = uses.recharge;
 			component.name = game.i18n.localize('OBSIDIAN.Uses');
 
@@ -97,7 +97,7 @@ export const v1 = {
 		} else {
 			// Unfortunately, item IDs have all been wiped by this point during
 			// the core migration so we cannot re-link the resources.
-			component = Effect.newConsume();
+			component = Effect.createComponent('consume');
 		}
 
 		return component;

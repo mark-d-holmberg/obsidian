@@ -23,55 +23,8 @@
 				       name="flags.obsidian.effects.{{effectIndex}}.name"
 				       placeholder="{{localize 'OBSIDIAN.EffectName'}}">
 				{{#each components}}
-					{{#if (eq type 'resource')}}
-						{{> modules/obsidian/html/components/effects/resource.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'attack')}}
-						{{> modules/obsidian/html/components/effects/attack.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'damage')}}
-						{{> modules/obsidian/html/components/effects/damage.html
-						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'save')}}
-						{{> modules/obsidian/html/components/effects/save.html
-						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'scaling')}}
-						{{> modules/obsidian/html/components/effects/scaling.html
-							  prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'target')}}
-						{{> modules/obsidian/html/components/effects/targets.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'consume')}}
-						{{> modules/obsidian/html/components/effects/consume.html
-							  prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'produce')}}
-						{{> modules/obsidian/html/components/effects/produce.html
-						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'spells')}}
-						{{> modules/obsidian/html/components/effects/spells.html
-						    prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'roll-mod')}}
-						{{> modules/obsidian/html/components/effects/roll-mod.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'filter')}}
-						{{> modules/obsidian/html/components/effects/filter.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'bonus')}}
-						{{> modules/obsidian/html/components/effects/bonus.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'duration')}}
-						{{> modules/obsidian/html/components/effects/duration.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'expression')}}
-						{{> modules/obsidian/html/components/effects/expression.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'applied')}}
-						{{> modules/obsidian/html/components/effects/applied.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{else if (eq type 'defense')}}
-						{{> modules/obsidian/html/components/effects/defense.html
-								prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
-					{{/if}}
+					{{> (add 'modules/obsidian/html/components/effects/' type '.html')
+							prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}
 				{{/each}}
 			</div>
 		{{/each}}
@@ -88,89 +41,27 @@
 		<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-demolish obsidian-rm-effect obsidian-hidden">
 			<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DeleteSelected'}}</div>
 		</li>
-		<li class="obsidian-effects-pill obsidian-icon-uses-ability obsidian-add-uses-ability">
-			<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.UsesAbility'}}</div>
-		</li>
-		<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-uses-ability obsidian-rm-uses-ability">
-			<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.UsesAbility'}}</div>
-		</li>
-		<details class="obsidian-effects-cat" data-key="rolls">
-			<summary class="obsidian-hidden">
-				<div><h3>{{localize 'OBSIDIAN.Rolls'}}</h3></div>
-				<i class="fas fa-angle-down"></i>
-			</summary>
-			<li class="obsidian-effects-pill obsidian-icon-melee obsidian-add-attack">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddAttack'}}</div>
+		{{#each uncategorised}}
+			<li class="obsidian-effects-pill{{#if (eq mode 'rm')}} obsidian-effects-pill-rm{{/if}}
+					 obsidian-icon-comp-{{type}} obsidian-{{mode}}-{{type}}">
+				<div class="obsidian-effects-pill-text">{{label}}</div>
 			</li>
-			<li class="obsidian-effects-pill obsidian-icon-damage obsidian-add-damage">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DamageHeal'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-save obsidian-add-save">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddSave'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-expression obsidian-add-expr">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.DiceExpression'}}</div>
-			</li>
-		</details>
-		<details class="obsidian-effects-cat" data-key="resources">
-			<summary class="obsidian-hidden">
-				<div><h3>{{localize 'OBSIDIAN.Resources'}}</h3></div>
-				<i class="fas fa-angle-down"></i>
-			</summary>
-			<li class="obsidian-effects-pill obsidian-icon-resource obsidian-add-resource">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddResource'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-consume-resource obsidian-add-consume">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ConsumesResource'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-produce-resource obsidian-add-produce">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ProducesResource'}}</div>
-			</li>
-		</details>
-		<details class="obsidian-effects-cat" data-key="modifiers">
-			<summary class="obsidian-hidden">
-				<div><h3>{{localize 'OBSIDIAN.Modifiers'}}</h3></div>
-				<i class="fas fa-angle-down"></i>
-			</summary>
-			<li class="obsidian-effects-pill obsidian-icon-roll-modifier obsidian-add-roll-modifier">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-roll-modifier obsidian-rm-roll-modifier obsidian-hidden">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.RollModifier'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-bonus obsidian-add-bonus">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddBonus'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-effects-pill-rm obsidian-icon-bonus obsidian-rm-bonus obsidian-hidden">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.RemoveBonus'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-filter obsidian-add-filter">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddFilter'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-defense obsidian-add-defense">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddDefense'}}</div>
-			</li>
-		</details>
-		<details class="obsidian-effects-cat" data-key="special">
-			<summary class="obsidian-hidden">
-				<div><h3>{{localize 'OBSIDIAN.Special'}}</h3></div>
-				<i class="fas fa-angle-down"></i>
-			</summary>
-			<li class="obsidian-effects-pill obsidian-icon-scaling obsidian-add-scaling">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddScaling'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-target obsidian-add-targets">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AddTargets'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-provides-spells obsidian-add-spells">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.ProvidesSpells'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-duration obsidian-add-duration">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.CombatDuration'}}</div>
-			</li>
-			<li class="obsidian-effects-pill obsidian-icon-applied-effect obsidian-add-applied">
-				<div class="obsidian-effects-pill-text">{{localize 'OBSIDIAN.AppliedEffect'}}</div>
-			</li>
-		</details>
+		{{/each}}
+		{{#each categories}}
+			{{#unless (eq this.[0] 'none')}}
+			<details class="obsidian-effects-cat" data-key="{{this.[0]}}">
+				<summary class="obsidian-hidden">
+					<div><h3>{{this.1.label}}</h3></div>
+					<i class="fas fa-angle-down"></i>
+				</summary>
+				{{#each this.1.components}}
+					<li class="obsidian-effects-pill{{#if (eq mode 'rm')}} obsidian-effects-pill-rm{{/if}}
+					 obsidian-icon-comp-{{type}} obsidian-{{mode}}-{{type}}">
+						<div class="obsidian-effects-pill-text">{{label}}</div>
+					</li>
+				{{/each}}
+			</details>
+			{{/unless}}
+		{{/each}}
 	</ul>
 </form>

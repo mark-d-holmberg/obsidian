@@ -43,7 +43,7 @@ export const core = {
 			}
 
 			const target = data.data.target;
-			const component = Effect.newTarget();
+			const component = Effect.createComponent('target');
 			effect.components.push(component);
 
 			if (target.type === 'creature' || target.type === 'object') {
@@ -65,7 +65,7 @@ export const core = {
 			}
 
 			const uses = data.data.uses;
-			const component = Effect.newResource();
+			const component = Effect.createComponent('resource');
 			effect.components.push(component);
 
 			if (!effect.name.length) {
@@ -102,7 +102,7 @@ export const core = {
 				effect = getPrimaryEffect(data);
 			}
 
-			const component = Effect.newAttack();
+			const component = Effect.createComponent('attack');
 			effect.components.push(component);
 
 			if (action[0] === 'r') {
@@ -172,7 +172,7 @@ export const core = {
 				effect = getPrimaryEffect(data);
 			}
 
-			const component = Effect.newSave();
+			const component = Effect.createComponent('save');
 			effect.components.push(component);
 			component.target = save.ability;
 
@@ -198,7 +198,7 @@ export const core = {
 				scaling.method = 'cantrip';
 			}
 
-			const component = Effect.newDamage();
+			const component = Effect.createComponent('damage');
 			scalingEffect.components.push(component);
 
 			const existingDamage = spellEffect.components.find(c => c.type === 'damage');
@@ -240,7 +240,7 @@ export const core = {
 			return;
 		}
 
-		const component = Effect.newDamage();
+		const component = Effect.createComponent('damage');
 		if (Array.isArray(dmg) && CONVERT.damage[dmg[1]]) {
 			component.damage = CONVERT.damage[dmg[1]];
 		}
@@ -387,7 +387,7 @@ function getScalingEffect (data) {
 	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
 		data.flags.obsidian.effects = [Effect.create()];
 		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.Scaling');
-		data.flags.obsidian.effects[0].components.push(Effect.newScaling());
+		data.flags.obsidian.effects[0].components.push(Effect.createComponent('scaling'));
 	}
 
 	let effect =

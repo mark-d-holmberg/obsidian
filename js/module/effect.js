@@ -2,6 +2,269 @@ import {OBSIDIAN} from '../global.js';
 import {Filters} from '../rules/filters.js';
 import {determineAdvantage} from '../rules/prepare.js';
 
+export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
+
+export const Components = {
+	applied: {
+		data: {
+			type: 'applied',
+			ref: '',
+			on: 'target'
+		},
+		metadata: {
+			category: 'special'
+		}
+	},
+	attack: {
+		data: {
+			type: 'attack',
+			attack: 'melee',
+			category: 'weapon',
+			ability: '',
+			bonus: 0,
+			crit: 20,
+			proficient: false,
+			reach: null,
+			range1: null,
+			range2: null,
+			target: ''
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'AddAttack',
+			addons: ['roll-mod', 'bonus']
+		}
+	},
+	bonus: {
+		data: {
+			type: 'bonus',
+			name: '',
+			bonus: 0,
+			prof: 0,
+			ability: '',
+			level: '',
+			class: '',
+			text: '',
+			ndice: 0,
+			die: 4,
+			constant: 0,
+			operator: 'plus',
+			value: '',
+			formula: false
+		},
+		metadata: {
+			category: 'modifiers',
+			addon: 'extraBonus',
+			tray: ['AddBonus', 'RemoveBonus']
+		}
+	},
+	consume: {
+		data: {
+			type: 'consume',
+			target: 'this-effect',
+			itemID: '',
+			featID: '',
+			ref: '',
+			fixed: 1,
+			slots: 'any',
+			class: '',
+			slot: 1
+		},
+		metadata: {
+			category: 'resources',
+			tray: 'ConsumesResource'
+		}
+	},
+	damage: {
+		data: {
+			type: 'damage',
+			calc: 'formula',
+			ndice: 1,
+			die: 4,
+			ability: '',
+			bonus: 0,
+			damage: '',
+			versatile: false
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'DamageHeal',
+			addons: ['roll-mod', 'bonus']
+		}
+	},
+	defense: {
+		data: {
+			type: 'defense',
+			disease: false,
+			sleep: false,
+			defense: '',
+			damage: {level: 'res', dmg: 'acid', magic: '', material: ''},
+			condition: 'charmed'
+		},
+		metadata: {
+			category: 'modifiers',
+			tray: 'AddDefense'
+		}
+	},
+	duration: {
+		data: {
+			type: 'duration',
+			duration: 1,
+			concentration: false
+		},
+		metadata: {
+			category: 'special',
+			tray: 'CombatDuration'
+		}
+	},
+	expression: {
+		data: {
+			type: 'expression',
+			expr: '',
+			flavour: ''
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'DiceExpression'
+		}
+	},
+	filter: {
+		data: {
+			type: 'filter',
+			filter: 'roll',
+			score: 'ability',
+			roll: 'attack',
+			check: 'ability',
+			dmg: 'damage',
+			multi: 'any',
+			some: '',
+			collection: [],
+			mode: ''
+		},
+		metadata: {
+			category: 'modifiers',
+			tray: 'AddFilter',
+			addons: ['uses-ability']
+		}
+	},
+	produce: {
+		data: {
+			type: 'produce',
+			target: 'this-effect',
+			itemID: '',
+			featID: '',
+			ref: '',
+			calc: 'fixed',
+			fixed: 1,
+			unlimited: false,
+			slot: 1
+		},
+		metadata: {
+			category: 'resources',
+			tray: 'ProducesResource'
+		}
+	},
+	resource: {
+		data: {
+			type: 'resource',
+			name: '',
+			recharge: {time: 'long', calc: 'all', ndice: 0, die: 2, bonus: 0, roll: null},
+			bonus: 0,
+			operator: 'plus',
+			key: 'abl',
+			min: 0,
+			calc: 'fixed',
+			fixed: 0
+		},
+		metadata: {
+			category: 'resources',
+			tray: 'AddResource'
+		}
+	},
+	'roll-mod': {
+		data: {
+			type: 'roll-mod',
+			min: 1,
+			reroll: 1,
+			mode: 'reg',
+			ndice: 0
+		},
+		metadata: {
+			category: 'modifiers',
+			addon: 'rollMod',
+			tray: ['RollModifier', 'RollModifier']
+		}
+	},
+	save: {
+		data: {
+			type: 'save',
+			calc: 'fixed',
+			fixed: 0,
+			bonus: 0,
+			prof: 1,
+			ability: '',
+			target: 'con',
+			effect: '',
+			save: 'half'
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'AddSave'
+		}
+	},
+	scaling: {
+		data: {
+			type: 'scaling',
+			method: 'spell',
+			ref: ''
+		},
+		metadata: {
+			category: 'special',
+			tray: 'AddScaling'
+		}
+	},
+	spells: {
+		data: {
+			type: 'spells',
+			source: 'list',
+			list: 'clr',
+			spells: [],
+			method: 'innate',
+			class: '',
+			ability: 'cha',
+			upcast: false,
+			level: 0
+		},
+		metadata: {
+			category: 'special',
+			tray: 'ProvidesSpells'
+		}
+	},
+	target: {
+		data: {
+			type: 'target',
+			target: 'individual',
+			count: 1,
+			area: 'cone',
+			distance: 0
+		},
+		metadata: {
+			category: 'special',
+			tray: 'AddTargets'
+		}
+	},
+	'uses-ability': {
+		data: {
+			type: 'uses-ability',
+			abilities: {}
+		},
+		metadata: {
+			addon: 'usesAbility',
+			tray: ['UsesAbility', 'UsesAbility']
+		}
+	}
+};
+
 export const Effect = {
 	metadata: {
 		active: new Set(['roll-mod', 'bonus', 'defense']),
@@ -25,224 +288,10 @@ export const Effect = {
 		};
 	},
 
-	newResource: function () {
-		return {
-			type: 'resource',
-			name: '',
-			uuid: OBSIDIAN.uuid(),
-			recharge: {time: 'long', calc: 'all', ndice: 0, die: 2, bonus: 0, roll: null},
-			bonus: 0,
-			operator: 'plus',
-			key: 'abl',
-			min: 0,
-			calc: 'fixed',
-			fixed: 0
-		};
-	},
-
-	newAttack: function () {
-		return {
-			type: 'attack',
-			uuid: OBSIDIAN.uuid(),
-			attack: 'melee',
-			category: 'weapon',
-			ability: '',
-			bonus: 0,
-			crit: 20,
-			proficient: false,
-			reach: null,
-			range1: null,
-			range2: null,
-			target: ''
-		};
-	},
-
-	newDamage: function () {
-		return {
-			type: 'damage',
-			uuid: OBSIDIAN.uuid(),
-			calc: 'formula',
-			ndice: 1,
-			die: 4,
-			ability: '',
-			bonus: 0,
-			damage: '',
-			versatile: false
-		};
-	},
-
-	newSave: function () {
-		return {
-			type: 'save',
-			uuid: OBSIDIAN.uuid(),
-			calc: 'fixed',
-			fixed: 0,
-			bonus: 0,
-			prof: 1,
-			ability: '',
-			target: 'con',
-			effect: '',
-			save: 'half'
-		};
-	},
-
-	newScaling: function () {
-		return {
-			type: 'scaling',
-			uuid: OBSIDIAN.uuid(),
-			method: 'spell',
-			ref: ''
-		};
-	},
-
-	newTarget: function () {
-		return {
-			type: 'target',
-			uuid: OBSIDIAN.uuid(),
-			target: 'individual',
-			count: 1,
-			area: 'cone',
-			distance: 0
-		};
-	},
-
-	newConsume: function () {
-		return {
-			type: 'consume',
-			uuid: OBSIDIAN.uuid(),
-			target: 'this-effect',
-			itemID: '',
-			featID: '',
-			ref: '',
-			fixed: 1,
-			slots: 'any',
-			class: '',
-			slot: 1
-		};
-	},
-
-	newProduce: function () {
-		return {
-			type: 'produce',
-			uuid: OBSIDIAN.uuid(),
-			target: 'this-effect',
-			itemID: '',
-			featID: '',
-			ref: '',
-			calc: 'fixed',
-			fixed: 1,
-			unlimited: false,
-			slot: 1
-		};
-	},
-
-	newSpells: function () {
-		return {
-			type: 'spells',
-			uuid: OBSIDIAN.uuid(),
-			source: 'list',
-			list: 'clr',
-			spells: [],
-			method: 'innate',
-			class: '',
-			ability: 'cha',
-			upcast: false,
-			level: 0
-		};
-	},
-
-	newRollMod: function () {
-		return {
-			type: 'roll-mod',
-			uuid: OBSIDIAN.uuid(),
-			min: 1,
-			reroll: 1,
-			mode: 'reg',
-			ndice: 0
-		};
-	},
-
-	newBonus: function () {
-		return {
-			type: 'bonus',
-			uuid: OBSIDIAN.uuid(),
-			name: '',
-			bonus: 0,
-			prof: 0,
-			ability: '',
-			level: '',
-			class: '',
-			text: '',
-			ndice: 0,
-			die: 4,
-			constant: 0,
-			operator: 'plus',
-			value: '',
-			formula: false
-		};
-	},
-
-	newFilter: function () {
-		return {
-			type: 'filter',
-			uuid: OBSIDIAN.uuid(),
-			filter: 'roll',
-			score: 'ability',
-			roll: 'attack',
-			check: 'ability',
-			dmg: 'damage',
-			multi: 'any',
-			some: '',
-			collection: [],
-			mode: ''
-		};
-	},
-
-	newDuration: function () {
-		return {
-			type: 'duration',
-			uuid: OBSIDIAN.uuid(),
-			duration: 1,
-			concentration: false
-		};
-	},
-
-	newExpression: function () {
-		return {
-			type: 'expression',
-			uuid: OBSIDIAN.uuid(),
-			expr: '',
-			flavour: ''
-		};
-	},
-
-	newApplied: function () {
-		return {
-			type: 'applied',
-			uuid: OBSIDIAN.uuid(),
-			ref: '',
-			on: 'target'
-		};
-	},
-
-	newUsesAbility: function () {
-		return {
-			type: 'uses-ability',
-			uuid: OBSIDIAN.uuid(),
-			abilities: {}
-		};
-	},
-
-	newDefense: function () {
-		return {
-			type: 'defense',
-			uuid: OBSIDIAN.uuid(),
-			disease: false,
-			sleep: false,
-			defense: '',
-			damage: {level: 'res', dmg: 'acid', magic: '', material: ''},
-			condition: 'charmed'
-		};
+	createComponent: function (component) {
+		const o = duplicate(Components[component].data);
+		o.uuid = OBSIDIAN.uuid();
+		return o;
 	},
 
 	determineMulti: function (filter) {

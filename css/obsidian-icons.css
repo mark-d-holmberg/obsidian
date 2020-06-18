@@ -196,67 +196,71 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/demolish.svg');
 }
 
-.obsidian-icon-resource {
+.obsidian-icon-comp-attack {
+	background-image: url('../img/melee.svg');
+}
+
+.obsidian-icon-comp-resource {
 	background-image: url('../img/resource.svg');
 }
 
-.obsidian-icon-damage {
+.obsidian-icon-comp-damage {
 	background-image: url('../img/damage.svg');
 }
 
-.obsidian-icon-save {
+.obsidian-icon-comp-save {
 	background-image: url('../img/save.svg');
 }
 
-.obsidian-icon-scaling {
+.obsidian-icon-comp-scaling {
 	background-image: url('../img/scaling.svg');
 }
 
-.obsidian-icon-target {
+.obsidian-icon-comp-target {
 	background-image: url('../img/target.svg');
 }
 
-.obsidian-icon-consume-resource {
+.obsidian-icon-comp-consume {
 	background-image: url('../img/consume-resource.svg');
 }
 
-.obsidian-icon-produce-resource {
+.obsidian-icon-comp-produce {
 	background-image: url('../img/produce-resource.svg');
 }
 
-.obsidian-icon-provides-spells {
+.obsidian-icon-comp-spells {
 	background-image: url('../img/provides-spells.svg');
 }
 
-.obsidian-icon-roll-modifier {
+.obsidian-icon-comp-roll-mod {
 	background-image: url('../img/roll-modifier.svg');
 }
 
-.obsidian-icon-filter {
+.obsidian-icon-comp-filter {
 	background-image: url('../img/filter.svg');
 }
 
-.obsidian-icon-bonus {
+.obsidian-icon-comp-bonus {
 	background-image: url('../img/bonus.svg');
 }
 
-.obsidian-icon-duration {
+.obsidian-icon-comp-duration {
 	background-image: url('../img/duration.svg');
 }
 
-.obsidian-icon-expression {
+.obsidian-icon-comp-expression {
 	background-image: url('../img/expression.svg');
 }
 
-.obsidian-icon-applied-effect {
+.obsidian-icon-comp-applied {
 	background-image: url('../img/applied-effect.svg');
 }
 
-.obsidian-icon-uses-ability {
+.obsidian-icon-comp-uses-ability {
 	background-image: url('../img/uses-ability.svg');
 }
 
-.obsidian-icon-defense {
+.obsidian-icon-comp-defense {
 	background-image: url('../img/defense.svg');
 }
 

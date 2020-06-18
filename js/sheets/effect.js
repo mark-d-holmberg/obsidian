@@ -1,38 +1,11 @@
 import {ObsidianItemSheet} from './item-sheet.js';
-import {Effect} from '../module/effect.js';
+import {Categories, Components, Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 import {Rules} from '../rules/rules.js';
 
-const subMenus = {rollMod: 'roll-modifier', extraBonus: 'bonus', usesAbility: 'uses-ability'};
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
-const componentMenus = {
-	attack: ['rollMod', 'extraBonus'],
-	damage: ['rollMod', 'extraBonus'],
-	filter: ['usesAbility']
-};
-
-const COMPONENT_MAP = [
-	['add-resource', Effect.newResource],
-	['add-attack', Effect.newAttack],
-	['add-damage', Effect.newDamage],
-	['add-save', Effect.newSave],
-	['add-scaling', Effect.newScaling],
-	['add-targets', Effect.newTarget],
-	['add-consume', Effect.newConsume],
-	['add-produce', Effect.newProduce],
-	['add-spells', Effect.newSpells],
-	['add-filter', Effect.newFilter],
-	['add-duration', Effect.newDuration],
-	['add-expr', Effect.newExpression],
-	['add-applied', Effect.newApplied],
-	['add-defense', Effect.newDefense],
-	['roll-modifier', Effect.newRollMod, 'rollMod'],
-	['bonus', Effect.newBonus, 'extraBonus'],
-	['uses-ability', Effect.newUsesAbility, 'usesAbility']
-];
-
 const FILTER_SELECTIONS = {
 	score: {
 		ability: ['ABILITIES', 'Ability'],
@@ -54,6 +27,38 @@ const FILTER_SELECTIONS = {
 	}
 };
 
+let categories = null;
+function lazyInitialiseCategories () {
+	if (categories != null) {
+		return categories;
+	}
+
+	categories = new Map(Categories.map(cat => [cat, {
+		label: game.i18n.localize(`OBSIDIAN.${cat.capitalise()}`),
+		components: []
+	}]));
+
+	categories.set('none', {components: []});
+	Object.entries(Components).forEach(([type, component]) => {
+		let labels =
+			Array.isArray(component.metadata.tray)
+				? component.metadata.tray
+				: [component.metadata.tray];
+
+		labels = labels.map(i18n => game.i18n.localize(`OBSIDIAN.${i18n}`));
+
+		const category = component.metadata.category || 'none';
+		const components = categories.get(category).components;
+		components.push({type: type, mode: 'add', label: labels[0]});
+
+		if (labels.length > 1) {
+			components.push({type: type, mode: 'rm', label: labels[1]});
+		}
+	});
+
+	return categories;
+}
+
 export class ObsidianEffectSheet extends ObsidianItemSheet {
 	constructor (...args) {
 		super(...args);
@@ -73,21 +78,24 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		return options;
 	}
 
+	get _categories () {
+		return lazyInitialiseCategories();
+	}
+
 	/**
 	 * @param {JQuery} html
 	 * @return undefined
 	 */
 	activateListeners (html) {
 		super.activateListeners(html);
-		COMPONENT_MAP.forEach(([cls, fn, sub]) => {
-			if (sub) {
-				html.find(`.obsidian-rm-${cls}`).mousedown(this._preventSubmit.bind(this));
-				html.find(`.obsidian-rm-${cls}`).click(this._onRemoveSelected.bind(this, sub));
-				cls = `add-${cls}`;
-			}
+		Effect.metadata.components.forEach(type => {
+			const component = Components[type];
+			html.find(`.obsidian-add-${type}, .obsidian-rm-${type}`)
+				.mousedown(this._preventSubmit.bind(this));
 
-			html.find(`.obsidian-${cls}`).mousedown(this._preventSubmit.bind(this));
-			html.find(`.obsidian-${cls}`).click(this._onAddComponent.bind(this, fn, sub));
+			const addon = component.metadata.addon;
+			html.find(`.obsidian-rm-${type}`).click(this._onRemoveSelected.bind(this, addon));
+			html.find(`.obsidian-add-${type}`).click(this._onAddComponent.bind(this, type, addon));
 		});
 
 		html.find('.obsidian-add-effect, .obsidian-rm-effect')
@@ -143,6 +151,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const data = super.getData();
 		data.equipTypes = Schema.EquipTypes;
 		data.spellLists = Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS);
+		data.categories = this._categories;
+		data.uncategorised = data.categories.get('none').components;
 
 		if (data.actor && data.item.flags && data.item.flags.obsidian
 			&& data.item.flags.obsidian.effects)
@@ -329,7 +339,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
-	async _onAddComponent (generator, prop) {
+	async _onAddComponent (type, prop) {
 		if (this._selectedEffect == null && this._selectedComponent == null) {
 			return;
 		}
@@ -339,13 +349,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effect = effects.find(effect => effect.uuid === this._selectedEffect);
 
 		if (effect) {
-			effect.components.push(generator());
+			effect.components.push(Effect.createComponent(type));
 		} else {
 			const component =
 				effects.flatMap(e => e.components).find(c => c.uuid === this._selectedComponent);
 
 			if (component) {
-				component[prop] = generator();
+				component[prop] = Effect.createComponent(type);
 			} else {
 				return;
 			}
@@ -695,25 +705,19 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				return;
 			}
 
-			const menu = componentMenus[component.type];
-			if (!menu) {
+			const addons = Components[component.type].metadata.addons;
+			if (!addons) {
 				return;
 			}
 
-			menu.forEach(prop => {
-				const css = subMenus[prop];
-				if (!css) {
-					return;
-				}
-
-				if (component[prop] === undefined) {
-					this.element.find(`.obsidian-${css}, .obsidian-add-${css}`)
-						.removeClass('obsidian-hidden');
-					this.element.find(`.obsidian-rm-${css}`).addClass('obsidian-hidden');
+			addons.forEach(sub => {
+				const addon = Components[sub].metadata.addon;
+				if (component[addon] === undefined) {
+					this.element.find(`.obsidian-add-${sub}`).removeClass('obsidian-hidden');
+					this.element.find(`.obsidian-rm-${sub}`).addClass('obsidian-hidden');
 				} else {
-					this.element.find(`.obsidian-${css}, .obsidian-add-${css}`)
-						.addClass('obsidian-hidden');
-					this.element.find(`.obsidian-rm-${css}`).removeClass('obsidian-hidden');
+					this.element.find(`.obsidian-add-${sub}`).addClass('obsidian-hidden');
+					this.element.find(`.obsidian-rm-${sub}`).removeClass('obsidian-hidden');
 				}
 			});
 		}

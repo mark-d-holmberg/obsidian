@@ -154,7 +154,8 @@ export const Migrate = {
 			&& (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length))
 		{
 			data.flags.obsidian.effects = [Effect.create()];
-			data.flags.obsidian.effects[0].components = [Effect.newAttack(), Effect.newDamage()];
+			data.flags.obsidian.effects[0].components =
+				[Effect.createComponent('attack'), Effect.createComponent('damage')];
 			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
 
@@ -170,7 +171,7 @@ export const Migrate = {
 				data.flags.obsidian.effects.push(Effect.create());
 			}
 
-			const component = Effect.newConsume();
+			const component = Effect.createComponent('consume');
 			component.target = 'qty';
 			data.flags.obsidian.effects[0].components.push(component);
 		}
@@ -425,7 +426,7 @@ export const Migrate = {
 			spellEffect.components.push(Migrate.v1.convertAttack(attack, attack.attack, 'spell'));
 
 			if (attack.count > 1) {
-				const component = Effect.newTarget();
+				const component = Effect.createComponent('target');
 				spellEffect.components.push(component);
 				component.count = attack.count;
 			}
@@ -444,7 +445,7 @@ export const Migrate = {
 		{
 			const upcast = data.flags.obsidian.upcast;
 			if (upcast.natk > 0 && upcast.nlvl > 0) {
-				const component = Effect.newTarget();
+				const component = Effect.createComponent('target');
 				scalingEffect.components.push(component);
 				component.count = upcast.natk / upcast.nlvl;
 			}
@@ -455,7 +456,7 @@ export const Migrate = {
 		}
 
 		if (scalingEffect.components.length) {
-			const scaling = Effect.newScaling();
+			const scaling = Effect.createComponent('scaling');
 			scalingEffect.components.unshift(scaling);
 			scaling.method = data.data.level < 1 ? 'cantrip' : 'spell';
 			scaling.ref = spellEffect.uuid;
@@ -547,7 +548,7 @@ export const Migrate = {
 		if (data.flags.obsidian.special && data.flags.obsidian.special.length) {
 			for (const special of data.flags.obsidian.special) {
 				const effect = Effect.create();
-				const component = Effect.newResource();
+				const component = Effect.createComponent('resource');
 
 				effect.name = special.name;
 				data.flags.obsidian.effects.push(effect);

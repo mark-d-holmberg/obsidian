@@ -41,7 +41,7 @@ export const v6 = {
 };
 
 function makeBonus (original, type) {
-	const bonus = Effect.newBonus();
+	const bonus = Effect.createComponent('bonus');
 	bonus.formula = true;
 
 	switch (type) {
