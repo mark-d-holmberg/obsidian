@@ -15,6 +15,8 @@ import {prepareNPC} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
 import {Migrate} from '../migration/migrate.js';
+import {Obsidian} from './obsidian.js';
+import {ObsidianNPC} from './npc.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -280,7 +282,11 @@ export class ObsidianActor extends Actor5e {
 		return this.data.items.find(other => other._id === item?.flags.obsidian.parent);
 	}
 
-	async shortRest () {
+	async shortRest (...args) {
+		if (!(this.sheet instanceof Obsidian) && !(this.sheet instanceof ObsidianNPC)) {
+			return super.shortRest(...args);
+		}
+
 		if (this.data.data.spells.pact) {
 			await this.update({'data.spells.pact.value': this.data.data.spells.pact.max});
 		}
@@ -293,7 +299,11 @@ export class ObsidianActor extends Actor5e {
 		return Promise.resolve();
 	}
 
-	async longRest () {
+	async longRest (...args) {
+		if (!(this.sheet instanceof Obsidian) && !(this.sheet instanceof ObsidianNPC)) {
+			return super.longRest(...args);
+		}
+
 		await this.shortRest();
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
