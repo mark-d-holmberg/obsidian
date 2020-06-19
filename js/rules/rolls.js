@@ -412,7 +412,7 @@ export const Rolls = {
 	},
 
 	d20Roll: function (actor, mods = [], crit = 20, fail = 1, rollMod) {
-		let n = (!game.settings.get('obsidian','rollTwoDice') && determineAdvantage(rollMod.mode) === 0) ? 1 : 2;
+		let n = 2;
 		if (rollMod) {
 			n += rollMod.ndice;
 		}
@@ -442,7 +442,14 @@ export const Rolls = {
 
 			return acc + mod.mod;
 		}, 0);
-
+		
+		let hotkey_adv = (window && window.event && (window.event.shiftKey || window.event.altKey) && game.settings.get('obsidian','toggleHotkey'));
+		let hotkey_dis = (window && window.event && window.event.ctrlKey && game.settings.get('obsidian','toggleHotkey'));
+		let adv_type = hotkey_adv ? 1 : hotkey_dis ? -1 : determineAdvantage(...adv);
+		if (game.settings.get('obsidian','rollOneDice') && adv_type === 0) {
+			rolls.shift();
+        }
+		
 		const results = rolls.map(r => {
 			return {
 				data3d: {formula: '1d20', results: [r.last()]},
@@ -453,7 +460,7 @@ export const Rolls = {
 		});
 
 		Rolls.annotateCrits(crit, fail, results);
-		Rolls.annotateAdvantage(determineAdvantage(...adv), results);
+		Rolls.annotateAdvantage(adv_type, results);
 
 		return results;
 	},

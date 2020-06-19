@@ -1,6 +1,6 @@
 {
-	"OBSIDIAN.ConfigNumDiceHead": "Always roll two dice",
-	"OBSIDIAN.ConfigNumDiceMessage": "If left unchecked, will only roll a single die for abilities by default.",
+	"OBSIDIAN.ConfigNumDiceHead": "Always roll one dice",
+	"OBSIDIAN.ConfigNumDiceMessage": "If checked, will only roll a single dice for rolls by default.",
 	"OBSIDIAN.ConfigHotkeyToggleHead": "Enable advantage toggling",
 	"OBSIDIAN.ConfigHotkeyToggleMessage": "If checked, enables holding shift or alt for advantage, and ctrl for disadvantage.",
 	"OBSIDIAN.PersonalityTraits": "Personality Traits",

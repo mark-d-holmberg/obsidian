@@ -16,8 +16,8 @@ const ops = {
  *                  neither.
  */
 export function determineAdvantage (...mods) {
-	let hasAdvantage = mods.some(mod => mod === 'adv') || (window && window.event && (window.event.shiftKey || window.event.altKey) && game.settings.get('obsidian','toggleHotkey'));
-	let hasDisadvantage = mods.some(mod => mod === 'dis') || (window && window.event && window.event.ctrlKey && game.settings.get('obsidian','toggleHotkey'));
+	let hasAdvantage = mods.some(mod => mod === 'adv');
+	let hasDisadvantage = mods.some(mod => mod === 'dis');
 
 	if (hasAdvantage && hasDisadvantage) {
 		return 0;
