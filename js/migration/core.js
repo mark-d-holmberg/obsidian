@@ -117,11 +117,15 @@ export const core = {
 				}
 			}
 
-			if (!OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
+			if (OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
+				if (action[0] === 'r') {
+					ability = 'dex';
+				}
+			} else {
 				ability = data.data.ability;
-				component.ability = data.data.ability;
 			}
 
+			component.ability = ability;
 			component.bonus = data.data.attackBonus || 0;
 			component.proficient = !!data.data.proficient;
 		}
