@@ -448,7 +448,7 @@ export const Rolls = {
 		let adv_type = hotkey_adv ? 1 : hotkey_dis ? -1 : determineAdvantage(...adv);
 		if (game.settings.get('obsidian','rollOneDice') && adv_type === 0) {
 			rolls.shift();
-        }
+		}
 		
 		const results = rolls.map(r => {
 			return {
