@@ -38,7 +38,7 @@ export class ObsidianItemSheet extends ItemSheet {
 		data.ObsidianRules = OBSIDIAN.Rules;
 
 		if (data.actor) {
-			data.actor.data.feats = data.actor.data.items.filter(item => item.type === 'feat');
+			data.actor.data.feats = data.actor.data.obsidian.itemsByType.get('feat');
 		}
 
 		return data;

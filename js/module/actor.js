@@ -17,6 +17,7 @@ import {Rules} from '../rules/rules.js';
 import {Migrate} from '../migration/migrate.js';
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPC} from './npc.js';
+import {Partitioner} from '../util/partition.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
@@ -30,11 +31,16 @@ export class ObsidianActor extends Actor5e {
 
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
-		this.data.obsidian = {classes: []};
+		this.data.obsidian = {
+			classes: [],
+			itemsByType: new Partitioner(game.system.entityTypes.Item)
+		};
+
+		this.data.obsidian.itemsByType.partition(this.data.items, item => item.type);
 
 		if (this.data.type === 'character') {
 			this.data.obsidian.classes =
-				this.data.items.filter(item => item.type === 'class' && item.flags.obsidian);
+				this.data.obsidian.itemsByType.get('class').filter(item => item.flags.obsidian);
 
 			data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
 			for (const cls of this.data.obsidian.classes) {
@@ -46,6 +52,7 @@ export class ObsidianActor extends Actor5e {
 					cls.name === 'custom'
 						? cls.flags.obsidian.custom
 						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
+
 				cls.data.levels = Number(cls.data.levels);
 			}
 
@@ -74,9 +81,8 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		this.data.obsidian.magicalItems =
-			this.data.items.filter(item =>
-				(item.type === 'weapon' || item.type === 'equipment')
-				&& getProperty(item, 'flags.obsidian.magical'));
+			this.data.obsidian.itemsByType.get('weapon', 'equipment')
+				.filter(item => getProperty(item, 'flags.obsidian.magical'));
 
 		this.data.obsidian.attacks = [];
 		this.data.obsidian.effects = new Map();
@@ -132,7 +138,6 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		for (const item of this.data.items) {
-			this._partitionTriggers(this.data.obsidian.triggers, item);
 			prepareEffects(
 				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
 				this.data.obsidian.components);
@@ -152,15 +157,6 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		return this.data;
-	}
-
-	_partitionTriggers (triggers, item) {
-		if (item.type === 'feat'
-			&& item.data.activation.type === 'special'
-			&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.trigger))
-		{
-			triggers[item.flags.obsidian.trigger].push(item);
-		}
 	}
 
 	/**

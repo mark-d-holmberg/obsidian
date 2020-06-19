@@ -12,7 +12,8 @@ export const Components = {
 			on: 'target'
 		},
 		metadata: {
-			category: 'special'
+			category: 'special',
+			tray: 'AppliedEffect'
 		}
 	},
 	attack: {

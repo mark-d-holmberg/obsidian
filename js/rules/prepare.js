@@ -310,8 +310,8 @@ export const Prepare = {
 	armour: function (actorData) {
 		const data = actorData.data;
 		actorData.obsidian.armour =
-			actorData.items.filter(item =>
-				item.type === 'equipment' && item.flags.obsidian && item.flags.obsidian.armour);
+			actorData.obsidian.itemsByType.get('equipment')
+				.filter(item => item.flags.obsidian?.armour);
 
 		let bestArmour;
 		let bestShield;
@@ -400,16 +400,16 @@ export const Prepare = {
 			.forEach(([condition, enabled]) => actorData.obsidian.conditions[condition] = enabled);
 
 		actorData.obsidian.conditions.concentrating =
-			actorData.items
-				.filter(item =>
-					item.type === 'feat' && getProperty(item, 'flags.obsidian.duration'))
+			actorData.obsidian.itemsByType.get('feat')
+				.filter(item => getProperty(item, 'flags.obsidian.duration'))
 				.map(duration => actorData.obsidian.effects.get(duration.flags.obsidian.ref))
 				.some(effect => effect && Effect.isConcentration(actorData, effect))
 	},
 
 	consumables: function (actorData) {
 		actorData.obsidian.consumables =
-			actorData.items.filter(item => item.type === 'consumable' && item.flags.obsidian);
+			actorData.obsidian.itemsByType.get('consumable').filter(item => item.flags.obsidian);
+
 		actorData.obsidian.ammo =
 			actorData.obsidian.consumables.filter(consumable =>
 				consumable.flags.obsidian.subtype === 'ammo');
@@ -417,14 +417,8 @@ export const Prepare = {
 
 	weapons: function (actor) {
 		const actorData = actor.data;
-		for (let i = 0; i < actorData.items.length; i++) {
-			if (actorData.items[i].type !== 'weapon') {
-				continue;
-			}
-
-			const weapon = actorData.items[i];
+		for (const weapon of actorData.obsidian.itemsByType.get('weapon')) {
 			const flags = weapon.flags.obsidian;
-
 			if (!flags) {
 				continue;
 			}
@@ -442,7 +436,7 @@ export const Prepare = {
 				}
 
 				flags.ammo.display =
-					`<select data-name="items.${i}.flags.obsidian.ammo.id">
+					`<select data-name="items.${weapon.idx}.flags.obsidian.ammo.id">
 						<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo.id) ? 'selected' : ''}>
 							${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
 						</option>
@@ -494,17 +488,17 @@ export const Prepare = {
 		const actorData = actor.data;
 		actorData.obsidian.feats = [];
 
-		for (let i = 0; i < actorData.items.length; i++) {
-			if (actorData.items[i].type !== 'feat') {
+		for (const feat of actorData.obsidian.itemsByType.get('feat')) {
+			const flags = feat.flags.obsidian;
+			if (!flags) {
 				continue;
 			}
 
-			const feat = actorData.items[i];
-			const flags = feat.flags.obsidian;
 			actorData.obsidian.feats.push(feat);
-
-			if (!flags) {
-				continue;
+			if (feat.data.activation.type === 'special'
+				&& !OBSIDIAN.notDefinedOrEmpty(feat.flags.obsidian.trigger))
+			{
+				actorData.obsidian.triggers[feat.flags.obsidian.trigger].push(feat);
 			}
 
 			if (flags.source.type === 'class') {

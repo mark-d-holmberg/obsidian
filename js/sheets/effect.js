@@ -158,17 +158,15 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			&& data.item.flags.obsidian.effects)
 		{
 			const hasResource = item =>
-				item.flags && item.flags.obsidian && item.flags.obsidian.effects
-				&& item.flags.obsidian.effects.some(e =>
+				item.flags?.obsidian?.effects?.some(e =>
 					e.components.some(c => c.type === 'resource'));
 
 			data.itemsWithResources =
-				data.actor.data.items
-					.filter(item =>
-						!['class', 'spell', 'feat'].includes(item.type) && hasResource(item));
+				data.actor.data.obsidian.itemsByType.not('class', 'spell', 'feat')
+					.filter(hasResource);
 
 			data.featsWithResources =
-				data.actor.data.items.filter(item => item.type === 'feat' && hasResource(item));
+				data.actor.data.obsidian.itemsByType.get('feat').filter(hasResource);
 
 			data.item.flags.obsidian.effects
 				.flatMap(e => e.components)

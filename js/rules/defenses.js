@@ -133,6 +133,11 @@ export function hpAfterDamage (actor, damage, attack) {
 	const defenses = actor.data.flags.obsidian.defenses;
 
 	for (let [type, dmg] of damage.entries()) {
+		if (type === 'hlg') {
+			hp += Math.floor(dmg);
+			continue;
+		}
+
 		const isImmune = hasDefenseAgainst(defenses, attack, type, 'imm');
 		const isResistant = hasDefenseAgainst(defenses, attack, type, 'res');
 		const isVulnerable = defenses.vuln.includes(type);
