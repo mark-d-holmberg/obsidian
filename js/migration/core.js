@@ -400,7 +400,7 @@ function getScalingEffect (data) {
 	if (!effect) {
 		effect = Effect.create();
 		effect.name = game.i18n.localize('OBSIDIAN.Scaling');
-		effect.components.push(Effect.newScaling());
+		effect.components.push(Effect.createComponent('scaling'));
 		data.flags.obsidian.effects.push(effect);
 	}
 
