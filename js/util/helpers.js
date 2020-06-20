@@ -409,7 +409,7 @@ export function registerHandlebarHelpers () {
 
 	Handlebars.registerHelper('which-damage', function (item, attack) {
 		if (item.type === 'spell' && item.data.level < 1) {
-			return item.obsidian.damage;
+			return item.obsidian.collection.damage;
 		}
 
 		return attack.mode === 'versatile'
