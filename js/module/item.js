@@ -175,6 +175,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
 		effect.isLinked = false;
+		effect.eagerScaling = false;
 
 		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
 		Effect.metadata.linked.forEach(linked => {
@@ -283,6 +284,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				return;
 			}
 
+			effect.eagerScaling = scaling;
 			const targetComponent = scaling.effect.components.find(c => c.type === 'target');
 			const damageComponents = scaling.effect.components.filter(c => c.type === 'damage');
 

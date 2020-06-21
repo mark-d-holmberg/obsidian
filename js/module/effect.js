@@ -402,6 +402,10 @@ export const Effect = {
 
 	getScaling: function (actor, effect, value) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		if (!item) {
+			return;
+		}
+
 		const scalingEffects =
 			item.obsidian.collection.scaling.filter(e => e.scalingComponent.ref === effect.uuid);
 
