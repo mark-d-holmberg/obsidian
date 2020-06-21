@@ -132,12 +132,12 @@ export const ObsidianItems = {
 			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
 		let scaledAmount = 0;
-		if (scaling && consumers.length) {
+		if (scaling && (consumers.length || resources.length)) {
 			const consumer = consumers[0];
 			let consumed = options.consumed || 0;
 			let base;
 
-			if (consumer.calc === 'var') {
+			if (!consumer || consumer.calc === 'var') {
 				base = 1;
 			} else {
 				if (consumer.target === 'spell') {
