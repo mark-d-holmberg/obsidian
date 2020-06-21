@@ -99,7 +99,7 @@ export const Prepare = {
 	calculateHit: function (actorData, item, hit, cls) {
 		const data = actorData.data;
 		hit.rollParts = [{
-			mod: weaponBonus(actorData, item, hit),
+			mod: (hit.bonus || 0) + weaponBonus(actorData, item),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
@@ -135,9 +135,12 @@ export const Prepare = {
 	calculateDamage: function (actorData, item, dmg, cls) {
 		const data = actorData.data;
 		dmg.rollParts = [{
-			mod: weaponBonus(actorData, item, dmg),
+			mod: dmg.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus'),
 			constant: true
+		}, {
+			mod: weaponBonus(actorData, item),
+			name: game.i18n.localize('OBSIDIAN.Magic')
 		}];
 
 		Prepare.spellPart(dmg, data, cls);
@@ -255,7 +258,7 @@ export const Prepare = {
 		let ndice = dmg.ndice;
 
 		if (dmg.scaledDice !== undefined) {
-			ndice *= dmg.scaledDice;
+			ndice = dmg.scaledDice;
 		}
 
 		if (ndice > 0 && dmg.calc === 'formula') {
@@ -754,8 +757,8 @@ export const Prepare = {
 	}
 };
 
-function weaponBonus (actorData, item, component) {
-	let bonus = component.bonus || 0;
+function weaponBonus (actorData, item) {
+	let bonus = 0;
 	if (item.type !== 'weapon') {
 		return bonus;
 	}

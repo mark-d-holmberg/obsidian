@@ -471,10 +471,17 @@ export const Rolls = {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const isVersatile =
 			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
-		const damage =
+		let damage =
 			effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile);
-		const scaling =
-			item.obsidian.collection.scaling.find(e => e.scalingComponent.ref === effect.uuid);
+
+		let scaling;
+		if (scaledAmount) {
+			scaling = Effect.getScaling(actor, effect, scaledAmount);
+		}
+
+		if (scaling) {
+			damage = Effect.scaleDamage(scaling, scaledAmount, damage);
+		}
 
 		if (!item || !damage.length) {
 			return [];
@@ -491,7 +498,8 @@ export const Rolls = {
 						title: item.name,
 						damage: Rolls.rollDamage(actor, damage, {
 							item: item,
-							scaledAmount: scaledAmount, scaling: scaling
+							scaledAmount: scaledAmount,
+							scaling: scaling
 						})
 					}
 				}
@@ -579,40 +587,41 @@ export const Rolls = {
 	effectRoll: function (actor, effect, options, {name, isFirst = true} = {}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
-		const damage = effect.components.filter(c => c.type === 'damage');
 		const saves = effect.components.filter(c => c.type === 'save');
 		const expr = effect.components.filter(c => c.type === 'expression');
 		const targets =
-			effect.components.filter(c => c.type === 'target' && c.target === 'individual');
-		const scaling =
-			item.obsidian.collection.scaling.find(e => e.scalingComponent.ref === effect.uuid);
-		const results = [];
+			effect.components.find(c => c.type === 'target' && c.target === 'individual');
 
+		const results = [];
 		let scaledAmount = options.scaling || 0;
+		let damage = effect.components.filter(c => c.type === 'damage');
+
 		if (item.type === 'spell') {
 			scaledAmount = Math.max(0, options.spellLevel - item.data.level);
+		}
+
+		const scaling = Effect.getScaling(actor, effect, scaledAmount);
+		if (scaledAmount && scaling) {
+			damage = Effect.scaleDamage(scaling, scaledAmount, damage);
 		}
 
 		if (options.withDuration !== false) {
 			handleDurations(actor, item, effect, scaledAmount);
 		}
 
-		let scaledTargets = 0;
-		if (scaledAmount > 0 && scaling) {
+		let scaledTargets = targets?.count || 1;
+		if (scaledAmount && scaling) {
 			const targetScaling =
-				scaling.components.find(c => c.type === 'target' && c.target === 'individual');
+				scaling.effect.components.find(c =>
+					c.type === 'target' && c.target === 'individual');
 
 			if (targetScaling) {
-				scaledTargets = Math.floor(targetScaling.count * scaledAmount);
+				scaledTargets =
+					Effect.scaleConstant(scaling, scaledAmount, scaledTargets, targetScaling.count);
 			}
 		}
 
-		let multiDamage = scaledTargets;
-		if (targets.length) {
-			multiDamage += targets[0].count;
-		}
-
-		if (!damage.length || attacks.length || multiDamage < 1 || saves.length) {
+		if (!damage.length || attacks.length || scaledTargets < 2 || saves.length) {
 			results.push({
 				type: item.type === 'spell' ? 'spl' : 'fx',
 				title: name ? name : effect.name.length ? effect.name : item.name,
@@ -621,9 +630,12 @@ export const Rolls = {
 		}
 
 		if (attacks.length) {
-			let count = attacks[0].targets + scaledTargets;
-			results[0].results = [];
+			let count = attacks[0].targets;
+			if (scaledAmount && scaling) {
+				count = scaledTargets;
+			}
 
+			results[0].results = [];
 			for (let i = 0; i < count; i++) {
 				results[0].results.push(Rolls.toHitRoll(actor, attacks[0]));
 			}
@@ -633,12 +645,8 @@ export const Rolls = {
 			results[0].dmgCount = count;
 			results[0].dmgScaling = scaledAmount;
 			results[0].subtitle = game.i18n.localize(attacks[0].attackType);
-		} else if (damage.length && multiDamage < 1) {
-			results[0].damage = Rolls.rollDamage(actor, damage, {
-				scaledAmount: scaledAmount,
-				scaling: scaling,
-				item: item
-			});
+		} else if (damage.length && scaledTargets < 2) {
+			results[0].damage = Rolls.rollDamage(actor, damage, {item});
 		}
 
 		if (saves.length) {
@@ -649,16 +657,12 @@ export const Rolls = {
 			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr, scaledAmount));
 		}
 
-		if (damage.length && !attacks.length && multiDamage > 0) {
-			for (let i = 0; i < multiDamage; i++) {
+		if (damage.length && !attacks.length && scaledTargets > 1) {
+			for (let i = 0; i < scaledTargets; i++) {
 				results.push({
 					type: item.type === 'spell' ? 'spl' : 'fx',
 					title: name ? name : effect.name.length ? effect.name : item.name,
-					damage: Rolls.rollDamage(actor, damage, {
-						scaledAmount: scaledAmount,
-						scaling: scaling,
-						item: item
-					})
+					damage: Rolls.rollDamage(actor, damage, {item})
 				});
 			}
 		}
@@ -861,9 +865,9 @@ export const Rolls = {
 		};
 	},
 
-	rollDamage: function (actor, damage, {scaledAmount = 0, scaling = null, item = null}) {
-		damage = damage.concat(
-			damage.flatMap(dmg => dmg.rollParts)
+	rollDamage: function (actor, damage, {item = null}) {
+		damage.push(
+			...damage.flatMap(dmg => dmg.rollParts)
 				.filter(mod => mod.ndice !== undefined)
 				.map(mod => {
 					mod.derived = {ncrit: Math.abs(mod.ndice)};
@@ -873,36 +877,6 @@ export const Rolls = {
 					mod.damage = damage[0].damage;
 					return mod;
 				}));
-
-		if (scaledAmount > 0 && scaling != null && scaling.scalingComponent.method !== 'cantrip') {
-			const damageComponents = scaling.components.filter(c => c.type === 'damage');
-			if (damageComponents) {
-				damage = damage.concat(duplicate(damageComponents).map(dmg => {
-					if (dmg.calc === 'fixed') {
-						const constant = dmg.rollParts.find(part => part.constant);
-						if (constant) {
-							constant.mod = Math.floor(constant.mod * scaledAmount);
-						}
-					} else {
-						dmg.ndice = Math.floor(dmg.ndice * scaledAmount);
-						dmg.derived.ncrit = Math.floor(dmg.derived.ncrit * scaledAmount);
-					}
-
-					return dmg;
-				}));
-			}
-		}
-
-		if (scaling != null && scaling.scalingComponent.method === 'cantrip') {
-			const damageComponents = scaling.components.filter(c => c.type === 'damage');
-			if (damageComponents) {
-				damage = damage.concat(duplicate(damageComponents).map(dmg => {
-					dmg.ndice = Math.floor(dmg.ndice * dmg.scaledDice);
-					dmg.derived.ncrit = Math.floor(dmg.derived.ncrit * dmg.scaledDice);
-					return dmg;
-				}).filter(dmg => dmg.ndice > 0));
-			}
-		}
 
 		const rolls = damage.map(dmg => {
 			if (dmg.calc === 'fixed' || !dmg.ndice) {

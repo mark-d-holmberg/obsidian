@@ -553,9 +553,11 @@
 	"OBSIDIAN.NewSpell": "New Spell",
 	"OBSIDIAN.AddScaling": "Add Scaling",
 	"OBSIDIAN.Scaling": "Scaling",
-	"OBSIDIAN.Scaling-spell": "Spell Scaling",
+	"OBSIDIAN.Scaling-spell": "Spell Level",
 	"OBSIDIAN.Scaling-cantrip": "Cantrip Scaling",
 	"OBSIDIAN.Scaling-resource": "Resource Scaling",
+	"OBSIDIAN.Scaling-level": "Character Level",
+	"OBSIDIAN.Scaling-class": "Class Level",
 	"OBSIDIAN.Method": "Method",
 	"OBSIDIAN.AddTargets": "Add Targets",
 	"OBSIDIAN.Targets": "Targets",
@@ -893,5 +895,6 @@
 	"OBSIDIAN.AppliedOn-save": "Failed Save",
 	"OBSIDIAN.OnSave": "On Save",
 	"OBSIDIAN.OnSave-half": "Half Damage",
-	"OBSIDIAN.OnSave-none": "No Damage"
+	"OBSIDIAN.OnSave-none": "No Damage",
+	"OBSIDIAN.Threshold": "Threshold"
 }

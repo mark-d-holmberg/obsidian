@@ -234,7 +234,7 @@ export class ObsidianActor extends Actor5e {
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
-				item.flags.obsidian.source.other = item.flags.obsidian.source.custom;
+				item.flags.obsidian.source.other = item.flags.obsidian.source.text;
 			} else {
 				item.flags.obsidian.source.class = cls._id;
 			}
@@ -245,9 +245,12 @@ export class ObsidianActor extends Actor5e {
 			if (cls === undefined) {
 				const byName = this.data.obsidian.classes.find(cls => cls.name === needle);
 				if (byName === undefined) {
+					const i18n = `OBSIDIAN.Class-${needle}`;
 					item.flags.obsidian.source.type = 'other';
 					item.flags.obsidian.source.other =
-						game.i18n.localize(`OBSIDIAN.Class-${needle}`);
+						getProperty(game.i18n.translations, i18n)
+						|| getProperty(game.i18n._fallback, i18n)
+						|| needle;
 				} else {
 					item.flags.obsidian.source.class = byName._id;
 				}
@@ -276,6 +279,31 @@ export class ObsidianActor extends Actor5e {
 
 	getItemParent (item) {
 		return this.data.items.find(other => other._id === item?.flags.obsidian.parent);
+	}
+
+	rollHD (rolls) {
+		const totalDice = rolls.reduce((acc, [n, _]) => acc + n, 0);
+		const conBonus = this.data.data.abilities.con.mod * totalDice;
+		const results = Rolls.hd(this, rolls, conBonus);
+		const total = results.reduce((acc, die) => acc + die.total, 0);
+		const hp = this.data.data.attributes.hp;
+		const hd = duplicate(this.data.flags.obsidian.attributes.hd);
+
+		let newHP = hp.value + total + conBonus;
+		if (newHP > hp.max) {
+			newHP = hp.max;
+		}
+
+		rolls.forEach(([n, d]) => {
+			const obj = hd[`d${d}`];
+			obj.value -= n;
+
+			if (obj.value < 0) {
+				obj.value = 0;
+			}
+		});
+
+		this.update({'data.attributes.hp.value': newHP, 'flags.obsidian.attributes.hd': hd});
 	}
 
 	async shortRest (...args) {

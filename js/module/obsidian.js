@@ -37,6 +37,7 @@ import {ObsidianNPCSavesDialog} from '../dialogs/npc-saves.js';
 import {ObsidianNPCSkillsDialog} from '../dialogs/npc-skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianNPCFeaturesDialog} from '../dialogs/npc-features.js';
+import {Rules} from '../rules/rules.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -209,6 +210,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 	_activateDialogs (html) {
 		html.find('.obsidian-simple-dialog, [data-dialog]').click(evt => {
 			const options = duplicate(evt.currentTarget.dataset);
+
+			if (options.dialog === 'RollHD' && evt.shiftKey) {
+				this._rollHighestHD();
+				return;
+			}
 
 			if (options.width !== undefined) {
 				options.width = parseInt(options.width);
@@ -430,6 +436,21 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const activeTab = this._findActiveTab();
 		if (activeTab.length > 0) {
 			activeTab[0].scrollTop = this.scroll.tab;
+		}
+	}
+
+	_rollHighestHD () {
+		const highest = Rules.HD.reduce((max, hd) => {
+			const actorHD = this.actor.data.flags.obsidian.attributes.hd[`d${hd}`];
+			if (actorHD && actorHD.value && hd > max) {
+				return hd;
+			}
+
+			return max;
+		}, 0);
+
+		if (highest > 0) {
+			this.actor.rollHD([[1, highest]]);
 		}
 	}
 

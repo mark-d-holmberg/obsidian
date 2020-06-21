@@ -156,7 +156,7 @@ export const ObsidianItems = {
 			const component =
 				actor.data.obsidian.components.get(spell.flags?.obsidian?.parentComponent);
 
-			if (component.source === 'individual'
+			if (component?.source === 'individual'
 				&& ['innate', 'item'].includes(component.method))
 			{
 				options.spellLevel = spell.data.level;

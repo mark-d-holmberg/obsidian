@@ -217,6 +217,9 @@ export const Components = {
 		data: {
 			type: 'scaling',
 			method: 'spell',
+			class: '',
+			text: '',
+			threshold: 0,
 			ref: ''
 		},
 		metadata: {
@@ -397,6 +400,39 @@ export const Effect = {
 		return [item, effect, resource];
 	},
 
+	getScaling: function (actor, effect, value) {
+		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const scalingEffects =
+			item.obsidian.collection.scaling.filter(e => e.scalingComponent.ref === effect.uuid);
+
+		if (scalingEffects.length < 1) {
+			return;
+		}
+
+		if (scalingEffects.length < 2 && !scalingEffects[0].scalingComponent.threshold) {
+			return {mode: 'scaling', effect: scalingEffects[0]};
+		}
+
+		// Returns the scaling component with the highest threshold less than
+		// the scaling value.
+		// Example: Thresholds = {3, 5, 9}, Value = 6, Return = 5
+
+		const scaling = scalingEffects.reduce((min, e) => {
+			const threshold = e.scalingComponent.threshold;
+			if ((!min || threshold > min.scalingComponent.threshold) && value >= threshold) {
+				return e;
+			}
+
+			return min;
+		});
+
+		if (!scaling) {
+			return;
+		}
+
+		return {mode: 'breakpoint', effect: scaling};
+	},
+
 	isConcentration: function (actorData, effect) {
 		if (effect.durationComponent && effect.durationComponent.concentration) {
 			return true;
@@ -404,5 +440,63 @@ export const Effect = {
 
 		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
 		return item && item.type === 'spell' && item.data.components.concentration;
+	},
+
+	isEagerScaling: function (effect) {
+		return ['cantrip', 'level', 'class'].includes(effect.scalingComponent.method);
+	},
+
+	scaleConstant: function (scaling, value, base, constant) {
+		if (scaling.mode === 'scaling') {
+			return Math.floor(base + constant * value);
+		} else {
+			return constant;
+		}
+	},
+
+	scaleDamage: function (scaling, scaledAmount, damage) {
+		if (!damage.length) {
+			return [];
+		}
+
+		let damageComponents =
+			duplicate(scaling.effect.components.filter(c => c.type === 'damage'));
+
+		if (Effect.isEagerScaling(scaling.effect)) {
+			damageComponents = damageComponents.map(dmg => {
+				dmg.ndice = dmg.scaledDice || 0;
+				dmg.derived.ncrit = dmg.scaledCrit || 0;
+				return dmg;
+			}).filter(dmg => dmg.ndice);
+
+			if (scaling.mode === 'scaling') {
+				damage.push(...damageComponents);
+				return damage;
+			} else {
+				return damageComponents;
+			}
+		} else {
+			if (scaling.mode === 'scaling') {
+				damage.push(...damageComponents.map(dmg => {
+					if (dmg.calc === 'fixed') {
+						const constant = dmg.rollParts.find(part => part.constant);
+						if (constant) {
+							constant.mod =
+								Effect.scaleConstant(scaling, scaledAmount, 0, constant.mod);
+						}
+					} else {
+						dmg.ndice = Effect.scaleConstant(scaling, scaledAmount, 0, dmg.ndice);
+						dmg.derived.ncrit =
+							Effect.scaleConstant(scaling, scaledAmount, 0, dmg.derived.ncrit);
+					}
+
+					return dmg;
+				}));
+
+				return damage;
+			} else {
+				return damageComponents;
+			}
+		}
 	}
 };

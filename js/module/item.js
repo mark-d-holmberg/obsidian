@@ -264,30 +264,65 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		spellNotes(item);
 	}
 
-	if (item.type === 'spell' && item.data.level === 0) {
-		const cantripScaling =
-			item.obsidian.collection.scaling.find(effect =>
-				effect.scalingComponent.method === 'cantrip');
+	if (item.obsidian.collection.scaling.some(Effect.isEagerScaling)) {
+		let scaledAmount = 0;
+		const component = item.obsidian.collection.scaling[0].scalingComponent;
 
-		if (cantripScaling) {
-			// Cantrips are scaled up-front, not when rolled.
-			const extra = Math.round((data.details.level + 1) / 6 + .5) - 1;
-			if (extra > 0) {
-				const targetComponent =
-					cantripScaling.components.find(c => c.type === 'target');
-				const damageComponents =
-					cantripScaling.components.filter(c => c.type === 'damage');
+		switch (component.method) {
+			case 'level': scaledAmount = data.details.level; break;
+			case 'cantrip': scaledAmount = Math.round((data.details.level + 1) / 6 + .5) - 1; break;
+			case 'class':
+				const cls = actorData.obsidian.itemsByID.get(component.class);
+				scaledAmount = cls.data.levels;
+				break;
+		}
 
-				if (targetComponent) {
-					item.obsidian.collection.attack.forEach(atk =>
-						atk.targets += targetComponent.count * extra);
-				} else if (damageComponents.length) {
-					damageComponents.forEach(dmg => dmg.scaledDice = extra);
+		effects.filter(effect => !effect.isLinked).forEach(effect => {
+			const scaling = Effect.getScaling(actor, effect, scaledAmount);
+			if (!scaling) {
+				return;
+			}
+
+			const targetComponent = scaling.effect.components.find(c => c.type === 'target');
+			const damageComponents = scaling.effect.components.filter(c => c.type === 'damage');
+
+			if (targetComponent) {
+				effect.components
+					.filter(c => c.type === 'attack')
+					.forEach(atk =>
+						atk.targets =
+							Effect.scaleConstant(
+								scaling, scaledAmount, atk.targets, targetComponent.count));
+			}
+
+			damageComponents.forEach(dmg => {
+				if (dmg.calc === 'fixed') {
+					const constant = dmg.rollParts.find(part => part.constant);
+					if (constant) {
+						constant.mod = Effect.scaleConstant(scaling, scaledAmount, 0, constant.mod);
+						dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
+					}
+				} else {
+					dmg.scaledDice = Effect.scaleConstant(scaling, scaledAmount, 0, dmg.ndice);
+					dmg.scaledCrit =
+						Effect.scaleConstant(scaling, scaledAmount, 0, dmg.derived?.ncrit || 0);
+				}
+			});
+
+			if (damageComponents.length) {
+				if (scaling.mode === 'scaling') {
+					item.obsidian.collection.damage.push(...damageComponents);
+				} else {
+					const oldComponents =
+						new Set(effect.components.filter(c => c.type === 'damage'));
+
 					item.obsidian.collection.damage =
-						item.obsidian.collection.damage.concat(damageComponents);
+						item.obsidian.collection.damage
+							.filter(c => !oldComponents.has(c))
+							.concat(damageComponents);
 				}
 			}
-		}
+		});
 	}
 
 	if (item.obsidian.collection.attack.length) {
