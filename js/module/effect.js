@@ -458,15 +458,20 @@ export const Effect = {
 		}
 	},
 
-	scaleDamage: function (scaling, scaledAmount, damage) {
+	scaleDamage: function (actor, scaling, scaledAmount, damage) {
 		if (!damage.length) {
 			return [];
 		}
 
-		let damageComponents =
-			duplicate(scaling.effect.components.filter(c => c.type === 'damage'));
+		let scalingEffect = scaling.effect;
+		if (typeof scalingEffect === 'string') {
+			scalingEffect = actor.data.obsidian.effects.get(scalingEffect);
+		}
 
-		if (Effect.isEagerScaling(scaling.effect)) {
+		let damageComponents =
+			duplicate(scalingEffect.components.filter(c => c.type === 'damage'));
+
+		if (Effect.isEagerScaling(scalingEffect)) {
 			damageComponents = damageComponents.map(dmg => {
 				dmg.ndice = dmg.scaledDice || 0;
 				dmg.derived.ncrit = dmg.scaledCrit || 0;

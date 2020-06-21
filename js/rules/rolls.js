@@ -480,7 +480,8 @@ export const Rolls = {
 		}
 
 		if (scaling || effect.eagerScaling) {
-			damage = Effect.scaleDamage(effect.eagerScaling || scaling, scaledAmount, damage);
+			damage =
+				Effect.scaleDamage(actor, effect.eagerScaling || scaling, scaledAmount, damage);
 		}
 
 		if (!item || !damage.length) {
@@ -602,7 +603,8 @@ export const Rolls = {
 
 		const scaling = Effect.getScaling(actor, effect, scaledAmount);
 		if ((scaledAmount && scaling) || effect.eagerScaling) {
-			damage = Effect.scaleDamage(effect.eagerScaling || scaling, scaledAmount, damage);
+			damage =
+				Effect.scaleDamage(actor, effect.eagerScaling || scaling, scaledAmount, damage);
 		}
 
 		if (options.withDuration !== false) {

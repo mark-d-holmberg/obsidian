@@ -284,7 +284,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 				return;
 			}
 
-			effect.eagerScaling = scaling;
+			effect.eagerScaling = {mode: scaling.mode, effect: scaling.effect.uuid};
 			const targetComponent = scaling.effect.components.find(c => c.type === 'target');
 			const damageComponents = scaling.effect.components.filter(c => c.type === 'damage');
 

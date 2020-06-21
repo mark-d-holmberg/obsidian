@@ -2,7 +2,7 @@
 	"name": "obsidian",
 	"title": "Obsidian Character Sheets",
 	"description": "Dark theme character sheets.",
-	"version": "3.6.1",
+	"version": "3.6.2",
 	"minimumCoreVersion": "0.6.2",
 	"compatibleCoreVersion": "0.6.2",
 	"author": "Kim Mantas",
@@ -23,7 +23,7 @@
 	}],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
-	"download": "https://bitbucket.org/Fyorl/obsidian/get/3.6.1.zip",
+	"download": "https://bitbucket.org/Fyorl/obsidian/get/3.6.2.zip",
 	"languages": [{
 		"lang": "en",
 		"name": "English",
