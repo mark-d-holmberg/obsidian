@@ -25,7 +25,7 @@ export class ObsidianNPCSkillsDialog extends ObsidianDialog {
 			newValue = 2;
 		}
 
-		await this.parent.actor.update({[`data.skills.${id}.value`]: newValue});
+		await this.parent.actor.update({[`flags.obsidian.skills.${id}.value`]: newValue});
 		this.render(true);
 	}
 }
