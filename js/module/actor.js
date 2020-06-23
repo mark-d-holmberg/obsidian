@@ -179,7 +179,7 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
-	async importSpells (item) {
+	importSpells (item) {
 		if (!getProperty(item, 'flags.obsidian.effects.length')) {
 			return;
 		}
@@ -193,15 +193,21 @@ export class ObsidianActor extends Actor5e {
 					&& c.spells.length
 					&& typeof c.spells[0] === 'object')
 				.map(async c => {
+					c.spells.filter(spell => spell.flags.obsidian.isEmbedded).forEach(spell => {
+						spell.flags.obsidian.source.item = item._id;
+						spell.flags.obsidian.parentComponent = c.uuid;
+					});
+
 					const ownedSpells =
 						await this.createEmbeddedEntity('OwnedItem', c.spells);
 					c.spells = [].concat(ownedSpells).map(spell => spell._id);
 				});
 
 		if (pending.length) {
-			await Promise.all(pending);
-			this.updateEmbeddedEntity(
-				'OwnedItem', {_id: item._id, 'flags.obsidian.effects': effects});
+			OBSIDIAN.Queue.runLater(
+				Promise.all(pending).then(() =>
+					this.updateEmbeddedEntity(
+						'OwnedItem', {_id: item._id, 'flags.obsidian.effects': effects})));
 		}
 	}
 
