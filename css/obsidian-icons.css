@@ -264,6 +264,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/defense.svg');
 }
 
+.obsidian-icon-comp-setter {
+	background-image: url('../img/set-score.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }

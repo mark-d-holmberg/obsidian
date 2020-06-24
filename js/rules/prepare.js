@@ -93,7 +93,15 @@ export const Prepare = {
 			dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
-		dc.value = bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		dc.value = Math.floor(bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0));
+
+		const setters = actorData.obsidian.filters.setters(Filters.appliesTo.saveDCs(dc));
+		if (setters.length) {
+			const setter = Effect.combineSetters(setters);
+			if (!setter.min || setter.score > dc.value) {
+				dc.value = setter.score;
+			}
+		}
 	},
 
 	calculateHit: function (actorData, item, hit, cls) {
@@ -305,8 +313,19 @@ export const Prepare = {
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
 				flags.abilities[id].value = Math.floor(flags.abilities[id].value);
-				ability.mod = Math.floor((flags.abilities[id].value - 10) / 2);
 			}
+
+			const abilitySetters =
+				actorData.obsidian.filters.setters(Filters.appliesTo.abilityScores(id));
+
+			if (abilitySetters.length) {
+				const setter = Effect.combineSetters(abilitySetters);
+				if (!setter.min || setter.score > ability.value) {
+					flags.abilities[id].value = setter.score;
+				}
+			}
+
+			ability.mod = Math.floor((flags.abilities[id].value - 10) / 2);
 		}
 	},
 
@@ -696,6 +715,16 @@ export const Prepare = {
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
 				skill.passive = Math.floor(skill.passive);
+			}
+
+			const passiveSetters =
+				actorData.obsidian.filters.setters(Filters.appliesTo.passiveScores(key));
+
+			if (passiveSetters.length) {
+				const setter = Effect.combineSetters(passiveSetters);
+				if (!setter.min || setter.score > skill.passive) {
+					skill.passive = setter.score;
+				}
 			}
 		}
 	},

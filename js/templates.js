@@ -31,7 +31,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/duration.html',
 		'modules/obsidian/html/components/effects/expression.html',
 		'modules/obsidian/html/components/effects/applied.html',
-		'modules/obsidian/html/components/effects/defense.html'
+		'modules/obsidian/html/components/effects/defense.html',
+		'modules/obsidian/html/components/effects/setter.html'
 	]);
 };
 

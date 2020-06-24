@@ -33,6 +33,7 @@ export const Filters = {
 
 	mods: effects => pred => Filters.filterEffects(effects, 'roll-mod', pred),
 	bonuses: effects => pred => Filters.filterEffects(effects, 'bonus', pred),
+	setters: effects => pred => Filters.filterEffects(effects, 'setter', pred),
 
 	appliesTo: {
 		abilityChecks: (ability, mode) => filter =>

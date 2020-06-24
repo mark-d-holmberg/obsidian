@@ -51,6 +51,7 @@ export function prepareFilters (actorData) {
 	actorData.obsidian.toggleable = Array.from(new Set(filterToggleable(actorData)).values());
 	actorData.obsidian.filters = {
 		mods: Filters.mods(actorData.obsidian.toggleable),
-		bonuses: Filters.bonuses(actorData.obsidian.toggleable)
+		bonuses: Filters.bonuses(actorData.obsidian.toggleable),
+		setters: Filters.setters(actorData.obsidian.toggleable)
 	};
 }

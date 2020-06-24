@@ -227,6 +227,17 @@ export const Components = {
 			tray: 'AddScaling'
 		}
 	},
+	setter: {
+		data: {
+			type: 'setter',
+			score: 0,
+			min: false
+		},
+		metadata: {
+			category: 'modifiers',
+			tray: 'SetScore'
+		}
+	},
 	spells: {
 		data: {
 			type: 'spells',
@@ -271,17 +282,13 @@ export const Components = {
 
 export const Effect = {
 	metadata: {
-		active: new Set(['roll-mod', 'bonus', 'defense']),
+		components: Object.keys(Components),
+		active: new Set(['roll-mod', 'bonus', 'defense', 'setter']),
 		linked: ['applied', 'scaling'],
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([
 			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce'
-		]),
-		components: [
-			'resource', 'attack', 'damage', 'save', 'scaling', 'target', 'consume', 'produce',
-			'spells', 'roll-mod', 'bonus', 'filter', 'duration', 'expression', 'applied',
-			'uses-ability', 'defense'
-		]
+		])
 	},
 
 	create: function () {
@@ -321,6 +328,21 @@ export const Effect = {
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
 			mode: mods.reduce((acc, mod) => acc.concat(mod.mode), [])
 		};
+	},
+
+	combineSetters: setters => {
+		const strict = setters.find(setter => !setter.min);
+		if (strict) {
+			return strict;
+		}
+
+		return setters.reduce((min, setter) => {
+			if (setter.score > min.score) {
+				return setter;
+			}
+
+			return min;
+		}, {score: 0, min: true});
 	},
 
 	determineRollMods: (actor, globalMod, pred) => {

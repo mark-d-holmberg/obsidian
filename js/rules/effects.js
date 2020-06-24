@@ -10,13 +10,14 @@ export function prepareToggleableEffects (actorData) {
 			oxfordComma(
 				effect.active.bonus.map(bonus => formatBonus(actorData, bonus))
 					.concat(effect.active['roll-mod'].map(formatRollMod))
+					.concat(effect.active.setter.map(formatSetter))
 					.concat(formatDefenses(effect.active.defense))
 					.filter(part => part.length))
 				.capitalise();
 
 		if (effect.filters.length) {
 			let preposition = 'OBSIDIAN.On';
-			if (!effect.active['roll-mod'].length) {
+			if (!effect.active['roll-mod'].length && !effect.active.setter.length) {
 				preposition = 'OBSIDIAN.To';
 			}
 
@@ -258,6 +259,11 @@ function formatRollMod (mod) {
 	}
 
 	return oxfordComma(parts);
+}
+
+function formatSetter (setter) {
+	return localize(`OBSIDIAN.SetScoreTo`)
+		.format(setter.score, setter.min ? ` ${localize('OBSIDIAN.IfNotHigher')}` : '');
 }
 
 function formatDefenses (defs) {

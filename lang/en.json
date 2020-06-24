@@ -901,5 +901,10 @@
 	"OBSIDIAN.OnSave": "On Save",
 	"OBSIDIAN.OnSave-half": "Half Damage",
 	"OBSIDIAN.OnSave-none": "No Damage",
-	"OBSIDIAN.Threshold": "Threshold"
+	"OBSIDIAN.Threshold": "Threshold",
+	"OBSIDIAN.SetScore": "Set Score",
+	"OBSIDIAN.Score": "Score",
+	"OBSIDIAN.NoEffectIfHigher": "No effect if already higher",
+	"OBSIDIAN.SetScoreTo": "Set score to {0}{1}",
+	"OBSIDIAN.IfNotHigher": "if not already higher"
 }

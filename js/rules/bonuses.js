@@ -1,5 +1,6 @@
 import {Filters} from './filters.js';
 import {OBSIDIAN} from '../global.js';
+import {Effect} from '../module/effect.js';
 
 export function applyBonuses (actorData) {
 	const data = actorData.data;
@@ -22,6 +23,17 @@ export function applyBonuses (actorData) {
 				Math.floor(flags.attributes.speed[speed].derived);
 		} else {
 			delete flags.attributes.speed[speed].derived;
+		}
+
+		const setters = actorData.obsidian.filters.setters(Filters.appliesTo.speedScores(speed));
+		if (setters.length) {
+			const setter = Effect.combineSetters(setters);
+			const speed = flags.attributes.speed[speed];
+			const value = speed.derived || speed.override;
+
+			if (!setter.min || setter.score > value) {
+				speed.derived = setter.score;
+			}
 		}
 	}
 
@@ -46,6 +58,14 @@ export function applyBonuses (actorData) {
 		data.attributes.ac.min = Math.floor(data.attributes.ac.min);
 	}
 
+	const acSetters = actorData.obsidian.filters.setters(Filters.isAC);
+	if (acSetters.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+		const setter = Effect.combineSetters(acSetters);
+		if (!setter.min || setter.score > data.attributes.ac.min) {
+			data.attributes.ac.min = setter.score;
+		}
+	}
+
 	const hpBonuses = actorData.obsidian.filters.bonuses(Filters.isHP);
 	if (hpBonuses.length) {
 		data.attributes.hp.maxAdjusted +=
@@ -53,6 +73,14 @@ export function applyBonuses (actorData) {
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
 		data.attributes.hp.maxAdjusted = Math.floor(data.attributes.hp.maxAdjusted);
+	}
+
+	const hpSetters = actorData.obsidian.filters.setters(Filters.isHP);
+	if (hpSetters.length) {
+		const setter = Effect.combineSetters(hpSetters);
+		if (!setter.min || setter.score > data.attributes.hp.maxAdjusted) {
+			data.attributes.hp.maxAdjusted = setter.score;
+		}
 	}
 
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
@@ -67,6 +95,18 @@ export function applyBonuses (actorData) {
 				flags.attributes.spellcasting[key].map(val => val + total);
 		}
 	});
+
+	const spellDCSetters = actorData.obsidian.filters.setters(Filters.appliesTo.spellDCs);
+	if (spellDCSetters.length) {
+		const setter = Effect.combineSetters(spellDCSetters);
+		flags.attributes.spellcasting.saves = flags.attributes.spellcasting.saves.map(save => {
+			if (!setter.min || setter.score > save) {
+				return setter.score;
+			}
+
+			return save;
+		});
+	}
 }
 
 function bonusName (actorData, bonus) {
