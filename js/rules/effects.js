@@ -262,6 +262,7 @@ function formatRollMod (mod) {
 
 function formatDefenses (defs) {
 	const dmg = dmg => localize(`OBSIDIAN.Damage-${dmg}`);
+	const vuln = new Set();
 	const res = {
 		noCondition: new Set(),
 		nonMagical: new Set(),
@@ -276,20 +277,23 @@ function formatDefenses (defs) {
 		nonMagicalAdm: new Set()
 	};
 
-	const vuln = new Set();
-	const conds = new Set();
+	const conds = {
+		imm: new Set(),
+		adv: new Set(),
+		dis: new Set()
+	};
 
 	defs.forEach(def => {
 		if (def.sleep) {
-			conds.add('sleep');
+			conds.imm.add('sleep');
 		}
 
 		if (def.disease) {
-			conds.add('disease');
+			conds.imm.add('disease');
 		}
 
 		if (def.defense === 'condition') {
-			conds.add(def.condition);
+			conds[def.condition.level].add(def.condition.condition);
 		} else if (def.defense === 'damage') {
 			if (def.damage.level === 'vuln') {
 				vuln.add(def.damage.dmg);
@@ -316,13 +320,17 @@ function formatDefenses (defs) {
 			localize('OBSIDIAN.VulnTo').format(oxfordComma(Array.from(vuln.values()).map(dmg))));
 	}
 
-	if (conds.size) {
-		parts.push(
-			localize('OBSIDIAN.ImmuneTo').format(
+	[['imm', 'ImmuneTo'], ['adv', 'AdvantageSave'], ['dis', 'DisadvantageSave']]
+		.forEach(([level, i18n]) => {
+			if (!conds[level].size) {
+				return;
+			}
+
+			parts.push(localize(`OBSIDIAN.${i18n}`).format(
 				oxfordComma(
-					Array.from(conds.values())
+					Array.from(conds[level].values())
 						.map(cond => localize(`OBSIDIAN.Condition-${cond}`)))));
-	}
+		});
 
 	[res, imm].forEach(level => {
 		const subParts = [];

@@ -25,6 +25,7 @@ Rules.DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn'
 ];
 
+Rules.CONDITION_LEVELS = ['imm', 'adv', 'dis'];
 Rules.CONDITIONS = [
 	'blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible',
 	'paralysed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'

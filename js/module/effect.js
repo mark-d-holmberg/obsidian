@@ -100,7 +100,7 @@ export const Components = {
 			sleep: false,
 			defense: '',
 			damage: {level: 'res', dmg: 'acid', magic: '', material: ''},
-			condition: 'charmed'
+			condition: {level: 'imm', condition: 'charmed'}
 		},
 		metadata: {
 			category: 'modifiers',

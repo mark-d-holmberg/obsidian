@@ -143,9 +143,9 @@ export class ObsidianActor extends Actor5e {
 				this.data.obsidian.components);
 		}
 
+		prepareDefenses(this.data, flags);
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data);
-		prepareDefenses(this.data, flags);
 
 		if (this.isToken) {
 			// If we are preparing data right after an update, this.token

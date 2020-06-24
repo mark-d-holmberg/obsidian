@@ -280,6 +280,18 @@
 								  <span>{{actor.flags.obsidian.defenses.vulnDisplay}}</span>
 							  </div>
 						  {{/if}}
+							{{#if actor.flags.obsidian.defenses.condDisplay.dis}}
+								<div class="obsidian-list-box-row">
+									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
+									 obsidian-css-icon-negative">
+										<div class="obsidian-css-icon-shape"></div>
+										<div class="obsidian-css-icon-label">
+											{{localize 'OBSIDIAN.DisadvantageAbbr'}}
+										</div>
+									</div>
+									<span>{{actor.flags.obsidian.defenses.condDisplay.dis}}</span>
+								</div>
+							{{/if}}
 						  {{#if actor.flags.obsidian.defenses.resDisplay}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
@@ -304,6 +316,18 @@
 								  <span>{{actor.flags.obsidian.defenses.pcImmDisplay}}</span>
 							  </div>
 						  {{/if}}
+							{{#if actor.flags.obsidian.defenses.condDisplay.adv}}
+								<div class="obsidian-list-box-row">
+									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
+									 obsidian-css-icon-positive">
+										<div class="obsidian-css-icon-shape"></div>
+										<div class="obsidian-css-icon-label">
+											{{localize 'OBSIDIAN.AdvantageAbbr'}}
+										</div>
+									</div>
+									<span>{{actor.flags.obsidian.defenses.condDisplay.adv}}</span>
+								</div>
+							{{/if}}
 						</div>
 					</div>
 				</div>

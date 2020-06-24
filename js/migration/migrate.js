@@ -10,6 +10,7 @@ import {v3} from './v3.js';
 import {v4} from './v4.js';
 import {v5} from './v5.js';
 import {v6} from './v6.js';
+import {v7} from './v7.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -48,6 +49,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 6 && source !== 'core') {
 			Migrate.v5.convertProficiencies(data);
+		}
+
+		if (data.flags.obsidian.version < 8 && source !== 'core') {
+			Migrate.v7.convertActorDefenses(data);
 		}
 
 		if (data.items?.length) {
@@ -186,6 +191,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 7 && source !== 'core') {
 			Migrate.v6.convertBonuses(data);
+		}
+
+		if (data.flags.obsidian.version < 8 && source !== 'core') {
+			Migrate.v7.convertItemDefenses(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -604,6 +613,7 @@ Migrate.v3 = v3;
 Migrate.v4 = v4;
 Migrate.v5 = v5;
 Migrate.v6 = v6;
+Migrate.v7 = v7;
 
 function lazyConvert () {
 	const convert = (key, convert) => {

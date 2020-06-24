@@ -68,8 +68,15 @@
   {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>
-	      <select name="flags.obsidian.defenses.conditions.{{id}}">
-	        {{#select def}}
+		    <select name="flags.obsidian.defenses.conditions.{{id}}.level">
+			    {{#select def.level}}
+				    {{#each @root.ObsidianRules.CONDITION_LEVELS}}
+					    <option value="{{this}}">{{i18n-join 'OBSIDIAN.ConditionLevel-' this}}</option>
+				    {{/each}}
+			    {{/select}}
+		    </select>
+	      <select name="flags.obsidian.defenses.conditions.{{id}}.condition">
+	        {{#select def.condition}}
 		        {{#each ../ObsidianRules.CONDITIONS}}
 			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
 		        {{/each}}

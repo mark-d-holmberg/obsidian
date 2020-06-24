@@ -4,14 +4,13 @@ export function prepareDefenses (actorData, flags) {
 	flags.defenses.res = [];
 	flags.defenses.imm = [];
 	flags.defenses.vuln = new Set();
-	flags.defenses.conds = new Set();
+	flags.defenses.conds = {imm: [], adv: [], dis: []};
 
 	prepareActiveDefenses(actorData, flags);
 	prepareManualDefenses(flags);
 
 	// Convert to normal arrays to avoid being nuked during duplication.
-	['vuln', 'conds'].forEach(def =>
-		flags.defenses[def] = Array.from(flags.defenses[def].values()));
+	flags.defenses.vuln = Array.from(flags.defenses.vuln.values());
 }
 
 function prepareActiveDefenses (actorData, flags) {
@@ -21,15 +20,15 @@ function prepareActiveDefenses (actorData, flags) {
 		.flatMap(effect => effect.active.defense)
 		.forEach(def => {
 			if (def.sleep) {
-				flags.defenses.conds.add('sleep');
+				flags.defenses.conds.imm.push('sleep');
 			}
 
 			if (def.disease) {
-				flags.defenses.conds.add('disease');
+				flags.defenses.conds.imm.push('disease');
 			}
 
 			if (def.defense === 'condition') {
-				flags.defenses.conds.add(def.condition);
+				flags.defenses.conds[def.condition.level].push(def.condition.condition);
 			} else if (def.defense === 'damage') {
 				if (def.damage.level === 'vuln') {
 					flags.defenses.vuln.add(def.damage.dmg);
@@ -41,24 +40,43 @@ function prepareActiveDefenses (actorData, flags) {
 }
 
 function prepareManualDefenses (flags) {
-	flags.defenses.conditions.forEach(cond => flags.defenses.conds.add(cond));
-	const conditions =
-		Array.from(flags.defenses.conds.values())
-			.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`));
+	flags.defenses.resDisplay = '';
+	flags.defenses.immDisplay = '';
+	flags.defenses.condDisplay = {imm: new Set(), adv: new Set(), dis: new Set()};
+
+	flags.defenses.conditions.forEach(cond => {
+		flags.defenses.conds[cond.level].push(cond.condition);
+	});
 
 	if (flags.defenses.disease) {
-		flags.defenses.conds.add('disease');
-		conditions.push(game.i18n.localize('OBSIDIAN.Disease'));
+		flags.defenses.conds.imm.push('disease');
 	}
 
 	if (flags.defenses.sleep) {
-		flags.defenses.conds.add('sleep');
-		conditions.push(game.i18n.localize('OBSIDIAN.MagicalSleep'));
+		flags.defenses.conds.imm.push('sleep');
 	}
 
-	flags.defenses.resDisplay = '';
-	flags.defenses.immDisplay = '';
-	flags.defenses.condDisplay = conditions.join(', ');
+	Object.entries(flags.defenses.conds).forEach(([level, conditions]) =>
+		conditions.forEach(condition => flags.defenses.condDisplay[level].add(condition)));
+
+	Object.entries(flags.defenses.condDisplay).forEach(([level, conditions]) =>
+		flags.defenses.condDisplay[level] = Array.from(conditions.values()).map(cond => {
+			let i18n = `Condition-${cond}`;
+			if (cond === 'sleep') {
+				i18n = 'MagicalSleep';
+			} else if (cond === 'disease') {
+				i18n = 'Disease';
+			}
+
+			return game.i18n.localize(`OBSIDIAN.${i18n}`);
+		}).join(', '));
+
+	['adv', 'dis'].forEach(mode =>
+		flags.defenses.condDisplay[mode] =
+			flags.defenses.conds[mode]
+				.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`))
+				.join(', '));
+
 	flags.defenses.damage.forEach(def => {
 		const collection = flags.defenses[def.level];
 		if (collection instanceof Set) {
@@ -121,8 +139,8 @@ function prepareManualDefenses (flags) {
 		flags.defenses.pcImmDisplay.push(flags.defenses.immDisplay);
 	}
 
-	if (flags.defenses.condDisplay.length) {
-		flags.defenses.pcImmDisplay.push(flags.defenses.condDisplay);
+	if (flags.defenses.condDisplay.imm.length) {
+		flags.defenses.pcImmDisplay.push(flags.defenses.condDisplay.imm);
 	}
 
 	flags.defenses.pcImmDisplay = flags.defenses.pcImmDisplay.join(', ');
