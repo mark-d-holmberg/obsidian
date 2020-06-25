@@ -258,6 +258,10 @@ function formatRollMod (mod) {
 		parts.push(localize(`OBSIDIAN.Roll-${mod.mode}`));
 	}
 
+	if (mod.max) {
+		parts.push(localize('OBSIDIAN.MaxRoll'));
+	}
+
 	return oxfordComma(parts);
 }
 

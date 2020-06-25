@@ -906,5 +906,6 @@
 	"OBSIDIAN.Score": "Score",
 	"OBSIDIAN.NoEffectIfHigher": "No effect if already higher",
 	"OBSIDIAN.SetScoreTo": "Set score to {0}{1}",
-	"OBSIDIAN.IfNotHigher": "if not already higher"
+	"OBSIDIAN.IfNotHigher": "if not already higher",
+	"OBSIDIAN.MaxRoll": "Maximise rolls"
 }

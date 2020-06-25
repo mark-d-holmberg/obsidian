@@ -23,6 +23,11 @@
 			       data-dtype="Number" placeholder="0" name="{{prefix}}.ndice" value="{{ndice}}">
 			<span>{{localize 'OBSIDIAN.ExtraDice'}}</span>
 		</label>
+	</div>
+</div>
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
 		{{/unless}}
+		{{fancy-checkbox prefix 'max' content='OBSIDIAN.MaxRoll' checked=max}}
 	</div>
 </div>

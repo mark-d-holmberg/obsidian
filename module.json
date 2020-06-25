@@ -4,7 +4,7 @@
 	"description": "Dark theme character sheets.",
 	"version": "3.7.0",
 	"minimumCoreVersion": "0.6.2",
-	"compatibleCoreVersion": "0.6.2",
+	"compatibleCoreVersion": "0.6.4",
 	"author": "Kim Mantas",
 	"systems": ["dnd5e"],
 	"esmodules": ["js/main.js"],

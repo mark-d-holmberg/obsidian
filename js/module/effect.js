@@ -188,7 +188,8 @@ export const Components = {
 			min: 1,
 			reroll: 1,
 			mode: 'reg',
-			ndice: 0
+			ndice: 0,
+			max: false
 		},
 		metadata: {
 			category: 'modifiers',
@@ -319,14 +320,15 @@ export const Effect = {
 
 	combineRollMods: mods => {
 		if (!mods.length) {
-			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg'});
+			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg', max: false});
 		}
 
 		return {
 			min: Math.max(...mods.map(mod => mod.min)),
 			reroll: Math.max(...mods.map(mod => mod.reroll)),
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
-			mode: mods.reduce((acc, mod) => acc.concat(mod.mode), [])
+			mode: mods.reduce((acc, mod) => acc.concat(mod.mode), []),
+			max: mods.some(mod => mod.max)
 		};
 	},
 

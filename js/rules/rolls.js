@@ -127,6 +127,11 @@ export const Rolls = {
 
 	applyRollModifiers: function (roll, rolls, rollMod) {
 		const mult = rolls[0][0] < 0 ? -1 : 1;
+		if (rollMod.max) {
+			rolls.forEach(r => r.push(roll.faces * mult));
+			return;
+		}
+
 		if (rollMod.reroll > 1) {
 			rolls.forEach(r => {
 				if (Math.abs(r.last()) < rollMod.reroll) {
@@ -890,8 +895,9 @@ export const Rolls = {
 			const hitRoll = new Die(dmg.die).roll(ndice);
 			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || ndice);
 			const hitRolls = hitRoll.results.map(r => [r * mult]);
-			const allRolls = hitRolls.concat(critRoll.results.map(r => [r * mult]));
+			const critRolls = critRoll.results.map(r => [r * mult]);
             const numRolls = ndice + (dmg.derived.ncrit || ndice);
+			let allRolls = hitRolls.concat(critRolls);
 
 			if (dmg.addMods === false) {
 				return {
@@ -910,7 +916,9 @@ export const Rolls = {
 			}
 
 			const rollMod = Effect.combineRollMods(rollMods);
-			Rolls.applyRollModifiers(hitRoll, allRolls, rollMod);
+			Rolls.applyRollModifiers(hitRoll, hitRolls, rollMod);
+			Rolls.applyRollModifiers(critRoll, critRolls, rollMod);
+			allRolls = hitRolls.concat(critRolls);
 
 			return {
 				hit: hitRolls,
