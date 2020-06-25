@@ -109,6 +109,21 @@ export function applyBonuses (actorData) {
 	}
 }
 
+export function applyProfBonus (actorData) {
+	const attr = actorData.data.attributes;
+	const profBonuses = actorData.obsidian.filters.bonuses(Filters.isProf);
+	actorData.flags.obsidian.attributes.originalProf = attr.prof;
+
+	if (profBonuses.length) {
+		attr.prof =
+			Math.floor(
+				attr.prof +
+				profBonuses
+					.flatMap(bonus => bonusToParts(actorData, bonus))
+					.reduce((acc, part) => acc + part.mod, 0));
+	}
+}
+
 function bonusName (actorData, bonus) {
 	if (bonus.name.length) {
 		return bonus.name;

@@ -90,7 +90,11 @@
 				<div class="obsidian-char-column" style="padding-right: 2px;">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Proficiency'}}</div>
-						<div class="obsidian-char-box">
+						<div class="{{#if (gt data.attributes.prof actor.flags.obsidian.attributes.originalProf)~}}
+							obsidian-positive
+						{{~else if (lt data.attributes.prof actor.flags.obsidian.attributes.originalProf)~}}
+							obsidian-negative
+						{{~/if}} obsidian-char-box">
 							{{numberFormat data.attributes.prof decimals=0 sign=true}}
 						</div>
 					</div>

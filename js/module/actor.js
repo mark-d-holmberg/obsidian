@@ -9,7 +9,7 @@ import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
 import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
-import {applyBonuses} from '../rules/bonuses.js';
+import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
 import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
@@ -110,6 +110,7 @@ export class ObsidianActor extends Actor5e {
 
 		prepareFilters(this.data);
 		prepareInventory(this.data);
+		applyProfBonus(this.data);
 		Prepare.abilities(this.data);
 
 		data.attributes.ac.min =

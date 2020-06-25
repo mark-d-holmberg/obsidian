@@ -217,6 +217,8 @@ function formatFilter (filter) {
 				parts[0] = `${localize('OBSIDIAN.Your')} ${parts[0]}`;
 				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DCs')}`;
 			}
+		} else if (filter.score === 'prof') {
+			parts.push(localize('OBSIDIAN.ProfBonusLC'));
 		}
 	}
 

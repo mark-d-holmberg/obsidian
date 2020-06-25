@@ -20,6 +20,7 @@ export const Filters = {
 	isPassive: filter => filter.filter === 'score' && filter.score === 'passive',
 	isSpeed: filter => filter.filter === 'score' && filter.score === 'speed',
 	isDC: filter => filter.filter === 'score' && filter.score === 'dc',
+	isProf: filter => filter.filter === 'score' && filter.score === 'prof',
 
 	rollingAt: (filter, mode) => OBSIDIAN.notDefinedOrEmpty(filter.mode) || filter.mode === mode,
 	usesAbility: (filter, abl) =>

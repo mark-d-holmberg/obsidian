@@ -2,6 +2,7 @@
 // entityClass? ¯\_(ツ)_/¯
 import {Rolls} from '../rules/rolls.js';
 import {ObsidianActor} from './actor.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export function patchChatMessage () {
 	ChatMessage.prototype.render = (function () {
@@ -85,7 +86,15 @@ export function patchChatMessage () {
 				canvas.tokens.get(this.data.speaker.token)?._onHoverOut();
 			});
 
-			html.find('[data-roll]').click(evt => Rolls.fromClick(null, evt));
+			html.find('[data-roll]').click(evt => {
+				const roll = evt.currentTarget.dataset.roll;
+				if (roll === 'item') {
+					ObsidianItems.roll(null, evt.currentTarget.dataset);
+				} else {
+					Rolls.fromClick(null, evt);
+				}
+			});
+
 			html.find('.obsidian-place-template').click(Rolls.placeTemplate);
 			html.find('[data-dmg], [data-apply-all]').click(Rolls.applyDamage);
 			html.find('.obsidian-apply-save').click(Rolls.applySave);
