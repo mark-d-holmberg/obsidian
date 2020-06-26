@@ -28,11 +28,11 @@ export function applyBonuses (actorData) {
 		const setters = actorData.obsidian.filters.setters(Filters.appliesTo.speedScores(speed));
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
-			const speed = flags.attributes.speed[speed];
-			const value = speed.derived || speed.override;
+			const spd = flags.attributes.speed[speed];
+			const value = spd.derived || spd.override;
 
 			if (!setter.min || setter.score > value) {
-				speed.derived = setter.score;
+				spd.derived = setter.score;
 			}
 		}
 	}

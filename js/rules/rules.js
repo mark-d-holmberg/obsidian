@@ -112,9 +112,6 @@ Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
 Rules.EFFECT_BONUS_LEVEL = ['chr', 'cls'];
 Rules.EFFECT_BONUS_VALUES = ['abl', 'prof', 'chr', 'cls'];
 Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
-Rules.EFFECT_CONSUME_TARGETS = [
-	'this-effect', 'this-item', 'item', 'feat', 'spell', 'qty'
-];
 
 Rules.EFFECT_CONSUME_SLOTS = ['any', 'class'];
 Rules.EFFECT_DAMAGE_TYPES = [

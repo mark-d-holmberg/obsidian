@@ -6,12 +6,18 @@
 		    {{localize 'OBSIDIAN.Resource'}}
 	      <select name="{{prefix}}.target" data-selector="{{prefix}}.target">
 	        {{#select target}}
-		        {{#each @root.ObsidianRules.EFFECT_CONSUME_TARGETS}}
-			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumeTarget-' this}}</option>
-		        {{/each}}
+		        <option value="this-effect">{{localize 'OBSIDIAN.ConsumeTarget-this-effect'}}</option>
+		        <option value="this-item">{{localize 'OBSIDIAN.ConsumeTarget-this-item'}}</option>
+	          {{#if @root.actor}}
+		        <option value="item">{{localize 'OBSIDIAN.ConsumeTarget-item'}}</option>
+		        <option value="feat">{{localize 'OBSIDIAN.ConsumeTarget-feat'}}</option>
+	          {{/if}}
+		        <option value="spell">{{localize 'OBSIDIAN.ConsumeTarget-spell'}}</option>
+		        <option value="qty">{{localize 'OBSIDIAN.ConsumeTarget-qty'}}</option>
 	        {{/select}}
 	      </select>
 	    </label>
+	    {{#if actor}}
       <select name="{{prefix}}.itemID" data-selector-parent="{{prefix}}.target" data-show="item">
         {{#select itemID}}
 	        {{#each @root.itemsWithResources}}
@@ -26,6 +32,7 @@
 			    {{/each}}
 		    {{/select}}
 	    </select>
+	    {{/if}}
 	    <select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target" data-hide="spell, qty">
 		    {{#select ref}}
 			    {{#each itemResourceComponents}}

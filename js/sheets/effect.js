@@ -154,9 +154,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		data.categories = this._categories;
 		data.uncategorised = data.categories.get('none').components;
 
-		if (data.actor && data.item.flags && data.item.flags.obsidian
-			&& data.item.flags.obsidian.effects)
-		{
+		if (data.actor && data.item.flags?.obsidian?.effects) {
 			const hasResource = item =>
 				item.flags?.obsidian?.effects?.some(e =>
 					e.components.some(c => c.type === 'resource'));
@@ -170,29 +168,37 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			data.item.flags.obsidian.effects
 				.flatMap(e => e.components)
-				.filter(c => c.type === 'consume' || c.type === 'produce')
-				.forEach(component => {
-					const item =
-						data.actor.data.obsidian.itemsByID.get(
-							component.target === 'feat' ? component.featID : component.itemID);
-
-					if (item) {
-						component.itemResourceComponents =
-							item.flags.obsidian.effects
-								.flatMap(e => e.components)
-								.filter(c => c.type === 'resource');
-					}
-				});
-
-			data.item.flags.obsidian.effects
-				.flatMap(e => e.components)
 				.filter(c => c.type === 'spells')
 				.forEach(component =>
 					component.spells = component.spells.map(id =>
 						this.actor.data.obsidian.itemsByID.get(id)));
 		}
 
-		data.item.flags.obsidian.effects
+		data.item.flags?.obsidian?.effects
+			.flatMap(e => e.components)
+			.filter(c => c.type === 'consume' || c.type === 'produce')
+			.forEach(component => {
+				let item = data.item;
+				if (data.actor) {
+					item =
+						data.actor.data.obsidian.itemsByID.get(
+							component.target === 'feat' ? component.featID : component.itemID);
+				}
+
+				if (item) {
+					component.itemResourceComponents =
+						item.flags.obsidian.effects
+							.flatMap(e => e.components)
+							.filter(c => c.type === 'resource');
+				}
+
+				if (!data.actor) {
+					component.itemResourceComponents.forEach(c =>
+						c.label = c.name.length ? c.name : game.i18n.localize('OBSIDIAN.Unnamed'));
+				}
+			});
+
+		data.item.flags?.obsidian?.effects
 			.flatMap(e => e.components)
 			.filter(c => c.type === 'filter')
 			.forEach(component => {
