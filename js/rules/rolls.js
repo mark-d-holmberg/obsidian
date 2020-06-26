@@ -443,7 +443,7 @@ export const Rolls = {
 			return acc + mod.mod;
 		}, 0);
 		
-		let hotkey_adv = (window && window.event && (window.event.shiftKey || window.event.altKey) && game.settings.get('obsidian','toggleHotkey'));
+		let hotkey_adv = (window && window.event && window.event.altKey && game.settings.get('obsidian','toggleHotkey'));
 		let hotkey_dis = (window && window.event && window.event.ctrlKey && game.settings.get('obsidian','toggleHotkey'));
 		let adv_type = hotkey_adv ? 1 : hotkey_dis ? -1 : determineAdvantage(...adv);
 		if (game.settings.get('obsidian','rollOneDice') && adv_type === 0) {
