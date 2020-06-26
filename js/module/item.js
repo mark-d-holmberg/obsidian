@@ -92,6 +92,7 @@ const prepareComponents = {
 			});
 		} else if (component.source === 'list'
 			&& getProperty(item, 'flags.obsidian.source.type') === 'class'
+			&& OBSIDIAN.Data.SPELLS_BY_CLASS
 			&& OBSIDIAN.Data.SPELLS_BY_CLASS[component.list])
 		{
 			const cls = actorData.obsidian.classes.find(cls =>
