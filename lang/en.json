@@ -1,4 +1,6 @@
 {
+	"OBSIDIAN.ConfigNumDiceHead": "Only roll one die",
+	"OBSIDIAN.ConfigNumDiceMessage": "If enabled, obsidian will only roll a single d20 by default, instead of always rolling 2d20.",
 	"OBSIDIAN.PersonalityTraits": "Personality Traits",
 	"OBSIDIAN.Ideals": "Ideals",
 	"OBSIDIAN.Bonds": "Bonds",
@@ -869,7 +871,7 @@
 	"OBSIDIAN.AttackOverride": "Attack Override",
 	"OBSIDIAN.SaveOverride": "Save Override",
 	"OBSIDIAN.Recharged": "Recharged",
-	"OBSIDIAN.ConfigHotbarTitle": "Allow Macro Creation",
+	"OBSIDIAN.ConfigHotbarTitle": "Allow macro creation",
 	"OBSIDIAN.ConfigHotbarHint": "Allows obsidian to create its own macros when dragging from sheets onto the hotbar. Disable this if other modules also create their own macros when dropped onto the hotbar and you prefer to use those instead of obsidian's.",
 	"OBSIDIAN.BonusValue-abl": "Ability",
 	"OBSIDIAN.BonusValue-prof": "Proficiency",

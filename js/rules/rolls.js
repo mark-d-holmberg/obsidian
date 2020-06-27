@@ -449,6 +449,16 @@ export const Rolls = {
 		}, 0);
 
 		total = Math.floor(total);
+		const rollMode =
+			window.event?.altKey ? 1
+			: window.event?.ctrlKey ? -1
+			: window.event?.shiftKey ? 0
+			: determineAdvantage(...adv);
+
+		if (game.settings.get('obsidian','rollOneDie') && rollMode === 0) {
+			rolls.pop();
+		}
+
 		const results = rolls.map(r => {
 			return {
 				data3d: {formula: '1d20', results: [r.last()]},
@@ -459,7 +469,7 @@ export const Rolls = {
 		});
 
 		Rolls.annotateCrits(crit, fail, results);
-		Rolls.annotateAdvantage(determineAdvantage(...adv), results);
+		Rolls.annotateAdvantage(rollMode, results);
 
 		return results;
 	},

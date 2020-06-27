@@ -21,6 +21,7 @@ import {refreshNPC} from './rules/npc.js';
 import {addTransformHook} from './rules/transform.js';
 import {sendTriggers} from './module/triggers.js';
 import {updateApplyIcons} from './module/message.js';
+import {registerSettings} from './module/settings.js';
 
 runPatches();
 
@@ -57,6 +58,7 @@ Hooks.once('ready', function () {
 	link.href = `modules/obsidian/css/${fontSheet}.css`;
 	document.getElementsByTagName('head')[0].appendChild(link);
 
+	registerSettings();
 	addMacroHook();
 	checkVersion();
 	loadSpellData();
