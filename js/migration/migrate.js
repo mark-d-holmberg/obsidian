@@ -220,20 +220,29 @@ export const Migrate = {
 				data.name = 'custom';
 				data.flags.obsidian.custom = name;
 			}
+
+			if (!data.data.spellcasting || data.data.spellcasting === 'none') {
+				data.data.spellcasting = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[data.name] || 'none';
+			}
 		}
 
 		if (!data.data.hitDice) {
 			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(data.name);
 		}
 
-		data.flags.obsidian.spellcasting =
-			ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
+		if (!data.flags.obsidian.spellcasting) {
+			data.flags.obsidian.spellcasting =
+				ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
+		}
 
-		if (data.flags.obsidian.spellcasting.progression) {
+		if (source !== 'core'
+			&& data.flags.obsidian.version < 7
+			&& data.flags.obsidian.spellcasting.progression)
+		{
 			data.data.spellcasting = data.flags.obsidian.spellcasting.progression;
 		}
 
-		if (!data.data.spellcasting || data.data.spellcasting === 'none') {
+		if (!data.data.spellcasting) {
 			data.data.spellcasting = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[data.name] || 'none';
 		}
 	},
