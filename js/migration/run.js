@@ -38,7 +38,7 @@ async function beginMigration (html) {
 			updateProgress();
 		}
 
-		await Item.update(updates);
+		await Item.update(updates, {diff: false});
 	} catch (e) {
 		console.error(item, e);
 		migrationFailed();
@@ -54,7 +54,7 @@ async function beginMigration (html) {
 			}
 		}
 
-		await Actor.update(actorUpdates);
+		await Actor.update(actorUpdates, {diff: false});
 	} catch (e) {
 		console.error(actor, e);
 		migrationFailed();
@@ -98,7 +98,7 @@ async function beginMigration (html) {
 			updateProgress();
 		}
 
-		await Scene.update(updates);
+		await Scene.update(updates, {diff: false});
 	} catch (e) {
 		console.error(scene, e);
 		migrationFailed();
