@@ -22,6 +22,17 @@ import {Partitioner} from '../util/partition.js';
 export class ObsidianActor extends Actor5e {
 	prepareData () {
 		super.prepareData();
+		if (!game.settings?.settings.has('obsidian.version')) {
+			return;
+		}
+
+		const moduleVersion = game.settings.get('obsidian', 'version');
+		if (moduleVersion !== undefined && moduleVersion < Schema.VERSION) {
+			// Don't attempt to prepare actors if we haven't migrated the world
+			// yet.
+			return;
+		}
+
 		if (!this.data.flags?.obsidian
 			|| (this.data.flags.obsidian.version || 0) < Schema.VERSION)
 		{
