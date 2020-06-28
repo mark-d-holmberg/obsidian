@@ -234,7 +234,8 @@
 	border-bottom: 2px solid var(--mid);
 }
 
-.npc main section:last-child {
+.npc main section:last-child,
+.npc main .obsidian-feature-body section {
 	border: none;
 }
 

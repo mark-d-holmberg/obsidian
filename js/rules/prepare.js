@@ -472,7 +472,8 @@ export const Prepare = {
 			flags.display = TextEditor.enrichHTML(weapon.data.description.value, {
 				entities: false,
 				links: false,
-				rollData: actor.getRollData()
+				rollData: actor.getRollData(),
+				secrets: actor.owner
 			});
 		}
 	},
@@ -540,7 +541,8 @@ export const Prepare = {
 			flags.display = TextEditor.enrichHTML(feat.data.description.value, {
 				entities: true,
 				links: true,
-				rollData: actor.getRollData()
+				rollData: actor.getRollData(),
+				secrets: actor.owner
 			});
 		}
 	},

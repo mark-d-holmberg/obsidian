@@ -112,6 +112,9 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			let cat;
 			if (item.type === 'feat') {
 				cat = item.data.activation.type;
+				if (!cat.length) {
+					cat = 'none';
+				}
 			} else if (item.type === 'weapon' && item.data.equipped) {
 				cat = 'action';
 			} else {
@@ -121,7 +124,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			let category = data.featCategories[cat];
 			if (!category) {
 				category = [];
-				data.featCategories[item.data.activation.type] = category;
+				data.featCategories[cat] = category;
 			}
 
 			category.push(item);
