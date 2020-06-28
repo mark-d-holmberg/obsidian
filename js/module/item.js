@@ -329,7 +329,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 	}
 
 	if (item.obsidian.collection.attack.length) {
-		if (attackList && (item.type !== 'weapon' || item.data.equipped)) {
+		if (attackList
+			&& (item.type !== 'weapon' || item.data.equipped)
+			&& (item.type !== 'spell' || item.flags.obsidian.visible))
+		{
 			attackList.push(...item.obsidian.collection.attack);
 		}
 

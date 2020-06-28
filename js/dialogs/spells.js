@@ -238,7 +238,10 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		if (owned) {
 			spell = this.parent.actor.data.items.find(item => item._id === id);
 		} else {
-			spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);
+			try {
+				spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);
+			} catch {}
+
 			if (!OBSIDIAN.notDefinedOrEmpty(classID)) {
 				const cls =
 					this.parent.actor.data.obsidian.classes.find(cls => cls._id === classID);
