@@ -168,12 +168,10 @@
 	<details {{#if message.flags.obsidian.open}}open{{/if}}>
 		<summary>{{localize 'OBSIDIAN.Details'}}</summary>
 		{{#if (eq message.flags.obsidian.type 'spl')}}
-			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.details
-					view=false upcast=message.flags.obsidian.upcast}}
-		{{else if message.flags.obsidian.details.flags.obsidian.display}}
-			{{{message.flags.obsidian.details.flags.obsidian.display}}}
+			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.item
+					view=false upcast=message.flags.obsidian.upcast details=message.flags.obsidian.details}}
 		{{else}}
-			{{{message.flags.obsidian.details.data.description.value}}}
+			{{{message.flags.obsidian.details}}}
 		{{/if}}
 	</details>
 	{{/if}}

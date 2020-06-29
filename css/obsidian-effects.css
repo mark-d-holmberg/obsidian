@@ -118,6 +118,10 @@
 	cursor: pointer;
 }
 
+.obsidian-effect legend .obsidian-edit {
+	font-size: 14px;
+}
+
 .obsidian input[type=text].obsidian-effect-name {
 	width: 100%;
 	font-family: var(--font);
@@ -340,4 +344,11 @@
 	text-transform: uppercase;
 	font-family: var(--font);
 	cursor: default;
+}
+
+.obsidian-component-description > p {
+	margin: 0;
+	font-size: 14px;
+	font-family: var(--font-condensed);
+	text-align: justify;
 }

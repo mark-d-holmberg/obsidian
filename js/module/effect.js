@@ -107,6 +107,16 @@ export const Components = {
 			tray: 'AddDefense'
 		}
 	},
+	description: {
+		data: {
+			type: 'description',
+			raw: ''
+		},
+		metadata: {
+			category: 'special',
+			tray: 'AddDescription'
+		}
+	},
 	duration: {
 		data: {
 			type: 'duration',
@@ -288,7 +298,8 @@ export const Effect = {
 		linked: ['applied', 'scaling'],
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([
-			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce'
+			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce',
+			'description'
 		])
 	},
 

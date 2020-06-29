@@ -13,6 +13,6 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 
 	async close () {
 		await super.close();
-		Hooks.callAll('obsidian-classSheetClosed');
+		Hooks.callAll('obsidian.classSheetClosed');
 	}
 }

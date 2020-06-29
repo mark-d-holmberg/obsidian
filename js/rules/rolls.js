@@ -605,6 +605,7 @@ export const Rolls = {
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const saves = effect.components.filter(c => c.type === 'save');
 		const expr = effect.components.filter(c => c.type === 'expression');
+		const desc = effect.components.find(c => c.type === 'description');
 		const targets =
 			effect.components.find(c => c.type === 'target' && c.target === 'individual');
 
@@ -684,9 +685,15 @@ export const Rolls = {
 			}
 		}
 
+		let details = item.flags.obsidian.display || item.data.description.value;
+		if (desc) {
+			details = desc.display;
+		}
+
 		if (isFirst) {
 			results[0].upcast = scaledAmount;
-			results[0].details = item;
+			results[0].item = item;
+			results[0].details = details;
 			results[0].open = !attacks.length && !damage.length;
 
 			if (effect.components.some(c => c.type === 'target' && c.target === 'area')) {
@@ -803,7 +810,8 @@ export const Rolls = {
 					obsidian: {
 						type: item.type === 'spell' ? 'spl' : 'fx',
 						title: item.name,
-						details: item,
+						item: item,
+						details: item.flags.obsidian.display || item.data.description.value,
 						open: true,
 						upcast: upcast
 					}

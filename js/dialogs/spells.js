@@ -238,9 +238,9 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		if (owned) {
 			spell = this.parent.actor.data.items.find(item => item._id === id);
 		} else {
-			try {
+			if (OBSIDIAN.Data.SPELLS_BY_CLASS[list]) {
 				spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);
-			} catch {}
+			}
 
 			if (!OBSIDIAN.notDefinedOrEmpty(classID)) {
 				const cls =

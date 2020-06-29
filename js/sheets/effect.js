@@ -4,6 +4,7 @@ import {OBSIDIAN} from '../global.js';
 import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 import {Rules} from '../rules/rules.js';
+import {ObsidianStandaloneDialog} from '../dialogs/standalone.js';
 
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
 const FILTER_SELECTIONS = {
@@ -116,6 +117,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			this._interacting = false;
 		});
 
+		html.find('legend .obsidian-edit').click(this._editDescription.bind(this));
 		html.find('.obsidian-add-remove').keypress(ObsidianCurrencyDialog.onAddRemove);
 		html.find('.obsidian-spell-drop').on('dragover', evt => evt.preventDefault());
 		html.find('.obsidian-spell-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
@@ -238,6 +240,61 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				this._onSubmit(evt);
 			}
 		}, 50);
+	}
+
+	_editDescription (evt) {
+		const target = evt.currentTarget;
+		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const effect =
+			effects.find(e => e.uuid === target.closest('.obsidian-effect').dataset.uuid);
+
+		if (!effect) {
+			return;
+		}
+
+		const component =
+			effect.components.find(c => c.uuid === target.closest('fieldset').dataset.uuid);
+
+		if (!component) {
+			return;
+		}
+
+		const dialog = new ObsidianStandaloneDialog({}, {
+			width: 560,
+			height: 300,
+			title: game.i18n.localize('OBSIDIAN.EditDescription'),
+			template: 'modules/obsidian/html/dialogs/description.html'
+		});
+
+		dialog._createEditor = super._createEditor;
+
+		dialog.editors = {};
+
+		dialog.activateListeners = html => {
+			html.find('.editor-content[data-edit]').each((i, div) =>
+				FormApplication.prototype._activateEditor.apply(dialog, [div]));
+		};
+
+		dialog.close = async () => {
+			const editors = Object.values(dialog.editors);
+			if (editors.length) {
+				const ed = editors[0];
+				if (ed.mce) {
+					component.raw = ed.mce.getContent();
+					await this.item.update(
+						OBSIDIAN.updateArrays(this.item.data, {'flags.obsidian.effects': effects}));
+				}
+			}
+
+			this.render(false);
+			Application.prototype.close.apply(dialog, arguments);
+		};
+
+		dialog.getData = () => {
+			return {existingContent: component.raw};
+		};
+
+		dialog.render(true);
 	}
 
 	get _formData () {

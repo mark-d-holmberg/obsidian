@@ -5,7 +5,7 @@ import {ObsidianNewClassDialog} from './new-class.js';
 export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	constructor (...args) {
 		super(...args);
-		this._hookID = Hooks.on('obsidian-classSheetClosed', () => this.render(false));
+		this._hookID = Hooks.on('obsidian.classSheetClosed', () => this.render(false));
 	}
 
 	static get defaultOptions () {
@@ -32,7 +32,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	}
 
 	async close () {
-		Hooks.off('obsidian-classSheetClosed', this._hookID);
+		Hooks.off('obsidian.classSheetClosed', this._hookID);
 		return super.close();
 	}
 

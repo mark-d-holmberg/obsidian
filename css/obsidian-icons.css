@@ -268,6 +268,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/set-score.svg');
 }
 
+.obsidian-icon-comp-description {
+	background-image: url('../img/description.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }

@@ -70,5 +70,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="obsidian-item-card-body">{{{data.description.value}}}</div>
+	<div class="obsidian-item-card-body">
+		{{#if details}}
+			{{{details}}}
+		{{else}}
+			{{{data.description.value}}}
+		{{/if}}
+	</div>
 </div>

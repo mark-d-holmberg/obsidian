@@ -910,5 +910,7 @@
 	"OBSIDIAN.SetScoreTo": "Set score to {0}{1}",
 	"OBSIDIAN.IfNotHigher": "if not already higher",
 	"OBSIDIAN.MaxRoll": "Maximise rolls",
-	"OBSIDIAN.ProfBonusLC": "your proficiency bonus"
+	"OBSIDIAN.ProfBonusLC": "your proficiency bonus",
+	"OBSIDIAN.AddDescription": "Add Description",
+	"OBSIDIAN.EditDescription": "Edit Description"
 }

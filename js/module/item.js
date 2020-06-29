@@ -31,21 +31,30 @@ export function getSourceClass (actorData, source) {
 }
 
 const prepareComponents = {
-	attack: function (actorData, item, effect, component, cls) {
-		Prepare.calculateHit(actorData, item, component, cls);
+	attack: function (actor, item, effect, component, cls) {
+		Prepare.calculateHit(actor.data, item, component, cls);
 		Prepare.calculateAttackType(item.flags.obsidian, component);
 	},
 
-	damage: function (actorData, item, effect, component, cls) {
-		Prepare.calculateDamage(actorData, item, component, cls);
+	damage: function (actor, item, effect, component, cls) {
+		Prepare.calculateDamage(actor.data, item, component, cls);
 	},
 
-	save: function (actorData, item, effect, component, cls) {
-		Prepare.calculateSave(actorData, item, component, cls);
+	description: function (actor, item, effect, component) {
+		component.display = TextEditor.enrichHTML(component.raw, {
+			entities: true,
+			links: true,
+			rollData: actor.getRollData(),
+			secrets: actor.owner
+		});
 	},
 
-	resource: function (actorData, item, effect, component) {
-		Prepare.calculateResources(actorData, item, effect, component);
+	save: function (actor, item, effect, component, cls) {
+		Prepare.calculateSave(actor.data, item, component, cls);
+	},
+
+	resource: function (actor, item, effect, component) {
+		Prepare.calculateResources(actor.data, item, effect, component);
 
 		component.label =
 			component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
@@ -58,7 +67,7 @@ const prepareComponents = {
 			+ '</div>');
 	},
 
-	target: function (actorData, item, effect, component) {
+	target: function (actor, item, effect, component) {
 		if (component.target === 'area' && !effect.isLinked) {
 			item.flags.obsidian.notes.push(
 				`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
@@ -66,7 +75,7 @@ const prepareComponents = {
 		}
 	},
 
-	consume: function (actorData, item, effect, component) {
+	consume: function (actor, item, effect, component) {
 		if (component.calc === 'var') {
 			component.fixed = 1;
 		}
@@ -76,7 +85,8 @@ const prepareComponents = {
 		}
 	},
 
-	spells: function (actorData, item, effect, component) {
+	spells: function (actor, item, effect, component) {
+		const actorData = actor.data;
 		if (component.source === 'individual' && component.method === 'list') {
 			const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
 			component.spells.forEach(id => {
@@ -216,7 +226,7 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 			const prepare = prepareComponents[component.type];
 			if (prepare) {
-				prepare(actorData, item, effect, component, cls);
+				prepare(actor, item, effect, component, cls);
 			}
 		}
 
