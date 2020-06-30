@@ -31,6 +31,8 @@
 		</button>
 	</label>
 	{{#each actor.flags.obsidian.skills.custom as |skill id|}}
+		<input type="hidden" name="flags.obsidian.skills.custom.{{id}}.custom" value="true"
+		       data-dtype="Boolean">
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">

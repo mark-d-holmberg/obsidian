@@ -1,40 +1,89 @@
 <form class="obsidian" autocomplete="off">
-	<label class="obsidian-inline obsidian-label-lg">
-		{{localize 'OBSIDIAN.Tools'}}
-		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-skill">
-			{{localize 'OBSIDIAN.Add'}}
-		</button>
-	</label>
-	{{#each actor.flags.obsidian.skills.tools as |tool id|}}
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
-			<div>
-				<select name="flags.obsidian.skills.tools.{{id}}.value" data-dtype="Number">
-					{{#select tool.value}}
-						{{#each ../ObsidianRules.PROFICIENCY_LEVELS}}
-							<option value="{{@key}}">
-								{{i18n-join 'OBSIDIAN.Proficiency-' this}}
-							</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<select name="flags.obsidian.skills.tools.{{id}}.ability"
-				        style="text-transform: uppercase;">
-					{{#select (lc tool.ability)}}
-						{{#each ../data.abilities}}
-							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</option>
-						{{/each}}
-					{{/select}}
-				</select>
-				<input class="obsidian-input-compact" type="text" placeholder="{{localize 'OBSIDIAN.Tool'}}"
-				       value="{{tool.label}}" name="flags.obsidian.skills.tools.{{id}}.label">
-				<span class="obsidian-binary-operator">&plus;</span>
-				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
-				       placeholder="0" value="{{tool.bonus}}" data-dtype="Number"
-				       name="flags.obsidian.skills.tools.{{id}}.bonus">
-			</div>
-			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
-				{{localize 'OBSIDIAN.Remove'}}
-			</button>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Tools'}}</legend>
+		<div class="obsidian-checkbox-grid">
+			{{#each ObsidianRules.PROF_TOOLS as |tool|}}
+				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+				{{/with}}
+			{{/each}}
 		</div>
-	{{/each}}
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.ToolProf-game'}}</legend>
+		<div class="obsidian-checkbox-grid">
+			{{#each ObsidianRules.PROF_TOOLS_GAME as |tool|}}
+				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+				{{/with}}
+			{{/each}}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.ToolProf-music'}}</legend>
+		<div class="obsidian-checkbox-grid">
+			{{#each ObsidianRules.PROF_TOOLS_INSTRUMENT as |tool|}}
+				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+				{{/with}}
+			{{/each}}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.ToolProf-art'}}</legend>
+		<div class="obsidian-checkbox-grid">
+			{{#each ObsidianRules.PROF_TOOLS_ARTISAN as |tool|}}
+				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+				{{/with}}
+			{{/each}}
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>
+			{{localize 'OBSIDIAN.Custom'}}
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-tool">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+		</legend>
+		{{#each actor.flags.obsidian.tools.custom as |tool id|}}
+			<input type="hidden" name="flags.obsidian.tools.custom.{{id}}.custom" value="true"
+			       data-dtype="Boolean">
+			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+				<div>
+					<select name="flags.obsidian.tools.custom.{{id}}.value" data-dtype="Number">
+						{{#select tool.value}}
+							{{#each @root.ObsidianRules.PROFICIENCY_LEVELS}}
+								<option value="{{@key}}">
+									{{i18n-join 'OBSIDIAN.Proficiency-' this}}
+								</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<select name="flags.obsidian.tools.custom.{{id}}.ability"
+					        style="text-transform: uppercase;">
+						{{#select (lc tool.ability)}}
+							{{#each @root.ObsidianRules.ABILITIES}}
+								<option value="{{@key}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+					<input class="obsidian-input-compact" type="text" value="{{tool.label}}"
+					       placeholder="{{localize 'OBSIDIAN.Tool'}}"
+					       name="flags.obsidian.tools.custom.{{id}}.label">
+					<span class="obsidian-binary-operator">&plus;</span>
+					<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
+					       placeholder="0" value="{{tool.bonus}}" data-dtype="Number"
+					       name="flags.obsidian.tools.custom.{{id}}.bonus">
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+	</fieldset>
 </form>

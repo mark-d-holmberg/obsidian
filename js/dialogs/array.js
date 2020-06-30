@@ -1,4 +1,5 @@
 import {ObsidianDialog} from './dialog.js';
+import {ObsidianItemSheet} from '../sheets/item-sheet.js';
 
 export class ObsidianArrayDialog extends ObsidianDialog {
 	/**
@@ -12,6 +13,24 @@ export class ObsidianArrayDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html);
 	}
 
+	get _formData () {
+		const formData =
+			Object.getOwnPropertyDescriptor(ObsidianItemSheet.prototype, '_formData').get
+				.apply(this);
+
+		const array = [];
+		for (const p in formData) {
+			if (p.startsWith(this.flag)) {
+				const path = p.substr(this.flag.length + 1);
+				setProperty(array, path, formData[p]);
+				delete formData[p];
+			}
+		}
+
+		formData[this.flag] = array;
+		return formData;
+	}
+
 	/**
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
@@ -23,9 +42,9 @@ export class ObsidianArrayDialog extends ObsidianDialog {
 		if (item.id === undefined) {
 			item.id = array.length;
 		}
-		array.push(this.item);
-		const update = {};
-		update[this.flag] = array;
+
+		const update = this._formData;
+		update[this.flag].push(item);
 		await this.parent.actor.update(update);
 		this.render(false);
 	}
@@ -37,11 +56,13 @@ export class ObsidianArrayDialog extends ObsidianDialog {
 	async _onRemove (evt) {
 		evt.preventDefault();
 		const array = getProperty(this.parent.actor.data, this.flag);
-		const update = {};
-		update[this.flag] = ObsidianDialog.removeRow(array, evt);
+		const update = this._formData;
+		update[this.flag] = ObsidianDialog.removeRow(update[this.flag], evt);
+
 		if (this.onRemove) {
 			this.onRemove(array, update);
 		}
+
 		await this.parent.actor.update(update);
 		this.render(false);
 	}

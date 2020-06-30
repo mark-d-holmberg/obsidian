@@ -166,6 +166,17 @@ Rules.PROF_LANG = [
 	'zemnian'
 ];
 
+Rules.PROF_TOOLS = ['dis', 'frg', 'hrb', 'nav', 'psn', 'thv', 'vhl', 'vhw'];
+Rules.PROF_TOOLS_GAME = ['dice', 'chess', 'card', 'ante'];
+Rules.PROF_TOOLS_ARTISAN = [
+	'alc', 'brw', 'cal', 'crp', 'crt', 'cob', 'cook', 'gls', 'jwl', 'lth', 'msn', 'pnt', 'pot',
+	'smt', 'tnk', 'wvr', 'wood'
+];
+
+Rules.PROF_TOOLS_INSTRUMENT = [
+	'bag', 'drm', 'dul', 'flt', 'lut', 'lyr', 'hrn', 'pflt', 'swm', 'viol'
+];
+
 Rules.PLUS_PROF = {
 	0.5: 'half',
 	1: 'prof',

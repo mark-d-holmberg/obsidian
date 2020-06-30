@@ -393,14 +393,14 @@
 					<div class="obsidian-char-box-text">
 						{{localize 'OBSIDIAN.Tools'}}
 						<a title="{{localize 'OBSIDIAN.ManageTools'}}" class="obsidian-edit"
-						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Skills"
-						   data-data-path="flags.obsidian.skills.tools" data-template="tools.html">
+						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Tools"
+						   data-data-path="flags.obsidian.tools.custom" data-template="tools.html">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each actor.flags.obsidian.skills.tools as |tool id|}}
-							<div class="obsidian-skill-item" data-skill-id="tools.{{id}}">
+						{{#each actor.obsidian.tools as |tool id|}}
+							<div class="obsidian-skill-item" data-tool-id="{{id}}">
 								<div class="
 								{{~#if (eq 0.5 tool.proficiency.value)~}}
 									obsidian-half-proficient
@@ -415,7 +415,7 @@
 								{{~/if}} obsidian-prof obsidian-ptr">
 									<span></span>
 								</div>
-								<select name="flags.obsidian.skills.tools.{{id}}.ability">
+								<select name="flags.obsidian.tools.{{id}}.ability">
 									{{#select (lc tool.ability)}}
 										{{#each ../data.abilities}}
 											<option value="{{@key}}">

@@ -368,13 +368,23 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		if (this.actor
-			&& getProperty(this.actor, 'data.flags.obsidian.skills.tools.length')
 			&& component.filter === 'roll'
 			&& component.roll === 'check'
 			&& component.check === 'tool')
 		{
-			this.actor.data.flags.obsidian.skills.tools.forEach((v, i) =>
-				selections[`tools.${i}`] = v.label);
+			const tools = Rules.PROF_TOOLS
+				.concat(Rules.PROF_TOOLS_GAME)
+				.concat(Rules.PROF_TOOLS_ARTISAN)
+				.concat(Rules.PROF_TOOLS_INSTRUMENT)
+				.map(key => [key, game.i18n.localize(`OBSIDIAN.ToolProf-${key}`)]);
+
+			tools.sort((a, b) => a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0);
+			tools.forEach(([key, label]) => selections[key] = label);
+
+			if (this.actor.data.flags.obsidian.tools.custom.length) {
+				this.actor.data.flags.obsidian.tools.custom.forEach((v, i) =>
+					selections[`custom.${i}`] = v.label);
+			}
 		}
 
 		return selections;

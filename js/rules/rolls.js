@@ -178,13 +178,21 @@ export const Rolls = {
 			} else {
 				rolls.push(...tokens.map(t => {
 					const skill = Rolls.findSkill(t.actor, component.component);
-					let id = component.component.skill;
+					const tool = Rolls.findTool(t.actor, component.component);
 
-					if (OBSIDIAN.notDefinedOrEmpty(id) || id === 'custom') {
-						id = null;
+					if (!skill && !tool) {
+						return Rolls.abilityCheck(
+							t.actor, component.ability, false, [],
+							Effect.sheetGlobalRollMod(t.actor));
 					}
 
-					return Rolls.skillCheck(t.actor, skill, id);
+					if (skill) {
+						return Rolls.skillCheck(
+							t.actor, skill, 'skills', Filters.appliesTo.skillChecks);
+					} else {
+						return Rolls.skillCheck(
+							t.actor, tool, 'tools', Filters.appliesTo.toolChecks);
+					}
 				}));
 			}
 
@@ -396,18 +404,20 @@ export const Rolls = {
 				return;
 			}
 
-			Rolls.toChat(actor, Rolls.skillCheck(actor, skill, options.skl));
+			Rolls.toChat(
+				actor, Rolls.skillCheck(actor, skill, 'skills', Filters.appliesTo.skillChecks));
 		} else if (roll === 'tool') {
 			if (options.tool === undefined) {
 				return;
 			}
 
-			const tool = actor.data.flags.obsidian.skills.tools[Number(options.tool)];
+			const tool = getProperty(actor.data.flags.obsidian.tools, options.tool);
 			if (!tool) {
 				return;
 			}
 
-			Rolls.toChat(actor, Rolls.skillCheck(actor, tool));
+			Rolls.toChat(
+				actor, Rolls.skillCheck(actor, tool, 'tools', Filters.appliesTo.toolChecks));
 		} else if (roll === 'dmg') {
 			if (options.effect === undefined) {
 				return;
@@ -866,16 +876,21 @@ export const Rolls = {
 			return skills[skill.skill];
 		}
 
-		let found = skills.custom.find(skl =>
+		return skills.custom.find(skl =>
 			skl.label.toLocaleLowerCase() === skill.custom.toLocaleLowerCase());
+	},
+
+	findTool: function (actor, tool) {
+		const tools = actor.data.flags.obsidian.tools;
+		let found = Object.values(tools).find(entry =>
+			entry.label?.toLocaleLowerCase() === tool.custom.toLocaleLowerCase());
 
 		if (found) {
 			return found;
 		}
 
-		return skills.tools.find(tool =>
-			tool.label.toLocaleLowerCase() === skill.custom.toLocaleLowerCase());
-
+		return tools.custom.find(entry =>
+			entry.label.toLocaleLowerCase() === tool.custom.toLocaleLowerCase());
 	},
 
 	placeTemplate: function (evt) {
@@ -1127,32 +1142,15 @@ export const Rolls = {
 		}
 	},
 
-	skillCheck: function (actor, skill, id) {
+	skillCheck: function (actor, skill, prop, filter) {
 		const flags = actor.data.flags.obsidian;
-		const skillName = skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${id}`);
-		let tool = false;
-		let key = id;
-
-		if (!key) {
-			let list = 'custom';
-			let idx = flags.skills.custom.indexOf(skill);
-
-			if (idx < 0) {
-				tool = true;
-				list = 'tools';
-				idx = flags.skills.tools.indexOf(skill);
-			}
-
-			key = `${list}.${idx}`;
-		}
-
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
 				Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
-				mode => Filters.appliesTo.skillChecks(tool, key, skill.ability, mode));
+				mode => filter(skill.key, skill.ability, mode));
 
-		return Rolls.abilityCheck(actor, skill.ability, skillName, skill.rollParts, rollMod);
+		return Rolls.abilityCheck(actor, skill.ability, skill.label, skill.rollParts, rollMod);
 	},
 
 	toChat: async function (actor, ...msgs) {

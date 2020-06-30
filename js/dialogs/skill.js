@@ -1,17 +1,25 @@
 import {ObsidianDialog} from './dialog.js';
 
 export class ObsidianSkillDialog extends ObsidianDialog {
-	constructor (parent, skillID) {
-		const skill = getProperty(parent.actor.data.flags.obsidian.skills, skillID);
+	constructor (parent, evt) {
+		const item = evt.currentTarget.closest('.obsidian-skill-item');
+		const id = item.dataset.skillId || item.dataset.toolId;
+		const tool = !!item.dataset.toolId;
+		const prop = tool ? 'tools' : 'skills';
+		const data = getProperty(parent.actor.data.flags.obsidian, `${prop}.${id}`);
+
 		super(parent, {
-			title: game.i18n.localize(
-				`OBSIDIAN.Manage${skillID.startsWith('tools') ? 'Tool' : 'Skill'}`)
-				+ ': '
-				+ (skill.custom ? skill.label : game.i18n.localize(`OBSIDIAN.Skill-${skillID}`)),
+			title: `${game.i18n.localize(`OBSIDIAN.Manage${tool ? 'Tool' : 'Skill'}`)}: `
+				+ (data.custom
+					? data.label
+					: game.i18n.localize(`OBSIDIAN.${tool ? 'ToolProf' : 'Skill'}-${id}`)),
 			width: 300
 		});
 
-		this.skillID = skillID;
+		this._tool = tool;
+		this._prop = prop;
+		this._id = id;
+		this._data = data;
 	}
 
 	get template () {
@@ -20,8 +28,10 @@ export class ObsidianSkillDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.skillID = this.skillID;
-		data.skill = getProperty(this.parent.actor.data.flags.obsidian.skills, this.skillID);
+		data.tool = this._tool;
+		data.prop = this._prop;
+		data.id = this._id;
+		data.data = this._data;
 		return data;
 	}
 }

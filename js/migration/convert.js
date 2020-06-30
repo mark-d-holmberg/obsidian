@@ -27,5 +27,6 @@ export const CONVERT = {
 		ver: 'versatile', hvy: 'heavy', fin: 'finesse', lgt: 'light', lod: 'loading', rch: 'reach',
 		thr: 'thrown', two: 'twohanded'
 	},
+	tools: {disg: 'dis', forg: 'frg', herb: 'hrb', navg: 'nav', pois: 'psn', thief: 'thv'},
 	validTargetTypes: new Set(['creature', 'object', 'sphere', 'cylinder', 'cone', 'cube', 'line'])
 };

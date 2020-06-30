@@ -406,13 +406,19 @@ export const ObsidianItems = {
 			return;
 		}
 
-		const idx =
-			actor.data.flags.obsidian.skills.tools.findIndex(t =>
-				t.label.toLocaleLowerCase() === tool.name.toLocaleLowerCase());
+		const tools = actor.data.flags.obsidian.tools;
+		const allTools =
+			Object.entries(tools)
+				.filter(([p,]) => p !== 'custom')
+				.map(([, v]) => v)
+				.concat(tools.custom);
 
-		if (idx > -1) {
+		const found = allTools.find(t =>
+			t.label.toLocaleLowerCase() === tool.name.toLocaleLowerCase());
+
+		if (found) {
 			options.roll = 'tool';
-			options.tool = idx;
+			options.tool = found.key;
 		}
 
 		Rolls.create(actor, options);

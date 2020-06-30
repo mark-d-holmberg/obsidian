@@ -11,7 +11,8 @@ export const Filters = {
 		isDamage: filter => filter.dmg === 'damage',
 		isAttack: filter => filter.dmg === 'attack'
 	},
-	isSkillOrTool: (filter, tool) => filter.check === (tool ? 'tool' : 'skill'),
+	isSkill: filter => filter.check === 'skill',
+	isTool: filter => filter.check === 'tool',
 	inCollection: (filter, key) =>
 		filter.multi === 'any' || filter.collection.some(item => item.key === key),
 	isAbilityScore: filter => filter.filter === 'score' && filter.score === 'ability',
@@ -83,10 +84,10 @@ export const Filters = {
 			&& Filters.inCollection(filter, save)
 			&& Filters.rollingAt(filter, mode),
 
-		skillChecks: (tool, key, ability, mode) => filter =>
+		skillChecks: (key, ability, mode) => filter =>
 			Filters.isCheck(filter)
 			&& Filters.rollingAt(filter, mode)
-			&& ((Filters.isSkillOrTool(filter, tool) && Filters.inCollection(filter, key))
+			&& ((Filters.isSkill(filter) && Filters.inCollection(filter, key))
 			|| (Filters.isAbility(filter) && Filters.inCollection(filter, ability))),
 
 		spellAttacks: (filter, mode) =>
@@ -98,6 +99,12 @@ export const Filters = {
 		spellDCs: filter => Filters.isDC(filter) && Filters.inCollection(filter, 'spell'),
 
 		speedScores: speed => filter =>
-			Filters.isSpeed(filter) && Filters.inCollection(filter, speed)
+			Filters.isSpeed(filter) && Filters.inCollection(filter, speed),
+
+		toolChecks: (key, ability, mode) => filter =>
+			Filters.isCheck(filter)
+			&& Filters.rollingAt(filter, mode)
+			&& ((Filters.isTool(filter) && Filters.inCollection(filter, key))
+			|| (Filters.isAbility(filter) && Filters.inCollection(filter, ability)))
 	}
 };

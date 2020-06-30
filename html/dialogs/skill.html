@@ -1,16 +1,16 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
-		<legend>{{skill.label}}</legend>
+		<legend>{{data.label}}</legend>
 		<div class="obsidian-form-row obsidian-inline">
-				<select name="flags.obsidian.skills.{{skillID}}.value" data-dtype="Number">
-					{{#select skill.value}}
+				<select name="flags.obsidian.{{prop}}.{{id}}.value" data-dtype="Number">
+					{{#select data.value}}
 						{{#each ObsidianRules.PROFICIENCY_LEVELS}}
 							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Proficiency-' this}}</option>
 						{{/each}}
 					{{/select}}
 				</select>
-				<select name="flags.obsidian.skills.{{skillID}}.roll">
-					{{#select skill.roll}}
+				<select name="flags.obsidian.{{prop}}.{{id}}.roll">
+					{{#select data.roll}}
 						{{#each ObsidianRules.ROLL}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
 						{{/each}}
@@ -20,26 +20,27 @@
 		<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
 			<div class="obsidian-flex">
 				<label class="obsidian-inline">
-					<input type="text" name="flags.obsidian.skills.{{skillID}}.bonus" data-dtype="Number"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-					       value="{{skill.bonus}}">
+					<input type="text" name="flags.obsidian.{{prop}}.{{id}}.bonus" data-dtype="Number"
+					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       placeholder="0" value="{{data.bonus}}">
 					<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 				</label>
 				<label class="obsidian-inline">
 					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="flags.obsidian.skills.{{skillID}}.override"
-					       value="{{skill.override}}">
+					       name="flags.obsidian.{{prop}}.{{id}}.override" value="{{data.override}}">
 					<span>{{localize 'OBSIDIAN.Override'}}</span>
 				</label>
 			</div>
 		</div>
+		{{#unless tool}}
 		<div class="obsidian-form-row obsidian-stacked-row">
 			<label class="obsidian-inline">
-				<input type="text" name="flags.obsidian.skills.{{skillID}}.passiveBonus" data-dtype="Number"
-				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-				       value="{{skill.passiveBonus}}">
+				<input type="text" name="flags.obsidian.{{prop}}.{{id}}.passiveBonus" data-dtype="Number"
+				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       placeholder="0" value="{{data.passiveBonus}}">
 				<span>{{localize 'OBSIDIAN.PassiveBonus'}}</span>
 			</label>
 		</div>
+		{{/unless}}
 	</fieldset>
 </form>

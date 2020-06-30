@@ -1,6 +1,6 @@
 export const Schema = {};
 
-Schema.VERSION = 9;
+Schema.VERSION = 10;
 
 Schema.Actor = {
 	attributes: {
@@ -50,11 +50,13 @@ Schema.Actor = {
 		bonus: 0,
 		joat: false,
 		custom: [],
-		tools: [],
 		passives: ['prc', 'inv']
 	},
 	spells: {
 		slots: {}
+	},
+	tools: {
+		custom: []
 	},
 	traits: {
 		profs: {

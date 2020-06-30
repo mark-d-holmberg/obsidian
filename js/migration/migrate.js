@@ -11,6 +11,7 @@ import {v4} from './v4.js';
 import {v5} from './v5.js';
 import {v6} from './v6.js';
 import {v7} from './v7.js';
+import {v9} from './v9.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -53,6 +54,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 8 && source !== 'core') {
 			Migrate.v7.convertActorDefenses(data);
+		}
+
+		if (data.flags.obsidian.version < 10 && source !== 'core') {
+			Migrate.v9.convertTools(data);
 		}
 
 		if (data.items?.length) {
@@ -379,9 +384,34 @@ export const Migrate = {
 		}
 
 		if (source === 'core' && traits.toolProf) {
-			data.flags.obsidian.skills.tools.push(...traits.toolProf.value.map(prof => {
+			const tools = data.flags.obsidian.tools;
+			const [concrete, custom] = traits.toolProf.value.reduce(([concrete, custom], prof) => {
+				const convert = CONVERT.tools[prof];
+				if (convert) {
+					concrete.push(convert);
+				} else {
+					custom.push(prof);
+				}
+
+				return [concrete, custom];
+			});
+
+			concrete.forEach(prof => {
+				if (tools[prof]) {
+					tools[prof].enabled = true;
+				} else {
+					tools[prof] = {ability: 'str', bonus: 0, value: 1, enabled: true};
+				}
+			});
+
+			custom.push(
+				...traits.toolProf.custom.split(';')
+					.map(prof => prof.trim())
+					.filter(prof => prof.length));
+
+			tools.custom.push(...custom.map(prof => {
 				return {
-					ability: 'str', bonus: 0, value: 0, custom: true,
+					ability: 'str', bonus: 0, value: 1, custom: true, enabled: true,
 					label: translateOrElseOriginal(`OBSIDIAN.ToolProf-${prof}`, prof)
 				}
 			}));
@@ -623,6 +653,7 @@ Migrate.v4 = v4;
 Migrate.v5 = v5;
 Migrate.v6 = v6;
 Migrate.v7 = v7;
+Migrate.v9 = v9;
 
 function lazyConvert () {
 	const convert = (key, convert) => {

@@ -30,6 +30,8 @@ import {ObsidianSensesDialog} from '../dialogs/senses.js';
 // noinspection ES6UnusedImports
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
 // noinspection ES6UnusedImports
+import {ObsidianToolsDialog} from '../dialogs/tools.js';
+// noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
 // noinspection ES6UnusedImports
 import {ObsidianNPCSavesDialog} from '../dialogs/npc-saves.js';
@@ -143,9 +145,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>
-			new ObsidianSkillDialog(
-				this, $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id'))
-				.render(true));
+			new ObsidianSkillDialog(this, evt).render(true));
 		html.find('.obsidian-save-mod').click(evt =>
 			new ObsidianSaveDialog(
 				this, $(evt.currentTarget).closest('.obsidian-save-item').data('value'))
@@ -509,24 +509,26 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_setSkillProficiency (evt) {
-		const id = $(evt.currentTarget).closest('.obsidian-skill-item').data('skill-id');
-		const skill = getProperty(this.actor.data.flags.obsidian.skills, id);
+		const item = evt.currentTarget.closest('.obsidian-skill-item');
+		const id = item.dataset.skillId || item.dataset.toolId;
+		const prop = item.dataset.skillId ? 'skills' : 'tools';
+		const data = getProperty(this.actor.data.flags.obsidian, `${prop}.${id}`);
 
 		let newValue = 0;
-		if (skill.value === 0) {
+		if (data.value === 0) {
 			newValue = 1;
-		} else if (skill.value === 1) {
+		} else if (data.value === 1) {
 			newValue = 2;
 		}
 
 		const update = {};
 		if (id.includes('.')) {
 			const [key, idx] = id.split('.');
-			const newSkills = duplicate(this.actor.data.flags.obsidian.skills[key]);
+			const newSkills = duplicate(this.actor.data.flags.obsidian[prop][key]);
 			newSkills[idx].value = newValue;
-			update[`flags.obsidian.skills.${key}`] = newSkills;
+			update[`flags.obsidian.${prop}.${key}`] = newSkills;
 		} else {
-			update[`flags.obsidian.skills.${id}.value`] = newValue;
+			update[`flags.obsidian.${prop}.${id}.value`] = newValue;
 		}
 
 		this.actor.update(update);

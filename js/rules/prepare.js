@@ -682,7 +682,7 @@ export const Prepare = {
 			if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 				const bonuses =
 					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.skillChecks(false, key, skill.ability));
+						Filters.appliesTo.skillChecks(key, skill.ability));
 
 				if (bonuses.length) {
 					skill.rollParts.push(
@@ -693,7 +693,7 @@ export const Prepare = {
 
 			const rollMods =
 				actorData.obsidian.filters.mods(
-					Filters.appliesTo.skillChecks(false, key, skill.ability));
+					Filters.appliesTo.skillChecks(key, skill.ability));
 
 			let rollMod = {mode: ['reg']};
 			if (rollMods.length) {
@@ -707,6 +707,7 @@ export const Prepare = {
 				skill.mod = original.mod;
 			}
 
+			skill.key = key;
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 			skill.proficiency = skill.rollParts.find(part => part.proficiency);
@@ -736,20 +737,36 @@ export const Prepare = {
 	},
 
 	tools: function (actorData, data, flags) {
-		for (const tool of flags.skills.tools) {
+		actorData.obsidian.tools = {};
+		for (let [id, tool] of
+			Object.entries(flags.tools).filter(([p,]) => p !== 'custom')
+				.concat(Object.entries(flags.tools.custom)))
+		{
+			const custom = !isNaN(Number(id));
+			if (!custom) {
+				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf-${id}`);
+			}
+
+			const key = custom ? `custom.${id}` : id;
 			Prepare.calculateSkill(data, flags, tool);
+
+			if (custom || tool.enabled) {
+				actorData.obsidian.tools[key] = tool;
+			}
+
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
 				const bonuses =
 					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.skillChecks(true, `tools.${tool.id}`, tool.ability));
+						Filters.appliesTo.skillChecks(key, tool.ability));
 
 				if (bonuses.length) {
-					tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-					tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+					tool.rollParts.push(
+						...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 					tool.rollParts = highestProficiency(tool.rollParts);
 				}
 			}
 
+			tool.key = key;
 			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			tool.proficiency = tool.rollParts.find(part => part.proficiency);
 		}
