@@ -56,50 +56,54 @@ export const Prepare = {
 		}
 	},
 
-	calculateSave: function (actorData, item, dc, cls) {
+	calculateDC: function (actorData, item, component, cls, pred) {
 		const data = actorData.data;
-		if (dc.calc === 'fixed') {
-			dc.value = dc.fixed;
+		if (component.calc === 'fixed') {
+			component.value = component.fixed;
 			return;
 		}
 
 		let bonus = 8;
-		if (!OBSIDIAN.notDefinedOrEmpty(dc.bonus)) {
-			bonus = Number(dc.bonus);
+		if (!OBSIDIAN.notDefinedOrEmpty(component.bonus)) {
+			bonus = Number(component.bonus);
 		}
 
-		dc.rollParts = [{
-			mod: dc.prof * data.attributes.prof,
+		component.rollParts = [{
+			mod: component.prof * data.attributes.prof,
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 			proficiency: true,
-			value: Number(dc.prof)
+			value: Number(component.prof)
 		}];
 
-		dc.spellMod = 0;
+		component.spellMod = 0;
 		if (getProperty(item, 'flags.obsidian.parentComponent')) {
 			const provider = actorData.obsidian.components.get(item.flags.obsidian.parentComponent);
 			if (provider && provider.method === 'innate') {
-				dc.spellMod = data.abilities[provider.ability].mod;
-				dc.rollParts.push({mod: dc.spellMod, name: game.i18n.localize('OBSIDIAN.Spell')});
+				component.spellMod = data.abilities[provider.ability].mod;
+				component.rollParts.push({
+					mod: component.spellMod,
+					name: game.i18n.localize('OBSIDIAN.Spell')
+				});
 			} else {
-				Prepare.spellPart(dc, data, cls);
+				Prepare.spellPart(component, data, cls);
 			}
 		} else {
-			Prepare.spellPart(dc, data, cls);
+			Prepare.spellPart(component, data, cls);
 		}
 
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.saveDCs(dc));
+		const bonuses = actorData.obsidian.filters.bonuses(pred(component));
 		if (bonuses.length) {
-			dc.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			component.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
 
-		dc.value = Math.floor(bonus + dc.rollParts.reduce((acc, part) => acc + part.mod, 0));
+		component.value =
+			Math.floor(bonus + component.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-		const setters = actorData.obsidian.filters.setters(Filters.appliesTo.saveDCs(dc));
+		const setters = actorData.obsidian.filters.setters(pred(component));
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
-			if (!setter.min || setter.score > dc.value) {
-				dc.value = setter.score;
+			if (!setter.min || setter.score > component.value) {
+				component.value = setter.score;
 			}
 		}
 	},

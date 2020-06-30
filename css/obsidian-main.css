@@ -1332,7 +1332,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-row-dmg > div:last-child,
-.obsidian-apply-save {
+.obsidian-apply-save,
+.obsidian-apply-check {
 	width: 20px;
 	height: 20px;
 	margin-left: 5px;
@@ -1346,12 +1347,14 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 9px;
 }
 
-.obsidian-apply-save {
+.obsidian-apply-save,
+.obsidian-apply-check {
 	padding: 0 1px 1px 0;
 }
 
 .obsidian-msg-row-dmg > div:last-child:hover,
-.obsidian-apply-save:hover {
+.obsidian-apply-save:hover,
+.obsidian-apply-check:hover {
 	background: var(--dark);
 	color: var(--text-bright);
 }

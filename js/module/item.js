@@ -4,6 +4,7 @@ import {Schema} from './schema.js';
 import {spellNotes} from '../rules/spells.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
+import {Filters} from '../rules/filters.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
@@ -36,6 +37,15 @@ const prepareComponents = {
 		Prepare.calculateAttackType(item.flags.obsidian, component);
 	},
 
+	check: function (actor, item, effect, component, cls) {
+		let pred = () => false;
+		if (component.calc === 'formula' && component.ability === 'spell') {
+			pred = () => Filters.appliesTo.spellDCs;
+		}
+
+		Prepare.calculateDC(actor.data, item, component, cls, pred);
+	},
+
 	damage: function (actor, item, effect, component, cls) {
 		Prepare.calculateDamage(actor.data, item, component, cls);
 	},
@@ -50,7 +60,7 @@ const prepareComponents = {
 	},
 
 	save: function (actor, item, effect, component, cls) {
-		Prepare.calculateSave(actor.data, item, component, cls);
+		Prepare.calculateDC(actor.data, item, component, cls, Filters.appliesTo.saveDCs);
 	},
 
 	resource: function (actor, item, effect, component) {

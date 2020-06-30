@@ -149,7 +149,7 @@ export const Rolls = {
 		}
 	},
 
-	applySave: async function (evt) {
+	applySave: async function (evt, collection) {
 		const autoFail = evt.ctrlKey;
 		const idx = Number(evt.currentTarget.dataset.index);
 		const msgID = evt.currentTarget.closest('[data-message-id]').dataset.messageId;
@@ -164,11 +164,30 @@ export const Rolls = {
 		const apply = game.user.targets.size > 0;
 		const flags = msg.data.flags.obsidian;
 		const tokens = apply ? Array.from(game.user.targets) : canvas.tokens.controlled;
-		const save = flags.saves[idx];
+		const component = flags[collection][idx];
 		const rolls = [];
 
 		if (!autoFail) {
-			rolls.push(...tokens.map(t => Rolls.savingThrow(t.actor, save.ability)));
+			if (collection === 'saves') {
+				rolls.push(...tokens.map(t => Rolls.savingThrow(t.actor, component.ability)));
+			} else if (OBSIDIAN.notDefinedOrEmpty(component.skill)) {
+				rolls.push(...tokens.map(t =>
+					Rolls.abilityCheck(
+						t.actor, component.ability, false, [],
+						Effect.sheetGlobalRollMod(t.actor))));
+			} else {
+				rolls.push(...tokens.map(t => {
+					const skill = Rolls.findSkill(t.actor, component.component);
+					let id = component.component.skill;
+
+					if (OBSIDIAN.notDefinedOrEmpty(id) || id === 'custom') {
+						id = null;
+					}
+
+					return Rolls.skillCheck(t.actor, skill, id);
+				}));
+			}
+
 			Rolls.sendMessages(tokens.map((t, i) => [rolls[i], t.actor]));
 		}
 
@@ -203,13 +222,13 @@ export const Rolls = {
 			let failed = true;
 			if (!autoFail) {
 				const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
-				failed = roll < save.dc;
+				failed = roll < component.dc;
 			}
 
 			if (failed) {
 				targets.push(token);
 			} else {
-				if (save.save === 'none') {
+				if (component.save === 'none') {
 					continue;
 				}
 
@@ -273,24 +292,32 @@ export const Rolls = {
 		return annotated[0];
 	},
 
-	compileSave: function (actor, save) {
+	compileDC: function (actor, component) {
 		const result = {
-			effect: save.effect,
-			ability: save.target,
-			save: save.save,
-			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${save.target}`)
+			component: component,
+			effect: component.effect,
+			ability: component.target,
+			save: component.save,
+			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${component.target}`)
 		};
 
-		if (save.calc === 'formula') {
+		if (!OBSIDIAN.notDefinedOrEmpty(component.skill)) {
+			result.skill =
+				component.skill === 'custom'
+					? component.custom
+					: game.i18n.localize(`OBSIDIAN.Skill-${component.skill}`);
+		}
+
+		if (component.calc === 'formula') {
 			let bonus = 8;
-			if (!OBSIDIAN.notDefinedOrEmpty(save.bonus)) {
-				bonus = Number(save.bonus);
+			if (!OBSIDIAN.notDefinedOrEmpty(component.bonus)) {
+				bonus = Number(component.bonus);
 			}
 
-			result.dc = save.value;
-			result.breakdown = bonus + Rolls.compileBreakdown(save.rollParts);
+			result.dc = component.value;
+			result.breakdown = bonus + Rolls.compileBreakdown(component.rollParts);
 		} else {
-			result.dc = save.fixed;
+			result.dc = component.fixed;
 			result.breakdown = `${result.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
 		}
 
@@ -604,6 +631,7 @@ export const Rolls = {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const saves = effect.components.filter(c => c.type === 'save');
+		const checks = effect.components.filter(c => c.type === 'check');
 		const expr = effect.components.filter(c => c.type === 'expression');
 		const desc = effect.components.find(c => c.type === 'description');
 		const targets =
@@ -668,7 +696,11 @@ export const Rolls = {
 		}
 
 		if (saves.length) {
-			results[0].saves = saves.map(save => Rolls.compileSave(actor, save));
+			results[0].saves = saves.map(save => Rolls.compileDC(actor, save));
+		}
+
+		if (checks.length) {
+			results[0].checks = checks.map(check => Rolls.compileDC(actor, check));
 		}
 
 		if (expr.length) {
@@ -826,6 +858,24 @@ export const Rolls = {
 				name: item.name,
 				isFirst: i === 0
 			}));
+	},
+
+	findSkill: function (actor, skill) {
+		const skills = actor.data.flags.obsidian.skills;
+		if (skill.skill !== 'custom') {
+			return skills[skill.skill];
+		}
+
+		let found = skills.custom.find(skl =>
+			skl.label.toLocaleLowerCase() === skill.custom.toLocaleLowerCase());
+
+		if (found) {
+			return found;
+		}
+
+		return skills.tools.find(tool =>
+			tool.label.toLocaleLowerCase() === skill.custom.toLocaleLowerCase());
+
 	},
 
 	placeTemplate: function (evt) {

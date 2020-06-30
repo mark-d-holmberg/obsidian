@@ -1,0 +1,71 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.AbilityCheck'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Calculation'}}
+				<select name="{{prefix}}.calc" data-selector="{{prefix}}.calc">
+					{{#select calc}}
+						{{#each @root.ObsidianRules.RESOURCE_USES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.ResourceUses-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" name="{{prefix}}.fixed" value="{{fixed}}"
+			       data-selector-parent="{{prefix}}.calc" data-show="fixed">
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+	     data-selector-parent="{{prefix}}.calc" data-show="formula">
+		<div class="obsidian-fullwidth">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       placeholder="0" name="{{prefix}}.bonus" value="{{bonus}}">
+			<span class="obsidian-binary-operator">&plus;</span>
+			<select name="{{prefix}}.prof" data-dtype="Number">
+				{{#select prof}}
+					<option value="">&mdash;</option>
+					{{#each @root.ObsidianRules.PLUS_PROF}}
+						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.PlusProf-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<span class="obsidian-binary-operator">&plus;</span>
+			<select name="{{prefix}}.ability">
+				{{#select ability}}
+					<option value="">&mdash;</option>
+					{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Check'}}
+				<select name="{{prefix}}.target">
+					{{#select target}}
+						{{#each @root.ObsidianRules.ABILITIES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<select name="{{prefix}}.skill" data-selector="{{prefix}}.skill">
+				{{#select skill}}
+					<option value="">&mdash;</option>
+					{{#each @root.ObsidianRules.SKILLS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Skill-' this}}</option>
+					{{/each}}
+					<option value="custom">{{localize 'OBSIDIAN.Custom'}}</option>
+				{{/select}}
+			</select>
+			<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.custom"
+			       value="{{custom}}" placeholder="{{localize 'OBSIDIAN.Custom'}}" data-show="custom"
+			       data-selector-parent="{{prefix}}.skill">
+		</div>
+	</div>
+</fieldset>

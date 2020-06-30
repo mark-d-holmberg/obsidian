@@ -78,6 +78,27 @@
 		{{/each}}
 	</section>
 	{{/if}}
+	{{#if message.flags.obsidian.checks}}
+	<section class="obsidian-msg-save">
+		{{#each message.flags.obsidian.checks}}
+		<div>
+			<div class="obsidian-msg-save-dc">
+				{{localize 'OBSIDIAN.DC'}}
+				<div class="obsidian-msg-roll-box">{{dc}}</div>
+				<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
+				{{target}} {{localize 'OBSIDIAN.Check'}}
+				{{#if (is-gm)}}
+					<div title="{{localize 'OBSIDIAN.Apply'}}" class="obsidian-apply-check"
+					     data-index="{{@index}}">
+						<i class="fas fa-check"></i>
+					</div>
+				{{/if}}
+			</div>
+			<div class="obsidian-msg-save-effect">{{skill}}</div>
+		</div>
+		{{/each}}
+	</section>
+	{{/if}}
 	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe) message.flags.obsidian.start)
 			      (or user.isGM (eq user.id author.id)))}}
 	<section class="obsidian-msg-btn-row">

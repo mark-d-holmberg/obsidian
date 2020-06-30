@@ -59,6 +59,23 @@ export const Components = {
 			tray: ['AddBonus', 'RemoveBonus']
 		}
 	},
+	check: {
+		data: {
+			type: 'check',
+			calc: 'fixed',
+			fixed: 0,
+			bonus: 8,
+			prof: 1,
+			ability: '',
+			target: 'str',
+			skill: '',
+			custom: ''
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'AbilityCheck'
+		}
+	},
 	consume: {
 		data: {
 			type: 'consume',
@@ -212,7 +229,7 @@ export const Components = {
 			type: 'save',
 			calc: 'fixed',
 			fixed: 0,
-			bonus: 0,
+			bonus: 8,
 			prof: 1,
 			ability: '',
 			target: 'con',

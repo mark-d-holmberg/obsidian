@@ -33,7 +33,8 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/applied.html',
 		'modules/obsidian/html/components/effects/defense.html',
 		'modules/obsidian/html/components/effects/setter.html',
-		'modules/obsidian/html/components/effects/description.html'
+		'modules/obsidian/html/components/effects/description.html',
+		'modules/obsidian/html/components/effects/check.html'
 	]);
 };
 

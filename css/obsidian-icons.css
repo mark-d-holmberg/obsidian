@@ -272,6 +272,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/description.svg');
 }
 
+.obsidian-icon-comp-check {
+	background-image: url('../img/check.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }
