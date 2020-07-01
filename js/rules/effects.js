@@ -147,7 +147,13 @@ function formatFilter (filter) {
 				if (filter.multi === 'any') {
 					parts.push(localize('OBSIDIAN.ToolChecks'));
 				} else if (filter.collection.length) {
-					parts.push(...filter.collection.map(item => item.label));
+					parts.push(...filter.collection.map(item => {
+						if (item.label) {
+							return item.label;
+						} else {
+							return localize(`OBSIDIAN.ToolProf-${item.key}`);
+						}
+					}));
 					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
 				}
 			} else if (filter.check === 'init') {

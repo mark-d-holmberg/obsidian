@@ -315,14 +315,15 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 						&& !Number.isNumeric(prop)
 						&& component.collection[prop])
 					{
-						if (prop === 'tools' || prop === 'custom') {
+						const lookup = `${component.check}s`;
+						if (prop === 'custom') {
 							collection.push(
 								...Object.entries(component.collection[prop])
 								.filter(([_, v]) => v)
 								.map(([k, _]) => {
 									return {
 										key: `${prop}.${k}`,
-										label: this.actor.data.flags.obsidian.skills[prop][k].label
+										label: this.actor.data.flags.obsidian[lookup][prop][k].label
 									};
 								}));
 						} else {

@@ -202,6 +202,10 @@ export const Migrate = {
 			Migrate.v7.convertItemDefenses(data);
 		}
 
+		if (data.flags.obsidian.version < 10 && source !== 'core') {
+			Migrate.v9.convertToolFilters(data);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},

@@ -406,14 +406,7 @@ export const ObsidianItems = {
 			return;
 		}
 
-		const tools = actor.data.flags.obsidian.tools;
-		const allTools =
-			Object.entries(tools)
-				.filter(([p,]) => p !== 'custom')
-				.map(([, v]) => v)
-				.concat(tools.custom);
-
-		const found = allTools.find(t =>
+		const found = Object.values(actor.data.obsidian.tools).find(t =>
 			t.label.toLocaleLowerCase() === tool.name.toLocaleLowerCase());
 
 		if (found) {

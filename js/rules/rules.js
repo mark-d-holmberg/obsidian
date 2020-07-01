@@ -177,6 +177,12 @@ Rules.PROF_TOOLS_INSTRUMENT = [
 	'bag', 'drm', 'dul', 'flt', 'lut', 'lyr', 'hrn', 'pflt', 'swm', 'viol'
 ];
 
+Rules.ALL_TOOLS =
+	Rules.PROF_TOOLS
+		.concat(Rules.PROF_TOOLS_GAME)
+		.concat(Rules.PROF_TOOLS_ARTISAN)
+		.concat(Rules.PROF_TOOLS_INSTRUMENT);
+
 Rules.PLUS_PROF = {
 	0.5: 'half',
 	1: 'prof',

@@ -2,6 +2,7 @@ import {OBSIDIAN} from '../global.js';
 import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
+import {Rules} from './rules.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -738,10 +739,16 @@ export const Prepare = {
 
 	tools: function (actorData, data, flags) {
 		actorData.obsidian.tools = {};
-		for (let [id, tool] of
-			Object.entries(flags.tools).filter(([p,]) => p !== 'custom')
-				.concat(Object.entries(flags.tools.custom)))
-		{
+		const tools = Rules.ALL_TOOLS.map(t => {
+			const tool = mergeObject(
+				{ability: 'str', bonus: 0, value: 0, label: '', enabled: false},
+				flags.tools[t] || {});
+
+			flags.tools[t] = tool;
+			return [t, tool];
+		});
+
+		for (const [id, tool] of tools.concat(Object.entries(flags.tools.custom))) {
 			const custom = !isNaN(Number(id));
 			if (!custom) {
 				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf-${id}`);
@@ -757,7 +764,7 @@ export const Prepare = {
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
 				const bonuses =
 					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.skillChecks(key, tool.ability));
+						Filters.appliesTo.toolChecks(key, tool.ability));
 
 				if (bonuses.length) {
 					tool.rollParts.push(

@@ -4,8 +4,8 @@
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_TOOLS as |tool|}}
 				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
-					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
-					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' key)}}
 				{{/with}}
 			{{/each}}
 		</div>
@@ -15,8 +15,8 @@
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_TOOLS_GAME as |tool|}}
 				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
-					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
-					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' key)}}
 				{{/with}}
 			{{/each}}
 		</div>
@@ -26,8 +26,8 @@
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_TOOLS_INSTRUMENT as |tool|}}
 				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
-					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
-					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' key)}}
 				{{/with}}
 			{{/each}}
 		</div>
@@ -37,13 +37,13 @@
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_TOOLS_ARTISAN as |tool|}}
 				{{#with (lookup ../actor.flags.obsidian.tools tool)}}
-					{{fancy-checkbox 'flags.obsidian.tools' ../tool 'enabled' checked=enabled
-					                 content=(add 'OBSIDIAN.ToolProf-' ../tool)}}
+					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
+					                 content=(add 'OBSIDIAN.ToolProf-' key)}}
 				{{/with}}
 			{{/each}}
 		</div>
 	</fieldset>
-	<fieldset>
+	<fieldset style="margin-bottom: 10px;">
 		<legend>
 			{{localize 'OBSIDIAN.Custom'}}
 			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-tool">
@@ -68,7 +68,7 @@
 					        style="text-transform: uppercase;">
 						{{#select (lc tool.ability)}}
 							{{#each @root.ObsidianRules.ABILITIES}}
-								<option value="{{@key}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</option>
+								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
@@ -80,7 +80,7 @@
 					       placeholder="0" value="{{tool.bonus}}" data-dtype="Number"
 					       name="flags.obsidian.tools.custom.{{id}}.bonus">
 				</div>
-				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tool">
 					{{localize 'OBSIDIAN.Remove'}}
 				</button>
 			</div>
