@@ -945,5 +945,9 @@
 	"OBSIDIAN.MaxRoll": "Maximise rolls",
 	"OBSIDIAN.ProfBonusLC": "your proficiency bonus",
 	"OBSIDIAN.AddDescription": "Add Description",
-	"OBSIDIAN.EditDescription": "Edit Description"
+	"OBSIDIAN.EditDescription": "Edit Description",
+	"OBSIDIAN.RollOnTable": "Roll on Table",
+	"OBSIDIAN.RollableTable": "Rollable Table",
+	"OBSIDIAN.DropTablesHere": "Drop Tables Here",
+	"OBSIDIAN.ResetAfterRoll": "Reset after roll"
 }

@@ -1,0 +1,24 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.RollableTable'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.Rolls'}}
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" placeholder="1" name="{{prefix}}.nrolls" value="{{nrolls}}">
+			</label>
+			{{fancy-checkbox prefix 'reset' content='OBSIDIAN.ResetAfterRoll' checked=reset}}
+		</div>
+	</div>
+	<div class="obsidian-item-drop obsidian-table-drop{{#unless tables.length}} obsidian-empty{{/unless}}">
+		{{#unless tables.length}}
+			<div class="obsidian-item-drop-empty">{{localize 'OBSIDIAN.DropTablesHere'}}</div>
+		{{/unless}}
+		{{#each tables}}
+			<div class="obsidian-item-drop-pill" data-id="{{_id}}">
+				<div class="obsidian-item-drop-pill-body obsidian-roll-table-body">{{name}}</div>
+				<div class="obsidian-item-drop-pill-rm obsidian-rm-roll-table">&times;</div>
+			</div>
+		{{/each}}
+	</div>
+</fieldset>

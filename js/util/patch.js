@@ -57,6 +57,37 @@ export function runPatches () {
 		return this;
 	};
 
+	RollTableConfig.prototype._updateObject = (function () {
+		const cached = RollTableConfig.prototype._updateObject;
+		return async function (evt, formData) {
+			if (getProperty(this.entity, 'data.flags.obsidian.isEmbedded')
+				&& this.entity.options.parentItem
+				&& this.entity.options.parentComponent)
+			{
+				const parentItem = this.entity.options.parentItem;
+				const newData =
+					mergeObject(
+						this.entity.data,
+						expandObject(OBSIDIAN.updateArrays(this.entity.data, formData)),
+						{inplace: false});
+
+				const effects = duplicate(parentItem.data.flags.obsidian.effects);
+				const component =
+					effects.flatMap(e => e.components)
+						.find(c => c.uuid === this.entity.options.parentComponent);
+
+				const idx = component.tables.findIndex(table => table._id === this.entity.data._id);
+				component.tables[idx] = newData;
+
+				await parentItem.update({'flags.obsidian.effects': effects});
+				this.entity.data = newData;
+				this.render(false);
+			} else {
+				return cached.apply(this, arguments);
+			}
+		};
+	})();
+
 	patchChatMessage();
 }
 

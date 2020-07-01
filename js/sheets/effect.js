@@ -5,6 +5,7 @@ import {Schema} from '../module/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 import {Rules} from '../rules/rules.js';
 import {ObsidianStandaloneDialog} from '../dialogs/standalone.js';
+import {ObsidianActor} from '../module/actor.js';
 
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
 const FILTER_SELECTIONS = {
@@ -123,6 +124,11 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-spell-drop').each((i, el) => el.ondrop = this._onDropSpell.bind(this));
 		html.find('.obsidian-rm-provide-spell').click(this._onRemoveSpell.bind(this));
 		html.find('.obsidian-provide-spell-body').click(this._onEditSpell.bind(this));
+		html.find('.obsidian-table-drop').on('dragover', evt => evt.preventDefault());
+		html.find('.obsidian-table-drop').each((i, el) => el.ondrop = this._onDropTable.bind(this));
+		html.find('.obsidian-rm-roll-table').click(this._onRemoveTable.bind(this));
+		html.find('.obsidian-roll-table-body')
+			.click(evt => this._openEmbeddedEntity(evt, 'tables', 'RollTable'));
 		html.find('summary').click(this._saveCategoryStates.bind(this));
 
 		this._onCheckBoxClicked();
@@ -391,6 +397,31 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		return selections;
 	}
 
+	_openEmbeddedEntity (evt, collection, entity) {
+		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
+		const fieldset = pill.closest('fieldset');
+		const component =
+			this.item.data.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.find(c => c.uuid === fieldset.dataset.uuid);
+
+		if (!component) {
+			return;
+		}
+
+		const data = component[collection].find(i => i._id === pill.dataset.id);
+		if (!data) {
+			return;
+		}
+
+		const item = new CONFIG[entity].entityClass(data, {
+			parentComponent: component.uuid,
+			parentItem: this.item
+		});
+
+		item.sheet.render(true);
+	}
+
 	/**
 	 * @private
 	 */
@@ -502,59 +533,19 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	async _onDropSpell (evt) {
-		evt.preventDefault();
-		let data;
-
-		try {
-			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
-		} catch (ignored) {}
-
-		if (!data || !data.pack) {
-			return false;
-		}
-
-		const pack = game.packs.find(pack => pack.collection === data.pack);
-		if (!pack) {
-			return false;
-		}
-
-		const item = await pack.getEntity(data.id);
+		const [effects, component, item] = await this._processDrop(evt);
 		if (!item || item.type !== 'spell') {
 			return false;
 		}
 
-		const effects = duplicate(this.item.data.flags.obsidian.effects);
-		const fieldset = evt.target.closest('fieldset');
-		const effectDiv = fieldset.closest('.obsidian-effect');
-		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
-
-		if (!effect) {
-			return false;
-		}
-
-		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
-		if (!component) {
-			return false;
-		}
-
-		if (!item.data.flags) {
-			item.data.flags = {};
-		}
-
-		if (!item.data.flags.obsidian) {
-			item.data.flags.obsidian = {};
-		}
-
-		item.data.flags.obsidian.isEmbedded = true;
-		item.data.flags.obsidian.parentComponent = component.uuid;
-		item.data.flags.obsidian.source = {
+		item.flags.obsidian.source = {
 			type: 'item',
 			item: this.item.data._id,
 			display: this.item.data.name
 		};
 
 		if (this.actor) {
-			const created = await this.actor.createEmbeddedEntity('OwnedItem', item.data);
+			const created = await this.actor.createEmbeddedEntity('OwnedItem', item);
 			if (this.actor.isToken) {
 				// For some reason, if this is a token, we get the entire token
 				// back from createEmbeddedEntity instead of the actual entity
@@ -567,9 +558,22 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				component.spells.push(created._id);
 			}
 		} else {
-			component.spells.push(item.data);
+			component.spells.push(item);
 		}
 
+		this.item.update({'flags.obsidian.effects': effects});
+	}
+
+	/**
+	 * @private
+	 */
+	async _onDropTable (evt) {
+		const [effects, component, item] = await this._processDrop(evt, 'RollTable');
+		if (!item) {
+			return false;
+		}
+
+		component.tables.push(item);
 		this.item.update({'flags.obsidian.effects': effects});
 	}
 
@@ -588,28 +592,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			item.sheet.render(true);
 		} else {
-			const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
-			const fieldset = pill.closest('fieldset');
-			const component =
-				this.item.data.flags.obsidian.effects
-					.flatMap(e => e.components)
-					.find(c => c.uuid === fieldset.dataset.uuid);
-
-			if (!component) {
-				return;
-			}
-
-			const spell = component.spells.find(spell => spell._id === pill.dataset.id);
-			if (!spell) {
-				return;
-			}
-
-			const item = new CONFIG.Item.entityClass(spell, {
-				parentComponent: component.uuid,
-				parentItem: this.item
-			});
-
-			item.sheet.render(true);
+			this._openEmbeddedEntity(evt, 'spells', 'Item');
 		}
 	}
 
@@ -692,29 +675,102 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	async _onRemoveSpell (evt) {
+		let extractID;
+		await this._removeEmbeddedEntity(evt, (component, id) => {
+			extractID = id;
+			if (this.actor) {
+				component.spells = component.spells.filter(spell => spell !== id);
+			} else {
+				component.spells = component.spells.filter(spell => spell._id !== id);
+			}
+		});
+
+		if (this.actor) {
+			this.actor.deleteEmbeddedEntity('OwnedItem', extractID);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onRemoveTable (evt) {
+		return this._removeEmbeddedEntity(evt, (component, id) =>
+			component.tables = component.tables.filter(table => table._id !== id));
+	}
+
+	_preventSubmit () {
+		clearTimeout(this._submitTimeout);
+		this._interacting = true;
+	}
+
+	async _processDrop (evt, entity = 'Item') {
+		evt.preventDefault();
+		let data;
+
+		try {
+			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
+		} catch (ignored) {}
+
+		if (!data || data.type !== entity) {
+			return [];
+		}
+
+		let itemData;
+		if (data.pack) {
+			const pack = game.packs.get(data.pack);
+			if (!pack) {
+				return [];
+			}
+
+			itemData = await pack.getEntry(data.id);
+		} else {
+			const item = CONFIG[entity].collection.instance.get(data.id);
+			if (item) {
+				itemData = duplicate(item.data);
+			}
+		}
+
+		if (!itemData) {
+			return [];
+		}
+
+		itemData = ObsidianActor.duplicateItem(itemData);
+		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const fieldset = evt.target.closest('fieldset');
+		const effectDiv = fieldset.closest('.obsidian-effect');
+		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
+
+		if (!effect) {
+			return [];
+		}
+
+		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
+		if (!component) {
+			return [];
+		}
+
+		if (!itemData.flags) {
+			itemData.flags = {};
+		}
+
+		if (!itemData.flags.obsidian) {
+			itemData.flags.obsidian = {};
+		}
+
+		itemData.flags.obsidian.isEmbedded = true;
+		itemData.flags.obsidian.parentComponent = component.uuid;
+		return [effects, component, itemData];
+	}
+
+	_removeEmbeddedEntity (evt, remove) {
 		const effects = duplicate(this.item.data.flags.obsidian.effects);
 		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
 		const fieldset = pill.closest('fieldset');
 		const effectDiv = fieldset.closest('.obsidian-effect');
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
-
-		if (this.actor) {
-			component.spells = component.spells.filter(spell => spell !== pill.dataset.id);
-		} else {
-			component.spells = component.spells.filter(spell => spell._id !== pill.dataset.id);
-		}
-
-		await this.item.update({'flags.obsidian.effects': effects});
-
-		if (this.actor) {
-			this.actor.deleteEmbeddedEntity('OwnedItem', pill.dataset.id);
-		}
-	}
-
-	_preventSubmit () {
-		clearTimeout(this._submitTimeout);
-		this._interacting = true;
+		remove(component, pill.dataset.id);
+		return this.item.update({'flags.obsidian.effects': effects});
 	}
 
 	/**

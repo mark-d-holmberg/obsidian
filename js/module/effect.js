@@ -224,6 +224,18 @@ export const Components = {
 			tray: ['RollModifier', 'RollModifier']
 		}
 	},
+	'roll-table': {
+		data: {
+			type: 'roll-table',
+			tables: [],
+			nrolls: 1,
+			reset: true
+		},
+		metadata: {
+			category: 'rolls',
+			tray: 'RollOnTable'
+		}
+	},
 	save: {
 		data: {
 			type: 'save',
@@ -316,7 +328,7 @@ export const Effect = {
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([
 			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce',
-			'description'
+			'description', 'roll-table'
 		])
 	},
 
