@@ -128,6 +128,7 @@ export const ObsidianItems = {
 		const resources = effect.components.filter(c => c.type === 'resource');
 		const consumers = effect.components.filter(c => c.type === 'consume');
 		const producers = effect.components.filter(c => c.type === 'produce');
+		const tables = effect.components.filter(c => c.type === 'roll-table');
 		const scaling = item.obsidian.collection.scaling.find(e =>
 			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
 
@@ -255,6 +256,20 @@ export const ObsidianItems = {
 			if (ammo) {
 				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id, suppressCard: suppressCard});
 			}
+		}
+
+		if (tables.length) {
+			tables.forEach(component => {
+				const RollTable = CONFIG.RollTable.entityClass;
+				component.tables.map(table => new RollTable(table, {actor, item}))
+					.forEach(table => {
+						table.drawMany(component.nrolls).then(() => {
+							if (component.reset) {
+								table.reset();
+							}
+						});
+					});
+			});
 		}
 	},
 

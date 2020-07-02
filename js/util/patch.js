@@ -88,6 +88,35 @@ export function runPatches () {
 		};
 	})();
 
+	RollTable.prototype.reset = (function () {
+		const cached = RollTable.prototype.reset;
+		return function () {
+			const flags = this.data.flags?.obsidian;
+			if (flags?.isEmbedded
+				&& flags?.parentComponent
+				&& this.options.actor
+				&& this.options.item)
+			{
+				const results = duplicate(this.data.results);
+				results.forEach(r => r.drawn = false);
+
+				const effects = duplicate(this.options.item.flags.obsidian.effects);
+				const component =
+					effects.flatMap(e => e.components).find(c => c.uuid === flags.parentComponent);
+
+				const idx = component.tables.findIndex(table => table._id === this.data._id);
+				component.tables[idx].results = results;
+
+				this.options.actor.updateEmbeddedEntity('OwnedItem', {
+					_id: this.options.item._id,
+					'flags.obsidian.effects': effects
+				});
+			} else {
+				return cached.apply(this, arguments);
+			}
+		};
+	})();
+
 	patchChatMessage();
 }
 
