@@ -398,7 +398,7 @@ export const Migrate = {
 				}
 
 				return [concrete, custom];
-			});
+			}, [[], []]);
 
 			concrete.forEach(prof => {
 				if (tools[prof]) {
