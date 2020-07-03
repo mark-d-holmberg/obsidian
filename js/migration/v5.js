@@ -8,7 +8,7 @@ export const v5 = {
 
 		if (data.flags.obsidian.active === 'passive') {
 			data.data.activation.type = 'none';
-		} else {
+		} else if (data.flags.obsidian.active) {
 			data.data.activation.type = CONVERT.activation[data.flags.obsidian.action];
 		}
 	},
