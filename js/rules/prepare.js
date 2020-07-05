@@ -645,9 +645,7 @@ export const Prepare = {
 			save.save =
 				Math.floor(flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-			if (flags.saves[id].rollParts.find(p => p.proficiency).value > 0
-				&& original && original.save > save.save)
-			{
+			if ((flags.saves[id].proficiency || 0) > 0 && original && original.save > save.save) {
 				save.save = original.save;
 			}
 		}
