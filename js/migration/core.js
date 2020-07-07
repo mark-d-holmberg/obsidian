@@ -299,7 +299,7 @@ export const core = {
 		const defenses = data.flags.obsidian.defenses;
 		data.data.traits.ci.value.forEach(condition => {
 			const key = CONVERT.defs.conditions.get(condition.toLowerCase());
-			defenses.conditions.push(key || condition);
+			defenses.conditions.push({level: 'imm', condition: key || condition});
 		});
 
 		[['di', 'imm'], ['dr', 'res'], ['dv', 'vuln']].forEach(([key, level]) => {
