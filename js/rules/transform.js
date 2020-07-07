@@ -6,7 +6,12 @@ export function addTransformHook () {
 
 function transform (original, target, data) {
 	if (data.flags.dnd5e.transformOptions.mergeSkills) {
-		for (const [id, skill] of Object.entries(original.data.data.skills)) {
+		let originalSkills = original.data.data.skills;
+		if (original.data.obsidian?.skills) {
+			originalSkills = original.data.obsidian.skills;
+		}
+
+		for (const [id, skill] of Object.entries(originalSkills)) {
 			data.flags.obsidian.skills[id].value =
 				Math.max(skill.value, target.data.data.skills[id].value);
 		}
@@ -27,7 +32,7 @@ function transform (original, target, data) {
 
 	const hdFormula = target.data.data.attributes.hp.formula;
 	if (!OBSIDIAN.notDefinedOrEmpty(hdFormula) && hdFormula.includes('d')) {
-		const [n, d] = hdFormula.split('d');
+		const [, n, d] = hdFormula.match(/(\d+)d(\d+)/);
 		const hd = data.flags.obsidian.attributes.hd;
 		data.items.filter(i => i.type === 'class')
 			.concat({data: {hitDice: `d${d}`}})

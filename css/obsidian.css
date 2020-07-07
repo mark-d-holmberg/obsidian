@@ -30,6 +30,10 @@
 	min-height: 625px;
 }
 
+.dnd5e.sheet.actor.npc.obsidian-window {
+	min-width: 500px;
+}
+
 .obsidian button,
 .obsidian-msg button,
 .dialog.obsidian-window button.dialog-button {
