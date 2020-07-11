@@ -112,11 +112,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			let cat;
 			if (item.type === 'feat') {
 				cat = item.data.activation.type;
-				if (!cat.length) {
-					cat = 'none';
-				}
-
-				if (cat === 'special') {
+				if (cat === 'special' || cat === 'bonus' || !cat.length) {
 					cat = 'none';
 				}
 			} else if (item.type === 'weapon' && item.data.equipped) {
