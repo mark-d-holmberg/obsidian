@@ -38,7 +38,7 @@ const prepareComponents = {
 	},
 
 	check: function (actor, item, effect, component, cls) {
-		let pred = () => false;
+		let pred = () => () => false;
 		if (component.calc === 'formula' && component.ability === 'spell') {
 			pred = () => Filters.appliesTo.spellDCs;
 		}
