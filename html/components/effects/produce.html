@@ -5,14 +5,14 @@
 			<label class="obsidian-inline">
 				{{localize 'OBSIDIAN.Resource'}}
 				<select name="{{prefix}}.target" data-selector="{{prefix}}.target">
-					<option value="this-effect">{{localize OBSIDIAN.ConsumeTarget-this-effect}}'</option>
-					<option value="this-item">{{localize OBSIDIAN.ConsumeTarget-this-item}}</option>
+					<option value="this-effect">{{localize 'OBSIDIAN.ConsumeTarget-this-effect'}}</option>
+					<option value="this-item">{{localize 'OBSIDIAN.ConsumeTarget-this-item'}}</option>
 					{{#if @root.actor}}
-					<option value="item">{{localize OBSIDIAN.ConsumeTarget-item}}</option>
-					<option value="feat">{{localize OBSIDIAN.ConsumeTarget-feat}}</option>
+					<option value="item">{{localize 'OBSIDIAN.ConsumeTarget-item'}}</option>
+					<option value="feat">{{localize 'OBSIDIAN.ConsumeTarget-feat'}}</option>
 					{{/if}}
-					<option value="spell">{{localize OBSIDIAN.ConsumeTarget-spell}}</option>
-					<option value="qty">{{localize OBSIDIAN.ConsumeTarget-qty}}</option>
+					<option value="spell">{{localize 'OBSIDIAN.ConsumeTarget-spell'}}</option>
+					<option value="qty">{{localize 'OBSIDIAN.ConsumeTarget-qty'}}</option>
 				</select>
 			</label>
 			{{#if actor}}
