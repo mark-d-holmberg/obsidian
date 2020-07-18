@@ -182,38 +182,41 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 						this.actor.data.obsidian.itemsByID.get(id)));
 		}
 
-		data.item.flags?.obsidian?.effects
-			.flatMap(e => e.components)
-			.filter(c => c.type === 'consume' || c.type === 'produce')
-			.forEach(component => {
-				let item = data.item;
-				if (data.actor) {
-					item =
-						data.actor.data.obsidian.itemsByID.get(
-							component.target === 'feat' ? component.featID : component.itemID);
-				}
+		if (data.item.flags?.obsidian?.effects?.length) {
+			data.item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'consume' || c.type === 'produce')
+				.forEach(component => {
+					let item = data.item;
+					if (data.actor) {
+						item =
+							data.actor.data.obsidian.itemsByID.get(
+								component.target === 'feat' ? component.featID : component.itemID);
+					}
 
-				if (item) {
-					component.itemResourceComponents =
-						item.flags.obsidian.effects
-							.flatMap(e => e.components)
-							.filter(c => c.type === 'resource');
-				}
+					if (item) {
+						component.itemResourceComponents =
+							item.flags.obsidian.effects
+								.flatMap(e => e.components)
+								.filter(c => c.type === 'resource');
+					}
 
-				if (!data.actor) {
-					component.itemResourceComponents.forEach(c =>
-						c.label = c.name.length ? c.name : game.i18n.localize('OBSIDIAN.Unnamed'));
-				}
-			});
+					if (!data.actor) {
+						component.itemResourceComponents.forEach(c =>
+							c.label =
+								c.name.length ? c.name : game.i18n.localize('OBSIDIAN.Unnamed'));
+					}
+				});
 
-		data.item.flags?.obsidian?.effects
-			.flatMap(e => e.components)
-			.filter(c => c.type === 'filter')
-			.forEach(component => {
-				component.isMulti = Effect.determineMulti(component);
-				component.isCollection = component.isMulti && component.multi === 'some';
-				component.availableSelections = this._generateFilterSelections(component);
-			});
+			data.item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'filter')
+				.forEach(component => {
+					component.isMulti = Effect.determineMulti(component);
+					component.isCollection = component.isMulti && component.multi === 'some';
+					component.availableSelections = this._generateFilterSelections(component);
+				});
+		}
 
 		data.usesAbilities = {};
 		Rules.ABILITIES.forEach(abl =>
@@ -510,7 +513,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			magic.attr('style', '');
 		}
 
-		if (this.item.data.flags.obsidian.type === 'ranged') {
+		if (this.item.data.flags.obsidian?.type === 'ranged') {
 			range.removeClass('obsidian-hidden');
 			magic.attr('style', '');
 		}
