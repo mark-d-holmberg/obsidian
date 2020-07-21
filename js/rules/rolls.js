@@ -655,7 +655,10 @@ export const Rolls = {
 			scaledAmount = Math.max(0, options.spellLevel - item.data.level);
 		}
 
-		const scaling = Effect.getScaling(actor, effect, scaledAmount);
+		const scaling =
+			Effect.getScaling(actor, effect,
+				options.consumed || options.spellLevel || scaledAmount);
+
 		if ((scaledAmount && scaling) || effect.eagerScaling) {
 			damage =
 				Effect.scaleDamage(actor, effect.eagerScaling || scaling, scaledAmount, damage);
