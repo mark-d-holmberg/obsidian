@@ -171,7 +171,8 @@ function formatFilter (filter) {
 			if (filter.multi === 'any') {
 				parts.push(localize('OBSIDIAN.DamageRolls'));
 			} else if (filter.collection.length && filter.dmg === 'damage') {
-				parts.push(...filter.collection.map(item => item.label));
+				parts.push(...filter.collection.map(item =>
+					localize(`OBSIDIAN.Damage-${item.key}`)));
 				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DamageRolls')}`;
 			} else if (filter.collection.length && filter.dmg === 'attack') {
 				weaponAttacks(filter, parts);

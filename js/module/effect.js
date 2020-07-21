@@ -410,7 +410,7 @@ export const Effect = {
 	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),
 
 	filterDamage: (actorData, filter, dmg) => {
-		let attackPred = filter => !Filters.damage.isAttack(filter);
+		let attackPred = filter => Filters.damage.isAttack(filter) && filter.multi === 'any';
 		const parentEffect = actorData.obsidian.effects.get(dmg.parentEffect);
 
 		if (parentEffect) {
@@ -429,6 +429,7 @@ export const Effect = {
 			damagePred = filter =>
 				Filters.damage.isDamage(filter) && Filters.inCollection(filter, dmg.damage);
 		}
+
 
 		return filter(filter =>
 			Filters.isDamage(filter) && (attackPred(filter) || damagePred(filter)));
