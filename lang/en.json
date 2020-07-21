@@ -949,5 +949,6 @@
 	"OBSIDIAN.RollOnTable": "Roll on Table",
 	"OBSIDIAN.RollableTable": "Rollable Table",
 	"OBSIDIAN.DropTablesHere": "Drop Tables Here",
-	"OBSIDIAN.ResetAfterRoll": "Reset after roll"
+	"OBSIDIAN.ResetAfterRoll": "Reset after roll",
+	"OBSIDIAN.ActivatedBy": "Activated By"
 }

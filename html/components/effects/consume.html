@@ -17,7 +17,7 @@
 	        {{/select}}
 	      </select>
 	    </label>
-	    {{#if actor}}
+	    {{#if @root.actor}}
       <select name="{{prefix}}.itemID" data-selector-parent="{{prefix}}.target" data-show="item">
         {{#select itemID}}
 	        {{#each @root.itemsWithResources}}
