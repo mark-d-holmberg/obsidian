@@ -30,11 +30,16 @@ export function prepareInventory (actorData) {
 
 		if (item.type === 'backpack') {
 			item.flags.obsidian.carriedWeight = 0;
-			if (!item.data.capacity.weightless && item.flags.obsidian.currency) {
-				item.flags.obsidian.carriedWeight +=
+			if (item.flags.obsidian.currency) {
+				const currencyWeight =
 					Object.values(item.flags.obsidian.currency)
 						.reduce((acc, currency) => acc + currency, 0)
 					* OBSIDIAN.Rules.COIN_WEIGHT;
+
+				item.flags.obsidian.carriedWeight += currencyWeight;
+				if (!item.data.capacity.weightless) {
+					inventory.weight += currencyWeight;
+				}
 			}
 
 			if (!item.flags.obsidian.order) {
