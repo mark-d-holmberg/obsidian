@@ -51,6 +51,7 @@ export const preloadTemplates = function () {
 		'modules/obsidian/html/tabs/features.html',
 		'modules/obsidian/html/tabs/sub-features.html',
 		'modules/obsidian/html/tabs/notes.html',
-		'modules/obsidian/html/tabs/effects.html'
+		'modules/obsidian/html/tabs/effects.html',
+		'modules/obsidian/html/tabs/crew.html'
 	]);
 };

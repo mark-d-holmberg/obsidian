@@ -1,0 +1,92 @@
+<form class="obsidian {{cssClass}}" autocomplete="off">
+	<ul class="obsidian-tab-bar" data-group="main-tabs">
+		<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
+		<li class="obsidian-tab item" data-tab="stats">{{localize 'OBSIDIAN.Stats'}}</li>
+		<li class="obsidian-tab item" data-tab="equipment">{{localize 'OBSIDIAN.CargoEquipment'}}</li>
+		<li class="obsidian-tab item" data-tab="crew">{{localize 'OBSIDIAN.PassengerCrew'}}</li>
+		<li class="obsidian-tab item" data-tab="effects">{{localize 'OBSIDIAN.Effects'}}</li>
+	</ul>
+	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="desc">
+		<section>
+			<img class="obsidian-profile-img obsidian-ptr profile" src="{{actor.img}}"
+			     title="{{actor.name}}" alt="{{actor.name}}" data-edit="img">
+		</section>
+		<section>
+			<h3>
+				{{localize 'OBSIDIAN.Notes'}}
+				<a class="obsidian-edit-npc-notes"><i class="fas fa-edit"></i></a>
+			</h3>
+			<div class="obsidian-rich-text">
+				{{editor content=data.details.biography.value button=true editable=editable
+				         target='data.details.biography.value'}}
+			</div>
+		</section>
+	</div>
+	<div class="obsidian-tab-container obsidian-npc-stats tab" data-group="main-tabs"
+	     data-tab="stats">
+		<header>
+			<input name="name" type="text" value="{{actor.name}}"
+			       class="obsidian-char-charname obsidian-condensed"
+			       placeholder="{{localize 'OBSIDIAN.Name'}}">
+			<div class="obsidian-char-header-minor obsidian-condensed">
+				<span>{{i18n-join 'OBSIDIAN.Size-' data.traits.size}}</span>
+				<span>{{~lc (localize 'DND5E.Vehicle')~}}</span>
+				{{#if actor.flags.obsidian.details.type}}
+					<span>
+						({{lc (i18n-join 'OBSIDIAN.VehicleType-' actor.flags.obsidian.details.type)}})
+					</span>
+				{{/if}}
+				{{#if data.traits.dimensions}}
+					<span>({{lc data.traits.dimensions}})</span>
+				{{/if}}
+			</div>
+			<div class="obsidian-npc-btns">
+				<div class="obsidian-npc-btn-row">
+					<button type="button" class="
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
+					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
+					        obsidian-global-advantage">
+						{{localize 'OBSIDIAN.Roll-adv'}}
+					</button>
+					<button type="button" class="
+					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
+					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
+					        obsidian-global-disadvantage">
+						{{localize 'OBSIDIAN.Roll-dis'}}
+					</button>
+				</div>
+			</div>
+		</header>
+		<main>
+			<section class="obsidian-npc-stat-block">
+				<div class="obsidian-char-abilities">
+					{{#each data.abilities}}
+						<div class="obsidian-char-ability">
+							<div class="obsidian-char-ability-name rollable obsidian-condensed"
+							     data-roll="abl" data-abl="{{@key}}" draggable="true">
+								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+							</div>
+							<div class="obsidian-char-ability-mod">
+								{{numberFormat mod decimals=0 sign=true}}
+							</div>
+							{{#with (lookup ../actor.flags.obsidian.abilities @key)}}
+								<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
+								       class="obsidian-char-ability-score
+									{{#if (gt value ../value)}}
+										obsidian-positive
+									{{else if (lt value ../value)}}
+										obsidian-negative
+									{{/if}}">
+							{{/with}}
+							<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
+							       data-dtype="Number">
+						</div>
+					{{/each}}
+				</div>
+			</section>
+		</main>
+	</div>
+	{{> modules/obsidian/html/tabs/equipment.html}}
+	{{> modules/obsidian/html/tabs/crew.html}}
+	{{> modules/obsidian/html/tabs/effects.html}}
+</form>

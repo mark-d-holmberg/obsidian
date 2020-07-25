@@ -90,7 +90,8 @@
 }
 
 .obsidian-tab-contents > h3,
-.npc .obsidian h3 {
+.npc .obsidian h3,
+.vehicle .obsidian h3 {
 	text-transform: uppercase;
 	font-family: var(--font-condensed);
 	font-size: 13px;
@@ -490,7 +491,9 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .npc .obsidian .editor,
-.npc .obsidian .tox.tox-tinymce {
+.npc .obsidian .tox.tox-tinymce,
+.vehicle .obsidian .editor,
+.vehicle .obsidian .tox.tox-tinymce {
 	min-height: unset;
 	max-height: none;
 }
@@ -536,7 +539,8 @@ h3 > div > .obsidian-feature-recharge {
 	display: none;
 }
 
-.npc .obsidian .tox-tbtn[title=Save] {
+.npc .obsidian .tox-tbtn[title=Save],
+.vehicle .obsidian .tox-tbtn[title=Save] {
 	display: flex;
 }
 
@@ -895,7 +899,8 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-table summary > div > h3,
-.npc .obsidian-table summary > div > h3 {
+.npc .obsidian-table summary > div > h3,
+.vehicle .obsidian-table summary > div > h3 {
 	text-transform: none;
 	color: var(--text-regular);
 	border: none;

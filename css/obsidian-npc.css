@@ -3,7 +3,12 @@
 	text-align: center;
 }
 
-.npc .obsidian [data-tab=desc] .obsidian-char-box {
+.vehicle .obsidian [data-tab=desc] section:first-child {
+	text-align: center;
+}
+
+.npc .obsidian [data-tab=desc] .obsidian-char-box,
+.vehicle .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 350px;
 	text-align: left;
 	font-weight: normal;
@@ -12,25 +17,30 @@
 	padding: 8px;
 }
 
-.npc .obsidian [data-tab=desc] h3 {
+.npc .obsidian [data-tab=desc] h3,
+.vehicle .obsidian [data-tab=desc] h3 {
 	margin: 15px 8px .5rem 8px;
 }
 
-.dnd5e.sheet.npc .window-content .obsidian .tab {
+.dnd5e.sheet.npc .window-content .obsidian .tab,
+.dnd5e.sheet.vehicle .window-content .obsidian .tab {
 	height: auto;
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
 }
 
-.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar {
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar,
+.dnd5e.sheet.vehicle .window-content .obsidian .tab::-webkit-scrollbar {
 	height: 6px;
 }
 
-.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-track {
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-track,
+.dnd5e.sheet.vehicle .window-content .obsidian .tab::-webkit-scrollbar-track {
 	box-shadow: none;
 }
 
-.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-thumb {
+.dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar-thumb,
+.dnd5e.sheet.vehicle .window-content .obsidian .tab::-webkit-scrollbar-thumb {
 	border: none;
 	background: rgba(0, 0, 0, .75);
 }
@@ -55,7 +65,8 @@
 	cursor: pointer;
 }
 
-.dnd5e.sheet.npc .obsidian-npc-stats header .obsidian-char-header-minor span {
+.dnd5e.sheet.npc .obsidian-npc-stats header .obsidian-char-header-minor span,
+.dnd5e.sheet.vehicle .obsidian-npc-stats header .obsidian-char-header-minor span {
 	font-size: 16px;
 	font-style: italic;
 }
@@ -142,7 +153,8 @@
 	border-bottom: 1px solid var(--mid);
 }
 
-.npc .obsidian-char-abilities {
+.npc .obsidian-char-abilities,
+.vehicle .obsidian-char-abilities {
 	padding: 2px 0 6px 0;
 }
 
@@ -230,16 +242,20 @@
 	break-inside: avoid;
 }
 
-.npc main section {
+.npc main section,
+.vehicle main section {
 	border-bottom: 2px solid var(--mid);
 }
 
 .npc main section:last-child,
-.npc main .obsidian-feature-body section {
+.npc main .obsidian-feature-body section,
+.vehicle main section:last-child,
+.vehicle main .obsidian-feature-body section {
 	border: none;
 }
 
-.npc main section .obsidian-feature:last-child {
+.npc main section .obsidian-feature:last-child,
+.vehicle main section .obsidian-feature:last-child {
 	margin-bottom: 10px;
 }
 
@@ -258,7 +274,8 @@
 	margin-bottom: 4px;
 }
 
-.npc .obsidian .obsidian-npc-stats h3 {
+.npc .obsidian .obsidian-npc-stats h3,
+.vehicle .obsidian .obsidian-npc-stats h3 {
 	border: none;
 	text-transform: none;
 	font-size: 20px;
@@ -319,4 +336,8 @@
 
 .obsidian-npc-btns button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-bottom: 5px;
+}
+
+[data-edit="data.details.biography.value"]+.editor-edit {
+	display: none !important;
 }

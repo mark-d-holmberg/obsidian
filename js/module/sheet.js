@@ -225,6 +225,10 @@ export const Sheet = {
 
 	filterSpells: function (sheet) {
 		const spellTab = sheet.element.find('[data-group="main-tabs"][data-tab="spells"]');
+		if (!spellTab.length) {
+			return;
+		}
+
 		const name = spellTab.find('.obsidian-input-search').val();
 		const filter = spellTab.find('ul[data-group="spells"] li.active').data('tab').substring(6);
 

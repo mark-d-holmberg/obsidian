@@ -950,5 +950,10 @@
 	"OBSIDIAN.RollableTable": "Rollable Table",
 	"OBSIDIAN.DropTablesHere": "Drop Tables Here",
 	"OBSIDIAN.ResetAfterRoll": "Reset after roll",
-	"OBSIDIAN.ActivatedBy": "Activated By"
+	"OBSIDIAN.ActivatedBy": "Activated By",
+	"OBSIDIAN.CargoEquipment": "Cargo & Equipment",
+	"OBSIDIAN.PassengerCrew": "Passengers & Crew",
+	"OBSIDIAN.DimensionsWeight": "Dimensions/Weight",
+	"OBSIDIAN.VehicleType-land": "Land",
+	"OBSIDIAN.VehicleType-water": "Water"
 }

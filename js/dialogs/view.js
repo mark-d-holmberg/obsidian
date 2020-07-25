@@ -75,6 +75,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			item.sheet.render(true);
 		});
 
+		Sheet.contextMenu(this.parent, html);
 		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
 		html.find('.obsidian-equip-action').click(evt => Sheet.onEquip(this.parent, evt));
 		html.find('.obsidian-attune').click(evt => Sheet.onAttune(this.parent, evt));

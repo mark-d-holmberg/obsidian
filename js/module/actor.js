@@ -135,9 +135,13 @@ export class ObsidianActor extends Actor5e {
 
 		Prepare.init(data, flags);
 		Prepare.conditions(this);
-		Prepare.skills(this.data, data, flags, originalSkills);
+
+		if (this.data.type !== 'vehicle') {
+			Prepare.skills(this.data, data, flags, originalSkills);
+			prepareSpellcasting(this.data, flags);
+		}
+
 		Prepare.saves(this.data, data, flags, originalSaves);
-		prepareSpellcasting(this.data, flags);
 		Prepare.features(this);
 		Prepare.consumables(this.data);
 		Prepare.weapons(this);

@@ -22,6 +22,7 @@ import {addTransformHook} from './rules/transform.js';
 import {sendTriggers} from './module/triggers.js';
 import {updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
+import {ObsidianVehicle} from './module/vehicle.js';
 
 runPatches();
 
@@ -29,6 +30,7 @@ Hooks.once('init', async function () {
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Actors.registerSheet('dnd5e', ObsidianNPC, {types: ['npc'], makeDefault: true});
+	Actors.registerSheet('dnd5e', ObsidianVehicle, {types: ['vehicle'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
 		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell', 'tool', 'loot'],

@@ -30,7 +30,8 @@
 	min-height: 625px;
 }
 
-.dnd5e.sheet.actor.npc.obsidian-window {
+.dnd5e.sheet.actor.npc.obsidian-window,
+.dnd5e.sheet.actor.vehicle.obsidian-window {
 	min-width: 500px;
 }
 
@@ -190,7 +191,8 @@
 	overflow: auto;
 }
 
-.dnd5e.sheet.npc form.obsidian {
+.dnd5e.sheet.npc form.obsidian,
+.dnd5e.sheet.vehicle form.obsidian {
 	display: block;
 	padding: 12px 8px;
 }
@@ -274,7 +276,8 @@
 	border-bottom: 1px solid var(--mid);
 }
 
-.npc .obsidian img.obsidian-profile-img {
+.npc .obsidian img.obsidian-profile-img,
+.vehicle .obsidian img.obsidian-profile-img {
 	padding-bottom: 0;
 	border: none;
 }
@@ -540,7 +543,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	display: inline-block;
 }
 
-.dnd5e.sheet.npc .obsidian .obsidian-char-header-minor span {
+.dnd5e.sheet.npc .obsidian .obsidian-char-header-minor span,
+.dnd5e.sheet.vehicle .obsidian .obsidian-char-header-minor span {
 	margin: 0;
 }
 
@@ -622,7 +626,8 @@ form.obsidian .rollable:hover {
 	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
 }
 
-.npc .obsidian-char-ability {
+.npc .obsidian-char-ability,
+.vehicle .obsidian-char-ability {
 	padding: 0 4px 0 0;
 }
 
@@ -635,7 +640,8 @@ form.obsidian .rollable:hover {
 	text-align: center;
 }
 
-.npc .obsidian-char-ability-name {
+.npc .obsidian-char-ability-name,
+.vehicle .obsidian-char-ability-name {
 	font-size: 13px;
 	padding-bottom: 2px;
 }
@@ -649,7 +655,8 @@ form.obsidian .rollable:hover {
 	text-align: center;
 }
 
-.npc .obsidian-char-ability-mod {
+.npc .obsidian-char-ability-mod,
+.vehicle .obsidian-char-ability-mod {
 	padding: 6px 0;
 	font-size: 14px;
 }
@@ -667,7 +674,8 @@ form.obsidian .rollable:hover {
 	line-height: 1;
 }
 
-.dnd5e.sheet.npc form input[type=text].obsidian-char-ability-score {
+.dnd5e.sheet.npc form input[type=text].obsidian-char-ability-score,
+.dnd5e.sheet.vehicle form input[type=text].obsidian-char-ability-score {
 	padding: 2px 0;
 	width: 45px;
 	font-size: 13px;
@@ -1267,7 +1275,8 @@ legend .fancy-checkbox {
 }
 
 .obsidian-sidebar .obsidian-char-box-stacked,
-.npc .obsidian [data-tab="desc"] .obsidian-char-box-stacked {
+.npc .obsidian [data-tab="desc"] .obsidian-char-box-stacked,
+.vehicle .obsidian [data-tab=desc] .obsidian-char-box-stacked {
 	margin-top: 15px;
 }
 
