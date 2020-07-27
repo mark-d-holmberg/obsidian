@@ -59,6 +59,71 @@
 		</header>
 		<main>
 			<section class="obsidian-npc-stat-block">
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">{{localize 'DND5E.VehicleCreatureCapacity'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13" contenteditable="true"
+					     data-edit="data.attributes.capacity.creature">
+						{{data.attributes.capacity.creature}}
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
+					<div class="obsidian-npc-stat-key">{{localize 'DND5E.VehicleCargoCapacity'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-vehicle-cargo-cap">
+						<input type="text" name="data.attributes.capacity.cargo" data-dtype="Number"
+						       class="obsidian-input-num" placeholder="0"
+						       value="{{data.attributes.capacity.cargo}}">
+						<span class="obsidian-npc-subtle">{{localize 'OBSIDIAN.Tons'}}</span>
+					</div>
+				</div>
+
+				{{#if landVehicle}}
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.AC'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-vehicle-ac">
+						<input type="text" name="data.attributes.ac.value" data-dtype="Number"
+						       class="obsidian-input-num" value="{{data.attributes.ac.value}}"
+						       placeholder="&mdash;">
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.HP'}}</div>
+					<div class="obsidian-npc-stat-value obsidian-npc-hp">
+						<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
+						       value="{{data.attributes.hp.value}}" data-dtype="Number">
+						<span class="obsidian-binary-operator" style="color: var(--text-subtle);">&sol;</span>
+						<input type="text" name="data.attributes.hp.max" class="obsidian-input-num"
+						       value="{{data.attributes.hp.max}}">
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
+					<div class="obsidian-npc-stat-key" style="color: transparent">
+						{{localize 'OBSIDIAN.HP'}}
+					</div>
+					<div class="obsidian-npc-stat-value obsidian-vehicle-dt">
+						<span class="obsidian-npc-subtle">{{localize 'DND5E.Threshold'}}</span>
+						<input type="text" name="data.attributes.hp.dt" class="obsidian-input-num"
+						       value="{{data.attributes.hp.dt}}" data-dtype="Number" placeholder="&mdash;">
+						<span class="obsidian-npc-subtle">{{localize 'DND5E.VehicleMishap'}}</span>
+						<input type="text" name="data.attributes.hp.mt" class="obsidian-input-num"
+						       value="{{data.attributes.hp.mt}}" data-dtype="Number" placeholder="&mdash;">
+					</div>
+				</div>
+				{{/if}}
+
+				<div class="obsidian-npc-stat-row">
+					<div class="obsidian-npc-stat-key">
+						{{#if waterVehicle}}
+							{{localize 'OBSIDIAN.TravelPace'}}
+						{{else}}
+							{{localize 'DND5E.Speed'}}
+						{{/if}}
+					</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13" contenteditable="true"
+					     data-edit="data.attributes.speed.value">
+						{{data.attributes.speed.value}}
+					</div>
+				</div>
+
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
 						<div class="obsidian-char-ability">

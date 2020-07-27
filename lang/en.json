@@ -955,5 +955,7 @@
 	"OBSIDIAN.PassengerCrew": "Passengers & Crew",
 	"OBSIDIAN.DimensionsWeight": "Dimensions/Weight",
 	"OBSIDIAN.VehicleType-land": "Land",
-	"OBSIDIAN.VehicleType-water": "Water"
+	"OBSIDIAN.VehicleType-water": "Water",
+	"OBSIDIAN.Tons": "tons",
+	"OBSIDIAN.TravelPace": "Travel Pace"
 }
