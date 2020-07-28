@@ -1,6 +1,6 @@
 <div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
      data-tab="effects">
-	{{#if isNPC}}
+	{{#unless isCharacter}}
 	<h3>{{localize 'OBSIDIAN.Conditions'}}</h3>
 	<div class="obsidian-npc-grid obsidian-npc-condition-grid">
 		{{#each ObsidianRules.CONDITIONS}}
@@ -39,7 +39,7 @@
 			{{/each}}
 		</div>
 	</div>
-	{{/if}}
+	{{/unless}}
 	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
 	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">

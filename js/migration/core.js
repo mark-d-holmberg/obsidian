@@ -359,6 +359,15 @@ export const core = {
 				}
 			});
 		}
+	},
+
+	convertVehicle: function (data) {
+		// We don't have the default data provided by the system template yet
+		// so we add it here so that the rest of the conversion code can be
+		// aware of it.
+
+		const model = game.system.model.Actor.vehicle;
+		data.data = mergeObject(model, data.data || {}, {inplace: false});
 	}
 };
 

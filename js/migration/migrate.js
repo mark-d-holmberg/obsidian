@@ -34,6 +34,10 @@ export const Migrate = {
 		}
 
 		if (source === 'core') {
+			if (data.type === 'vehicle') {
+				Migrate.core.convertVehicle(data);
+			}
+
 			Migrate.core.convertSpeed(data);
 			Migrate.core.convertDefenses(data);
 		}
@@ -683,6 +687,7 @@ function lazyConvert () {
 		['damage', 'Damage', 'CONVERT_DAMAGE_TYPES']
 	]);
 
+	CONVERT.defs.conditions.set('paralyzed', 'paralysed');
 	convertSpeeds();
 }
 

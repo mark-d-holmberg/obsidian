@@ -119,8 +119,8 @@
 						{{/if}}
 					</div>
 					<div class="obsidian-npc-stat-value obsidian-font-13" contenteditable="true"
-					     data-edit="data.attributes.speed.value">
-						{{data.attributes.speed.value}}
+					     data-edit="data.attributes.speed">
+						{{data.attributes.speed}}
 					</div>
 				</div>
 
@@ -147,6 +147,49 @@
 							       data-dtype="Number">
 						</div>
 					{{/each}}
+				</div>
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-npc-saves">
+					<strong>{{localize 'OBSIDIAN.Saves'}}</strong>
+					{{#each data.abilities}}
+						<div class="obsidian-npc-stat-li">
+							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
+								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+							</span>
+							{{numberFormat save decimals=0 sign=true~}}
+						</div>
+					{{/each}}
+				</div>
+				{{#if actor.flags.obsidian.defenses.vulnDisplay}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
+					<strong>{{localize 'OBSIDIAN.DamageVulnerabilities'}}</strong>
+					{{lc actor.flags.obsidian.defenses.vulnDisplay}}
+				</div>
+				{{/if}}
+				{{#if actor.flags.obsidian.defenses.resDisplay}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
+					<strong>{{localize 'OBSIDIAN.DamageResistances'}}</strong>
+					{{lc actor.flags.obsidian.defenses.resDisplay}}
+				</div>
+				{{/if}}
+				{{#if actor.flags.obsidian.defenses.immDisplay}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
+					<strong>{{localize 'OBSIDIAN.DamageImmunities'}}</strong>
+					{{lc actor.flags.obsidian.defenses.immDisplay}}
+				</div>
+				{{/if}}
+				{{#if actor.flags.obsidian.defenses.condDisplay.imm}}
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
+					<strong>{{localize 'OBSIDIAN.ConditionImmunities'}}</strong>
+					{{lc actor.flags.obsidian.defenses.condDisplay.imm}}
+				</div>
+				{{/if}}
+				<div class="obsidian-npc-configure">
+					<div data-dialog="Defenses">
+						{{localize 'OBSIDIAN.Defenses'}} <i class="fas fa-cog"></i>
+					</div>
+					<div data-dialog="VehicleFeatures">
+						{{localize 'OBSIDIAN.Features'}} <i class="fas fa-cog"></i>
+					</div>
 				</div>
 			</section>
 		</main>

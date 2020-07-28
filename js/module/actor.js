@@ -49,6 +49,10 @@ export class ObsidianActor extends Actor5e {
 
 		this.data.obsidian.itemsByType.partition(this.data.items, item => item.type);
 
+		if (this.data.type === 'vehicle') {
+			data.attributes.prof = 0;
+		}
+
 		if (this.data.type === 'character') {
 			this.data.obsidian.classes =
 				this.data.obsidian.itemsByType.get('class').filter(item => item.flags.obsidian);

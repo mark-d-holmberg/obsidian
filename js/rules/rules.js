@@ -273,5 +273,7 @@ Rules.SPELL_SLOT_TABLE = [
 	[4, 3, 3, 3, 3, 2, 2, 1, 1]
 ];
 
+Rules.VEHICLE_LAND_FEATURES = ['none', 'station', 'reaction'];
+Rules.VEHICLE_WATER_FEATURES = ['none', 'action', 'component', 'siege'];
 Rules.VEHICLE_TYPES = ['land', 'water'];
 Rules.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed'];

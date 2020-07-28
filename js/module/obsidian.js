@@ -39,6 +39,8 @@ import {ObsidianNPCSavesDialog} from '../dialogs/npc-saves.js';
 import {ObsidianNPCSkillsDialog} from '../dialogs/npc-skills.js';
 // noinspection ES6UnusedImports
 import {ObsidianNPCFeaturesDialog} from '../dialogs/npc-features.js';
+// noinspection ES6UnusedImports
+import {ObsidianVehicleFeaturesDialog} from '../dialogs/vehicle-features.js';
 import {Rules} from '../rules/rules.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
