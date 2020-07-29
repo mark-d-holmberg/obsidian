@@ -162,6 +162,14 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		data.categories = this._categories;
 		data.uncategorised = data.categories.get('none').components;
 
+		if (data.actor) {
+			if (data.actor.data.type === 'vehicle') {
+				data.equipTypes = ['vehicle'];
+			}
+		} else {
+			data.equipTypes.push('vehicle');
+		}
+
 		if (data.actor && data.item.flags?.obsidian?.effects) {
 			const hasResource = item =>
 				item.flags?.obsidian?.effects?.some(e =>

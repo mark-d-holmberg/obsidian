@@ -409,6 +409,7 @@
 	"OBSIDIAN.WeaponCat-simple": "Simple",
 	"OBSIDIAN.WeaponCat-martial": "Martial",
 	"OBSIDIAN.WeaponCat-unarmed": "Unarmed",
+	"OBSIDIAN.WeaponCat-siege": "Siege",
 	"OBSIDIAN.Equip": "Equip",
 	"OBSIDIAN.Unequip": "Unequip",
 	"OBSIDIAN.Use": "Use",
@@ -902,6 +903,7 @@
 	"OBSIDIAN.LegendaryActions": "Legendary Actions",
 	"OBSIDIAN.LairActions": "Lair Actions",
 	"OBSIDIAN.LairRules": "Lair rules",
+	"OBSIDIAN.ActionRules": "Action rules",
 	"OBSIDIAN.PactMagic": "Pact Magic",
 	"OBSIDIAN.NPCSpellcaster": "NPC Spellcaster",
 	"OBSIDIAN.AttackOverride": "Attack Override",
@@ -960,5 +962,7 @@
 	"OBSIDIAN.VehicleType-land": "Land",
 	"OBSIDIAN.VehicleType-water": "Water",
 	"OBSIDIAN.Tons": "tons",
-	"OBSIDIAN.TravelPace": "Travel Pace"
+	"OBSIDIAN.TravelPace": "Travel Pace",
+	"OBSIDIAN.NewComponent": "New Component",
+	"OBSIDIAN.NewWeapon": "New Weapon"
 }

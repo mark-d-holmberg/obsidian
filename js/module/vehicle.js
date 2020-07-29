@@ -93,6 +93,28 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.landVehicle = type === 'land';
 		data.waterVehicle = !type || type === 'water';
+		data.featCategories = {};
+
+		for (const item of data.actor.items) {
+			let cat;
+			if (item.type === 'feat') {
+				cat = item.data.activation.type;
+				if (cat === 'special' || cat === 'bonus' || !cat.length) {
+					cat = 'none';
+				}
+			} else {
+				continue;
+			}
+
+			let category = data.featCategories[cat];
+			if (!category) {
+				category = [];
+				data.featCategories[cat] = category;
+			}
+
+			category.push(item);
+		}
+
 		return data;
 	}
 

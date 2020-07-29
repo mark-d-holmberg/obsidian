@@ -34,6 +34,14 @@
 	</div>
 	<ul class="obsidian-tab-bar" data-group="equipment">
 		<li class="obsidian-sub-tab item" data-tab="equipment-all">{{localize 'OBSIDIAN.All'}}</li>
+		{{#if isVehicle}}
+		<li class="obsidian-sub-tab item" data-tab="equipment-component">
+			{{localize 'OBSIDIAN.Components'}}
+		</li>
+		<li class="obsidian-sub-tab item" data-tab="equipment-cargo">
+			{{localize 'DND5E.VehicleCargo'}}
+		</li>
+		{{else}}
 		<li class="obsidian-sub-tab item" data-tab="equipment-magical">
 			{{localize 'OBSIDIAN.Magical'}}
 		</li>
@@ -50,6 +58,7 @@
 		<li class="obsidian-sub-tab item" data-tab="equipment-attunement">
 			{{localize 'OBSIDIAN.Attunement'}}
 		</li>
+		{{/if}}
 	</ul>
 	<div class="obsidian-tab-contents obsidian-inv-table tab">
 		<div class="obsidian-drag-indicator">

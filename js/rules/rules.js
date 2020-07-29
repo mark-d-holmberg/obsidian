@@ -250,30 +250,7 @@ Rules.SPELLS_KNOWN_TABLE = {
 	}
 };
 
-Rules.SPELL_SLOT_TABLE = [
-	[2],
-	[3],
-	[4, 2],
-	[4, 3],
-	[4, 3, 2],
-	[4, 3, 3],
-	[4, 3, 3, 1],
-	[4, 3, 3, 2],
-	[4, 3, 3, 3, 1],
-	[4, 3, 3, 3, 2],
-	[4, 3, 3, 3, 2, 1],
-	[4, 3, 3, 3, 2, 1],
-	[4, 3, 3, 3, 2, 1, 1],
-	[4, 3, 3, 3, 2, 1, 1],
-	[4, 3, 3, 3, 2, 1, 1, 1],
-	[4, 3, 3, 3, 2, 1, 1, 1],
-	[4, 3, 3, 3, 2, 1, 1, 1, 1],
-	[4, 3, 3, 3, 3, 1, 1, 1, 1],
-	[4, 3, 3, 3, 3, 2, 1, 1, 1],
-	[4, 3, 3, 3, 3, 2, 2, 1, 1]
-];
-
 Rules.VEHICLE_LAND_FEATURES = ['none', 'station', 'reaction'];
-Rules.VEHICLE_WATER_FEATURES = ['none', 'action', 'component', 'siege'];
+Rules.VEHICLE_WATER_FEATURES = ['action', 'component', 'siege', 'none'];
 Rules.VEHICLE_TYPES = ['land', 'water'];
-Rules.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed'];
+Rules.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed', 'siege'];

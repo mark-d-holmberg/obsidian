@@ -1,5 +1,6 @@
 import {ObsidianDialog} from './dialog.js';
 import {OBSIDIAN} from '../global.js';
+import {ObsidianNPCFeaturesDialog} from './npc-features.js';
 
 export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 	static get defaultOptions () {
@@ -14,8 +15,7 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 	}
 
 	activateListeners (html) {
-		super.activateListeners(html);
-		html.find('button').click(this._onAddFeature.bind(this));
+		ObsidianNPCFeaturesDialog.prototype.activateListeners.apply(this, arguments);
 	}
 
 	getData () {
@@ -29,6 +29,37 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 	}
 
 	async _onAddFeature () {
+		const selection = this.element.find('select').val();
+		const itemData = {
+			name: game.i18n.localize('OBSIDIAN.NewFeature'),
+			type: 'feat',
+			data: {activation: {type: selection}}
+		};
 
+		if (selection === 'station') {
+			itemData.data.activation.type = 'action';
+		} else if (selection === 'component') {
+			itemData.name = game.i18n.localize('OBSIDIAN.NewComponent');
+			itemData.type = 'equipment';
+			itemData.flags = {obsidian: {subtype: 'vehicle'}};
+			delete itemData.data;
+		} else if (selection === 'siege') {
+			itemData.name = game.i18n.localize('OBSIDIAN.NewWeapon');
+			itemData.type = 'weapon';
+			itemData.flags = {obsidian: {category: 'siege'}};
+			delete itemData.data;
+		}
+
+		const item = await this.parent.actor.createEmbeddedEntity('OwnedItem', itemData);
+		Item.createOwned(item, this.parent.actor).sheet.render(true);
+		this.close();
+	}
+
+	_updateObject (event, formData) {
+		if (formData['flags.obsidian.actions'] === game.i18n.localize('OBSIDIAN.ActionRules')) {
+			formData['flags.obsidian.actions'] = '';
+		}
+
+		super._updateObject(event, formData);
 	}
 }

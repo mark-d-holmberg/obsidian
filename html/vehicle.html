@@ -192,6 +192,28 @@
 					</div>
 				</div>
 			</section>
+			{{#if featCategories.none}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.none}}
+				</section>
+			{{/if}}
+			{{#if featCategories.action}}
+				<section>
+					{{#if landVehicle}}
+						{{> modules/obsidian/html/components/features.html feats=featCategories.action
+								heading='DND5E.VehicleActionStations'}}
+					{{else if waterVehicle}}
+						{{> modules/obsidian/html/components/features.html feats=featCategories.action
+								heading='OBSIDIAN.Actions' subtext=actor.flags.obsidian.actions}}
+					{{/if}}
+				</section>
+			{{/if}}
+			{{#if featCategories.reaction}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.reaction
+							heading='OBSIDIAN.Reactions'}}
+				</section>
+			{{/if}}
 		</main>
 	</div>
 	{{> modules/obsidian/html/tabs/equipment.html}}
