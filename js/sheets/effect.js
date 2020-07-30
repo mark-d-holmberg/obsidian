@@ -6,6 +6,7 @@ import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
 import {Rules} from '../rules/rules.js';
 import {ObsidianStandaloneDialog} from '../dialogs/standalone.js';
 import {ObsidianActor} from '../module/actor.js';
+import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 
 const TRAY_STATES = Object.freeze({START: 1, EFFECT: 2, COMPONENT: 3});
 const FILTER_SELECTIONS = {
@@ -161,6 +162,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		data.spellLists = Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS);
 		data.categories = this._categories;
 		data.uncategorised = data.categories.get('none').components;
+		data.isVehicle = data.actor?.data.type === 'vehicle';
+		data.config = {cover: DND5E.cover};
 
 		if (data.actor) {
 			if (data.actor.data.type === 'vehicle') {

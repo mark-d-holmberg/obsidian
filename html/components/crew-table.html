@@ -1,0 +1,36 @@
+<section class="obsidian-{{type}}-section">
+	<h3>
+		<div>{{localize title}}</div>
+		<a title="{{localize 'OBSIDIAN.Add'}}" class="obsidian-add-crew" data-type="{{type}}">
+			{{localize 'OBSIDIAN.Add'}}
+		</a>
+	</h3>
+	<div class="obsidian-table">
+		<div class="obsidian-thead">
+			<div class="obsidian-col-icon"></div>
+			<div class="obsidian-col-name">{{localize 'OBSIDIAN.Name'}}</div>
+			<div class="obsidian-col-qty">{{localize 'OBSIDIAN.QuantityAbbr'}}</div>
+		</div>
+		<div class="obsidian-tbody">
+			{{#each items}}
+				<div class="obsidian-tr item cargo-row {{../type}}" data-item-id="{{@index}}">
+					<div class="obsidian-col-icon">
+						<a class="obsidian-delete obsidian-rm-crew">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+					<div class="obsidian-col-name">
+						<div class="obsidian-table-text" contenteditable="true"
+						     data-edit="data.cargo.{{../type}}.{{@index}}.name">
+							{{name}}
+						</div>
+					</div>
+					<div class="obsidian-col-qty">
+						<input type="text" class="obsidian-table-input" data-dtype="Number" placeholder="1"
+						       name="data.cargo.{{../type}}.{{@index}}.quantity" value="{{quantity}}">
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</section>

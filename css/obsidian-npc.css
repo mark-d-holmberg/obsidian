@@ -71,7 +71,8 @@
 	font-style: italic;
 }
 
-.obsidian-npc-stats main {
+.obsidian-npc-stats main,
+.obsidian-crew-tab .obsidian-crew-table {
 	column-width: 350px;
 	column-gap: 20px;
 	padding-top: 8px;
@@ -268,6 +269,10 @@
 
 .obsidian-npc-stats .obsidian-feature {
 	margin-bottom: 0;
+	break-inside: avoid;
+}
+
+.obsidian-crew-table section {
 	break-inside: avoid;
 }
 

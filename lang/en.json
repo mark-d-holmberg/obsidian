@@ -964,5 +964,6 @@
 	"OBSIDIAN.Tons": "tons",
 	"OBSIDIAN.TravelPace": "Travel Pace",
 	"OBSIDIAN.NewComponent": "New Component",
-	"OBSIDIAN.NewWeapon": "New Weapon"
+	"OBSIDIAN.NewWeapon": "New Weapon",
+	"OBSIDIAN.Cover": "{0} Cover"
 }

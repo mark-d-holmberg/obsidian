@@ -69,4 +69,20 @@
 			</div>
 		</div>
 	</div>
+	{{#if isVehicle}}
+		<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					{{localize 'DND5E.Cover'}}
+					<select name="data.cover" data-dtype="Number">
+						{{#select item.data.cover}}
+							{{#each config.cover}}
+								<option value="{{@key}}">{{localize this}}</option>
+							{{/each}}
+						{{/select}}
+					</select>
+				</label>
+			</div>
+		</div>
+	{{/if}}
 </fieldset>

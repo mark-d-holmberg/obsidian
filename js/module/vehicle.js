@@ -58,7 +58,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		console.debug(this.actor);
 
 		this.form.ondragover = Reorder.dragOver;
-		this.form.ondrop = evt => Sheet.onDrop(this, evt);
+		this.form.ondrop = evt => this._onDrop(evt);
 
 		if (this.actor.limited) {
 			return;
@@ -81,6 +81,8 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 			html.find('[data-edit="data.details.biography.value"]+.editor-edit')[0].onclick;
 
 		html.find('.obsidian-edit-npc-notes').click(activateEditor.bind(this));
+		html.find('.obsidian-add-crew').click(this._onItemCreate.bind(this));
+		html.find('.obsidian-rm-crew').click(this._onCrewDelete.bind(this));
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -127,6 +129,62 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		Obsidian.prototype.setModal.apply(this, arguments);
 	}
 
+	async _addCrew (evt, data) {
+		let dest = 'crew';
+		let section;
+		let current = evt.target;
+
+		while (current && current.nodeType !== Node.DOCUMENT_NODE) {
+			if (current.nodeType !== Node.ELEMENT_NODE) {
+				current = current.parentNode;
+				continue;
+			}
+
+			if (current.tagName === 'SECTION') {
+				section = current;
+				break;
+			}
+
+			current = current.parentNode;
+		}
+
+		if (section && section.classList.contains('obsidian-passengers-section')) {
+			dest = 'passengers';
+		}
+
+		let name;
+		if (data.pack) {
+			const index = game.packs.get(data.pack).getIndex();
+			const entry = index.find(entry => entry._id === data.id);
+
+			if (entry) {
+				name = entry.name;
+			}
+		} else {
+			const actor = game.actors.get(data.id);
+			if (actor) {
+				name = actor.name;
+			}
+		}
+
+		if (!name) {
+			return;
+		}
+
+		const collection = duplicate(this.actor.data.data.cargo[dest]);
+		const index = collection.findIndex(entry => entry.name === name);
+
+		if (index < 0) {
+			const row = super.constructor.newCargo;
+			row.name = name;
+			collection.push(row);
+		} else {
+			collection[index].quantity++;
+		}
+
+		this.actor.update({[`data.cargo.${dest}`]: collection});
+	}
+
 	_calculateEditorHeight () {
 		return ObsidianNPC.prototype._calculateEditorHeight.apply(this, arguments);
 	}
@@ -139,10 +197,30 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		new ObsidianVehicleDetailsDialog(this).render(true);
 	}
 
+	_onCrewDelete (evt) {
+		if (!evt.currentTarget.classList.contains('obsidian-alert')) {
+			return;
+		}
+
+		this._onItemDelete(evt);
+	}
+
 	_onChangeTab (event, tabs, active) {
 		if (active.startsWith('equipment-')) {
 			Sheet.filterEquipment(this);
 		}
+	}
+
+	_onDrop (evt) {
+		let data;
+		try {
+			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
+			if (data.type === 'Actor') {
+				return this._addCrew(evt, data);
+			}
+		} catch (ignored) {}
+
+		return Reorder.drop(this.actor, evt);
 	}
 
 	_onResize (event) {

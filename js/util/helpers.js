@@ -2,6 +2,7 @@ import {OBSIDIAN} from '../global.js';
 import {Prepare} from '../rules/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
+import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('attack-sort', function (list) {
@@ -109,6 +110,10 @@ export function registerHandlebarHelpers () {
 
 			return valid;
 		});
+	});
+
+	Handlebars.registerHelper('format-cover', function (cover) {
+		return game.i18n.localize('OBSIDIAN.Cover').format(DND5E.cover[cover]);
 	});
 
 	Handlebars.registerHelper('format-legendary', function (legact) {

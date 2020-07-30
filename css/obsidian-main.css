@@ -170,6 +170,14 @@
 	width: 140px;
 }
 
+.obsidian-col-name {
+	flex: 1;
+}
+
+.obsidian-col-name .obsidian-table-text {
+	outline: none;
+}
+
 .obsidian-col-range,
 .obsidian-col-hit {
 	width: 50px;

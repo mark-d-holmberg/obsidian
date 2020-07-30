@@ -9,6 +9,9 @@
 		<div class="obsidian-feature-header">
 			<div>
 				<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
+				{{#if (and feat.data.cover (gt feat.data.cover 0))}}
+				<div class="obsidian-feature-recharge"> &bull; {{format-cover feat.data.cover}}</div>
+				{{/if}}
 				<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat bull=true}}}</div>
 				<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
 				   data-item-id="{{feat._id}}">
