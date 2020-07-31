@@ -24,9 +24,19 @@
 					<i class="fas fa-trash"></i>
 				</a>
 			</div>
+			{{#if (and @root.landVehicle (eq feat.data.activation.type 'action'))}}
+				<select name="items.{{feat.idx}}.flags.obsidian.crewed" class="obsidian-select-crew">
+					{{#select feat.flags.obsidian.crewed}}
+						<option value="">&mdash;</option>
+						{{#each @root.availableCrew}}
+							<option value="{{this}}">{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			{{/if}}
 			{{format-uses @root.actor feat}}
 		</div>
-		{{#if @root.isNPC}}
+		{{#unless @root.isCharacter}}
 		{{#each feat.obsidian.collection.attack}}
 		<div class="obsidian-attack-line">
 			<div class="obsidian-col-icon">
@@ -118,7 +128,7 @@
 			</div>
 		</div>
 		{{/each}}
-		{{/if}}
+		{{/unless}}
 		{{#unless feat.flags.obsidian.collapsed}}
 		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
 		{{/unless}}

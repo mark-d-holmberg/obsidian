@@ -358,3 +358,10 @@
 	min-width: 40px;
 	outline: none;
 }
+
+.dnd5e.sheet select.obsidian-select-crew {
+	flex: unset;
+	height: 22px;
+	padding: 0;
+	border: none;
+}

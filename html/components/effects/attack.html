@@ -36,7 +36,7 @@
 			                 checked=proficient}}
 		</div>
 	</div>
-	{{#if @root.isNPC}}
+	{{#unless @root.isCharacter}}
 	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
 		{{#unless (eq @root.item.type 'weapon')}}
 		<label class="obsidian-inline" data-selector-parent="{{prefix}}.attack" data-show="melee">
@@ -61,7 +61,7 @@
 		       style="flex: 1; max-width: none;" value="{{target}}"
 		       placeholder="{{localize 'OBSIDIAN.Target'}}">
 	</div>
-	{{/if}}
+	{{/unless}}
 	{{#if extraBonus}}
 		{{> modules/obsidian/html/components/effects/bonus-body.html extraBonus stacked=true
 				prefix=(add prefix '.extraBonus') attack=true}}

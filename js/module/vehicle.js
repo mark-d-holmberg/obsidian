@@ -96,6 +96,8 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		data.landVehicle = type === 'land';
 		data.waterVehicle = !type || type === 'water';
 		data.featCategories = {};
+		data.availableCrew = data.actor.data.cargo.crew.map(crew => crew.name);
+		data.availableCrew.sort();
 
 		for (const item of data.actor.items) {
 			let cat;
@@ -115,6 +117,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 			}
 
 			category.push(item);
+			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
 		}
 
 		return data;
@@ -130,8 +133,8 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	}
 
 	async _addCrew (evt, data) {
-		let dest = 'crew';
 		let section;
+		let dest = 'crew';
 		let current = evt.target;
 
 		while (current && current.nodeType !== Node.DOCUMENT_NODE) {
@@ -154,7 +157,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 
 		let name;
 		if (data.pack) {
-			const index = game.packs.get(data.pack).getIndex();
+			const index = await game.packs.get(data.pack).getIndex();
 			const entry = index.find(entry => entry._id === data.id);
 
 			if (entry) {
