@@ -46,6 +46,9 @@
 			</div>
 		</div>
 	</div>
+	{{#if (eq item.flags.obsidian.category 'siege')}}
+		{{> modules/obsidian/html/components/mountable.html}}
+	{{/if}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<label class="obsidian-inline obsidian-range-part">

@@ -36,17 +36,19 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 			data: {activation: {type: selection}}
 		};
 
-		if (selection === 'station') {
-			itemData.data.activation.type = 'action';
-		} else if (selection === 'component') {
+		if (selection === 'component') {
 			itemData.name = game.i18n.localize('OBSIDIAN.NewComponent');
 			itemData.type = 'equipment';
 			itemData.flags = {obsidian: {subtype: 'vehicle'}};
 			delete itemData.data;
-		} else if (selection === 'siege') {
+		} else if (selection === 'siege' || selection === 'weapon') {
 			itemData.name = game.i18n.localize('OBSIDIAN.NewWeapon');
 			itemData.type = 'weapon';
-			itemData.flags = {obsidian: {category: 'siege'}};
+
+			if (selection === 'siege') {
+				itemData.flags = {obsidian: {category: 'siege'}};
+			}
+
 			delete itemData.data;
 		}
 

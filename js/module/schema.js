@@ -70,7 +70,8 @@ Schema.Actor = {
 };
 
 Schema.EquipTypes = [
-	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear'
+	'armour', 'helm', 'amulet', 'ring', 'belt', 'bracers', 'gauntlet', 'boots', 'cloak', 'gear',
+	'vehicle'
 ];
 
 Schema.Consumable = {

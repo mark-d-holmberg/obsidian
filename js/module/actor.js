@@ -148,6 +148,7 @@ export class ObsidianActor extends Actor5e {
 		Prepare.saves(this.data, data, flags, originalSaves);
 		Prepare.features(this);
 		Prepare.consumables(this.data);
+		Prepare.equipment(this);
 		Prepare.weapons(this);
 		Prepare.armour(this.data);
 		prepareSpells(this.data);

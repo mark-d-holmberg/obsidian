@@ -365,3 +365,42 @@
 	padding: 0;
 	border: none;
 }
+
+.obsidian-feature-header.obsidian-vehicle-component {
+	height: unset;
+	margin-top: 4px;
+}
+
+.obsidian-feature-header.obsidian-vehicle-component h4 {
+	font-size: 20px;
+	font-family: var(--font);
+	font-weight: normal;
+	color: var(--text-secondary);
+}
+
+.obsidian-feature-header.obsidian-vehicle-component > div:first-child {
+	align-items: center;
+}
+
+.obsidian-feature .obsidian-npc-stat-runon strong {
+	font-weight: bold;
+	text-transform: none;
+	font-family: var(--font-condensed);
+	font-size: 13px;
+	line-height: 1.2;
+	color: var(--text-regular);
+}
+
+.obsidian-npc-stat-runon-hp {
+	display: flex;
+	align-items: center;
+}
+
+.dnd5e.sheet .obsidian-npc-stat-runon-hp input {
+	display: inline-block;
+	margin: 0;
+	font-size: 13px;
+	color: var(--text-subtle);
+	font-weight: bold;
+	text-align: right;
+}

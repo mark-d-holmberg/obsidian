@@ -106,6 +106,10 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 				if (cat === 'special' || cat === 'bonus' || !cat.length) {
 					cat = 'none';
 				}
+			} else if (item.type === 'weapon') {
+				cat = data.landVehicle ? 'action' : 'component';
+			} else if (item.type === 'equipment' && item.flags.obsidian.subtype === 'vehicle') {
+				cat = 'component';
 			} else {
 				continue;
 			}

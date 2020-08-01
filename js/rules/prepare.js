@@ -442,6 +442,23 @@ export const Prepare = {
 				consumable.flags.obsidian.subtype === 'ammo');
 	},
 
+	equipment: function (actor) {
+		const actorData = actor.data;
+		for (const equipment of actorData.obsidian.itemsByType.get('equipment')) {
+			const flags = equipment.flags.obsidian;
+			if (!flags || flags.subtype !== 'vehicle') {
+				continue;
+			}
+
+			flags.display = TextEditor.enrichHTML(equipment.data.description.value, {
+				entities: false,
+				links: false,
+				rollData: actor.getRollData(),
+				secrets: actor.owner
+			});
+		}
+	},
+
 	weapons: function (actor) {
 		const actorData = actor.data;
 		for (const weapon of actorData.obsidian.itemsByType.get('weapon')) {

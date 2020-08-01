@@ -165,14 +165,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		data.isVehicle = data.actor?.data.type === 'vehicle';
 		data.config = {cover: DND5E.cover};
 
-		if (data.actor) {
-			if (data.actor.data.type === 'vehicle') {
-				data.equipTypes = ['vehicle'];
-			}
-		} else {
-			data.equipTypes.push('vehicle');
-		}
-
 		if (data.actor && data.item.flags?.obsidian?.effects) {
 			const hasResource = item =>
 				item.flags?.obsidian?.effects?.some(e =>

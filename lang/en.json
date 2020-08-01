@@ -434,6 +434,7 @@
 	"OBSIDIAN.ItemType-wand": "Wand",
 	"OBSIDIAN.ItemType-scroll": "Scroll",
 	"OBSIDIAN.ItemType-trinket": "Trinket",
+	"OBSIDIAN.ItemType-vehicle": "Vehicle Component",
 	"OBSIDIAN.Gear": "Gear",
 	"OBSIDIAN.Container": "Container",
 	"OBSIDIAN.Capacity": "Capacity",
@@ -896,9 +897,9 @@
 	"OBSIDIAN.Feat-reaction": "Reaction",
 	"OBSIDIAN.Feat-legendary": "Legendary Action",
 	"OBSIDIAN.Feat-lair": "Lair Action",
-	"OBSIDIAN.Feat-station": "Action Station",
 	"OBSIDIAN.Feat-component": "Vehicle Component",
 	"OBSIDIAN.Feat-siege": "Siege Weapon",
+	"OBSIDIAN.Feat-weapon": "Weapon",
 	"OBSIDIAN.AddFeature": "Add Feature",
 	"OBSIDIAN.LegendaryActions": "Legendary Actions",
 	"OBSIDIAN.LairActions": "Lair Actions",
@@ -965,5 +966,6 @@
 	"OBSIDIAN.TravelPace": "Travel Pace",
 	"OBSIDIAN.NewComponent": "New Component",
 	"OBSIDIAN.NewWeapon": "New Weapon",
-	"OBSIDIAN.Cover": "{0} Cover"
+	"OBSIDIAN.Cover": "{0} Cover",
+	"OBSIDIAN.ThresholdAbbr": "DT"
 }

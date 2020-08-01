@@ -1,0 +1,38 @@
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.HP'}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+			       data-dtype="Number" placeholder="0" name="data.hp.value" value="{{data.hp.value}}">
+		</label>
+		<span class="obsidian-binary-operator">&sol;</span>
+		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+		       data-dtype="Number" placeholder="0" name="data.hp.max" value="{{data.hp.max}}">
+		<label class="obsidian-inline">
+			{{localize 'DND5E.Threshold'}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" placeholder="0" name="data.hp.dt" value="{{data.hp.dt}}">
+		</label>
+		<input type="text" class="obsidian-input-compact" style="max-width: 190px;"
+		       name="data.hp.conditions" value="{{data.hp.conditions}}"
+		       placeholder="{{localize 'OBSIDIAN.Conditions'}}">
+	</div>
+</div>
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.AC'}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       placeholder="10" data-dtype="Number" name="data.armor.value"
+			       value="{{data.armor.value}}">
+		</label>
+		{{fancy-checkbox 'flags.obsidian.speed' content='OBSIDIAN.Speed' selector='speed'
+		                 checked=item.flags.obsidian.speed}}
+		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+		       data-selector-parent="speed" data-dtype="Number" name="data.speed.value"
+		       value="{{data.speed.value}}" placeholder="&mdash;">
+		<input type="text" class="obsidian-input-compact" data-selector-parent="speed"
+		       name="data.speed.conditions" value="{{data.speed.conditions}}"
+		       placeholder="{{localize 'OBSIDIAN.Conditions'}}" style="max-width: 245px;">
+	</div>
+</div>

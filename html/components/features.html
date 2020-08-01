@@ -1,4 +1,5 @@
 {{#each (sort feats 'name') as |feat idx|}}
+	{{#if ../component}}<section>{{/if}}
 	<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
 		{{#if (and ../heading (eq idx 0))}}
 			<h3>{{localize ../heading}} {{format-legendary ../legendary}}</h3>
@@ -6,7 +7,7 @@
 				<div class="obsidian-rules-text">{{../subtext}}</div>
 			{{/if}}
 		{{/if}}
-		<div class="obsidian-feature-header">
+		<div class="obsidian-feature-header {{#if ../component}}obsidian-vehicle-component{{/if}}">
 			<div>
 				<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
 				{{#if (and feat.data.cover (gt feat.data.cover 0))}}
@@ -24,7 +25,7 @@
 					<i class="fas fa-trash"></i>
 				</a>
 			</div>
-			{{#if (and @root.landVehicle (eq feat.data.activation.type 'action'))}}
+			{{#if (and @root.landVehicle (or (eq feat.data.activation.type 'action') (eq feat.type 'weapon')))}}
 				<select name="items.{{feat.idx}}.flags.obsidian.crewed" class="obsidian-select-crew">
 					{{#select feat.flags.obsidian.crewed}}
 						<option value="">&mdash;</option>
@@ -36,6 +37,42 @@
 			{{/if}}
 			{{format-uses @root.actor feat}}
 		</div>
+		{{#if ../component}}
+		<div class="obsidian-npc-stat-runon obsidian-condensed">
+			<strong>{{localize 'OBSIDIAN.AC'}}</strong>
+			{{feat.data.armor.value}}
+		</div>
+		<div class="obsidian-npc-stat-runon obsidian-npc-stat-runon-hp obsidian-condensed">
+			<strong>{{localize 'OBSIDIAN.HP'}}</strong>
+			<input type="text" class="obsidian-input-num obsidian-input-num-md" data-dtype="Number"
+			       placeholder="0" name="items.{{feat.idx}}.data.hp.value" value="{{feat.data.hp.value}}">
+			<span class="obsidian-binary-operator" style="margin-left: 10px;">&sol;</span>
+			<span class="obsidian-npc-max-hp">{{feat.data.hp.max}}</span>
+			{{#if feat.data.hp.dt}}
+				<span class="obsidian-npc-subtle" style="margin-left: 10px;">
+					{{localize 'OBSIDIAN.ThresholdAbbr'}}
+					{{feat.data.hp.dt}}
+				</span>
+			{{/if}}
+			{{#if feat.data.hp.conditions}}
+				<span class="obsidian-npc-subtle">
+					; {{feat.data.hp.conditions}}
+				</span>
+			{{/if}}
+		</div>
+		{{#if feat.flags.obsidian.speed}}
+		<div class="obsidian-npc-stat-runon obsidian-condensed">
+			<strong>{{localize 'OBSIDIAN.Speed'}}</strong>
+			{{feat.data.speed.value}}
+			<span class="obsidian-npc-subtle">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+			{{#if feat.data.speed.conditions}}
+				<span class="obsidian-npc-subtle" style="margin-left: -3px;">
+					; {{feat.data.speed.conditions}}
+				</span>
+			{{/if}}
+		</div>
+		{{/if}}
+		{{/if}}
 		{{#unless @root.isCharacter}}
 		{{#each feat.obsidian.collection.attack}}
 		<div class="obsidian-attack-line">
@@ -56,14 +93,19 @@
 			<div class="obsidian-col-range">
 				{{#if (eq mode 'ranged')}}
 					<div class="obsidian-table-number-md">
-						<div>
+						{{#if parentItem.data.range.long}}
+							<div>
+								{{parentItem.data.range.value}}
+								<span class="obsidian-table-number-split">/</span>
+							</div>
+							<div>
+								<span class="obsidian-table-number-minor">{{parentItem.data.range.long}}</span>
+								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+							</div>
+						{{else}}
 							{{parentItem.data.range.value}}
-							<span class="obsidian-table-number-split">/</span>
-						</div>
-						<div>
-							<span class="obsidian-table-number-minor">{{parentItem.data.range.long}}</span>
 							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
-						</div>
+						{{/if}}
 					</div>
 				{{else if (eq parentItem.type 'spell')}}
 					{{#if (or (eq parentItem.flags.obsidian.range.type 'short') (eq parentItem.flags.obsidian.range.type 'long'))}}
@@ -89,14 +131,21 @@
 				{{else}}
 					{{#if (eq attack 'ranged')}}
 					<div class="obsidian-table-number-md">
-						<div>
+						{{#if range2}}
+							<div>
+								{{range1}}
+								<span class="obsidian-table-number-split">&sol;</span>
+							</div>
+							<div>
+								<span class="obsidian-table-number-minor">{{range2}}</span>
+								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+							</div>
+						{{else}}
 							{{range1}}
-							<span class="obsidian-table-number-split">&sol;</span>
-						</div>
-						<div>
-							<span class="obsidian-table-number-minor">{{range2}}</span>
-							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
-						</div>
+							<span class="obsidian-table-unit">
+								{{localize 'OBSIDIAN.FeetAbbr'}}
+							</span>
+						{{/if}}
 					</div>
 					{{else}}
 					<div class="obsidian-table-number-md">
@@ -133,4 +182,5 @@
 		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
 		{{/unless}}
 	</div>
+	{{#if ../component}}</section>{{/if}}
 {{/each}}

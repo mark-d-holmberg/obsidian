@@ -250,7 +250,7 @@ Rules.SPELLS_KNOWN_TABLE = {
 	}
 };
 
-Rules.VEHICLE_LAND_FEATURES = ['none', 'station', 'reaction'];
+Rules.VEHICLE_LAND_FEATURES = ['none', 'action', 'weapon', 'reaction'];
 Rules.VEHICLE_WATER_FEATURES = ['action', 'component', 'siege', 'none'];
 Rules.VEHICLE_TYPES = ['land', 'water'];
 Rules.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed', 'siege'];

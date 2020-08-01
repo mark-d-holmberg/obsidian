@@ -9,7 +9,7 @@
 				<div class="obsidian-fullwidth obsidian-checkbox-row">
 					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
 					       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
-					<select name="flags.obsidian.subtype">
+					<select name="flags.obsidian.subtype" data-selector="subtype">
 						{{#select item.flags.obsidian.subtype}}
 							{{#each equipTypes}}
 								<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
@@ -41,7 +41,11 @@
 			</div>
 		</div>
 	</div>
+	{{#if (eq item.flags.obsidian.subtype 'vehicle')}}
+		{{> modules/obsidian/html/components/mountable.html}}
+	{{/if}}
 </fieldset>
+{{#unless (eq item.flags.obsidian.subtype 'vehicle')}}
 <fieldset {{disabled (not item.flags.obsidian.armour)}}>
 	<legend>
 		{{fancy-checkbox 'flags.obsidian.armour' content='OBSIDIAN.ItemType-armour'
@@ -83,3 +87,4 @@
 		</div>
 	</div>
 </fieldset>
+{{/unless}}

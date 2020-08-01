@@ -208,6 +208,10 @@
 					{{/if}}
 				</section>
 			{{/if}}
+			{{#if featCategories.component}}
+				{{> modules/obsidian/html/components/features.html feats=featCategories.component
+						component=true}}
+			{{/if}}
 			{{#if featCategories.reaction}}
 				<section>
 					{{> modules/obsidian/html/components/features.html feats=featCategories.reaction

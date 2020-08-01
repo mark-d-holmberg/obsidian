@@ -15,6 +15,7 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/saves-part.html',
 		'modules/obsidian/html/components/features.html',
 		'modules/obsidian/html/components/crew-table.html',
+		'modules/obsidian/html/components/mountable.html',
 		'modules/obsidian/html/components/effects/resource.html',
 		'modules/obsidian/html/components/effects/attack.html',
 		'modules/obsidian/html/components/effects/damage.html',
