@@ -200,6 +200,14 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
+	async importFromJSON (json) {
+		const data = Migrate.convertActor(JSON.parse(json));
+		delete data._id;
+		data.flags.obsidian.skills = duplicate(data.data.skills);
+
+		return this.update(data);
+	}
+
 	importSpells (item) {
 		if (!getProperty(item, 'flags.obsidian.effects.length')) {
 			return;
