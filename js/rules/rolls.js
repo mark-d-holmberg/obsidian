@@ -743,6 +743,8 @@ export const Rolls = {
 
 			if (effect.components.some(c => c.type === 'target' && c.target === 'area')) {
 				results[0].aoe = effect.uuid;
+				results[0].consumed = options.consumed;
+				results[0].spellLevel = options.spellLevel;
 			}
 		}
 
@@ -897,19 +899,18 @@ export const Rolls = {
 	},
 
 	placeTemplate: function (evt) {
-		let actor = game.actors.get(evt.currentTarget.dataset.actor);
+		const options = evt.currentTarget.dataset;
+		let actor = game.actors.get(options.actor);
+
 		if (!actor) {
-			actor =
-				ObsidianActor.fromSceneTokenPair(
-					evt.currentTarget.dataset.scene,
-					evt.currentTarget.dataset.token);
+			actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
 
 			if (!actor) {
 				return;
 			}
 		}
 
-		const effect = actor.data.obsidian.effects.get(evt.currentTarget.dataset.effect);
+		const effect = actor.data.obsidian.effects.get(options.effect);
 		if (!effect) {
 			return;
 		}
@@ -924,6 +925,24 @@ export const Rolls = {
 			return;
 		}
 
+		let scaledDistance = aoe.distance;
+		const scaledAmount = options.scaling || 0;
+		const scaling =
+			Effect.getScaling(actor, effect,
+				options.consumed || options.spellLevel || options.scaling);
+
+		if (scaledAmount && scaling) {
+			const aoeScaling =
+				scaling.effect.components.find(c => c.type === 'target' && c.target === 'area');
+
+			if (aoeScaling) {
+				scaledDistance =
+					Effect.scaleConstant(
+						scaling, scaledAmount, scaledDistance, aoeScaling.distance);
+			}
+		}
+
+
 		// Temporarily set the core data to the AoE so we can interface with
 		// AbilityTemplate.
 		if (!item.data.data.target) {
@@ -931,7 +950,7 @@ export const Rolls = {
 		}
 
 		item.data.data.target.type = aoe.area;
-		item.data.data.target.value = aoe.distance;
+		item.data.data.target.value = scaledDistance;
 
 		const template = AbilityTemplate.fromItem(item);
 		template.drawPreview();

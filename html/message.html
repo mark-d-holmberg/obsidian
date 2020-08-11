@@ -125,7 +125,10 @@
 		        {{else}}
 		          data-actor="{{message.speaker.actor}}"
 		        {{/if}}
-		        data-effect="{{message.flags.obsidian.aoe}}">
+		        data-effect="{{message.flags.obsidian.aoe}}"
+		        data-scaling="{{message.flags.obsidian.upcast}}"
+		        data-consumed="{{message.flags.obsidian.consumed}}"
+		        data-spell-level="{{message.flags.obsidian.spellLeve}}">
 			<i class="fas fa-bullseye"></i>
 			{{localize 'OBSIDIAN.AreaOfEffect'}}
 		</button>
