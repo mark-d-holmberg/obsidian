@@ -37,4 +37,4 @@ The SVG images found in the `img` directory are used and redistributed under the
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.svg`, `marked.svg`, `prone.svg`
 * [Willdabeast](http://wjbstories.blogspot.com/): `rod.svg`
 
-The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`, `abjuration.png`, `conjuration.png`, `divination.png`, `enchantment.png`, `evocation.png`, `illusion.png`, `necromancy.png`, `transmutation.png`) are copyright 2019-2020 [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+The PNG images in the `img` directory (`copper.png`, `silver.png`, `electrum.png`, `gold.png`, `platinum.png`, `obsidian.png`, `abjuration.png`, `conjuration.png`, `divination.png`, `enchantment.png`, `evocation.png`, `illusion.png`, `necromancy.png`, `transmutation.png`, `damage-reduction.png`) are copyright 2019-2020 [mikiko](https://mikiko.art) and are used and redistributed under the terms of [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).

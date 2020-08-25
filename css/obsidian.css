@@ -470,6 +470,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin: 0;
 }
 
+.obsidian-defenses .obsidian-list-box-row > div:first-child {
+	width: 14px;
+	height: 14px;
+	margin: 0 5px 0 0;
+}
+
 .obsidian-char-hp {
 	padding: 4px 14px;
 }

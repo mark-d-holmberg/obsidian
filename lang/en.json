@@ -967,5 +967,7 @@
 	"OBSIDIAN.NewComponent": "New Component",
 	"OBSIDIAN.NewWeapon": "New Weapon",
 	"OBSIDIAN.Cover": "{0} Cover",
-	"OBSIDIAN.ThresholdAbbr": "DT"
+	"OBSIDIAN.ThresholdAbbr": "DT",
+	"OBSIDIAN.DamageReduction": "Damage Reduction",
+	"OBSIDIAN.PhysicalDamageReduction": "Reduces nonmagical physical damage by {0}"
 }

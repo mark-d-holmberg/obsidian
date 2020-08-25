@@ -320,6 +320,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/magic/necromancy.png');
 }
 
+.obsidian-icon-damage-reduction {
+	background-image: url('../img/damage-reduction.png');
+}
+
 .obsidian-css-icon {
 	position: relative;
 }

@@ -4,6 +4,11 @@
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			{{fancy-checkbox prefix 'disease' content='OBSIDIAN.ImmuneDisease' checked=disease}}
 			{{fancy-checkbox prefix 'sleep' content='OBSIDIAN.ImmuneSleep' checked=sleep}}
+			<label class="obsidian-inline">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" name="{{prefix}}.dr" value="{{dr}}">
+				<span>{{localize 'OBSIDIAN.DamageReduction'}}</span>
+			</label>
 		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">

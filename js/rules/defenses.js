@@ -6,6 +6,11 @@ export function prepareDefenses (actorData, flags) {
 	flags.defenses.vuln = new Set();
 	flags.defenses.conds = {imm: [], adv: [], dis: []};
 
+	if (!flags.defenses.dr) {
+		flags.defenses.dr = {value: null};
+	}
+
+	flags.defenses.dr.derived = null;
 	prepareActiveDefenses(actorData, flags);
 	prepareManualDefenses(flags);
 
@@ -14,6 +19,7 @@ export function prepareDefenses (actorData, flags) {
 }
 
 function prepareActiveDefenses (actorData, flags) {
+	let bestDR = 0;
 	actorData.obsidian.toggleable
 		.filter(effect => effect.toggle.active)
 		.filter(effect => effect.active.defense.length)
@@ -27,6 +33,10 @@ function prepareActiveDefenses (actorData, flags) {
 				flags.defenses.conds.imm.push('disease');
 			}
 
+			if (def.dr && def.dr > bestDR) {
+				bestDR = def.dr;
+			}
+
 			if (def.defense === 'condition') {
 				flags.defenses.conds[def.condition.level].push(def.condition.condition);
 			} else if (def.defense === 'damage') {
@@ -37,6 +47,10 @@ function prepareActiveDefenses (actorData, flags) {
 				}
 			}
 		});
+
+	if (bestDR) {
+		flags.defenses.dr.derived = bestDR;
+	}
 }
 
 function prepareManualDefenses (flags) {
@@ -54,6 +68,11 @@ function prepareManualDefenses (flags) {
 
 	if (flags.defenses.sleep) {
 		flags.defenses.conds.imm.push('sleep');
+	}
+
+	if (flags.defenses.dr.value) {
+		// Override any derived value.
+		flags.defenses.dr.derived = flags.defenses.dr.value;
 	}
 
 	Object.entries(flags.defenses.conds).forEach(([level, conditions]) =>
@@ -162,6 +181,10 @@ export function hpAfterDamage (actor, damage, attack) {
 
 		if (isImmune) {
 			continue;
+		}
+
+		if (['blg', 'prc', 'slh'].includes(type) && !attack?.magical && defenses.dr.derived) {
+			dmg -= defenses.dr.derived;
 		}
 
 		if (isResistant) {

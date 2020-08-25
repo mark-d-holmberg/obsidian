@@ -302,6 +302,7 @@ function formatDefenses (defs) {
 		dis: new Set()
 	};
 
+	let bestDR = 0;
 	defs.forEach(def => {
 		if (def.sleep) {
 			conds.imm.add('sleep');
@@ -309,6 +310,10 @@ function formatDefenses (defs) {
 
 		if (def.disease) {
 			conds.imm.add('disease');
+		}
+
+		if (def.dr && def.dr > bestDR) {
+			bestDR = def.dr;
 		}
 
 		if (def.defense === 'condition') {
@@ -337,6 +342,10 @@ function formatDefenses (defs) {
 	if (vuln.size) {
 		parts.push(
 			localize('OBSIDIAN.VulnTo').format(oxfordComma(Array.from(vuln.values()).map(dmg))));
+	}
+
+	if (bestDR) {
+		parts.push(localize('OBSIDIAN.PhysicalDamageReduction').format(bestDR));
 	}
 
 	[['imm', 'ImmuneTo'], ['adv', 'AdvantageSave'], ['dis', 'DisadvantageSave']]
