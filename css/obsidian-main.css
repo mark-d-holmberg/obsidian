@@ -91,7 +91,8 @@
 
 .obsidian-tab-contents > h3,
 .npc .obsidian h3,
-.vehicle .obsidian h3 {
+.vehicle .obsidian h3,
+.obsidian-char-notes h3 {
 	text-transform: uppercase;
 	font-family: var(--font-condensed);
 	font-size: 13px;
@@ -103,6 +104,11 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-end;
+}
+
+.obsidian-char-notes h3 {
+	margin: 15px 0 -2px 0;
+	padding: 0;
 }
 
 .obsidian-tab-contents h3 i {

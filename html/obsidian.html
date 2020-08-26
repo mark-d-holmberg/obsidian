@@ -26,6 +26,18 @@
 				{{{data.details.flaw}}}
 			</div>
 		</div>
+		{{#unless limited}}
+		<div class="obsidian-char-notes">
+			<h3>
+				{{localize 'OBSIDIAN.Notes'}}
+				<a class="obsidian-edit obsidian-simple-dialog" data-template="other.html"
+				   data-title="{{localize 'OBSIDIAN.EditNotes'}}" data-width="578">
+					<i class="fas fa-edit"></i>
+				</a>
+			</h3>
+			<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.other}}}</div>
+		</div>
+		{{/unless}}
 		<div class="obsidian-collapser-container obsidian-ptr">
 			<i class="fas fa-angle-double-down fa-rotate-90"></i>
 		</div>

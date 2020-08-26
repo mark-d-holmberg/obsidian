@@ -11,7 +11,7 @@ import {addSettingsHook} from './rules/spell-lists.js';
 import {Migrate} from './migration/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
-import {addMacroHook} from './module/macros.js';
+import {addMacroHook, hotbarRender} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {advanceDurations, initDurations} from './module/duration.js';
 import {patchConditions} from './rules/conditions.js';
@@ -85,6 +85,10 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
+
+Hooks.on('renderHotbar', hotbarRender);
+Hooks.on('obsidian.actorsPrepared', () => ui.hotbar.render());
+Hooks.on('updateOwnedItem', () => ui.hotbar.render());
 
 addCompendiumContextMenuHook();
 addSettingsHook();

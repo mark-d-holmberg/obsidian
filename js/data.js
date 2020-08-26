@@ -58,4 +58,5 @@ export async function loadSpellData () {
 	OBSIDIAN.computeSpellsByClass(spellLists);
 	game.actors.entities.forEach(actor => actor.prepareData());
 	Object.values(game.actors.tokens).forEach(actor => actor.prepareData());
+	Hooks.callAll('obsidian.actorsPrepared');
 }

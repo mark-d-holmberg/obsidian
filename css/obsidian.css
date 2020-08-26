@@ -1505,3 +1505,14 @@ legend .fancy-checkbox {
 .obsidian-multiline-input.obsidian-placeholder {
 	color: var(--text-secondary);
 }
+
+.obsidian-hotbar-counter {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	background-color: rgba(0,0,0,.75);
+	color: var(--text-regular);
+	font-size: 12px;
+}
