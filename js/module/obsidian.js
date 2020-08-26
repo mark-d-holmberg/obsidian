@@ -7,6 +7,7 @@ import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
 import {Sheet} from './sheet.js';
 import {ObsidianTabs} from './tabs.js';
+import {Rules} from '../rules/rules.js';
 
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
@@ -41,7 +42,6 @@ import {ObsidianNPCSkillsDialog} from '../dialogs/npc-skills.js';
 import {ObsidianNPCFeaturesDialog} from '../dialogs/npc-features.js';
 // noinspection ES6UnusedImports
 import {ObsidianVehicleFeaturesDialog} from '../dialogs/vehicle-features.js';
-import {Rules} from '../rules/rules.js';
 
 export class Obsidian extends ActorSheet5eCharacter {
 	constructor (object, options) {
@@ -156,6 +156,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('h3[data-notes]').mouseup(this._onCollapseNotes.bind(this));
+		html.find('.obsidian-speed').mouseup(this._cycleSpeed.bind(this));
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -245,6 +246,35 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		if (this.settings.height !== undefined) {
 			this.position.height = this.settings.height;
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_cycleSpeed (evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+
+		const currentSpeed = this.actor.data.flags.obsidian.attributes.speedDisplay || 'walk';
+		const speeds = this.actor.data.flags.obsidian.attributes.speed;
+		const startIdx = Rules.SPEEDS.indexOf(currentSpeed);
+		let newSpeed = null;
+
+		for (let i = 1; i < Rules.SPEEDS.length; i++) {
+			const nextIdx = (startIdx + i) % Rules.SPEEDS.length;
+			const speedKey = Rules.SPEEDS[nextIdx];
+			const speed = speeds[speedKey];
+
+			if (speed.override || speed.derived) {
+				newSpeed = speedKey;
+				break;
+			}
+		}
+
+		if (newSpeed !== currentSpeed) {
+			this.actor.update({'flags.obsidian.attributes.speedDisplay': newSpeed});
 		}
 	}
 
