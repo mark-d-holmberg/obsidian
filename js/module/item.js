@@ -159,6 +159,12 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		return;
 	}
 
+	if (!actorData.obsidian.filters?.bonuses) {
+		// The actor hasn't been prepared yet.
+		// TODO: Decouple actor and item preparation workflow.
+		return;
+	}
+
 	const data = actorData.data;
 	const flags = item.flags.obsidian;
 	const effects = flags.effects || [];
@@ -172,10 +178,10 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		Prepare.weaponNotes(item);
 	}
 
-	item.obsidian = {
+	item.obsidian = mergeObject(item.obsidian || {}, {
 		actionable: [],
 		collection: {versatile: []}
-	};
+	});
 
 	Effect.metadata.components.forEach(c => item.obsidian.collection[c] = []);
 

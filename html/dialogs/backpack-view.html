@@ -3,12 +3,12 @@
 		<div class="obsidian-char-inv-header-weight">
 			<div>
 				{{localize 'OBSIDIAN.WeightCarried'}}:
-				<span>{{numberFormat item.flags.obsidian.carriedWeight decimals=2}}</span>
+				<span>{{numberFormat item.obsidian.carriedWeight decimals=2}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
-			<div{{#if (gt item.flags.obsidian.carriedWeight item.data.capacity.value)}}
+			<div{{#if (gt item.obsidian.carriedWeight item.data.capacity.value)}}
 				class="obsidian-negative"{{/if}}>
-				{{#if (gt item.flags.obsidian.carriedWeight item.data.capacity.value)}}
+				{{#if (gt item.obsidian.carriedWeight item.data.capacity.value)}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
 				{{else}}
 					{{localize 'OBSIDIAN.WithinCapacity'}}
@@ -32,7 +32,7 @@
 		</div>
 		<div class="obsidian-table">
 			<div class="obsidian-thead">
-				{{#if (not-empty item.flags.obsidian.contents)}}
+				{{#if (not-empty item.obsidian.contents)}}
 					<div class="obsidian-col-action"></div>
 					<div class="obsidian-col-inv-item">{{localize 'OBSIDIAN.Name'}}</div>
 					<div class="obsidian-col-weight">{{localize 'OBSIDIAN.Weight'}}</div>
@@ -48,7 +48,7 @@
 				{{/if}}
 			</div>
 			<div class="obsidian-tbody">
-				{{> modules/obsidian/html/components/inventory.html item.flags.obsidian.contents}}
+				{{> modules/obsidian/html/components/inventory.html item.obsidian.contents}}
 			</div>
 		</div>
 	</div>

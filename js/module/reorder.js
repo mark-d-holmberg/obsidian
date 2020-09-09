@@ -176,60 +176,33 @@ export const Reorder = {
 
 	insert: function (actor, src, dest, where, update) {
 		const data = actor.data;
-		const root = data.flags.obsidian.order.equipment.root;
-		const containers = data.flags.obsidian.order.equipment.containers;
-		const srcParent = actor.getItemParent(src);
+		const root = data.obsidian.inventory.root;
+		const containers = data.obsidian.inventory.containers;
 		const destParent = actor.getItemParent(dest);
-		let fromOrder = srcParent == null ? root : srcParent.flags.obsidian.order;
-		let toOrder = destParent == null ? root : destParent.flags.obsidian.order;
+		let siblings = destParent == null ? root : destParent.obsidian.contents;
 
 		if (src.type === 'backpack') {
-			fromOrder = containers;
-			toOrder = containers;
+			siblings = containers;
 		} else if (dest?.type === 'backpack') {
-			toOrder = dest.flags.obsidian.order;
+			siblings = dest.obsidian.contents;
 		}
 
-		const oldPos = fromOrder.indexOf(src._id);
-		let newPos = toOrder.indexOf(dest?._id);
+		siblings = siblings.map(i => {return {data: i};});
+		const existing = siblings.find(i => i.data._id === src._id) || {data: src};
+		const updates = SortingHelpers.performIntegerSort(existing, {
+			target: siblings.find(i => i.data._id === dest?._id),
+			siblings: siblings,
+			sortBefore: where === 'before'
+		});
 
-		if (fromOrder === toOrder) {
-			if (oldPos < newPos && where === 'before') {
-				newPos--;
-			} else if (oldPos > newPos && where === 'after') {
-				newPos++;
-			}
-		} else if (where === 'after') {
-			newPos++;
-		}
+		updates.forEach(u => update[`items.${u.target.data.idx}.sort`] = u.update.sort);
+
+		const parentKey = `items.${src.idx}.flags.obsidian.parent`;
+		update[parentKey] = destParent?._id || null;
 
 		if (src.type !== 'backpack' && dest?.type === 'backpack') {
-			newPos = toOrder.length;
-		}
-
-		if (newPos < 0) {
-			newPos = 0;
-		}
-
-		if (fromOrder !== toOrder || oldPos !== newPos) {
-			fromOrder.splice(oldPos, 1);
-			toOrder.splice(newPos, 0, src._id);
-		}
-
-		update['flags.obsidian.order.equipment'] = duplicate(data.flags.obsidian.order.equipment);
-		update[`items.${src.idx}.flags.obsidian.parent`] =
-			src.type !== 'backpack' && dest?.type === 'backpack'
-				? dest._id
-				: dest?.flags.obsidian.parent === undefined ? null : dest.flags.obsidian.parent;
-
-		if (srcParent != null) {
-			update[`items.${srcParent.idx}.flags.obsidian.order`] = duplicate(fromOrder);
-		}
-
-		if (src.type !== 'backpack' && dest?.type === 'backpack') {
-			update[`items.${dest.idx}.flags.obsidian.order`] = duplicate(toOrder);
-		} else if (destParent != null) {
-			update[`items.${destParent.idx}.flags.obsidian.order`] = duplicate(toOrder);
+			// Moving an item into a backpack.
+			update[parentKey] = dest._id;
 		}
 	},
 

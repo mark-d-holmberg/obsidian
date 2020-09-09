@@ -99,13 +99,13 @@
 				{{#each actor.obsidian.inventory.containers}}
 					<details{{#if flags.obsidian.open}} open{{/if}}>
 						<summary draggable="true" data-reorderable="true" class="
-						{{~#if (gt flags.obsidian.carriedWeight data.capacity.value)~}}
+						{{~#if (gt obsidian.carriedWeight data.capacity.value)~}}
 							obsidian-negative
 						{{~/if}} obsidian-inv-container" data-item-id="{{_id}}">
 							<div>
 								<h3>{{name}}</h3>
 								<div class="obsidian-details-sub-text">
-									&bull; {{numberFormat flags.obsidian.carriedWeight decimals=2}}
+									&bull; {{numberFormat obsidian.carriedWeight decimals=2}}
 								</div>
 								<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
 							</div>
@@ -121,7 +121,7 @@
 							</div>
 							<i class="fas fa-angle-down"></i>
 						</summary>
-						{{> modules/obsidian/html/components/inventory.html flags.obsidian.contents}}
+						{{> modules/obsidian/html/components/inventory.html obsidian.contents}}
 					</details>
 				{{/each}}
 			</div>

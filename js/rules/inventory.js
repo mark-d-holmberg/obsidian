@@ -6,11 +6,11 @@ export function prepareInventory (actorData) {
 		weight: 0,
 		encumbered: false,
 		items: [],
-		attunements: 0
+		attunements: 0,
+		root: [],
+		containers: []
 	};
 
-	const rootOrder = new Set(actorData.flags.obsidian.order.equipment.root);
-	const containerOrder = new Set(actorData.flags.obsidian.order.equipment.containers);
 	const inventory = actorData.obsidian.inventory;
 	const itemTypes = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot']);
 	const map = actorData.obsidian.itemsByID;
@@ -29,26 +29,17 @@ export function prepareInventory (actorData) {
 		}
 
 		if (item.type === 'backpack') {
-			item.flags.obsidian.carriedWeight = 0;
+			item.obsidian = {contents: [], carriedWeight: 0};
 			if (item.flags.obsidian.currency) {
 				const currencyWeight =
 					Object.values(item.flags.obsidian.currency)
 						.reduce((acc, currency) => acc + currency, 0)
 					* OBSIDIAN.Rules.COIN_WEIGHT;
 
-				item.flags.obsidian.carriedWeight += currencyWeight;
+				item.obsidian.carriedWeight += currencyWeight;
 				if (!item.data.capacity.weightless) {
 					inventory.weight += currencyWeight;
 				}
-			}
-
-			if (!item.flags.obsidian.order) {
-				item.flags.obsidian.order = [];
-			}
-
-			item.obsidian = {order: new Set(item.flags.obsidian.order)};
-			if (!containerOrder.has(item._id)) {
-				actorData.flags.obsidian.order.equipment.containers.push(item._id);
 			}
 		}
 	}
@@ -65,22 +56,22 @@ export function prepareInventory (actorData) {
 			inventory.attunements++;
 		}
 
-		if (flags.parent == null) {
-			inventory.weight += totalWeight;
-			if (item.type !== 'backpack' && !rootOrder.has(item._id)) {
-				actorData.flags.obsidian.order.equipment.root.push(item._id);
+		const container = map.get(flags.parent);
+		if (container) {
+			container.obsidian.carriedWeight += totalWeight;
+			if (!container.data.capacity.weightless) {
+				inventory.weight += totalWeight;
+			}
+
+			if (container.obsidian?.contents) {
+				container.obsidian.contents.push(item);
 			}
 		} else {
-			const container = map.get(flags.parent);
-			if (container) {
-				container.flags.obsidian.carriedWeight += totalWeight;
-				if (!container.data.capacity.weightless) {
-					inventory.weight += totalWeight;
-				}
-
-				if (container.obsidian && !container.obsidian.order.has(item._id)) {
-					container.flags.obsidian.order.push(item._id);
-				}
+			inventory.weight += totalWeight;
+			if (item.type === 'backpack') {
+				inventory.containers.push(item);
+			} else {
+				inventory.root.push(item);
 			}
 		}
 
@@ -90,16 +81,16 @@ export function prepareInventory (actorData) {
 			|| (item.type === 'equipment' && OBSIDIAN.Schema.EquipTypes.includes(flags.subtype));
 	}
 
-	const link = list => list.map(id => map.get(id)).filter(item => item !== undefined);
 	inventory.weight +=
 		Object.values(actorData.data.currency).reduce((acc, currency) => acc + currency, 0)
 		* OBSIDIAN.Rules.COIN_WEIGHT;
-	inventory.root = link(actorData.flags.obsidian.order.equipment.root);
-	inventory.containers = link(actorData.flags.obsidian.order.equipment.containers);
-	inventory.containers.forEach(container =>
-		container.flags.obsidian.contents = link(container.flags.obsidian.order));
 
 	if (inventory.weight >= actorData.data.abilities.str.value * OBSIDIAN.Rules.CARRY_MULTIPLIER) {
 		inventory.encumbered = true;
 	}
+
+	const sort = (a, b) => a.sort - b.sort;
+	inventory.root.sort(sort);
+	inventory.containers.sort(sort);
+	inventory.containers.forEach(container => container.obsidian.contents.sort(sort));
 }
