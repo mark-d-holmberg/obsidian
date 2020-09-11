@@ -273,7 +273,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			}
 		}
 
-		if (newSpeed !== currentSpeed) {
+		if (newSpeed && newSpeed !== currentSpeed) {
 			this.actor.update({'flags.obsidian.attributes.speedDisplay': newSpeed});
 		}
 	}
@@ -398,7 +398,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
 		atk.parentEffect.versatile =
 			atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
-		atk.parentItem = this.actor.getEmbeddedEntity('OwnedItem', atk.parentEffect.parentItem);
+		atk.parentItem = this.actor.data.obsidian.itemsByID.get(atk.parentEffect.parentItem);
 	}
 
 	/**

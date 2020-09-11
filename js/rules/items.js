@@ -346,7 +346,7 @@ export const ObsidianItems = {
 	},
 
 	rollItem: async function (actor, options) {
-		const item = actor.getEmbeddedEntity('OwnedItem', options.id);
+		const item = actor.data.obsidian.itemsByID.get(options.id);
 		if (!item || !item.obsidian) {
 			Rolls.create(actor, options);
 			return;

@@ -283,11 +283,11 @@ export const Sheet = {
 					label: game.i18n.localize('OBSIDIAN.CreateItem'),
 					callback: dlg =>
 						sheet.actor.createEmbeddedEntity(
-							'OwnedItem', validateForm(dlg[0].children[0]))
+							'OwnedItem', new FormDataExtended(dlg.find('form')[0]).toObject())
 				}
 			},
 			default: 'create'
-		}, {classes: ['form', 'dialog', 'obsidian-window']}).render(true);
+		}, {classes: ['form', 'dialog', 'obsidian-window'], jQuery: true}).render(true);
 	},
 
 	onAddSpell: function (sheet, evt) {
@@ -477,7 +477,6 @@ export const Sheet = {
 		if (!item) {
 			return;
 		}
-
 
 		const max = Math.max(resource.max, resource.remaining);
 		let used = max - resource.remaining;

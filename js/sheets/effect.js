@@ -310,7 +310,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	}
 
 	get _formData () {
-		const expanded = OBSIDIAN.updateArrays(this.item.data, super._formData);
+		const expanded = OBSIDIAN.updateArrays(this.item.data, this._getSubmitData());
 		if (!expanded['flags.obsidian.effects']) {
 			return expanded;
 		}

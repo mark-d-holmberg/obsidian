@@ -72,26 +72,6 @@ export class ObsidianItemSheet extends ItemSheet {
 		super._createEditor(target, editorOptions, initialContent);
 	}
 
-	get _formData () {
-		const formData = this._getFormData(this.element.find('form')[0]);
-		const types = formData._dtypes;
-
-		return Array.from(formData).reduce((data, [key, val]) => {
-			const type = types[key];
-			if (type === 'Number') {
-				data[key] = val === '' ? null : Number(val);
-			} else if (type === 'Boolean') {
-				data[key] = val === 'true';
-			} else if (type === 'Radio') {
-				data[key] = JSON.parse(val);
-			} else {
-				data[key] = val;
-			}
-
-			return data;
-		}, {});
-	}
-
 	/**
 	 * @private
 	 */

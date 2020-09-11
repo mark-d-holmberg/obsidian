@@ -195,7 +195,7 @@
 			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.item
 					view=false upcast=message.flags.obsidian.upcast details=message.flags.obsidian.details}}
 		{{else}}
-			{{{message.flags.obsidian.details}}}
+			{{{clean-formatting message.flags.obsidian.details}}}
 		{{/if}}
 	</details>
 	{{/if}}

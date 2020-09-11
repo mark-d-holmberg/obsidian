@@ -179,7 +179,7 @@
 		{{/each}}
 		{{/unless}}
 		{{#unless feat.flags.obsidian.collapsed}}
-		<div class="obsidian-feature-body">{{{feat.flags.obsidian.display}}}</div>
+		<div class="obsidian-feature-body">{{{clean-formatting feat.flags.obsidian.display}}}</div>
 		{{/unless}}
 	</div>
 	{{#if ../component}}</section>{{/if}}

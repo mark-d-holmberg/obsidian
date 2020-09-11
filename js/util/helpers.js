@@ -61,6 +61,10 @@ export function registerHandlebarHelpers () {
 		return ar.length;
 	});
 
+	Handlebars.registerHelper('clean-formatting', function (html) {
+		return new Handlebars.SafeString(html.replace(/color: #191813;/g, ''));
+	});
+
 	Handlebars.registerHelper('debug', console.debug);
 
 	Handlebars.registerHelper('defined', function (arg) {

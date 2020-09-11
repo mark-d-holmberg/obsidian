@@ -8,6 +8,7 @@ import {applyEffects, handleDurations} from '../module/duration.js';
 import {ObsidianActor} from '../module/actor.js';
 import {hpAfterDamage} from './defenses.js';
 import {rollInitiative} from './combat.js';
+import ObsidianDie from '../module/die.js';
 
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
@@ -33,7 +34,7 @@ export const Rolls = {
 
 	abilityRecharge: function (item, effect, component) {
 		const recharge = component.recharge;
-		const roll = new Die(6).roll(1);
+		const roll = new ObsidianDie(6).roll(1);
 		const success = roll.total >= recharge.roll;
 
 		return {
@@ -355,7 +356,7 @@ export const Rolls = {
 				return;
 			}
 
-			const item = actor.getEmbeddedEntity('OwnedItem', options.id);
+			const item = actor.data.obsidian.itemsByID.get(options.id);
 			if (!item) {
 				return;
 			}
@@ -459,7 +460,7 @@ export const Rolls = {
 			n += rollMod.ndice;
 		}
 
-		const roll = new Die(20).roll(n);
+		const roll = new ObsidianDie(20).roll(n);
 		const rolls = roll.results.map(r => [r]);
 		let adv = [];
 
@@ -478,7 +479,7 @@ export const Rolls = {
 					mod.sgn = '+';
 				}
 
-				mod.roll = new Die(mod.die).roll(mod.ndice * mult);
+				mod.roll = new ObsidianDie(mod.die).roll(mod.ndice * mult);
 				return acc + mod.roll.total * mult;
 			}
 
@@ -773,7 +774,7 @@ export const Rolls = {
 	},
 
 	hd: function (actor, rolls, conBonus) {
-		const results = rolls.map(([n, d]) => new Die(d).roll(n));
+		const results = rolls.map(([n, d]) => new ObsidianDie(d).roll(n));
 		Rolls.toChat(actor, {
 			flags: {
 				obsidian: {
@@ -958,7 +959,7 @@ export const Rolls = {
 
 	recharge: function (item, effect, component) {
 		const recharge = component.recharge;
-		const roll = new Die(recharge.die).roll(recharge.ndice);
+		const roll = new ObsidianDie(recharge.die).roll(recharge.ndice);
 
 		return {
 			flags: {
@@ -997,8 +998,8 @@ export const Rolls = {
 
 			const mult = dmg.ndice < 0 ? -1 : 1;
 			const ndice = Math.abs(dmg.ndice);
-			const hitRoll = new Die(dmg.die).roll(ndice);
-			const critRoll = new Die(dmg.die).roll(dmg.derived.ncrit || ndice);
+			const hitRoll = new ObsidianDie(dmg.die).roll(ndice);
+			const critRoll = new ObsidianDie(dmg.die).roll(dmg.derived.ncrit || ndice);
 			const hitRolls = hitRoll.results.map(r => [r * mult]);
 			const critRolls = critRoll.results.map(r => [r * mult]);
             const numRolls = ndice + (dmg.derived.ncrit || ndice);

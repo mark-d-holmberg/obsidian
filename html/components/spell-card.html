@@ -72,9 +72,9 @@
 	</div>
 	<div class="obsidian-item-card-body">
 		{{#if details}}
-			{{{details}}}
+			{{{clean-formatting details}}}
 		{{else}}
-			{{{data.description.value}}}
+			{{{clean-formatting data.description.value}}}
 		{{/if}}
 	</div>
 </div>
