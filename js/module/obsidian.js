@@ -176,6 +176,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	getData () {
 		const data = super.getData();
+		data.base = duplicate(this.actor._data);
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.actor.obsidian.attacks.forEach(this._reifyAttackLinks, this);
 

@@ -146,6 +146,7 @@ Rules.FEAT_TRIGGERS = ['hit', 'start'];
 Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];
 Rules.FEAT_USES_KEYS = ['abl', 'chr', 'cls'];
 Rules.HD = [2, 4, 6, 8, 10, 12, 20];
+Rules.INVENTORY_ITEMS = new Set(['weapon', 'equipment', 'consumable', 'backpack', 'tool', 'loot']);
 Rules.ITEM_CHARGE_DICE = [2, 3, 4, 6, 8, 10, 12, 20];
 Rules.ITEM_RECHARGE = ['long', 'short', 'dawn', 'dusk', 'never', 'roll'];
 Rules.MAX_LEVEL = 20;

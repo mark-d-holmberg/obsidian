@@ -107,10 +107,6 @@ export const Reorder = {
 				src =
 					await actor.createEmbeddedEntity(
 						'OwnedItem', ObsidianActor.duplicateItem(game.items.get(data.id).data));
-
-				if (actor.isToken) {
-					src = src.actorData.items.last();
-				}
 			}
 		}
 

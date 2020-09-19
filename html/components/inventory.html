@@ -12,7 +12,7 @@
 		     {{#if flags.obsidian.attunement}}data-filter-attunement="true"{{/if}}
 	     {{/if}}>
 		<div class="obsidian-col-action">
-			{{#if flags.obsidian.equippable}}
+			{{#if obsidian.equippable}}
 				<button type="button" class="{{#if data.equipped}}obsidian-btn-active{{/if}}
 				        obsidian-btn-outline obsidian-equip-action">
 					{{#if data.equipped}}
@@ -21,7 +21,7 @@
 						{{localize 'OBSIDIAN.Equip'}}
 					{{/if}}
 				</button>
-			{{else if (or (eq type 'tool') flags.obsidian.consumable)}}
+			{{else if (or (eq type 'tool') obsidian.consumable)}}
 				<button type="button" class="obsidian-btn-outline obsidian-equip-action">
 					{{localize 'OBSIDIAN.Use'}}
 				</button>
@@ -96,7 +96,7 @@
 			"></div>
 		</div>
 		<div class="obsidian-col-notes">
-			{{#each flags.obsidian.notes}}
+			{{#each obsidian.notes}}
 				<div class="obsidian-table-note-text">{{{this}}}</div>
 			{{/each}}
 		</div>

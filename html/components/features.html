@@ -124,7 +124,7 @@
 					{{/if}}
 				{{else if (eq parentItem.type 'weapon')}}
 					<div class="obsidian-table-number-md">
-						{{parentItem.flags.obsidian.reach}}
+						{{parentItem.obsidian.attributes.reach}}
 						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
 					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
@@ -179,7 +179,7 @@
 		{{/each}}
 		{{/unless}}
 		{{#unless feat.flags.obsidian.collapsed}}
-		<div class="obsidian-feature-body">{{{clean-formatting feat.flags.obsidian.display}}}</div>
+		<div class="obsidian-feature-body">{{{clean-formatting feat.obsidian.display}}}</div>
 		{{/unless}}
 	</div>
 	{{#if ../component}}</section>{{/if}}

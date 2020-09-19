@@ -6,11 +6,11 @@
 		style="grid-row-start: 3;"
 		{{/if}} class="obsidian-save-item" data-value="{{id}}">
 			<div class="obsidian-radio obsidian-ptr
-				{{#if (eq 0.5 proficiency.value)~}}
+				{{#if (eq 0.5 ../ability.proficient)~}}
 					obsidian-half-proficient
-				{{~else if (eq 1 proficiency.value)~}}
+				{{~else if (eq 1 ../ability.proficient)~}}
 					obsidian-proficient
-				{{~else if (eq 2 proficiency.value)~}}
+				{{~else if (eq 2 ../ability.proficient)~}}
 					obsidian-expertise
 				{{~/if~}}">
 				<span></span>

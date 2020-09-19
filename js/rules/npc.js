@@ -2,31 +2,30 @@ import {OBSIDIAN} from '../global.js';
 import {Rules} from './rules.js';
 import {Rolls} from './rolls.js';
 
-export function prepareNPC (actorData) {
-	const flags = actorData.flags.obsidian;
-	actorData.obsidian.tags = [];
+export function prepareNPC (flags, derived) {
+	derived.details.tags = [];
 
 	for (const [tag, val] of Object.entries(flags.details.tags)) {
 		if (tag === 'custom' || !val) {
 			continue;
 		}
 
-		actorData.obsidian.tags.push(game.i18n.localize(`OBSIDIAN.CreatureTag-${tag}`));
+		derived.details.tags.push(game.i18n.localize(`OBSIDIAN.CreatureTag-${tag}`));
 	}
 
-	actorData.obsidian.tags = actorData.obsidian.tags.join(', ');
+	derived.details.tags = derived.tags.join(', ');
 	if (!OBSIDIAN.notDefinedOrEmpty(flags.details.tags.custom)) {
-		if (!OBSIDIAN.notDefinedOrEmpty(actorData.obsidian.tags)) {
-			actorData.obsidian.tags += ', ';
+		if (!OBSIDIAN.notDefinedOrEmpty(derived.details.tags)) {
+			derived.details.tags += ', ';
 		}
 
-		actorData.obsidian.tags += flags.details.tags.custom;
+		derived.details.tags += flags.details.tags.custom;
 	}
 
-	prepareSpeed(actorData, flags);
+	prepareSpeed(flags, derived);
 }
 
-function prepareSpeed (actorData, flags) {
+function prepareSpeed (flags, derived) {
 	const speed = [];
 	const feet = game.i18n.localize('OBSIDIAN.FeetAbbr');
 	const hover = game.i18n.localize('OBSIDIAN.Hover').toLowerCase();
@@ -50,7 +49,7 @@ function prepareSpeed (actorData, flags) {
 		speed.push(item);
 	}
 
-	actorData.obsidian.speedDisplay = speed.join(', ');
+	derived.attributes.speed = speed.join(', ');
 }
 
 export async function refreshNPC (combat) {

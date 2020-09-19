@@ -43,8 +43,7 @@ export const Prepare = {
 
 			if (component.ability === 'spell') {
 				component.spellMod =
-					cls ? cls.flags.obsidian.spellcasting.mod
-						: data.attributes.spellMod ? data.attributes.spellMod : 0;
+					cls?.obsidian.spellcasting.mod || data.attributes.spellMod || 0;
 
 				mod = component.spellMod;
 				i18n = 'OBSIDIAN.Spell';
@@ -293,82 +292,79 @@ export const Prepare = {
 		return out;
 	},
 
-	abilities: function (actorData) {
-		const data = actorData.data;
-		const flags = actorData.flags.obsidian;
-		flags.abilities = {};
+	ac: function (data, flags, derived) {
+		derived.attributes.ac =
+			flags.attributes.ac.base
+			+ data.abilities[flags.attributes.ac.ability1].mod
+			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0);
 
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+			derived.attributes.ac = Number(flags.attributes.ac.override);
+		}
+	},
+
+	abilities: function (actorData, data, flags, derived) {
+		derived.abilities = {};
 		for (const [id, ability] of Object.entries(data.abilities)) {
-			flags.abilities[id] = {rollParts: [], value: ability.value};
-			const abilityBonuses =
-				actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityChecks(id));
+			derived.abilities[id] = {rollParts: [], value: ability.value};
+			const abilityBonuses = derived.filters.bonuses(Filters.appliesTo.abilityChecks(id));
 
 			if (abilityBonuses.length) {
-				flags.abilities[id].rollParts.push(
+				derived.abilities[id].rollParts.push(
 					...abilityBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 			}
 
-			const scoreBonuses =
-				actorData.obsidian.filters.bonuses(Filters.appliesTo.abilityScores(id));
-
+			const scoreBonuses = derived.filters.bonuses(Filters.appliesTo.abilityScores(id));
 			if (scoreBonuses.length) {
-				flags.abilities[id].value +=
+				derived.abilities[id].value +=
 					scoreBonuses.reduce((acc, bonus) =>
 						acc + bonusToParts(actorData, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
-				flags.abilities[id].value = Math.floor(flags.abilities[id].value);
+				derived.abilities[id].value = Math.floor(flags.abilities[id].value);
 			}
 
-			const abilitySetters =
-				actorData.obsidian.filters.setters(Filters.appliesTo.abilityScores(id));
-
+			const abilitySetters = derived.filters.setters(Filters.appliesTo.abilityScores(id));
 			if (abilitySetters.length) {
 				const setter = Effect.combineSetters(abilitySetters);
 				if (!setter.min || setter.score > ability.value) {
-					flags.abilities[id].value = setter.score;
+					derived.abilities[id].value = setter.score;
 				}
 			}
 
-			ability.mod = Math.floor((flags.abilities[id].value - 10) / 2);
+			ability.mod = Math.floor((derived.abilities[id].value - 10) / 2);
 		}
 	},
 
-	armour: function (actorData) {
-		const data = actorData.data;
-		actorData.obsidian.armour =
-			actorData.obsidian.itemsByType.get('equipment')
-				.filter(item => item.flags.obsidian?.armour);
+	armour: function (data, flags, derived) {
+		derived.armour =
+			derived.itemsByType.get('equipment').filter(item => item.flags.obsidian?.armour);
 
 		let bestArmour;
 		let bestShield;
 
-		for (const armour of actorData.obsidian.armour) {
-			const flags = armour.flags.obsidian;
-			flags.baseAC = armour.data.armor.value;
+		for (const armour of derived.armour) {
+			const baseAC = armour.data.armor.value;
 
 			if (armour.data.armor.type === 'shield') {
-				if (armour.data.equipped
-					&& (!bestShield || bestShield.flags.obsidian.baseAC < flags.baseAC))
-				{
+				if (armour.data.equipped && (!bestShield || bestShield.data.armor.value < baseAC)) {
 					bestShield = armour;
 				}
 			} else {
-				if (armour.data.equipped
-					&& (!bestArmour || bestArmour.flags.obsidian.baseAC < flags.baseAC))
-				{
+				if (armour.data.equipped && (!bestArmour || bestArmour.data.armor.value < baseAC)) {
 					bestArmour = armour;
 				}
 			}
 		}
 
-		const acOverride = actorData.flags.obsidian.attributes.ac.override;
+		const acOverride = flags.attributes.ac.override;
 		const armourDisplay = [];
 
 		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
 				armourDisplay.push(bestArmour.name.toLocaleLowerCase());
-				data.attributes.ac.min = bestArmour.flags.obsidian.baseAC;
+				derived.attributes.ac = bestArmour.data.armor.value;
+
 				if (bestArmour.flags.obsidian.addDex) {
 					let maxDex = bestArmour.data.armor.dex;
 					if (OBSIDIAN.notDefinedOrEmpty(maxDex)) {
@@ -377,203 +373,36 @@ export const Prepare = {
 						maxDex = Number(maxDex);
 					}
 
-					data.attributes.ac.min += Math.min(data.abilities.dex.mod, maxDex);
+					derived.attributes.ac += Math.min(data.abilities.dex.mod, maxDex);
 				}
 			}
 
 			if (bestShield) {
 				armourDisplay.push(bestShield.name.toLocaleLowerCase());
-				data.attributes.ac.min += bestShield.flags.obsidian.baseAC;
+				derived.attributes.ac += bestShield.data.armor.value;
 			}
 		}
 
-		actorData.obsidian.armourDisplay = armourDisplay.join(', ');
+		derived.armourDisplay = armourDisplay.join(', ');
 	},
 
-	armourNotes: function (item) {
-		const flags = item.flags.obsidian;
-		if (item.data.armor.type === 'shield') {
-			flags.notes.push(
-				`${flags.baseAC < 0 ? '-' : '+'}${flags.baseAC} `
-				+ game.i18n.localize('OBSIDIAN.ACAbbr'));
-		} else {
-			flags.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${flags.baseAC}`);
-			if (!OBSIDIAN.notDefinedOrEmpty(item.data.strength)) {
-				flags.notes.push(
-					`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} `
-					+ item.data.strength);
-			}
+	conditions: function (data, flags, derived) {
+		derived.conditions = {exhaustion: data.attributes.exhaustion};
+		Object.entries(flags.attributes.conditions)
+			.forEach(([condition, enabled]) => derived.conditions[condition] = enabled);
 
-			if (item.data.stealth) {
-				flags.notes.push(
-					'<div class="obsidian-table-note-flex">'
-						+ game.i18n.localize('OBSIDIAN.Skill-ste')
-						+ '<div class="obsidian-css-icon obsidian-css-icon-sm '
-						+ 'obsidian-css-icon-hexagon obsidian-css-icon-negative">'
-							+ '<div class="obsidian-css-icon-shape"></div>'
-							+ '<div class="obsidian-css-icon-label">'
-								+ game.i18n.localize('OBSIDIAN.DisadvantageAbbr')
-							+ '</div>'
-						+ '</div>'
-					+ '</div>');
-			}
-		}
-	},
-
-	conditions: function (actor) {
-		const actorData = actor.data;
-		actorData.obsidian.conditions = {exhaustion: actorData.data.attributes.exhaustion};
-		Object.entries(actorData.flags.obsidian.attributes.conditions)
-			.forEach(([condition, enabled]) => actorData.obsidian.conditions[condition] = enabled);
-
-		actorData.obsidian.conditions.concentrating =
-			actorData.obsidian.itemsByType.get('feat')
+		derived.conditions.concentrating =
+			derived.itemsByType.get('feat')
 				.filter(item => getProperty(item, 'flags.obsidian.duration'))
-				.map(duration => actorData.obsidian.effects.get(duration.flags.obsidian.ref))
-				.some(effect => effect && Effect.isConcentration(actorData, effect))
+				.map(duration => derived.effects.get(duration.flags.obsidian.ref))
+				.some(effect => effect && Effect.isConcentration(derived, effect))
 	},
 
-	consumables: function (actorData) {
-		actorData.obsidian.consumables =
-			actorData.obsidian.itemsByType.get('consumable').filter(item => item.flags.obsidian);
-
-		actorData.obsidian.ammo =
-			actorData.obsidian.consumables.filter(consumable =>
-				consumable.flags.obsidian.subtype === 'ammo');
-	},
-
-	equipment: function (actor) {
-		const actorData = actor.data;
-		for (const equipment of actorData.obsidian.itemsByType.get('equipment')) {
-			const flags = equipment.flags.obsidian;
-			if (!flags || flags.subtype !== 'vehicle') {
-				continue;
-			}
-
-			flags.display = TextEditor.enrichHTML(equipment.data.description.value, {
-				entities: false,
-				links: false,
-				rollData: actor.getRollData(),
-				secrets: actor.owner
-			});
-		}
-	},
-
-	weapons: function (actor) {
-		const actorData = actor.data;
-		for (const weapon of actorData.obsidian.itemsByType.get('weapon')) {
-			const flags = weapon.flags.obsidian;
-			if (!flags) {
-				continue;
-			}
-
-			if (flags.type === 'melee') {
-				flags.reach = 5;
-				if (flags.tags.reach) {
-					flags.reach += 5;
-				}
-			}
-
-			if (flags.tags.ammunition) {
-				if (!flags.ammo) {
-					flags.ammo = {};
-				}
-
-				flags.ammo.display =
-					`<select data-name="items.${weapon.idx}.flags.obsidian.ammo.id">
-						<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo.id) ? 'selected' : ''}>
-							${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
-						</option>
-						${actorData.obsidian.ammo.map(ammo =>
-							`<option value="${ammo._id}" ${ammo._id === flags.ammo.id ? 'selected': ''}>
-								${ammo.name}
-							</option>`)}
-					</select>`;
-			}
-
-			flags.display = TextEditor.enrichHTML(weapon.data.description.value, {
-				entities: false,
-				links: false,
-				rollData: actor.getRollData(),
-				secrets: actor.owner
-			});
-		}
-	},
-
-	weaponNotes: function (item) {
-		const flags = item.flags.obsidian;
-		if (flags.category) {
-			flags.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
-		}
-
-		flags.notes =
-			flags.notes.concat(
-				Object.entries(flags.tags).map(([tag, val]) => {
-					if (tag === 'custom' && val.length) {
-						return val;
-					}
-
-					if (val) {
-						if (tag === 'ammunition' && flags.ammo) {
-							return flags.ammo.display;
-						}
-
-						return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
-					}
-
-					return null;
-				}).filter(tag => tag != null));
-
-		if (flags.magical) {
-			flags.notes.push(game.i18n.localize('OBSIDIAN.Magical'));
-		}
-	},
-
-	features: function (actor) {
-		const actorData = actor.data;
-		actorData.obsidian.feats = [];
-
-		for (const feat of actorData.obsidian.itemsByType.get('feat')) {
-			const flags = feat.flags.obsidian;
-			if (!flags) {
-				continue;
-			}
-
-			actorData.obsidian.feats.push(feat);
-			if (feat.data.activation.type === 'special'
-				&& !OBSIDIAN.notDefinedOrEmpty(feat.flags.obsidian.trigger))
-			{
-				actorData.obsidian.triggers[feat.flags.obsidian.trigger].push(feat);
-			}
-
-			if (flags.source.type === 'class') {
-				const cls = actorData.obsidian.classes.find(cls => cls._id === flags.source.class);
-				if (cls) {
-					flags.source.className = cls.flags.obsidian.label;
-				}
-			}
-
-			// Check CONFIG is ready first.
-			try {
-				CONFIG.JournalEntry.entityClass.collection;
-			} catch {
-				return;
-			}
-
-			flags.display = TextEditor.enrichHTML(feat.data.description.value, {
-				entities: true,
-				links: true,
-				rollData: actor.getRollData(),
-				secrets: actor.owner
-			});
-		}
-	},
-
-	hd: function (actorData) {
+	hd: function (flags, derived) {
 		const classHD = {};
-		const existingHD = actorData.flags.obsidian.attributes.hd;
+		const existingHD = flags.attributes.hd;
 
-		for (const cls of actorData.obsidian.classes) {
+		for (const cls of derived.classes) {
 			const die = cls.data.hitDice;
 			let hd = classHD[die] || 0;
 			hd += cls.data.levels;
@@ -601,8 +430,8 @@ export const Prepare = {
 		}
 	},
 
-	init: function (data, flags) {
-		flags.attributes.init.rollParts = [];
+	init: function (data, flags, derived) {
+		derived.attributes.init.rollParts = [];
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
 			+ data.attributes.init.value;
@@ -616,8 +445,10 @@ export const Prepare = {
 		}
 	},
 
-	saves: function (actorData, data, flags, originalSaves) {
+	saves: function (actorData, data, flags, derived, originalSaves) {
+		derived.saves = {};
 		for (const [id, save] of Object.entries(data.abilities)) {
+			derived.saves[id] = {};
 			if (!flags.saves[id]) {
 				flags.saves[id] = {};
 			}
@@ -628,7 +459,7 @@ export const Prepare = {
 			}
 
 			if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
-				flags.saves[id].rollParts = [{
+				derived.saves[id].rollParts = [{
 					mod: save.proficient * data.attributes.prof,
 					name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 					proficiency: true,
@@ -641,46 +472,41 @@ export const Prepare = {
 					name: game.i18n.localize('OBSIDIAN.Bonus')
 				}];
 
-				const saveBonuses =
-					actorData.obsidian.filters.bonuses(Filters.appliesTo.savingThrows(id));
-
+				const saveBonuses = derived.filters.bonuses(Filters.appliesTo.savingThrows(id));
 				if (saveBonuses.length) {
-					flags.saves[id].rollParts.push(
+					derived.saves[id].rollParts.push(
 						...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-					flags.saves[id].rollParts = highestProficiency(flags.saves[id].rollParts);
+					derived.saves[id].rollParts = highestProficiency(derived.saves[id].rollParts);
 				}
 
-				flags.saves[id].proficiency =
-					flags.saves[id].rollParts.find(part => part.proficiency);
+				derived.saves[id].proficiency =
+					derived.saves[id].rollParts.find(part => part.proficiency);
 			} else {
-				flags.saves[id].rollParts = [{
+				derived.saves[id].rollParts = [{
 					mod: Number(flags.saves[id].override),
 					name: game.i18n.localize('OBSIDIAN.Override')
 				}];
 			}
 
 			save.save =
-				Math.floor(flags.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0));
+				Math.floor(derived.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-			if ((flags.saves[id].proficiency || 0) > 0 && original && original.save > save.save) {
+			if ((derived.saves[id].proficiency?.value || 0) > 0
+				&& original && original.save > save.save)
+			{
 				save.save = original.save;
 			}
 		}
 	},
 
-	skills: function (actorData, data, flags, originalSkills) {
-		actorData.obsidian.skills = {};
+	skills: function (actorData, data, flags, derived, originalSkills) {
+		derived.skills = {};
 		for (let [id, skill] of
 			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
 		{
 			const custom = !isNaN(Number(id));
-			if (!custom && flags.skills[id] === undefined) {
-				flags.skills[id] = duplicate(skill);
-			} else if (!custom) {
-				flags.skills[id] = mergeObject(skill, flags.skills[id], {inplace: false});
-			}
-
 			if (!custom) {
+				flags.skills[id] = mergeObject(skill, flags.skills[id] || {}, {inplace: false});
 				skill = flags.skills[id];
 				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
 			}
@@ -692,13 +518,13 @@ export const Prepare = {
 				original = originalSkills[key];
 			}
 
-			actorData.obsidian.skills[key] = skill;
+			derived.skills[key] = duplicate(skill);
+			skill = derived.skills[key];
 			Prepare.calculateSkill(data, flags, skill, original);
 
 			if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
 				const bonuses =
-					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.skillChecks(key, skill.ability));
+					derived.filters.bonuses(Filters.appliesTo.skillChecks(key, skill.ability));
 
 				if (bonuses.length) {
 					skill.rollParts.push(
@@ -708,8 +534,7 @@ export const Prepare = {
 			}
 
 			const rollMods =
-				actorData.obsidian.filters.mods(
-					Filters.appliesTo.skillChecks(key, skill.ability));
+				derived.filters.mods(Filters.appliesTo.skillChecks(key, skill.ability));
 
 			let rollMod = {mode: ['reg']};
 			if (rollMods.length) {
@@ -728,9 +553,7 @@ export const Prepare = {
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 			skill.proficiency = skill.rollParts.find(part => part.proficiency);
 
-			const passiveBonuses =
-				actorData.obsidian.filters.bonuses(Filters.appliesTo.passiveScores(key));
-
+			const passiveBonuses = derived.filters.bonuses(Filters.appliesTo.passiveScores(key));
 			if (passiveBonuses.length) {
 				skill.passive +=
 					passiveBonuses.reduce((acc, bonus) =>
@@ -740,9 +563,7 @@ export const Prepare = {
 				skill.passive = Math.floor(skill.passive);
 			}
 
-			const passiveSetters =
-				actorData.obsidian.filters.setters(Filters.appliesTo.passiveScores(key));
-
+			const passiveSetters = derived.filters.setters(Filters.appliesTo.passiveScores(key));
 			if (passiveSetters.length) {
 				const setter = Effect.combineSetters(passiveSetters);
 				if (!setter.min || setter.score > skill.passive) {
@@ -752,8 +573,8 @@ export const Prepare = {
 		}
 	},
 
-	tools: function (actorData, data, flags) {
-		actorData.obsidian.tools = {};
+	tools: function (actorData, data, flags, derived) {
+		derived.tools = {};
 		const tools = Rules.ALL_TOOLS.map(t => {
 			const tool = mergeObject(
 				{ability: 'str', bonus: 0, value: 0, label: '', enabled: false},
@@ -763,23 +584,20 @@ export const Prepare = {
 			return [t, tool];
 		});
 
-		for (const [id, tool] of tools.concat(Object.entries(flags.tools.custom))) {
+		for (let [id, tool] of tools.concat(Object.entries(flags.tools.custom))) {
 			const custom = !isNaN(Number(id));
 			if (!custom) {
 				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf-${id}`);
 			}
 
 			const key = custom ? `custom.${id}` : id;
+			derived.tools[key] = duplicate(tool);
+			tool = derived.tools[key];
 			Prepare.calculateSkill(data, flags, tool);
-
-			if (custom || tool.enabled) {
-				actorData.obsidian.tools[key] = tool;
-			}
 
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
 				const bonuses =
-					actorData.obsidian.filters.bonuses(
-						Filters.appliesTo.toolChecks(key, tool.ability));
+					derived.filters.bonuses(Filters.appliesTo.toolChecks(key, tool.ability));
 
 				if (bonuses.length) {
 					tool.rollParts.push(
@@ -842,9 +660,9 @@ function weaponBonus (actorData, item) {
 	}
 
 	if (item.flags.obsidian.tags?.ammunition
-		&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.ammo?.id))
+		&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.ammo))
 	{
-		const ammo = actorData.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
+		const ammo = actorData.obsidian.itemsByID.get(item.flags.obsidian.ammo);
 		if (ammo && ammo.flags.obsidian.magical && ammo.flags.obsidian.magicBonus) {
 			bonus += ammo.flags.obsidian.magicBonus;
 		}

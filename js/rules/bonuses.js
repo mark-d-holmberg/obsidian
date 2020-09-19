@@ -2,16 +2,13 @@ import {Filters} from './filters.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from '../module/effect.js';
 
-export function applyBonuses (actorData) {
-	const data = actorData.data;
-	const flags = actorData.flags.obsidian;
-
+export function applyBonuses (actorData, data, flags, derived) {
 	for (const speed of OBSIDIAN.Rules.SPEEDS) {
 		if (!flags.attributes.speed[speed]) {
 			flags.attributes.speed[speed] = {};
 		}
 
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.speedScores(speed));
+		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
 		if (bonuses.length) {
 			flags.attributes.speed[speed].derived =
 				(flags.attributes.speed[speed].override || 0)
@@ -25,7 +22,7 @@ export function applyBonuses (actorData) {
 			delete flags.attributes.speed[speed].derived;
 		}
 
-		const setters = actorData.obsidian.filters.setters(Filters.appliesTo.speedScores(speed));
+		const setters = derived.filters.setters(Filters.appliesTo.speedScores(speed));
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
 			const spd = flags.attributes.speed[speed];
@@ -38,68 +35,66 @@ export function applyBonuses (actorData) {
 	}
 
 	const initBonuses =
-		actorData.obsidian.filters.bonuses(
-			Filters.appliesTo.initiative(flags.attributes.init.ability));
+		derived.filters.bonuses(Filters.appliesTo.initiative(flags.attributes.init.ability));
 
 	if (initBonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
-		flags.attributes.init.rollParts.push(
+		derived.attributes.init.rollParts.push(
 			...initBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		data.attributes.init.mod +=
-			flags.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			derived.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		data.attributes.init.mod = Math.floor(data.attributes.init.mod);
 	}
 
-	const acBonuses = actorData.obsidian.filters.bonuses(Filters.isAC);
+	const acBonuses = derived.filters.bonuses(Filters.isAC);
 	if (acBonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-		data.attributes.ac.min +=
+		derived.attributes.ac +=
 			acBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
-		data.attributes.ac.min = Math.floor(data.attributes.ac.min);
+		derived.attributes.ac = Math.floor(derived.attributes.ac);
 	}
 
-	const acSetters = actorData.obsidian.filters.setters(Filters.isAC);
+	const acSetters = derived.filters.setters(Filters.isAC);
 	if (acSetters.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 		const setter = Effect.combineSetters(acSetters);
-		if (!setter.min || setter.score > data.attributes.ac.min) {
-			data.attributes.ac.min = setter.score;
+		if (!setter.min || setter.score > derived.attributes.ac) {
+			derived.attributes.ac = setter.score;
 		}
 	}
 
-	const hpBonuses = actorData.obsidian.filters.bonuses(Filters.isHP);
+	const hpBonuses = derived.filters.bonuses(Filters.isHP);
 	if (hpBonuses.length) {
-		data.attributes.hp.maxAdjusted +=
+		data.attributes.hp.max +=
 			hpBonuses.reduce((acc, bonus) =>
 				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
-		data.attributes.hp.maxAdjusted = Math.floor(data.attributes.hp.maxAdjusted);
+		data.attributes.hp.max = Math.floor(data.attributes.hp.max);
 	}
 
 	const hpSetters = actorData.obsidian.filters.setters(Filters.isHP);
 	if (hpSetters.length) {
 		const setter = Effect.combineSetters(hpSetters);
-		if (!setter.min || setter.score > data.attributes.hp.maxAdjusted) {
-			data.attributes.hp.maxAdjusted = setter.score;
+		if (!setter.min || setter.score > data.attributes.hp.max) {
+			data.attributes.hp.max = setter.score;
 		}
 	}
 
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo[filter]);
+		const bonuses = derived.filters.bonuses(Filters.appliesTo[filter]);
 		if (bonuses.length) {
 			let total =
 				bonuses.flatMap(bonus => bonusToParts(actorData, bonus))
 					.reduce((acc, part) => acc + part.mod, 0);
 
 			total = Math.floor(total);
-			flags.attributes.spellcasting[key] =
-				flags.attributes.spellcasting[key].map(val => val + total);
+			derived.spellcasting[key] = derived.spellcasting[key].map(val => val + total);
 		}
 	});
 
-	const spellDCSetters = actorData.obsidian.filters.setters(Filters.appliesTo.spellDCs);
+	const spellDCSetters = derived.filters.setters(Filters.appliesTo.spellDCs);
 	if (spellDCSetters.length) {
 		const setter = Effect.combineSetters(spellDCSetters);
-		flags.attributes.spellcasting.saves = flags.attributes.spellcasting.saves.map(save => {
+		derived.spellcasting.saves = derived.spellcasting.saves.map(save => {
 			if (!setter.min || setter.score > save) {
 				return setter.score;
 			}
@@ -113,7 +108,6 @@ export function applyProfBonus (actorData) {
 	const attr = actorData.data.attributes;
 	const bonuses = actorData.obsidian.filters.bonuses(Filters.isProf);
 	const setters = actorData.obsidian.filters.setters(Filters.isProf);
-	actorData.flags.obsidian.attributes.originalProf = attr.prof;
 
 	if (bonuses.length) {
 		attr.prof =

@@ -19,7 +19,7 @@ export const Rolls = {
 			mods.push({
 				mod: actor.data.data.abilities[ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
-			}, ...actor.data.flags.obsidian.abilities[ability].rollParts);
+			}, ...actor.data.obsidian.abilities[ability].rollParts);
 		}
 
 		return Rolls.simpleRoll(actor, {
@@ -400,7 +400,7 @@ export const Rolls = {
 				return;
 			}
 
-			const skill = getProperty(actor.data.flags.obsidian.skills, options.skl);
+			const skill = actor.data.obsidian.skills[options.skl];
 			if (!skill) {
 				return;
 			}
@@ -412,7 +412,7 @@ export const Rolls = {
 				return;
 			}
 
-			const tool = getProperty(actor.data.flags.obsidian.tools, options.tool);
+			const tool = actor.data.obsidian.tools[options.tool];
 			if (!tool) {
 				return;
 			}
@@ -801,7 +801,8 @@ export const Rolls = {
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
-		const mods = duplicate(flags.attributes.init.rollParts);
+		const derived = actor.data.obsidian;
+		const mods = duplicate(derived.attributes.init.rollParts);
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
@@ -859,7 +860,7 @@ export const Rolls = {
 						type: item.type === 'spell' ? 'spl' : 'fx',
 						title: item.name,
 						item: item,
-						details: item.flags.obsidian.display || item.data.description.value,
+						details: item.obsidian.display || item.data.description.value,
 						open: true,
 						upcast: upcast
 					}
@@ -877,26 +878,18 @@ export const Rolls = {
 	},
 
 	findSkill: function (actor, skill) {
-		const skills = actor.data.flags.obsidian.skills;
+		const skills = actor.data.obsidian.skills;
 		if (skill.skill !== 'custom') {
 			return skills[skill.skill];
 		}
 
-		return skills.custom.find(skl =>
+		return skills.find(skl =>
 			skl.label.toLocaleLowerCase() === skill.custom.toLocaleLowerCase());
 	},
 
 	findTool: function (actor, tool) {
-		const tools = actor.data.flags.obsidian.tools;
-		let found = Object.values(tools).find(entry =>
+		return Object.values(actor.data.obsidian.tools).find(entry =>
 			entry.label?.toLocaleLowerCase() === tool.custom.toLocaleLowerCase());
-
-		if (found) {
-			return found;
-		}
-
-		return tools.custom.find(entry =>
-			entry.label.toLocaleLowerCase() === tool.custom.toLocaleLowerCase());
 	},
 
 	placeTemplate: function (evt) {
@@ -1130,7 +1123,8 @@ export const Rolls = {
 			type: 'save',
 			title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-			mods: saveData.rollParts, rollMod: rollMod
+			mods: actor.data.obsidian.saves[save].rollParts,
+			rollMod: rollMod
 		});
 	},
 

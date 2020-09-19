@@ -26,13 +26,7 @@
 			<select>
 				{{#select passive}}
 					{{#each ../actor.obsidian.skills as |skill id|}}
-						<option value="{{id}}">
-							{{#if skill.custom}}
-								{{skill.label}}
-							{{else}}
-								{{i18n-join 'OBSIDIAN.Skill-' id}}
-							{{/if}}
-						</option>
+						<option value="{{id}}">{{skill.label}}</option>
 					{{/each}}
 				{{/select}}
 			</select>

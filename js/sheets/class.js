@@ -8,7 +8,7 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 	}
 
 	get title () {
-		return this.item.data.flags.obsidian.label;
+		return this.item.data.obsidian.label;
 	}
 
 	async close () {

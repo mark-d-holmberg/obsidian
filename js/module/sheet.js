@@ -406,7 +406,7 @@ export const Sheet = {
 		try {
 			data = JSON.parse(event.dataTransfer.getData('text/plain'));
 			if (data.type === 'Actor') {
-				return ActorSheet5e.prototype._onDrop.apply(sheet, [event]);
+				return ActorSheet5e.prototype._onDropActor.call(sheet, event, data);
 			}
 		} catch (ignored) {}
 
@@ -431,7 +431,7 @@ export const Sheet = {
 			return;
 		}
 
-		if (item.flags.obsidian.equippable) {
+		if (item.obsidian.equippable) {
 			sheet.actor.updateEmbeddedEntity(
 				'OwnedItem',
 				{_id: id, 'data.equipped': !item.data.equipped});

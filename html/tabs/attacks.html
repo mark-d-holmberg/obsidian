@@ -76,7 +76,7 @@
 							{{/if}}
 						{{else if (eq parentItem.type 'weapon')}}
 							<div class="obsidian-table-number-md">
-								{{parentItem.flags.obsidian.reach}}
+								{{parentItem.obsidian.attributes.reach}}
 								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 							</div>
 							<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
@@ -101,7 +101,7 @@
 						</div>
 					</div>
 					<div class="obsidian-col-notes">
-						{{#each parentItem.flags.obsidian.notes}}
+						{{#each parentItem.obsidian.notes}}
 							<div class="obsidian-table-note-text">{{{this}}}</div>
 						{{/each}}
 					</div>

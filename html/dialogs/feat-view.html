@@ -14,7 +14,7 @@
 					{{~else if (eq item.flags.obsidian.source.type 'other')~}}
 						{{~item.flags.obsidian.source.other~}}
 					{{~else if (eq item.flags.obsidian.source.type 'class')~}}
-						{{~item.flags.obsidian.source.className~}}
+						{{~item.obsidian.source.className~}}
 					{{~/if~}}
 				</div>
 				{{#if (format-recharge actor item)}}
@@ -22,6 +22,6 @@
 				{{/if}}
 			</div>
 		</div>
-		<div class="obsidian-item-card-body">{{{clean-formatting item.flags.obsidian.display}}}</div>
+		<div class="obsidian-item-card-body">{{{clean-formatting item.obsidian.display}}}</div>
 	</div>
 </form>

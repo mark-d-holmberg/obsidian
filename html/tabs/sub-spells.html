@@ -33,7 +33,7 @@
 				<div class="obsidian-tbody">
 					{{#with (spellbook-lookup ../spellbook this)}}
 					{{#each (sort spells 'name')}}
-					{{#if flags.obsidian.visible}}
+					{{#if obsidian.visible}}
 						<div class="obsidian-tr obsidian-spell-tr item" data-item-id="{{_id}}"
 						     data-level="{{data.level}}" data-name="{{name}}" draggable="true"
 						     data-concentration="{{data.components.concentration}}"
@@ -109,7 +109,7 @@
 								</div>
 							</div>
 							<div class="obsidian-col-spell-notes">
-								{{#each flags.obsidian.notes}}
+								{{#each obsidian.notes}}
 									<div class="obsidian-table-note-text">{{{this}}}</div>
 								{{/each}}
 							</div>

@@ -98,9 +98,6 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 		};
 
 		duration = await actor.createEmbeddedEntity('OwnedItem', duration);
-		if (actor.isToken) {
-			duration = duration.actorData.items.last();
-		}
 	}
 
 	const active = [];

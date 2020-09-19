@@ -275,9 +275,7 @@ export function registerHandlebarHelpers () {
 			spellbookEntry = spellbook.find(entry => entry.prop === `spell${level}`);
 		}
 
-		return (spellbookEntry
-			&& spellbookEntry.spells.some(spell =>
-				spell.flags.obsidian && spell.flags.obsidian.visible))
+		return (spellbookEntry && spellbookEntry.spells.some(spell => spell.obsidian?.visible))
 			|| (level > 0 && (Number(spell.max) || actor.data.spells.pact?.level === level));
 	});
 

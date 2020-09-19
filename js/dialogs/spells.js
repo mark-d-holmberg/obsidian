@@ -42,8 +42,8 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		data.spellsByClass = duplicate(OBSIDIAN.Data.SPELLS_BY_CLASS);
 
 		const classByID =
-			new Map(data.actor.obsidian.classes.filter(cls => cls.flags.obsidian).map(cls => {
-				const spellcasting = cls.flags.obsidian.spellcasting;
+			new Map(data.actor.obsidian.classes.map(cls => {
+				const spellcasting = cls.obsidian.spellcasting;
 				spellcasting.totalCantrips = 0;
 				spellcasting.totalPrepared = 0;
 				spellcasting.totalKnown = 0;
@@ -84,7 +84,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				continue;
 			}
 
-			const spellcasting = cls.flags.obsidian.spellcasting;
+			const spellcasting = cls.obsidian.spellcasting;
 			if (spell.data.level === 0) {
 				spellcasting.totalCantrips++;
 			} else if (flags.known) {
@@ -93,8 +93,8 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				spellcasting.totalPrepared++;
 			}
 
-			if (data.actor.obsidian.spells[cls.flags.obsidian.spellcasting.list]) {
-				const clsSpells = data.actor.obsidian.spells[cls.flags.obsidian.spellcasting.list];
+			const clsSpells = data.actor.obsidian.spells[cls.flags.obsidian.spellcasting.list];
+			if (clsSpells) {
 				if (spell.data.level === 0) {
 					clsSpells.known.push(spell);
 					clsSpells.prepared.push(spell);

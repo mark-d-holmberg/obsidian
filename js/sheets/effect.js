@@ -552,17 +552,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		if (this.actor) {
 			const created = await this.actor.createEmbeddedEntity('OwnedItem', item);
-			if (this.actor.isToken) {
-				// For some reason, if this is a token, we get the entire token
-				// back from createEmbeddedEntity instead of the actual entity
-				// we tried to create. Instead we assume the last item in the
-				// items array is what was just created. This might be a race
-				// condition but also perhaps not because of how the event loop
-				// works.
-				component.spells.push(created.actorData.items.last()._id);
-			} else {
-				component.spells.push(created._id);
-			}
+			component.spells.push(created._id);
 		} else {
 			component.spells.push(item);
 		}

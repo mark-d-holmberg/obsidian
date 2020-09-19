@@ -62,7 +62,7 @@
 							{{localize 'OBSIDIAN.Race'}}
 						{{/if}}
 					</span>
-					<span>{{actor.obsidian.classFormat}}</span>
+					<span>{{actor.obsidian.details.class}}</span>
 					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
 					   data-dialog="HeaderDetails">
 						<i class="fas fa-edit"></i>
@@ -71,7 +71,7 @@
 				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{actor.obsidian.xpDerivedLevel}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{actor.obsidian.details.level}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -82,10 +82,10 @@
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{#if (geq actor.obsidian.xpDerivedLevel ObsidianRules.MAX_LEVEL)}}
+							{{#if (geq actor.obsidian.details.level ObsidianRules.MAX_LEVEL)}}
 								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
 							{{else}}
-								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add actor.obsidian.xpDerivedLevel 1}}
+								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add actor.obsidian.details.level 1}}
 							{{/if}}
 						</span>
 					</div>
@@ -181,7 +181,7 @@
 						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html"
 						     data-width="450">
-							{{data.attributes.ac.min}}
+							{{actor.obsidian.attributes.ac}}
 						</div>
 					</div>
 					<button type="button" class="
@@ -204,7 +204,7 @@
 					<div class="obsidian-char-ability-mod">
 						{{numberFormat ability.mod decimals=0 sign=true}}
 					</div>
-					{{#with (lookup ../actor.flags.obsidian.abilities id)}}
+					{{#with (lookup ../actor.obsidian.abilities id)}}
 						<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
 							class="obsidian-char-ability-score
 								{{#if (gt value ability.value)}}
@@ -228,13 +228,13 @@
 								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
 								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
-								{{#if (gt data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+								{{#if (gt data.attributes.hp.max base.data.attributes.hp.max)~}}
 									obsidian-positive
-								{{else if (lt data.attributes.hp.maxAdjusted data.attributes.hp.max)~}}
+								{{else if (lt data.attributes.hp.max base.data.attributes.hp.max)~}}
 									obsidian-negative
 								{{~/if}} obsidian-simple-dialog" data-title="{{localize 'OBSIDIAN.EditMaxHP'}}"
 								     data-width="250" data-template="hp.html">
-									{{data.attributes.hp.maxAdjusted}}
+									{{data.attributes.hp.max}}
 								</div>
 							</div>
 							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
@@ -397,11 +397,7 @@
 								</select>
 								<div class="obsidian-skill-name rollable" data-roll="skl" data-skl="{{id}}"
 								     draggable="true">
-									{{#if skill.custom}}
-										{{skill.label}}
-									{{else}}
-										{{i18n-join 'OBSIDIAN.Skill-' id}}
-									{{/if}}
+									{{skill.label}}
 								</div>
 								<div class="obsidian-skill-mod obsidian-ptr">
 									{{numberFormat skill.mod decimals=0 sign=true}}
@@ -422,6 +418,7 @@
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
 						{{#each actor.obsidian.tools as |tool id|}}
+							{{#if tool.enabled}}
 							<div class="obsidian-skill-item" data-tool-id="{{id}}">
 								<div class="
 								{{~#if (eq 0.5 tool.proficiency.value)~}}
@@ -454,6 +451,7 @@
 									{{numberFormat tool.mod decimals=0 sign=true}}
 								</div>
 							</div>
+							{{/if}}
 						{{/each}}
 					</div>
 				</div>

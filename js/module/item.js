@@ -1,17 +1,18 @@
 import Item5e from '../../../../systems/dnd5e/module/item/entity.js';
 import {Prepare} from '../rules/prepare.js';
-import {Schema} from './schema.js';
-import {spellNotes} from '../rules/spells.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
 import {Filters} from '../rules/filters.js';
+import {cssIconHexagon} from '../util/html.js';
+import {Rules} from '../rules/rules.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
 		const cached = Item5e.prototype.prepareData;
-		return function (attackList, effectMap, componentMap, toggleList) {
+		return function () {
 			cached.apply(this, arguments);
-			prepareEffects(this.actor, this.data, attackList, effectMap, componentMap, toggleList);
+			prepareData(this);
+			prepareEffects(this);
 		};
 	})();
 }
@@ -30,6 +31,296 @@ export function getSourceClass (actorData, source) {
 		}
 	}
 }
+
+function prepareData (item) {
+	item.data.obsidian = {
+		actionable: [],
+		attributes: {},
+		collection: {versatile: []},
+		notes: []
+	};
+
+	const data = item.data.data;
+	const flags = item.data.flags.obsidian;
+	const derived = item.data.obsidian;
+	Effect.metadata.components.forEach(c => derived.collection[c] = []);
+
+	const prepare = prepareItem[item.data.type];
+	if (prepare) {
+		prepare(item, data, flags, derived);
+	}
+}
+
+const prepareItem = {
+	backpack: function (item, data, flags, derived) {
+		derived.contents = [];
+		derived.carriedWeight = 0;
+
+		if (flags.currency) {
+			const currencyWeight =
+				Object.values(flags.currency).reduce((acc, currency) => acc + currency, 0)
+				* Rules.COIN_WEIGHT;
+
+			derived.carriedWeight += currencyWeight;
+		}
+	},
+
+	'class': function (item, data, flags, derived) {
+		data.levels = Number(data.levels);
+		derived.label =
+			item.name === 'custom'
+				? flags.custom
+				: game.i18n.localize(`OBSIDIAN.Class-${item.name}`);
+
+		if (!flags.spellcasting) {
+			return;
+		}
+
+		if (data.spellcasting === 'none') {
+			data.spellcasting = Rules.CLASS_SPELL_PROGRESSION[item.name] || 'none';
+		}
+
+		if (flags.spellcasting.preparation === undefined) {
+			flags.spellcasting.preparation = Rules.CLASS_SPELL_PREP[item.name];
+		}
+
+		if (flags.spellcasting.rituals === undefined) {
+			flags.spellcasting.rituals = Rules.CLASS_RITUALS[item.name] || 'none';
+		}
+
+		derived.spellcasting = duplicate(flags.spellcasting);
+		const spellcasting = derived.spellcasting;
+		const levels = data.levels;
+
+		spellcasting.list = item.name === 'custom' ? flags.custom : item.name;
+		spellcasting.spellList = [];
+
+		if (OBSIDIAN.Data.SPELLS_BY_CLASS && OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list]) {
+			const originalList = OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list];
+			spellcasting.spellList = [].concat(originalList);
+		}
+
+		if (spellcasting.spell === undefined) {
+			spellcasting.spell = Rules.CLASS_SPELL_MODS[item.name];
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell) && item.isOwned) {
+			const actorData = item.actor.data.data;
+			const mod = actorData.abilities[spellcasting.spell].mod;
+			spellcasting.mod = mod;
+			spellcasting.attack = mod + actorData.attributes.prof;
+			spellcasting.save = mod + actorData.attributes.prof + 8;
+		}
+
+		const spellsKnown = Rules.SPELLS_KNOWN_TABLE[item.name];
+		if (spellsKnown !== undefined) {
+			spellcasting.maxKnown = spellsKnown.known[levels - 1];
+			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
+			if (spellcasting.maxCantrips === undefined) {
+				spellcasting.maxCantrips = spellsKnown.cantrips[spellsKnown.cantrips.length - 1];
+			}
+		}
+
+		if (spellcasting.preparation === 'prep') {
+			spellcasting.maxPrepared = spellcasting.mod || 0;
+			switch (data.spellcasting) {
+				case 'third': spellcasting.maxPrepared += Math.floor(levels / 3); break;
+				case 'half': case 'artificer': spellcasting.maxPrepared += Math.floor(levels / 2); break;
+				case 'full': spellcasting.maxPrepared += levels; break;
+			}
+		}
+	},
+
+	equipment: function (item, data, flags, derived) {
+		if (item.isOwned && flags.subtype === 'vehicle') {
+			derived.display = TextEditor.enrichHTML(data.description.value, {
+				entities: false,
+				links: false,
+				rollData: item.actor.getRollData(),
+				secrets: item.actor.owner
+			});
+		}
+
+		if (!flags.armour) {
+			return;
+		}
+
+		if (data.armor.type === 'shield') {
+			derived.notes.push(
+				`${data.armor.value.sgn()} ${game.i18n.localize('OBSIDIAN.ACAbbr')}`);
+		} else {
+			derived.notes.push(
+				`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${data.armor.value.baseAC}`);
+
+			if (!OBSIDIAN.notDefinedOrEmpty(data.strength)) {
+				derived.notes.push(
+					`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} ${data.strength}`);
+			}
+
+			if (data.stealth) {
+				derived.notes.push(`
+					<div class="obsidian-table-note-flex">
+						${game.i18n.localize('OBSIDIAN.Skill-ste')}
+						${cssIconHexagon('OBSIDIAN.DisadvantageAbbr', false)}
+					</div>
+				`);
+			}
+		}
+	},
+
+	feat: function (item, data, flags, derived) {
+		if (!item.isOwned) {
+			return;
+		}
+
+		if (flags.source.type === 'class') {
+			const cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
+			derived.source = {className: cls?.obsidian.label};
+		}
+
+		// Check CONFIG is ready first.
+		try {
+			CONFIG.JournalEntry.entityClass.collection;
+		} catch {
+			return;
+		}
+
+		derived.display = TextEditor.enrichHTML(data.description.value, {
+			entities: true,
+			links: true,
+			rollData: item.actor.getRollData(),
+			secrets: item.actor.owner
+		});
+	},
+
+	spell: function (item, data, flags, derived) {
+		derived.source = {display: ''};
+
+		if (OBSIDIAN.notDefinedOrEmpty(flags.time.n)) {
+			flags.time.n = 1;
+		} else {
+			flags.time.n = Number(flags.time.n);
+		}
+
+		if (flags.components.m && data.materials.value.length) {
+			derived.notes.push(
+				`${game.i18n.localize('OBSIDIAN.MaterialAbbr')}: ${data.materials.value}`);
+		}
+
+		if (flags.time.type === 'react' && flags.time.react.length > 0) {
+			derived.notes.push(
+				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}}: ${flags.time.react}`);
+		}
+
+		derived.components =
+			Object.entries(flags.components)
+				.filter(([, val]) => val)
+				.map(([key,]) => Rules.SPELL_COMPONENT_MAP[key])
+				.filter(_ => _)
+				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
+				.join(', ');
+
+		let cls;
+		if (flags.source === undefined) {
+			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
+		} else if (flags.source.type === 'custom') {
+			derived.source.display = flags.source.custom;
+		} else if (flags.source.type === 'class' && item.isOwned) {
+			cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
+			derived.source.display = cls?.obsidian.label;
+		}
+
+		if (cls) {
+			const spellcasting = cls.obsidian.spellcasting;
+			if (data.level === 0) {
+				flags.known = true;
+				derived.visible = true;
+			} else if (spellcasting.preparation === 'known') {
+				if (flags.known === undefined) {
+					flags.known = true;
+				}
+
+				derived.visible = flags.known;
+			} else if (spellcasting.preparation === 'prep') {
+				if (flags.prepared === undefined) {
+					flags.prepared = true;
+				}
+
+				derived.visible = flags.prepared;
+			} else if (spellcasting.preparation === 'book') {
+				if (flags.book === undefined) {
+					flags.book = true;
+				}
+
+				if (flags.prepared === undefined) {
+					flags.prepared = false;
+				}
+
+				derived.visible = flags.book && flags.prepared;
+			}
+
+			if (data.components.ritual) {
+				derived.visible = derived.visible || spellcasting.rituals === 'book';
+			}
+		} else {
+			derived.visible = true;
+		}
+	},
+
+	weapon: function (item, data, flags, derived) {
+		if (flags.type === 'melee') {
+			derived.attributes.reach = 5;
+			if (flags.tags.reach) {
+				derived.attributes.reach += 5;
+			}
+		}
+
+		if (flags.tags.ammunition && item.isOwned) {
+			derived.ammo = `
+				<select data-name="items.${item.data.idx}.flags.obsidian.ammo.id">
+					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
+						${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
+					</option>
+					${item.actor.data.obsidian.ammo.map(ammo =>
+						`<option value="${ammo._id}" ${ammo._id === flags.ammo ? 'selected': ''}>
+							${ammo.name}
+						</option>`)}
+				</select>
+			`;
+		}
+
+		if (flags.category) {
+			derived.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
+		}
+
+		if (flags.magical) {
+			derived.notes.push(game.i18n.localize('OBSIDIAN.Magical'));
+		}
+
+		derived.notes.push(...Object.entries(flags.tags).map(([tag, val]) => {
+			if (tag === 'custom' && val.length) {
+				return val;
+			}
+
+			if (!val) {
+				return null;
+			}
+
+			if (tag === 'ammunition') {
+				return derived.ammo;
+			}
+
+			return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
+		}).filter(tag => tag != null));
+
+		derived.display = TextEditor.enrichHTML(data.description.value, {
+			entities: false,
+			links: false,
+			rollData: item.actor?.getRollData(),
+			secrets: !!item.actor?.owner
+		});
+	}
+};
 
 const prepareComponents = {
 	attack: function (actor, item, effect, component, cls) {
@@ -96,6 +387,10 @@ const prepareComponents = {
 	},
 
 	spells: function (actor, item, effect, component) {
+		if (!actor) {
+			return;
+		}
+
 		const actorData = actor.data;
 		if (component.source === 'individual' && component.method === 'list') {
 			const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
@@ -105,9 +400,9 @@ const prepareComponents = {
 					return;
 				}
 
-				spell.flags.obsidian.visible = false;
-				if (cls && getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
-					cls.flags.obsidian.spellcasting.spellList.push(spell);
+				spell.obsidian.visible = false;
+				if (cls?.obsidian?.spellcasting?.spellList) {
+					cls.obsidian.spellcasting.spellList.push(spell);
 				}
 			});
 		} else if (component.source === 'list'
@@ -118,21 +413,21 @@ const prepareComponents = {
 			const cls = actorData.obsidian.classes.find(cls =>
 				cls._id === item.flags.obsidian.source.class);
 
-			if (!cls || !getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
+			if (!cls || !getProperty(cls, 'flags.spellcasting.spellList')) {
 				return;
 			}
 
-			const list = cls.flags.obsidian.spellcasting.spellList;
+			const list = cls.obsidian.spellcasting.spellList;
 			const existing = new Set(list.map(spell => spell._id));
 
-			cls.flags.obsidian.spellcasting.spellList =
+			cls.obsidian.spellcasting.spellList =
 				list.concat(
 					OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
 						.filter(spell => !existing.has(spell._id)));
 		}
 
 		if (component.source === 'individual' && component.method === 'item') {
-			item.flags.obsidian.notes.push(...component.spells
+			item.obsidian.notes.push(...component.spells
 				.map(id => actorData.obsidian.itemsByID.get(id))
 				.filter(_ => _)
 				.map(spell =>
@@ -145,65 +440,50 @@ const prepareComponents = {
 
 prepareComponents.produce = prepareComponents.consume;
 
-export function prepareEffects (actor, item, attackList, effectMap, componentMap) {
-	if (!item.flags || !item.flags.obsidian || !actor) {
+function prepareEffects (item) {
+	const flags = item.data.flags?.obsidian;
+	if (!flags) {
 		return;
 	}
-
-	const actorData = actor.data;
-	if (!actorData.flags
-		|| !actorData.obsidian
-		|| !actorData.flags.obsidian
-		|| (actorData.flags.obsidian.version || 0) < Schema.VERSION)
-	{
-		return;
-	}
-
-	if (!actorData.obsidian.filters?.bonuses) {
-		// The actor hasn't been prepared yet.
-		// TODO: Decouple actor and item preparation workflow.
-		return;
-	}
-
-	const data = actorData.data;
-	const flags = item.flags.obsidian;
-	const effects = flags.effects || [];
-	flags.notes = [];
-
-	if (item.type === 'equipment' && item.flags.obsidian.armour) {
-		Prepare.armourNotes(item);
-	}
-
-	if (item.type === 'weapon') {
-		Prepare.weaponNotes(item);
-	}
-
-	item.obsidian = mergeObject(item.obsidian || {}, {
-		actionable: [],
-		collection: {versatile: []}
-	});
-
-	Effect.metadata.components.forEach(c => item.obsidian.collection[c] = []);
 
 	let cls;
-	if (flags.source) {
+	let actorData;
+	const data = item.data.data;
+	const effects = flags.effects || [];
+	const derived = item.data.obsidian;
+	const myEffects = new Map();
+
+	if (item.isOwned) {
+		actorData = item.actor.data;
+	}
+
+	if (flags.source && item.isOwned) {
 		cls = getSourceClass(actorData, flags.source);
 	}
 
 	for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {
 		const effect = effects[effectIdx];
-		if (effectMap) {
-			effectMap.set(effect.uuid, effect);
+		myEffects.set(effect.uuid, effect);
+
+		if (item.isOwned) {
+			actorData.obsidian.effects.set(effect.uuid, effect);
+		}
+
+		if (!effect.toggle) {
+			effect.toggle = {active: true, display: ''};
 		}
 
 		effect.parentActor = actorData._id;
-		effect.parentItem = item._id;
+		effect.parentItem = item.data._id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
+		effect.filters = [];
+		effect.active = {};
 		effect.isLinked = false;
 		effect.eagerScaling = false;
 
+		Effect.metadata.active.forEach(c => effect.active[c] = []);
 		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
 		Effect.metadata.linked.forEach(linked => {
 			const found = effect.components.find(c => c.type === linked);
@@ -216,20 +496,20 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 			effect.isLinked |= effect[bool] && !effect[self];
 
 			if (found) {
-				item.obsidian.collection[linked].push(effect);
+				derived.collection[linked].push(effect);
 			}
 		});
 
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
-			if (componentMap) {
-				componentMap.set(component.uuid, component);
+			if (item.isOwned) {
+				actorData.obsidian.components.set(component.uuid, component);
 			}
 
 			component.parentEffect = effect.uuid;
 			component.idx = componentIdx;
 
-			if (Effect.metadata.single.has(component.type)) {
+			if (effect.metadata.single.has(component.type)) {
 				effect[`${component.type}Component`] = component;
 			} else if (!effect.isLinked) {
 				let collection = component.type;
@@ -237,12 +517,18 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 					collection = 'versatile';
 				}
 
-				item.obsidian.collection[collection].push(component);
+				derived.collection[collection].push(component);
+			}
+
+			if (Effect.metadata.active.has(component.type)) {
+				effect.active[component.type].push(component);
+			} else if (component.type === 'filter') {
+				effect.filters.push(component);
 			}
 
 			const prepare = prepareComponents[component.type];
 			if (prepare) {
-				prepare(actor, item, effect, component, cls);
+				prepare(item.actor, item.data, effect, component, cls);
 			}
 		}
 
@@ -253,60 +539,62 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		}
 
 		if (!effect.isLinked && !effect.components.some(c => Effect.metadata.active.has(c.type))) {
-			item.obsidian.actionable.push(effect);
+			derived.actionable.push(effect);
 		}
 
 		const isRollable =
 			effect.selfApplied || effect.components.some(c => Effect.metadata.rollable.has(c.type));
 
 		if (isRollable
-			&& item.type !== 'spell'
+			&& item.data.type !== 'spell'
 			&& !effect.components.some(c =>
-				c.type === 'resource'
-				|| c.type === 'attack'
+				c.type === 'resource' || c.type === 'attack'
 				|| (c.type === 'spells' && c.source === 'individual' && c.method === 'item')))
 		{
-			flags.notes.push(
-				'<div class="obsidian-table-note-flex">'
-					+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
-						+ effect.label
-					+ '</div>'
-				+ '</div>');
+			derived.notes.push(`
+				<div class="obsidian-table-note-flex">
+					<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">
+						${effect.label}
+					</div>
+				</div>
+			`);
 		}
 	}
 
-	item.obsidian.collection.applied.forEach(e =>
-		effectMap?.get(e.appliedComponent.ref)?.applies.push(e.uuid));
+	derived.collection.applied.forEach(e =>
+		myEffects.get(e.appliedComponent.ref)?.applies.push(e.uuid));
 
-	item.obsidian.actionable = item.obsidian.actionable.flatMap(action => {
+	derived.actionable = derived.actionable.flatMap(action => {
 		const spells = action.components.filter(c => c.type === 'spells');
 		if (spells.length) {
-			return spells.flatMap(spell =>
-				spell.spells.map(id => actorData.obsidian.itemsByID.get(id)));
-		} else {
-			return action;
+			return spells.flatMap(component =>
+				component.spells.map(entry => {
+					if (item.isOwned) {
+						return actorData.obsidian.itemsByID.get(entry);
+					}
+
+					return entry;
+				}));
 		}
+
+		return action;
 	});
 
-	if (item.type === 'spell') {
-		spellNotes(item);
-	}
-
-	if (item.obsidian.collection.scaling.some(Effect.isEagerScaling)) {
+	if (item.isOwned && derived.collection.scaling.some(Effect.isEagerScaling)) {
 		let scaledAmount = 0;
-		const component = item.obsidian.collection.scaling[0].scalingComponent;
+		const actorLevel = actorData.data.details.level;
+		const component = derived.collection.scaling[0].scalingComponent;
 
 		switch (component.method) {
-			case 'level': scaledAmount = data.details.level; break;
-			case 'cantrip': scaledAmount = Math.round((data.details.level + 1) / 6 + .5) - 1; break;
+			case 'level': scaledAmount = actorLevel; break;
+			case 'cantrip': scaledAmount = Math.round((actorLevel + 1) / 6 + .5) - 1; break;
 			case 'class':
-				const cls = actorData.obsidian.itemsByID.get(component.class);
-				scaledAmount = cls.data.levels;
+				scaledAmount = actorData.obsidian.itemsByID.get(component.class)?.data.levels;
 				break;
 		}
 
 		effects.filter(effect => !effect.isLinked).forEach(effect => {
-			const scaling = Effect.getScaling(actor, effect, scaledAmount);
+			const scaling = Effect.getScaling(item.actor, effect, scaledAmount);
 			if (!scaling) {
 				return;
 			}
@@ -340,13 +628,13 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 
 			if (damageComponents.length) {
 				if (scaling.mode === 'scaling') {
-					item.obsidian.collection.damage.push(...damageComponents);
+					derived.collection.damage.push(...damageComponents);
 				} else {
 					const oldComponents =
 						new Set(effect.components.filter(c => c.type === 'damage'));
 
-					item.obsidian.collection.damage =
-						item.obsidian.collection.damage
+					derived.collection.damage =
+						derived.collection.damage
 							.filter(c => !oldComponents.has(c))
 							.concat(damageComponents);
 				}
@@ -354,44 +642,34 @@ export function prepareEffects (actor, item, attackList, effectMap, componentMap
 		});
 	}
 
-	if (item.obsidian.collection.attack.length) {
-		if (attackList
-			&& (item.type !== 'weapon' || item.data.equipped)
-			&& (item.type !== 'spell' || item.flags.obsidian.visible))
-		{
-			attackList.push(...item.obsidian.collection.attack);
-		}
+	if (derived.collection.attack.length) {
+		derived.bestAttack =
+			derived.collection.attack.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
 
-		item.obsidian.bestAttack =
-			item.obsidian.collection.attack.reduce((acc, atk) => atk.value > acc.value ? atk : acc);
-
-		if (item.obsidian.bestAttack.targets > 1) {
-			flags.notes.push(
-				`${game.i18n.localize('OBSIDIAN.Count')}: `
-				+ item.obsidian.bestAttack.targets);
+		if (derived.bestAttack.targets > 1) {
+			derived.notes.push(
+				`${game.i18n.localize('OBSIDIAN.Count')}: ${derived.bestAttack.targets}`);
 		}
-	} else if (item.obsidian.collection.damage.length) {
+	} else if (derived.collection.damage.length) {
 		const targetComponents =
 			effects.filter(effect => !effect.isLinked)
 				.flatMap(effect => effect.components)
 				.filter(c => c.type === 'target' && c.target === 'individual');
 
 		if (targetComponents.length) {
-			flags.notes.push(
+			derived.notes.push(
 				`${game.i18n.localize('OBSIDIAN.Count')}: ${targetComponents[0].count}`);
 		}
 	}
 
-	if (item.obsidian.collection.save.length) {
-		item.obsidian.bestSave =
-			item.obsidian.collection.save.reduce((acc, save) =>
-				save.value > acc.value ? save : acc);
+	if (derived.collection.save.length) {
+		derived.bestSave =
+			derived.collection.save.reduce((acc, save) => save.value > acc.value ? save : acc);
 	}
 
-	if (item.obsidian.collection.resource.length) {
-		item.obsidian.bestResource =
-			item.obsidian.collection.resource.reduce((acc, resource) =>
-				resource.max > acc.max ? resource: acc);
+	if (derived.collection.resource.length) {
+		derived.bestResource =
+			derived.collection.resource.reduce((acc, res) => res.max > acc.max ? res : acc);
 	}
 }
 

@@ -1,16 +1,12 @@
 import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 import {OBSIDIAN} from '../global.js';
 import {Prepare} from '../rules/prepare.js';
-import {prepareInventory} from '../rules/inventory.js';
-import {prepareSpells} from '../rules/spells.js';
 import {prepareSpellcasting} from '../rules/spellcasting.js';
 import {Rolls} from '../rules/rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
-import {prepareEffects} from './item.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
-import {prepareFilters} from '../rules/toggleable.js';
 import {prepareNPC} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
@@ -18,93 +14,89 @@ import {Migrate} from '../migration/migrate.js';
 import {Obsidian} from './obsidian.js';
 import {ObsidianNPC} from './npc.js';
 import {Partitioner} from '../util/partition.js';
+import {Effect} from './effect.js';
+import {Filters} from '../rules/filters.js';
 
 export class ObsidianActor extends Actor5e {
-	prepareData () {
-		this.data.data.bonuses = {};
-		super.prepareData();
-		if (!game.settings?.settings.has('obsidian.version')) {
-			return;
+	static _deriveLevelFromXP (data, derived) {
+		let i = 0;
+		for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
+			if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
+				break;
+			}
 		}
 
-		const moduleVersion = game.settings.get('obsidian', 'version');
-		if (moduleVersion !== undefined && moduleVersion < Schema.VERSION) {
-			// Don't attempt to prepare actors if we haven't migrated the world
-			// yet.
+		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
+		const xp = data.details.xp;
+		derived.details.level = i;
+		xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
+		xp.pct = Math.floor(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100);
+	}
+
+	prepareBaseData () {
+		super.prepareBaseData();
+		if (!OBSIDIAN.isMigrated()) {
 			return;
 		}
 
 		if (!this.data.flags?.obsidian
 			|| (this.data.flags.obsidian.version || 0) < Schema.VERSION)
 		{
-			// This actor needs migrating.
 			Migrate.convertActor(this.data);
 		}
 
-		const data = this.data.data;
-		const flags = this.data.flags.obsidian;
 		this.data.obsidian = {
+			attacks: [],
+			attributes: {init: {}},
 			classes: [],
-			itemsByType: new Partitioner(game.system.entityTypes.Item)
+			components: new Map(),
+			details: {},
+			effects: new Map(),
+			itemsByType: new Partitioner(game.system.entityTypes.Item),
+			spellbook: {concentration: [], rituals: []},
+			toggleable: [],
+			triggers: {}
 		};
 
-		this.data.obsidian.itemsByType.partition(this.data.items, item => item.type);
+		const data = this.data.data;
+		const flags = this.data.flags.obsidian;
+		const derived = this.data.obsidian;
+		Rules.FEAT_TRIGGERS.forEach(trigger => derived.triggers[trigger] = []);
 
 		if (this.data.type === 'vehicle') {
 			data.attributes.prof = 0;
 		}
 
 		if (this.data.type === 'character') {
-			this.data.obsidian.classes =
-				this.data.obsidian.itemsByType.get('class').filter(item => item.flags.obsidian);
-
-			data.attributes.hp.maxAdjusted = data.attributes.hp.max + flags.attributes.hpMaxMod;
-			for (const cls of this.data.obsidian.classes) {
-				if (!cls.flags.obsidian) {
-					continue;
-				}
-
-				cls.flags.obsidian.label =
-					cls.name === 'custom'
-						? cls.flags.obsidian.custom
-						: game.i18n.localize(`OBSIDIAN.Class-${cls.name}`);
-
-				cls.data.levels = Number(cls.data.levels);
-			}
-
+			data.attributes.hp.max = data.attributes.hp.max + flags.attributes.hpMaxMod;
 			if (flags.details.milestone) {
-				this.data.obsidian.xpDerivedLevel = data.details.level;
+				derived.details.level = data.details.level;
 			} else {
-				let i = 0;
-				for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
-					if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
-						break;
-					}
-				}
-
-				const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
-				this.data.obsidian.xpDerivedLevel = i;
-				data.details.xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
-				data.details.xp.pct =
-					Math.floor(
-						((data.details.xp.value - lowerBound) / (data.details.xp.max - lowerBound))
-						* 100);
+				ObsidianActor._deriveLevelFromXP(data, derived);
 			}
-
-			this.data.obsidian.classFormat = ObsidianActor._classFormat(this.data.obsidian.classes);
 		} else {
-			prepareNPC(this.data);
+			prepareNPC(flags, derived);
+		}
+	}
+
+	prepareDerivedData () {
+		super.prepareDerivedData();
+		if (!OBSIDIAN.isMigrated()) {
+			return;
 		}
 
-		this.data.obsidian.magicalItems =
-			this.data.obsidian.itemsByType.get('weapon', 'equipment')
-				.filter(item => getProperty(item, 'flags.obsidian.magical'));
+		const data = this.data.data;
+		const flags = this.data.flags.obsidian;
+		const derived = this.data.obsidian;
+		derived.filters = {
+			mods: Filters.mods(derived.toggleable),
+			bonuses: Filters.bonuses(derived.toggleable),
+			setters: Filters.setters(derived.toggleable)
+		};
 
-		this.data.obsidian.attacks = [];
-		this.data.obsidian.effects = new Map();
-		this.data.obsidian.components = new Map();
-		this.data.obsidian.triggers = {};
-		Rules.FEAT_TRIGGERS.forEach(t => this.data.obsidian.triggers[t] = []);
+		if (this.data.type === 'character') {
+			derived.details.class = ObsidianActor._classFormat(derived.classes);
+		}
 
 		let originalSkills;
 		let originalSaves;
@@ -124,50 +116,29 @@ export class ObsidianActor extends Actor5e {
 			}
 		}
 
-		prepareFilters(this.data);
-		prepareInventory(this.data);
+		this._prepareInventory(data, derived.inventory, derived.itemsByID);
 		applyProfBonus(this.data);
-		Prepare.abilities(this.data);
-
-		data.attributes.ac.min =
-			flags.attributes.ac.base
-			+ data.abilities[flags.attributes.ac.ability1].mod
-			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0);
-
-		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-			data.attributes.ac.min = Number(flags.attributes.ac.override);
-		}
-
-		Prepare.init(data, flags);
-		Prepare.conditions(this);
+		Prepare.abilities(this.data, data, flags, derived);
+		Prepare.ac(data, flags, derived);
+		Prepare.init(data, flags, derived);
+		Prepare.conditions(data, flags, derived);
 
 		if (this.data.type !== 'vehicle') {
-			Prepare.skills(this.data, data, flags, originalSkills);
-			prepareSpellcasting(this.data, flags);
+			Prepare.skills(this.data, data, flags, derived, originalSkills);
+			prepareSpellcasting(this.data, data, flags, derived);
 		}
 
-		Prepare.saves(this.data, data, flags, originalSaves);
-		Prepare.features(this);
-		Prepare.consumables(this.data);
-		Prepare.equipment(this);
-		Prepare.weapons(this);
-		Prepare.armour(this.data);
-		prepareSpells(this.data);
+		Prepare.saves(this.data, data, flags, derived, originalSaves);
+		Prepare.armour(data, flags, derived);
 
 		if (this.data.type === 'character') {
-			Prepare.hd(this.data);
-			Prepare.tools(this.data, data, flags);
-		}
-
-		for (const item of this.data.items) {
-			prepareEffects(
-				this, item, this.data.obsidian.attacks, this.data.obsidian.effects,
-				this.data.obsidian.components);
+			Prepare.hd(flags, derived);
+			Prepare.tools(this.data, data, flags, derived);
 		}
 
 		prepareDefenses(this.data, flags);
 		prepareToggleableEffects(this.data);
-		applyBonuses(this.data);
+		applyBonuses(this.data, data, flags, derived);
 
 		if (this.isToken) {
 			// If we are preparing data right after an update, this.token
@@ -177,8 +148,155 @@ export class ObsidianActor extends Actor5e {
 		} else if (canvas) {
 			this.getActiveTokens(true).forEach(token => token.drawEffects());
 		}
+	}
 
-		return this.data;
+	prepareEmbeddedEntities () {
+		const derived = this.data.obsidian;
+		const items = this.data.items || [];
+		derived.itemsByType.partition(items, item => item.type);
+		derived.itemsByID = new Map();
+		this._enrichOwnedItems(derived, items);
+		super.prepareEmbeddedEntities();
+
+		if (!OBSIDIAN.isMigrated()) {
+			return;
+		}
+
+		if (this.data.type === 'character') {
+			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
+		}
+
+		this._prepareItems(derived, items);
+	}
+
+	_enrichOwnedItems (derived, items) {
+		// Owned items need to know their own index and be able to cross-
+		// reference other items before they can be prepared properly.
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			derived.itemsByID.set(item._id, item);
+			items.idx = i;
+		}
+	}
+
+	_prepareItems (derived, items) {
+		derived.magicalItems = [];
+		derived.ammo = [];
+		derived.inventory = {
+			weight: 0,
+			encumbered: false,
+			attunements: 0,
+			items: [],
+			root: [],
+			containers: []
+		};
+
+		for (const item of items) {
+			const flags = item.flags.obsidian;
+			if (['weapon', 'equipment'].includes(item.type) && flags?.magical) {
+				derived.magicalItems.push(item);
+			}
+
+			if (flags && Rules.INVENTORY_ITEMS.has(item.type)
+				&& (item.type !== 'weapon' || flags.type !== 'unarmed'))
+			{
+				derived.inventory.items.push(item);
+			}
+
+			const effects = flags?.effects || [];
+			for (const effect of effects) {
+				derived.effects.set(effect.uuid, effect);
+				for (const component of effect.components) {
+					derived.components.set(component.uuid, component);
+				}
+
+				const isToggleable = Object.values(effect.active).some(list => list.length);
+				if (isToggleable && Effect.isActive(item.data, effect)) {
+					derived.toggleable.push(effect);
+				}
+			}
+
+			if (item.obsidian.collection.attack.length
+				&& (item.type !== 'weapon' || item.data.equipped)
+				&& (item.type !== 'spell' || item.obsidian.visible))
+			{
+				derived.attacks.push(...item.obsidian.collection.attack);
+			}
+
+			if (item.type === 'feat'
+				&& item.data.activation.type === 'special'
+				&& !OBSIDIAN.notDefinedOrEmpty(flags.trigger))
+			{
+				derived.triggers[flags.trigger].push(item);
+			}
+
+			if (item.type === 'consumable' && flags.subtype === 'ammo') {
+				derived.ammo.push(item);
+			}
+
+			if (item.type === 'spell' && item.obsidian.visible) {
+				if (item.data.concentration) {
+					derived.spellbook.concentration.push(item);
+				}
+
+				if (item.data.components.ritual) {
+					derived.spellbook.rituals.push(item);
+				}
+			}
+		}
+	}
+
+	_prepareInventory (actorData, inventory, itemsByID) {
+		for (const item of inventory.items) {
+			const data = item.data;
+			const flags = item.flags.obsidian;
+			const derived = item.obsidian;
+			const totalWeight = data.weight * (data.quantity || 1);
+
+			if (flags.attunement && data.attuned) {
+				inventory.attunements++;
+			}
+
+			const container = itemsByID.get(flags.parent);
+			if (container) {
+				container.obsidian.carriedWeight += totalWeight;
+				if (!container.data.capacity.weightless) {
+					inventory.weight += totalWeight;
+				}
+
+				if (item.type === 'backpack') {
+					flags.parent = null;
+					inventory.root.push(item);
+				} else {
+					container.obsidian.contents.push(item);
+				}
+			} else {
+				inventory.weight += totalWeight;
+				if (item.type === 'backpack') {
+					inventory.containers.push(item);
+				} else {
+					inventory.root.push(item);
+				}
+			}
+
+			derived.consumable = item.type === 'consumable';
+			derived.equippable =
+				item.type === 'weapon'
+				|| (item.type === 'equipment' && Schema.EquipTypes.includes(flags.subtype));
+		}
+
+		inventory.weight +=
+			Object.values(actorData.currency).reduce((acc, currency) => acc + currency, 0)
+			* Rules.COIN_WEIGHT;
+
+		if (inventory.weight >= actorData.abilities.str.value * Rules.CARRY_MULTIPLIER) {
+			inventory.encumbered = true;
+		}
+
+		const sort = (a, b) => a.sort - b.sort;
+		inventory.root.sort(sort);
+		inventory.containers.sort(sort);
+		inventory.containers.forEach(container => container.obsidian.contents.sort(sort));
 	}
 
 	/**
@@ -302,15 +420,10 @@ export class ObsidianActor extends Actor5e {
 			return game.i18n.localize('OBSIDIAN.Class');
 		}
 
-		return classes.sort((a, b) => b.data.levels - a.data.levels).map(cls => {
-			if (!cls.flags.obsidian) {
-				return '';
-			}
-
-			return (cls.data.subclass && cls.data.subclass.length
-					? `${cls.data.subclass} ` : '')
-				+ `${cls.flags.obsidian.label} ${cls.data.levels}`;
-		}).join(' / ');
+		return classes.sort((a, b) => b.data.levels - a.data.levels).map(cls =>
+			(cls.data.subclass?.length ? `${cls.data.subclass} ` : '')
+			+ `${cls.obsidian.label} ${cls.data.levels}`
+		).join(' / ');
 	}
 
 	getItemParent (item) {

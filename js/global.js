@@ -25,6 +25,15 @@ OBSIDIAN.Fixes = {
 	fixBackpacks: fixBackpacks
 };
 
+OBSIDIAN.isMigrated = function () {
+	if (!game.settings?.settings.has('obsidian.version')) {
+		return false;
+	}
+
+	const moduleVersion = game.settings.get('obsidian', 'version');
+	return moduleVersion === undefined || moduleVersion >= Schema.VERSION;
+};
+
 OBSIDIAN.Queue = new Queue();
 
 String.prototype.capitalise = function () {

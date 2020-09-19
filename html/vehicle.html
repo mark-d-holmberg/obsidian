@@ -134,7 +134,7 @@
 							<div class="obsidian-char-ability-mod">
 								{{numberFormat mod decimals=0 sign=true}}
 							</div>
-							{{#with (lookup ../actor.flags.obsidian.abilities @key)}}
+							{{#with (lookup ../actor.obsidian.abilities @key)}}
 								<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
 								       class="obsidian-char-ability-score
 									{{#if (gt value ../value)}}

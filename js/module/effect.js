@@ -503,12 +503,28 @@ export const Effect = {
 		return {mode: 'breakpoint', effect: scaling};
 	},
 
-	isConcentration: function (actorData, effect) {
+	isActive: function (item, effect) {
+		if (item.type === 'spell' || effect.isApplied) {
+			return false;
+		}
+
+		if (item.flags.obsidian.attunement && !item.data.attuned) {
+			return false;
+		}
+
+		if (item.obsidian.equippable && !item.data.equipped) {
+			return false;
+		}
+
+		return true;
+	},
+
+	isConcentration: function (derived, effect) {
 		if (effect.durationComponent && effect.durationComponent.concentration) {
 			return true;
 		}
 
-		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
+		const item = derived.itemsByID.get(effect.parentItem);
 		return item && item.type === 'spell' && item.data.components.concentration;
 	},
 

@@ -12,6 +12,7 @@ import {v5} from './v5.js';
 import {v6} from './v6.js';
 import {v7} from './v7.js';
 import {v9} from './v9.js';
+import {v10} from './v10.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -208,6 +209,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 10 && source !== 'core') {
 			Migrate.v9.convertToolFilters(data);
+		}
+
+		if (data.flags.obsidian.version < 11 && source !== 'core') {
+			Migrate.v10.convertAmmo(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -662,6 +667,7 @@ Migrate.v5 = v5;
 Migrate.v6 = v6;
 Migrate.v7 = v7;
 Migrate.v9 = v9;
+Migrate.v10 = v10;
 
 function lazyConvert () {
 	const convert = (key, convert) => {

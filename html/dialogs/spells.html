@@ -8,10 +8,10 @@
 				spells=actor.obsidian.spells.custom btnClass='obsidian-rm-spell' filter=false}}
 	</details>
 	{{#each actor.obsidian.classes}}
-		{{#if (not-empty (lookup ../spellsByClass flags.obsidian.spellcasting.list))}}
-			<h2 data-class-id="{{_id}}">{{flags.obsidian.label}}</h2>
-			{{#if (eq flags.obsidian.spellcasting.preparation 'prep')}}
-				{{#with (lookup ../actor.obsidian.spells flags.obsidian.spellcasting.list)}}
+		{{#if (not-empty (lookup ../spellsByClass obsidian.spellcasting.list))}}
+			<h2 data-class-id="{{_id}}">{{obsidian.label}}</h2>
+			{{#if (eq obsidian.spellcasting.preparation 'prep')}}
+				{{#with (lookup ../actor.obsidian.spells obsidian.spellcasting.list)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.KnownSpells'}}</h3>
@@ -19,12 +19,12 @@
 						</summary>
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
 								btnActive='OBSIDIAN.Prepared' filter=true active=prepared
-								spellList=../flags.obsidian.spellcasting.list
-								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
-								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
-								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
-								totalPrepared=../flags.obsidian.spellcasting.totalPrepared
-								maxPrepared=../flags.obsidian.spellcasting.maxPrepared
+								spellList=../obsidian.spellcasting.list
+								spells=(lookup ../../spellsByClass ../obsidian.spellcasting.list)
+								totalCantrips=../obsidian.spellcasting.totalCantrips
+								maxCantrips=../obsidian.spellcasting.maxCantrips
+								totalPrepared=../obsidian.spellcasting.totalPrepared
+								maxPrepared=../obsidian.spellcasting.maxPrepared
 								btnCantrip='OBSIDIAN.Learn' btnCantripActive='OBSIDIAN.Remove'}}
 					</details>
 					<details>
@@ -36,8 +36,8 @@
 								filter=false spells=prepared btnCantrip='OBSIDIAN.Remove'}}
 					</details>
 				{{/with}}
-			{{else if (eq flags.obsidian.spellcasting.preparation 'known')}}
-				{{#with (lookup ../actor.obsidian.spells flags.obsidian.spellcasting.list)}}
+			{{else if (eq obsidian.spellcasting.preparation 'known')}}
+				{{#with (lookup ../actor.obsidian.spells obsidian.spellcasting.list)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>
@@ -45,12 +45,12 @@
 						</summary>
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn'
 								btnActive='OBSIDIAN.Remove' filter=true active=known
-								totalKnown=../flags.obsidian.spellcasting.totalKnown
-								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
-							  spellList=../flags.obsidian.spellcasting.list
-								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
-								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
-								maxKnown=../flags.obsidian.spellcasting.maxKnown}}
+								totalKnown=../obsidian.spellcasting.totalKnown
+								spells=(lookup ../../spellsByClass ../obsidian.spellcasting.list)
+							  spellList=../obsidian.spellcasting.list
+								totalCantrips=../obsidian.spellcasting.totalCantrips
+								maxCantrips=../obsidian.spellcasting.maxCantrips
+								maxKnown=../obsidian.spellcasting.maxKnown}}
 					</details>
 					<details>
 						<summary>
@@ -61,18 +61,18 @@
 								btnClass='obsidian-rm-spell' filter=false spells=known}}
 					</details>
 				{{/with}}
-			{{else if (eq flags.obsidian.spellcasting.preparation 'book')}}
-				{{#with (lookup ../actor.obsidian.spells flags.obsidian.spellcasting.list)}}
+			{{else if (eq obsidian.spellcasting.preparation 'book')}}
+				{{#with (lookup ../actor.obsidian.spells obsidian.spellcasting.list)}}
 					<details>
 						<summary>
 							<h3>{{localize 'OBSIDIAN.AddSpells'}}</h3>
 							<i class="fas fa-angle-down"></i>
 						</summary>
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Learn' active=book
-								btnActive='OBSIDIAN.Remove' filter=true spellList=../flags.obsidian.spellcasting.list
-								spells=(lookup ../../spellsByClass ../flags.obsidian.spellcasting.list)
-								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
-								maxCantrips=../flags.obsidian.spellcasting.maxCantrips}}
+								btnActive='OBSIDIAN.Remove' filter=true spellList=../obsidian.spellcasting.list
+								spells=(lookup ../../spellsByClass ../obsidian.spellcasting.list)
+								totalCantrips=../obsidian.spellcasting.totalCantrips
+								maxCantrips=../obsidian.spellcasting.maxCantrips}}
 					</details>
 					<details>
 						<summary>
@@ -89,10 +89,10 @@
 						</summary>
 						{{> modules/obsidian/html/components/spell-list.html btn='OBSIDIAN.Prepare'
 								btnActive='OBSIDIAN.Prepared' filter=true spells=book active=prepared
-								totalCantrips=../flags.obsidian.spellcasting.totalCantrips
-								maxCantrips=../flags.obsidian.spellcasting.maxCantrips
-								totalPrepared=../flags.obsidian.spellcasting.totalPrepared
-								maxPrepared=../flags.obsidian.spellcasting.maxPrepared
+								totalCantrips=../obsidian.spellcasting.totalCantrips
+								maxCantrips=../obsidian.spellcasting.maxCantrips
+								totalPrepared=../obsidian.spellcasting.totalPrepared
+								maxPrepared=../obsidian.spellcasting.maxPrepared
 								btnCantripActive='OBSIDIAN.Remove'}}
 					</details>
 				{{/with}}

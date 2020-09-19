@@ -49,17 +49,11 @@ async function onHotbarDrop (bar, data, slot) {
 
 		switch (args.rollData.roll) {
 			case 'tool':
-				name = actor.data.flags.obsidian.skills.tools[args.rollData.tool].label;
+				name = actor.data.obsidian.tools[args.rollData.tool].label;
 				break;
 
 			case 'skl':
-				if (args.rollData.skl.startsWith('custom')) {
-					const idx = Number(args.rollData.skl.split('.')[1]);
-					name = actor.data.flags.obsidian.skills.custom[idx].label;
-				} else {
-					name = game.i18n.localize(`OBSIDIAN.Skill-${args.rollData.skl}`);
-				}
-
+				name = actor.data.obsidian.skills[args.rollData.skl].label;
 				break;
 
 			case 'abl': case 'save':
@@ -180,7 +174,7 @@ function resourcesFromItem (actor, id) {
 		}
 	}
 
-	const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo?.id);
+	const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo);
 	if (ammo) {
 		return [ammo.data.quantity, null];
 	}

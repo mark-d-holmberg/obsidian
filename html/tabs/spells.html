@@ -3,7 +3,7 @@
 	     data-title="{{localize 'OBSIDIAN.ManageSpellcasting'}}" data-width="450">
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each actor.flags.obsidian.attributes.spellcasting.mods}}
+				{{#each actor.obsidian.spellcasting.mods}}
 					<span>{{numberFormat this decimals=0 sign=true}}</span>
 				{{/each}}
 			</div>
@@ -11,7 +11,7 @@
 		</div>
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each actor.flags.obsidian.attributes.spellcasting.attacks}}
+				{{#each actor.obsidian.spellcasting.attacks}}
 					<span>{{numberFormat this decimals=0 sign=true}}</span>
 				{{/each}}
 			</div>
@@ -19,7 +19,7 @@
 		</div>
 		<div>
 			<div class="obsidian-table-number-lg">
-				{{#each actor.flags.obsidian.attributes.spellcasting.saves}}
+				{{#each actor.obsidian.spellcasting.saves}}
 					<span>{{this}}</span>
 				{{/each}}
 			</div>

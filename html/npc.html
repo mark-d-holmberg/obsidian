@@ -62,7 +62,7 @@
 						{{~else~}}
 						{{~lc data.details.type~}}
 					{{~/if~}}
-				</span>{{#if actor.obsidian.tags}}<span style="margin-left: 3px;">({{{lc actor.obsidian.tags}}})</span>{{/if}}<span>,</span>
+				</span>{{#if actor.obsidian.details.tags}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}<span>,</span>
 				<span>
 					{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2)}}
 						{{#if actor.flags.obsidian.details.alignment1}}
@@ -112,7 +112,7 @@
 				     data-width="450">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.AC'}}</div>
 					<div class="obsidian-npc-stat-value obsidian-font-14">
-						{{data.attributes.ac.min}}
+						{{actor.obsidian.attributes.ac}}
 						{{#if actor.flags.obsidian.attributes.ac.note}}
 							<span class="obsidian-npc-subtle">({{actor.flags.obsidian.attributes.ac.note}})</span>
 						{{else if actor.obsidian.armourDisplay}}
@@ -154,7 +154,7 @@
 				     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250" data-npc="true"
 				     data-template="speed.html">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Speed'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13">{{actor.obsidian.speedDisplay}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13">{{actor.obsidian.attributes.speed}}</div>
 				</div>
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
@@ -166,7 +166,7 @@
 						<div class="obsidian-char-ability-mod">
 							{{numberFormat mod decimals=0 sign=true}}
 						</div>
-						{{#with (lookup ../actor.flags.obsidian.abilities @key)}}
+						{{#with (lookup ../actor.obsidian.abilities @key)}}
 							<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
 								class="obsidian-char-ability-score
 									{{#if (gt value ../value)}}
@@ -251,7 +251,7 @@
 					<div class="obsidian-npc-stat-li">
 						{{localize 'OBSIDIAN.PassiveLC'}}
 						{{localize 'OBSIDIAN.Skill-prc'}}
-						{{actor.flags.obsidian.skills.prc.passive}}
+						{{actor.obsidian.skills.prc.passive}}
 					</div>
 				</div>
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr"
