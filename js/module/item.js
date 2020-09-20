@@ -448,7 +448,6 @@ function prepareEffects (item) {
 
 	let cls;
 	let actorData;
-	const data = item.data.data;
 	const effects = flags.effects || [];
 	const derived = item.data.obsidian;
 	const myEffects = new Map();

@@ -105,7 +105,7 @@ function formatBonus (actorData, bonus) {
 		const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
 		if (cls) {
 			parts.push(localize('OBSIDIAN.BonusClassLevel')
-				.format(addOrSubtract, multiplier, cls.flags.obsidian.label));
+				.format(addOrSubtract, multiplier, cls.obsidian.label));
 		}
 	}
 

@@ -284,7 +284,7 @@
 					<div class="obsidian-char-box-container" data-dialog="Defenses">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses">
-						  {{#if actor.flags.obsidian.defenses.vulnDisplay}}
+						  {{#if actor.obsidian.defenses.display.damage.vuln}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-negative obsidian-css-icon-diamond"
@@ -294,10 +294,10 @@
 									    {{localize 'OBSIDIAN.VulnerabilityAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.flags.obsidian.defenses.vulnDisplay}}</span>
+								  <span>{{actor.obsidian.defenses.display.damage.vuln}}</span>
 							  </div>
 						  {{/if}}
-							{{#if actor.flags.obsidian.defenses.condDisplay.dis}}
+							{{#if actor.obsidian.defenses.display.conditions.dis}}
 								<div class="obsidian-list-box-row">
 									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
 									 obsidian-css-icon-negative" title="{{localize 'OBSIDIAN.Disadvantage'}}">
@@ -306,10 +306,10 @@
 											{{localize 'OBSIDIAN.DisadvantageAbbr'}}
 										</div>
 									</div>
-									<span>{{actor.flags.obsidian.defenses.condDisplay.dis}}</span>
+									<span>{{actor.obsidian.defenses.display.conditions.dis}}</span>
 								</div>
 							{{/if}}
-						  {{#if actor.flags.obsidian.defenses.resDisplay}}
+						  {{#if actor.obsidian.defenses.display.damage.res}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond"
@@ -319,10 +319,10 @@
 								      {{localize 'OBSIDIAN.ResistanceAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.flags.obsidian.defenses.resDisplay}}</span>
+								  <span>{{actor.obsidian.defenses.display.damage.res}}</span>
 							  </div>
 						  {{/if}}
-						  {{#if actor.flags.obsidian.defenses.pcImmDisplay}}
+						  {{#if actor.obsidian.defenses.display.pc}}
 							  <div class="obsidian-list-box-row">
 								  <div class="obsidian-css-icon obsidian-css-icon-sm
 								       obsidian-css-icon-positive obsidian-css-icon-diamond"
@@ -332,10 +332,10 @@
 								      {{localize 'OBSIDIAN.ImmunityAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.flags.obsidian.defenses.pcImmDisplay}}</span>
+								  <span>{{actor.obsidian.defenses.display.pc}}</span>
 							  </div>
 						  {{/if}}
-							{{#if actor.flags.obsidian.defenses.condDisplay.adv}}
+							{{#if actor.obsidian.defenses.display.conditions.adv}}
 								<div class="obsidian-list-box-row">
 									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
 									     obsidian-css-icon-positive" title="{{localize 'OBSIDIAN.Advantage'}}">
@@ -344,14 +344,14 @@
 											{{localize 'OBSIDIAN.AdvantageAbbr'}}
 										</div>
 									</div>
-									<span>{{actor.flags.obsidian.defenses.condDisplay.adv}}</span>
+									<span>{{actor.obsidian.defenses.display.conditions.adv}}</span>
 								</div>
 							{{/if}}
-							{{#if actor.flags.obsidian.defenses.dr.derived}}
+							{{#if actor.obsidian.defenses.parts.dr}}
 								<div class="obsidian-list-box-row">
 									<div class="obsidian-icon-sm obsidian-icon-damage-reduction"
 									     title="{{localize 'OBSIDIAN.DamageReduction'}}"></div>
-									<strong>{{actor.flags.obsidian.defenses.dr.derived}}</strong>
+									<strong>{{actor.obsidian.defenses.parts.dr}}</strong>
 								</div>
 							{{/if}}
 						</div>

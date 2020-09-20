@@ -136,7 +136,7 @@ export class ObsidianActor extends Actor5e {
 			Prepare.tools(this.data, data, flags, derived);
 		}
 
-		prepareDefenses(this.data, flags);
+		prepareDefenses(data, flags, derived);
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data, data, flags, derived);
 
@@ -176,6 +176,14 @@ export class ObsidianActor extends Actor5e {
 			const item = items[i];
 			derived.itemsByID.set(item._id, item);
 			items.idx = i;
+
+			const effects = flags?.effects || [];
+			for (const effect of effects) {
+				derived.effects.set(effect.uuid, effect);
+				for (const component of effect.components) {
+					derived.components.set(component.uuid, component);
+				}
+			}
 		}
 	}
 
@@ -205,11 +213,6 @@ export class ObsidianActor extends Actor5e {
 
 			const effects = flags?.effects || [];
 			for (const effect of effects) {
-				derived.effects.set(effect.uuid, effect);
-				for (const component of effect.components) {
-					derived.components.set(component.uuid, component);
-				}
-
 				const isToggleable = Object.values(effect.active).some(list => list.length);
 				if (isToggleable && Effect.isActive(item.data, effect)) {
 					derived.toggleable.push(effect);

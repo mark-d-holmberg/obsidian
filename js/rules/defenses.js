@@ -1,36 +1,46 @@
 import {OBSIDIAN} from '../global.js';
 
-export function prepareDefenses (actorData, flags) {
-	flags.defenses.res = [];
-	flags.defenses.imm = [];
-	flags.defenses.vuln = new Set();
-	flags.defenses.conds = {imm: [], adv: [], dis: []};
+export function prepareDefenses (data, flags, derived) {
+	derived.defenses = {
+		parts: {
+			conditions: {imm: [], adv: [], dis: []},
+			damage: {res: [], imm: [], vuln: new Set()},
+			dr: null
+		},
+		display: {
+			conditions: {imm: new Set(), adv: new Set(), dis: new Set()},
+			damage: {res: '', imm: '', vuln: ''},
+			pc: []
+		}
+	};
 
 	if (!flags.defenses.dr) {
 		flags.defenses.dr = {value: null};
 	}
 
-	flags.defenses.dr.derived = null;
-	prepareActiveDefenses(actorData, flags);
-	prepareManualDefenses(flags);
+	prepareActiveDefenses(flags, derived);
+	prepareManualDefenses(flags, derived);
 
 	// Convert to normal arrays to avoid being nuked during duplication.
-	flags.defenses.vuln = Array.from(flags.defenses.vuln.values());
+	derived.defenses.parts.damage.vuln = Array.from(derived.defenses.parts.damage.vuln.values());
 }
 
-function prepareActiveDefenses (actorData, flags) {
+function prepareActiveDefenses (flags, derived) {
 	let bestDR = 0;
-	actorData.obsidian.toggleable
+	const conditions = derived.defenses.parts.conditions;
+	const damage = derived.defenses.parts.damage;
+
+	derived.toggleable
 		.filter(effect => effect.toggle.active)
 		.filter(effect => effect.active.defense.length)
 		.flatMap(effect => effect.active.defense)
 		.forEach(def => {
 			if (def.sleep) {
-				flags.defenses.conds.imm.push('sleep');
+				conditions.imm.push('sleep');
 			}
 
 			if (def.disease) {
-				flags.defenses.conds.imm.push('disease');
+				conditions.imm.push('disease');
 			}
 
 			if (def.dr && def.dr > bestDR) {
@@ -38,48 +48,47 @@ function prepareActiveDefenses (actorData, flags) {
 			}
 
 			if (def.defense === 'condition') {
-				flags.defenses.conds[def.condition.level].push(def.condition.condition);
+				conditions[def.condition.level].push(def.condition.condition);
 			} else if (def.defense === 'damage') {
 				if (def.damage.level === 'vuln') {
-					flags.defenses.vuln.add(def.damage.dmg);
+					damage.vuln.add(def.damage.dmg);
 				} else {
-					flags.defenses[def.damage.level].push(def.damage);
+					damage[def.damage.level].push(def.damage);
 				}
 			}
 		});
 
 	if (bestDR) {
-		flags.defenses.dr.derived = bestDR;
+		derived.defenses.dr = bestDR;
 	}
 }
 
-function prepareManualDefenses (flags) {
-	flags.defenses.resDisplay = '';
-	flags.defenses.immDisplay = '';
-	flags.defenses.condDisplay = {imm: new Set(), adv: new Set(), dis: new Set()};
+function prepareManualDefenses (flags, derived) {
+	const parts = derived.defenses.parts;
+	const display = derived.defenses.display;
 
 	flags.defenses.conditions.forEach(cond => {
-		flags.defenses.conds[cond.level].push(cond.condition);
+		parts.conditions[cond.level].push(cond.condition);
 	});
 
 	if (flags.defenses.disease) {
-		flags.defenses.conds.imm.push('disease');
+		parts.conditions.imm.push('disease');
 	}
 
 	if (flags.defenses.sleep) {
-		flags.defenses.conds.imm.push('sleep');
+		parts.conditions.imm.push('sleep');
 	}
 
 	if (flags.defenses.dr.value) {
 		// Override any derived value.
-		flags.defenses.dr.derived = flags.defenses.dr.value;
+		derived.defenses.parts.dr = flags.defenses.dr.value;
 	}
 
-	Object.entries(flags.defenses.conds).forEach(([level, conditions]) =>
-		conditions.forEach(condition => flags.defenses.condDisplay[level].add(condition)));
+	Object.entries(parts.conditions).forEach(([level, conditions]) =>
+		conditions.forEach(condition => display.conditions[level].add(condition)));
 
-	Object.entries(flags.defenses.condDisplay).forEach(([level, conditions]) =>
-		flags.defenses.condDisplay[level] = Array.from(conditions.values()).map(cond => {
+	Object.entries(display.conditions).forEach(([level, conditions]) =>
+		display.conditions[level] = Array.from(conditions.values()).map(cond => {
 			let i18n = `Condition-${cond}`;
 			if (cond === 'sleep') {
 				i18n = 'MagicalSleep';
@@ -91,13 +100,13 @@ function prepareManualDefenses (flags) {
 		}).join(', '));
 
 	['adv', 'dis'].forEach(mode =>
-		flags.defenses.condDisplay[mode] =
-			flags.defenses.conds[mode]
+		display.conditions[mode] =
+			parts.conditions[mode]
 				.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`))
 				.join(', '));
 
 	flags.defenses.damage.forEach(def => {
-		const collection = flags.defenses[def.level];
+		const collection = parts.damage[def.level];
 		if (collection instanceof Set) {
 			collection.add(def.dmg);
 		} else {
@@ -105,8 +114,8 @@ function prepareManualDefenses (flags) {
 		}
 	});
 
-	flags.defenses.vulnDisplay =
-		Array.from(flags.defenses.vuln.values())
+	display.damage.vuln =
+		Array.from(parts.damage.vuln.values())
 			.map(dmg => game.i18n.localize(`OBSIDIAN.Damage-${dmg}`))
 			.join(', ');
 
@@ -116,7 +125,7 @@ function prepareManualDefenses (flags) {
 		const nonMagicalSil = new Set();
 		const nonMagicalAdm = new Set();
 
-		for (const def of flags.defenses[level]) {
+		for (const def of parts.damage[level]) {
 			const i18n = game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`);
 			if (OBSIDIAN.notDefinedOrEmpty(def.magic)) {
 				noCondition.add(i18n);
@@ -131,43 +140,42 @@ function prepareManualDefenses (flags) {
 			}
 		}
 
-		const display = `${level}Display`;
-		flags.defenses[display] = Array.from(noCondition.values()).join(', ');
+		display.damage[level] = Array.from(noCondition.values()).join(', ');
+		const displayParts = [display.damage[level]];
 
-		const parts = [flags.defenses[display]];
 		if (nonMagical.size) {
-			parts[1] = Array.from(nonMagical.values()).join(', ')
+			displayParts[1] = Array.from(nonMagical.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagical')}`;
 		}
 
 		if (nonMagicalSil.size) {
-			parts[2] = Array.from(nonMagicalSil.values()).join(', ')
+			displayParts[2] = Array.from(nonMagicalSil.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalSil')}`;
 		}
 
 		if (nonMagicalAdm.size) {
-			parts[3] = Array.from(nonMagicalAdm.values()).join(', ')
+			displayParts[3] = Array.from(nonMagicalAdm.values()).join(', ')
 				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalAdm')}`;
 		}
 
-		flags.defenses[display] = parts.filter(part => part && part.length).join('; ');
+		display.damage[level] = displayParts.filter(part => part && part.length).join('; ');
 	});
 
-	flags.defenses.pcImmDisplay = [];
-	if (flags.defenses.immDisplay.length) {
-		flags.defenses.pcImmDisplay.push(flags.defenses.immDisplay);
+	if (display.damage.imm.length) {
+		display.pc.push(display.damage.imm);
 	}
 
-	if (flags.defenses.condDisplay.imm.length) {
-		flags.defenses.pcImmDisplay.push(flags.defenses.condDisplay.imm);
+	if (display.conditions.imm.length) {
+		display.pc.push(display.conditions.imm);
 	}
 
-	flags.defenses.pcImmDisplay = flags.defenses.pcImmDisplay.join(', ');
+	display.pc = display.pc.join(', ');
 }
 
 export function hpAfterDamage (actor, damage, attack) {
 	let hp = actor.data.data.attributes.hp.value;
-	const defenses = actor.data.flags.obsidian.defenses;
+	const defenses = actor.data.obsidian.defenses.parts.damage;
+	const dr = actor.data.obsidian.defenses.parts.dr;
 
 	for (let [type, dmg] of damage.entries()) {
 		if (type === 'hlg') {
@@ -183,8 +191,8 @@ export function hpAfterDamage (actor, damage, attack) {
 			continue;
 		}
 
-		if (['blg', 'prc', 'slh'].includes(type) && !attack?.magical && defenses.dr.derived) {
-			dmg -= defenses.dr.derived;
+		if (['blg', 'prc', 'slh'].includes(type) && !attack?.magical && dr) {
+			dmg -= dr;
 		}
 
 		if (isResistant) {
