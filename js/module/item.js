@@ -33,16 +33,17 @@ export function getSourceClass (actorData, source) {
 }
 
 function prepareData (item) {
-	item.data.obsidian = {
-		actionable: [],
-		attributes: {},
-		collection: {versatile: []},
-		notes: []
-	};
+	if (!item.data.obsidian) {
+		item.data.obsidian = {};
+	}
 
 	const data = item.data.data;
 	const flags = item.data.flags.obsidian;
 	const derived = item.data.obsidian;
+	derived.actionable = [];
+	derived.attributes = {};
+	derived.collection = {versatile: []};
+	derived.notes = [];
 	Effect.metadata.components.forEach(c => derived.collection[c] = []);
 
 	const prepare = prepareItem[item.data.type];
@@ -53,9 +54,6 @@ function prepareData (item) {
 
 const prepareItem = {
 	backpack: function (item, data, flags, derived) {
-		derived.contents = [];
-		derived.carriedWeight = 0;
-
 		if (flags.currency) {
 			const currencyWeight =
 				Object.values(flags.currency).reduce((acc, currency) => acc + currency, 0)
@@ -169,7 +167,7 @@ const prepareItem = {
 	},
 
 	feat: function (item, data, flags, derived) {
-		if (!item.isOwned) {
+		if (!item.isOwned || !item.actor.data.obsidian) {
 			return;
 		}
 
@@ -225,7 +223,7 @@ const prepareItem = {
 			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
 		} else if (flags.source.type === 'custom') {
 			derived.source.display = flags.source.custom;
-		} else if (flags.source.type === 'class' && item.isOwned) {
+		} else if (flags.source.type === 'class' && item.isOwned && item.actor.data.obsidian) {
 			cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
 			derived.source.display = cls?.obsidian.label;
 		}
@@ -275,7 +273,7 @@ const prepareItem = {
 			}
 		}
 
-		if (flags.tags.ammunition && item.isOwned) {
+		if (flags.tags.ammunition && item.isOwned && item.actor.data.obsidian) {
 			derived.ammo = `
 				<select data-name="items.${item.data.idx}.flags.obsidian.ammo.id">
 					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
@@ -324,7 +322,7 @@ const prepareItem = {
 
 const prepareComponents = {
 	attack: function (actor, item, effect, component, cls) {
-		Prepare.calculateHit(actor.data, item, component, cls);
+		Prepare.calculateHit(actor?.data, item, component, cls);
 		Prepare.calculateAttackType(item.flags.obsidian, component);
 	},
 
@@ -338,7 +336,7 @@ const prepareComponents = {
 	},
 
 	damage: function (actor, item, effect, component, cls) {
-		Prepare.calculateDamage(actor.data, item, component, cls);
+		Prepare.calculateDamage(actor?.data, item, component, cls);
 	},
 
 	description: function (actor, item, effect, component) {
@@ -351,16 +349,16 @@ const prepareComponents = {
 	},
 
 	save: function (actor, item, effect, component, cls) {
-		Prepare.calculateDC(actor.data, item, component, cls, Filters.appliesTo.saveDCs);
+		Prepare.calculateDC(actor?.data, item, component, cls, Filters.appliesTo.saveDCs);
 	},
 
 	resource: function (actor, item, effect, component) {
-		Prepare.calculateResources(actor.data, item, effect, component);
+		Prepare.calculateResources(actor?.data, item, effect, component);
 
 		component.label =
 			component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
 
-		item.flags.obsidian.notes.push(
+		item.obsidian.notes.push(
 			'<div class="obsidian-table-note-flex">'
 				+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
 					+ component.label
@@ -370,7 +368,7 @@ const prepareComponents = {
 
 	target: function (actor, item, effect, component) {
 		if (component.target === 'area' && !effect.isLinked) {
-			item.flags.obsidian.notes.push(
+			item.obsidian.notes.push(
 				`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
 				+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
 		}
@@ -387,7 +385,7 @@ const prepareComponents = {
 	},
 
 	spells: function (actor, item, effect, component) {
-		if (!actor) {
+		if (!actor || !actor.data.obsidian) {
 			return;
 		}
 
@@ -456,7 +454,7 @@ function prepareEffects (item) {
 		actorData = item.actor.data;
 	}
 
-	if (flags.source && item.isOwned) {
+	if (flags.source && item.isOwned && actorData.obsidian) {
 		cls = getSourceClass(actorData, flags.source);
 	}
 
@@ -464,7 +462,7 @@ function prepareEffects (item) {
 		const effect = effects[effectIdx];
 		myEffects.set(effect.uuid, effect);
 
-		if (item.isOwned) {
+		if (item.isOwned && actorData.obsidian) {
 			actorData.obsidian.effects.set(effect.uuid, effect);
 		}
 
@@ -472,17 +470,14 @@ function prepareEffects (item) {
 			effect.toggle = {active: true, display: ''};
 		}
 
-		effect.parentActor = actorData._id;
+		effect.parentActor = actorData?._id;
 		effect.parentItem = item.data._id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
-		effect.filters = [];
-		effect.active = {};
 		effect.isLinked = false;
 		effect.eagerScaling = false;
 
-		Effect.metadata.active.forEach(c => effect.active[c] = []);
 		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
 		Effect.metadata.linked.forEach(linked => {
 			const found = effect.components.find(c => c.type === linked);
@@ -501,14 +496,14 @@ function prepareEffects (item) {
 
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
-			if (item.isOwned) {
+			if (item.isOwned && actorData.obsidian) {
 				actorData.obsidian.components.set(component.uuid, component);
 			}
 
 			component.parentEffect = effect.uuid;
 			component.idx = componentIdx;
 
-			if (effect.metadata.single.has(component.type)) {
+			if (Effect.metadata.single.has(component.type)) {
 				effect[`${component.type}Component`] = component;
 			} else if (!effect.isLinked) {
 				let collection = component.type;
@@ -517,12 +512,6 @@ function prepareEffects (item) {
 				}
 
 				derived.collection[collection].push(component);
-			}
-
-			if (Effect.metadata.active.has(component.type)) {
-				effect.active[component.type].push(component);
-			} else if (component.type === 'filter') {
-				effect.filters.push(component);
 			}
 
 			const prepare = prepareComponents[component.type];
@@ -568,7 +557,7 @@ function prepareEffects (item) {
 		if (spells.length) {
 			return spells.flatMap(component =>
 				component.spells.map(entry => {
-					if (item.isOwned) {
+					if (item.isOwned && actorData.obsidian) {
 						return actorData.obsidian.itemsByID.get(entry);
 					}
 
@@ -579,7 +568,7 @@ function prepareEffects (item) {
 		return action;
 	});
 
-	if (item.isOwned && derived.collection.scaling.some(Effect.isEagerScaling)) {
+	if (item.isOwned && actorData.obsidian && derived.collection.scaling.some(Effect.isEagerScaling)) {
 		let scaledAmount = 0;
 		const actorLevel = actorData.data.details.level;
 		const component = derived.collection.scaling[0].scalingComponent;

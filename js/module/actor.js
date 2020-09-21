@@ -46,13 +46,15 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		this.data.obsidian = {
-			attacks: [],
+			ammo: [],
 			attributes: {init: {}},
 			classes: [],
 			components: new Map(),
 			details: {},
 			effects: new Map(),
+			itemsByID: new Map(),
 			itemsByType: new Partitioner(game.system.entityTypes.Item),
+			magicalItems: [],
 			spellbook: {concentration: [], rituals: []},
 			toggleable: [],
 			triggers: {}
@@ -77,26 +79,20 @@ export class ObsidianActor extends Actor5e {
 		} else {
 			prepareNPC(flags, derived);
 		}
-	}
 
-	prepareDerivedData () {
-		super.prepareDerivedData();
-		if (!OBSIDIAN.isMigrated()) {
-			return;
+		const items = this.data.items || [];
+		derived.itemsByType.partition(items, item => item.type);
+		this._collateOwnedItems(derived, items);
+
+		if (this.data.type === 'character') {
+			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
 		}
 
-		const data = this.data.data;
-		const flags = this.data.flags.obsidian;
-		const derived = this.data.obsidian;
 		derived.filters = {
 			mods: Filters.mods(derived.toggleable),
 			bonuses: Filters.bonuses(derived.toggleable),
 			setters: Filters.setters(derived.toggleable)
 		};
-
-		if (this.data.type === 'character') {
-			derived.details.class = ObsidianActor._classFormat(derived.classes);
-		}
 
 		let originalSkills;
 		let originalSaves;
@@ -125,7 +121,6 @@ export class ObsidianActor extends Actor5e {
 
 		if (this.data.type !== 'vehicle') {
 			Prepare.skills(this.data, data, flags, derived, originalSkills);
-			prepareSpellcasting(this.data, data, flags, derived);
 		}
 
 		Prepare.saves(this.data, data, flags, derived, originalSaves);
@@ -135,6 +130,124 @@ export class ObsidianActor extends Actor5e {
 			Prepare.hd(flags, derived);
 			Prepare.tools(this.data, data, flags, derived);
 		}
+	}
+
+	_collateOwnedItems (actorDerived, items) {
+		actorDerived.inventory = {
+			weight: 0,
+			encumbered: false,
+			attunements: 0,
+			items: [],
+			root: [],
+			containers: []
+		};
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			if (!item.obsidian) {
+				item.obsidian = {};
+			}
+
+			const data = item.data;
+			const flags = item.flags.obsidian;
+			const derived = item.obsidian;
+
+			item.idx = i;
+			actorDerived.itemsByID.set(item._id, item);
+			derived.consumable = item.type === 'consumable';
+			derived.equippable =
+				item.type === 'weapon'
+				|| (item.type === 'equipment' && Schema.EquipTypes.includes(flags?.subtype));
+
+			if (item.type === 'consumable' && flags?.subtype === 'ammo') {
+				actorDerived.ammo.push(item);
+			}
+
+			if (['weapon', 'equipment'].includes(item.type) && flags?.magical) {
+				actorDerived.magicalItems.push(item);
+			}
+
+			if (flags && Rules.INVENTORY_ITEMS.has(item.type)
+				&& (item.type !== 'weapon' || flags.type !== 'unarmed'))
+			{
+				actorDerived.inventory.items.push(item);
+			}
+
+			if (item.type === 'feat'
+				&& data.activation.type === 'special'
+				&& !OBSIDIAN.notDefinedOrEmpty(flags?.trigger))
+			{
+				actorDerived.triggers[flags.trigger].push(item);
+			}
+
+			if (item.type === 'spell' && derived.visible) {
+				if (data.concentration) {
+					actorDerived.spellbook.concentration.push(item);
+				}
+
+				if (data.components.ritual) {
+					actorDerived.spellbook.rituals.push(item);
+				}
+			}
+
+			if (item.type === 'backpack') {
+				derived.contents = [];
+				derived.carriedWeight = 0;
+			}
+
+			const effects = flags?.effects || [];
+			for (const effect of effects) {
+				actorDerived.effects.set(effect.uuid, effect);
+				effect.filters = [];
+				effect.active = {};
+				effect.isApplied = false;
+				Effect.metadata.active.forEach(c => effect.active[c] = []);
+
+				for (const component of effect.components) {
+					actorDerived.components.set(component.uuid, component);
+					if (component.type === 'applied') {
+						effect.isApplied = true;
+					}
+
+					if (Effect.metadata.active.has(component.type)) {
+						effect.active[component.type].push(component);
+					} else if (component.type === 'filter') {
+						effect.filters.push(component);
+					}
+				}
+
+				const isToggleable = Object.values(effect.active).some(list => list.length);
+				if (isToggleable && Effect.isActive(item, effect)) {
+					actorDerived.toggleable.push(effect);
+				}
+			}
+		}
+	}
+
+	prepareDerivedData () {
+		super.prepareDerivedData();
+		if (!OBSIDIAN.isMigrated()) {
+			return;
+		}
+
+		const data = this.data.data;
+		const flags = this.data.flags.obsidian;
+		const derived = this.data.obsidian;
+
+		if (this.data.type === 'character') {
+			derived.details.class = ObsidianActor._classFormat(derived.classes);
+		}
+
+		if (this.data.type !== 'vehicle') {
+			prepareSpellcasting(this.data, data, flags, derived);
+		}
+
+		derived.attacks =
+			this.data.items.filter(item =>
+				item.obsidian?.collection.attack.length
+				&& (item.type !== 'weapon' || item.data.equipped)
+				&& (item.type !== 'spell' || item.obsidian?.visible))
+				.flatMap(item => item.obsidian.collection.attack);
 
 		prepareDefenses(data, flags, derived);
 		prepareToggleableEffects(this.data);
@@ -150,110 +263,10 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
-	prepareEmbeddedEntities () {
-		const derived = this.data.obsidian;
-		const items = this.data.items || [];
-		derived.itemsByType.partition(items, item => item.type);
-		derived.itemsByID = new Map();
-		this._enrichOwnedItems(derived, items);
-		super.prepareEmbeddedEntities();
-
-		if (!OBSIDIAN.isMigrated()) {
-			return;
-		}
-
-		if (this.data.type === 'character') {
-			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
-		}
-
-		this._prepareItems(derived, items);
-	}
-
-	_enrichOwnedItems (derived, items) {
-		// Owned items need to know their own index and be able to cross-
-		// reference other items before they can be prepared properly.
-		for (let i = 0; i < items.length; i++) {
-			const item = items[i];
-			derived.itemsByID.set(item._id, item);
-			items.idx = i;
-
-			const effects = flags?.effects || [];
-			for (const effect of effects) {
-				derived.effects.set(effect.uuid, effect);
-				for (const component of effect.components) {
-					derived.components.set(component.uuid, component);
-				}
-			}
-		}
-	}
-
-	_prepareItems (derived, items) {
-		derived.magicalItems = [];
-		derived.ammo = [];
-		derived.inventory = {
-			weight: 0,
-			encumbered: false,
-			attunements: 0,
-			items: [],
-			root: [],
-			containers: []
-		};
-
-		for (const item of items) {
-			const flags = item.flags.obsidian;
-			if (['weapon', 'equipment'].includes(item.type) && flags?.magical) {
-				derived.magicalItems.push(item);
-			}
-
-			if (flags && Rules.INVENTORY_ITEMS.has(item.type)
-				&& (item.type !== 'weapon' || flags.type !== 'unarmed'))
-			{
-				derived.inventory.items.push(item);
-			}
-
-			const effects = flags?.effects || [];
-			for (const effect of effects) {
-				const isToggleable = Object.values(effect.active).some(list => list.length);
-				if (isToggleable && Effect.isActive(item.data, effect)) {
-					derived.toggleable.push(effect);
-				}
-			}
-
-			if (item.obsidian.collection.attack.length
-				&& (item.type !== 'weapon' || item.data.equipped)
-				&& (item.type !== 'spell' || item.obsidian.visible))
-			{
-				derived.attacks.push(...item.obsidian.collection.attack);
-			}
-
-			if (item.type === 'feat'
-				&& item.data.activation.type === 'special'
-				&& !OBSIDIAN.notDefinedOrEmpty(flags.trigger))
-			{
-				derived.triggers[flags.trigger].push(item);
-			}
-
-			if (item.type === 'consumable' && flags.subtype === 'ammo') {
-				derived.ammo.push(item);
-			}
-
-			if (item.type === 'spell' && item.obsidian.visible) {
-				if (item.data.concentration) {
-					derived.spellbook.concentration.push(item);
-				}
-
-				if (item.data.components.ritual) {
-					derived.spellbook.rituals.push(item);
-				}
-			}
-		}
-	}
-
 	_prepareInventory (actorData, inventory, itemsByID) {
 		for (const item of inventory.items) {
 			const data = item.data;
 			const flags = item.flags.obsidian;
-			const derived = item.obsidian;
 			const totalWeight = data.weight * (data.quantity || 1);
 
 			if (flags.attunement && data.attuned) {
@@ -281,11 +294,6 @@ export class ObsidianActor extends Actor5e {
 					inventory.root.push(item);
 				}
 			}
-
-			derived.consumable = item.type === 'consumable';
-			derived.equippable =
-				item.type === 'weapon'
-				|| (item.type === 'equipment' && Schema.EquipTypes.includes(flags.subtype));
 		}
 
 		inventory.weight +=

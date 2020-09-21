@@ -37,7 +37,7 @@ export function determineAdvantage (...mods) {
 
 export const Prepare = {
 	spellPart: function (component, data, cls) {
-		if (!OBSIDIAN.notDefinedOrEmpty(component.ability)) {
+		if (!OBSIDIAN.notDefinedOrEmpty(component.ability) && data) {
 			let mod;
 			let i18n;
 
@@ -57,7 +57,7 @@ export const Prepare = {
 	},
 
 	calculateDC: function (actorData, item, component, cls, pred) {
-		const data = actorData.data;
+		const data = actorData?.data;
 		if (component.calc === 'fixed') {
 			component.value = component.fixed;
 			return;
@@ -69,7 +69,7 @@ export const Prepare = {
 		}
 
 		component.rollParts = [{
-			mod: component.prof * data.attributes.prof,
+			mod: component.prof * (data?.attributes.prof || 0),
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 			proficiency: true,
 			value: Number(component.prof)
@@ -77,7 +77,9 @@ export const Prepare = {
 
 		component.spellMod = 0;
 		if (getProperty(item, 'flags.obsidian.parentComponent')) {
-			const provider = actorData.obsidian.components.get(item.flags.obsidian.parentComponent);
+			const provider =
+				actorData?.obsidian?.components.get(item.flags.obsidian.parentComponent);
+
 			if (provider && provider.method === 'innate') {
 				component.spellMod = data.abilities[provider.ability].mod;
 				component.rollParts.push({
@@ -91,7 +93,7 @@ export const Prepare = {
 			Prepare.spellPart(component, data, cls);
 		}
 
-		const bonuses = actorData.obsidian.filters.bonuses(pred(component));
+		const bonuses = actorData?.obsidian?.filters.bonuses(pred(component)) || [];
 		if (bonuses.length) {
 			component.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
@@ -99,7 +101,7 @@ export const Prepare = {
 		component.value =
 			Math.floor(bonus + component.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-		const setters = actorData.obsidian.filters.setters(pred(component));
+		const setters = actorData?.obsidian?.filters.setters(pred(component)) || [];
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
 			if (!setter.min || setter.score > component.value) {
@@ -109,7 +111,7 @@ export const Prepare = {
 	},
 
 	calculateHit: function (actorData, item, hit, cls) {
-		const data = actorData.data;
+		const data = actorData?.data;
 		hit.rollParts = [{
 			mod: (hit.bonus || 0) + weaponBonus(actorData, item),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -121,14 +123,16 @@ export const Prepare = {
 
 		if (hit.proficient) {
 			hit.rollParts.push({
-				mod: data.attributes.prof,
+				mod: data?.attributes.prof || 0,
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 				proficiency: true,
 				value: 1
 			});
 		}
 
-		const bonuses = actorData.obsidian.filters.bonuses(Filters.appliesTo.attackRolls(hit));
+		const bonuses =
+			actorData?.obsidian?.filters.bonuses(Filters.appliesTo.attackRolls(hit)) || [];
+
 		if (bonuses.length) {
 			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
 		}
@@ -145,7 +149,7 @@ export const Prepare = {
 	},
 
 	calculateDamage: function (actorData, item, dmg, cls) {
-		const data = actorData.data;
+		const data = actorData?.data;
 		dmg.rollParts = [{
 			mod: dmg.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus'),
@@ -156,10 +160,12 @@ export const Prepare = {
 		}];
 
 		Prepare.spellPart(dmg, data, cls);
-		const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
 
-		if (bonuses.length) {
-			dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+		if (actorData?.obsidian) {
+			const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
+			if (bonuses.length) {
+				dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			}
 		}
 
 		if (dmg.extraBonus) {
@@ -176,19 +182,17 @@ export const Prepare = {
 	},
 
 	calculateResources: function (actorData, item, effect, resource) {
-		const data = actorData.data;
-		const classes = actorData.obsidian.classes;
-
+		const data = actorData?.data;
 		if (resource.calc === 'fixed') {
 			resource.max = resource.fixed;
-		} else {
+		} else if (actorData) {
 			const op = ops[resource.operator];
 			if (resource.key === 'abl') {
 				resource.max = op(resource.bonus, data.abilities[resource.ability].mod);
 			} else if (resource.key === 'chr') {
 				resource.max = op(resource.bonus, data.details.level);
-			} else if (resource.key === 'cls') {
-				const cls = classes.find(cls => cls._id === resource.class);
+			} else if (resource.key === 'cls' && actorData.obsidian) {
+				const cls = actorData.obsidian.itemsByID.get(resource.class);
 				if (cls) {
 					resource.max = op(resource.bonus, cls.data.levels);
 				}
@@ -321,7 +325,7 @@ export const Prepare = {
 						acc + bonusToParts(actorData, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
-				derived.abilities[id].value = Math.floor(flags.abilities[id].value);
+				derived.abilities[id].value = Math.floor(derived.abilities[id].value);
 			}
 
 			const abilitySetters = derived.filters.setters(Filters.appliesTo.abilityScores(id));
@@ -662,7 +666,7 @@ function weaponBonus (actorData, item) {
 	if (item.flags.obsidian.tags?.ammunition
 		&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.ammo))
 	{
-		const ammo = actorData.obsidian.itemsByID.get(item.flags.obsidian.ammo);
+		const ammo = actorData?.obsidian?.itemsByID.get(item.flags.obsidian.ammo);
 		if (ammo && ammo.flags.obsidian.magical && ammo.flags.obsidian.magicBonus) {
 			bonus += ammo.flags.obsidian.magicBonus;
 		}

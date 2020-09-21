@@ -13,7 +13,7 @@ export function prepareNPC (flags, derived) {
 		derived.details.tags.push(game.i18n.localize(`OBSIDIAN.CreatureTag-${tag}`));
 	}
 
-	derived.details.tags = derived.tags.join(', ');
+	derived.details.tags = derived.details.tags.join(', ');
 	if (!OBSIDIAN.notDefinedOrEmpty(flags.details.tags.custom)) {
 		if (!OBSIDIAN.notDefinedOrEmpty(derived.details.tags)) {
 			derived.details.tags += ', ';
