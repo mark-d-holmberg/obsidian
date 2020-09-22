@@ -532,6 +532,12 @@ export const Effect = {
 		return ['cantrip', 'level', 'class'].includes(effect.scalingComponent.method);
 	},
 
+	isEmbeddedSpellsComponent: function (component) {
+		return component.type === 'spells'
+			&& component.source === 'individual'
+			&& component.spells.length;
+	},
+
 	scaleConstant: function (scaling, value, base, constant) {
 		if (scaling.mode === 'scaling') {
 			return Math.floor(base + constant * value);

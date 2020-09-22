@@ -310,6 +310,26 @@ export class ObsidianActor extends Actor5e {
 		inventory.containers.forEach(container => container.obsidian.contents.sort(sort));
 	}
 
+	async deleteEmbeddedEntity (embeddedName, data, options = {}) {
+		let deleted = await super.deleteEmbeddedEntity(embeddedName, data, options);
+		deleted = Array.isArray(deleted) ? deleted : [deleted];
+
+		if (embeddedName === 'OwnedItem') {
+			const orphanedSpells =
+				deleted.flatMap(item => item.flags.obsidian?.effects || [])
+					.flatMap(e => e.components)
+					.filter(c => c.type === 'spells')
+					.flatMap(c => c.spells)
+					.filter(spell => typeof spell === 'string');
+
+			if (orphanedSpells.length) {
+				await this.deleteEmbeddedEntity('OwnedItem', orphanedSpells, options);
+			}
+		}
+
+		return deleted;
+	}
+
 	/**
 	 * @private
 	 */
@@ -338,36 +358,71 @@ export class ObsidianActor extends Actor5e {
 		return this.update(data);
 	}
 
-	importSpells (item) {
-		if (!getProperty(item, 'flags.obsidian.effects.length')) {
-			return;
+	async createEmbeddedEntity (embeddedName, data, options = {}) {
+		if (embeddedName !== 'OwnedItem') {
+			return super.createEmbeddedEntity(embeddedName, data, options);
 		}
 
-		const effects = duplicate(item.flags.obsidian.effects);
-		const pending =
-			effects.flatMap(e => e.components)
-				.filter(c =>
-					c.type === 'spells'
-					&& c.source === 'individual'
-					&& c.spells.length
-					&& typeof c.spells[0] === 'object')
-				.map(async c => {
-					c.spells.filter(spell => spell.flags.obsidian.isEmbedded).forEach(spell => {
-						spell.flags.obsidian.source.item = item._id;
-						spell.flags.obsidian.parentComponent = c.uuid;
-					});
+		let items = await super.createEmbeddedEntity('OwnedItem', data, options);
+		items = Array.isArray(items) ? items : [items];
 
-					const ownedSpells =
-						await this.createEmbeddedEntity('OwnedItem', c.spells);
-					c.spells = [].concat(ownedSpells).map(spell => spell._id);
-				});
+		let spells = this._importSpellsFromItem(data, options, items);
+		if (spells.length) {
+			const updates = [];
+			spells = await this.createEmbeddedEntity('OwnedItem', spells, options);
 
-		if (pending.length) {
-			OBSIDIAN.Queue.runLater(
-				Promise.all(pending).then(() =>
-					this.updateEmbeddedEntity(
-						'OwnedItem', {_id: item._id, 'flags.obsidian.effects': effects})));
+			for (const parentItem of items) {
+				const effects = duplicate(parentItem.flags.obsidian?.effects || []);
+				const components =
+					effects.flatMap(e => e.components).filter(Effect.isEmbeddedSpellsComponent);
+
+				if (!components?.length) {
+					continue;
+				}
+
+				updates.push({_id: parentItem._id, 'flags.obsidian.effects': effects});
+				for (const component of components) {
+					component.spells =
+						spells.filter(spell =>
+							spell.flags.obsidian.parentComponent === component.uuid)
+							.map(spell => spell._id);
+				}
+			}
+
+			if (updates.length) {
+				await this.updateEmbeddedEntity('OwnedItem', updates);
+			}
 		}
+
+		return items;
+	}
+
+	_importSpellsFromItem (data, {temporary = false} = {}, items) {
+		const spells = [];
+		if (temporary) {
+			return spells;
+		}
+
+		for (const item of items) {
+			if (!getProperty(item, 'flags.obsidian.effects.length')) {
+				continue;
+			}
+
+			const effects = duplicate(item.flags.obsidian.effects);
+			spells.push(
+				...effects.flatMap(e => e.components)
+					.filter(c =>
+						Effect.isEmbeddedSpellsComponent(c)
+						&& typeof c.spells[0] === 'object')
+					.flatMap(c =>
+						c.spells.filter(spell => spell.flags.obsidian.isEmbedded).map(spell => {
+							spell.flags.obsidian.source.item = item._id;
+							spell.flags.obsidian.parentComponent = c.uuid;
+							return spell;
+						})));
+		}
+
+		return spells;
 	}
 
 	linkClasses (item) {

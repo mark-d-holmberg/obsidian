@@ -113,12 +113,6 @@ Hooks.on('preCreateOwnedItem', (actor, data) => {
 	actor.linkClasses(data);
 });
 
-Hooks.on('createOwnedItem', (actor, item) => {
-	if (actor instanceof CONFIG.Actor.entityClass) {
-		actor.importSpells(item);
-	}
-});
-
 Hooks.on('updateCombat', async combat => {
 	if (!game.user.isGM) {
 		return;

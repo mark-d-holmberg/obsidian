@@ -3,7 +3,6 @@ import {Schema} from './module/schema.js';
 import {Rules} from './rules/rules.js';
 import {fixBackpacks} from './util/fixes.js';
 import {Migrate} from './migration/migrate.js';
-import {Queue} from './util/queue.js';
 
 export const OBSIDIAN = {};
 OBSIDIAN.Items = ObsidianItems;
@@ -33,8 +32,6 @@ OBSIDIAN.isMigrated = function () {
 	const moduleVersion = game.settings.get('obsidian', 'version');
 	return moduleVersion === undefined || moduleVersion >= Schema.VERSION;
 };
-
-OBSIDIAN.Queue = new Queue();
 
 String.prototype.capitalise = function () {
 	if (!this.length) {

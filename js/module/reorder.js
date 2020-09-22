@@ -138,7 +138,6 @@ export const Reorder = {
 		}
 
 		Reorder.insert(actor, src, dest, where, update);
-		await OBSIDIAN.Queue.flush();
 		actor.update(OBSIDIAN.updateArrays(actor.data, update), {diff: false});
 		return false;
 	},
