@@ -37,13 +37,12 @@ export class ObsidianNPCFeaturesDialog extends ObsidianDialog {
 
 	async _onAddFeature () {
 		const selection = this.element.find('select').val();
-		const item = await this.parent.actor.createEmbeddedEntity('OwnedItem', {
+		await this.parent.actor.createEmbeddedEntity('OwnedItem', {
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			type: 'feat',
 			data: {activation: {type: selection}}
-		});
+		}, {renderSheet: true});
 
-		Item.createOwned(item, this.parent.actor).sheet.render(true);
 		this.close();
 	}
 

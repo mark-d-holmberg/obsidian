@@ -196,8 +196,8 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		return ObsidianNPC.prototype._calculateEditorHeight.apply(this, arguments);
 	}
 
-	_createEditor (target, editorOptions, initialContent) {
-		ObsidianNPC.prototype._createEditor.apply(this, arguments);
+	activateEditor (name, options = {}, initialContent = '') {
+		ObsidianNPC.prototype.activateEditor.apply(this, arguments);
 	}
 
 	_editDetails () {

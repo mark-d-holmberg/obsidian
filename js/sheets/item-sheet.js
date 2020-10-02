@@ -67,10 +67,10 @@ export class ObsidianItemSheet extends ItemSheet {
 		}, 25);
 	}
 
-	_createEditor (target, editorOptions, initialContent) {
-		editorOptions.content_css =
+	activateEditor (name, options = {}, initialContent = '') {
+		options.content_css =
 			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
-		super._createEditor(target, editorOptions, initialContent);
+		super.activateEditor(name, options, initialContent);
 	}
 
 	/**

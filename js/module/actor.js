@@ -330,26 +330,6 @@ export class ObsidianActor extends Actor5e {
 		return deleted;
 	}
 
-	/**
-	 * @private
-	 */
-	_onDeleteEmbeddedEntity (embeddedName, deleted, options, userId) {
-		super._onDeleteEmbeddedEntity(embeddedName, deleted, options, userId);
-		if (!getProperty(deleted, 'flags.obsidian.effects.length')) {
-			return;
-		}
-
-		const orphaned =
-			deleted.flags.obsidian.effects
-				.flatMap(e => e.components)
-				.filter(c => c.type === 'spells')
-				.flatMap(c => c.spells);
-
-		if (orphaned.length) {
-			this.deleteEmbeddedEntity(embeddedName, orphaned);
-		}
-	}
-
 	async importFromJSON (json) {
 		const data = Migrate.convertActor(JSON.parse(json));
 		delete data._id;
@@ -394,7 +374,7 @@ export class ObsidianActor extends Actor5e {
 			}
 		}
 
-		return items;
+		return items.length === 1 ? items[0] : items;
 	}
 
 	_importSpellsFromItem (data, {temporary = false} = {}, items) {

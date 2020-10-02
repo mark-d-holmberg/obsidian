@@ -5,6 +5,8 @@ import {Effect} from './effect.js';
 import {Filters} from '../rules/filters.js';
 import {cssIconHexagon} from '../util/html.js';
 import {Rules} from '../rules/rules.js';
+import {Schema} from './schema.js';
+import {Migrate} from '../migration/migrate.js';
 
 export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
@@ -33,6 +35,10 @@ export function getSourceClass (actorData, source) {
 }
 
 function prepareData (item) {
+	if (!item.data.flags?.obsidian || (item.data.flags.obsidian.version || 0) < Schema.VERSION) {
+		Migrate.convertItem(item.data, item.actor?.data);
+	}
+
 	if (!item.data.obsidian) {
 		item.data.obsidian = {};
 	}
@@ -131,7 +137,7 @@ const prepareItem = {
 
 	equipment: function (item, data, flags, derived) {
 		if (item.isOwned && flags.subtype === 'vehicle') {
-			derived.display = TextEditor.enrichHTML(data.description.value, {
+			derived.display = TextEditor.enrichHTML(data.description.value || '', {
 				entities: false,
 				links: false,
 				rollData: item.actor.getRollData(),
@@ -183,7 +189,7 @@ const prepareItem = {
 			return;
 		}
 
-		derived.display = TextEditor.enrichHTML(data.description.value, {
+		derived.display = TextEditor.enrichHTML(data.description.value || '', {
 			entities: true,
 			links: true,
 			rollData: item.actor.getRollData(),
@@ -311,7 +317,7 @@ const prepareItem = {
 			return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
 		}).filter(tag => tag != null));
 
-		derived.display = TextEditor.enrichHTML(data.description.value, {
+		derived.display = TextEditor.enrichHTML(data.description.value || '', {
 			entities: false,
 			links: false,
 			rollData: item.actor?.getRollData(),
@@ -340,7 +346,7 @@ const prepareComponents = {
 	},
 
 	description: function (actor, item, effect, component) {
-		component.display = TextEditor.enrichHTML(component.raw, {
+		component.display = TextEditor.enrichHTML(component.raw || '', {
 			entities: true,
 			links: true,
 			rollData: actor.getRollData(),

@@ -232,16 +232,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		Application.prototype.maximize.apply(this, arguments);
 	}
 
-	/**
-	 * @private
-	 */
-	_createEditor (target, editorOptions, initialContent) {
-		editorOptions.content_css =
-			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
-		TextEditor.create(editorOptions, initialContent)
-			.then(mce => mce[0].on('change', () => this.editors[target].changed = true));
-	}
-
 	_delaySubmit (evt) {
 		if (this._interacting) {
 			return;

@@ -52,8 +52,7 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 			delete itemData.data;
 		}
 
-		const item = await this.parent.actor.createEmbeddedEntity('OwnedItem', itemData);
-		Item.createOwned(item, this.parent.actor).sheet.render(true);
+		await this.parent.actor.createEmbeddedEntity('OwnedItem', itemData, {renderSheet: true});
 		this.close();
 	}
 

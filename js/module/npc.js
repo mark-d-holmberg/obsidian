@@ -153,12 +153,21 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		return windowHeight - tabBarHeight - topSectionHeight - headerHeight - padding * 2;
 	}
 
-	_createEditor (target, editorOptions, initialContent) {
-		editorOptions.height = this._calculateEditorHeight();
-		editorOptions.save_enablewhendirty = false;
-		editorOptions.content_css =
+	activateEditor (name, options = {}, initialContent = '') {
+		const editor = this.editors[name];
+		options = mergeObject(editor.options, options);
+		options.height = this._calculateEditorHeight();
+		options.save_enablewhendirty = false;
+		options.content_css =
 			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
-		super._createEditor(target, editorOptions, initialContent);
+
+		TextEditor.create(options, initialContent || editor.initial).then(mce => {
+			editor.mce = mce;
+			editor.changed = false;
+			editor.active = true;
+			mce.focus();
+			mce.on('change', () => editor.changed = true);
+		});
 	}
 
 	_editDetails () {
