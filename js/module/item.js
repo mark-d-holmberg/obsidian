@@ -338,7 +338,7 @@ const prepareComponents = {
 			pred = () => Filters.appliesTo.spellDCs;
 		}
 
-		Prepare.calculateDC(actor.data, item, component, cls, pred);
+		Prepare.calculateDC(actor?.data, item, component, cls, pred);
 	},
 
 	damage: function (actor, item, effect, component, cls) {
@@ -349,8 +349,8 @@ const prepareComponents = {
 		component.display = TextEditor.enrichHTML(component.raw || '', {
 			entities: true,
 			links: true,
-			rollData: actor.getRollData(),
-			secrets: actor.owner
+			rollData: actor?.getRollData(),
+			secrets: actor?.owner
 		});
 	},
 

@@ -23,10 +23,12 @@ import {sendTriggers} from './module/triggers.js';
 import {updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
 import {ObsidianVehicle} from './module/vehicle.js';
+import ObsidianTable from './module/tables.js';
 
 runPatches();
 
 Hooks.once('init', async function () {
+	CONFIG.RollTable.entityClass = ObsidianTable;
 	CONFIG.Actor.entityClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
 	Actors.registerSheet('dnd5e', ObsidianNPC, {types: ['npc'], makeDefault: true});

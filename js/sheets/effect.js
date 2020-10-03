@@ -268,7 +268,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			template: 'modules/obsidian/html/dialogs/description.html'
 		});
 
-		dialog._createEditor = super._createEditor;
+		dialog.activateEditor = super.activateEditor;
 
 		dialog.editors = {};
 
@@ -283,7 +283,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				const ed = editors[0];
 				if (ed.mce) {
 					component.raw = ed.mce.getContent();
-					await this.item.update(
+					await this._updateEffects(
+						null,
 						OBSIDIAN.updateArrays(this.item.data, {'flags.obsidian.effects': effects}));
 				}
 			}
@@ -431,7 +432,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		effects.push(Effect.create());
-		this.item.update(formData);
+		this._updateEffects(null, formData);
 		this._interacting = false;
 	}
 
@@ -460,7 +461,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			}
 		}
 
-		this.item.update(formData);
+		this._updateEffects(null, formData);
 		this._interacting = false;
 	}
 
@@ -547,7 +548,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			component.spells.push(item);
 		}
 
-		this.item.update({'flags.obsidian.effects': effects});
+		this._updateEffects(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -560,7 +561,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		component.tables.push(item);
-		this.item.update({'flags.obsidian.effects': effects});
+		this._updateEffects(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -653,7 +654,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			await this.actor.deleteEmbeddedEntity('OwnedItem', orphanedSpells);
 		}
 
-		this.item.update(formData);
+		this._updateEffects(null, formData);
 		this._interacting = false;
 	}
 
@@ -756,7 +757,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
 		remove(component, pill.dataset.id);
-		return this.item.update({'flags.obsidian.effects': effects});
+		return this._updateEffects(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -841,13 +842,16 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 * @private
 	 */
 	async _updateObject (event, formData) {
-		formData = this._formData;
+		return this._updateEffects(event, this._formData);
+	}
+
+	async _updateEffects (event, data) {
 		if (getProperty(this.item, 'data.flags.obsidian.isEmbedded')
 			&& this.item.options.parentItem
 			&& this.item.options.parentComponent
 			&& !this.actor)
 		{
-			const newData = mergeObject(this.item.data, expandObject(formData), {inplace: false});
+			const newData = mergeObject(this.item.data, expandObject(data), {inplace: false});
 			const effects = duplicate(this.item.options.parentItem.data.flags.obsidian.effects);
 			const component =
 				effects
@@ -861,7 +865,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			this.item.data = newData;
 			this.render(false);
 		} else {
-			super._updateObject(event, formData);
+			super._updateObject(event, data);
 		}
 	}
 }

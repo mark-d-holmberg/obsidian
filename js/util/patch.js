@@ -4,19 +4,6 @@ import {Rolls} from '../rules/rolls.js';
 import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 
 export function runPatches () {
-	Draggable.prototype._onDragMouseDown = (function () {
-		const cached = Draggable.prototype._onDragMouseDown;
-		return function (evt) {
-			if (evt && evt.target && evt.target.tagName === 'INPUT' && evt.target.parentNode
-				&& evt.target.parentNode.className === 'obsidian-titlebar-uses')
-			{
-				return;
-			}
-
-			cached.apply(this, arguments);
-		};
-	})();
-
 	Combat.prototype.rollInitiative = async function (ids) {
 		ids = typeof ids === 'string' ? [ids] : ids;
 		const currentID = this.combatant._id;
@@ -57,68 +44,6 @@ export function runPatches () {
 		await ChatMessage.create(messages);
 		return this;
 	};
-
-	RollTableConfig.prototype._updateObject = (function () {
-		const cached = RollTableConfig.prototype._updateObject;
-		return async function (evt, formData) {
-			if (getProperty(this.entity, 'data.flags.obsidian.isEmbedded')
-				&& this.entity.options.parentItem
-				&& this.entity.options.parentComponent)
-			{
-				const parentItem = this.entity.options.parentItem;
-				const newData =
-					mergeObject(
-						this.entity.data,
-						expandObject(OBSIDIAN.updateArrays(this.entity.data, formData)),
-						{inplace: false});
-
-				const effects = duplicate(parentItem.data.flags.obsidian.effects);
-				const component =
-					effects.flatMap(e => e.components)
-						.find(c => c.uuid === this.entity.options.parentComponent);
-
-				const idx = component.tables.findIndex(table => table._id === this.entity.data._id);
-				component.tables[idx] = newData;
-
-				await parentItem.update({'flags.obsidian.effects': effects});
-				this.entity.data = newData;
-				this.render(false);
-			} else {
-				return cached.apply(this, arguments);
-			}
-		};
-	})();
-
-	RollTable.prototype.reset = (function () {
-		const cached = RollTable.prototype.reset;
-		return function () {
-			const flags = this.data.flags?.obsidian;
-			if (flags?.isEmbedded
-				&& flags?.parentComponent
-				&& this.options.actor
-				&& this.options.item)
-			{
-				const results = duplicate(this.data.results);
-				results.forEach(r => r.drawn = false);
-
-				const effects = duplicate(this.options.item.flags.obsidian.effects);
-				const component =
-					effects.flatMap(e => e.components).find(c => c.uuid === flags.parentComponent);
-
-				const idx = component.tables.findIndex(table => table._id === this.data._id);
-				component.tables[idx].results = results;
-
-				this.options.actor.updateEmbeddedEntity('OwnedItem', {
-					_id: this.options.item._id,
-					'flags.obsidian.effects': effects
-				});
-			} else {
-				return cached.apply(this, arguments);
-			}
-		};
-	})();
-
-
 
 	patchChatMessage();
 }

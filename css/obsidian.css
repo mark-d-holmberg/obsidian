@@ -1359,18 +1359,6 @@ legend .fancy-checkbox {
 	padding: 0;
 }
 
-.obsidian-titlebar-uses input {
-	width: 25px;
-	background: transparent;
-	border: none;
-	color: var(--text-bright);
-	text-align: right;
-}
-
-.obsidian-titlebar-uses span {
-	margin-right: 4px;
-}
-
 .obsidian-checkbox-grid,
 .obsidian-npc-grid {
 	display: flex;

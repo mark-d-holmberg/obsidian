@@ -261,8 +261,10 @@ export const ObsidianItems = {
 		if (tables.length) {
 			tables.forEach(component => {
 				const RollTable = CONFIG.RollTable.entityClass;
-				component.tables.map(table => new RollTable(table, {actor, item}))
-					.forEach(table => {
+				component.tables.map(table =>
+					new RollTable(table, {
+						parentItem: CONFIG.Item.entityClass.createOwned(item, actor)
+					})).forEach(table => {
 						table.drawMany(component.nrolls).then(() => {
 							if (component.reset) {
 								table.reset();

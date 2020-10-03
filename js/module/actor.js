@@ -683,6 +683,12 @@ export class ObsidianActor extends Actor5e {
 					component.ref = newUUID;
 				}
 			}
+
+			if (component.tables?.length) {
+				component.tables.forEach(table =>
+					table.flags.obsidian.parentComponent =
+						uuidMap.get(table.flags.obsidian.parentComponent));
+			}
 		});
 
 		return dupe;
