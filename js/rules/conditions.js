@@ -29,22 +29,4 @@ export function patchConditions () {
 			}
 		};
 	})();
-
-	Token.prototype.drawEffects = (function () {
-		const cached = Token.prototype.drawEffects;
-		return function () {
-			if (this.actor && this.actor.data.obsidian) {
-				this.data.effects =
-					Object.entries(this.actor.data.obsidian.conditions)
-						.filter(([, enabled]) => enabled)
-						.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`)
-						.concat(
-							this.actor.data.obsidian.toggleable
-								.filter(effect => effect.activeEffect && effect.toggle.active)
-								.map(effect => effect.img));
-			}
-
-			cached.apply(this, arguments);
-		};
-	})();
 }

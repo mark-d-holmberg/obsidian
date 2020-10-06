@@ -232,7 +232,8 @@ export const Reorder = {
 				actor.createEmbeddedEntity('OwnedItem', item);
 			} else {
 				game.socket.emit('module.obsidian', {
-					action: 'CREATE.OWNED',
+					action: 'CREATE',
+					entity: 'OwnedItem',
 					actorID: actor.id,
 					data: item
 				});

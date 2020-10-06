@@ -28,7 +28,7 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 	if (effect.applies.length) {
 		for (const target of targets) {
 			if (!target.actor.data.items.some(item =>
-					item.flags.obsidian.duration?.item === duration._id))
+					item.flags.obsidian.duration?.src === duration._id))
 			{
 				active.push([target.scene.data._id, target.data._id]);
 				await createActiveEffect(target, actor, effect, duration, 'target');
@@ -52,10 +52,9 @@ export async function applyEffects (actor, effect, targets, on) {
 	}
 
 	const duration =
-		actor.data.items.find(item =>
-			item.type === 'feat'
-			&& getProperty(item, 'flags.obsidian.duration')
-			&& getProperty(item, 'flags.obsidian.ref') === effect.uuid);
+		actor.data.effects.find(effect =>
+			getProperty(effect, 'flags.obsidian.duration')
+			&& getProperty(effect, 'flags.obsidian.ref') === effect.uuid);
 
 	let active = [];
 	if (duration) {
@@ -68,7 +67,7 @@ export async function applyEffects (actor, effect, targets, on) {
 	}
 
 	if (duration) {
-		actor.updateEmbeddedEntity('OwnedItem', {
+		actor.updateEmbeddedEntity('ActiveEffect', {
 			_id: duration._id,
 			'flags.obsidian.active': active
 		});
@@ -77,15 +76,12 @@ export async function applyEffects (actor, effect, targets, on) {
 
 async function createDuration (actor, rounds, effect, scaledAmount) {
 	let duration =
-		actor.data.items.find(item =>
-			item.type === 'feat'
-			&& getProperty(item, 'flags.obsidian.duration')
-			&& getProperty(item, 'flags.obsidian.ref') === effect);
+		actor.data.effects.find(item => getProperty(item, 'flags.obsidian.ref') === effect);
 
 	if (!duration) {
+		const item = actor.items.get(actor.data.obsidian.effects.get(effect)?.parentItem);
 		duration = {
-			type: 'feat',
-			name: 'Duration',
+			icon: item?.img,
 			flags: {
 				obsidian: {
 					duration: true,
@@ -97,12 +93,12 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 			}
 		};
 
-		duration = await actor.createEmbeddedEntity('OwnedItem', duration);
+		duration = await actor.createEmbeddedEntity('ActiveEffect', duration);
 	}
 
 	const active = [];
 	await applyDuration(duration, actor, effect, false, active);
-	await actor.updateEmbeddedEntity('OwnedItem', {
+	await actor.updateEmbeddedEntity('ActiveEffect', {
 		_id: duration._id,
 		'flags.obsidian.remaining': rounds,
 		'flags.obsidian.active': active
@@ -138,24 +134,26 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 				activeEffect: true,
 				effects: effects,
 				duration: {
-					item: duration?._id
+					src: duration?._id
 				}
 			}
 		}
 	};
 
+	const flags = item.flags.obsidian;
 	if (actor.isToken) {
-		item.flags.obsidian.duration.scene = actor.token.scene.data._id;
-		item.flags.obsidian.duration.token = actor.token.data._id;
+		flags.duration.scene = actor.token.scene.data._id;
+		flags.duration.token = actor.token.data._id;
 	} else {
-		item.flags.obsidian.duration.actor = actor.data._id;
+		flags.duration.actor = actor.data._id;
 	}
 
 	if (game.user.isGM) {
 		await target.actor.createEmbeddedEntity('OwnedItem', item);
 	} else {
 		await game.socket.emit('module.obsidian', {
-			action: 'CREATE.OWNED',
+			action: 'CREATE',
+			entity: 'OwnedItem',
 			sceneID: target.scene.data._id,
 			tokenID: target.data._id,
 			data: item
@@ -191,6 +189,12 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 		duration = 'Infinity';
 	}
 
+	if (item.type === 'spell' && !duration) {
+		// Create a temporary bubble to allow retargeting/alternate effects for
+		// instantaneous spells that expires at the end of the turn.
+		duration = 0;
+	}
+
 	if (!duration) {
 		return;
 	}
@@ -199,13 +203,14 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 }
 
 export async function advanceDurations (combat) {
-	if (!combat.combatant?.actor) {
+	const actor = combat.combatant?.actor;
+	if (!actor) {
 		return;
 	}
 
 	const durations =
-		combat.combatant.actor.data.items.filter(item =>
-			item.type === 'feat' && getProperty(item, 'flags.obsidian.duration') === true);
+		actor.data.effects.filter(effect =>
+			getProperty(effect, 'flags.obsidian.duration') === true);
 
 	const update = [];
 	const expired = [];
@@ -224,8 +229,8 @@ export async function advanceDurations (combat) {
 	}
 
 	await cleanupExpired(expired);
-	await combat.combatant.actor.deleteEmbeddedEntity('OwnedItem', expired.map(item => item._id));
-	await OBSIDIAN.updateManyOwnedItems(combat.combatant.actor, update);
+	await actor.deleteEmbeddedEntity('ActiveEffect', expired.map(item => item._id));
+	await actor.updateEmbeddedEntity('ActiveEffect', update);
 	renderDurations();
 }
 
@@ -239,7 +244,7 @@ async function cleanupExpired (expired) {
 
 			const items =
 				actor.data.items
-					.filter(item => item.flags.obsidian.duration?.item === duration._id)
+					.filter(item => item.flags.obsidian.duration?.src === duration._id)
 					.map(item => item._id);
 
 			if (!items.length) {
@@ -250,10 +255,11 @@ async function cleanupExpired (expired) {
 				await actor.deleteEmbeddedEntity('OwnedItem', items);
 			} else {
 				await game.socket.emit({
-					action: 'DELETE.MANY.OWNED',
+					action: 'DELETE',
+					entity: 'OwnedItem',
 					sceneID: sceneID,
 					tokenID: tokenID,
-					ids: items
+					data: items
 				});
 			}
 		}
@@ -266,13 +272,13 @@ async function onDelete (html) {
 		return;
 	}
 
-	const duration = actor.data.obsidian.itemsByID.get(html.data('item-id'));
+	const duration = actor.effects.get(html.data('item-id'));
 	if (!duration) {
 		return;
 	}
 
-	await cleanupExpired([duration]);
-	await actor.deleteEmbeddedEntity('OwnedItem', duration._id);
+	await cleanupExpired([duration.data]);
+	await actor.deleteEmbeddedEntity('ActiveEffect', duration.data._id);
 	renderDurations();
 }
 
@@ -282,14 +288,14 @@ async function onEdit (html) {
 		return;
 	}
 
-	const duration = actor.data.obsidian.itemsByID.get(html.data('item-id'));
+	const duration = actor.effects.get(html.data('item-id'));
 	if (!duration) {
 		return;
 	}
 
 	const doEdit = async remaining => {
-		await actor.updateEmbeddedEntity('OwnedItem', {
-			_id: duration._id,
+		await actor.updateEmbeddedEntity('ActiveEffect', {
+			_id: duration.data._id,
 			'flags.obsidian.remaining': remaining
 		});
 
@@ -298,7 +304,7 @@ async function onEdit (html) {
 
 	const dlg = await renderTemplate('modules/obsidian/html/dialogs/duration.html', {
 		name: html.find('img').attr('alt'),
-		remaining: duration.flags.obsidian.remaining
+		remaining: duration.data.flags.obsidian.remaining
 	});
 
 	new Dialog({
@@ -321,20 +327,20 @@ async function onClick (evt) {
 		return;
 	}
 
-	const duration = actor.data.obsidian.itemsByID.get(evt.currentTarget.dataset.itemId);
+	const duration = actor.effects.get(evt.currentTarget.dataset.itemId);
 	if (!duration) {
 		return;
 	}
 
 	const active = [];
-	await applyDuration(duration, actor, duration.flags.obsidian.ref, true, active);
-	const newActive = duplicate(duration.flags.obsidian.active);
+	await applyDuration(duration.data, actor, duration.data.flags.obsidian.ref, true, active);
+	const newActive = duplicate(duration.data.flags.obsidian.active);
 	newActive.push(...active.filter(([sceneA, tokenA]) =>
 		!newActive.some(([sceneB, tokenB]) => sceneB === sceneA && tokenB === tokenA)));
 
 	if (game.user.targets.size) {
-		actor.updateEmbeddedEntity('OwnedItem', {
-			_id: duration._id,
+		actor.updateEmbeddedEntity('ActiveEffect', {
+			_id: duration.data._id,
 			'flags.obsidian.active': newActive
 		});
 	}
@@ -428,8 +434,7 @@ export function renderDurations () {
 	}
 
 	const durations =
-		actor.data.items.filter(item =>
-			item.type === 'feat' && getProperty(item, 'flags.obsidian.duration'));
+		actor.data.effects.filter(item => getProperty(item, 'flags.obsidian.duration'));
 
 	for (const duration of durations) {
 		const effect = actor.data.obsidian.effects.get(duration.flags.obsidian.ref);
@@ -449,12 +454,16 @@ export function renderDurations () {
 			remaining = '∞';
 		} else if (remaining > 10) {
 			remaining = '10+';
+		} else if (remaining < 1) {
+			remaining = false;
 		}
 
 		durationBar.append($(`
 			<div class="obsidian-duration" data-item-id="${duration._id}">
-				<img src="${item.img}" alt="${label}">
-				<div class="obsidian-duration-remaining">${remaining}</div>
+				<img src="${duration.icon}" alt="${label}">
+				${remaining !== false
+					? `<div class="obsidian-duration-remaining">${remaining}</div>`
+					: ''}
 				<div class="obsidian-msg-tooltip">${label}</div>
 			</div>
 		`));

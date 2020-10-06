@@ -390,16 +390,16 @@ export const Prepare = {
 		derived.armourDisplay = armourDisplay.join(', ');
 	},
 
-	conditions: function (data, flags, derived) {
+	conditions: function (actorData, data, flags, derived) {
 		derived.conditions = {exhaustion: data.attributes.exhaustion};
 		Object.entries(flags.attributes.conditions)
 			.forEach(([condition, enabled]) => derived.conditions[condition] = enabled);
 
 		derived.conditions.concentrating =
-			derived.itemsByType.get('feat')
-				.filter(item => getProperty(item, 'flags.obsidian.duration'))
+			actorData.effects
+				.filter(item => getProperty(item, 'flags.obsidian.ref'))
 				.map(duration => derived.effects.get(duration.flags.obsidian.ref))
-				.some(effect => effect && Effect.isConcentration(derived, effect))
+				.some(effect => effect && Effect.isConcentration(derived, effect));
 	},
 
 	hd: function (flags, derived) {

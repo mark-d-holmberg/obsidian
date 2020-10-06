@@ -117,7 +117,7 @@ export class ObsidianActor extends Actor5e {
 		Prepare.abilities(this.data, data, flags, derived);
 		Prepare.ac(data, flags, derived);
 		Prepare.init(data, flags, derived);
-		Prepare.conditions(data, flags, derived);
+		Prepare.conditions(this.data, data, flags, derived);
 
 		if (this.data.type !== 'vehicle') {
 			Prepare.skills(this.data, data, flags, derived, originalSkills);
@@ -257,9 +257,9 @@ export class ObsidianActor extends Actor5e {
 			// If we are preparing data right after an update, this.token
 			// points to the old token that has since been replaced on the
 			// canvas. We need to make sure we get the new token.
-			canvas.tokens.get(this.token.data._id)?.drawEffects();
+			canvas.tokens.get(this.token.data._id)?.drawEffects().catch(() => {});
 		} else if (canvas) {
-			this.getActiveTokens(true).forEach(token => token.drawEffects());
+			this.getActiveTokens(true).forEach(token => token.drawEffects().catch(() => {}));
 		}
 	}
 
@@ -499,6 +499,22 @@ export class ObsidianActor extends Actor5e {
 		});
 
 		this.update({'data.attributes.hp.value': newHP, 'flags.obsidian.attributes.hd': hd});
+	}
+
+	get temporaryEffects () {
+		const effects =
+			(this.data.obsidian?.toggleable || [])
+				.filter(effect => effect.activeEffect && effect.toggle.active)
+				.map(effect => effect.img);
+
+		const conditions =
+			Object.entries(this.data.obsidian?.conditions || {})
+				.filter(([, enabled]) => enabled)
+				.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`);
+
+		return Array.from(new Set(effects.concat(conditions)).values()).map(icon => {
+			return {data: {icon: icon}};
+		});
 	}
 
 	async shortRest (...args) {

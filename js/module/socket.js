@@ -9,42 +9,14 @@ function handleMsg (payload) {
 		return;
 	}
 
-	if (payload.action === 'CREATE.OWNED') {
-		createOwned(payload);
-	} else if (payload.action === 'DELETE.OWNED') {
-		deleteOwned(payload);
-	} else if (payload.action === 'DELETE.MANY.OWNED') {
-		deleteManyOwned(payload);
-	} else if (payload.action === 'SET.WORLD') {
+	if (payload.action === 'SET.WORLD') {
 		setWorld(payload);
+	} else {
+		const actor = getActor(payload);
+		if (actor) {
+			actor[`${payload.action.toLowerCase()}EmbeddedEntity`](payload.entity, payload.data);
+		}
 	}
-}
-
-function createOwned (payload) {
-	const actor = getActor(payload);
-	if (!actor) {
-		return;
-	}
-
-	actor.createEmbeddedEntity('OwnedItem', payload.data);
-}
-
-function deleteOwned (payload) {
-	const actor = getActor(payload);
-	if (!actor) {
-		return;
-	}
-
-	actor.deleteEmbeddedEntity('OwnedItem', payload.itemID);
-}
-
-function deleteManyOwned (payload) {
-	const actor = getActor(payload);
-	if (!actor) {
-		return;
-	}
-
-	actor.deleteEmbeddedEntity('OwnedItem', payload.ids);
 }
 
 function setWorld (payload) {
