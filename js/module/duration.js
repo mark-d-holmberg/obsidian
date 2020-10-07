@@ -2,6 +2,7 @@ import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
 import {Rolls} from '../rules/rolls.js';
 import {Schema} from './schema.js';
+import {ObsidianItems} from '../rules/items.js';
 
 export function initDurations () {
 	Hooks.on('controlToken', renderDurations);
@@ -40,7 +41,7 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 		Rolls.create(actor, {
 			roll: 'fx',
 			uuid: effect.uuid,
-			scaling: duration.scaledAmount,
+			scaling: duration.flags.obsidian.scaledAmount,
 			withDuration: false
 		});
 	}
@@ -51,12 +52,9 @@ export async function applyEffects (actor, effect, targets, on) {
 		return;
 	}
 
-	const duration =
-		actor.data.effects.find(effect =>
-			getProperty(effect, 'flags.obsidian.duration')
-			&& getProperty(effect, 'flags.obsidian.ref') === effect.uuid);
-
+	const duration = findExistingDuration(actor, effect.uuid);
 	let active = [];
+
 	if (duration) {
 		active = duplicate(duration.flags.obsidian.active);
 	}
@@ -75,15 +73,14 @@ export async function applyEffects (actor, effect, targets, on) {
 }
 
 async function createDuration (actor, rounds, effect, scaledAmount) {
-	let duration =
-		actor.data.effects.find(item => getProperty(item, 'flags.obsidian.ref') === effect);
-
+	let duration = findExistingDuration(actor, effect);
 	if (!duration) {
 		const item = actor.items.get(actor.data.obsidian.effects.get(effect)?.parentItem);
 		duration = {
 			icon: item?.img,
 			flags: {
 				obsidian: {
+					active: [],
 					duration: true,
 					ref: effect,
 					remaining: rounds,
@@ -98,10 +95,14 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 
 	const active = [];
 	await applyDuration(duration, actor, effect, false, active);
+	const newActive = duplicate(duration.flags.obsidian.active);
+	newActive.push(...active.filter(([sceneA, tokenA]) =>
+		!newActive.some(([sceneB, tokenB]) => sceneB === sceneA && tokenB === tokenA)));
+
 	await actor.updateEmbeddedEntity('ActiveEffect', {
 		_id: duration._id,
 		'flags.obsidian.remaining': rounds,
-		'flags.obsidian.active': active
+		'flags.obsidian.active': newActive
 	});
 
 	renderDurations();
@@ -167,10 +168,6 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 	const spellDuration =
 		item.type === 'spell' && ['round', 'min', 'hour', 'day'].includes(magnitude);
 
-	if (!effect.applies.length && !spellDuration) {
-		return;
-	}
-
 	let duration;
 	if (durations.length) {
 		duration = durations[0].duration;
@@ -195,11 +192,37 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 		duration = 0;
 	}
 
-	if (!duration) {
+	if (duration == null) {
 		return;
 	}
 
 	createDuration(actor, duration, effect.uuid, scaledAmount);
+}
+
+function findExistingDuration (actor, ref) {
+	const byRef = () =>
+		actor.data.effects.find(effect =>
+			getProperty(effect, 'flags.obsidian.duration')
+			&& getProperty(effect, 'flags.obsidian.ref') === ref);
+
+	const effect = actor.data.obsidian.effects.get(ref);
+	if (!effect) {
+		return byRef();
+	}
+
+	const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+	if (!item) {
+		return byRef();
+	}
+
+	if (item.type === 'spell') {
+		const uuids = new Set(item.flags.obsidian.effects.map(effect => effect.uuid));
+		return actor.data.effects.find(effect =>
+			getProperty(effect, 'flags.obsidian.duration')
+			&& uuids.has(getProperty(effect, 'flags.obsidian.ref')));
+	}
+
+	return byRef();
 }
 
 export async function advanceDurations (combat) {
@@ -330,6 +353,21 @@ async function onClick (evt) {
 	const duration = actor.effects.get(evt.currentTarget.dataset.itemId);
 	if (!duration) {
 		return;
+	}
+
+	const effect = actor.data.obsidian.effects.get(duration.data.flags.obsidian.ref);
+	if (effect) {
+		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		if (item && item.type === 'spell') {
+			ObsidianItems.rollItem(actor, {
+				roll: 'item',
+				id: item._id,
+				spellLevel: item.data.level + (duration.data.flags.obsidian.scaledAmount || 0),
+				parentResolved: true
+			});
+
+			return;
+		}
 	}
 
 	const active = [];
