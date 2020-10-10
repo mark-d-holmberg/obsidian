@@ -7,7 +7,7 @@ import {ObsidianItems} from '../rules/items.js';
 export function patchChatMessage () {
 	ChatMessage.prototype.render = (function () {
 		const cached = ChatMessage.prototype.render;
-		return async function () {
+		return async function (force, options) {
 			if (!this.data.flags || !this.data.flags.obsidian) {
 				return cached.apply(this, arguments);
 			}
@@ -35,6 +35,7 @@ export function patchChatMessage () {
 				message: duplicate(this.data),
 				isWhisper: this.data.whisper.length,
 				triggers: triggers,
+				popout: options?.popout,
 				whisperTo:
 					this.data.whisper
 						.map(user => game.users.get(user))

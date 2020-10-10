@@ -189,7 +189,7 @@
 	</section>
 	{{/if}}
 	{{#if message.flags.obsidian.details}}
-	<details {{#if message.flags.obsidian.open}}open{{/if}}>
+	<details {{#if (or popout message.flags.obsidian.open)}}open{{/if}}>
 		<summary>{{localize 'OBSIDIAN.Details'}}</summary>
 		{{#if (eq message.flags.obsidian.type 'spl')}}
 			{{> modules/obsidian/html/components/spell-card.html message.flags.obsidian.item

@@ -45,6 +45,12 @@ export function runPatches () {
 		return this;
 	};
 
+	ChatPopout.prototype._renderInner = async function () {
+		const html = await this.message.render(false, {popout: true});
+		html.find('.message-delete').remove();
+		return html;
+	};
+
 	patchChatMessage();
 }
 

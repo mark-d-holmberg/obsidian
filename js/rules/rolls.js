@@ -750,7 +750,7 @@ export const Rolls = {
 		}
 
 		return results.map(result => {
-			return {flags: {obsidian: result}}
+			return {flags: {obsidian: result, 'core.canPopout': true}}
 		});
 	},
 

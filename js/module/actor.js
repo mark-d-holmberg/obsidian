@@ -544,7 +544,7 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		const update = {};
 
-		update['data.attributes.hp.value'] = data.attributes.hp.maxAdjusted;
+		update['data.attributes.hp.value'] = data.attributes.hp.max;
 
 		const hds = duplicate(flags.attributes.hd);
 		Object.values(hds)
