@@ -164,6 +164,10 @@
 	width: 27px;
 }
 
+.obsidian-spell-table .obsidian-tbody .obsidian-col-icon {
+	cursor: pointer;
+}
+
 .obsidian-col-action {
 	width: 40px;
 }

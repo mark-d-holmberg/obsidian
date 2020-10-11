@@ -83,6 +83,9 @@ export const Sheet = {
 		html.find('.obsidian-death-failures .obsidian-radio')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.failure', evt));
 
+		html.find('.obsidian-spell-table .obsidian-tbody .obsidian-col-icon')
+			.click(evt => Sheet.highlightSpell(sheet, evt));
+
 		html.find('.obsidian-effect-row .obsidian-radio')
 			.click(evt => Sheet.onEffectToggled(sheet, evt));
 
@@ -261,6 +264,14 @@ export const Sheet = {
 		if (filter === 'all') {
 			spellTab.find('.obsidian-spell-table > h3').removeClass('obsidian-hidden');
 		}
+	},
+
+	highlightSpell: function (sheet, evt) {
+		const spell =
+			sheet.actor.items.get(evt.currentTarget.closest('.obsidian-tr').dataset.itemId);
+
+		const highlight = !!spell.getFlag('obsidian', 'highlight');
+		spell.setFlag('obsidian', 'highlight', !highlight);
 	},
 
 	onAddItem: async function (sheet, evt) {

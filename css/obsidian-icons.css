@@ -5,6 +5,10 @@
 	background-size: 20px 20px;
 }
 
+.obsidian-icon.obsidian-highlight {
+	filter: var(--white-to-highlight);
+}
+
 li.context-item .obsidian-icon {
 	display: inline-block;
 	margin-right: 3px;

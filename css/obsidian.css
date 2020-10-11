@@ -23,6 +23,7 @@
 	--positive: #40d250;
 	--horizontal-space: 10px;
 	--vertical-space: 20px;
+	--white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
