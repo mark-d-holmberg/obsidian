@@ -21,6 +21,7 @@ import {Partitioner} from '../util/partition.js';
 
 export class ObsidianActor extends Actor5e {
 	prepareData () {
+		this.data.data.bonuses = {};
 		super.prepareData();
 		if (!game.settings?.settings.has('obsidian.version')) {
 			return;
