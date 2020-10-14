@@ -8,7 +8,6 @@ Schema.Actor = {
 			ability1: 'dex',
 			base: 10
 		},
-		conditions: {},
 		death: {
 			adv: false,
 			bonus: 0,

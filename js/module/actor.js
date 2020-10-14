@@ -510,14 +510,13 @@ export class ObsidianActor extends Actor5e {
 				.filter(effect => effect.activeEffect && effect.toggle.active)
 				.map(effect => effect.img);
 
-		const conditions =
-			Object.entries(this.data.obsidian?.conditions || {})
-				.filter(([, enabled]) => enabled)
-				.map(([condition,]) => `modules/obsidian/img/conditions/${condition}.svg`);
+		if (this.data.obsidian?.conditions.concentrating) {
+			effects.push('modules/obsidian/img/conditions/concentrating.svg');
+		}
 
-		return Array.from(new Set(effects.concat(conditions)).values()).map(icon => {
+		return Array.from(new Set(effects).values()).map(icon => {
 			return {data: {icon: icon}};
-		});
+		}).concat(super.temporaryEffects);
 	}
 
 	async shortRest (...args) {

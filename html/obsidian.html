@@ -570,7 +570,7 @@
 						<div class="obsidian-meatballs obsidian-exhaustion">
 							{{#each (range 1 6) as |level|}}
 								<div class="
-								{{~#if (leq level ../data.attributes.exhaustion)~}}
+								{{~#if (leq level ../actor.obsidian.conditions.exhaustion)~}}
 									obsidian-radio-selected
 								{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{level}}">
 									<span></span>

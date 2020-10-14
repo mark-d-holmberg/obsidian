@@ -31,7 +31,7 @@
 		</div>
 		<div class="obsidian-meatballs obsidian-exhaustion">
 			{{#each (range 1 6)}}
-				<div class="{{#if (leq this ../data.attributes.exhaustion)}}
+				<div class="{{#if (leq this ../actor.obsidian.conditions.exhaustion)}}
 					obsidian-radio-selected
 				{{/if}} obsidian-radio obsidian-radio-negative" data-value="{{this}}">
 					<span></span>

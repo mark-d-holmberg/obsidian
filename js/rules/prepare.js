@@ -391,9 +391,22 @@ export const Prepare = {
 	},
 
 	conditions: function (actorData, data, flags, derived) {
-		derived.conditions = {exhaustion: data.attributes.exhaustion};
-		Object.entries(flags.attributes.conditions)
-			.forEach(([condition, enabled]) => derived.conditions[condition] = enabled);
+		derived.conditions = {exhaustion: 0};
+		actorData.effects.forEach(effect => {
+			const id = effect.flags?.core?.statusId;
+			if (id.startsWith('exhaust')) {
+				const level = Number(id.substr(7));
+				if (level > derived.conditions.exhaustion) {
+					derived.conditions.exhaustion = level;
+				}
+
+				return;
+			}
+
+			if (id) {
+				derived.conditions[id] = true;
+			}
+		});
 
 		derived.conditions.concentrating =
 			actorData.effects

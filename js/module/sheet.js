@@ -77,7 +77,7 @@ export const Sheet = {
 		html.find('.obsidian-feature-header').mouseup(evt => Sheet.collapseFeature(sheet, evt));
 
 		html.find('.obsidian-exhaustion .obsidian-radio')
-			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.exhaustion', evt));
+			.click(evt => Sheet.setExhaustion(sheet, evt));
 		html.find('.obsidian-death-successes .obsidian-radio')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.success', evt));
 		html.find('.obsidian-death-failures .obsidian-radio')
@@ -527,7 +527,7 @@ export const Sheet = {
 
 	setAttributeLevel: function (sheet, prop, evt) {
 		const current = getProperty(sheet.actor.data, prop);
-		let value = Number($(evt.currentTarget).data('value'));
+		const value = Number(evt.currentTarget.dataset.value);
 		let update = current;
 
 		if (value > current) {
@@ -541,14 +541,47 @@ export const Sheet = {
 
 	setCondition: function (sheet, evt) {
 		const id = $(evt.currentTarget).data('value');
-		let state = sheet.actor.data.flags.obsidian.attributes.conditions[id];
-		if (state === undefined) {
-			state = false;
+		const existing =
+			sheet.actor.effects.find(effect => effect.getFlag('core', 'statusId') === id);
+
+		if (existing) {
+			existing.delete();
+		} else {
+			sheet.actor.createEmbeddedEntity('ActiveEffect', {
+				label: game.i18n.localize(`OBSIDIAN.Condition-${id}`),
+				icon: `modules/obsidian/img/conditions/${id}.svg`,
+				'flags.core.statusId': id
+			});
+		}
+	},
+
+	setExhaustion: async function (sheet, evt) {
+		const current = sheet.actor.data.obsidian.conditions.exhaustion;
+		const value = Number(evt.currentTarget.dataset.value);
+		let update = current;
+
+		if (value > current) {
+			update++;
+		} else {
+			update--;
 		}
 
-		const update = {};
-		update[`flags.obsidian.attributes.conditions.${id}`] = !state;
-		sheet.actor.update(update);
+		const existing = sheet.actor.data.effects.filter(effect => {
+			const id = getProperty(effect, 'flags.core.statusId');
+			return id && id.startsWith('exhaust');
+		}).map(effect => effect._id);
+
+		if (existing.length) {
+			await sheet.actor.deleteEmbeddedEntity('ActiveEffect', existing);
+		}
+
+		if (update > 0) {
+			sheet.actor.createEmbeddedEntity('ActiveEffect', {
+				label: game.i18n.localize('OBSIDIAN.Condition-exhaustion'),
+				icon: `modules/obsidian/img/conditions/exhaust${update}.svg`,
+				'flags.core.statusId': `exhaust${update}`
+			});
+		}
 	},
 
 	setGlobalRoll: function (sheet, roll) {
