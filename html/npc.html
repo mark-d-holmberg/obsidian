@@ -184,7 +184,7 @@
 					<strong class="obsidian-ptr" data-dialog="NPCSaves">
 						{{localize 'OBSIDIAN.Saves'}}
 					</strong>
-					{{#each data.abilities}}
+					{{#each actor.obsidian.saves}}
 						<div class="obsidian-npc-stat-li">
 							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
 								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}

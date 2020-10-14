@@ -1276,7 +1276,7 @@ legend .fancy-checkbox {
 	width: 100%;
 }
 
-[data-pack='dnd5e.spells'] {
+.compendium-pack[data-pack='dnd5e.spells'] {
 	display: none !important;
 }
 

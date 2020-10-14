@@ -451,8 +451,10 @@ export const Prepare = {
 
 	saves: function (actorData, data, flags, derived, originalSaves) {
 		derived.saves = {};
-		for (const [id, save] of Object.entries(data.abilities)) {
-			derived.saves[id] = {};
+		for (const [id, ability] of Object.entries(data.abilities)) {
+			const save = {};
+			derived.saves[id] = save;
+
 			if (!flags.saves[id]) {
 				flags.saves[id] = {};
 			}
@@ -463,11 +465,11 @@ export const Prepare = {
 			}
 
 			if (OBSIDIAN.notDefinedOrEmpty(flags.saves[id].override)) {
-				derived.saves[id].rollParts = [{
-					mod: save.proficient * data.attributes.prof,
+				save.rollParts = [{
+					mod: ability.proficient * data.attributes.prof,
 					name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
 					proficiency: true,
-					value: Number(save.proficient)
+					value: Number(ability.proficient)
 				}, {
 					mod: data.abilities[id].mod,
 					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)
@@ -478,26 +480,23 @@ export const Prepare = {
 
 				const saveBonuses = derived.filters.bonuses(Filters.appliesTo.savingThrows(id));
 				if (saveBonuses.length) {
-					derived.saves[id].rollParts.push(
+					save.rollParts.push(
 						...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
-					derived.saves[id].rollParts = highestProficiency(derived.saves[id].rollParts);
+					save.rollParts = highestProficiency(save.rollParts);
 				}
 
-				derived.saves[id].proficiency =
-					derived.saves[id].rollParts.find(part => part.proficiency);
+				save.proficiency = save.rollParts.find(part => part.proficiency);
 			} else {
-				derived.saves[id].rollParts = [{
+				save.rollParts = [{
 					mod: Number(flags.saves[id].override),
 					name: game.i18n.localize('OBSIDIAN.Override')
 				}];
 			}
 
-			save.save =
-				Math.floor(derived.saves[id].rollParts.reduce((acc, part) => acc + part.mod, 0));
+			save.proficient = save.proficiency?.value || 0;
+			save.save = Math.floor(save.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-			if ((derived.saves[id].proficiency?.value || 0) > 0
-				&& original && original.save > save.save)
-			{
+			if (save.proficient > 0 && original && original.save > save.save) {
 				save.save = original.save;
 			}
 		}

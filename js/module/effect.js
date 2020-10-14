@@ -51,7 +51,9 @@ export const Components = {
 			constant: 0,
 			operator: 'plus',
 			value: '',
-			formula: false
+			formula: false,
+			dmg: {enabled: false, type: 'wpn'},
+			method: 'dice'
 		},
 		metadata: {
 			category: 'modifiers',

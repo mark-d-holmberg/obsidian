@@ -221,6 +221,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				});
 		}
 
+		if (this.item.isOwned) {
+			data.rollData = this.item.actor.getRollData();
+		}
+
 		data.usesAbilities = {};
 		Rules.ABILITIES.forEach(abl =>
 			data.usesAbilities[abl] = `OBSIDIAN.Ability-${abl}`);

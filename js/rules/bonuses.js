@@ -188,17 +188,23 @@ export function bonusToParts (actorData, bonus) {
 		}
 	}
 
+	let constant = 0;
 	const parts = [];
-	if (bonus.ndice !== 0) {
+
+	if (bonus.ndice !== 0 && (!bonus.formula || bonus.method === 'dice')) {
 		parts.push({mod: 0, ndice: bonus.ndice, die: bonus.die});
 	}
 
-	let constant = bonus.bonus || 0;
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.constant)
+	if (bonus.formula && bonus.method === 'dice') {
+		constant = bonus.bonus;
+	}
+
+	if (bonus.formula
+		&& bonus.method === 'formula'
 		&& bonus.constant !== 0
 		&& bonus.operator === 'plus')
 	{
-		constant += bonus.constant;
+		constant = bonus.constant;
 	}
 
 	if (constant !== 0) {
@@ -210,7 +216,7 @@ export function bonusToParts (actorData, bonus) {
 		multiplier = bonus.constant || 0;
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
+	if (!bonus.formula && !OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
 		parts.push({
 			mod: Math.floor(bonus.prof * actorData.data.attributes.prof),
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
@@ -219,7 +225,7 @@ export function bonusToParts (actorData, bonus) {
 		});
 	}
 
-	if (bonus.formula && bonus.value === 'prof') {
+	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'prof') {
 		parts.push({
 			mod: Math.floor(multiplier * actorData.data.attributes.prof),
 			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
@@ -228,27 +234,32 @@ export function bonusToParts (actorData, bonus) {
 		});
 	}
 
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.ability) && (!bonus.formula || bonus.value === 'abl')) {
+	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'abl') {
 		parts.push({
 			mod: Math.floor(multiplier * actorData.data.abilities[bonus.ability].mod),
 			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
 		});
 	}
 
-	const levelKey = bonus.formula ? bonus.value : bonus.level;
-	if (['chr', 'cls'].includes(levelKey)) {
-		let level;
-		if (levelKey === 'chr') {
-			level = actorData.data.details.level;
-		} else if (levelKey === 'cls') {
-			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
-			if (cls) {
-				level = cls.data.levels;
+	if (!bonus.formula || bonus.method === 'formula') {
+		const levelKey = bonus.formula ? bonus.value : bonus.level;
+		if (['chr', 'cls'].includes(levelKey)) {
+			let level;
+			if (levelKey === 'chr') {
+				level = actorData.data.details.level;
+			} else if (levelKey === 'cls') {
+				const cls = actorData.obsidian.itemsByID.get(bonus.class);
+				if (cls) {
+					level = cls.data.levels;
+				}
 			}
-		}
 
-		if (level !== undefined) {
-			parts.push({mod: Math.floor(multiplier * level), name: bonusName(actorData, bonus)});
+			if (level !== undefined) {
+				parts.push({
+					mod: Math.floor(multiplier * level),
+					name: bonusName(actorData, bonus)
+				});
+			}
 		}
 	}
 

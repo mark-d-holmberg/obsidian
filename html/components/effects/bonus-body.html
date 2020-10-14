@@ -1,9 +1,35 @@
-<div class="obsidian-form-row{{#if stacked}} obsidian-stacked-row{{/if}} obsidian-mixed-form-row obsidian-inline">
-	<div class="obsidian-fullwidth">
-		{{#unless (or attack damage)}}
+{{#unless (or attack damage)}}
+<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
 		<input type="text" class="obsidian-input-compact" name="{{prefix}}.name" value="{{name}}"
-		       placeholder="{{localize 'OBSIDIAN.RollName'}}">
-		{{/unless}}
+		       placeholder="{{localize 'OBSIDIAN.RollName'}}" style="margin-right: 20px;">
+		<label class="obsidian-inline">
+			{{localize 'OBSIDIAN.Method'}}
+			<select name="{{prefix}}.method" data-selector="{{prefix}}.method">
+				{{#select method}}
+					{{#each @root.ObsidianRules.EFFECT_BONUS_METHOD}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.BonusMethod-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</label>
+		{{fancy-checkbox prefix 'dmg.enabled' content='OBSIDIAN.Damage' checked=dmg.enabled
+		                 selector=(add prefix '.dmg.enabled')}}
+		<select name="{{prefix}}.dmg.type" data-selector-parent="{{prefix}}.dmg.enabled"
+		        style="margin-left: 10px;">
+			{{#select dmg.type}}
+				<option value="wpn">{{localize 'OBSIDIAN.Damage-wpn'}}</option>
+				{{#each @root.ObsidianRules.EFFECT_DAMAGE_TYPES}}
+					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
+				{{/each}}
+			{{/select}}
+		</select>
+	</div>
+</div>
+{{/unless}}
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+     {{#unless (or attack damage)}}data-selector-parent="{{prefix}}.method" data-show="dice"{{/unless}}>
+	<div class="obsidian-fullwidth">
 		{{#if attack}}
 			<span class="obsidian-binary-operator">&plus;</span>
 		{{/if}}
@@ -38,9 +64,12 @@
 	</div>
 </div>
 <input type="hidden" name="{{prefix}}.formula" data-dtype="Boolean" value="true">
-<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
+     data-selector-parent="{{prefix}}.method" data-show="formula">
 	<div class="obsidian-fullwidth">
-		<span class="obsidian-binary-operator">&plus;</span>
+		{{#if (or attack damage)}}
+			<span class="obsidian-binary-operator">&plus;</span>
+		{{/if}}
 		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
 		       data-dtype="Number" placeholder="0" name="{{prefix}}.constant" value="{{constant}}">
 		<select class="obsidian-select-operator" name="{{prefix}}.operator">

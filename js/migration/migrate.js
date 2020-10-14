@@ -213,6 +213,7 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 11 && source !== 'core') {
 			Migrate.v10.convertAmmo(data);
+			Migrate.v10.convertBonuses(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;

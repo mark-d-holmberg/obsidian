@@ -110,6 +110,7 @@ Rules.EFFECT_ADD_SPELLS_SOURCE = ['list', 'individual'];
 Rules.EFFECT_APPLIED_ON = ['target', 'hit', 'save'];
 Rules.EFFECT_ATTACK_CATS = ['weapon', 'spell'];
 Rules.EFFECT_BONUS_LEVEL = ['chr', 'cls'];
+Rules.EFFECT_BONUS_METHOD = ['dice', 'formula'];
 Rules.EFFECT_BONUS_VALUES = ['abl', 'prof', 'chr', 'cls'];
 Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
 

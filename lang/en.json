@@ -220,6 +220,7 @@
 	"OBSIDIAN.Damage-rad": "Radiant",
 	"OBSIDIAN.Damage-thn": "Thunder",
 	"OBSIDIAN.Damage-hlg": "Healing",
+	"OBSIDIAN.Damage-wpn": "Weapon",
 	"OBSIDIAN.Damage-nonmagical": "Nonmagical Attacks",
 	"OBSIDIAN.VersatileDamage": "Versatile Damage",
 	"OBSIDIAN.Tags": "Tags",
@@ -970,5 +971,7 @@
 	"OBSIDIAN.Cover": "{0} Cover",
 	"OBSIDIAN.ThresholdAbbr": "DT",
 	"OBSIDIAN.DamageReduction": "Damage Reduction",
-	"OBSIDIAN.PhysicalDamageReduction": "Reduces nonmagical physical damage by {0}"
+	"OBSIDIAN.PhysicalDamageReduction": "Reduces nonmagical physical damage by {0}",
+	"OBSIDIAN.BonusMethod-dice": "Dice",
+	"OBSIDIAN.BonusMethod-formula": "Formula"
 }

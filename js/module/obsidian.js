@@ -527,7 +527,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	 */
 	_setSaveProficiency (evt) {
 		const save = $(evt.currentTarget).closest('.obsidian-save-item').data('value');
-		let state = this.actor.data.data.abilities[save].proficient;
+		let state = this.actor._data.data.abilities[save].proficient;
 
 		if (state === undefined || state === 0) {
 			state = 1;

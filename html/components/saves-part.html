@@ -1,4 +1,4 @@
-{{#each data.abilities as |ability id|}}
+{{#each actor.obsidian.saves as |save id|}}
 	{{#with (lookup ../actor.flags.obsidian.saves id)}}
 		<div {{#if (eq id 'dex')}}
 		style="grid-row-start: 2;"
@@ -6,11 +6,11 @@
 		style="grid-row-start: 3;"
 		{{/if}} class="obsidian-save-item" data-value="{{id}}">
 			<div class="obsidian-radio obsidian-ptr
-				{{#if (eq 0.5 ../ability.proficient)~}}
+				{{#if (eq 0.5 save.proficient)~}}
 					obsidian-half-proficient
-				{{~else if (eq 1 ../ability.proficient)~}}
+				{{~else if (eq 1 save.proficient)~}}
 					obsidian-proficient
-				{{~else if (eq 2 ../ability.proficient)~}}
+				{{~else if (eq 2 save.proficient)~}}
 					obsidian-expertise
 				{{~/if~}}">
 				<span></span>
@@ -24,7 +24,7 @@
 				       value="{{override}}" placeholder="&mdash;">
 			{{else}}
 				<div class="obsidian-save-mod obsidian-ptr">
-					{{numberFormat ability.save decimals=0 sign=true}}
+					{{numberFormat save.save decimals=0 sign=true}}
 				</div>
 			{{/if}}
 		</div>

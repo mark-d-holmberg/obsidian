@@ -37,75 +37,72 @@ function formatFilters (filters) {
 
 function formatBonus (actorData, bonus) {
 	const parts = [];
-	if (bonus.ndice !== 0) {
-		let i18n = 'OBSIDIAN.AddLC';
-		let ndice = bonus.ndice;
+	if (bonus.method === 'dice') {
+		if (bonus.ndice !== 0) {
+			let i18n = 'OBSIDIAN.AddLC';
+			let ndice = bonus.ndice;
 
-		if (ndice < 0) {
-			i18n = 'OBSIDIAN.Subtract';
-			ndice *= -1;
+			if (ndice < 0) {
+				i18n = 'OBSIDIAN.Subtract';
+				ndice *= -1;
+			}
+
+			parts.push(`${localize(i18n)} ${ndice}d${bonus.die}`);
 		}
 
-		parts.push(`${localize(i18n)} ${ndice}d${bonus.die}`);
+		if (bonus.bonus !== 0) {
+			let operator = '&plus;';
+			let mod = bonus.bonus;
+
+			if (bonus.bonus < 0) {
+				operator = '&minus;';
+				mod *= -1;
+			}
+
+			parts.push(`<strong>${operator}${mod}</strong>`);
+		}
 	}
 
-	let constant = bonus.bonus || 0;
-	if (!OBSIDIAN.notDefinedOrEmpty(bonus.constant)
-		&& bonus.constant !== 0
-		&& bonus.operator === 'plus')
-	{
-		constant += bonus.constant;
-	}
+	if (bonus.method === 'formula') {
+		let multiplier = '';
+		const bonusApplies =
+			bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '');
 
-	if (constant !== 0) {
-		let operator = '&plus;';
-		let mod = constant;
-
-		if (mod < 0) {
-			operator = '&minus;';
-			mod *= -1;
+		if (bonus.operator === 'mult') {
+			const naturalLang = multipliers[bonus.constant];
+			if (naturalLang) {
+				multiplier = `${localize(naturalLang)} `;
+			} else if (bonus.constant !== 1) {
+				multiplier = `${bonus.constant} &times; `;
+			}
+		} else if (bonus.constant !== 0) {
+			multiplier = `${bonus.constant} &plus; `;
 		}
 
-		parts.push(`<strong>${operator}${mod}</strong>`);
-	}
-
-	const bonusApplies = bonus.operator === 'plus' || bonus.constant !== 0;
-	let multiplier = '';
-
-	if (bonus.operator === 'mult') {
-		const naturalLang = multipliers[bonus.constant];
-		if (naturalLang) {
-			multiplier = localize(naturalLang);
-		} else if (bonus.constant !== 1) {
-			multiplier = localize(`${bonus.constant} &times;`);
+		let addOrSubtract = localize('OBSIDIAN.AddLC');
+		if (bonusApplies && bonus.constant < 0) {
+			addOrSubtract = localize('OBSIDIAN.Subtract');
 		}
 
-		multiplier += ' ';
-	}
+		if (bonusApplies && bonus.value === 'prof') {
+			parts.push(localize('OBSIDIAN.BonusProf').format(addOrSubtract, multiplier));
+		}
 
-	let addOrSubtract = localize('OBSIDIAN.AddLC');
-	if (bonusApplies && bonus.constant < 0) {
-		addOrSubtract = localize('OBSIDIAN.Subtract');
-	}
+		if (bonusApplies && bonus.value === 'abl') {
+			parts.push(localize('OBSIDIAN.BonusAbilityMod')
+				.format(addOrSubtract, multiplier, localize(`OBSIDIAN.Ability-${bonus.ability}`)));
+		}
 
-	if (bonusApplies && bonus.value === 'prof') {
-		parts.push(localize('OBSIDIAN.BonusProf').format(addOrSubtract, multiplier));
-	}
+		if (bonusApplies && bonus.value === 'chr') {
+			parts.push(localize('OBSIDIAN.BonusCharLevel').format(addOrSubtract, multiplier));
+		}
 
-	if (bonusApplies && bonus.value === 'abl') {
-		parts.push(localize('OBSIDIAN.BonusAbilityMod')
-			.format(addOrSubtract, multiplier, localize(`OBSIDIAN.Ability-${bonus.ability}`)));
-	}
-
-	if (bonusApplies && bonus.value === 'chr') {
-		parts.push(localize('OBSIDIAN.BonusCharLevel').format(addOrSubtract, multiplier));
-	}
-
-	if (bonusApplies && bonus.value === 'cls') {
-		const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
-		if (cls) {
-			parts.push(localize('OBSIDIAN.BonusClassLevel')
-				.format(addOrSubtract, multiplier, cls.obsidian.label));
+		if (bonusApplies && bonus.value === 'cls') {
+			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
+			if (cls) {
+				parts.push(localize('OBSIDIAN.BonusClassLevel')
+					.format(addOrSubtract, multiplier, cls.obsidian.label));
+			}
 		}
 	}
 
