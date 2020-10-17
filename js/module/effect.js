@@ -104,7 +104,8 @@ export const Components = {
 			ability: '',
 			bonus: 0,
 			damage: '',
-			versatile: false
+			versatile: false,
+			ncrit: ''
 		},
 		metadata: {
 			category: 'rolls',
@@ -433,7 +434,6 @@ export const Effect = {
 				Filters.damage.isDamage(filter) && Filters.inCollection(filter, dmg.damage);
 		}
 
-
 		return filter(filter =>
 			Filters.isDamage(filter) && (attackPred(filter) || damagePred(filter)));
 	},
@@ -558,44 +558,34 @@ export const Effect = {
 			scalingEffect = actor.data.obsidian.effects.get(scalingEffect);
 		}
 
-		let damageComponents =
+		const damageComponents =
 			duplicate(scalingEffect.components.filter(c => c.type === 'damage'));
 
-		if (Effect.isEagerScaling(scalingEffect)) {
-			damageComponents = damageComponents.map(dmg => {
-				dmg.ndice = dmg.scaledDice || 0;
-				dmg.derived.ncrit = dmg.scaledCrit || 0;
-				return dmg;
-			}).filter(dmg => dmg.ndice);
-
-			if (scaling.mode === 'scaling') {
-				damage.push(...damageComponents);
-				return damage;
-			} else {
-				return damageComponents;
+		if (scaling.mode === 'scaling') {
+			for (const dmg of damageComponents) {
+				const existing = damage.find(c => c.damage === dmg.damage);
+				if (existing) {
+					Effect.scaleExistingDamage(dmg, existing, scaling, scaledAmount);
+				}
 			}
+
+			return damage;
 		} else {
-			if (scaling.mode === 'scaling') {
-				damage.push(...damageComponents.map(dmg => {
-					if (dmg.calc === 'fixed') {
-						const constant = dmg.rollParts.find(part => part.constant);
-						if (constant) {
-							constant.mod =
-								Effect.scaleConstant(scaling, scaledAmount, 0, constant.mod);
-						}
-					} else {
-						dmg.ndice = Effect.scaleConstant(scaling, scaledAmount, 0, dmg.ndice);
-						dmg.derived.ncrit =
-							Effect.scaleConstant(scaling, scaledAmount, 0, dmg.derived.ncrit);
-					}
-
-					return dmg;
-				}));
-
-				return damage;
-			} else {
-				return damageComponents;
-			}
+			return damageComponents;
 		}
+	},
+
+	scaleExistingDamage: function (dmg, existing, scaling, scaledAmount) {
+		const constant = existing.rollParts.find(part => part.constant);
+		if (constant && dmg.bonus != null) {
+			constant.mod = Effect.scaleConstant(scaling, scaledAmount, constant.mod, dmg.bonus);
+			existing.mod = existing.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		}
+
+		existing.derived.ndice =
+			Effect.scaleConstant(scaling, scaledAmount, existing.derived.ndice, dmg.derived.ndice);
+
+		existing.derived.ncrit =
+			Effect.scaleConstant(scaling, scaledAmount, existing.derived.ncrit, dmg.derived.ncrit);
 	}
 };

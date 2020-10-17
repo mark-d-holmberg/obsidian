@@ -192,7 +192,12 @@ export function bonusToParts (actorData, bonus) {
 	const parts = [];
 
 	if (bonus.ndice !== 0 && (!bonus.formula || bonus.method === 'dice')) {
-		parts.push({mod: 0, ndice: bonus.ndice, die: bonus.die});
+		const part = {mod: 0, ndice: bonus.ndice, die: bonus.die};
+		parts.push(part);
+
+		if (bonus.dmg?.enabled && bonus.dmg?.type !== 'wpn') {
+			part.damage = bonus.dmg.type;
+		}
 	}
 
 	if (bonus.formula && bonus.method === 'dice') {

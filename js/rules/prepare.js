@@ -173,8 +173,8 @@ export const Prepare = {
 		}
 
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
+		dmg.derived = {ncrit: dmg.ndice, ndice: dmg.ndice};
 		dmg.display = Prepare.damageFormat(dmg);
-		dmg.derived = {ncrit: dmg.ndice};
 
 		if (!OBSIDIAN.notDefinedOrEmpty(dmg.ncrit)) {
 			dmg.derived.ncrit = Number(dmg.ncrit);
@@ -271,11 +271,7 @@ export const Prepare = {
 		}
 
 		let out = '';
-		let ndice = dmg.ndice;
-
-		if (dmg.scaledDice !== undefined) {
-			ndice = dmg.scaledDice;
-		}
+		const ndice = dmg.derived.ndice;
 
 		if (ndice > 0 && dmg.calc === 'formula') {
 			out += `${ndice}d${dmg.die}`;
@@ -394,6 +390,10 @@ export const Prepare = {
 		derived.conditions = {exhaustion: 0};
 		actorData.effects.forEach(effect => {
 			const id = effect.flags?.core?.statusId;
+			if (!id) {
+				return;
+			}
+
 			if (id.startsWith('exhaust')) {
 				const level = Number(id.substr(7));
 				if (level > derived.conditions.exhaustion) {
@@ -403,9 +403,7 @@ export const Prepare = {
 				return;
 			}
 
-			if (id) {
-				derived.conditions[id] = true;
-			}
+			derived.conditions[id] = true;
 		});
 
 		derived.conditions.concentrating =

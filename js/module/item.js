@@ -482,7 +482,6 @@ function prepareEffects (item) {
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
 		effect.isLinked = false;
-		effect.eagerScaling = false;
 
 		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
 		Effect.metadata.linked.forEach(linked => {
@@ -574,26 +573,36 @@ function prepareEffects (item) {
 		return action;
 	});
 
-	if (item.isOwned && actorData.obsidian && derived.collection.scaling.some(Effect.isEagerScaling)) {
-		let scaledAmount = 0;
-		const actorLevel = actorData.data.details.level;
-		const component = derived.collection.scaling[0].scalingComponent;
-
-		switch (component.method) {
-			case 'level': scaledAmount = actorLevel; break;
-			case 'cantrip': scaledAmount = Math.round((actorLevel + 1) / 6 + .5) - 1; break;
-			case 'class':
-				scaledAmount = actorData.obsidian.itemsByID.get(component.class)?.data.levels;
-				break;
-		}
-
+	if (item.isOwned && actorData.obsidian) {
 		effects.filter(effect => !effect.isLinked).forEach(effect => {
+			const scalingEffects =
+				derived.collection.scaling.filter(e => e.scalingComponent.ref === effect.uuid);
+
+			if (scalingEffects.length < 1 || !Effect.isEagerScaling(scalingEffects[0])) {
+				return;
+			}
+
+			let scaledAmount = 0;
+			const actorLevel = actorData.data.details.level;
+			const component = scalingEffects[0].scalingComponent;
+
+			switch (component.method) {
+				case 'level':
+					scaledAmount = actorLevel;
+					break;
+				case 'cantrip':
+					scaledAmount = Math.round((actorLevel + 1) / 6 + .5) - 1;
+					break;
+				case 'class':
+					scaledAmount = actorData.obsidian.itemsByID.get(component.class)?.data.levels;
+					break;
+			}
+
 			const scaling = Effect.getScaling(item.actor, effect, scaledAmount);
 			if (!scaling) {
 				return;
 			}
 
-			effect.eagerScaling = {mode: scaling.mode, effect: scaling.effect.uuid};
 			const targetComponent = scaling.effect.components.find(c => c.type === 'target');
 			const damageComponents = scaling.effect.components.filter(c => c.type === 'damage');
 
@@ -606,23 +615,18 @@ function prepareEffects (item) {
 								scaling, scaledAmount, atk.targets, targetComponent.count));
 			}
 
-			damageComponents.forEach(dmg => {
-				if (dmg.calc === 'fixed') {
-					const constant = dmg.rollParts.find(part => part.constant);
-					if (constant) {
-						constant.mod = Effect.scaleConstant(scaling, scaledAmount, 0, constant.mod);
-						dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
-					}
-				} else {
-					dmg.scaledDice = Effect.scaleConstant(scaling, scaledAmount, 0, dmg.ndice);
-					dmg.scaledCrit =
-						Effect.scaleConstant(scaling, scaledAmount, 0, dmg.derived?.ncrit || 0);
-				}
-			});
-
 			if (damageComponents.length) {
 				if (scaling.mode === 'scaling') {
-					derived.collection.damage.push(...damageComponents);
+					for (const dmg of damageComponents) {
+						const existing =
+							effect.components.find(c =>
+								c.type === 'damage' && c.damage === dmg.damage);
+
+						if (existing) {
+							Effect.scaleExistingDamage(dmg, existing, scaling, scaledAmount);
+							existing.display = Prepare.damageFormat(existing);
+						}
+					}
 				} else {
 					const oldComponents =
 						new Set(effect.components.filter(c => c.type === 'damage'));

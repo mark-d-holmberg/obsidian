@@ -134,9 +134,10 @@ export const Rolls = {
 		}
 
 		if (rollMod.reroll > 1) {
+			const die = new Die({faces: roll.faces, number: 1});
 			rolls.forEach(r => {
 				if (Math.abs(r.last()) < rollMod.reroll) {
-					r.push(roll._roll().roll * mult);
+					r.push(die.roll().result * mult);
 				}
 			});
 		}
@@ -532,9 +533,8 @@ export const Rolls = {
 			scaling = Effect.getScaling(actor, effect, scaledAmount);
 		}
 
-		if (scaling || effect.eagerScaling) {
-			damage =
-				Effect.scaleDamage(actor, effect.eagerScaling || scaling, scaledAmount, damage);
+		if (scaling) {
+			damage = Effect.scaleDamage(actor, scaling, scaledAmount, damage);
 		}
 
 		if (!item || !damage.length) {
@@ -660,9 +660,8 @@ export const Rolls = {
 			Effect.getScaling(actor, effect,
 				options.consumed || options.spellLevel || scaledAmount);
 
-		if ((scaledAmount && scaling) || effect.eagerScaling) {
-			damage =
-				Effect.scaleDamage(actor, effect.eagerScaling || scaling, scaledAmount, damage);
+		if (scaledAmount && scaling) {
+			damage = Effect.scaleDamage(actor, scaling, scaledAmount, damage);
 		}
 
 		if (options.withDuration !== false) {
@@ -976,21 +975,21 @@ export const Rolls = {
 			...damage.flatMap(dmg => dmg.rollParts)
 				.filter(mod => mod.ndice !== undefined)
 				.map(mod => {
-					mod.derived = {ncrit: Math.abs(mod.ndice)};
+					mod.derived = {ncrit: Math.abs(mod.ndice), ndice: mod.ndice};
 					mod.calc = 'formula';
 					mod.addMods = false;
 					mod.rollParts = [];
-					mod.damage = damage[0].damage;
+					mod.damage = mod.damage || damage[0].damage;
 					return mod;
 				}));
 
 		const rolls = damage.map(dmg => {
-			if (dmg.calc === 'fixed' || !dmg.ndice) {
+			if (dmg.calc === 'fixed' || !dmg.derived.ndice) {
 				return null;
 			}
 
-			const mult = dmg.ndice < 0 ? -1 : 1;
-			const ndice = Math.abs(dmg.ndice);
+			const mult = dmg.derived.ndice < 0 ? -1 : 1;
+			const ndice = Math.abs(dmg.derived.ndice);
 			const hitRoll = new ObsidianDie(dmg.die).roll(ndice);
 			const critRoll = new ObsidianDie(dmg.die).roll(dmg.derived.ncrit || ndice);
 			const hitRolls = hitRoll.results.map(r => [r * mult]);
