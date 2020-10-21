@@ -40,29 +40,34 @@
 		</div>
 	</div>
 	{{/unless}}
-	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
-	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
+	{{#*inline 'effect'}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
 			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
 			            obsidian-radio obsidian-radio-negative">
 				<span></span>
 			</div>
-			<div class="obsidian-effect-row-name">{{label}}:</div>
-			<div class="obsidian-effect-row-content">{{{toggle.display}}}</div>
-		</div>
-	{{/each}}
-	<h3>{{localize 'OBSIDIAN.Temporary'}}</h3>
-	{{#each (filter actor.obsidian.toggleable 'activeEffect' true)}}
-		<div class="obsidian-effect-row item" data-item-id="{{parentItem}}">
-			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
-			            obsidian-radio obsidian-radio-negative">
-				<span></span>
+			<div class="obsidian-effect-row-content">
+				<strong>{{label}}:</strong>
+				{{{toggle.display}}}
 			</div>
-			<div class="obsidian-effect-row-name">{{label}}:</div>
-			<div class="obsidian-effect-row-content">{{{toggle.display}}}</div>
-			<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
-				<i class="fas fa-trash"></i>
-			</a>
 		</div>
+	{{/inline}}
+	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
+	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
+		{{> effect}}
+	{{/each}}
+	<h3 style="margin-top: 15px;">{{localize 'OBSIDIAN.Temporary'}}</h3>
+	{{#each actor.obsidian.tempEffects}}
+		<fieldset data-item-id="{{_id}}" class="obsidian-temp-effect item">
+			<legend>
+				{{name}}
+				<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+					<i class="fas fa-trash"></i>
+				</a>
+			</legend>
+			{{#each flags.obsidian.effects}}
+				{{> effect}}
+			{{/each}}
+		</fieldset>
 	{{/each}}
 </div>

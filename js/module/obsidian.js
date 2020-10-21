@@ -180,6 +180,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.actor.obsidian.feats = duplicate(this.actor.data.obsidian.itemsByType.get('feat'));
 		data.actor.obsidian.attacks.forEach(this._reifyAttackLinks, this);
+		data.actor.obsidian.tempEffects =
+			data.actor.obsidian.feats.filter(feat => feat.flags.obsidian?.activeEffect);
 
 		console.debug(data);
 		return data;

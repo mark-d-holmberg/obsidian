@@ -129,7 +129,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 	const item = {
 		type: 'feat',
-		name: 'ActiveEffect',
+		name: originalItem.name,
 		flags: {
 			obsidian: {
 				activeEffect: true,

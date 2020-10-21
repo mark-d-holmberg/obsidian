@@ -86,7 +86,8 @@ export const Sheet = {
 		html.find('.obsidian-spell-table .obsidian-tbody .obsidian-col-icon')
 			.click(evt => Sheet.highlightSpell(sheet, evt));
 
-		html.find('.obsidian-effect-row .obsidian-radio')
+		html.find(
+			'.obsidian-effect-row .obsidian-radio, .obsidian-effect-row-content strong:first-child')
 			.click(evt => Sheet.onEffectToggled(sheet, evt));
 
 		html.find('[data-spell-level] .obsidian-feature-use')

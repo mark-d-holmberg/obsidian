@@ -211,7 +211,6 @@
 	margin-bottom: 5px;
 	position: relative;
 	padding-right: 20px;
-	align-items: center;
 }
 
 .obsidian-effect-row .obsidian-delete {
@@ -219,18 +218,19 @@
 	right: 5px;
 }
 
-.obsidian-effect-row-name {
-	margin-right: 3px;
-}
-
 .obsidian-effect-row-content {
 	font-weight: normal;
 	flex: 1;
 }
 
-.obsidian-effect-row .obsidian-radio {
-	width: 18px;
+.obsidian-effect-row-content strong:first-child {
 	cursor: pointer;
+}
+
+.obsidian-effect-row .obsidian-radio {
+	width: 12px;
+	cursor: pointer;
+	display: block;
 }
 
 .obsidian-effects-cat summary {
@@ -351,4 +351,20 @@
 	font-size: 14px;
 	font-family: var(--font-condensed);
 	text-align: justify;
+}
+
+.obsidian-temp-effect {
+	padding: 5px 5px 5px 10px;
+}
+
+.obsidian-temp-effect legend {
+	font-weight: normal;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+}
+
+.obsidian-temp-effect legend a {
+	font-size: 12px;
+	margin-left: 5px;
 }
