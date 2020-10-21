@@ -1,7 +1,7 @@
 import {Obsidian} from './module/obsidian.js';
 import {preloadPartials, preloadTemplates} from './templates.js';
 import {loadSpellData} from './data.js';
-import {runPatches} from './util/patch.js';
+import {patchGetClassFeatures, runPatches} from './util/patch.js';
 import {registerHandlebarHelpers} from './util/helpers.js';
 import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
@@ -59,6 +59,11 @@ Hooks.once('ready', function () {
 	link.rel = 'stylesheet';
 	link.href = `modules/obsidian/css/${fontSheet}.css`;
 	document.getElementsByTagName('head')[0].appendChild(link);
+
+	// Disable buggy auto class features until 0.9.9 fix released.
+	if (isNewerVersion('0.99', game.system.data.version)) {
+		patchGetClassFeatures();
+	}
 
 	registerSettings();
 	addMacroHook();

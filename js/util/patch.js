@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../rules/rolls.js';
+import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 
 export function runPatches () {
 	Draggable.prototype._onDragMouseDown = (function () {
@@ -117,7 +118,15 @@ export function runPatches () {
 		};
 	})();
 
+
+
 	patchChatMessage();
+}
+
+export function patchGetClassFeatures () {
+	Actor5e.getClassFeatures = function () {
+		return Promise.resolve([]);
+	};
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {
