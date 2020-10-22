@@ -515,7 +515,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		return Array.from(new Set(effects).values()).map(icon => {
-			return {data: {icon: icon}};
+			return {data: {icon: icon}, getFlag: () => false};
 		}).concat(super.temporaryEffects);
 	}
 
