@@ -638,6 +638,29 @@ export const Rolls = {
 		return roll;
 	},
 
+	DSN: function (data3d) {
+		const notation = {throws: [{dice: []}]};
+		const dice = notation.throws[0].dice;
+		let resultIdx = 0;
+
+		data3d.formula.split('+').forEach(roll => {
+			const [n, die] = roll.split('d');
+			for (let i = 0; i < n; i++) {
+				dice.push({
+					vectors: [],
+					options: {},
+					type: `d${die}`,
+					result: data3d.results[resultIdx],
+					resultLabel: data3d.results[resultIdx]
+				});
+
+				resultIdx++;
+			}
+		});
+
+		return notation;
+	},
+
 	effectRoll: function (actor, effect, options, {name, isFirst = true} = {}) {
 		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
@@ -781,8 +804,8 @@ export const Rolls = {
 					title: game.i18n.localize('OBSIDIAN.HD'),
 					results: [[{
 						data3d: {
-							formula: results.map(d => `${d.rolls.length}d${d.faces}`).join('+'),
-							results: results.flatMap(d => d.rolls.flatMap(r => r.roll))
+							formula: results.map(d => `${d.results.length}d${d.faces}`).join('+'),
+							results: results.flatMap(d => d.results)
 						},
 						total: results.reduce((acc, die) => acc + die.total, 0) + conBonus,
 						breakdown:
@@ -1191,7 +1214,7 @@ export const Rolls = {
 	        });
 
 	        data3d.formula = data3d.formula.join('+');
-	        await game.dice3d.show(data3d);
+	        await game.dice3d.show(Rolls.DSN(data3d));
         }
 
 		Rolls.sendMessages(msgs.map(msg => [msg, actor]), dice3d);
