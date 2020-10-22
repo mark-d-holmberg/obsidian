@@ -237,6 +237,10 @@ export class ObsidianActor extends Actor5e {
 		const flags = this.data.flags.obsidian;
 		const derived = this.data.obsidian;
 
+		for (const [id, abl] of Object.entries(data.abilities)) {
+			abl.mod = Math.floor((derived.abilities[id].value - 10) / 2);
+		}
+
 		if (this.data.type === 'character') {
 			derived.details.class = ObsidianActor._classFormat(derived.classes);
 		}
