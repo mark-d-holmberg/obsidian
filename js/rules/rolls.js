@@ -10,6 +10,12 @@ import {hpAfterDamage} from './defenses.js';
 import {rollInitiative} from './combat.js';
 import ObsidianDie from '../module/die.js';
 
+const DMG_COLOURS = {
+	acd: 'acid', cld: 'ice', fir: 'fire', frc: 'force', lig: 'lightning', ncr: 'necrotic',
+	psn: 'poison', psy: 'psychic', rad: 'radiant', thn: 'thunder', blg: 'white',prc: 'white',
+	slh: 'white', hlg: 'starynight'
+};
+
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
 		if (!skill) {
@@ -644,21 +650,39 @@ export const Rolls = {
 		let resultIdx = 0;
 
 		data3d.formula.split('+').forEach(roll => {
-			const [n, die] = roll.split('d');
+			const [n, d] = roll.split('d');
 			for (let i = 0; i < n; i++) {
-				dice.push({
+				const die = {
 					vectors: [],
 					options: {},
-					type: `d${die}`,
+					type: `d${d}`,
 					result: data3d.results[resultIdx],
 					resultLabel: data3d.results[resultIdx]
-				});
+				};
 
+				if (data3d.colours && data3d.colours[resultIdx]) {
+					die.options.colorset = data3d.colours[resultIdx];
+				}
+
+				dice.push(die);
 				resultIdx++;
 			}
 		});
 
 		return notation;
+	},
+
+	DSNColours: function (colour, hitRolls, allRolls) {
+		const colours = [];
+		for (let i = 0; i < allRolls; i++) {
+			if (i < hitRolls) {
+				colours.push(colour);
+			} else {
+				colours.push('bloodmoon');
+			}
+		}
+
+		return colours;
 	},
 
 	effectRoll: function (actor, effect, options, {name, isFirst = true} = {}) {
@@ -1019,6 +1043,11 @@ export const Rolls = {
 			const critRolls = critRoll.results.map(r => [r * mult]);
             const numRolls = ndice + (dmg.derived.ncrit || ndice);
 			let allRolls = hitRolls.concat(critRolls);
+			let colour = DMG_COLOURS[dmg.damage];
+
+			if (!colour) {
+				colour = 'black';
+			}
 
 			if (dmg.addMods === false) {
 				return {
@@ -1026,7 +1055,8 @@ export const Rolls = {
 					crit: allRolls,
 					data3d: {
 						formula: `${numRolls}d${dmg.die}`,
-						results: allRolls.map(r => Math.abs(r.last()))
+						results: allRolls.map(r => Math.abs(r.last())),
+						colours: Rolls.DSNColours(colour, hitRolls.length, allRolls.length)
 					}
 				};
 			}
@@ -1046,7 +1076,8 @@ export const Rolls = {
 				crit: allRolls,
 				data3d: {
 					formula: `${numRolls}d${dmg.die}`,
-					results: allRolls.map(r => Math.abs(r.last()))
+					results: allRolls.map(r => Math.abs(r.last())),
+					colours: Rolls.DSNColours(colour, hitRolls.length, allRolls.length)
 				}
 			};
 		});
@@ -1107,6 +1138,10 @@ export const Rolls = {
 				formula: rolls.filter(_ => _).map(r => r.data3d.formula).join('+'),
 				results: rolls.filter(_ => _).reduce((acc, r) => {
 					acc.push(...r.data3d.results);
+					return acc;
+				}, []),
+				colours: rolls.filter(_ => _).reduce((acc, r) => {
+					acc.push(...r.data3d.colours);
 					return acc;
 				}, [])
 			}
@@ -1196,7 +1231,7 @@ export const Rolls = {
 		const dice3d = game.modules.get('dice-so-nice')?.active;
         if (dice3d) {
         	// Collect all the dice data.
-	        const data3d = {formula: [], results: []};
+	        const data3d = {formula: [], results: [], colours: []};
 	        msgs.forEach(msg => {
 		        if (getProperty(msg, 'flags.obsidian.results')) {
 		        	msg.flags.obsidian.results.forEach(result => result.forEach(roll => {
@@ -1210,6 +1245,7 @@ export const Rolls = {
 		        if (getProperty(msg, 'flags.obsidian.damage.data3d')) {
 			        data3d.formula.push(msg.flags.obsidian.damage.data3d.formula);
 			        data3d.results.push(...msg.flags.obsidian.damage.data3d.results);
+			        data3d.colours.push(...msg.flags.obsidian.damage.data3d.colours);
 		        }
 	        });
 
