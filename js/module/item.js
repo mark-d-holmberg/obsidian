@@ -583,7 +583,7 @@ function prepareEffects (item) {
 			}
 
 			let scaledAmount = 0;
-			const actorLevel = actorData.data.details.level;
+			const actorLevel = actorData.data.details[actorData.type === 'npc' ? 'cr' : 'level'];
 			const component = scalingEffects[0].scalingComponent;
 
 			switch (component.method) {

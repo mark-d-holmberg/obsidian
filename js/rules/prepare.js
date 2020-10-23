@@ -42,8 +42,12 @@ export const Prepare = {
 			let i18n;
 
 			if (component.ability === 'spell') {
-				component.spellMod =
-					cls?.obsidian.spellcasting.mod || data.attributes.spellMod || 0;
+				component.spellMod = 0;
+				if (cls) {
+					component.spellMod = cls.obsidian.spellcasting.mod;
+				} else if (!OBSIDIAN.notDefinedOrEmpty(data.attributes.spellcasting)) {
+					component.spellMod = data.abilities[data.attributes.spellcasting].mod;
+				}
 
 				mod = component.spellMod;
 				i18n = 'OBSIDIAN.Spell';

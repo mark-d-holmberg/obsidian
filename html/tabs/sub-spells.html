@@ -4,7 +4,7 @@
 			<h3>
 				{{spell-level-format this cantrip=true level=true}}
 				<div class="obsidian-spells-slots-pact">
-					{{#if (eq ../actor.data.spells.pact.level this)}}
+					{{#if (and (gt ../actor.data.spells.pact.level 0) (eq ../actor.data.spells.pact.level this))}}
 						<div class="obsidian-spells-pact">
 							{{format-slots ../actor.data.spells.pact 'pact'}}
 							<span>{{localize 'OBSIDIAN.Pact'}}</span>
