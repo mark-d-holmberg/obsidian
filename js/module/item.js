@@ -17,6 +17,11 @@ export function patchItem_prepareData () {
 			prepareEffects(this);
 		};
 	})();
+
+	// For compatibility with item collection.
+	Item5e.prototype.isOwnedByActor = function () {
+		return this.isOwned && this.actor instanceof Actor;
+	};
 }
 
 export function getSourceClass (actorData, source) {
@@ -108,7 +113,7 @@ const prepareItem = {
 			spellcasting.spell = Rules.CLASS_SPELL_MODS[item.name];
 		}
 
-		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell) && item.isOwned) {
+		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell) && item.isOwnedByActor()) {
 			const actorData = item.actor.data.data;
 			const mod = actorData.abilities[spellcasting.spell].mod;
 			spellcasting.mod = mod;
@@ -136,7 +141,7 @@ const prepareItem = {
 	},
 
 	equipment: function (item, data, flags, derived) {
-		if (item.isOwned && flags.subtype === 'vehicle') {
+		if (item.isOwnedByActor() && flags.subtype === 'vehicle') {
 			derived.display = TextEditor.enrichHTML(data.description.value || '', {
 				entities: false,
 				links: false,
@@ -173,7 +178,7 @@ const prepareItem = {
 	},
 
 	feat: function (item, data, flags, derived) {
-		if (!item.isOwned || !item.actor.data.obsidian) {
+		if (!item.isOwnedByActor() || !item.actor.data.obsidian) {
 			return;
 		}
 
@@ -229,7 +234,10 @@ const prepareItem = {
 			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
 		} else if (flags.source.type === 'custom') {
 			derived.source.display = flags.source.custom;
-		} else if (flags.source.type === 'class' && item.isOwned && item.actor.data.obsidian) {
+		} else if (flags.source.type === 'class'
+			&& item.isOwnedByActor()
+			&& item.actor.data.obsidian)
+		{
 			cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
 			derived.source.display = cls?.obsidian.label;
 		}
@@ -279,7 +287,7 @@ const prepareItem = {
 			}
 		}
 
-		if (flags.tags.ammunition && item.isOwned && item.actor.data.obsidian) {
+		if (flags.tags.ammunition && item.isOwnedByActor() && item.actor.data.obsidian) {
 			derived.ammo = `
 				<select data-name="items.${item.data.idx}.flags.obsidian.ammo.id">
 					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
@@ -456,11 +464,11 @@ function prepareEffects (item) {
 	const derived = item.data.obsidian;
 	const myEffects = new Map();
 
-	if (item.isOwned) {
+	if (item.isOwnedByActor()) {
 		actorData = item.actor.data;
 	}
 
-	if (flags.source && item.isOwned && actorData.obsidian) {
+	if (flags.source && item.isOwnedByActor() && actorData.obsidian) {
 		cls = getSourceClass(actorData, flags.source);
 	}
 
@@ -468,7 +476,7 @@ function prepareEffects (item) {
 		const effect = effects[effectIdx];
 		myEffects.set(effect.uuid, effect);
 
-		if (item.isOwned && actorData.obsidian) {
+		if (item.isOwnedByActor() && actorData.obsidian) {
 			actorData.obsidian.effects.set(effect.uuid, effect);
 		}
 
@@ -501,7 +509,7 @@ function prepareEffects (item) {
 
 		for (let componentIdx = 0; componentIdx < effect.components.length; componentIdx++) {
 			const component = effect.components[componentIdx];
-			if (item.isOwned && actorData.obsidian) {
+			if (item.isOwnedByActor() && actorData.obsidian) {
 				actorData.obsidian.components.set(component.uuid, component);
 			}
 
@@ -562,7 +570,7 @@ function prepareEffects (item) {
 		if (spells.length) {
 			return spells.flatMap(component =>
 				component.spells.map(entry => {
-					if (item.isOwned && actorData.obsidian) {
+					if (item.isOwnedByActor() && actorData.obsidian) {
 						return actorData.obsidian.itemsByID.get(entry);
 					}
 
@@ -573,7 +581,7 @@ function prepareEffects (item) {
 		return action;
 	});
 
-	if (item.isOwned && actorData.obsidian) {
+	if (item.isOwnedByActor() && actorData.obsidian) {
 		effects.filter(effect => !effect.isLinked).forEach(effect => {
 			const scalingEffects =
 				derived.collection.scaling.filter(e => e.scalingComponent.ref === effect.uuid);
