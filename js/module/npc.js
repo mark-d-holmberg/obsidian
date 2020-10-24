@@ -101,7 +101,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		data.featCategories = {};
 		data.skills = {};
 
-		for (const skill in data.actor.obsidian.skills) {
+		for (const skill of Object.values(data.actor.obsidian.skills)) {
 			if (skill?.value || skill?.override) {
 				data.skills[skill.key] = skill;
 			}

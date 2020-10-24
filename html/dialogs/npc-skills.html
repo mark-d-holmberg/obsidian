@@ -3,7 +3,7 @@
 		<legend>{{localize 'OBSIDIAN.Skills'}}</legend>
 		<div class="obsidian-npc-grid obsidian-npc-skills">
 			{{#each data.skills as |skill id|}}
-			{{#with (lookup ../actor.flags.obsidian.skills id)}}
+			{{#with (lookup ../actor.obsidian.skills id)}}
 				<div class="obsidian-npc-grid-item">
 					<div class="obsidian-prof obsidian-ptr {{#if (eq 1 proficiency.value)}}
 						obsidian-proficient
