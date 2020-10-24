@@ -453,6 +453,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-size: 12px;
 	font-family: var(--font-condensed);
 	flex-wrap: nowrap;
+	text-align: left;
+	align-items: unset;
 }
 
 .obsidian-list-box-row span {

@@ -81,7 +81,7 @@
 		    <select name="flags.obsidian.defenses.conditions.{{id}}.level">
 			    {{#select def.level}}
 				    {{#each @root.ObsidianRules.CONDITION_LEVELS}}
-					    <option value="{{this}}">{{i18n-join 'OBSIDIAN.ConditionLevel-' this}}</option>
+					    <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
 				    {{/each}}
 			    {{/select}}
 		    </select>

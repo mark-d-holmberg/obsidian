@@ -218,7 +218,7 @@
 				</div>
 				{{/each}}
 			</div>
-			<div class="obsidian-char-top-level">
+			<div class="obsidian-char-top-level" style="align-items: flex-start;">
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.HP'}}</div>
@@ -294,7 +294,7 @@
 									    {{localize 'OBSIDIAN.VulnerabilityAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.obsidian.defenses.display.damage.vuln}}</span>
+								  <span>{{{actor.obsidian.defenses.display.damage.vuln}}}</span>
 							  </div>
 						  {{/if}}
 							{{#if actor.obsidian.defenses.display.conditions.dis}}
@@ -306,7 +306,7 @@
 											{{localize 'OBSIDIAN.DisadvantageAbbr'}}
 										</div>
 									</div>
-									<span>{{actor.obsidian.defenses.display.conditions.dis}}</span>
+									<span>{{{actor.obsidian.defenses.display.conditions.dis}}}</span>
 								</div>
 							{{/if}}
 						  {{#if actor.obsidian.defenses.display.damage.res}}
@@ -319,7 +319,7 @@
 								      {{localize 'OBSIDIAN.ResistanceAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.obsidian.defenses.display.damage.res}}</span>
+								  <span>{{{actor.obsidian.defenses.display.damage.res}}}</span>
 							  </div>
 						  {{/if}}
 						  {{#if actor.obsidian.defenses.display.pc}}
@@ -332,7 +332,7 @@
 								      {{localize 'OBSIDIAN.ImmunityAbbr'}}
 								    </div>
 								  </div>
-								  <span>{{actor.obsidian.defenses.display.pc}}</span>
+								  <span>{{{actor.obsidian.defenses.display.pc}}}</span>
 							  </div>
 						  {{/if}}
 							{{#if actor.obsidian.defenses.display.conditions.adv}}
@@ -344,7 +344,7 @@
 											{{localize 'OBSIDIAN.AdvantageAbbr'}}
 										</div>
 									</div>
-									<span>{{actor.obsidian.defenses.display.conditions.adv}}</span>
+									<span>{{{actor.obsidian.defenses.display.conditions.adv}}}</span>
 								</div>
 							{{/if}}
 							{{#if actor.obsidian.defenses.parts.dr}}
