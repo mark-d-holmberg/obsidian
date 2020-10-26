@@ -242,7 +242,7 @@ const prepareItem = {
 			derived.source.display = cls?.obsidian.label;
 		}
 
-		if (cls) {
+		if (cls && cls.obsidian.spellcasting) {
 			const spellcasting = cls.obsidian.spellcasting;
 			if (data.level === 0) {
 				flags.known = true;
