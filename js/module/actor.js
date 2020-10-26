@@ -227,6 +227,13 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
+	prepareEmbeddedEntities () {
+		// Many items have a dependency on class items as their source, so they
+		// need to be prepared first.
+		this.data.items.filter(i => i.type === 'class').forEach(cls => Item.createOwned(cls, this));
+		super.prepareEmbeddedEntities();
+	}
+
 	prepareDerivedData () {
 		super.prepareDerivedData();
 		if (!OBSIDIAN.isMigrated()) {

@@ -425,7 +425,7 @@ const prepareComponents = {
 			const cls = actorData.obsidian.classes.find(cls =>
 				cls._id === item.flags.obsidian.source.class);
 
-			if (!cls || !getProperty(cls, 'flags.spellcasting.spellList')) {
+			if (!cls || !getProperty(cls, 'obsidian.spellcasting.spellList')) {
 				return;
 			}
 
