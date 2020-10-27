@@ -53,10 +53,10 @@
 									{{/if}}
 								</div>
 								<div class="obsidian-table-sub-text">
-									{{#unless @root.isNPC}}{{flags.obsidian.source.display}}{{/unless}}
-									{{#if flags.obsidian.components.display}}
+									{{#unless @root.isNPC}}{{obsidian.source.display}}{{/unless}}
+									{{#if obsidian.components}}
 										{{#unless @root.isNPC}}&bull;{{/unless}}
-										{{flags.obsidian.components.display}}
+										{{obsidian.components}}
 									{{/if}}
 								</div>
 							</div>
