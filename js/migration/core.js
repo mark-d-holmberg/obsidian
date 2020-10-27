@@ -224,9 +224,12 @@ export const core = {
 			return;
 		}
 
-		const reqs = data.data.requirements.replace(/\d+/g, '').trim().toLocaleLowerCase();
+		const className =
+			data.flags.srd5e.className
+			|| data.data.requirements.replace(/\d+/g, '').trim().toLocaleLowerCase();
+
 		const cls = OBSIDIAN.Rules.CLASSES.find(cls =>
-			game.i18n.localize(`OBSIDIAN.Class-${cls}`).toLocaleLowerCase() === reqs);
+			game.i18n.localize(`OBSIDIAN.Class-${cls}`).toLocaleLowerCase() === className);
 
 		if (cls) {
 			data.flags.obsidian.source.type = 'class';
