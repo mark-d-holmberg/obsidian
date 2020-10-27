@@ -14,11 +14,9 @@ export class ObsidianArrayDialog extends ObsidianDialog {
 	}
 
 	get _formData () {
-		const formData =
-			Object.getOwnPropertyDescriptor(ObsidianItemSheet.prototype, '_formData').get
-				.apply(this);
-
+		const formData = FormApplication.prototype._getSubmitData.apply(this);
 		const array = [];
+
 		for (const p in formData) {
 			if (p.startsWith(this.flag)) {
 				const path = p.substr(this.flag.length + 1);

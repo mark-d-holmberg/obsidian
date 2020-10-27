@@ -604,13 +604,17 @@ export const Prepare = {
 
 		for (let [id, tool] of tools.concat(Object.entries(flags.tools.custom))) {
 			const custom = !isNaN(Number(id));
-			if (!custom) {
+			const key = custom ? `custom.${id}` : id;
+
+			derived.tools[key] = duplicate(tool);
+			tool = derived.tools[key];
+
+			if (custom) {
+				tool.enabled = true;
+			} else {
 				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf-${id}`);
 			}
 
-			const key = custom ? `custom.${id}` : id;
-			derived.tools[key] = duplicate(tool);
-			tool = derived.tools[key];
 			Prepare.calculateSkill(data, flags, tool);
 
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {

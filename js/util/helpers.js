@@ -62,7 +62,7 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('clean-formatting', function (html) {
-		return new Handlebars.SafeString(html.replace(/color: #191813;/g, ''));
+		return new Handlebars.SafeString(html?.replace(/color: #191813;/g, '') || '');
 	});
 
 	Handlebars.registerHelper('debug', console.debug);
