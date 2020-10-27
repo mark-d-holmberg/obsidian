@@ -225,7 +225,7 @@ export const core = {
 		}
 
 		const className =
-			data.flags.srd5e.className
+			data.flags?.srd5e?.className
 			|| data.data.requirements.replace(/\d+/g, '').trim().toLocaleLowerCase();
 
 		const cls = OBSIDIAN.Rules.CLASSES.find(cls =>
