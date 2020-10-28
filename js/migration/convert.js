@@ -25,7 +25,7 @@ export const CONVERT = {
 	spellComponents: {vocal: 'v', somatic: 's', material: 'm'},
 	tags: {
 		ver: 'versatile', hvy: 'heavy', fin: 'finesse', lgt: 'light', lod: 'loading', rch: 'reach',
-		thr: 'thrown', two: 'twohanded'
+		thr: 'thrown', two: 'twohanded', amm: 'ammunition'
 	},
 	tools: {disg: 'dis', forg: 'frg', herb: 'hrb', navg: 'nav', pois: 'psn', thief: 'thv'},
 	validTargetTypes: new Set(['creature', 'object', 'sphere', 'cylinder', 'cone', 'cube', 'line'])

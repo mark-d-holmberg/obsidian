@@ -158,9 +158,7 @@ const prepareItem = {
 			derived.notes.push(
 				`${data.armor.value.sgn()} ${game.i18n.localize('OBSIDIAN.ACAbbr')}`);
 		} else {
-			derived.notes.push(
-				`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${data.armor.value.baseAC}`);
-
+			derived.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${data.armor.value}`);
 			if (!OBSIDIAN.notDefinedOrEmpty(data.strength)) {
 				derived.notes.push(
 					`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} ${data.strength}`);
