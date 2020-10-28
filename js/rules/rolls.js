@@ -127,8 +127,7 @@ export const Rolls = {
 		}
 
 		for (const token of game.user.targets) {
-			await token.actor.update(
-				{'data.attributes.hp.value': hpAfterDamage(token.actor, damage, attack)});
+			await token.actor.update(hpAfterDamage(token.actor, damage, attack));
 		}
 	},
 
@@ -253,8 +252,7 @@ export const Rolls = {
 				}
 			}
 
-			await token.actor.update(
-				{'data.attributes.hp.value': hpAfterDamage(token.actor, damage, attack)});
+			await token.actor.update(hpAfterDamage(token.actor, damage, attack));
 		}
 
 		await applyEffects(actor, effect, targets, 'save');

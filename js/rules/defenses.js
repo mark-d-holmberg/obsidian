@@ -173,13 +173,19 @@ function prepareManualDefenses (flags, derived) {
 }
 
 export function hpAfterDamage (actor, damage, attack) {
-	let hp = actor.data.data.attributes.hp.value;
+	const hp = actor.data.data.attributes.hp;
 	const defenses = actor.data.obsidian.defenses.parts.damage;
 	const dr = actor.data.obsidian.defenses.parts.dr;
+	let current = hp.value;
+	let tmp = hp.temp;
+
+	if (tmp == null || tmp < 0) {
+		tmp = 0;
+	}
 
 	for (let [type, dmg] of damage.entries()) {
 		if (type === 'hlg') {
-			hp += Math.floor(dmg);
+			current += Math.floor(dmg);
 			continue;
 		}
 
@@ -203,10 +209,22 @@ export function hpAfterDamage (actor, damage, attack) {
 			dmg *= 2;
 		}
 
-		hp -= Math.max(1, Math.floor(dmg));
+		tmp -= Math.max(1, Math.floor(dmg));
 	}
 
-	return hp;
+	if (tmp < 0) {
+		// Any damage leftover after depleting temporary HP is applied to
+		// current HP.
+		current += tmp;
+		tmp = 0;
+	}
+
+	const update = {'data.attributes.hp.value': Math.clamped(current, 0, hp.max)};
+	if (hp.temp != null) {
+		update['data.attributes.hp.temp'] = tmp;
+	}
+
+	return update;
 }
 
 function hasDefenseAgainst (defenses, attack, type, level) {
