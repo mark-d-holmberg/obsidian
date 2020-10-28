@@ -125,7 +125,7 @@ export function hotbarRender (hotbar, html) {
 				: resourcesFromItem(actor, args.item);
 
 		if (remaining === null && max === null) {
-			return;
+			continue;
 		}
 
 		let display = remaining.toString();
