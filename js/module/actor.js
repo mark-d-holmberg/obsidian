@@ -431,7 +431,7 @@ export class ObsidianActor extends Actor5e {
 				const needle = c.text.toLowerCase();
 				const cls =
 					this.data.obsidian.classes.find(cls =>
-						cls.flags.obsidian.label.toLowerCase() === needle);
+						cls.obsidian.label.toLowerCase() === needle);
 
 				c.class = cls ? cls._id : '';
 			});
@@ -444,7 +444,7 @@ export class ObsidianActor extends Actor5e {
 			const needle = item.flags.obsidian.source.text.toLowerCase();
 			const cls =
 				this.data.obsidian.classes.find(cls =>
-					cls.flags.obsidian.label.toLowerCase() === needle);
+					cls.obsidian.label.toLowerCase() === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
