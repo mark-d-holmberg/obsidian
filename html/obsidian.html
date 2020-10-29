@@ -465,7 +465,7 @@
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
 						{{#each actor.flags.obsidian.skills.passives}}
-						{{#with (get-property ../actor.flags.obsidian.skills this)}}
+						{{#with (get-property ../actor.obsidian.skills this)}}
 							<div class="obsidian-passive-item">
 								<div class="obsidian-skill-name">{{localize 'OBSIDIAN.Passive'}} {{label}}</div>
 								<div class="obsidian-skill-passive">{{passive}}</div>

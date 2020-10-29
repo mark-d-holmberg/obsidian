@@ -132,6 +132,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		name: originalItem.name,
 		flags: {
 			obsidian: {
+				version: Schema.VERSION,
 				activeEffect: true,
 				effects: effects,
 				duration: {
