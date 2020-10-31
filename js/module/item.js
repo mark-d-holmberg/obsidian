@@ -378,6 +378,12 @@ const prepareComponents = {
 			+ '</div>');
 	},
 
+	'roll-mod': function (actor, item, effect, component) {
+		if (component.mcrit == null) {
+			component.mcrit = 20;
+		}
+	},
+
 	target: function (actor, item, effect, component) {
 		if (component.target === 'area' && !effect.isLinked) {
 			item.obsidian.notes.push(

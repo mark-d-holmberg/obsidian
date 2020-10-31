@@ -220,7 +220,8 @@ export const Components = {
 			reroll: 1,
 			mode: 'reg',
 			ndice: 0,
-			max: false
+			max: false,
+			mcrit: 20
 		},
 		metadata: {
 			category: 'modifiers',
@@ -364,7 +365,7 @@ export const Effect = {
 
 	combineRollMods: mods => {
 		if (!mods.length) {
-			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg', max: false});
+			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg', max: false, mcrit: 20});
 		}
 
 		return {
@@ -372,7 +373,8 @@ export const Effect = {
 			reroll: Math.max(...mods.map(mod => mod.reroll)),
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
 			mode: mods.map(mod => mod.mode),
-			max: mods.some(mod => mod.max)
+			max: mods.some(mod => mod.max),
+			mcrit: Math.clamped(Math.min(...mods.map(mod => mod.mcrit)), 0, 20),
 		};
 	},
 
@@ -408,7 +410,7 @@ export const Effect = {
 	},
 
 	makeModeRollMod: modes => {
-		return {min: 1, reroll: 1, ndice: 0, mode: [].concat(modes)}
+		return {min: 1, reroll: 1, ndice: 0, mcrit: 20, mode: [].concat(modes)}
 	},
 
 	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),

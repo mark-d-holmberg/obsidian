@@ -268,6 +268,10 @@ function formatRollMod (mod) {
 		parts.push(localize('OBSIDIAN.MaxRoll'));
 	}
 
+	if (mod.mcrit > 0 && mod.mcrit < 20) {
+		parts.push(localize('OBSIDIAN.RollModCritRange').format(mod.mcrit));
+	}
+
 	return oxfordComma(parts);
 }
 

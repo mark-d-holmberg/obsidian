@@ -27,6 +27,13 @@
 </div>
 <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 	<div class="obsidian-fullwidth obsidian-checkbox-row">
+		{{#unless attack}}
+		<label class="obsidian-inline">
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				   data-dtype="Number" placeholder="20" name="{{prefix}}.mcrit" value="{{mcrit}}">
+			<span>{{localize 'OBSIDIAN.CritRange'}}</span>
+		</label>
+		{{/unless}}
 		{{/unless}}
 		{{fancy-checkbox prefix 'max' content='OBSIDIAN.MaxRoll' checked=max}}
 	</div>

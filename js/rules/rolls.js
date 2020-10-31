@@ -460,9 +460,14 @@ export const Rolls = {
 	},
 
 	d20Roll: function (actor, mods = [], crit = 20, fail = 1, rollMod) {
+		if (crit == null) {
+			crit = 20;
+		}
+
 		let n = 2;
 		if (rollMod) {
 			n += rollMod.ndice;
+			crit = Math.clamped(rollMod.mcrit, 0, 20);
 		}
 
 		const roll = new ObsidianDie(20).roll(n);
