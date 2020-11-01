@@ -13,8 +13,10 @@ export function patchItem_prepareData () {
 		const cached = Item5e.prototype.prepareData;
 		return function () {
 			cached.apply(this, arguments);
-			prepareData(this);
-			prepareEffects(this);
+			if (OBSIDIAN.isMigrated()) {
+				prepareData(this);
+				prepareEffects(this);
+			}
 		};
 	})();
 
