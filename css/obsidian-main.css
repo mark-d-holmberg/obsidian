@@ -1289,8 +1289,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	max-width: none;
 }
 
-#chat-log .obsidian-msg,
-.chat-popout .obsidian-msg {
+#chat-log .message.obsidian-msg,
+.chat-popout .message.obsidian-msg {
 	border: 2px solid transparent;
 	background: var(--bg);
 	color: var(--text-regular);
@@ -1298,6 +1298,18 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	font-size: 13px;
 	position: relative;
 	padding: 5px;
+}
+
+.message.obsidian-msg .fa-trash {
+	color: var(--text-regular);
+}
+
+.message.obsidian-msg .fa-dice-d20 {
+	color: var(--text-regular);
+}
+
+.message.obsidian-msg button:hover .fa-dice-d20 {
+	color: var(--text-bright);
 }
 
 .chat-popout .window-content {

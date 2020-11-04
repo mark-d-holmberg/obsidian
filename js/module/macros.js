@@ -179,5 +179,9 @@ function resourcesFromItem (actor, id) {
 		return [ammo.data.quantity, null];
 	}
 
+	if (item.data.quantity > 1) {
+		return [item.data.quantity, null];
+	}
+
 	return [null, null];
 }
