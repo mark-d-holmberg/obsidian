@@ -234,12 +234,14 @@ const prepareItem = {
 			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
 		} else if (flags.source.type === 'custom') {
 			derived.source.display = flags.source.custom;
-		} else if (flags.source.type === 'class'
-			&& item.isOwnedByActor()
-			&& item.actor.data.obsidian)
-		{
-			cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
-			derived.source.display = cls?.obsidian.label;
+		} else if (item.isOwnedByActor() && item.actor.data.obsidian) {
+			if (flags.source.type === 'class') {
+				cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
+				derived.source.display = cls?.obsidian.label;
+			} else if (flags.source.type === 'item') {
+				derived.source.display =
+					item.actor.data.obsidian.itemsByID.get(flags.source.item)?.name;
+			}
 		}
 
 		if (cls && cls.obsidian.spellcasting) {

@@ -34,9 +34,6 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	prepareBaseData () {
-		// Workaround for bug in dnd5e 0.9.8.
-		this.data.data.bonuses = {};
-
 		super.prepareBaseData();
 		if (!OBSIDIAN.isMigrated()) {
 			return;

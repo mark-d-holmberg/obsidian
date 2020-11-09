@@ -69,7 +69,7 @@ export class ObsidianItemSheet extends ItemSheet {
 
 	activateEditor (name, options = {}, initialContent = '') {
 		options.content_css =
-			`${CONFIG.TinyMCE.css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
 		super.activateEditor(name, options, initialContent);
 	}
 

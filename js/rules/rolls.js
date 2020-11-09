@@ -901,8 +901,8 @@ export const Rolls = {
 			upcast = Math.max(0, options.spellLevel - item.data.level);
 		}
 
-		const itemFlags = item.flags.obsidian;
-		if (!itemFlags.effects.length) {
+		const effects = item.flags.obsidian.effects.filter(effect => !effect.isLinked);
+		if (!effects.length) {
 			return [{
 				flags: {
 					obsidian: {
@@ -918,12 +918,10 @@ export const Rolls = {
 		}
 
 
-		return itemFlags.effects
-			.filter(effect => !effect.isLinked)
-			.flatMap((effect, i) => Rolls.effectRoll(actor, effect, options, {
-				name: item.name,
-				isFirst: i === 0
-			}));
+		return effects.flatMap((effect, i) => Rolls.effectRoll(actor, effect, options, {
+			name: item.name,
+			isFirst: i === 0
+		}));
 	},
 
 	findSkill: function (actor, skill) {
