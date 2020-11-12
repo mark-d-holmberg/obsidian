@@ -326,44 +326,6 @@ export const core = {
 		});
 	},
 
-	convertSpeed: function (data) {
-		if (data.data?.attributes.speed.value) {
-			const value = /\d+/.exec(data.data.attributes.speed.value);
-			if (!OBSIDIAN.notDefinedOrEmpty(value)) {
-				data.flags.obsidian.attributes.speed = {
-					walk: {override: Number(value)}
-				};
-			}
-		}
-
-		if (data.data?.attributes.speed.special) {
-			data.data.attributes.speed.special.split(';').forEach(speedString => {
-				speedString = speedString.trim();
-				const value = /\d+/.exec(speedString);
-
-				if (value === null) {
-					return;
-				}
-
-				let spd;
-				speedString.split(' ').forEach(word => {
-					const convert = CONVERT.speeds.get(word.toLowerCase());
-					if (convert) {
-						spd = convert;
-					}
-				});
-
-				if (spd) {
-					data.flags.obsidian.attributes.speed[spd] = {override: Number(value[0])};
-					if (spd === 'fly') {
-						data.flags.obsidian.attributes.speed.fly.hover =
-							CONVERT.speeds.hover.test(speedString);
-					}
-				}
-			});
-		}
-	},
-
 	convertVehicle: function (data) {
 		// We don't have the default data provided by the system template yet
 		// so we add it here so that the rest of the conversion code can be

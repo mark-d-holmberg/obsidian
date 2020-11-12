@@ -12,6 +12,10 @@ export function patchItem_prepareData () {
 	Item5e.prototype.prepareData = (function () {
 		const cached = Item5e.prototype.prepareData;
 		return function () {
+			if (!this.data.data.preparation) {
+				this.data.data.preparation = {};
+			}
+
 			cached.apply(this, arguments);
 			if (OBSIDIAN.isMigrated()) {
 				prepareData(this);

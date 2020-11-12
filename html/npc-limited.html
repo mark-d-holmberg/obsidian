@@ -1,0 +1,14 @@
+<form class="obsidian {{cssClass}}" autocomplete="off">
+	<div class="obsidian-tab-container tab active" data-group="main-tabs" data-tab="desc">
+		<section style="column-width: unset;">
+			<img class="obsidian-profile-img profile" src="{{actor.img}}" title="{{actor.name}}"
+			     alt="{{actor.name}}">
+		</section>
+		<section>
+			<h3>{{localize 'OBSIDIAN.Description'}}</h3>
+			<div class="obsidian-rich-text" style="padding: 0 8px;">
+				{{{data.details.biography.value}}}
+			</div>
+		</section>
+	</div>
+</form>

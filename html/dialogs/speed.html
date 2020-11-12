@@ -19,17 +19,14 @@
 			<div class="obsidian-form-row obsidian-inline">
 				<div class="obsidian-flex">
 					<label class="obsidian-inline">
-						<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md" type="text"
-						       name="flags.obsidian.attributes.speed.{{id}}.override" data-dtype="Number"
-						       value="
-						       {{~#with (lookup ../actor.flags.obsidian.attributes.speed id) as |spd|~}}
-						        {{~spd.override~}}
-						       {{~/with~}}">
+						<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
+						       name="data.attributes.movement.{{id}}" data-dtype="Number" type="text"
+						       value="{{lookup ../data.attributes.movement id}}">
 						<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
 					</label>
 					{{#if (eq id 'fly')}}
-						{{fancy-checkbox 'flags.obsidian.attributes.speed.fly.hover' content='OBSIDIAN.Hover'
-						                 checked=../actor.flags.obsidian.attributes.speed.fly.hover}}
+						{{fancy-checkbox 'data.attributes.movement.hover' content='OBSIDIAN.Hover'
+						                 checked=../data.attributes.movement.hover}}
 					{{/if}}
 				</div>
 			</div>

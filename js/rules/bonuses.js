@@ -4,32 +4,25 @@ import {Effect} from '../module/effect.js';
 
 export function applyBonuses (actorData, data, flags, derived) {
 	for (const speed of OBSIDIAN.Rules.SPEEDS) {
-		if (!flags.attributes.speed[speed]) {
-			flags.attributes.speed[speed] = {};
-		}
-
+		derived.attributes.speed[speed] = data.attributes.movement[speed];
 		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
+
 		if (bonuses.length) {
-			flags.attributes.speed[speed].derived =
-				(flags.attributes.speed[speed].override || 0)
-				+ bonuses.reduce((acc, bonus) =>
+			derived.attributes.speed[speed] +=
+				bonuses.reduce((acc, bonus) =>
 					acc + bonusToParts(actorData, bonus)
 						.reduce((acc, part) => acc + part.mod, 0), 0);
 
-			flags.attributes.speed[speed].derived =
-				Math.floor(flags.attributes.speed[speed].derived);
-		} else {
-			delete flags.attributes.speed[speed].derived;
+			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed]);
 		}
 
 		const setters = derived.filters.setters(Filters.appliesTo.speedScores(speed));
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
-			const spd = flags.attributes.speed[speed];
-			const value = spd.derived || spd.override;
+			const spd = derived.attributes.speed;
 
-			if (!setter.min || setter.score > value) {
-				spd.derived = setter.score;
+			if (!setter.min || setter.score > spd[speed]) {
+				spd[speed] = setter.score;
 			}
 		}
 	}

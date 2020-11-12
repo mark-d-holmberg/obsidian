@@ -25,7 +25,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	}
 
 	get template () {
-		return 'modules/obsidian/html/npc.html';
+		return `modules/obsidian/html/npc${this.actor.limited ? '-limited' : ''}.html`;
 	}
 
 	static get defaultOptions () {
@@ -40,7 +40,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 				initial: 'stats'
 			}, {
 				navSelector: 'ul.obsidian-tab-bar[data-group="spells"]',
-				contentSelector: '.obsidian-spell-tabls',
+				contentSelector: '.obsidian-spell-table',
 				initial: 'spell-all'
 			}, {
 				navSelector: 'ul.obsidian-tab-bar[data-group="equipment"]',
@@ -65,6 +65,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		this.form.ondrop = evt => Sheet.onDrop(this, evt);
 
 		if (this.actor.limited) {
+
 			return;
 		}
 
@@ -108,14 +109,15 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 
 		for (const item of data.actor.items) {
-			let cat;
+			let cat = item.data.activation?.type;
 			if (item.type === 'feat') {
-				cat = item.data.activation.type;
 				if (cat === 'special' || cat === 'bonus' || !cat.length) {
 					cat = 'none';
 				}
 			} else if (item.type === 'weapon' && item.data.equipped) {
-				cat = 'action';
+				if (cat !== 'legendary' && cat !== 'lair') {
+					cat = 'action';
+				}
 			} else {
 				continue;
 			}

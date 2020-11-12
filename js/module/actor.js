@@ -7,7 +7,7 @@ import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
-import {prepareNPC} from '../rules/npc.js';
+import {prepareNPC, prepareSpeed} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
 import {Migrate} from '../migration/migrate.js';
@@ -47,7 +47,7 @@ export class ObsidianActor extends Actor5e {
 
 		this.data.obsidian = {
 			ammo: [],
-			attributes: {init: {}},
+			attributes: {init: {}, speed: {}},
 			classes: [],
 			components: new Map(),
 			details: {},
@@ -263,6 +263,10 @@ export class ObsidianActor extends Actor5e {
 		prepareDefenses(data, flags, derived);
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data, data, flags, derived);
+
+		if (this.data.type === 'npc') {
+			prepareSpeed(data, derived);
+		}
 
 		if (this.isToken) {
 			// If we are preparing data right after an update, this.token

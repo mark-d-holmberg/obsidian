@@ -142,17 +142,7 @@
 						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250"
 						     data-template="speed.html">
-							{{#with actor.flags.obsidian.attributes as |attr|}}
-								{{#if attr.speedDisplay}}
-									{{#with (lookup attr.speed attr.speedDisplay) as |spd|}}
-										{{#if spd.derived}}
-											{{spd.derived}}
-										{{else}}
-											{{spd.override}}
-										{{/if}}
-									{{/with}}
-								{{/if}}
-							{{/with}}
+							{{lookup actor.obsidian.attributes.speed actor.flags.obsidian.attributes.speedDisplay}}
 						</div>
 					</div>
 				</div>

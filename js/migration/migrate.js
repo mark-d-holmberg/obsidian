@@ -13,6 +13,7 @@ import {v6} from './v6.js';
 import {v7} from './v7.js';
 import {v9} from './v9.js';
 import {v10} from './v10.js';
+import {v11} from './v11.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -39,7 +40,6 @@ export const Migrate = {
 				Migrate.core.convertVehicle(data);
 			}
 
-			Migrate.core.convertSpeed(data);
 			Migrate.core.convertDefenses(data);
 		}
 
@@ -63,6 +63,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 10 && source !== 'core') {
 			Migrate.v9.convertTools(data);
+		}
+
+		if (data.flags.obsidian.version < 12 && source !== 'core') {
+			Migrate.v11.convertSpeed(data);
 		}
 
 		if (data.items?.length) {
@@ -669,6 +673,7 @@ Migrate.v6 = v6;
 Migrate.v7 = v7;
 Migrate.v9 = v9;
 Migrate.v10 = v10;
+Migrate.v11 = v11;
 
 function lazyConvert () {
 	const convert = (key, convert) => {

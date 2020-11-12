@@ -21,35 +21,30 @@ export function prepareNPC (flags, derived) {
 
 		derived.details.tags += flags.details.tags.custom;
 	}
-
-	prepareSpeed(flags, derived);
 }
 
-function prepareSpeed (flags, derived) {
+export function prepareSpeed (data, derived) {
 	const speed = [];
 	const feet = game.i18n.localize('OBSIDIAN.FeetAbbr');
 	const hover = game.i18n.localize('OBSIDIAN.Hover').toLowerCase();
-	const walk = flags.attributes.speed.walk?.override;
-
-	if (!OBSIDIAN.notDefinedOrEmpty(walk)) {
-		speed.push(`${walk} ${feet}`);
-	}
+	const walk = derived.attributes.speed.walk || 0;
+	speed.push(`${walk} ${feet}`);
 
 	for (const spd of Rules.SPEEDS) {
-		const override = flags.attributes.speed[spd]?.override;
-		if (spd === 'walk' || OBSIDIAN.notDefinedOrEmpty(override)) {
+		const value = derived.attributes.speed[spd];
+		if (spd === 'walk' || !value) {
 			continue;
 		}
 
-		let item = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr-${spd}`)} ${override} ${feet}`;
-		if (flags.attributes.speed[spd].hover) {
-			item += ` (${hover})`;
+		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr-${spd}`)} ${value} ${feet}`;
+		if (spd === 'fly' && data.attributes.movement.hover) {
+			display += ` (${hover})`;
 		}
 
-		speed.push(item);
+		speed.push(display);
 	}
 
-	derived.attributes.speed = speed.join(', ');
+	derived.attributes.speed.display = speed.join(', ');
 }
 
 export async function refreshNPC (combat) {

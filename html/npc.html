@@ -154,7 +154,9 @@
 				     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250" data-npc="true"
 				     data-template="speed.html">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Speed'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13">{{actor.obsidian.attributes.speed}}</div>
+					<div class="obsidian-npc-stat-value obsidian-font-13">
+						{{actor.obsidian.attributes.speed.display}}
+					</div>
 				</div>
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
