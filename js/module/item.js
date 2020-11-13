@@ -640,7 +640,9 @@ function prepareEffects (item) {
 					for (const dmg of damageComponents) {
 						const existing =
 							effect.components.find(c =>
-								c.type === 'damage' && c.damage === dmg.damage);
+								c.type === 'damage'
+								&& c.damage === dmg.damage
+								&& c.die === dmg.die);
 
 						if (existing) {
 							Effect.scaleExistingDamage(dmg, existing, scaling, scaledAmount);

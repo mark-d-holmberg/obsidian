@@ -372,7 +372,7 @@ export const Effect = {
 			min: Math.max(...mods.map(mod => mod.min)),
 			reroll: Math.max(...mods.map(mod => mod.reroll)),
 			ndice: mods.reduce((acc, mod) => acc + mod.ndice, 0),
-			mode: mods.map(mod => mod.mode),
+			mode: mods.flatMap(mod => mod.mode),
 			max: mods.some(mod => mod.max),
 			mcrit: Math.clamped(Math.min(...mods.map(mod => mod.mcrit)), 0, 20),
 		};

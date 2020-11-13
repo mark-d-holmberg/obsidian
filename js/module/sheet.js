@@ -309,7 +309,7 @@ export const Sheet = {
 		sheet.actor.createEmbeddedEntity('OwnedItem', {
 			type: 'spell',
 			name: game.i18n.localize('OBSIDIAN.NewSpell')
-		}, {renderSheet: true});
+		}).then(spell => sheet.actor.items.get(spell._id).sheet.render(true));
 	},
 
 	onAttackToggle: function (sheet, evt) {

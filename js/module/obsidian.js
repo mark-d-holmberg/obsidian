@@ -341,7 +341,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
-		}, {renderSheet: true});
+		}).then(item => this.actor.items.get(item._id).sheet.render(true));
 	}
 
 	_onCollapseNotes (evt) {
