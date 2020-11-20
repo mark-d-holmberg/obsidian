@@ -535,7 +535,8 @@ export const Rolls = {
 		const isVersatile =
 			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
 		let damage =
-			effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile);
+			duplicate(
+				effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile));
 
 		let scaling;
 		if (scaledAmount) {
@@ -700,7 +701,7 @@ export const Rolls = {
 
 		const results = [];
 		let scaledAmount = options.scaling || 0;
-		let damage = effect.components.filter(c => c.type === 'damage');
+		let damage = duplicate(effect.components.filter(c => c.type === 'damage'));
 
 		if (item.type === 'spell') {
 			scaledAmount = Math.max(0, options.spellLevel - item.data.level);
