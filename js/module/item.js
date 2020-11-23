@@ -295,7 +295,7 @@ const prepareItem = {
 
 		if (flags.tags.ammunition && item.isOwnedByActor() && item.actor.data.obsidian) {
 			derived.ammo = `
-				<select data-name="items.${item.data.idx}.flags.obsidian.ammo.id">
+				<select data-name="items.${item.data.idx}.flags.obsidian.ammo">
 					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
 						${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
 					</option>

@@ -247,8 +247,8 @@ export const ObsidianItems = {
 			Rolls.create(actor, options);
 		}
 
-		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo.id'))) {
-			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo.id);
+		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo'))) {
+			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo);
 			const collection = ammo.obsidian.collection;
 			const suppressCard =
 				(collection.attack.length + collection.damage.length + collection.save.length) < 1;
