@@ -200,6 +200,8 @@ export const Prepare = {
 				if (cls) {
 					resource.max = op(resource.bonus, cls.data.levels);
 				}
+			} else if (resource.key === 'prof') {
+				resource.max = op(resource.bonus, data.attributes.prof);
 			}
 
 			resource.max = Math.max(resource.min, resource.max);
