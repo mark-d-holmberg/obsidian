@@ -3,29 +3,7 @@ import {OBSIDIAN} from '../global.js';
 import {Effect} from '../module/effect.js';
 
 export function applyBonuses (actorData, data, flags, derived) {
-	for (const speed of OBSIDIAN.Rules.SPEEDS) {
-		derived.attributes.speed[speed] = data.attributes.movement[speed];
-		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
-
-		if (bonuses.length) {
-			derived.attributes.speed[speed] +=
-				bonuses.reduce((acc, bonus) =>
-					acc + bonusToParts(actorData, bonus)
-						.reduce((acc, part) => acc + part.mod, 0), 0);
-
-			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed]);
-		}
-
-		const setters = derived.filters.setters(Filters.appliesTo.speedScores(speed));
-		if (setters.length) {
-			const setter = Effect.combineSetters(setters);
-			const spd = derived.attributes.speed;
-
-			if (!setter.min || setter.score > spd[speed]) {
-				spd[speed] = setter.score;
-			}
-		}
-	}
+	applySpeedBonuses(actorData, data, derived);
 
 	const initBonuses =
 		derived.filters.bonuses(Filters.appliesTo.initiative(flags.attributes.init.ability));
@@ -94,6 +72,36 @@ export function applyBonuses (actorData, data, flags, derived) {
 
 			return save;
 		});
+	}
+}
+
+function applySpeedBonuses (actorData, data, derived) {
+	if (actorData.type === 'vehicle') {
+		return;
+	}
+
+	for (const speed of OBSIDIAN.Rules.SPEEDS) {
+		derived.attributes.speed[speed] = data.attributes.movement[speed];
+		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
+
+		if (bonuses.length) {
+			derived.attributes.speed[speed] +=
+				bonuses.reduce((acc, bonus) =>
+					acc + bonusToParts(actorData, bonus)
+						.reduce((acc, part) => acc + part.mod, 0), 0);
+
+			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed]);
+		}
+
+		const setters = derived.filters.setters(Filters.appliesTo.speedScores(speed));
+		if (setters.length) {
+			const setter = Effect.combineSetters(setters);
+			const spd = derived.attributes.speed;
+
+			if (!setter.min || setter.score > spd[speed]) {
+				spd[speed] = setter.score;
+			}
+		}
 	}
 }
 
