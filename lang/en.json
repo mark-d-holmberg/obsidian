@@ -1,6 +1,8 @@
 {
 	"OBSIDIAN.ConfigNumDiceHead": "Only roll one die",
 	"OBSIDIAN.ConfigNumDiceMessage": "If enabled, obsidian will only roll a single d20 by default, instead of always rolling 2d20.",
+	"OBSIDIAN.ConfigDiceSoNiceShowPublicRollsHead": "Dice So Nice! - Broadcast Public Rolls",
+	"OBSIDIAN.ConfigDiceSoNiceShowPublicRollsMessage": "If enabled, Obsidian will show public rolls using Dice So Nice! to other players.",
 	"OBSIDIAN.PersonalityTraits": "Personality Traits",
 	"OBSIDIAN.Ideals": "Ideals",
 	"OBSIDIAN.Bonds": "Bonds",

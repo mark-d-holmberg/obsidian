@@ -1251,8 +1251,13 @@ export const Rolls = {
 		        }
 	        });
 
-	        data3d.formula = data3d.formula.join('+');
-	        await game.dice3d.show(Rolls.DSN(data3d));
+			data3d.formula = data3d.formula.join('+');
+
+	        if(game.settings.get('obsidian', 'diceSoNiceShowPublicRolls') && game.settings.get("core", "rollMode") == "roll") {
+		        await game.dice3d.show(Rolls.DSN(data3d), game.user, true);
+			} else {
+		        await game.dice3d.show(Rolls.DSN(data3d));
+			}
         }
 
 		Rolls.sendMessages(msgs.map(msg => [msg, actor]), dice3d);
