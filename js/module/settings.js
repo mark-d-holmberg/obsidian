@@ -8,8 +8,7 @@ export function registerSettings () {
 		type: Boolean
 	});
 
-	const dice3d = game.modules.get('dice-so-nice')?.active;
-	if(dice3d) {
+	if(game.modules.get('dice-so-nice')?.active) {
 		game.settings.register('obsidian', 'diceSoNiceShowPublicRolls', {
 			name: 'OBSIDIAN.ConfigDiceSoNiceShowPublicRollsHead',
 			hint: 'OBSIDIAN.ConfigDiceSoNiceShowPublicRollsMessage',
