@@ -1269,7 +1269,7 @@ export const Rolls = {
 				game.user,
 				synchronize,
 				users,
-				(rollMode === 'blindRole')
+				(rollMode === 'blindroll')
 			);
         }
 
