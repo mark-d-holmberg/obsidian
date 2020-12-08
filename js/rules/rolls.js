@@ -1251,8 +1251,26 @@ export const Rolls = {
 		        }
 	        });
 
-	        data3d.formula = data3d.formula.join('+');
-	        await game.dice3d.show(Rolls.DSN(data3d));
+			data3d.formula = data3d.formula.join('+');
+
+			const rollMode = game.settings.get('core', 'rollMode');
+			const users = [];
+			let synchronize = true;
+
+			if (['gmroll', 'blindroll'].includes(rollMode)) {
+				users.push(...game.users.entities.filter(user => user.isGM).map(user => user._id));
+			} else if(rollMode === "selfroll") {
+				users.push(game.user.data._id);
+				synchronize = false;
+			}
+
+			await game.dice3d.show(
+				Rolls.DSN(data3d),
+				game.user,
+				synchronize,
+				users,
+				(rollMode === 'blindroll')
+			);
         }
 
 		Rolls.sendMessages(msgs.map(msg => [msg, actor]), dice3d);
