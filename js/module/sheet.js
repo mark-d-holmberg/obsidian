@@ -267,6 +267,15 @@ export const Sheet = {
 		}
 	},
 
+	getSenses: function (data) {
+		data.senses = game.dnd5e.config.senses;
+		data.hasSenses =
+			Object.keys(data.senses)
+				.map(sense => data.data.attributes.senses[sense])
+				.filter(n => n != null)
+				.reduce((n, acc) => acc + n, 0) > 0;
+	},
+
 	highlightSpell: function (sheet, evt) {
 		const spell =
 			sheet.actor.items.get(evt.currentTarget.closest('.obsidian-tr').dataset.itemId);

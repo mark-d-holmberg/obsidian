@@ -462,12 +462,12 @@
 							</div>
 						{{/with}}
 						{{/each}}
-						{{#if (non-zero actor.flags.obsidian.attributes.senses 'radius')}}
+						{{#if hasSenses}}
 						<div class="obsidian-horizontal-list">
-							{{#each actor.flags.obsidian.attributes.senses as |sense id|}}
-								{{#if (gt sense.radius 0)}}
+							{{#each senses}}
+								{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
 									<span>
-										{{i18n-join 'OBSIDIAN.Sense-' id}}&nbsp;{{sense.radius}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
+										{{this}}&nbsp;{{lookup ../data.attributes.senses @key}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
 									</span>
 								{{/if}}
 							{{/each}}

@@ -132,6 +132,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
 		}
 
+		Sheet.getSenses(data);
 		return data;
 	}
 

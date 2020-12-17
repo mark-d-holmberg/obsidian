@@ -15,4 +15,13 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 		await super.close();
 		Hooks.callAll('obsidian.classSheetClosed');
 	}
+
+	getData () {
+		const data = super.getData();
+		if (this.item.isOwned) {
+			data.rollData = this.item.actor.getRollData();
+		}
+
+		return data;
+	}
 }

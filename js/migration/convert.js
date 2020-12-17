@@ -21,6 +21,7 @@ export const CONVERT = {
 	},
 	range: {self: 'self', touch: 'touch', ft: 'short', mi: 'long', any: 'unlimited'},
 	recharge: {sr: 'short', lr: 'long', day: 'dawn'},
+	senses: {dark: 'darkvision', blind: 'blindsight', tremor: 'tremorsense', true: 'truesight'},
 	size: {tiny: 'tiny', small: 'sm', medium: 'med', large: 'lg', huge: 'huge', gargantuan: 'grg'},
 	spellComponents: {vocal: 'v', somatic: 's', material: 'm'},
 	tags: {

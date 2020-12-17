@@ -24,6 +24,9 @@
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
 	"download": "https://bitbucket.org/Fyorl/obsidian/get/4.2.7.zip",
+	"license": "LICENSE",
+	"readme": "README.md",
+	"bugs": "https://bitbucket.org/Fyorl/obsidian/issues",
 	"languages": [{
 		"lang": "en",
 		"name": "English",

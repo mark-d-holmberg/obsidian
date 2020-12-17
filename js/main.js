@@ -30,13 +30,30 @@ runPatches();
 Hooks.once('init', async function () {
 	CONFIG.RollTable.entityClass = ObsidianTable;
 	CONFIG.Actor.entityClass = ObsidianActor;
-	Actors.registerSheet('dnd5e', Obsidian, {types: ['character'], makeDefault: true});
-	Actors.registerSheet('dnd5e', ObsidianNPC, {types: ['npc'], makeDefault: true});
-	Actors.registerSheet('dnd5e', ObsidianVehicle, {types: ['vehicle'], makeDefault: true});
-	Items.registerSheet('dnd5e', ObsidianClassSheet, {types: ['class'], makeDefault: true});
+	Actors.registerSheet('dnd5e', Obsidian, {
+		types: ['character'],
+		makeDefault: true,
+		label: 'OBSIDIAN.ActorSheet'
+	});
+	Actors.registerSheet('dnd5e', ObsidianNPC, {
+		types: ['npc'],
+		makeDefault: true,
+		label: 'OBSIDIAN.NPCSheet'
+	});
+	Actors.registerSheet('dnd5e', ObsidianVehicle, {
+		types: ['vehicle'],
+		makeDefault: true,
+		label: 'OBSIDIAN.VehicleSheet'
+	});
+	Items.registerSheet('dnd5e', ObsidianClassSheet, {
+		types: ['class'],
+		makeDefault: true,
+		label: 'OBSIDIAN.ClassSheet'
+	});
 	Items.registerSheet('dnd5e', ObsidianEffectSheet, {
 		types: ['weapon', 'equipment', 'consumable', 'backpack', 'feat', 'spell', 'tool', 'loot'],
-		makeDefault: true
+		makeDefault: true,
+		label: 'OBSIDIAN.ItemSheet'
 	});
 
 	patchItem_prepareData();

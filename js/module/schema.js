@@ -1,6 +1,6 @@
 export const Schema = {};
 
-Schema.VERSION = 12;
+Schema.VERSION = 13;
 
 Schema.Actor = {
 	attributes: {
@@ -17,8 +17,7 @@ Schema.Actor = {
 		hpMaxMod: 0,
 		init: {
 			ability: 'dex'
-		},
-		senses: {}
+		}
 	},
 	defenses: {
 		damage: [],

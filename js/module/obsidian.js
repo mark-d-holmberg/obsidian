@@ -183,6 +183,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		data.actor.obsidian.tempEffects =
 			data.actor.obsidian.feats.filter(feat => feat.flags.obsidian?.activeEffect);
 
+		Sheet.getSenses(data);
 		console.debug(data);
 		return data;
 	}

@@ -237,12 +237,12 @@
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Senses"
 				     data-npc="true">
 					<strong>{{localize 'OBSIDIAN.Senses'}}</strong>
-					{{#if (not-empty actor.flags.obsidian.attributes.senses)}}
-						{{#each actor.flags.obsidian.attributes.senses}}
-							{{#if radius}}
+					{{#if hasSenses}}
+						{{#each senses}}
+							{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
 							<div class="obsidian-npc-stat-li">
-								{{lc (i18n-join 'OBSIDIAN.Sense-' @key)}}
-								{{radius}}
+								{{lc this}}
+								{{lookup ../data.attributes.senses @key}}
 								{{localize 'OBSIDIAN.FeetAbbr'~}}
 							</div>
 							{{/if}}

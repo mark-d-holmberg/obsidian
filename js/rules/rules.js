@@ -200,7 +200,6 @@ Rules.PROFICIENCY_LEVELS = {
 
 Rules.RESOURCE_USES = ['fixed', 'formula'];
 Rules.ROLL = ['reg', 'adv', 'dis'];
-Rules.SENSES = ['dark', 'blind', 'tremor', 'true'];
 Rules.SKILLS = [
 	'acr', 'ani', 'arc', 'ath', 'dec', 'his', 'ins', 'inv', 'itm', 'med', 'nat', 'per', 'prc',
 	'prf', 'rel', 'slt', 'ste', 'sur'

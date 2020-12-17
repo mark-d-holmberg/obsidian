@@ -63,4 +63,8 @@
 			</select>
 		</div>
 	</fieldset>
+	<label class="obsidian-label-lg">{{localize 'OBSIDIAN.Description'}}</label>
+	<div class="obsidian-rich-text">
+		{{tinymce content=item.data.description.value target='data.description.value' rollData=rollData}}
+	</div>
 </form>

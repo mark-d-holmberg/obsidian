@@ -23,6 +23,12 @@ export class ObsidianSensesDialog extends ObsidianDialog {
 		ObsidianDialog.recalculateHeight(html);
 	}
 
+	getData () {
+		const data = super.getData();
+		data.senses = game.dnd5e.config.senses;
+		return data;
+	}
+
 	/**
 	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
