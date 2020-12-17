@@ -498,22 +498,22 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		const range = this.element.find('.obsidian-range-part');
 		const consume = this.element.find('[data-bound="flags.obsidian.consumeThrown"]');
-		const magic = this.element.find('[data-bound="flags.obsidian.magical"]');
+		const magic = this.element.find('.obsidian-magic-item');
 
 		range.addClass('obsidian-hidden');
 		consume.addClass('obsidian-hidden');
-		magic.attr('style', 'margin-left: 0;')
+		magic.removeClass('obsidian-stacked-row');
 		const thrown = this.element.find('input[name="flags.obsidian.tags.thrown"]');
 
 		if (thrown.length && thrown.prop('checked')) {
 			range.removeClass('obsidian-hidden');
 			consume.removeClass('obsidian-hidden');
-			magic.attr('style', '');
+			magic.addClass('obsidian-stacked-row');
 		}
 
 		if (this.item.data.flags.obsidian?.type === 'ranged') {
 			range.removeClass('obsidian-hidden');
-			magic.attr('style', '');
+			magic.addClass('obsidian-stacked-row');
 		}
 	}
 

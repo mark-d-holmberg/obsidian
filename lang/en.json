@@ -987,5 +987,13 @@
 	"OBSIDIAN.NPCSheet": "Obsidian NPC Sheet",
 	"OBSIDIAN.VehicleSheet": "Obsidian Vehicle Sheet",
 	"OBSIDIAN.ClassSheet": "Obsidian Class Sheet",
-	"OBSIDIAN.ItemSheet": "Obsidian Item Sheet"
+	"OBSIDIAN.ItemSheet": "Obsidian Item Sheet",
+	"OBSIDIAN.Rarity-c": "Common",
+	"OBSIDIAN.Rarity-uc": "Uncommon",
+	"OBSIDIAN.Rarity-r": "Rare",
+	"OBSIDIAN.Rarity-vr": "Very Rare",
+	"OBSIDIAN.Rarity-l": "Legendary",
+	"OBSIDIAN.Rarity-a": "Artefact",
+	"OBSIDIAN.Subrarity-min": "Minor",
+	"OBSIDIAN.Subrarity-maj": "Major"
 }
