@@ -1,6 +1,8 @@
 {
 	"OBSIDIAN.ConfigNumDiceHead": "Only roll one die",
 	"OBSIDIAN.ConfigNumDiceMessage": "If enabled, obsidian will only roll a single d20 by default, instead of always rolling 2d20.",
+	"OBSIDIAN.ConfigEncumbrance": "Use Variant Encumbrance",
+	"OBSIDIAN.ConfigEncumbranceMessage": "If enabled, obsidian will use the variant encumbrance rules for calculating carrying capacity and armour strength requirements.",
 	"OBSIDIAN.PersonalityTraits": "Personality Traits",
 	"OBSIDIAN.Ideals": "Ideals",
 	"OBSIDIAN.Bonds": "Bonds",
@@ -399,6 +401,8 @@
 	"OBSIDIAN.View": "View",
 	"OBSIDIAN.OverCapacity": "Over Carrying Capacity",
 	"OBSIDIAN.WithinCapacity": "Within Capacity",
+	"OBSIDIAN.Encumbered": "Encumbered",
+	"OBSIDIAN.HeavilyEncumbered": "Heavily Encumbered",
 	"OBSIDIAN.Unencumbered": "Unencumbered",
 	"OBSIDIAN.WeightCarried": "Weight Carried",
 	"OBSIDIAN.Currency": "Currency",

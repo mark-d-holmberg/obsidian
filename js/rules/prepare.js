@@ -419,6 +419,24 @@ export const Prepare = {
 				.some(effect => effect && Effect.isConcentration(derived, effect));
 	},
 
+	encumbrance: function (data, derived) {
+		const inventory = derived.inventory;
+		const str = data.abilities.str.value;
+		const thresholds = Rules.ENCUMBRANCE_THRESHOLDS;
+		const variant = game.settings.get('obsidian', 'encumbrance');
+		const sizeMod = Rules.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
+
+		inventory.encumbered = false;
+		inventory.heavilyEncumbered = false;
+		inventory.overCapacity =
+			inventory.weight >= str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier;
+
+		if (variant) {
+			inventory.encumbered = inventory.weight >= str * thresholds.encumbered;
+			inventory.heavilyEncumbered = inventory.weight >= str * thresholds.heavy;
+		}
+	},
+
 	hd: function (flags, derived) {
 		const classHD = {};
 		const existingHD = flags.attributes.hd;

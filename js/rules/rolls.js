@@ -19,8 +19,11 @@ const DMG_COLOURS = {
 export const Rolls = {
 	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
 		if (!skill) {
-			rollMod = Effect.determineRollMods(actor, rollMod, mode =>
-				Filters.appliesTo.abilityChecks(ability, mode));
+			rollMod =
+				Effect.determineRollMods(
+					actor,
+					Effect.combineRollMods([rollMod, Effect.encumbranceRollMod(actor, ability)]),
+					mode =>	Filters.appliesTo.abilityChecks(ability, mode));
 
 			mods.push({
 				mod: actor.data.data.abilities[ability].mod,
@@ -856,7 +859,9 @@ export const Rolls = {
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
-				Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
+				Effect.combineRollMods([
+					Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
+					Effect.encumbranceRollMod(actor, flags.attributes.init.ability)]),
 				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
@@ -1175,7 +1180,9 @@ export const Rolls = {
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
-				Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
+				Effect.combineRollMods([
+					Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
+					Effect.encumbranceRollMod(actor, save)]),
 				mode => Filters.appliesTo.savingThrows(save, mode));
 
 		return Rolls.simpleRoll(actor, {
@@ -1223,7 +1230,9 @@ export const Rolls = {
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
-				Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
+				Effect.combineRollMods([
+					Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
+					Effect.encumbranceRollMod(actor, skill.ability)]),
 				mode => filter(skill.key, skill.ability, mode));
 
 		return Rolls.abilityCheck(actor, skill.ability, skill.label, skill.rollParts, rollMod);
@@ -1301,7 +1310,11 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraMods = []) {
-		const rollMods = [Effect.sheetGlobalRollMod(actor)];
+		const rollMods = [
+			Effect.sheetGlobalRollMod(actor),
+			Effect.encumbranceRollMod(actor, hit.ability)
+		];
+
 		if (hit.rollMod) {
 			rollMods.push(hit.rollMod);
 		}

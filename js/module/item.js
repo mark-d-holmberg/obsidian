@@ -71,12 +71,12 @@ function prepareData (item) {
 
 const prepareItem = {
 	backpack: function (item, data, flags, derived) {
-		if (flags.currency) {
-			const currencyWeight =
-				Object.values(flags.currency).reduce((acc, currency) => acc + currency, 0)
-				* Rules.COIN_WEIGHT;
+		if (flags.currency && game.settings.get('dnd5e', 'currencyWeight')) {
+			const coins =
+				Object.values(flags.currency).reduce((acc, currency) =>
+					acc + Math.max(currency, 0), 0);
 
-			derived.carriedWeight += currencyWeight;
+			derived.carriedWeight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight;
 		}
 	},
 

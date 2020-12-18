@@ -11,8 +11,6 @@ Rules.ALIGNMENT_PARTS_1 = ['l', 'c'];
 Rules.ALIGNMENT_PARTS_2 = ['g', 'n', 'e', 'u'];
 Rules.ATTACK_TYPES = ['melee', 'ranged'];
 Rules.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
-Rules.CARRY_MULTIPLIER = 15;
-Rules.COIN_WEIGHT = 0.02;
 Rules.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear'];
 Rules.CLASSES = [
 	'art', 'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz',
@@ -142,6 +140,8 @@ Rules.EFFECT_SAVE = ['half', 'none'];
 Rules.EFFECT_SCALING_METHODS = ['spell', 'cantrip', 'resource', 'level', 'class'];
 Rules.EFFECT_TARGETS = ['self', 'individual', 'area'];
 Rules.EFFECT_TARGETS_AREA = ['cone', 'cube', 'cylinder', 'line', 'sphere'];
+Rules.ENCUMBRANCE_SIZE_MOD = {tiny: 0.5, sm: 1, med: 1, lg: 2, huge: 4, grg: 8};
+Rules.ENCUMBRANCE_THRESHOLDS = {encumbered: 5, heavy: 10};
 Rules.FEAT_ACTION = ['none', 'action', 'bonus', 'reaction', 'special'];
 Rules.FEAT_TRIGGERS = ['hit', 'start'];
 Rules.FEAT_SOURCE_TYPES = ['class', 'race', 'feat', 'other'];

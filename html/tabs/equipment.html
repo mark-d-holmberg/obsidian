@@ -6,9 +6,15 @@
 				<span>{{numberFormat actor.obsidian.inventory.weight decimals=2}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
-			<div{{#if actor.obsidian.inventory.encumbered}} class="obsidian-negative"{{/if}}>
-				{{#if actor.obsidian.inventory.encumbered}}
+			<div{{#if (or actor.obsidian.inventory.encumbered
+					          actor.obsidian.inventory.heavilyEncumbered
+					          actor.obsidian.inventory.overCapacity)}} class="obsidian-negative"{{/if}}>
+				{{#if actor.obsidian.inventory.overCapacity}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
+				{{else if actor.obsidian.inventory.heavilyEncumbered}}
+					{{localize 'OBSIDIAN.HeavilyEncumbered'}}
+				{{else if actor.obsidian.inventory.encumbered}}
+					{{localize 'OBSIDIAN.Encumbered'}}
 				{{else}}
 					{{localize 'OBSIDIAN.Unencumbered'}}
 				{{/if}}

@@ -125,6 +125,7 @@ export class ObsidianActor extends Actor5e {
 
 		Prepare.saves(this.data, data, flags, derived, originalSaves);
 		Prepare.armour(data, flags, derived);
+		Prepare.encumbrance(data, derived);
 
 		if (this.data.type === 'character') {
 			Prepare.hd(flags, derived);
@@ -135,7 +136,6 @@ export class ObsidianActor extends Actor5e {
 	_collateOwnedItems (actorDerived, items) {
 		actorDerived.inventory = {
 			weight: 0,
-			encumbered: false,
 			attunements: 0,
 			items: [],
 			root: [],
@@ -282,7 +282,7 @@ export class ObsidianActor extends Actor5e {
 		for (const item of inventory.items) {
 			const data = item.data;
 			const flags = item.flags.obsidian;
-			const totalWeight = data.weight * (data.quantity || 1);
+			const totalWeight = (data.weight || 0) * (data.quantity ?? 1);
 
 			if (flags.attunement && data.attuned) {
 				inventory.attunements++;
@@ -311,12 +311,12 @@ export class ObsidianActor extends Actor5e {
 			}
 		}
 
-		inventory.weight +=
-			Object.values(actorData.currency).reduce((acc, currency) => acc + currency, 0)
-			* Rules.COIN_WEIGHT;
+		if (game.settings.get('dnd5e', 'currencyWeight')) {
+			const coins =
+				Object.values(actorData.currency).reduce((acc, currency) =>
+					acc + Math.max(currency, 0), 0);
 
-		if (inventory.weight >= actorData.abilities.str.value * Rules.CARRY_MULTIPLIER) {
-			inventory.encumbered = true;
+			inventory.weight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight;
 		}
 
 		const sort = (a, b) => a.sort - b.sort;

@@ -365,7 +365,7 @@ export const Effect = {
 
 	combineRollMods: mods => {
 		if (!mods.length) {
-			mods.push({min: 1, reroll: 1, ndice: 0, mode: 'reg', max: false, mcrit: 20});
+			mods.push(Effect.makeModeRollMod('reg'));
 		}
 
 		return {
@@ -410,10 +410,22 @@ export const Effect = {
 	},
 
 	makeModeRollMod: modes => {
-		return {min: 1, reroll: 1, ndice: 0, mcrit: 20, mode: [].concat(modes)}
+		return {min: 1, reroll: 1, ndice: 0, mcrit: 20, max: false, mode: [].concat(modes)}
 	},
 
 	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),
+
+	encumbranceRollMod: (actor, ability) => {
+		const inventory = actor.data.obsidian.inventory;
+		const variant = game.settings.get('obsidian', 'encumbrance');
+		let mode = 'reg';
+
+		if (variant && inventory.heavilyEncumbered && ['str', 'dex', 'con'].includes(ability)) {
+			mode = 'dis';
+		}
+
+		return Effect.makeModeRollMod(mode);
+	},
 
 	filterDamage: (actorData, filter, dmg) => {
 		let attackPred = filter => Filters.damage.isAttack(filter) && filter.multi === 'any';
