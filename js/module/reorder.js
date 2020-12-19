@@ -58,11 +58,9 @@ export const Reorder = {
 			return false;
 		}
 
-		const items = actor.data.items;
-		const idData = event.dataTransfer.types.find(type => type === 'item-id');
-
-		let srcID;
 		let data;
+		let srcID;
+		const idData = event.dataTransfer.types.find(type => type === 'item-id');
 
 		try {
 			data = JSON.parse(event.dataTransfer.getData('text/plain'));
@@ -119,14 +117,14 @@ export const Reorder = {
 		const half = Reorder.whichHalf(event, target);
 		const where = half === 'bottom' ? 'after' : 'before';
 		const destID = target?.dataset.itemId;
-		const dest = items.find(item => item._id === destID);
+		const dest = actor.items.get(destID);
 		const update = {};
 
 		if (idData) {
 			if (srcID === destID) {
 				return false;
 			} else {
-				src = items.find(item => item._id === srcID);
+				src = actor.items.get(srcID);
 				if (!src) {
 					return false;
 				}
@@ -137,7 +135,7 @@ export const Reorder = {
 			return false;
 		}
 
-		Reorder.insert(actor, src, dest, where, update);
+		Reorder.insert(actor, src.data, dest?.data, where, update);
 		actor.update(OBSIDIAN.updateArrays(actor.data, update), {diff: false});
 		return false;
 	},

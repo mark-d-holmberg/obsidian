@@ -195,7 +195,7 @@ export const Sheet = {
 
 	deleteItem: async function (sheet, el) {
 		const id = el.data('item-id');
-		const item = sheet.actor.data.items.find(item => item._id === id);
+		const item = sheet.actor.items.get(id);
 		await sheet.actor.deleteEmbeddedEntity('OwnedItem', id);
 		sheet.actor.updateEquipment(item);
 	},
@@ -446,16 +446,16 @@ export const Sheet = {
 
 	onEquip: function (sheet, evt) {
 		const id = $(evt.currentTarget).closest('.obsidian-tr').data('item-id');
-		const item = sheet.actor.data.items.find(item => item._id === id);
+		const item = sheet.actor.items.get(id);
 
-		if (!item || !item.flags.obsidian) {
+		if (!item || !item.data.flags.obsidian) {
 			return;
 		}
 
-		if (item.obsidian.equippable) {
+		if (item.data.obsidian.equippable) {
 			sheet.actor.updateEmbeddedEntity(
 				'OwnedItem',
-				{_id: id, 'data.equipped': !item.data.equipped});
+				{_id: id, 'data.equipped': !item.data.data.equipped});
 		} else {
 			evt.currentTarget.dataset.roll = 'item';
 			evt.currentTarget.dataset.id = id;

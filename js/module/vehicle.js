@@ -99,7 +99,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		data.availableCrew = data.actor.data.cargo.crew.map(crew => crew.name);
 		data.availableCrew.sort();
 
-		for (const item of data.actor.items) {
+		for (const item of data.items) {
 			let cat;
 			if (item.type === 'feat') {
 				cat = item.data.activation.type;

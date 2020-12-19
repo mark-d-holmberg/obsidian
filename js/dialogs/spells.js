@@ -61,9 +61,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		Object.keys(data.spellsByClass)
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
 
-		for (const spell of Object.values(
-			data.actor.items.filter(item => item.type === 'spell')))
-		{
+		for (const spell of Object.values(data.items.filter(item => item.type === 'spell'))) {
 			const flags = spell.flags.obsidian;
 			if (!flags || !flags.source || !['class', 'item'].includes(flags.source.type)) {
 				data.actor.obsidian.spells.custom.push(spell);
@@ -236,7 +234,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		let spell;
 
 		if (owned) {
-			spell = this.parent.actor.data.items.find(item => item._id === id);
+			spell = this.parent.actor.items.get(id)?.data;
 		} else {
 			if (OBSIDIAN.Data.SPELLS_BY_CLASS[list]) {
 				spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);

@@ -17,7 +17,8 @@ export function patchItem_prepareData () {
 			}
 
 			cached.apply(this, arguments);
-			if (OBSIDIAN.isMigrated()) {
+			if (OBSIDIAN.isMigrated() && !this.isOwnedByActor()) {
+				// Owned items will be prepared at a later stage.
 				prepareData(this);
 				prepareEffects(this);
 			}
@@ -27,6 +28,13 @@ export function patchItem_prepareData () {
 	// For compatibility with item collection.
 	Item5e.prototype.isOwnedByActor = function () {
 		return this.isOwned && this.actor instanceof Actor;
+	};
+
+	Item5e.prototype.prepareObsidianEffects = function () {
+		if (OBSIDIAN.isMigrated()) {
+			prepareData(this);
+			prepareEffects(this);
+		}
 	};
 }
 

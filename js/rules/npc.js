@@ -54,12 +54,12 @@ export async function refreshNPC (combat) {
 	}
 
 	const itemUpdates = [];
-	for (const item of actor.data.items) {
-		if (!getProperty(item, 'flags.obsidian.effects.length')) {
+	for (const item of actor.items) {
+		if (!getProperty(item.data, 'flags.obsidian.effects.length')) {
 			continue;
 		}
 
-		for (const effect of item.flags.obsidian.effects) {
+		for (const effect of item.data.flags.obsidian.effects) {
 			for (const component of effect.components) {
 				if (component.type !== 'resource'
 					|| component.recharge.time !== 'roll'
@@ -68,7 +68,7 @@ export async function refreshNPC (combat) {
 					continue;
 				}
 
-				const recharge = Rolls.abilityRecharge(item, effect, component);
+				const recharge = Rolls.abilityRecharge(item.data, effect, component);
 				Rolls.toChat(actor, recharge);
 
 				if (recharge.flags.obsidian.addendum.success) {
@@ -77,8 +77,8 @@ export async function refreshNPC (combat) {
 						+ `.components.${component.idx}.remaining`;
 
 					itemUpdates.push(
-						OBSIDIAN.updateArrays(item, {
-							_id: item._id,
+						OBSIDIAN.updateArrays(item.data, {
+							_id: item.data._id,
 							[`${updateKey}`]: component.max
 						}));
 				}

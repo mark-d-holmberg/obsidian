@@ -79,58 +79,6 @@ export class ObsidianActor extends Actor5e {
 		} else {
 			prepareNPC(flags, derived);
 		}
-
-		const items = this.data.items || [];
-		derived.itemsByType.partition(items, item => item.type);
-		this._collateOwnedItems(derived, items);
-
-		if (this.data.type === 'character') {
-			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
-		}
-
-		derived.filters = {
-			mods: Filters.mods(derived.toggleable),
-			bonuses: Filters.bonuses(derived.toggleable),
-			setters: Filters.setters(derived.toggleable)
-		};
-
-		let originalSkills;
-		let originalSaves;
-
-		if (this.isPolymorphed) {
-			const transformOptions = this.getFlag('dnd5e', 'transformOptions');
-			const original = game.actors?.get(this.getFlag('dnd5e', 'originalActor'));
-
-			if (original) {
-				if (transformOptions.mergeSaves) {
-					originalSaves = original.data.data.abilities;
-				}
-
-				if (transformOptions.mergeSkills) {
-					originalSkills = original.data.obsidian.skills;
-				}
-			}
-		}
-
-		this._prepareInventory(data, derived.inventory, derived.itemsByID);
-		applyProfBonus(this.data);
-		Prepare.abilities(this.data, data, flags, derived);
-		Prepare.ac(data, flags, derived);
-		Prepare.init(data, flags, derived);
-		Prepare.conditions(this.data, data, flags, derived);
-
-		if (this.data.type !== 'vehicle') {
-			Prepare.skills(this.data, data, flags, derived, originalSkills);
-		}
-
-		Prepare.saves(this.data, data, flags, derived, originalSaves);
-		Prepare.armour(data, flags, derived);
-		Prepare.encumbrance(data, derived);
-
-		if (this.data.type === 'character') {
-			Prepare.hd(flags, derived);
-			Prepare.tools(this.data, data, flags, derived);
-		}
 	}
 
 	_collateOwnedItems (actorDerived, items) {
@@ -240,6 +188,75 @@ export class ObsidianActor extends Actor5e {
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
 		const derived = this.data.obsidian;
+		const items = (this.items || []).map(i => i.data);
+
+		derived.itemsByType.partition(items, item => item.type);
+		this._collateOwnedItems(derived, items);
+
+		if (this.data.type === 'character') {
+			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
+		}
+
+		derived.filters = {
+			mods: Filters.mods(derived.toggleable),
+			bonuses: Filters.bonuses(derived.toggleable),
+			setters: Filters.setters(derived.toggleable)
+		};
+
+		let originalSkills;
+		let originalSaves;
+
+		if (this.isPolymorphed) {
+			const transformOptions = this.getFlag('dnd5e', 'transformOptions');
+			const original = game.actors?.get(this.getFlag('dnd5e', 'originalActor'));
+
+			if (original) {
+				if (transformOptions.mergeSaves) {
+					originalSaves = original.data.data.abilities;
+				}
+
+				if (transformOptions.mergeSkills) {
+					originalSkills = original.data.obsidian.skills;
+				}
+			}
+		}
+
+		this._prepareInventory(data, derived.inventory, derived.itemsByID);
+		applyProfBonus(this.data);
+		Prepare.abilities(this.data, data, flags, derived);
+		Prepare.ac(data, flags, derived);
+		Prepare.init(data, flags, derived);
+		Prepare.conditions(this.data, data, flags, derived);
+
+		if (this.data.type !== 'vehicle') {
+			Prepare.skills(this.data, data, flags, derived, originalSkills);
+		}
+
+		Prepare.saves(this.data, data, flags, derived, originalSaves);
+		Prepare.armour(data, flags, derived);
+		Prepare.encumbrance(data, derived);
+
+		if (this.data.type === 'character') {
+			Prepare.hd(flags, derived);
+			Prepare.tools(this.data, data, flags, derived);
+		}
+
+		// We have a complicated preparation workflow where item and actor
+		// preparation depend on each other. So we must prepare items once,
+		// then perform some actor preparation, then prepare the items again
+		// with the now-updated actor data.
+		const nonClassItems = this.items.reduce((acc, item) => {
+			// Make sure we prepare class items first.
+			if (item.data.type === 'class') {
+				item.prepareObsidianEffects();
+				return acc;
+			}
+
+			acc.push(item);
+			return acc;
+		}, []);
+
+		nonClassItems.forEach(item => item.prepareObsidianEffects());
 
 		for (const [id, abl] of Object.entries(data.abilities)) {
 			abl.mod = Math.floor((derived.abilities[id].value - 10) / 2);
@@ -254,11 +271,11 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		derived.attacks =
-			this.data.items.filter(item =>
-				item.obsidian?.collection.attack.length
-				&& (item.type !== 'weapon' || item.data.equipped)
-				&& (item.type !== 'spell' || item.obsidian?.visible))
-				.flatMap(item => item.obsidian.collection.attack);
+			this.items.filter(item =>
+				item.data.obsidian?.collection.attack.length
+				&& (item.data.type !== 'weapon' || item.data.data.equipped)
+				&& (item.data.type !== 'spell' || item.data.obsidian?.visible))
+				.flatMap(item => item.data.obsidian.collection.attack);
 
 		prepareDefenses(data, flags, derived);
 		prepareToggleableEffects(this.data);
@@ -488,7 +505,7 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	getItemParent (item) {
-		return this.data.items.find(other => other._id === item?.flags.obsidian.parent);
+		return this.items.get(item?.flags.obsidian.parent)?.data;
 	}
 
 	rollHD (rolls) {
@@ -609,8 +626,8 @@ export class ObsidianActor extends Actor5e {
 	async updateEquipment (deleted) {
 		if (deleted) {
 			const update = {};
-			if (deleted.type === 'backpack') {
-				deleted.obsidian.contents.forEach(item => {
+			if (deleted.data.type === 'backpack') {
+				deleted.data.obsidian.contents.forEach(item => {
 					update[`items.${item.idx}.flags.obsidian.parent`] = null;
 				});
 			}
@@ -645,13 +662,13 @@ export class ObsidianActor extends Actor5e {
 	 */
 	_resourceUpdates (validTimes) {
 		const itemUpdates = [];
-		for (const item of this.data.items) {
-			if (!getProperty(item, 'flags.obsidian.effects.length')) {
+		for (const item of this.items) {
+			if (!getProperty(item.data, 'flags.obsidian.effects.length')) {
 				continue;
 			}
 
-			const updates = {_id: item._id};
-			for (const effect of item.flags.obsidian.effects) {
+			const updates = {_id: item.data._id};
+			for (const effect of item.data.flags.obsidian.effects) {
 				for (const component of effect.components) {
 					if (component.type !== 'resource'
 						|| !validTimes.includes(component.recharge.time)
@@ -660,12 +677,12 @@ export class ObsidianActor extends Actor5e {
 						continue;
 					}
 
-					this._recharge(item, effect, component, updates);
+					this._recharge(item.data, effect, component, updates);
 				}
 			}
 
 			if (Object.keys(updates).length > 1) {
-				itemUpdates.push(OBSIDIAN.updateArrays(item, updates));
+				itemUpdates.push(OBSIDIAN.updateArrays(item.data, updates));
 			}
 		}
 
