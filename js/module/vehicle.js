@@ -92,6 +92,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	getData () {
 		const data = super.getData();
 		const type = data.actor.flags.obsidian.details.type;
+		data.items = this.actor.items.map(i => duplicate(i.data));
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.landVehicle = type === 'land';
 		data.waterVehicle = !type || type === 'water';
