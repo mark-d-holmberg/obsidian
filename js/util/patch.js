@@ -114,7 +114,7 @@ OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 		items.forEach(item => {
 			const update = byID.get(item._id);
 			if (update) {
-				mergeObject(item, update);
+				mergeObject(item, OBSIDIAN.updateArrays(item, update));
 			}
 		});
 
