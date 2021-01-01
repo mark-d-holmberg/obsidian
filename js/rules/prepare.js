@@ -105,6 +105,14 @@ export const Prepare = {
 		component.value =
 			Math.floor(bonus + component.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
+		const multipliers = actorData?.obsidian?.filters.multipliers(pred(component)) || [];
+		if (multipliers.length) {
+			component.value =
+				Math.floor(
+					component.value
+					* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
+		}
+
 		const setters = actorData?.obsidian?.filters.setters(pred(component)) || [];
 		if (setters.length) {
 			const setter = Effect.combineSetters(setters);
@@ -330,6 +338,14 @@ export const Prepare = {
 				derived.abilities[id].value = Math.floor(derived.abilities[id].value);
 			}
 
+			const multipliers = derived.filters.multipliers(Filters.appliesTo.abilityScores(id));
+			if (multipliers.length) {
+				derived.abilities[id].value =
+					Math.floor(
+						derived.abilities[id].value
+						* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
+			}
+
 			const abilitySetters = derived.filters.setters(Filters.appliesTo.abilityScores(id));
 			if (abilitySetters.length) {
 				const setter = Effect.combineSetters(abilitySetters);
@@ -419,17 +435,37 @@ export const Prepare = {
 				.some(effect => effect && Effect.isConcentration(derived, effect));
 	},
 
-	encumbrance: function (data, derived) {
+	encumbrance: function (actorData, data, derived) {
 		const inventory = derived.inventory;
-		const str = data.abilities.str.value;
+		const str = derived.abilities.str.value;
 		const thresholds = Rules.ENCUMBRANCE_THRESHOLDS;
 		const variant = game.settings.get('obsidian', 'encumbrance');
 		const sizeMod = Rules.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
+		const bonuses = derived.filters.bonuses(Filters.isCarry);
+		const setters = derived.filters.setters(Filters.isCarry);
+		const multipliers = derived.filters.multipliers(Filters.isCarry);
+		inventory.max = str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier;
+
+		if (bonuses.length) {
+			inventory.max +=
+				bonuses.flatMap(bonus => bonusToParts(actorData, bonus))
+					.reduce((acc, part) => acc + part.mod, 0);
+		}
+
+		if (multipliers.length) {
+			inventory.max *= multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1);
+		}
+
+		if (setters.length) {
+			const setter = Effect.combineSetters(setters);
+			if (!setter.min || setter.score > inventory.max) {
+				inventory.max = setter.score;
+			}
+		}
 
 		inventory.encumbered = false;
 		inventory.heavilyEncumbered = false;
-		inventory.overCapacity =
-			inventory.weight >= str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier;
+		inventory.overCapacity = inventory.weight >= inventory.max;
 
 		if (variant) {
 			inventory.encumbered = inventory.weight >= str * thresholds.encumbered;
@@ -599,6 +635,14 @@ export const Prepare = {
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
 				skill.passive = Math.floor(skill.passive);
+			}
+
+			const multipliers = derived.filters.multipliers(Filters.appliesTo.passiveScores(key));
+			if (multipliers.length) {
+				skill.passive =
+					Math.floor(
+						skill.passive
+						* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
 			}
 
 			const passiveSetters = derived.filters.setters(Filters.appliesTo.passiveScores(key));

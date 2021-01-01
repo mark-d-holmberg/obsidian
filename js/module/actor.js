@@ -200,7 +200,8 @@ export class ObsidianActor extends Actor5e {
 		derived.filters = {
 			mods: Filters.mods(derived.toggleable),
 			bonuses: Filters.bonuses(derived.toggleable),
-			setters: Filters.setters(derived.toggleable)
+			setters: Filters.setters(derived.toggleable),
+			multipliers: Filters.multipliers(derived.toggleable)
 		};
 
 		let originalSkills;
@@ -234,7 +235,7 @@ export class ObsidianActor extends Actor5e {
 
 		Prepare.saves(this.data, data, flags, derived, originalSaves);
 		Prepare.armour(data, flags, derived);
-		Prepare.encumbrance(data, derived);
+		Prepare.encumbrance(this.data, data, derived);
 
 		if (this.data.type === 'character') {
 			Prepare.hd(flags, derived);

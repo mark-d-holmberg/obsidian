@@ -10,6 +10,7 @@ export function prepareToggleableEffects (actorData) {
 			oxfordComma(
 				effect.active.bonus.map(bonus => formatBonus(actorData, bonus))
 					.concat(effect.active['roll-mod'].map(formatRollMod))
+					.concat(effect.active.multiplier.map(formatMultiplier))
 					.concat(effect.active.setter.map(formatSetter))
 					.concat(formatDefenses(effect.active.defense))
 					.filter(part => part.length))
@@ -17,7 +18,10 @@ export function prepareToggleableEffects (actorData) {
 
 		if (effect.filters.length) {
 			let preposition = 'OBSIDIAN.On';
-			if (!effect.active['roll-mod'].length && !effect.active.setter.length) {
+			if (!effect.active['roll-mod'].length
+				&& !effect.active.setter.length
+				&& !effect.active.multiplier.length)
+			{
 				preposition = 'OBSIDIAN.To';
 			}
 
@@ -223,6 +227,8 @@ function formatFilter (filter) {
 			}
 		} else if (filter.score === 'prof') {
 			parts.push(localize('OBSIDIAN.ProfBonusLC'));
+		} else if (filter.score === 'carry') {
+			parts.push(localize('OBSIDIAN.Scores-carry'));
 		}
 	}
 
@@ -276,8 +282,12 @@ function formatRollMod (mod) {
 }
 
 function formatSetter (setter) {
-	return localize(`OBSIDIAN.SetScoreTo`)
+	return localize('OBSIDIAN.SetScoreTo')
 		.format(setter.score, setter.min ? ` ${localize('OBSIDIAN.IfNotHigher')}` : '');
+}
+
+function formatMultiplier (multiplier) {
+	return localize('OBSIDIAN.MultipliesScoreBy').format(multiplier.multiplier);
 }
 
 function formatDefenses (defs) {

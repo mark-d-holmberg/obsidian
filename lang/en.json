@@ -651,6 +651,7 @@
 	"OBSIDIAN.Scores-prof": "Proficiency",
 	"OBSIDIAN.Scores-speed": "Speed",
 	"OBSIDIAN.Scores-dc": "Save DC",
+	"OBSIDIAN.Scores-carry": "Carrying Capacity",
 	"OBSIDIAN.Multi-any": "Any",
 	"OBSIDIAN.Multi-some": "Some",
 	"OBSIDIAN.Attack-mw": "Melee Weapon",
@@ -999,5 +1000,8 @@
 	"OBSIDIAN.Rarity-l": "Legendary",
 	"OBSIDIAN.Rarity-a": "Artefact",
 	"OBSIDIAN.Subrarity-min": "Minor",
-	"OBSIDIAN.Subrarity-maj": "Major"
+	"OBSIDIAN.Subrarity-maj": "Major",
+	"OBSIDIAN.MultiplyScore": "Multiply Score",
+	"OBSIDIAN.Multiplier": "Multiplier",
+	"OBSIDIAN.MultipliesScoreBy": "Multiplies scores by {0}"
 }

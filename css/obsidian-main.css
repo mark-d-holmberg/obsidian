@@ -640,9 +640,12 @@ h3 > div > .obsidian-feature-recharge {
 	text-align: left;
 }
 
-.obsidian-char-inv-header-weight > div:first-child > span:first-child {
+.obsidian-char-inv-header-weight > div:first-child > span {
 	font-family: var(--font);
 	font-weight: normal;
+}
+
+.obsidian-char-inv-header-weight > div:first-child > span:first-child {
 	margin-left: 5px;
 }
 

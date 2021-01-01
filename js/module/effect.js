@@ -179,6 +179,16 @@ export const Components = {
 			addons: ['uses-ability']
 		}
 	},
+	multiplier: {
+		data: {
+			type: 'multiplier',
+			multiplier: 1
+		},
+		metadata: {
+			category: 'modifiers',
+			tray: 'MultiplyScore'
+		}
+	},
 	produce: {
 		data: {
 			type: 'produce',
@@ -328,7 +338,7 @@ export const Components = {
 export const Effect = {
 	metadata: {
 		components: Object.keys(Components),
-		active: new Set(['roll-mod', 'bonus', 'defense', 'setter']),
+		active: new Set(['roll-mod', 'bonus', 'defense', 'setter', 'multiplier']),
 		linked: ['applied', 'scaling'],
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([

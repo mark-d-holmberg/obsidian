@@ -4,6 +4,8 @@
 			<div>
 				{{localize 'OBSIDIAN.WeightCarried'}}:
 				<span>{{numberFormat actor.obsidian.inventory.weight decimals=2}}</span>
+				<span>&sol;</span>
+				<span>{{numberFormat actor.obsidian.inventory.max decimals=0}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
 			<div{{#if (or actor.obsidian.inventory.encumbered

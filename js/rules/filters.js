@@ -22,6 +22,7 @@ export const Filters = {
 	isSpeed: filter => filter.filter === 'score' && filter.score === 'speed',
 	isDC: filter => filter.filter === 'score' && filter.score === 'dc',
 	isProf: filter => filter.filter === 'score' && filter.score === 'prof',
+	isCarry: filter => filter.filter === 'score' && filter.score === 'carry',
 
 	rollingAt: (filter, mode) => OBSIDIAN.notDefinedOrEmpty(filter.mode) || filter.mode === mode,
 	usesAbility: (filter, abl) =>
@@ -36,6 +37,7 @@ export const Filters = {
 	mods: effects => pred => Filters.filterEffects(effects, 'roll-mod', pred),
 	bonuses: effects => pred => Filters.filterEffects(effects, 'bonus', pred),
 	setters: effects => pred => Filters.filterEffects(effects, 'setter', pred),
+	multipliers: effects => pred => Filters.filterEffects(effects, 'multiplier', pred),
 
 	appliesTo: {
 		abilityChecks: (ability, mode) => filter =>

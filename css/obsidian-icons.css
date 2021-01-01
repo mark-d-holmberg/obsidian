@@ -284,6 +284,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/roll-table.svg');
 }
 
+.obsidian-icon-comp-multiplier {
+	background-image: url('../img/multiplier.svg');
+}
+
 .obsidian-icon-npc {
 	background-image: url('../img/npc.svg');
 }
