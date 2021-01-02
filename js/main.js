@@ -108,6 +108,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 Hooks.on('renderHotbar', hotbarRender);
 Hooks.on('obsidian.actorsPrepared', () => ui.hotbar.render());
 Hooks.on('updateOwnedItem', () => ui.hotbar.render());
+Hooks.on('updateToken', () => ui.hotbar.render());
 
 addCompendiumContextMenuHook();
 addSettingsHook();
@@ -125,6 +126,23 @@ Hooks.on('preCreateItem', data => enrichItemFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, data) => {
 	enrichItemFlags(data);
 	actor.linkClasses(data);
+});
+
+Hooks.on('preUpdateToken', (scene, token, data) => {
+	// Synthetic actors do not fire createOwnedItem hooks so we need to
+	// simulate it here.
+	if (token.actorLink || data.actorData?.items == null) {
+		return true;
+	}
+
+	const actor = canvas.tokens.get(token.id)?.actor;
+	const existing = new Set(token.actorData.items.map(item => item._id));
+	data.actorData.items.filter(item => !existing.has(item._id)).forEach(item => {
+		enrichItemFlags(item);
+		if (actor) {
+			actor.linkClasses(item);
+		}
+	});
 });
 
 Hooks.on('updateCombat', async combat => {
