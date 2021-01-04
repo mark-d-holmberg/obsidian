@@ -4,13 +4,13 @@ import {Effect} from '../module/effect.js';
 
 export function applyBonuses (actorData, data, flags, derived) {
 	applySpeedBonuses(actorData, data, derived);
-	applyInitBonuses(actorData, flags, derived);
+	applyInitBonuses(actorData, data, flags, derived);
 	applyACBonuses(actorData, flags, derived);
 	applyHPBonuses(actorData, data, derived);
 	applySpellBonuses(actorData, derived);
 }
 
-function applyInitBonuses (actorData, flags, derived) {
+function applyInitBonuses (actorData, data, flags, derived) {
 	const bonuses =
 		derived.filters.bonuses(Filters.appliesTo.initiative(flags.attributes.init.ability));
 
