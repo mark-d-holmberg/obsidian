@@ -1,29 +1,29 @@
 :root {
-	--bg: #252830;
-	--mid: #434857;
-	--dark: black;
-	--light: white;
-	--select: #1997c6;
-	--border-subtle: rgba(0, 0, 0, .15);
-	--text-regular: #cfd2da;
-	--text-inverse: #495057;
-	--text-bright: white;
-	--text-secondary: #51586a;
-	--text-subtle: #999;
-	--text-placeholder: #6c757d;
-	--highlight: #c53131;
-	--highlight-rgba: rgba(197, 49, 49, .15);
-	--btn-positive: #40d250;
-	--btn-positive-hover: #2bb43a;
-	--btn-positive-inner: #218b2c;
-	--btn-negative: #c53131;
-	--btn-negative-hover: #9c2727;
-	--btn-negative-inner: #731d1d;
-	--negative: #c53131;
-	--positive: #40d250;
-	--horizontal-space: 10px;
-	--vertical-space: 20px;
-	--white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
+	--obs-bg: #252830;
+	--obs-mid: #434857;
+	--obs-dark: black;
+	--obs-light: white;
+	--obs-select: #1997c6;
+	--obs-border-subtle: rgba(0, 0, 0, .15);
+	--obs-text-regular: #cfd2da;
+	--obs-text-inverse: #495057;
+	--obs-text-bright: white;
+	--obs-text-secondary: #51586a;
+	--obs-text-subtle: #999;
+	--obs-text-placeholder: #6c757d;
+	--obs-highlight: #c53131;
+	--obs-highlight-rgba: rgba(197, 49, 49, .15);
+	--obs-btn-positive: #40d250;
+	--obs-btn-positive-hover: #2bb43a;
+	--obs-btn-positive-inner: #218b2c;
+	--obs-btn-negative: #c53131;
+	--obs-btn-negative-hover: #9c2727;
+	--obs-btn-negative-inner: #731d1d;
+	--obs-negative: #c53131;
+	--obs-positive: #40d250;
+	--obs-horizontal-space: 10px;
+	--obs-vertical-space: 20px;
+	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -40,9 +40,9 @@
 .obsidian-msg button,
 .dialog.obsidian-window button.dialog-button {
 	border-radius: 3px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	cursor: pointer;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian button.obsidian-btn-sm {
@@ -60,41 +60,41 @@
 
 .obsidian button.obsidian-btn-positive {
 	background-color: transparent;
-	color: var(--btn-positive);
-	border: 1px solid var(--btn-positive);
+	color: var(--obs-btn-positive);
+	border: 1px solid var(--obs-btn-positive);
 }
 
 .obsidian button.obsidian-btn-positive:hover {
-	box-shadow: inset 0 0 10px 2px var(--btn-positive-inner);
+	box-shadow: inset 0 0 10px 2px var(--obs-btn-positive-inner);
 }
 
 .obsidian button.obsidian-btn-negative {
 	background-color: transparent;
-	color: var(--btn-negative);
-	border: 1px solid var(--btn-negative);
+	color: var(--obs-btn-negative);
+	border: 1px solid var(--obs-btn-negative);
 }
 
 .obsidian button.obsidian-btn-negative:hover {
-	box-shadow: inset 0 0 10px 2px var(--btn-negative-inner);
+	box-shadow: inset 0 0 10px 2px var(--obs-btn-negative-inner);
 }
 
 .obsidian button.obsidian-btn-outline,
 .obsidian-msg button.obsidian-btn-outline,
 .dialog.obsidian-window button.dialog-button {
 	background: transparent;
-	border: 1px solid var(--highlight);
+	border: 1px solid var(--obs-highlight);
 }
 
 .obsidian button.obsidian-btn-outline:hover,
 .obsidian-msg button.obsidian-btn-outline:hover,
 .dialog.obsidian-window button.dialog-button:hover {
-	background: var(--dark);
-	color: var(--text-bright);
+	background: var(--obs-dark);
+	color: var(--obs-text-bright);
 }
 
 .obsidian button:disabled {
-	border: 1px solid var(--mid);
-	color: var(--text-secondary);
+	border: 1px solid var(--obs-mid);
+	color: var(--obs-text-secondary);
 	cursor: default;
 }
 
@@ -104,31 +104,31 @@
 }
 
 .obsidian select {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	background: transparent;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	border-radius: 0;
-	border: 0 solid var(--mid);
+	border: 0 solid var(--obs-mid);
 	border-bottom-width: 1px;
 	outline: none;
 	font-size: 14px;
 }
 
 .obsidian select.obsidian-select-operator {
-	font-family: var(--font);
+	font-family: var(--obs-font);
 }
 
 .obsidian :disabled select,
 .obsidian select:disabled {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian option {
-	color: var(--text-inverse);
+	color: var(--obs-text-inverse);
 }
 
 .obsidian hr {
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 }
 
 .dnd5e.sheet.obsidian-window.obsidian-background {
@@ -158,7 +158,7 @@
 }
 
 .obsidian-window .window-content {
-	background: var(--bg);
+	background: var(--obs-bg);
 }
 
 .dnd5e.sheet.obsidian-window .window-content {
@@ -203,10 +203,10 @@
 }
 
 .obsidian {
-	background: var(--bg);
-	color: var(--text-regular);
+	background: var(--obs-bg);
+	color: var(--obs-text-regular);
 	padding: 20px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
 }
@@ -233,17 +233,17 @@
 }
 
 .obsidian .obsidian-condensed {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian .obsidian-positive,
 .obsidian-msg .obsidian-positive {
-	color: var(--positive);
+	color: var(--obs-positive);
 }
 
 .obsidian .obsidian-negative,
 .obsidian-msg .obsidian-negative {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian img {
@@ -253,16 +253,16 @@
 .obsidian-edit,
 .obsidian-delete,
 .obsidian-view {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-delete.obsidian-alert {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-sidebar {
 	padding-right: 20px;
-	border-right: 1px solid var(--mid);
+	border-right: 1px solid var(--obs-mid);
 	text-align: center;
 	position: relative;
 }
@@ -273,8 +273,8 @@
 
 .obsidian img.obsidian-profile-img {
 	max-width: 400px;
-	padding-bottom: var(--vertical-space);
-	border-bottom: 1px solid var(--mid);
+	padding-bottom: var(--obs-vertical-space);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .npc .obsidian img.obsidian-profile-img,
@@ -298,7 +298,7 @@
 	width: 100%;
 	font-weight: normal;
 	text-align: left;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-size: 13px;
 	padding: 8px;
 }
@@ -312,7 +312,7 @@
 	position: absolute;
 	padding-right: 5px;
 	align-items: center;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-collapser-container:hover {
@@ -335,13 +335,13 @@
 
 .obsidian-char-top-level {
 	display: inline-flex;
-	padding-left: var(--horizontal-space);
+	padding-left: var(--obs-horizontal-space);
 }
 
 .obsidian-char-column {
 	display: flex;
 	flex-direction: column-reverse;
-	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
+	padding: 0 var(--obs-horizontal-space) var(--obs-vertical-space) 0;
 	align-items: center;
 }
 
@@ -354,7 +354,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian-btn-sheet i {
-	color: var(--highlight);
+	color: var(--obs-highlight);
 	margin-right: 6px;
 }
 
@@ -373,54 +373,54 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .obsidian button.obsidian-btn-positive.obsidian-btn-sheet {
-	color: var(--text-regular);
-	border-color: var(--positive);
+	color: var(--obs-text-regular);
+	border-color: var(--obs-positive);
 }
 
 .obsidian button.obsidian-btn-positive.obsidian-btn-sheet:hover {
-	background: var(--dark);
-	color: var(--text-bright);
-	box-shadow: 0 0 5px var(--positive);
+	background: var(--obs-dark);
+	color: var(--obs-text-bright);
+	box-shadow: 0 0 5px var(--obs-positive);
 }
 
 .obsidian button.obsidian-btn-positive.obsidian-btn-sheet.obsidian-btn-active {
-	background: var(--positive);
-	color: var(--bg);
+	background: var(--obs-positive);
+	color: var(--obs-bg);
 }
 
 .obsidian button.obsidian-btn-negative.obsidian-btn-sheet {
-	color: var(--text-regular);
-	border-color: var(--negative);
+	color: var(--obs-text-regular);
+	border-color: var(--obs-negative);
 }
 
 .obsidian button.obsidian-btn-negative.obsidian-btn-sheet:hover {
-	background: var(--dark);
-	color: var(--text-bright);
-	box-shadow: 0 0 5px var(--negative);
+	background: var(--obs-dark);
+	color: var(--obs-text-bright);
+	box-shadow: 0 0 5px var(--obs-negative);
 }
 
 .obsidian button.obsidian-btn-negative.obsidian-btn-sheet.obsidian-btn-active {
-	background: var(--negative);
-	color: var(--bg);
+	background: var(--obs-negative);
+	color: var(--obs-bg);
 }
 
 .obsidian button.obsidian-btn-outline.obsidian-btn-active {
-	background: var(--highlight);
-	color: var(--bg);
+	background: var(--obs-highlight);
+	color: var(--obs-bg);
 	font-weight: bold;
 }
 
 .obsidian-char-box-text {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: bold;
 	padding-bottom: 4px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-char-box {
-	border: 4px solid var(--mid);
+	border: 4px solid var(--obs-mid);
 	padding: 12px 0 8px 0;
 	font-size: 18px;
 	font-weight: bold;
@@ -433,8 +433,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .obsidian-resource-box {
 	padding: 4px 8px;
 	font-size: 14px;
-	color: var(--text-secondary);
-	font-family: var(--font-condensed);
+	color: var(--obs-text-secondary);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian-list-box {
@@ -451,7 +451,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 .obsidian-defenses .obsidian-list-box-row {
 	font-weight: normal;
 	font-size: 12px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	flex-wrap: nowrap;
 	text-align: left;
 	align-items: unset;
@@ -459,7 +459,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-list-box-row span {
 	font-weight: normal;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 13px;
 	line-height: 1.2;
 }
@@ -509,7 +509,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .dnd5e.sheet form .obsidian-resource-box input[type=text] {
 	height: auto;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	text-transform: uppercase;
 	font-size: 14px;
 }
@@ -521,12 +521,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .dnd5e.sheet form .obsidian-char-hp input[placeholder="TMP"] {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	font-weight: normal;
 }
 
 .obsidian-bisect {
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-bisect:last-child {
@@ -535,7 +535,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 
 .obsidian-resource-box-max {
 	min-width: 40px;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-weight: normal;
 }
 
@@ -545,7 +545,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .dnd5e.sheet form.obsidian .obsidian-char-header-minor span {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	margin-right: 4px;
 	font-size: 12px;
 	display: inline-block;
@@ -561,7 +561,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 }
 
 .dnd5e.sheet form input[type=text].obsidian-char-charname {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	height: auto;
 	display: block;
 	font-size: 26px;
@@ -573,8 +573,8 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 form.obsidian input[type=number].obsidian-input-sheet {
 	display: inline-block;
 	width: 40px;
-	font-family: var(--font);
-	color: var(--text-subtle);
+	font-family: var(--obs-font);
+	color: var(--obs-text-subtle);
 	font-size: 14px;
 	text-align: center;
 	padding: 4px 0;
@@ -605,13 +605,13 @@ form.obsidian .rollable:hover {
 .obsidian-char-xp-progress {
 	flex-grow: 1;
 	margin: 0 5px;
-	background-color: var(--mid);
+	background-color: var(--obs-mid);
 	height: 1px;
 }
 
 .obsidian-char-xp-progress-bar {
 	height: 1px;
-	background-color: var(--highlight);
+	background-color: var(--obs-highlight);
 	display: block;
 }
 
@@ -619,19 +619,19 @@ form.obsidian .rollable:hover {
 	font-size: 7px;
 	margin-top: 3px;
 	text-align: center;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	text-transform: uppercase;
 }
 
 .obsidian-inspiration {
-	color: var(--highlight);
+	color: var(--obs-highlight);
 	padding: 5px 0 0 0;
 	font-size: 28px;
 }
 
 .obsidian-char-ability {
 	display: inline-block;
-	padding: 0 var(--horizontal-space) var(--vertical-space) 0;
+	padding: 0 var(--obs-horizontal-space) var(--obs-vertical-space) 0;
 }
 
 .npc .obsidian-char-ability,
@@ -641,7 +641,7 @@ form.obsidian .rollable:hover {
 
 .obsidian-char-ability-name {
 	text-transform: uppercase;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	font-size: 16px;
 	padding-bottom: 4px;
 	font-weight: bold;
@@ -655,7 +655,7 @@ form.obsidian .rollable:hover {
 }
 
 .obsidian-char-ability-mod {
-	border: 4px solid var(--mid);
+	border: 4px solid var(--obs-mid);
 	border-bottom-width: 2px;
 	padding: 8px 0;
 	font-size: 18px;
@@ -671,14 +671,14 @@ form.obsidian .rollable:hover {
 
 .dnd5e.sheet form input[type=text].obsidian-char-ability-score {
 	width: 58px;
-	border: 2px solid var(--mid);
+	border: 2px solid var(--obs-mid);
 	padding: 4px 0;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	font-size: 16px;
 	margin: 0;
 	border-radius: 0;
 	text-align: center;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	line-height: 1;
 }
 
@@ -690,23 +690,23 @@ form.obsidian .rollable:hover {
 }
 
 .dnd5e.sheet form input[type=text].obsidian-char-ability-score.obsidian-positive {
-	color: var(--positive);
+	color: var(--obs-positive);
 }
 
 .dnd5e.sheet form input[type=text].obsidian-char-ability-score.obsidian-negative {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian label {
-	font-family: var(--font-condensed);
-	color: var(--text-secondary);
+	font-family: var(--obs-font-condensed);
+	color: var(--obs-text-secondary);
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: bold;
 }
 
 .obsidian p.notes {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian input {
@@ -716,12 +716,12 @@ form.obsidian .rollable:hover {
 	padding: 0 3px;
 	font-size: 16px;
 	line-height: 1.5;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	background-color: transparent;
-	border: 0 solid var(--mid);
+	border: 0 solid var(--obs-mid);
 	border-bottom-width: 1px;
 	border-radius: 0;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian .obsidian-resource-box input {
@@ -733,7 +733,7 @@ form.obsidian .rollable:hover {
 }
 
 .obsidian input::placeholder {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian input:focus {
@@ -876,7 +876,7 @@ form.obsidian .rollable:hover {
 }
 
 .obsidian-form-row .obsidian-constant {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	width: 100px;
 	display: inline-block;
 }
@@ -921,15 +921,15 @@ legend .fancy-checkbox {
 .checkbox-content {
 	display: inline-block;
 	margin-left: .75em;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: bold;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .checkbox-container {
-	border: 10px solid var(--mid);
+	border: 10px solid var(--obs-mid);
 	border-radius: 3px;
 	display: inline-block;
 	outline: none;
@@ -937,7 +937,7 @@ legend .fancy-checkbox {
 }
 
 .checkbox-inner-box {
-	border: 8px solid var(--bg);
+	border: 8px solid var(--obs-bg);
 	position: absolute;
 	left: -8px;
 	top: -8px;
@@ -963,14 +963,14 @@ legend .fancy-checkbox {
 }
 
 .checkmark-short {
-	border: 1px solid var(--bg);
+	border: 1px solid var(--obs-bg);
 	height: 5px;
 	left: 0;
 	position: absolute;
 }
 
 .checkmark-long {
-	border: 1px solid var(--bg);
+	border: 1px solid var(--obs-bg);
 	position: absolute;
 	left: 0;
 	top: 5px;
@@ -978,11 +978,11 @@ legend .fancy-checkbox {
 }
 
 .selected .checkbox-inner-box {
-	border-color: var(--mid);
+	border-color: var(--obs-mid);
 }
 
 .obsidian-binary-operator {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	margin-right: 10px;
 	font-weight: bold;
 	font-size: 16px;
@@ -1004,7 +1004,7 @@ legend .fancy-checkbox {
 	display: flex;
 	align-items: center;
 	margin-bottom: 5px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-skill-item:last-child {
@@ -1032,7 +1032,7 @@ legend .fancy-checkbox {
 .obsidian-radio span {
 	width: 10px;
 	height: 10px;
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 	border-radius: 50%;
 }
 
@@ -1040,7 +1040,7 @@ legend .fancy-checkbox {
 .obsidian-proficient span,
 .obsidian-expertise span,
 .obsidian-radio-selected span {
-	background: var(--mid);
+	background: var(--obs-mid);
 }
 
 .obsidian-half-proficient span {
@@ -1055,7 +1055,7 @@ legend .fancy-checkbox {
 	content: '';
 	width: 8px;
 	height: 8px;
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 	border-radius: 50%;
 	position: absolute;
 }
@@ -1070,7 +1070,7 @@ legend .fancy-checkbox {
 	content: '';
 	width: 11px;
 	height: 11px;
-	border: 2px solid var(--mid);
+	border: 2px solid var(--obs-mid);
 	border-radius: 50%;
 	position: absolute;
 	left: 1px;
@@ -1087,7 +1087,7 @@ legend .fancy-checkbox {
 
 .obsidian-skill-name,
 .obsidian-save-name {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 14px;
 	padding: 5px 0;
 	flex: 1;
@@ -1107,7 +1107,7 @@ legend .fancy-checkbox {
 }
 
 .obsidian-skill-passive {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	font-weight: normal;
 	font-size: 12px;
 	align-self: center;
@@ -1116,7 +1116,7 @@ legend .fancy-checkbox {
 .obsidian-char-box-lg {
 	width: 284px;
 	padding: 8px;
-	margin-right: var(--horizontal-space);
+	margin-right: var(--obs-horizontal-space);
 }
 
 .obsidian-grid-2-col {
@@ -1128,25 +1128,25 @@ legend .fancy-checkbox {
 	display: flex;
 	cursor: pointer;
 	font-size: 14px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-weight: normal;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-radio-label.obsidian-radio-selected {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian-radio-selected .obsidian-radio-negative span,
 .obsidian-radio-selected.obsidian-radio-negative span {
-	border-color: var(--negative);
-	background: var(--negative);
+	border-color: var(--obs-negative);
+	background: var(--obs-negative);
 }
 
 .obsidian-radio-selected .obsidian-radio-positive span,
 .obsidian-radio-selected.obsidian-radio-positive span {
-	border-color: var(--positive);
-	background: var(--positive);
+	border-color: var(--obs-positive);
+	background: var(--obs-positive);
 }
 
 .obsidian-radio {
@@ -1166,15 +1166,15 @@ legend .fancy-checkbox {
 }
 
 .obsidian-meatballs-title {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	font-size: 14px;
 	text-align: center;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-weight: normal;
 }
 
 .obsidian-meatballs-active {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian-save-item .obsidian-radio {
@@ -1186,13 +1186,13 @@ legend .fancy-checkbox {
 }
 
 .obsidian-conditions-and-saves {
-	padding-left: var(--horizontal-space);
+	padding-left: var(--obs-horizontal-space);
 	width: 598px;
 	height: 0;
 }
 
 .obsidian-vertical-bisect {
-	border-right: 1px solid var(--mid);
+	border-right: 1px solid var(--obs-mid);
 }
 
 .obsidian-vertical-bisect:last-child {
@@ -1208,11 +1208,11 @@ legend .fancy-checkbox {
 }
 
 .dnd5e.sheet form.editable.obsidian span.rollable:hover {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian-formula-constant {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	margin-right: 10px;
 	font-size: 14px;
 }
@@ -1231,7 +1231,7 @@ legend .fancy-checkbox {
 
 .obsidian-passive-item {
 	display: flex;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-passive-item:last-child {
@@ -1311,7 +1311,7 @@ legend .fancy-checkbox {
 
 #compendium li.compendium-pack footer.compendium-footer {
 	text-transform: uppercase;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	margin-right: 28px;
 }
 
@@ -1324,15 +1324,15 @@ legend .fancy-checkbox {
 }
 
 .obsidian-compendium .window-content {
-	background: var(--bg);
-	font-family: var(--font);
+	background: var(--obs-bg);
+	font-family: var(--obs-font);
 	font-size: 13px;
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 }
 
 .obsidian-compendium .directory-list .directory-item {
 	line-height: normal;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	align-items: center;
 }
 
@@ -1348,7 +1348,7 @@ legend .fancy-checkbox {
 }
 
 .obsidian .form-group label {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 16px;
 	text-transform: none;
 	font-weight: normal;
@@ -1374,7 +1374,7 @@ legend .fancy-checkbox {
 	display: flex;
 	align-items: center;
 	margin-bottom: 5px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-checkbox-grid .fancy-checkbox {
@@ -1404,12 +1404,12 @@ legend .fancy-checkbox {
 
 .obsidian-migrate-box {
 	width: 100%;
-	border: 2px ridge var(--mid);
+	border: 2px ridge var(--obs-mid);
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, .75);
-	background-color: var(--bg);
-	color: var(--text-regular);
+	background-color: var(--obs-bg);
+	color: var(--obs-text-regular);
 	font-size: 13px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	padding: 10px;
 	border-radius: 3px;
 }
@@ -1418,7 +1418,7 @@ legend .fancy-checkbox {
 	width: 100%;
 	font-size: 16px;
 	padding-bottom: 5px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	margin-bottom: 10px;
 }
 
@@ -1429,7 +1429,7 @@ legend .fancy-checkbox {
 
 .obsidian-migrate-buttons button {
 	width: 50%;
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 	font-size: 13px;
 	padding: 8px;
 	cursor: pointer;
@@ -1443,31 +1443,31 @@ legend .fancy-checkbox {
 }
 
 .obsidian-migrate-buttons button:hover {
-	background-color: var(--dark);
+	background-color: var(--obs-dark);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-positive {
-	border: 1px solid var(--positive);
+	border: 1px solid var(--obs-positive);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-positive i {
-	color: var(--positive);
+	color: var(--obs-positive);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-positive:hover {
-	box-shadow: 0 0 5px var(--positive);
+	box-shadow: 0 0 5px var(--obs-positive);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-negative {
-	border: 1px solid var(--negative);
+	border: 1px solid var(--obs-negative);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-negative i {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-migrate-buttons .obsidian-btn-negative:hover {
-	box-shadow: 0 0 5px var(--negative);
+	box-shadow: 0 0 5px var(--obs-negative);
 }
 
 .obsidian-migrate-progress {
@@ -1481,19 +1481,19 @@ legend .fancy-checkbox {
 
 .obsidian-migrate-bar {
 	height: 4px;
-	background-color: var(--positive);
+	background-color: var(--obs-positive);
 }
 
 .obsidian-multiline-input {
 	font-size: 14px;
-	font-family: var(--font-condensed);
-	color: var(--text-regular);
+	font-family: var(--obs-font-condensed);
+	color: var(--obs-text-regular);
 	width: 100%;
 	outline: none;
 }
 
 .obsidian-multiline-input.obsidian-placeholder {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-hotbar-counter {
@@ -1503,6 +1503,6 @@ legend .fancy-checkbox {
 	right: 0;
 	text-align: center;
 	background-color: rgba(0,0,0,.75);
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-size: 12px;
 }

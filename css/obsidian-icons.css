@@ -6,7 +6,7 @@
 }
 
 .obsidian-icon.obsidian-highlight {
-	filter: var(--white-to-highlight);
+	filter: var(--obs-white-to-highlight);
 }
 
 li.context-item .obsidian-icon {
@@ -349,11 +349,11 @@ li.context-item .obsidian-icon {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: var(--bg);
+	color: var(--obs-bg);
 }
 
 .obsidian-css-icon-negative .obsidian-css-icon-label {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian-css-icon-hexagon,
@@ -455,58 +455,58 @@ li.context-item .obsidian-icon {
 }
 
 .obsidian-css-icon-positive.obsidian-css-icon-hexagon {
-	background: var(--positive);
+	background: var(--obs-positive);
 }
 
 .obsidian-css-icon-negative.obsidian-css-icon-hexagon {
-	background: var(--negative);
+	background: var(--obs-negative);
 }
 
 .obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:before {
-	border-bottom-color: var(--positive);
+	border-bottom-color: var(--obs-positive);
 }
 
 .obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
-	border-top-color: var(--positive);
+	border-top-color: var(--obs-positive);
 }
 
 .obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:before {
-	border-bottom-color: var(--negative);
+	border-bottom-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
-	border-top-color: var(--negative);
+	border-top-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape {
-	border-bottom-color: var(--positive);
+	border-bottom-color: var(--obs-positive);
 }
 
 .obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
-	border-top-color: var(--positive);
+	border-top-color: var(--obs-positive);
 }
 
 .obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape {
-	border-bottom-color: var(--negative);
+	border-bottom-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
-	border-top-color: var(--negative);
+	border-top-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-secondary .obsidian-css-icon-shape {
-	background: var(--text-secondary);
+	background: var(--obs-text-secondary);
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-regular .obsidian-css-icon-shape {
-	background: var(--text-regular);
+	background: var(--obs-text-regular);
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-shape {
-	border: 1px solid var(--text-regular);
+	border: 1px solid var(--obs-text-regular);
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-label {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-weight: normal;
 }

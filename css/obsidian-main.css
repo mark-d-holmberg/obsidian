@@ -26,10 +26,10 @@
 
 .obsidian-tab,
 .obsidian-sub-tab {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-weight: bold;
 	font-size: 14px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	cursor: pointer;
 	text-transform: uppercase;
 	line-height: 1.4;
@@ -41,23 +41,23 @@
 	border-radius: 3px;
 	margin: 3px 2px;
 	padding: 5px 7px;
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 	text-align: center;
 }
 
 .obsidian-tab:hover {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian-sub-tab:hover,
 .obsidian-sub-tab.active {
-	color: var(--text-regular);
-	border-color: var(--highlight);
+	color: var(--obs-text-regular);
+	border-color: var(--obs-highlight);
 }
 
 .obsidian-tab.active {
-	color: var(--text-regular);
-	border-bottom: 3px solid var(--highlight);
+	color: var(--obs-text-regular);
+	border-bottom: 3px solid var(--obs-highlight);
 }
 
 .obsidian-tab-container .obsidian-tab-bar {
@@ -95,11 +95,11 @@
 .vehicle .obsidian h3,
 .obsidian-char-notes h3 {
 	text-transform: uppercase;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 13px;
 	font-weight: bold;
-	color: var(--text-secondary);
-	border-bottom: 1px solid var(--mid);
+	color: var(--obs-text-secondary);
+	border-bottom: 1px solid var(--obs-mid);
 	line-height: 1.4;
 	padding-left: 2px;
 	display: flex;
@@ -118,10 +118,10 @@
 
 .obsidian-tab-contents h3 a,
 .obsidian-char-spell-header a {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-size: 10px;
 	font-weight: bold;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian-thead,
@@ -132,7 +132,7 @@
 .obsidian-thead {
 	text-transform: uppercase;
 	font-size: 11px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	padding: 5px 0;
 	font-weight: bold;
 }
@@ -144,7 +144,7 @@
 .obsidian-tr {
 	font-weight: normal;
 	align-items: center;
-	border-bottom: 1px dotted var(--mid);
+	border-bottom: 1px dotted var(--obs-mid);
 	padding: 8px 0;
 }
 
@@ -229,7 +229,7 @@
 
 .obsidian-col-empty {
 	text-align: center;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	flex: 1;
 }
 
@@ -261,7 +261,7 @@
 .obsidian-table-text,
 .obsidian-table-sub-text,
 .obsidian-table-note-text {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian-table-text {
@@ -271,7 +271,7 @@
 .obsidian-table-sub-text,
 .obsidian-table-unit {
 	font-size: 10px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-table-sub-text {
@@ -281,7 +281,7 @@
 .obsidian-table-save {
 	font-weight: bold;
 	text-transform: uppercase;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 }
 
 .obsidian-table-number-sm,
@@ -311,7 +311,7 @@
 }
 
 .obsidian fieldset {
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 	margin: 0 0 10px 0;
 }
 
@@ -325,9 +325,9 @@
 
 .obsidian legend,
 .obsidian legend .checkbox-content {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 16px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	padding: 0 8px;
 }
 
@@ -364,8 +364,8 @@
 .obsidian-table-note-text,
 .obsidian-table-note-text:after {
 	font-size: 12px;
-	color: var(--text-subtle);
-	font-family: var(--font-condensed);
+	color: var(--obs-text-subtle);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian-table-note-text:after {
@@ -392,7 +392,7 @@
 .dnd5e.sheet form .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet,
 form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number].obsidian-input-sheet {
 	font-size: 12px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	width: 30px;
 	padding: 0;
 }
@@ -400,7 +400,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 .obsidian-table-note-text .obsidian-feature-max {
 	font-size: 12px;
 	min-width: 30px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 }
 
 .obsidian-table-note-text .obsidian-binary-operator {
@@ -410,12 +410,12 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 
 .obsidian-table-number-split {
 	font-weight: normal;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-table-number-minor {
 	font-weight: normal;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	font-size: 13px;
 }
 
@@ -426,7 +426,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 .obsidian-feature-header {
 	font-size: 13px;
 	line-height: 1.2;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	display: flex;
 	height: 15px;
 	justify-content: space-between;
@@ -448,7 +448,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 
 .obsidian-feature-body {
 	font-size: 12px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-weight: normal;
 	text-align: justify;
 }
@@ -456,7 +456,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 .obsidian-feature-recharge {
 	margin-left: 3px;
 	font-weight: normal;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 h3 > div > .obsidian-feature-recharge {
@@ -471,36 +471,36 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-feature-use {
 	height: 15px;
 	width: 15px;
-	border: 2px solid var(--mid);
+	border: 2px solid var(--obs-mid);
 	border-radius: 3px;
 	cursor: pointer;
 	display: inline-flex;
 	margin-right: 3px;
 	align-items: center;
 	justify-content: center;
-	color: var(--bg);
+	color: var(--obs-bg);
 	font-size: 21px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-weight: bold;
 }
 
 .obsidian-feature-use.obsidian-feature-positive {
-	border-color: var(--positive);
+	border-color: var(--obs-positive);
 }
 
 .obsidian-feature-used {
-	background: var(--mid);
+	background: var(--obs-mid);
 }
 
 .obsidian-feature-used.obsidian-feature-positive {
-	background: var(--positive);
+	background: var(--obs-positive);
 }
 
 .obsidian-feature-max {
 	font-size: 14px;
 	min-width: 40px;
 	text-align: center;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	display: inline-block;
 }
 
@@ -530,28 +530,28 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian .tox .tox-tbtn,
 .obsidian .tox .tox-tbtn__select-label {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	cursor: pointer;
 }
 
 .obsidian .tox .tox-tbtn__select-label {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 14px;
 }
 
 .obsidian .tox .tox-tbtn svg {
-	fill: var(--text-secondary);
+	fill: var(--obs-text-secondary);
 }
 
 .obsidian .tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
-	fill: var(--text-regular);
+	fill: var(--obs-text-regular);
 }
 
 .obsidian .tox .tox-tbtn:hover:not(.tox-tbtn--disabled),
 .obsidian .tox .tox-tbtn:active:not(.tox-tbtn--disabled),
 .obsidian .tox .tox-tbtn:focus:not(.tox-tbtn--disabled) {
 	background: transparent;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian .tox-tbtn[title=Save] {
@@ -564,12 +564,12 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .app .obsidian .tox-edit-area {
-	border-top: 1px solid var(--mid);
+	border-top: 1px solid var(--obs-mid);
 }
 
 .obsidian-na {
 	font-size: 14px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	font-weight: normal;
 }
 
@@ -578,7 +578,7 @@ h3 > div > .obsidian-feature-recharge {
 	display: flex;
 	padding-bottom: 10px;
 	margin-bottom: 10px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	width: 100%;
 }
 
@@ -598,7 +598,7 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-char-inv-header {
 	justify-content: space-between;
 	align-items: center;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 13px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -612,7 +612,7 @@ h3 > div > .obsidian-feature-recharge {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-weight: bold;
 	margin-right: 15px;
 }
@@ -623,7 +623,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-char-spell-header .obsidian-table-number-lg > span:after {
 	content : ' / ';
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-char-spell-header .obsidian-table-number-lg > span:last-child:after {
@@ -632,7 +632,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-char-spell-header-label {
 	font-size: 10px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	text-transform: uppercase;
 }
 
@@ -641,7 +641,7 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-char-inv-header-weight > div:first-child > span {
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-weight: normal;
 }
 
@@ -651,15 +651,15 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-char-inv-header-weight > div:last-child {
 	font-size: 10px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-char-inv-header-weight > div:last-child.obsidian-negative {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-char-inv-header-currency {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	display: flex;
 	align-items: center;
 }
@@ -668,7 +668,7 @@ h3 > div > .obsidian-feature-recharge {
 	font-size: 14px;
 	display: inline-flex;
 	margin-right: 10px;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	align-items: center;
 }
 
@@ -707,15 +707,15 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian input.obsidian-input-search,
 .dnd5e.sheet form.obsidian input.obsidian-input-search,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input {
-	color: var(--text-bright);
-	background-color: var(--mid);
-	border: 1px solid var(--border-subtle);
+	color: var(--obs-text-bright);
+	background-color: var(--obs-mid);
+	border: 1px solid var(--obs-border-subtle);
 	border-radius: .25rem;
 	height: 34px;
 	padding: 6px 34px;
 	font-size: 13px;
 	line-height: 1.4;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	transition: border-color ease-in-out .15s;
 	box-shadow: none;
 	text-align: left;
@@ -735,15 +735,15 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian .obsidian-input-search::placeholder,
 .dnd5e.sheet form.obsidian .obsidian-input-search::placeholder,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input::placeholder {
-	color: var(--text-placeholder);
+	color: var(--obs-text-placeholder);
 }
 
 .obsidian input.obsidian-input-search:focus,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus,
 .obsidian-compendium .sidebar-tab .directory-header .header-search input:focus {
-	color: var(--text-inverse);
-	background-color: var(--light);
-	border-color: var(--light);
+	color: var(--obs-text-inverse);
+	background-color: var(--obs-light);
+	border-color: var(--obs-light);
 	outline: none;
 }
 
@@ -753,7 +753,7 @@ h3 > div > .obsidian-feature-recharge {
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus + i + span,
 .obsidian-compendium .header-search input:focus + i,
 .obsidian-compendium .header-search input:focus + i + span {
-	color: var(--text-inverse);
+	color: var(--obs-text-inverse);
 }
 
 .obsidian-input-search-container > i,
@@ -767,7 +767,7 @@ h3 > div > .obsidian-feature-recharge {
 	justify-content: center;
 	position: absolute;
 	font-size: 14px;
-	color: var(--text-placeholder);
+	color: var(--obs-text-placeholder);
 }
 
 .obsidian-input-search-container > i,
@@ -806,25 +806,25 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .dnd5e.sheet.actor .obsidian .spell-component {
-	color: var(--bg);
-	background: var(--text-regular);
+	color: var(--obs-bg);
+	background: var(--obs-text-regular);
 	font-weight: bold;
 	transform: scale(.75);
 }
 
 .dnd5e.sheet.actor .obsidian .obsidian-icon-tab .spell-component {
-	background: var(--text-secondary);
+	background: var(--obs-text-secondary);
 }
 
 .dnd5e.sheet.actor .obsidian .obsidian-icon-tab:hover .spell-component,
 .dnd5e.sheet.actor .obsidian .obsidian-icon-tab.active .spell-component {
-	background: var(--text-regular);
+	background: var(--obs-text-regular);
 }
 
 .obsidian-spell-level-tab.obsidian-active {
-	border: 1px solid var(--highlight);
-	background: var(--highlight);
-	color: var(--bg);
+	border: 1px solid var(--obs-highlight);
+	background: var(--obs-highlight);
+	color: var(--obs-bg);
 }
 
 .obsidian-spells-slots-pact {
@@ -849,7 +849,7 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-rich-text .editor-edit {
 	border: none;
 	background: transparent;
-	color: var(--mid);
+	color: var(--obs-mid);
 }
 
 .obsidian-spell-filter .obsidian-tab-bar {
@@ -863,8 +863,8 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian details > summary {
 	position: relative;
-	color: var(--text-bright);
-	background-color: var(--mid);
+	color: var(--obs-text-bright);
+	background-color: var(--obs-mid);
 	padding: 10px;
 	list-style: none;
 	cursor: pointer;
@@ -881,12 +881,12 @@ h3 > div > .obsidian-feature-recharge {
 	justify-content: space-between;
 	align-items: center;
 	padding: 4px 35px 4px 5px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	margin-bottom: 5px;
 }
 
 .obsidian details[open] > summary {
-	border-left: 4px solid var(--highlight);
+	border-left: 4px solid var(--obs-highlight);
 }
 
 .obsidian .obsidian-spell-list details[open] > summary {
@@ -924,25 +924,25 @@ h3 > div > .obsidian-feature-recharge {
 .npc .obsidian-table summary > div > h3,
 .vehicle .obsidian-table summary > div > h3 {
 	text-transform: none;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	border: none;
 	line-height: 1;
 }
 
 .obsidian-table .obsidian-negative h3 {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-table summary > div > .obsidian-details-sub-text {
 	font-size: 13px;
-	font-family: var(--font);
-	color: var(--text-regular);
+	font-family: var(--obs-font);
+	color: var(--obs-text-regular);
 	font-weight: normal;
 	margin-left: 4px;
 }
 
 .obsidian-table .obsidian-negative .obsidian-details-sub-text {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-table summary > div > .obsidian-table-sub-text {
@@ -950,7 +950,7 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-table .obsidian-negative .obsidian-table-sub-text {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian summary > i {
@@ -958,7 +958,7 @@ h3 > div > .obsidian-feature-recharge {
 	top: 10px;
 	right: 10px;
 	font-size: 16px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-table details:not([open]) + details {
@@ -973,7 +973,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian details[open] > summary > i {
 	transform: rotate(180deg);
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 }
 
 .obsidian-spell-filter {
@@ -993,13 +993,13 @@ h3 > div > .obsidian-feature-recharge {
 	font-style: italic;
 	font-size: 13px;
 	font-weight: normal;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	display: inline-block;
 }
 
 .obsidian-spell-list .obsidian-col-spell .obsidian-table-sub-text {
 	font-size: 13px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	display: inline-block;
 }
 
@@ -1028,7 +1028,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-item-card {
 	padding: 10px;
-	border: 4px solid var(--mid);
+	border: 4px solid var(--obs-mid);
 	margin-bottom: 15px;
 }
 
@@ -1039,11 +1039,11 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-item-card-header {
 	padding-bottom: 10px;
 	margin-bottom: 10px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-item-card-header h3 {
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-size: 13px;
 	font-style: italic;
 	display: flex;
@@ -1051,7 +1051,7 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-item-card-header h4 {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	margin-top: -5px;
 }
 
@@ -1064,7 +1064,7 @@ h3 + .obsidian-item-card-header-row,
 h4 + .obsidian-item-card-header-row {
 	padding-top: 10px;
 	margin-top: 10px;
-	border-top: 1px solid var(--mid);
+	border-top: 1px solid var(--obs-mid);
 }
 
 .obsidian-item-card-header-row {
@@ -1081,24 +1081,24 @@ h4 + .obsidian-item-card-header-row {
 .obsidian-item-card-header-key {
 	font-weight: bold;
 	font-size: 13px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	margin-right: 5px;
 }
 
 .obsidian-item-card-header-value {
 	font-size: 13px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	flex: 1;
 }
 
 .obsidian-item-card-header-value .obsidian-table-unit {
 	font-size: 10px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-item-card-header-value .obsidian-table-sub-text {
 	font-size: 12px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 }
 
 .obsidian-spell-card-component {
@@ -1115,7 +1115,7 @@ h4 + .obsidian-item-card-header-row {
 
 .obsidian .obsidian-item-card input {
 	width: 40px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-size: 13px;
 	border: none;
 	display: inline-block;
@@ -1152,29 +1152,29 @@ h4 + .obsidian-item-card-header-row {
 }
 
 .dialog .obsidian h2 {
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-weight: bold;
 	font-size: 14px;
 	text-transform: uppercase;
-	color: var(--text-secondary);
-	border-bottom: 1px solid var(--mid);
+	color: var(--obs-text-secondary);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-spell-totals {
 	padding: 5px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 14px;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian #context-menu {
 	max-width: 100%;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-size: 13px;
-	color: var(--text-regular);
-	border: 1px dotted var(--mid);
+	color: var(--obs-text-regular);
+	border: 1px dotted var(--obs-mid);
 	border-top: none;
-	background: var(--bg);
+	background: var(--obs-bg);
 	border-radius: 0;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
 }
@@ -1187,15 +1187,15 @@ h4 + .obsidian-item-card-header-row {
 }
 
 .obsidian #context-menu li.context-item i {
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .dnd5e.sheet form.obsidian .obsidian-table-input,
 form.obsidian .obsidian-table-input {
 	font-size: 14px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-weight: bold;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	height: auto;
 	width: calc(100% - 2px);
 	padding: 0;
@@ -1212,13 +1212,13 @@ form.obsidian .obsidian-table-input:hover {
 	display: none;
 	justify-content: space-between;
 	font-size: 16px;
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 	position: fixed;
 	pointer-events: none;
 }
 
 .obsidian-inv-container.obsidian-container-drop {
-	background-color: var(--dark);
+	background-color: var(--obs-dark);
 }
 
 input[type=checkbox].obsidian-hidden + label.obsidian-inline {
@@ -1247,7 +1247,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian .obsidian-item-card-header select {
 	background: transparent;
 	font-size: 12px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	border: none;
 	padding: 0;
 }
@@ -1255,7 +1255,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-char-grid-row {
 	display: flex;
 	justify-content: space-between;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	font-size: 13px;
 	margin-bottom: 10px;
 }
@@ -1295,24 +1295,24 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 #chat-log .message.obsidian-msg,
 .chat-popout .message.obsidian-msg {
 	border: 2px solid transparent;
-	background: var(--bg);
-	color: var(--text-regular);
-	font-family: var(--font);
+	background: var(--obs-bg);
+	color: var(--obs-text-regular);
+	font-family: var(--obs-font);
 	font-size: 13px;
 	position: relative;
 	padding: 5px;
 }
 
 .message.obsidian-msg .fa-trash {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .message.obsidian-msg .fa-dice-d20 {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .message.obsidian-msg button:hover .fa-dice-d20 {
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 }
 
 .chat-popout .window-content {
@@ -1320,7 +1320,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg header {
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	padding-bottom: 5px;
 	margin-bottom: 5px;
 	display: flex;
@@ -1330,7 +1330,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-msg header h4 {
 	text-transform: uppercase;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	margin-bottom: 0;
 	display: flex;
 	align-items: center;
@@ -1345,12 +1345,12 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg header time {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg header .whisper-to {
 	font-size: 11px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg-row {
@@ -1382,10 +1382,10 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	width: 20px;
 	height: 20px;
 	margin-left: 5px;
-	border: 1px solid var(--highlight);
+	border: 1px solid var(--obs-highlight);
 	border-radius: 3px;
 	cursor: pointer;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1400,8 +1400,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-msg-row-dmg > div:last-child:hover,
 .obsidian-apply-save:hover,
 .obsidian-apply-check:hover {
-	background: var(--dark);
-	color: var(--text-bright);
+	background: var(--obs-dark);
+	color: var(--obs-text-bright);
 }
 
 .obsidian-msg-row,
@@ -1419,8 +1419,8 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-roll-box {
-	border: 2px solid var(--mid);
-	color: var(--text-bright);
+	border: 2px solid var(--obs-mid);
+	color: var(--obs-text-bright);
 	cursor: help;
 	padding: 4px 5px;
 	font-weight: bold;
@@ -1434,7 +1434,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-roll-box.obsidian-grey {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg-value {
@@ -1443,7 +1443,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-flavour {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	font-style: italic;
 }
 
@@ -1451,24 +1451,24 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	position: absolute;
 	font-size: 11px;
 	display: none;
-	background: var(--dark);
+	background: var(--obs-dark);
 	padding: 5px 8px;
 	z-index: 999;
-	color: var(--text-regular);
-	font-family: var(--font);
+	color: var(--obs-text-regular);
+	font-family: var(--obs-font);
 	word-break: break-all;
 }
 
 .obsidian-msg-tooltip .obsidian-positive {
-	color: var(--positive);
+	color: var(--obs-positive);
 }
 
 .obsidian-msg-tooltip .obsidian-negative {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-msg-tooltip .obsidian-grey {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg-tooltip:after {
@@ -1479,13 +1479,13 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	margin-left: -4px;
 	width: 0;
 	height: 0;
-	border-top: 4px solid var(--dark);
+	border-top: 4px solid var(--obs-dark);
 	border-right: 4px solid transparent;
 	border-left: 4px solid transparent;
 }
 
 .obsidian-msg section {
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 	padding-bottom: 5px;
 	margin-bottom: 5px;
 }
@@ -1517,7 +1517,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-msg-sub-title {
 	text-align: center;
 	font-size: 11px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg-addendum > div {
@@ -1550,7 +1550,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 }
 
 .obsidian-msg-save-effect {
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-msg-btn-row {
@@ -1585,7 +1585,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	text-align: center;
 	text-transform: uppercase;
 	margin-bottom: 5px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-msg details {
@@ -1596,14 +1596,14 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 .obsidian-msg details summary {
 	outline: none;
 	font-size: 12px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-spell-slot-row {
 	display: flex;
 	margin-bottom: 6px;
 	padding-bottom: 4px;
-	border-bottom: 1px solid var(--mid);
+	border-bottom: 1px solid var(--obs-mid);
 }
 
 .obsidian-spell-slot-row:last-child {
@@ -1614,16 +1614,16 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-spell-slot-row > div:first-child {
 	width: 45px;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 	font-size: 13px;
 }
 
 .obsidian-spell-slot-row > div:first-child.obsidian-negative {
-	color: var(--negative);
+	color: var(--obs-negative);
 }
 
 .obsidian-spell-slot-row > div:first-child.obsidian-positive {
-	color: var(--positive);
+	color: var(--obs-positive);
 }
 
 .obsidian-spell-slot-row > div:last-child {
@@ -1669,7 +1669,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-class-col-name {
 	flex: 1;
-	color: var(--text-subtle);
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-class-col-subclass {
@@ -1683,7 +1683,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 
 .obsidian-class-col-hd {
 	width: 40px;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 	font-size: 13px;
 }
 
@@ -1738,7 +1738,7 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 select[multiple] {
 	width: 100%;
 	height: 400px;
-	border: 2px ridge var(--mid);
+	border: 2px ridge var(--obs-mid);
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
@@ -1761,12 +1761,12 @@ select[multiple]::-webkit-scrollbar-thumb,
 }
 
 select[multiple] option {
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	padding: 6px 12px;
 }
 
 select[multiple] option:nth-child(2n) {
-	background-color: var(--mid);
+	background-color: var(--obs-mid);
 }
 
 .obsidian-transfer-buttons {
@@ -1788,14 +1788,14 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .obsidian-transfer-buttons button:hover {
 	box-shadow: none;
-	text-shadow: 0 0 5px var(--highlight);
+	text-shadow: 0 0 5px var(--obs-highlight);
 }
 
 .obsidian-json-dump {
 	height: 100%;
 	background: transparent;
-	color: var(--text-regular);
-	border: 1px solid var(--mid);
+	color: var(--obs-text-regular);
+	border: 1px solid var(--obs-mid);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
 }
@@ -1812,7 +1812,7 @@ select[multiple] option:nth-child(2n) {
 	width: 56px;
 	height: 56px;
 	margin-right: 10px;
-	border: 1px solid var(--mid);
+	border: 1px solid var(--obs-mid);
 	border-radius: 5px;
 }
 
@@ -1826,7 +1826,7 @@ select[multiple] option:nth-child(2n) {
 .obsidiam-msg .entity-link {
 	cursor: default;
 	font-weight: bold;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	background-color: transparent;
 	border: none;
 }
@@ -1850,7 +1850,7 @@ select[multiple] option:nth-child(2n) {
 	display: inline-block;
 	cursor: pointer;
 	font-weight: normal;
-	border: 1px solid var(--highlight);
+	border: 1px solid var(--obs-highlight);
 	border-radius: 3px;
 	padding: 4px 6px;
 	font-size: 11px;
@@ -1861,15 +1861,15 @@ select[multiple] option:nth-child(2n) {
 .obsidian .entity-link i,
 .obsidiam-msg .entity-link i {
 	display: inline-block;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 }
 
 .obsidian .inline-roll.roll:hover,
 .obsidian-msg .inline-roll.roll:hover,
 .obsidian .entity-link:hover,
 .obsidiam-msg .entity-link:hover {
-	background: var(--dark);
-	color: var(--text-bright);
+	background: var(--obs-dark);
+	color: var(--obs-text-bright);
 	box-shadow: 0 0 5px red;
 }
 
@@ -1877,5 +1877,5 @@ select[multiple] option:nth-child(2n) {
 .obsidian-msg .inline-roll.roll:hover i,
 .obsidian .entity-link:hover i,
 .obsidiam-msg .entity-link:hover i {
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 }

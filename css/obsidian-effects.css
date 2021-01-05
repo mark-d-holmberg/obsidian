@@ -21,7 +21,7 @@
 }
 
 .obsidian-2-pane > section:first-child {
-	border-right: 1px solid var(--mid);
+	border-right: 1px solid var(--obs-mid);
 }
 
 .obsidian-2-pane-header > section:first-child {
@@ -37,10 +37,10 @@
 	left: 570px;
 	width: 184px;
 	height: 738px;
-	background: var(--bg);
+	background: var(--obs-bg);
 	border-radius: 3px;
 	padding: 10px;
-	border: 2px ridge var(--mid);
+	border: 2px ridge var(--obs-mid);
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
@@ -64,7 +64,7 @@
 }
 
 .obsidian-effects-pill {
-	background-color: var(--dark);
+	background-color: var(--obs-dark);
 	padding-left: 34px;
 	background-repeat: no-repeat;
 	background-size: 24px;
@@ -85,12 +85,12 @@
 }
 
 .obsidian-effects-pill.obsidian-effects-pill-rm {
-	background-color: var(--negative);
+	background-color: var(--obs-negative);
 }
 
 .obsidian-effects-pill-text {
 	text-transform: uppercase;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 12px;
 	padding: 10px;
 	height: 34px;
@@ -100,18 +100,18 @@
 
 .obsidian-effect {
 	padding: 10px;
-	border: 2px ridge var(--mid);
+	border: 2px ridge var(--obs-mid);
 	min-height: 100px;
 	box-shadow: inset 0 0 5px rgba(0, 0, 0, .5);
 	margin-bottom: 10px;
 }
 
 .obsidian-effect.obsidian-selected {
-	border-color: var(--select);
+	border-color: var(--obs-select);
 }
 
 .obsidian-effect fieldset.obsidian-selected {
-	border-color: var(--select);
+	border-color: var(--obs-select);
 }
 
 .obsidian-effect legend {
@@ -124,8 +124,8 @@
 
 .obsidian input[type=text].obsidian-effect-name {
 	width: 100%;
-	font-family: var(--font);
-	color: var(--text-subtle);
+	font-family: var(--obs-font);
+	color: var(--obs-text-subtle);
 	font-size: 16px;
 	border: none;
 	padding: 0;
@@ -133,19 +133,19 @@
 }
 
 .obsidian input[type=text].obsidian-effect-name:hover {
-	border: 1px solid var(--dark);
-	box-shadow: 0 0 8px var(--negative);
+	border: 1px solid var(--obs-dark);
+	box-shadow: 0 0 8px var(--obs-negative);
 }
 
 .obsidian-action-row {
 	display: flex;
 	justify-content: flex-start;
 	font-size: 14px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	align-items: center;
 	padding-bottom: 8px;
 	margin-bottom: 8px;
-	border-bottom: 1px dotted var(--mid);
+	border-bottom: 1px dotted var(--obs-mid);
 }
 
 .obsidian-action-row:last-child {
@@ -159,7 +159,7 @@
 }
 
 .obsidian-item-drop {
-	border: 2px dashed var(--mid);
+	border: 2px dashed var(--obs-mid);
 	margin-top: 10px;
 	padding: 5px 5px 0 5px;
 }
@@ -172,24 +172,24 @@
 }
 
 .obsidian-item-drop-empty {
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	font-size: 12px;
 	text-transform: uppercase;
 	font-weight: bold;
-	color: var(--text-secondary);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-item-drop-pill {
 	display: inline-flex;
-	background-color: var(--dark);
+	background-color: var(--obs-dark);
 	border-radius: 5px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	margin-bottom: 5px;
 }
 
 .obsidian-item-drop-pill-body {
 	padding: 4px 8px;
-	border-right: 1px solid var(--bg);
+	border-right: 1px solid var(--obs-bg);
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -201,7 +201,7 @@
 
 .obsidian-item-drop-pill-rm {
 	padding: 4px 8px;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	cursor: pointer;
 }
 
@@ -277,7 +277,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--text-regular);
+	color: var(--obs-text-regular);
 	font-size: 11px;
 	border-radius: 50%;
 }
@@ -292,7 +292,7 @@
 }
 
 #obsidian-duration-menu .context-item:hover {
-	color: var(--text-bright);
+	color: var(--obs-text-bright);
 	background: rgba(0, 0, 0, .75);
 }
 
@@ -312,9 +312,9 @@
 	top: -5px;
 	width: 16px;
 	height: 16px;
-	background-color: var(--highlight);
-	color: var(--text-regular);
-	font-family: var(--font);
+	background-color: var(--obs-highlight);
+	color: var(--obs-text-regular);
+	font-family: var(--obs-font);
 	font-weight: bold;
 	border-radius: 50%;
 	font-size: 11px;
@@ -329,7 +329,7 @@
 
 .obsidian-effect .obsidian-sub-group {
 	border: none;
-	border-top: 1px solid var(--mid);
+	border-top: 1px solid var(--obs-mid);
 	padding: 0;
 	margin-top: 10px;
 }
@@ -342,14 +342,14 @@
 	font-size: 13px;
 	text-align: center;
 	text-transform: uppercase;
-	font-family: var(--font);
+	font-family: var(--obs-font);
 	cursor: default;
 }
 
 .obsidian-component-description > p {
 	margin: 0;
 	font-size: 14px;
-	font-family: var(--font-condensed);
+	font-family: var(--obs-font-condensed);
 	text-align: justify;
 }
 
