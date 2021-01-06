@@ -1003,5 +1003,6 @@
 	"OBSIDIAN.Subrarity-maj": "Major",
 	"OBSIDIAN.MultiplyScore": "Multiply Score",
 	"OBSIDIAN.Multiplier": "Multiplier",
-	"OBSIDIAN.MultipliesScoreBy": "Multiplies scores by {0}"
+	"OBSIDIAN.MultipliesScoreBy": "Multiplies scores by {0}",
+	"OBSIDIAN.DicePool": "Dice Pool"
 }

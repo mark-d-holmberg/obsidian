@@ -20,7 +20,7 @@ import {checkVersion} from './migration/run.js';
 import {refreshNPC} from './rules/npc.js';
 import {addTransformHook} from './rules/transform.js';
 import {sendTriggers} from './module/triggers.js';
-import {updateApplyIcons} from './module/message.js';
+import {applyRollDragover, updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
 import {ObsidianVehicle} from './module/vehicle.js';
 import ObsidianTable from './module/tables.js';
@@ -136,7 +136,7 @@ Hooks.on('preUpdateToken', (scene, token, data) => {
 	}
 
 	const actor = canvas.tokens.get(token.id)?.actor;
-	const existing = new Set(token.actorData.items.map(item => item._id));
+	const existing = new Set((token.actorData?.items || []).map(item => item._id));
 	data.actorData.items.filter(item => !existing.has(item._id)).forEach(item => {
 		enrichItemFlags(item);
 		if (actor) {
@@ -173,3 +173,4 @@ document.addEventListener('click', evt => {
 
 document.addEventListener('keydown', updateApplyIcons);
 document.addEventListener('keyup', updateApplyIcons);
+document.addEventListener('dragenter', applyRollDragover);

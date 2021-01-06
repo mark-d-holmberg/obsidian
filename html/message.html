@@ -26,10 +26,10 @@
 			<div class="obsidian-msg-sub-title">{{{message.flags.obsidian.subtitle}}}</div>
 		{{/if}}
 	</section>
-	{{#if (or message.flags.obsidian.results message.flags.obsidian.exprs)}}
+	{{#if (or message.flags.obsidian.results message.flags.obsidian.exprs message.flags.obsidian.pools)}}
 	<section>
 		{{#each message.flags.obsidian.results}}
-		<div class="obsidian-msg-row">
+		<div class="obsidian-msg-row obsidian-dice-drop-target" data-index="{{@index}}">
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
 			<div class="obsidian-msg-value">
 				{{#each this}}
@@ -45,6 +45,21 @@
 			</div>
 		</div>
 		{{/each}}
+		{{#if message.flags.obsidian.pools}}
+		<div class="obsidian-msg-row">
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-value">
+				{{#each message.flags.obsidian.pools.results}}
+					<div class="obsidian-msg-roll-box" draggable="true" data-value="{{total}}"
+					     data-flavour="{{@root.message.flags.obsidian.pools.flavour}}">
+						{{total}}
+					</div>
+					<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
+				{{/each}}
+			</div>
+			<div class="obsidian-msg-flavour">{{message.flags.obsidian.pools.flavour}}</div>
+		</div>
+		{{/if}}
 		{{#each message.flags.obsidian.exprs}}
 		<div class="obsidian-msg-row">
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
@@ -166,18 +181,10 @@
 	{{#if message.flags.obsidian.damage}}
 	<section class="obsidian-msg-dmg">
 		<div class="obsidian-grid-2-col">
-			<!-- TODO: This handles legacy damage structure and should be removed eventually -->
-			{{#if message.flags.obsidian.damage.hit}}
-				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.hit
-						title='OBSIDIAN.Hit'}}
-				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.crit
-						title='OBSIDIAN.Crit'}}
-			{{else}}
-				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage
-						title='OBSIDIAN.Hit'}}
-				{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.crit
-						title='OBSIDIAN.Crit'}}
-			{{/if}}
+			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.hit
+					title='OBSIDIAN.Hit' mode='hit'}}
+			{{> modules/obsidian/html/components/damage-format.html message.flags.obsidian.damage.crit
+					title='OBSIDIAN.Crit' mode='crit'}}
 		</div>
 	</section>
 	{{/if}}

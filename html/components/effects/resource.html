@@ -1,9 +1,21 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Resource'}}</legend>
 	<div class="obsidian-form-row obsidian-inline">
-		<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.name"
-		       value="{{name}}" placeholder="{{localize 'OBSIDIAN.ResourceName'}}"
-		       style="max-width: none;">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.name"
+			       value="{{name}}" placeholder="{{localize 'OBSIDIAN.ResourceName'}}"
+			       style="margin-right: 20px;">
+			{{fancy-checkbox prefix 'pool' content='OBSIDIAN.DicePool' checked=pool
+			                 selector=(add prefix '.pool')}}
+			<select name="{{prefix}}.die" data-dtype="Number" data-selector-parent="{{prefix}}.pool"
+			        style="margin-left: 10px;">
+				{{#select die}}
+					{{#each @root.ObsidianRules.EFFECT_RESOURCE_DICE_POOL}}
+						<option value="{{this}}">d{{this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+		</div>
 	</div>
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth">

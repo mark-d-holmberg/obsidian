@@ -183,6 +183,15 @@ export class Obsidian extends ActorSheet5eCharacter {
 		data.actor.obsidian.tempEffects =
 			data.actor.obsidian.feats.filter(feat => feat.flags.obsidian?.activeEffect);
 
+		data.speed = {
+			label: data.actor.flags.obsidian.attributes.speedDisplay
+		};
+
+		if (!data.speed.label) {
+			data.speed.label = 'walk';
+		}
+
+		data.speed.value = data.actor.obsidian.attributes.speed[data.speed.label];
 		Sheet.getSenses(data);
 		console.debug(data);
 		return data;
@@ -263,7 +272,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const currentSpeed = this.actor.data.flags.obsidian.attributes.speedDisplay || 'walk';
-		const speeds = this.actor.data.flags.obsidian.attributes.speed;
+		const speeds = this.actor.data.obsidian.attributes.speed;
 		const startIdx = Rules.SPEEDS.indexOf(currentSpeed);
 		let newSpeed = null;
 
@@ -272,7 +281,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			const speedKey = Rules.SPEEDS[nextIdx];
 			const speed = speeds[speedKey];
 
-			if (speed.override || speed.derived) {
+			if (speed) {
 				newSpeed = speedKey;
 				break;
 			}

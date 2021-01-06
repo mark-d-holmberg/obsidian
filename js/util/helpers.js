@@ -451,7 +451,12 @@ export function registerHandlebarHelpers () {
 
 function formatRecharge (recharge) {
 	if (recharge.time === 'roll' && recharge.roll) {
-		return `${game.i18n.localize('OBSIDIAN.Recharge')} ${recharge.roll}&mdash;6`;
+		let roll = recharge.roll.toString();
+		if (recharge.roll !== 6) {
+			roll += '&mdash;6';
+		}
+
+		return `${game.i18n.localize('OBSIDIAN.Recharge')} ${roll}`;
 	} else {
 		return game.i18n.localize(`OBSIDIAN.Recharge-${recharge.time}`);
 	}

@@ -266,7 +266,7 @@ export const Rolls = {
 			.map(mod => `${mod.mod.sgnex()} ${mod.name.length ? `[${mod.name}]` : ''}`).join(''),
 
 	compileExpression: function (roll) {
-		return roll.parts.map(part => {
+		return roll.terms.map(part => {
 			if (part instanceof Die) {
 				return part.total;
 			}
@@ -774,6 +774,8 @@ export const Rolls = {
 			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr, scaledAmount));
 		}
 
+		results[0].pools = Rolls.getDicePools(actor, effect, options);
+
 		if (damage.length && !attacks.length && scaledTargets > 1) {
 			for (let i = 0; i < scaledTargets; i++) {
 				results.push({
@@ -824,6 +826,28 @@ export const Rolls = {
 		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + value);
 		msg.data.flags.obsidian.damage[hit].results.forEach(dmg => accumulate(dmg.type, dmg.total));
 		return damage;
+	},
+
+	getDicePools: function (actor, effect, options) {
+		let resource;
+		const consumer = effect.components.find(c => c.type === 'consume');
+
+		if (consumer && !['qty', 'spell'].includes(consumer.target)) {
+			const [, , refResource] = Effect.getLinkedResource(actor.data, consumer);
+			if (refResource?.pool) {
+				resource = refResource;
+			}
+		}
+
+		if (!resource) {
+			resource = effect.components.find(c => c.type === 'resource');
+		}
+
+		if (!resource?.pool) {
+			return;
+		}
+
+		return Rolls.rollResource(resource, options.consumed || 1);
 	},
 
 	hd: function (actor, rolls, conBonus) {
@@ -1168,6 +1192,23 @@ export const Rolls = {
 		};
 	},
 
+	rollResource: function (resource, rolls) {
+		const roll = new ObsidianDie(resource.die).roll(rolls);
+		return {
+			flavour: resource.name,
+			data3d: {
+				formula: `${rolls}d${resource.die}`,
+				results: roll.results
+			},
+			results: roll.results.map(r => {
+				return {
+					total: r,
+					breakdown: `1d${resource.die} = ${r}`
+				}
+			})
+		};
+	},
+
 	savingThrow: function (actor, save) {
 		const flags = actor.data.flags.obsidian;
 		const saveData = flags.saves[save];
@@ -1257,6 +1298,11 @@ export const Rolls = {
 			        data3d.formula.push(msg.flags.obsidian.damage.data3d.formula);
 			        data3d.results.push(...msg.flags.obsidian.damage.data3d.results);
 			        data3d.colours.push(...msg.flags.obsidian.damage.data3d.colours);
+		        }
+
+		        if (getProperty(msg, 'flags.obsidian.pools.data3d')) {
+			        data3d.formula.push(msg.flags.obsidian.pools.data3d.formula);
+			        data3d.results.push(...msg.flags.obsidian.damage.data3d.results);
 		        }
 	        });
 

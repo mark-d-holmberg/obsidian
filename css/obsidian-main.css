@@ -1437,6 +1437,14 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	color: var(--obs-text-subtle);
 }
 
+.obsidian-msg-row.obsidian-dragover .obsidian-msg-roll-box {
+	border-color: var(--obs-highlight);
+}
+
+.obsidian-vertical-bisect.obsidian-dragover .obsidian-msg-wide-box {
+	border-color: var(--obs-highlight);
+}
+
 .obsidian-msg-value {
 	position: relative;
 	flex: 1;

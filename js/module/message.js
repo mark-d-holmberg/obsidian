@@ -100,6 +100,8 @@ export function patchChatMessage () {
 			html.find('[data-dmg], [data-apply-all]').click(Rolls.applyDamage);
 			html.find('.obsidian-apply-save').click(evt => Rolls.applySave(evt, 'saves'));
 			html.find('.obsidian-apply-check').click(evt => Rolls.applySave(evt, 'checks'));
+			html.find('.obsidian-msg-roll-box[draggable="true"]').each((i, el) => initRollDrag(el));
+			html.find('.obsidian-dice-drop-target').each((i, el) => initRollDrop(el));
 			return html;
 		};
 	})();
@@ -168,4 +170,83 @@ export function updateApplyIcons (evt) {
 	const chat = document.getElementById('chat-log');
 	chat.querySelectorAll('[data-dmg], [data-apply-all]').forEach(el => el.innerHTML = dmg);
 	chat.querySelectorAll('.obsidian-apply-save').forEach(el => el.innerHTML = save);
+}
+
+export function applyRollDragover (evt) {
+	$('#chat-log .obsidian-dragover').removeClass('obsidian-dragover');
+	const target = evt.target.closest('.obsidian-dice-drop-target');
+
+	if (target) {
+		target.classList.add('obsidian-dragover');
+	}
+}
+
+function initRollDrag (el) {
+	el.addEventListener('dragstart', evt =>
+		evt.dataTransfer.setData('application/json', JSON.stringify(el.dataset)));
+
+	el.addEventListener('dragend', () =>
+		$('#chat-log .obsidian-dragover').removeClass('obsidian-dragover'));
+}
+
+function initRollDrop (el) {
+	el.addEventListener('dragover', evt => {
+		evt.preventDefault();
+		evt.dataTransfer.dropEffect = 'copy';
+	});
+
+	el.addEventListener('drop', evt => {
+		evt.preventDefault();
+		const data = JSON.parse(evt.dataTransfer.getData('application/json'));
+		data.value = Number(data.value);
+
+		const mode = evt.currentTarget.dataset.mode;
+		const index = Number(evt.currentTarget.dataset.index);
+		const msgID = evt.currentTarget.closest('[data-message-id]').dataset.messageId;
+		const msg = game.messages.get(msgID);
+
+		if (!msg) {
+			return;
+		}
+
+		const flags = msg.data.flags.obsidian;
+		if (!flags) {
+			return;
+		}
+
+		if (!mode && !isNaN(index) && flags.results.length) {
+			const results = duplicate(flags.results);
+			const result = results[index];
+
+			if (!result) {
+				return;
+			}
+
+			result.forEach(roll => {
+				roll.total += data.value;
+				roll.breakdown += `${data.value.sgnex()} [${data.flavour}]`;
+			});
+
+			msg.setFlag('obsidian', 'results', results);
+			return;
+		}
+
+		if (flags.damage && flags.damage[mode]) {
+			const damage = duplicate(flags.damage[mode]);
+			const first = damage.results[0];
+
+			if (!first) {
+				return;
+			}
+
+			damage.results.push({
+				type: first.type,
+				total: data.value,
+				breakdown: `${data.value} [${data.flavour}]`
+			});
+
+			damage.total += data.value;
+			msg.setFlag('obsidian', `damage.${mode}`, damage);
+		}
+	});
 }

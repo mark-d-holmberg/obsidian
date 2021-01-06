@@ -216,7 +216,9 @@ export const Components = {
 			key: 'abl',
 			min: 0,
 			calc: 'fixed',
-			fixed: 0
+			fixed: 0,
+			pool: false,
+			die: 4
 		},
 		metadata: {
 			category: 'resources',
