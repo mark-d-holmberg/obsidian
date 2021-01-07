@@ -24,6 +24,7 @@ import {applyRollDragover, updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
 import {ObsidianVehicle} from './module/vehicle.js';
 import ObsidianTable from './module/tables.js';
+import {addLootSheetHook} from './module/compat/loot-sheet.js';
 
 runPatches();
 
@@ -86,6 +87,7 @@ Hooks.once('ready', function () {
 	addSocketListener();
 	initDurations();
 	addTransformHook();
+	addLootSheetHook();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {

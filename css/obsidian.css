@@ -1506,3 +1506,7 @@ legend .fancy-checkbox {
 	color: var(--obs-text-regular);
 	font-size: 12px;
 }
+
+.dnd5e.loot-sheet-npc .item-properties {
+	display: none;
+}
