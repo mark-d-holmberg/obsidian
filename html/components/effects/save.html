@@ -60,6 +60,7 @@
 				{{localize 'OBSIDIAN.OnSave'}}
 				<select name="{{prefix}}.save">
 					{{#select save}}
+						<option value="">&mdash;</option>
 						{{#each @root.ObsidianRules.EFFECT_SAVE}}
 							<option value="{{this}}">{{i18n-join 'OBSIDIAN.OnSave-' this}}</option>
 						{{/each}}

@@ -123,7 +123,7 @@ export const Rolls = {
 		}
 
 		let attack;
-		const message = game.messages.get(target.closest('.message').data('message-id'));0
+		const message = game.messages.get(target.closest('.message').data('message-id'));
 
 		if (message) {
 			attack = message.data.flags.obsidian.damage?.attack;
@@ -245,13 +245,13 @@ export const Rolls = {
 
 			if (failed) {
 				targets.push(token);
-			} else {
+			} else if (component.save.length) {
 				if (component.save === 'none') {
-					continue;
+					damage.clear();
 				}
 
 				for (const [type, dmg] of damage.entries()) {
-					damage.set(type, Math.max(1, Math.floor(dmg / 2)));
+					damage.set(type, Math.max(0, Math.floor(dmg / 2)));
 				}
 			}
 

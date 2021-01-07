@@ -263,7 +263,7 @@ export const Components = {
 			ability: '',
 			target: 'con',
 			effect: '',
-			save: 'half'
+			save: ''
 		},
 		metadata: {
 			category: 'rolls',
