@@ -23,6 +23,17 @@ export function prepareNPC (flags, derived) {
 	}
 }
 
+export function prepareNPCHD (data, flags, derived) {
+	const size = data.traits.size;
+	const conMod = data.abilities.con.mod;
+	const maxHD = flags.attributes.hd.max || 0;
+
+	derived.attributes.hd = {
+		die: Rules.NPC_SIZE_HD[size],
+		const: maxHD * conMod
+	};
+}
+
 export function prepareSpeed (data, derived) {
 	const speed = [];
 	const feet = game.i18n.localize('OBSIDIAN.FeetAbbr');

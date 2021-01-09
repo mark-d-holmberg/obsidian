@@ -98,7 +98,7 @@ Rules.CREATURE_TAGS = [
 
 Rules.CREATURE_TYPES = [
 	'aberration', 'beast', 'celestial', 'construct', 'dragon', 'elemental', 'fey', 'fiend', 'giant',
-	'humanoid', 'monstrosity', 'ooze', 'plant', 'undead'
+	'humanoid', 'monstrosity', 'object', 'ooze', 'plant', 'undead'
 ];
 
 Rules.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
@@ -155,6 +155,7 @@ Rules.ITEM_RECHARGE = ['long', 'short', 'dawn', 'dusk', 'never', 'roll'];
 Rules.ITEM_SUBRARITY = ['min', 'maj'];
 Rules.MAX_LEVEL = 20;
 Rules.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
+Rules.NPC_SIZE_HD = {tiny: 4, sm: 6, med: 8, lg: 10, huge: 12, grg: 20};
 Rules.PROF_ARMOUR = ['lgt', 'med', 'hvy', 'shl'];
 Rules.PROF_WEAPON = [
 	'sim', 'mar', 'fire', 'club', 'dag', 'gclub', 'haxe', 'jav', 'lham', 'mace', 'staff', 'sickle',

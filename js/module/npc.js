@@ -79,8 +79,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 		Sheet.activateDragging(this, html);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
-		html.find('.obsidian-npc-hp-formula').click(this._enterHPFormula.bind(this));
+		html.find('.obsidian-npc-dt').click(this._enterDT.bind(this));
 		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
+		html.find('.obsidian-npc-roll-hp').click(this._rollHP.bind(this));
+		html.find('.obsidian-npc-roll-hd').click(this._rollHD.bind(this));
 		html.find('.obsidian-npc-condition-grid .obsidian-radio-label')
 			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-legendary-actions .obsidian-feature-use')
@@ -100,6 +102,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		const data = super.getData();
 		data.items = this.actor.items.map(i => duplicate(i.data));
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.isObject = data.actor.flags.obsidian?.details?.type === 'object';
 		data.featCategories = {};
 		data.skills = {};
 
@@ -211,25 +214,21 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		});
 	}
 
-	_enterHPFormula (evt) {
+	_enterDT (evt) {
 		const target = $(evt.currentTarget);
 		target.off();
 		target.empty();
 		target.append(
-			$('<input type="text" name="data.attributes.hp.formula"'
-				+ ` value="${this.actor.data.data.attributes.hp.formula}"`
-				+ ` placeholder="${game.i18n.localize('OBSIDIAN.Formula')}">`));
+			$('<input type="text" name="flags.obsidian.attributes.dt" data-dtype="Number"'
+				+ ` value="${this.actor.data.flags.obsidian.attributes.dt ?? ''}"`
+				+ ' placeholder="0">'));
 
 		target.find('input').focus().focusout(evt => {
 			this._onSubmit(evt);
 			const target = $(evt.currentTarget);
-			let value = target.val();
-
-			if (value === '') {
-				value = game.i18n.localize('OBSIDIAN.Formula').toLowerCase();
-			}
-
-			target.parent().text(`(${value})`).click(this._enterHPFormula.bind(this));
+			target.parent()
+				.text(`${game.i18n.localize('OBSIDIAN.DT')} ${(target.val())}`)
+				.click(this._enterDT.bind(this));
 		});
 	}
 
@@ -248,6 +247,19 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	async _onSubmit (event, {updateData = null, preventClose = false, preventRender = false} = {}) {
 		return Obsidian.prototype._onSubmit.apply(this, arguments);
+	}
+
+	_rollHD () {
+		const hd = this.actor.data.flags.obsidian.attributes.hd;
+		if (!hd.value || !hd.max) {
+			return;
+		}
+
+		this.actor.rollHD([[1, this.actor.data.obsidian.attributes.hd.die]]);
+	}
+
+	_rollHP (evt) {
+		this.actor.rollHP(evt.shiftKey);
 	}
 
 	_restoreScrollPositions (html, selectors) {

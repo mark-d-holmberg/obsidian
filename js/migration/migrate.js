@@ -15,6 +15,7 @@ import {v9} from './v9.js';
 import {v10} from './v10.js';
 import {v11} from './v11.js';
 import {v12} from './v12.js';
+import {v13} from './v13.js';
 
 export const Migrate = {
 	convertActor: function (data) {
@@ -72,6 +73,10 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 13 && source !== 'core') {
 			Migrate.v12.convertSenses(data);
+		}
+
+		if (data.flags.obsidian.version < 14 && source !== 'core' && data.type === 'npc') {
+			Migrate.v13.convertHD(data);
 		}
 
 		if (data.items?.length) {
@@ -680,6 +685,7 @@ Migrate.v9 = v9;
 Migrate.v10 = v10;
 Migrate.v11 = v11;
 Migrate.v12 = v12;
+Migrate.v13 = v13;
 
 function lazyConvert () {
 	const convert = (key, convert) => {

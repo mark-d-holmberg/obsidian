@@ -25,6 +25,7 @@ import {registerSettings} from './module/settings.js';
 import {ObsidianVehicle} from './module/vehicle.js';
 import ObsidianTable from './module/tables.js';
 import {addLootSheetHook} from './module/compat/loot-sheet.js';
+import {addCreateObjectHooks, convertObject} from './module/objects.js';
 
 runPatches();
 
@@ -88,6 +89,7 @@ Hooks.once('ready', function () {
 	initDurations();
 	addTransformHook();
 	addLootSheetHook();
+	addCreateObjectHooks();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {
@@ -123,7 +125,10 @@ function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
 }
 
-Hooks.on('preCreateActor', data => enrichActorFlags(data));
+Hooks.on('preCreateActor', data => {
+	convertObject(data);
+	enrichActorFlags(data);
+});
 Hooks.on('preCreateItem', data => enrichItemFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, data) => {
 	enrichItemFlags(data);

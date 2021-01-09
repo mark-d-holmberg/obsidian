@@ -877,6 +877,27 @@ export const Rolls = {
 		return results;
 	},
 
+	hp: function (actor, n, d, c) {
+		const results = new ObsidianDie(d).roll(n);
+		results.total += c;
+
+		const data = Rolls.toMessage(actor, 'selfroll');
+		ChatMessage.create(mergeObject(data, {
+			flags: {
+				obsidian: {
+					type: 'hp',
+					title: game.i18n.localize('OBSIDIAN.HP'),
+					results: [[{
+						total: results.total,
+						breakdown: `${n}d${d} + ${c} = (${results.results.join('+')})${c.sgnex()}`
+					}]]
+				}
+			}
+		}));
+
+		return results;
+	},
+
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;

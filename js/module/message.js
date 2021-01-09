@@ -102,6 +102,7 @@ export function patchChatMessage () {
 			html.find('.obsidian-apply-check').click(evt => Rolls.applySave(evt, 'checks'));
 			html.find('.obsidian-msg-roll-box[draggable="true"]').each((i, el) => initRollDrag(el));
 			html.find('.obsidian-dice-drop-target').each((i, el) => initRollDrop(el));
+			$('.obsidian-msg-tooltip').css('display', 'none');
 			return html;
 		};
 	})();

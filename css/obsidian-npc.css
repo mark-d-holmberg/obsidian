@@ -108,6 +108,7 @@
 
 .dnd5e.sheet .obsidian-npc-hp input[type=text],
 .dnd5e.sheet .obsidian-npc-cr input[type=text],
+.dnd5e.sheet .obsidian-npc-hd input[type=text],
 .dnd5e.sheet .obsidian-vehicle-cargo-cap input[type=text],
 .dnd5e.sheet .obsidian-vehicle-ac input[type=text],
 .dnd5e.sheet .obsidian-vehicle-dt input[type=text] {
@@ -119,7 +120,17 @@
 	margin: 0;
 }
 
-.dnd5e.sheet .obsidian-npc-hp input[type=text]:first-child {
+.obsidian-npc-hd-die {
+	margin: 0 10px;
+}
+
+.obsidian-npc-hd-die,
+.obsidian-npc-hd-const {
+	color: var(--obs-text-subtle);
+}
+
+.dnd5e.sheet .obsidian-npc-hp input[type=text]:first-child,
+.dnd5e.sheet .obsidian-npc-hd input[type=text]:first-child {
 	color: var(--obs-text-subtle);
 }
 
@@ -134,7 +145,7 @@
 	text-align: right;
 }
 
-.obsidian-npc-hp-formula {
+.obsidian-npc-dt {
 	display: inline-block;
 	margin-left: 3px;
 }
@@ -144,7 +155,7 @@
 	font-size: 13px;
 }
 
-.dnd5e.sheet .obsidian-npc-hp-formula input[type=text],
+.dnd5e.sheet .obsidian-npc-dt input[type=text],
 .dnd5e.sheet .obsidian-npc-cr input[type=text] {
 	width: 75px;
 	font-weight: normal;
@@ -152,8 +163,8 @@
 	border-bottom: 1px solid var(--obs-mid);
 }
 
-.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:hover,
-.dnd5e.sheet .obsidian-npc-hp-formula input[type=text]:focus,
+.dnd5e.sheet .obsidian-npc-dt input[type=text]:hover,
+.dnd5e.sheet .obsidian-npc-dt input[type=text]:focus,
 .dnd5e.sheet .obsidian-npc-cr input[type=text]:hover,
 .dnd5e.sheet .obsidian-npc-cr input[type=text]:focus {
 	box-shadow: none;

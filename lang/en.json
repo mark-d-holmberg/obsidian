@@ -875,6 +875,7 @@
 	"OBSIDIAN.CreatureType-giant": "Giant",
 	"OBSIDIAN.CreatureType-humanoid": "Humanoid",
 	"OBSIDIAN.CreatureType-monstrosity": "Monstrosity",
+	"OBSIDIAN.CreatureType-object": "Object",
 	"OBSIDIAN.CreatureType-ooze": "Ooze",
 	"OBSIDIAN.CreatureType-plant": "Plant",
 	"OBSIDIAN.CreatureType-undead": "Undead",
@@ -1004,5 +1005,7 @@
 	"OBSIDIAN.MultiplyScore": "Multiply Score",
 	"OBSIDIAN.Multiplier": "Multiplier",
 	"OBSIDIAN.MultipliesScoreBy": "Multiplies scores by {0}",
-	"OBSIDIAN.DicePool": "Dice Pool"
+	"OBSIDIAN.DicePool": "Dice Pool",
+	"OBSIDIAN.Object": "Object",
+	"OBSIDIAN.DT": "DT"
 }

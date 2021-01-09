@@ -7,7 +7,7 @@ import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from './schema.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
-import {prepareNPC, prepareSpeed} from '../rules/npc.js';
+import {prepareNPC, prepareNPCHD, prepareSpeed} from '../rules/npc.js';
 import {prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
 import {Migrate} from '../migration/migrate.js';
@@ -240,6 +240,8 @@ export class ObsidianActor extends Actor5e {
 		if (this.data.type === 'character') {
 			Prepare.hd(flags, derived);
 			Prepare.tools(this.data, data, flags, derived);
+		} else if (this.data.type === 'npc') {
+			prepareNPCHD(data, flags, derived);
 		}
 
 		// We have a complicated preparation workflow where item and actor
@@ -523,7 +525,11 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		rolls.forEach(([n, d]) => {
-			const obj = hd[`d${d}`];
+			let obj = hd[`d${d}`];
+			if (this.data.type === 'npc') {
+				obj = hd;
+			}
+
 			obj.value -= n;
 
 			if (obj.value < 0) {
@@ -532,6 +538,26 @@ export class ObsidianActor extends Actor5e {
 		});
 
 		this.update({'data.attributes.hp.value': newHP, 'flags.obsidian.attributes.hd': hd});
+	}
+
+	rollHP (takeAverage) {
+		const totalDice = this.data.flags.obsidian.attributes.hd.max;
+		if (!totalDice) {
+			return;
+		}
+
+		let total;
+		const hd = this.data.obsidian.attributes.hd;
+
+		if (takeAverage) {
+			const average = hd.die / 2 + .5;
+			total = Math.floor(average * totalDice + hd.const);
+		} else {
+			const results = Rolls.hp(this, totalDice, hd.die, hd.const);
+			total = results.total;
+		}
+
+		this.update({'data.attributes.hp': {value: total, max: total}});
 	}
 
 	get temporaryEffects () {
@@ -600,6 +626,21 @@ export class ObsidianActor extends Actor5e {
 
 			if (recoveredHD >= hdToRecover) {
 				break;
+			}
+		}
+
+		if (this.data.type === 'npc') {
+			const hd = flags.attributes.hd;
+			if (hd.max) {
+				let expended = hd.max - hd.value;
+				if (isNaN(expended) || expended < 0) {
+					expended = 0;
+				}
+
+				if (expended > 0) {
+					const recovered = Math.min(Math.floor(hd.max / 2), expended);
+					update[`flags.obsidian.attributes.hd.value`] = hd.value + recovered;
+				}
 			}
 		}
 

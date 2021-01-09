@@ -62,7 +62,7 @@
 						{{~else~}}
 						{{~lc data.details.type~}}
 					{{~/if~}}
-				</span>{{#if actor.obsidian.details.tags}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}<span>,</span>
+				</span>{{#if (and actor.obsidian.details.tags (not isObject))}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}{{#if (not isObject)}}<span>,</span>
 				<span>
 					{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2)}}
 						{{#if actor.flags.obsidian.details.alignment1}}
@@ -74,9 +74,10 @@
 					{{else}}
 						{{lc data.details.alignment}}
 					{{/if}}
-				</span>
+				</span>{{/if}}
 			</div>
 			<div class="obsidian-npc-btns">
+				{{#if (not isObject)}}
 				<div class="obsidian-npc-btn-row">
 					<button type="button" class="obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet
 					        obsidian-short-rest">
@@ -89,6 +90,7 @@
 						{{localize 'OBSIDIAN.LongRest'}}
 					</button>
 				</div>
+				{{/if}}
 				<div class="obsidian-npc-btn-row">
 					<button type="button" class="
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
@@ -121,7 +123,9 @@
 					</div>
 				</div>
 				<div class="obsidian-npc-stat-row" style="height: 17px;">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.HP'}}</div>
+					<div class="obsidian-npc-stat-key obsidian-npc-roll-hp rollable">
+						{{localize 'OBSIDIAN.HP'}}
+					</div>
 					<div class="obsidian-npc-stat-value obsidian-npc-hp">
 						<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
 						       value="{{data.attributes.hp.value}}" data-dtype="Number">
@@ -133,13 +137,26 @@
 					         class="obsidian-input-num obsidian-npc-tmp-hp"
 					         value="{{data.attributes.hp.temp}}"
 					         placeholder="{{localize 'OBSIDIAN.TempAbbrUC'}}">
-						<div class="obsidian-npc-hp-formula obsidian-ptr obsidian-npc-subtle">
-							({{#if data.attributes.hp.formula}}
-								{{~data.attributes.hp.formula~}}
-							{{else}}
-								{{~lc (localize 'OBSIDIAN.Formula')~}}
-							{{/if}})
+						<div class="obsidian-npc-dt obsidian-ptr obsidian-npc-subtle">
+							{{localize 'OBSIDIAN.DT'}} {{actor.flags.obsidian.attributes.dt}}
 						</div>
+					</div>
+				</div>
+				<div class="obsidian-npc-stat-row" style="height: 17px;">
+					<div class="obsidian-npc-stat-key obsidian-npc-roll-hd rollable">
+						{{localize 'OBSIDIAN.HD'}}
+					</div>
+					<div class="obsidian-npc-stat-value obsidian-npc-hd">
+						<input type="text" name="flags.obsidian.attributes.hd.value" class="obsidian-input-num"
+						       value="{{actor.flags.obsidian.attributes.hd.value}}" data-dtype="Number"
+						       placeholder="0">
+						<span class="obsidian-binary-operator" style="color: var(--obs-text-subtle);">&sol;</span>
+						<input type="text" name="flags.obsidian.attributes.hd.max" class="obsidian-input-num"
+						       value="{{actor.flags.obsidian.attributes.hd.max}}" data-dtype="Number"
+						       placeholder="0">
+						<span class="obsidian-npc-hd-die">d{{actor.obsidian.attributes.hd.die}}</span>
+						<span class="obsidian-binary-operator">&plus;</span>
+						<span class="obsidian-npc-hd-const">{{actor.obsidian.attributes.hd.const}}</span>
 					</div>
 				</div>
 				<div class="obsidian-npc-stat-row">
@@ -234,6 +251,7 @@
 					{{{lc actor.obsidian.defenses.display.conditions.imm}}}
 				</div>
 				{{/if}}
+				{{#if (not isObject)}}
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Senses"
 				     data-npc="true">
 					<strong>{{localize 'OBSIDIAN.Senses'}}</strong>
@@ -307,6 +325,7 @@
 						</div>
 					</div>
 				</div>
+				{{/if}}
 				<div class="obsidian-npc-configure">
 					<div data-dialog="NPCSkills">
 						{{localize 'OBSIDIAN.Skills'}} <i class="fas fa-cog"></i>
