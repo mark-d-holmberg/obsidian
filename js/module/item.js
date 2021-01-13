@@ -242,6 +242,8 @@ const prepareItem = {
 				.join(', ');
 
 		let cls;
+		derived.visible = true;
+
 		if (flags.source === undefined) {
 			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
 		} else if (flags.source.type === 'custom') {
@@ -251,8 +253,12 @@ const prepareItem = {
 				cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
 				derived.source.display = cls?.obsidian.label;
 			} else if (flags.source.type === 'item') {
-				derived.source.display =
-					item.actor.data.obsidian.itemsByID.get(flags.source.item)?.name;
+				const src = item.actor.data.obsidian.itemsByID.get(flags.source.item);
+				derived.source.display = src?.name;
+
+				if (src.flags.obsidian.attunement && !src.data.attuned) {
+					derived.visible = false;
+				}
 			}
 		}
 
@@ -288,8 +294,6 @@ const prepareItem = {
 			if (data.components.ritual) {
 				derived.visible = derived.visible || spellcasting.rituals === 'book';
 			}
-		} else {
-			derived.visible = true;
 		}
 	},
 
