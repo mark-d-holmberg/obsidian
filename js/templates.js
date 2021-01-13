@@ -39,6 +39,7 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/effects/check.html',
 		'modules/obsidian/html/components/effects/roll-table.html',
 		'modules/obsidian/html/components/effects/multiplier.html',
+		'modules/obsidian/html/components/effects/actors.html',
 		'modules/obsidian/html/components/parts/weight-cost.html',
 		'modules/obsidian/html/components/parts/magic.html'
 	]);

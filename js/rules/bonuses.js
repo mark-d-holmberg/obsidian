@@ -116,7 +116,7 @@ function applySpeedBonuses (actorData, data, derived) {
 	}
 
 	const inventory = derived.inventory;
-	const variant = game.settings.get('obsidian', 'encumbrance');
+	const encumbrance = game.settings.get('obsidian', 'encumbrance');
 
 	for (const speed of OBSIDIAN.Rules.SPEEDS) {
 		derived.attributes.speed[speed] = data.attributes.movement[speed];
@@ -149,12 +149,12 @@ function applySpeedBonuses (actorData, data, derived) {
 			}
 		}
 
-		if (inventory.overCapacity) {
+		if (encumbrance < 2 && inventory.overCapacity) {
 			derived.attributes.speed[speed] = 0;
 			continue;
 		}
 
-		if (variant) {
+		if (encumbrance === 1) {
 			if (inventory.heavilyEncumbered) {
 				derived.attributes.speed[speed] -= 20;
 			} else if (inventory.encumbered) {

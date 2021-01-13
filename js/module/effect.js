@@ -5,6 +5,16 @@ import {determineAdvantage} from '../rules/prepare.js';
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
 
 export const Components = {
+	actors: {
+		data: {
+			type: 'actors',
+			actors: []
+		},
+		metadata: {
+			category: 'special',
+			tray: 'ProvidesActors'
+		}
+	},
 	applied: {
 		data: {
 			type: 'applied',
@@ -345,7 +355,7 @@ export const Effect = {
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([
 			'damage', 'save', 'target', 'duration', 'expression', 'consume', 'produce',
-			'description', 'roll-table'
+			'description', 'roll-table', 'actors'
 		])
 	},
 
@@ -429,10 +439,13 @@ export const Effect = {
 
 	encumbranceRollMod: (actor, ability) => {
 		const inventory = actor.data.obsidian.inventory;
-		const variant = game.settings.get('obsidian', 'encumbrance');
+		const encumbrance = game.settings.get('obsidian', 'encumbrance');
 		let mode = 'reg';
 
-		if (variant && inventory.heavilyEncumbered && ['str', 'dex', 'con'].includes(ability)) {
+		if (encumbrance === 1
+			&& inventory.heavilyEncumbered
+			&& ['str', 'dex', 'con'].includes(ability))
+		{
 			mode = 'dis';
 		}
 

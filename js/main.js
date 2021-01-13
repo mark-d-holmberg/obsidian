@@ -7,7 +7,6 @@ import {registerHandlebarsExpr} from './util/helpers-expr.js';
 import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
-import {addSettingsHook} from './rules/spell-lists.js';
 import {Migrate} from './migration/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
 import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
@@ -105,6 +104,16 @@ Hooks.on('renderCompendium', (compendium, html) => {
 });
 
 Hooks.on('renderCompendiumDirectory', (compendium, html) => {
+	html.find('.compendium-pack').attr('draggable', 'true').each((i, el) =>
+		el.ondragstart = evt => {
+			const pack = game.packs.get(el.dataset.pack);
+			evt.dataTransfer.setData('text/plain', JSON.stringify({
+				type: 'Compendium',
+				id: pack.collection,
+				entity: pack.entity
+			}));
+		});
+
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
@@ -115,7 +124,6 @@ Hooks.on('updateOwnedItem', () => ui.hotbar.render());
 Hooks.on('updateToken', () => ui.hotbar.render());
 
 addCompendiumContextMenuHook();
-addSettingsHook();
 
 function enrichActorFlags (data) {
 	mergeObject(data, Migrate.convertActor(data));

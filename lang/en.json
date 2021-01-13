@@ -1,8 +1,11 @@
 {
 	"OBSIDIAN.ConfigNumDiceHead": "Only roll one die",
 	"OBSIDIAN.ConfigNumDiceMessage": "If enabled, obsidian will only roll a single d20 by default, instead of always rolling 2d20.",
-	"OBSIDIAN.ConfigEncumbrance": "Use Variant Encumbrance",
-	"OBSIDIAN.ConfigEncumbranceMessage": "If enabled, obsidian will use the variant encumbrance rules for calculating carrying capacity and armour strength requirements.",
+	"OBSIDIAN.ConfigEncumbrance": "Encumbrance",
+	"OBSIDIAN.ConfigEncumbranceMessage": "Select which rules to use for determining creature encumbrance and any penalties associated with it.",
+	"OBSIDIAN.StandardEncumbrance": "Standard Encumbrance",
+	"OBSIDIAN.VariantEncumbrance": "Variant Encumbrance",
+	"OBSIDIAN.NoEncumbrance": "No Encumbrance",
 	"OBSIDIAN.PersonalityTraits": "Personality Traits",
 	"OBSIDIAN.Ideals": "Ideals",
 	"OBSIDIAN.Bonds": "Bonds",
@@ -610,6 +613,7 @@
 	"OBSIDIAN.ExportSpellLists": "Export Spell Lists",
 	"OBSIDIAN.ImportSpellLists": "Import Spell Lists",
 	"OBSIDIAN.SpellCompendium": "Configure spell compendium source",
+	"OBSIDIAN.SpellCompendiumHint": "This will be the compendium that characters pick spells from when they open the 'Manage Spells' dialog. You must make sure you configure the class spell lists above too if your compendium contains spells that aren't in the default lists.",
 	"OBSIDIAN.MigrateTitle": "Obsidian Update",
 	"OBSIDIAN.MigrateMessage": "In order to support new features, the underlying data model has been changed and your existing content needs to be migrated to this new format. <strong>Please make a backup of your world data before proceeding as this process cannot be reversed.</strong>",
 	"OBSIDIAN.MigrateMessage2": "If you do not wish to perform the migration at this time, click 'Cancel' below and then disable the module from the 'Manage Modules' section.",
@@ -1007,5 +1011,7 @@
 	"OBSIDIAN.MultipliesScoreBy": "Multiplies scores by {0}",
 	"OBSIDIAN.DicePool": "Dice Pool",
 	"OBSIDIAN.Object": "Object",
-	"OBSIDIAN.DT": "DT"
+	"OBSIDIAN.DT": "DT",
+	"OBSIDIAN.ProvidesActors": "Provides Actors",
+	"OBSIDIAN.DropActorsHere": "Drop Actors or Compendia Here"
 }

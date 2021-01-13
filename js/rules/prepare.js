@@ -439,7 +439,7 @@ export const Prepare = {
 		const inventory = derived.inventory;
 		const str = derived.abilities.str.value;
 		const thresholds = Rules.ENCUMBRANCE_THRESHOLDS;
-		const variant = game.settings.get('obsidian', 'encumbrance');
+		const encumbrance = game.settings.get('obsidian', 'encumbrance');
 		const sizeMod = Rules.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
 		const bonuses = derived.filters.bonuses(Filters.isCarry);
 		const setters = derived.filters.setters(Filters.isCarry);
@@ -465,9 +465,9 @@ export const Prepare = {
 
 		inventory.encumbered = false;
 		inventory.heavilyEncumbered = false;
-		inventory.overCapacity = inventory.weight >= inventory.max;
+		inventory.overCapacity = encumbrance < 2 && inventory.weight >= inventory.max;
 
-		if (variant) {
+		if (encumbrance === 1) {
 			inventory.encumbered = inventory.weight >= str * thresholds.encumbered;
 			inventory.heavilyEncumbered = inventory.weight >= str * thresholds.heavy;
 		}

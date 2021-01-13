@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 
-class ObsidianSpellLists extends Application {
+// noinspection JSClosureCompilerSyntax
+export default class ObsidianSpellLists extends FormApplication {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 800;
@@ -9,6 +10,8 @@ class ObsidianSpellLists extends Application {
 			options.classes.concat(['dialog', 'obsidian-window', 'obsidian-2-pane-window']);
 		options.template = 'modules/obsidian/html/dialogs/spell-class-lists.html';
 		options.title = game.i18n.localize('OBSIDIAN.SettingsConfSpellLists');
+		options.closeOnSubmit = false;
+		options.submitOnClose = false;
 		return options;
 	}
 
@@ -286,61 +289,4 @@ class ObsidianExportSpellListDialog extends ObsidianTextBoxDialog {
 			JSON.stringify(JSON.parse(game.settings.get('obsidian', 'spell-class-lists')), null, 2);
 		return data;
 	}
-}
-
-export function addSettingsHook () {
-	Hooks.on('renderSettingsConfig', (config, html) => {
-		if (!game.user.isGM) {
-			return;
-		}
-
-		const parent = html.find('[data-tab="modules"] .settings-list');
-		let header;
-
-		parent.find('h2').each((i, el) => {
-			if (el.innerText === 'Obsidian Character Sheets') {
-				header = $(el);
-			}
-		});
-
-		if (!header) {
-			return;
-		}
-
-		header.after($(`
-			<div class="form-group">
-				<label>${game.i18n.localize('OBSIDIAN.SettingsConfSpellLists')}</label>
-				<button type="button" class="obsidian-btn-outline" id="obsidian-config-spell-lists">
-					<i class="fas fa-cogs"></i>
-					${game.i18n.localize('OBSIDIAN.Configure')}
-				</button>
-			</div>
-			<div class="form-group">
-				<label>${game.i18n.localize('OBSIDIAN.SpellCompendium')}</label>
-				<select id="obsidian-config-spell-compendium"></select>
-			</div>
-		`));
-
-		const compendium = game.settings.get('obsidian', 'spell-compendium');
-		parent.find('#obsidian-config-spell-lists').click(() =>
-			new ObsidianSpellLists().render(true));
-
-		parent.find('#obsidian-config-spell-compendium').change(async evt => {
-			const newCompendium = $(evt.currentTarget).val();
-			game.settings.set('obsidian', 'spell-compendium', newCompendium);
-			await OBSIDIAN.collateSpells(newCompendium);
-			OBSIDIAN.computeSpellsByClass(
-				JSON.parse(game.settings.get('obsidian', 'spell-class-lists')));
-		}).append(
-			game.packs.filter(pack => pack.entity === 'Item')
-				.map(pack =>
-					$(`<option value="${pack.collection}">`
-						+ `[${pack.metadata.module
-								? pack.metadata.module
-								: pack.metadata.system
-									? pack.metadata.system
-									: pack.metadata.package}] `
-						+`${pack.metadata.label}</option>`)))
-			.find(`option[value="${compendium}"]`).prop('selected', true);
-	});
 }

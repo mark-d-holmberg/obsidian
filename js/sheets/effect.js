@@ -130,6 +130,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		html.find('.obsidian-rm-roll-table').click(this._onRemoveTable.bind(this));
 		html.find('.obsidian-roll-table-body')
 			.click(evt => this._openEmbeddedEntity(evt, 'tables', 'RollTable'));
+		html.find('.obsidian-actor-drop').on('dragover', evt => evt.preventDefault());
+		html.find('.obsidian-actor-drop').each((i, el) => el.ondrop = this._onDropActor.bind(this));
+		html.find('.obsidian-rm-provide-actor').click(this._onRemoveActor.bind(this));
+		html.find('.obsidian-provide-actor-body').click(this._onEditActor.bind(this));
 		html.find('summary').click(this._saveCategoryStates.bind(this));
 
 		this._onCheckBoxClicked();
@@ -156,7 +160,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		super.close();
 	}
 
-	getData () {
+	async getData () {
 		const data = super.getData();
 		data.equipTypes = Schema.EquipTypes;
 		data.spellLists = Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS);
@@ -186,9 +190,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		if (data.item.flags?.obsidian?.effects?.length) {
-			data.item.flags.obsidian.effects
-				.flatMap(e => e.components)
-				.filter(c => c.type === 'consume' || c.type === 'produce')
+			const components = data.item.flags.obsidian.effects.flatMap(e => e.components);
+			components.filter(c => c.type === 'consume' || c.type === 'produce')
 				.forEach(component => {
 					let item = data.item;
 					if (data.actor) {
@@ -211,14 +214,43 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					}
 				});
 
-			data.item.flags.obsidian.effects
-				.flatMap(e => e.components)
-				.filter(c => c.type === 'filter')
-				.forEach(component => {
-					component.isMulti = Effect.determineMulti(component);
-					component.isCollection = component.isMulti && component.multi === 'some';
-					component.availableSelections = this._generateFilterSelections(component);
+			components.filter(c => c.type === 'filter').forEach(component => {
+				component.isMulti = Effect.determineMulti(component);
+				component.isCollection = component.isMulti && component.multi === 'some';
+				component.availableSelections = this._generateFilterSelections(component);
+			});
+
+			const resolving = [];
+			components.filter(c => c.type === 'actors').forEach(component => {
+				component.processed = [];
+				component.actors.forEach(uuid => {
+					const parts = uuid.split('.');
+					if (parts[0] === 'Compendium' && parts.length < 4) {
+						parts.shift();
+						const pack = game.packs.get(parts.join('.'));
+
+						if (pack) {
+							resolving.push(
+								Promise.resolve({
+									uuid: uuid,
+									entity: 'Compendium',
+									name: pack.metadata.label
+								}).then(entry => component.processed.push(entry)));
+						}
+
+						return;
+					}
+
+					resolving.push(fromUuid(uuid).then(entity =>
+						component.processed.push({
+							uuid: uuid,
+							entity: entity.entity,
+							name: entity.name
+						})));
 				});
+			});
+
+			await Promise.all(resolving);
 		}
 
 		if (this.item.isOwned) {
@@ -533,6 +565,58 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	/**
 	 * @private
 	 */
+	async _onDropActor (evt) {
+		evt.preventDefault();
+		let data;
+
+		try {
+			data = JSON.parse(evt.dataTransfer.getData('text/plain'));
+		} catch (ignored) {}
+
+		if (!data || !['Actor', 'Compendium'].includes(data.type)
+			|| (data.type === 'Compendium' && data.entity !== 'Actor'))
+		{
+			return;
+		}
+
+		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const fieldset = evt.target.closest('fieldset');
+		const effectDiv = fieldset.closest('.obsidian-effect');
+		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
+
+		if (!effect) {
+			return;
+		}
+
+		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
+		if (!component) {
+			return;
+		}
+
+		if (data.type === 'Compendium') {
+			component.actors.push(`Compendium.${data.id}`);
+		} else {
+			let entity;
+			if (data.pack) {
+				const pack = game.packs.get(data.pack);
+				entity = await pack.getEntity(data.id);
+			} else {
+				entity = game.actors.get(data.id);
+			}
+
+			if (!entity) {
+				return;
+			}
+
+			component.actors.push(entity.uuid);
+		}
+
+		this._updateEffects(null, {'flags.obsidian.effects': effects});
+	}
+
+	/**
+	 * @private
+	 */
 	async _onDropSpell (evt) {
 		const [effects, component, item] = await this._processDrop(evt);
 		if (!item || item.type !== 'spell') {
@@ -566,6 +650,34 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		component.tables.push(item);
 		this._updateEffects(null, {'flags.obsidian.effects': effects});
+	}
+
+	/**
+	 * @private
+	 */
+	async _onEditActor (evt) {
+		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
+		const parts = pill.dataset.id.split('.');
+
+		if (parts[0] === 'Compendium' && parts.length < 4) {
+			parts.shift();
+
+			const pack = game.packs.get(parts.join('.'));
+			if (!pack) {
+				return;
+			}
+
+
+			pack.render(true);
+			return;
+		}
+
+		const entity = await fromUuid(pill.dataset.id);
+		if (!entity) {
+			return;
+		}
+
+		entity.sheet.render(true);
 	}
 
 	/**
@@ -660,6 +772,14 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		this._updateEffects(null, formData);
 		this._interacting = false;
+	}
+
+	/**
+	 * @private
+	 */
+	async _onRemoveActor (evt) {
+		return this._removeEmbeddedEntity(evt, (component, rm) =>
+			component.actors = component.actors.filter(uuid => uuid !== rm));
 	}
 
 	/**

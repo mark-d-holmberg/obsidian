@@ -26,18 +26,6 @@ OBSIDIAN.computeSpellsByClass = lists => {
 };
 
 export async function loadSpellData () {
-	game.settings.register('obsidian', 'spell-class-lists', {
-		scope: 'world',
-		type: String,
-		default: ''
-	});
-
-	game.settings.register('obsidian', 'spell-compendium', {
-		scope: 'world',
-		type: String,
-		default: 'obsidian.spells'
-	});
-
 	const compendium = game.settings.get('obsidian', 'spell-compendium');
 	let spellLists = game.settings.get('obsidian', 'spell-class-lists');
 

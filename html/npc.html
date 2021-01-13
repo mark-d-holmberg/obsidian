@@ -142,6 +142,7 @@
 						</div>
 					</div>
 				</div>
+				{{#if (not isObject)}}
 				<div class="obsidian-npc-stat-row" style="height: 17px;">
 					<div class="obsidian-npc-stat-key obsidian-npc-roll-hd rollable">
 						{{localize 'OBSIDIAN.HD'}}
@@ -159,6 +160,7 @@
 						<span class="obsidian-npc-hd-const">{{actor.obsidian.attributes.hd.const}}</span>
 					</div>
 				</div>
+				{{/if}}
 				<div class="obsidian-npc-stat-row">
 					<div class="obsidian-npc-stat-key rollable" data-roll="abl" data-abl="init">
 						{{localize 'OBSIDIAN.Initiative'}}
