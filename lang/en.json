@@ -1013,5 +1013,8 @@
 	"OBSIDIAN.Object": "Object",
 	"OBSIDIAN.DT": "DT",
 	"OBSIDIAN.ProvidesActors": "Provides Actors",
-	"OBSIDIAN.DropActorsHere": "Drop Actors or Compendia Here"
+	"OBSIDIAN.DropActorsHere": "Drop Actors or Compendia Here",
+	"OBSIDIAN.Conjure": "Conjure",
+	"OBSIDIAN.SelectActor": "Select Actor",
+	"OBSIDIAN.CR": "CR"
 }

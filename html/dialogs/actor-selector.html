@@ -1,0 +1,46 @@
+<form class="obsidian obsidian-form-bare obsidian-actor-selector" autocomplete="off"
+      onsubmit="event.preventDefault();">
+	<div class="obsidian-actor-filter">
+		<div class="obsidian-input-search-container">
+			<input type="text" class="obsidian-input-search"
+			       placeholder="{{localize 'OBSIDIAN.Search'}}...">
+			<i class="fas fa-search"></i>
+			<span class="obsidian-clear-search">&times;</span>
+		</div>
+		<ul class="obsidian-tab-bar">
+			{{#each crs}}
+				<li class="obsidian-sub-tab obsidian-actor-cr-tab" data-value="{{this}}">{{this}}</li>
+			{{/each}}
+		</ul>
+	</div>
+	<div class="obsidian-table">
+		<div class="obsidian-thead">
+			<div class="obsidian-col-icon"></div>
+			<div class="obsidian-col-cr">{{localize 'OBSIDIAN.CR'}}</div>
+			<div class="obsidian-col-type">{{localize 'OBSIDIAN.Type'}}</div>
+			<div class="obsidian-col-name">{{localize 'OBSIDIAN.Name'}}</div>
+		</div>
+		<div class="obsidian-tbody">
+			{{#each actors}}
+				<div class="obsidian-tr item" data-uuid="{{uuid}}" data-cr="{{cr}}" data-name="{{name}}">
+					<div class="obsidian-col-icon"><img src="{{img}}" alt="{{name}}"></div>
+					<div class="obsidian-col-cr">
+						<div class="obsidian-table-number-lg">
+							{{#if cr}}
+								{{cr}}
+							{{else}}
+								&mdash;
+							{{/if}}
+						</div>
+					</div>
+					<div class="obsidian-col-type">
+						<div class="obsidian-table-text">{{type}}</div>
+					</div>
+					<div class="obsidian-col-name rollable">
+						<div class="obsidian-table-text">{{name}}</div>
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</form>

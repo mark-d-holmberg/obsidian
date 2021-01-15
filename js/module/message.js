@@ -96,6 +96,7 @@ export function patchChatMessage () {
 				}
 			});
 
+			html.find('.obsidian-conjure').click(Rolls.conjure);
 			html.find('.obsidian-place-template').click(Rolls.placeTemplate);
 			html.find('[data-dmg], [data-apply-all]').click(Rolls.applyDamage);
 			html.find('.obsidian-apply-save').click(evt => Rolls.applySave(evt, 'saves'));

@@ -148,6 +148,10 @@
 	padding: 8px 0;
 }
 
+.obsidian-actor-selector .obsidian-tr {
+	padding: 4px 0;
+}
+
 .obsidian-tr:first-child {
 	padding-top: 0;
 }
@@ -163,6 +167,15 @@
 
 .obsidian-col-icon {
 	width: 27px;
+}
+
+.obsidian-actor-selector .obsidian-col-icon {
+	margin-right: 10px;
+}
+
+.obsidian-actor-selector .obsidian-col-icon img {
+	width: 24px;
+	height: 24px;
 }
 
 .obsidian-spell-table .obsidian-tbody .obsidian-col-icon {
@@ -252,6 +265,14 @@
 
 .obsidian-col-weight {
 	width: 40px;
+}
+
+.obsidian-col-cr {
+	width: 40px;
+}
+
+.obsidian-col-type {
+	width: 75px;
 }
 
 .obsidian-table {
@@ -795,7 +816,8 @@ h3 > div > .obsidian-feature-recharge {
 	margin: 0;
 }
 
-.obsidian-spell-level-tab {
+.obsidian-spell-level-tab,
+.obsidian-actor-cr-tab {
 	min-width: 36px;
 }
 
@@ -852,11 +874,13 @@ h3 > div > .obsidian-feature-recharge {
 	color: var(--obs-mid);
 }
 
-.obsidian-spell-filter .obsidian-tab-bar {
+.obsidian-spell-filter .obsidian-tab-bar,
+.obsidian-actor-filter .obsidian-tab-bar {
 	display: block;
 }
 
-.obsidian-spell-filter .obsidian-spell-level-tab {
+.obsidian-spell-filter .obsidian-spell-level-tab,
+.obsidian-actor-filter .obsidian-actor-cr-tab {
 	display: inline-block;
 	text-align: center;
 }

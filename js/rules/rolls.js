@@ -9,6 +9,7 @@ import {ObsidianActor} from '../module/actor.js';
 import {hpAfterDamage} from './defenses.js';
 import {rollInitiative} from './combat.js';
 import ObsidianDie from '../module/die.js';
+import ObsidianActorSelectorDialog from '../dialogs/actor-selector.js';
 
 const DMG_COLOURS = {
 	acd: 'acid', cld: 'ice', fir: 'fire', frc: 'force', lig: 'lightning', ncr: 'necrotic',
@@ -339,6 +340,40 @@ export const Rolls = {
 		}
 
 		return result;
+	},
+
+	conjure: function (evt) {
+		const options = evt.currentTarget.dataset;
+		let actor = game.actors.get(options.actor);
+
+		if (!actor) {
+			actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
+
+			if (!actor) {
+				return;
+			}
+		}
+
+		const effect = actor.data.obsidian.effects.get(options.effect);
+		if (!effect) {
+			return;
+		}
+
+		const conjure = effect.components.find(c => c.type === 'actors');
+		if (!conjure) {
+			return;
+		}
+
+		const item = actor.items.get(effect.parentItem);
+		if (!item) {
+			return;
+		}
+
+		if (!conjure.actors.length) {
+			return;
+		}
+
+		new ObsidianActorSelectorDialog(actor, conjure.actors, options).render(true);
 	},
 
 	create: function (actor, options) {
@@ -804,6 +839,12 @@ export const Rolls = {
 				results[0].consumed = options.consumed;
 				results[0].spellLevel = options.spellLevel;
 			}
+
+			if (effect.components.some(c => c.type === 'actors')) {
+				results[0].conjure = effect.uuid;
+				results[0].consumed = options.consumed;
+				results[0].spellLevel = options.spellLevel;
+			}
 		}
 
 		return results.map(result => {
@@ -1014,7 +1055,7 @@ export const Rolls = {
 			return;
 		}
 
-		const item = actor.items.find(item => item.data._id === effect.parentItem);
+		const item = actor.items.get(effect.parentItem);
 		if (!item) {
 			return;
 		}
