@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../rules/rolls.js';
+import {patchOnEscape} from '../module/actor-placement.js';
 
 export function runPatches () {
 	Combat.prototype.rollInitiative = async function (ids) {
@@ -51,6 +52,7 @@ export function runPatches () {
 	};
 
 	patchChatMessage();
+	patchOnEscape();
 }
 
 OBSIDIAN.detectArrays = function (original, updates) {

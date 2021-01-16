@@ -1,5 +1,17 @@
 <form class="obsidian obsidian-form-bare obsidian-actor-selector" autocomplete="off"
       onsubmit="event.preventDefault();">
+	<fieldset>
+		<legend>{{localize 'OBSIDIAN.Conjure'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<label class="obsidian-inline">
+					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       placeholder="1" value="1" name="amount">
+					<span>{{localize 'OBSIDIAN.Amount'}}</span>
+				</label>
+			</div>
+		</div>
+	</fieldset>
 	<div class="obsidian-actor-filter">
 		<div class="obsidian-input-search-container">
 			<input type="text" class="obsidian-input-search"

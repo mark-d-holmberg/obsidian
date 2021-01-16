@@ -843,7 +843,8 @@ h3 > div > .obsidian-feature-recharge {
 	background: var(--obs-text-regular);
 }
 
-.obsidian-spell-level-tab.obsidian-active {
+.obsidian-spell-level-tab.obsidian-active,
+.obsidian-actor-cr-tab.obsidian-active {
 	border: 1px solid var(--obs-highlight);
 	background: var(--obs-highlight);
 	color: var(--obs-bg);
@@ -1910,4 +1911,8 @@ select[multiple] option:nth-child(2n) {
 .obsidian .entity-link:hover i,
 .obsidiam-msg .entity-link:hover i {
 	color: var(--obs-text-bright);
+}
+
+.obsidian-actor-select-window {
+	max-height: 800px;
 }

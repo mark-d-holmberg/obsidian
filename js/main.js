@@ -25,6 +25,7 @@ import {ObsidianVehicle} from './module/vehicle.js';
 import ObsidianTable from './module/tables.js';
 import {addLootSheetHook} from './module/compat/loot-sheet.js';
 import {addCreateObjectHooks, convertObject} from './module/objects.js';
+import {OBSIDIAN} from './global.js';
 
 runPatches();
 
@@ -116,6 +117,19 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
+});
+
+Hooks.on('renderActorDirectory', (directory, html) => {
+	const actors = html.find('.actor');
+	for (let i = 0; i < actors.length; i++) {
+		const actor = actors[i];
+		const name = actor.querySelector('.entity-name a');
+
+		if (name?.textContent === OBSIDIAN.GENERIC_ACTOR) {
+			actor.remove();
+			return;
+		}
+	}
 });
 
 Hooks.on('renderHotbar', hotbarRender);

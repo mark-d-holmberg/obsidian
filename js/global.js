@@ -9,6 +9,7 @@ OBSIDIAN.Items = ObsidianItems;
 OBSIDIAN.Schema = Schema;
 OBSIDIAN.Rules = Rules;
 OBSIDIAN.Migrate = Migrate;
+OBSIDIAN.GENERIC_ACTOR = '_OBSIDIAN_GenericActor';
 
 OBSIDIAN.notDefinedOrEmpty = function (obj) {
 	return obj == null || obj === '';

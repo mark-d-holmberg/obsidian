@@ -791,4 +791,53 @@ export class ObsidianActor extends Actor5e {
 
 		return dupe;
 	}
+
+	static async conjure (uuid, amount, x, y) {
+		const actor = await fromUuid(uuid);
+		if (!actor) {
+			return;
+		}
+
+		const token = await Token.fromActor(actor, {x, y, actorLink: false, actorData: {}});
+		if (actor.compendium) {
+			// Since this actor doesn't actually exist in the world, and only
+			// exists inside a compendium, we reference a generic actor, and
+			// override all its data with the desired actor. This way we avoid
+			// creating a world actor every time we want to conjure something.
+			const template = await ObsidianActor.getGenericActor(actor.data.type);
+			token.data.actorId = template.id;
+			token.data.actorData = {
+				name: actor.name,
+				data: duplicate(actor.data.data),
+				flags: duplicate(actor.data.flags)
+			};
+		}
+
+		// Make sure the conjurer has access to their summon.
+		token.data.actorData.permission = duplicate(actor.data.permission);
+		if (!game.user.isGM) {
+			token.data.actorData.permission[game.userId] = 3;
+		}
+
+		const tokens = [];
+		amount = Math.clamped(amount, 0, 32);
+
+		for (let i = 0; i < amount; i++) {
+			tokens.push(duplicate(token.data));
+		}
+
+		return Token.create(tokens);
+	}
+
+	static async getGenericActor (type) {
+		const actor =
+			game.actors.entities.find(actor =>
+				actor.data.name === OBSIDIAN.GENERIC_ACTOR && actor.data.type === type);
+
+		if (actor) {
+			return actor;
+		}
+
+		return Actor.create({name: OBSIDIAN.GENERIC_ACTOR, type: type, token: {actorLink: false}});
+	}
 }
