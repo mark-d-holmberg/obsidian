@@ -95,7 +95,7 @@ const prepareItem = {
 				? flags.custom
 				: game.i18n.localize(`OBSIDIAN.Class-${item.name}`);
 
-		if (!flags.spellcasting) {
+		if (!flags.spellcasting?.enabled) {
 			return;
 		}
 
@@ -256,13 +256,13 @@ const prepareItem = {
 				const src = item.actor.data.obsidian.itemsByID.get(flags.source.item);
 				derived.source.display = src?.name;
 
-				if (src.flags.obsidian.attunement && !src.data.attuned) {
+				if (src?.flags.obsidian.attunement && !src?.data.attuned) {
 					derived.visible = false;
 				}
 			}
 		}
 
-		if (cls && cls.obsidian.spellcasting) {
+		if (cls?.obsidian.spellcasting?.enabled) {
 			const spellcasting = cls.obsidian.spellcasting;
 			if (data.level === 0) {
 				flags.known = true;

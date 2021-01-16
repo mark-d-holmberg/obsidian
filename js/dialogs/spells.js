@@ -43,6 +43,10 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 		const classByID =
 			new Map(data.actor.obsidian.classes.map(cls => {
+				if (!cls.obsidian.spellcasting) {
+					cls.obsidian.spellcasting = {};
+				}
+
 				const spellcasting = cls.obsidian.spellcasting;
 				spellcasting.totalCantrips = 0;
 				spellcasting.totalPrepared = 0;

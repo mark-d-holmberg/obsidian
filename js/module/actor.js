@@ -175,7 +175,15 @@ export class ObsidianActor extends Actor5e {
 	prepareEmbeddedEntities () {
 		// Many items have a dependency on class items as their source, so they
 		// need to be prepared first.
-		this.data.items.filter(i => i.type === 'class').forEach(cls => Item.createOwned(cls, this));
+		this.data.items.filter(i => i.type === 'class').forEach(cls => {
+			// Small patch to fix spell slot progression.
+			if (!cls.flags.obsidian?.spellcasting?.enabled) {
+				cls.data.spellcasting = 'none';
+			}
+
+			Item.createOwned(cls, this);
+		});
+
 		super.prepareEmbeddedEntities();
 	}
 
@@ -385,6 +393,7 @@ export class ObsidianActor extends Actor5e {
 		if (spells.length) {
 			const updates = [];
 			spells = await this.createEmbeddedEntity('OwnedItem', spells, options);
+			spells = Array.isArray(spells) ? spells : [spells];
 
 			for (const parentItem of items) {
 				const effects = duplicate(parentItem.flags.obsidian?.effects || []);

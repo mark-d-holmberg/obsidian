@@ -9,7 +9,10 @@ export function prepareSpellcasting (actorData, data, flags, derived) {
 	derived.spellcasting = {mods: mods, attacks: attacks, saves: saves};
 	for (const cls of derived.classes) {
 		const spellcasting = cls.obsidian.spellcasting;
-		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell) && !existing[spellcasting.spell]) {
+		if (spellcasting?.enabled
+			&& !OBSIDIAN.notDefinedOrEmpty(spellcasting.spell)
+			&& !existing[spellcasting.spell])
+		{
 			mods.push(spellcasting.mod);
 			attacks.push(spellcasting.attack);
 			saves.push(spellcasting.save);
