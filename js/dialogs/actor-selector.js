@@ -127,7 +127,7 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 		const amount = Number(this.element.find('input[name="amount"]').val()) || 1;
 		ObsidianActorPlacement.fromUUID(uuid).then(placement => {
 			if (placement) {
-				placement.place(amount);
+				placement.place(amount, this._options);
 			}
 		});
 

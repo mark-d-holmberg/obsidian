@@ -221,7 +221,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			});
 
 			const resolving = [];
-			components.filter(c => c.type === 'actors').forEach(component => {
+			components.filter(c => c.type === 'summon').forEach(component => {
 				component.processed = [];
 				component.actors.forEach(uuid => {
 					const parts = uuid.split('.');

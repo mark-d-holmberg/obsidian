@@ -5,16 +5,6 @@ import {determineAdvantage} from '../rules/prepare.js';
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
 
 export const Components = {
-	actors: {
-		data: {
-			type: 'actors',
-			actors: []
-		},
-		metadata: {
-			category: 'special',
-			tray: 'ProvidesActors'
-		}
-	},
 	applied: {
 		data: {
 			type: 'applied',
@@ -320,6 +310,22 @@ export const Components = {
 		metadata: {
 			category: 'special',
 			tray: 'ProvidesSpells'
+		}
+	},
+	summon: {
+		data: {
+			type: 'summon',
+			actors: [],
+			prof: false,
+			ac: {enabled: false},
+			hp: {enabled: false},
+			tmp: {enabled: false},
+			attack: '',
+			save: ''
+		},
+		metadata: {
+			category: 'special',
+			tray: 'AddSummons'
 		}
 	},
 	target: {

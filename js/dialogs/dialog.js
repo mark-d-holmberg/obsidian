@@ -57,6 +57,11 @@ export class ObsidianDialog extends BaseEntitySheet {
 
 				if (isParentHidden) {
 					jqel.addClass('obsidian-hidden');
+
+					if (jqel.data('selector')) {
+						updateSelections(jqel);
+					}
+
 					return;
 				}
 
@@ -75,6 +80,10 @@ export class ObsidianDialog extends BaseEntitySheet {
 					} else {
 						jqel.addClass('obsidian-hidden');
 					}
+				}
+
+				if (jqel.data('selector')) {
+					updateSelections(jqel);
 				}
 			});
 		};

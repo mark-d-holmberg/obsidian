@@ -1,0 +1,103 @@
+{{#*inline 'formula'}}
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			{{fancy-checkbox prefix 'enabled' content=content checked=enabled selector=prefix}}
+			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+			       data-dtype="Number" data-selector-parent="{{prefix}}" name="{{prefix}}.bonus"
+			       value="{{bonus}}" placeholder="0">
+			<select class="obsidian-select-operator" name="{{prefix}}.operator"
+			        data-selector-parent="{{prefix}}">
+				{{#select operator}}
+					<option value="plus">&plus;</option>
+					<option value="mult">&times;</option>
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.key" data-selector="{{prefix}}.key"
+			        data-selector-parent="{{prefix}}">
+				{{#select key}}
+					<option value="">&mdash;</option>
+					{{#each @root.ObsidianRules.EFFECT_SUMMON_BONUSES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.BonusValue-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.key" data-show="abl">
+				{{#select ability}}
+					{{#each @root.ObsidianRules.ABILITIES}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{#if @root.actor}}
+			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.key" data-show="cls">
+				{{#select class}}
+					{{#each @root.actor.data.obsidian.classes}}
+						<option value="{{_id}}">{{obsidian.label}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{else}}
+			<input type="text" class="obsidian-input-compact" name="{{prefix}}.text" value="{{text}}"
+			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="{{prefix}}.key"
+			       data-show="cls">
+			{{/if}}
+		</div>
+	</div>
+{{/inline}}
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.AddSummons'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			{{fancy-checkbox prefix 'prof' content='OBSIDIAN.ReplaceProf' checked=prof}}
+		</div>
+	</div>
+	{{#with ac}}
+		{{> formula prefix=(add ../prefix '.ac') content='OBSIDIAN.BonusAC'}}
+	{{/with}}
+	{{#with hp}}
+		{{> formula prefix=(add ../prefix '.hp') content='OBSIDIAN.BonusHP'}}
+	{{/with}}
+	{{#with tmp}}
+		{{> formula prefix=(add ../prefix '.tmp') content='OBSIDIAN.BonusTemp'}}
+	{{/with}}
+	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.ReplaceAttackRolls'}}
+				<select name="{{prefix}}.attack">
+					{{#select attack}}
+						<option value="">&mdash;</option>
+						{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+			<label class="obsidian-inline">
+				{{localize 'OBSIDIAN.ReplaceSaveDCs'}}
+				<select name="{{prefix}}.save">
+					{{#select save}}
+						<option value="">&mdash;</option>
+						{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
+							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			</label>
+		</div>
+	</div>
+	<div class="obsidian-item-drop obsidian-actor-drop{{#unless processed.length}} obsidian-empty{{/unless}}">
+		{{#unless processed.length}}
+			<div class="obsidian-item-drop-empty">{{localize 'OBSIDIAN.DropActorsHere'}}</div>
+		{{/unless}}
+		{{#each processed}}
+			<div class="obsidian-item-drop-pill" data-id="{{uuid}}">
+				<div class="obsidian-item-drop-pill-body obsidian-provide-actor-body">
+					<div class="obsidian-icon obsidian-icon-entity-{{entity}}"></div>
+					{{name}}
+				</div>
+				<div class="obsidian-item-drop-pill-rm obsidian-rm-provide-actor">&times;</div>
+			</div>
+		{{/each}}
+	</div>
+</fieldset>

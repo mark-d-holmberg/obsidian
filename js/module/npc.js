@@ -105,6 +105,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		data.isObject = data.actor.flags.obsidian?.details?.type === 'object';
 		data.featCategories = {};
 		data.skills = {};
+		data.summonLevel = this._getSummonLevel();
 
 		for (const skill of Object.values(data.actor.obsidian.skills)) {
 			if (skill?.value || skill?.override) {
@@ -230,6 +231,26 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 				.text(`${game.i18n.localize('OBSIDIAN.DT')} ${(target.val())}`)
 				.click(this._enterDT.bind(this));
 		});
+	}
+
+	_getSummonLevel () {
+		const level = this.actor.data.flags.obsidian?.summon?.spellLevel;
+		if (level == null || level < 1) {
+			return;
+		}
+
+		let n;
+		if (level === '1') {
+			n = game.i18n.localize('OBSIDIAN.FirstN');
+		} else if (level === '2') {
+			n = game.i18n.localize('OBSIDIAN.SecondN');
+		} else if (level === '3') {
+			n = game.i18n.localize('OBSIDIAN.ThirdN');
+		} else {
+			n = level + game.i18n.localize('OBSIDIAN.th');
+		}
+
+		return `${n} ${game.i18n.localize('OBSIDIAN.Level')}`;
 	}
 
 	_onChangeTab (event, tabs, active) {

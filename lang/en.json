@@ -937,6 +937,8 @@
 	"OBSIDIAN.BonusValue-prof": "Proficiency",
 	"OBSIDIAN.BonusValue-chr": "Character Level",
 	"OBSIDIAN.BonusValue-cls": "Class Level",
+	"OBSIDIAN.BonusValue-spell": "Spell Level",
+	"OBSIDIAN.BonusValue-upcast": "Upcast Levels",
 	"OBSIDIAN.RollingAt": "Rolling At",
 	"OBSIDIAN.WhenRollingAt": "when rolling at {0}",
 	"OBSIDIAN.Using": "using",
@@ -1012,9 +1014,15 @@
 	"OBSIDIAN.DicePool": "Dice Pool",
 	"OBSIDIAN.Object": "Object",
 	"OBSIDIAN.DT": "DT",
-	"OBSIDIAN.ProvidesActors": "Provides Actors",
+	"OBSIDIAN.AddSummons": "Add Summons",
 	"OBSIDIAN.DropActorsHere": "Drop Actors or Compendia Here",
-	"OBSIDIAN.Conjure": "Conjure",
+	"OBSIDIAN.Summon": "Summon",
 	"OBSIDIAN.SelectActor": "Select Actor",
-	"OBSIDIAN.CR": "CR"
+	"OBSIDIAN.CR": "CR",
+	"OBSIDIAN.BonusAC": "Bonus AC",
+	"OBSIDIAN.BonusHP": "Bonus HP",
+	"OBSIDIAN.BonusTemp": "Bonus Temp HP",
+	"OBSIDIAN.ReplaceProf": "Replace Proficiency",
+	"OBSIDIAN.ReplaceAttackRolls": "Replace Attack Rolls",
+	"OBSIDIAN.ReplaceSaveDCs": "Replace Save DCs"
 }

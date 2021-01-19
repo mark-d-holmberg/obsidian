@@ -76,6 +76,11 @@
 					{{/if}}
 				</span>{{/if}}
 			</div>
+			{{#if summonLevel}}
+			<div class="obsidian-char-header-minor obsidian-condensed obsidian-summon-level">
+				{{summonLevel}}
+			</div>
+			{{/if}}
 			<div class="obsidian-npc-btns">
 				{{#if (not isObject)}}
 				<div class="obsidian-npc-btn-row">

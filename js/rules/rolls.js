@@ -342,7 +342,7 @@ export const Rolls = {
 		return result;
 	},
 
-	conjure: function (evt) {
+	summon: function (evt) {
 		const options = evt.currentTarget.dataset;
 		let actor = game.actors.get(options.actor);
 
@@ -359,8 +359,8 @@ export const Rolls = {
 			return;
 		}
 
-		const conjure = effect.components.find(c => c.type === 'actors');
-		if (!conjure) {
+		const summon = effect.components.find(c => c.type === 'summon');
+		if (!summon) {
 			return;
 		}
 
@@ -369,11 +369,11 @@ export const Rolls = {
 			return;
 		}
 
-		if (!conjure.actors.length) {
+		if (!summon.actors.length) {
 			return;
 		}
 
-		new ObsidianActorSelectorDialog(actor, conjure.actors, options).render(true);
+		new ObsidianActorSelectorDialog(actor, summon.actors, options).render(true);
 	},
 
 	create: function (actor, options) {
@@ -771,7 +771,10 @@ export const Rolls = {
 			}
 		}
 
-		if (!damage.length || attacks.length || scaledTargets < 2 || saves.length) {
+		const pools = Rolls.getDicePools(actor, effect, options);
+		if (!damage.length || attacks.length || scaledTargets < 2 || saves.length
+			|| checks.length || expr.length || pools)
+		{
 			results.push({
 				type: item.type === 'spell' ? 'spl' : 'fx',
 				title: name ? name : effect.name.length ? effect.name : item.name,
@@ -811,7 +814,9 @@ export const Rolls = {
 			results[0].exprs = expr.map(expr => Rolls.rollExpression(actor, expr, scaledAmount));
 		}
 
-		results[0].pools = Rolls.getDicePools(actor, effect, options);
+		if (pools) {
+			results[0].pools = pools;
+		}
 
 		if (damage.length && !attacks.length && scaledTargets > 1) {
 			for (let i = 0; i < scaledTargets; i++) {
@@ -840,8 +845,8 @@ export const Rolls = {
 				results[0].spellLevel = options.spellLevel;
 			}
 
-			if (effect.components.some(c => c.type === 'actors')) {
-				results[0].conjure = effect.uuid;
+			if (effect.components.some(c => c.type === 'summon')) {
+				results[0].summon = effect.uuid;
 				results[0].consumed = options.consumed;
 				results[0].spellLevel = options.spellLevel;
 			}

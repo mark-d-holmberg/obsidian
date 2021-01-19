@@ -289,7 +289,7 @@ li.context-item .obsidian-icon {
 }
 
 .obsidian-icon-npc,
-.obsidian-icon-comp-actors,
+.obsidian-icon-comp-summon,
 .obsidian-icon-entity-Actor {
 	background-image: url('../img/npc.svg');
 }

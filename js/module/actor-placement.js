@@ -15,7 +15,7 @@ export default class ObsidianActorPlacement extends Token {
 		return new this(tokenData);
 	}
 
-	place (amount) {
+	place (amount, options) {
 		if (!amount) {
 			amount = 1;
 		}
@@ -24,11 +24,11 @@ export default class ObsidianActorPlacement extends Token {
 		this.draw();
 		this.layer.activate();
 		this.layer.preview.addChild(this);
-		this._activatePreviewListeners(initialLayer, amount);
+		this._activatePreviewListeners(initialLayer, amount, options);
 		this.visible = true;
 	}
 
-	_activatePreviewListeners (initialLayer, amount) {
+	_activatePreviewListeners (initialLayer, amount, options) {
 		const handlers = {};
 		let moveTime = 0;
 
@@ -62,7 +62,7 @@ export default class ObsidianActorPlacement extends Token {
 			const dest = canvas.grid.getSnappedPosition(this.x, this.y, 2);
 			this.data.x = dest.x;
 			this.data.y = dest.y;
-			ObsidianActor.conjure(this.data.actorUUID, amount, dest.x, dest.y);
+			ObsidianActor.summon(this.data.actorUUID, amount, dest.x, dest.y, options);
 		};
 
 		canvas.stage.on('mousemove', handlers.mm);

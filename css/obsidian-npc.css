@@ -71,6 +71,13 @@
 	font-style: italic;
 }
 
+.dnd5e.sheet.npc .obsidian-npc-stats header .obsidian-char-header-minor.obsidian-summon-level {
+	color: var(--obs-text-secondary);
+	font-style: normal;
+	padding-top: 4px;
+	font-size: 14px;
+}
+
 .obsidian-npc-stats main,
 .obsidian-crew-tab .obsidian-crew-table {
 	column-width: 350px;

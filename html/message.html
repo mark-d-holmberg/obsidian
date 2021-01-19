@@ -114,7 +114,7 @@
 		{{/each}}
 	</section>
 	{{/if}}
-	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe) (defined message.flags.obsidian.conjure) message.flags.obsidian.start)
+	{{#if (and (or (defined message.flags.obsidian.dmgBtn) (defined message.flags.obsidian.aoe) (defined message.flags.obsidian.summon) message.flags.obsidian.start)
 			      (or user.isGM (eq user.id author.id)))}}
 	<section class="obsidian-msg-btn-row">
 		{{#if (defined message.flags.obsidian.dmgBtn)}}
@@ -148,20 +148,20 @@
 			{{localize 'OBSIDIAN.AreaOfEffect'}}
 		</button>
 		{{/if}}
-		{{#if (defined message.flags.obsidian.conjure)}}
-		<button type="button" class="obsidian-btn-outline obsidian-conjure"
+		{{#if (defined message.flags.obsidian.summon)}}
+		<button type="button" class="obsidian-btn-outline obsidian-summon"
 		        {{#if message.flags.obsidian.realToken}}
 			        data-scene="{{message.flags.obsidian.realScene}}"
 			        data-token="{{message.flags.obsidian.realToken}}"
 		        {{else}}
 			        data-actor="{{message.speaker.actor}}"
 		        {{/if}}
-			      data-effect="{{message.flags.obsidian.conjure}}"
+			      data-effect="{{message.flags.obsidian.summon}}"
 		        data-scaling="{{message.flags.obsidian.upcast}}"
 		        data-consumed="{{message.flags.obsidian.consumed}}"
 			      data-spell-level="{{message.flags.obsidian.spellLevel}}">
 			<i class="fas fa-dragon"></i>
-			{{localize 'OBSIDIAN.Conjure'}}
+			{{localize 'OBSIDIAN.Summon'}}
 		</button>
 		{{/if}}
 		{{#if (and (not-empty triggers.hit) message.flags.obsidian.hit)}}
