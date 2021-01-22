@@ -65,7 +65,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		this.form.ondrop = evt => Sheet.onDrop(this, evt);
 
 		if (this.actor.limited) {
-
 			return;
 		}
 
@@ -106,6 +105,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		data.featCategories = {};
 		data.skills = {};
 		data.summonLevel = this._getSummonLevel();
+		data.actor.obsidian.tempEffects = [];
 
 		for (const skill of Object.values(data.actor.obsidian.skills)) {
 			if (skill?.value || skill?.override) {
@@ -115,6 +115,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 		for (const item of data.items) {
 			let cat = item.data.activation?.type;
+			if (item.flags.obsidian?.activeEffect) {
+				data.actor.obsidian.tempEffects.push(item);
+				continue;
+			}
+
 			if (item.type === 'feat') {
 				if (cat === 'special' || cat === 'bonus' || !cat.length) {
 					cat = 'none';

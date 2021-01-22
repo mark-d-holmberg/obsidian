@@ -1,6 +1,7 @@
 import {OBSIDIAN} from '../global.js';
 import {Filters} from '../rules/filters.js';
 import {determineAdvantage} from '../rules/prepare.js';
+import {ObsidianActor} from './actor.js';
 
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
 
@@ -276,7 +277,7 @@ export const Components = {
 			method: 'spell',
 			class: '',
 			text: '',
-			threshold: 0,
+			threshold: null,
 			ref: ''
 		},
 		metadata: {
@@ -481,6 +482,23 @@ export const Effect = {
 
 		return filter(filter =>
 			Filters.isDamage(filter) && (attackPred(filter) || damagePred(filter)));
+	},
+
+	fromDataset: dataset => {
+		let actor = game.actors.get(dataset.actor);
+		if (!actor) {
+			actor = ObsidianActor.fromSceneTokenPair(dataset.scene, dataset.token);
+			if (!actor) {
+				return [];
+			}
+		}
+
+		const effect = actor.data.obsidian.effects.get(dataset.effect);
+		if (!effect) {
+			return [];
+		}
+
+		return [actor, effect];
 	},
 
 	getLinkedResource: function (actorData, consumer) {

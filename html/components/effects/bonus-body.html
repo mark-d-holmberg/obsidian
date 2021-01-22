@@ -29,7 +29,7 @@
 {{/unless}}
 <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
      {{#unless (or attack damage)}}data-selector-parent="{{prefix}}.method" data-show="dice"{{/unless}}>
-	<div class="obsidian-fullwidth">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
 		{{#if attack}}
 			<span class="obsidian-binary-operator">&plus;</span>
 		{{/if}}
@@ -66,7 +66,7 @@
 <input type="hidden" name="{{prefix}}.formula" data-dtype="Boolean" value="true">
 <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
      data-selector-parent="{{prefix}}.method" data-show="formula">
-	<div class="obsidian-fullwidth">
+	<div class="obsidian-fullwidth obsidian-checkbox-row">
 		{{#if (or attack damage)}}
 			<span class="obsidian-binary-operator">&plus;</span>
 		{{/if}}
@@ -88,7 +88,7 @@
 		</select>
 		<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.value" data-show="abl">
 			{{#select ability}}
-				{{#each @root.ObsidianRules.ABILITIES}}
+				{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
 					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
 				{{/each}}
 			{{/select}}
@@ -119,5 +119,6 @@
 			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-show="cls"
 			       data-selector-parent="{{prefix}}.{{#if (or attack damage)}}level{{else}}value{{/if}}">
 		{{/if}}
+		{{fancy-checkbox prefix 'summoner' content='OBSIDIAN.FromSummoner' checked=summoner}}
 	</div>
 </div>

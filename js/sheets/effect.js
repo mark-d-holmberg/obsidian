@@ -241,12 +241,17 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 						return;
 					}
 
-					resolving.push(fromUuid(uuid).then(entity =>
+					resolving.push(fromUuid(uuid).then(entity => {
+						if (!entity) {
+							return;
+						}
+
 						component.processed.push({
 							uuid: uuid,
 							entity: entity.entity,
 							name: entity.name
-						})));
+						});
+					}));
 				});
 			});
 

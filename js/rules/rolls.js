@@ -343,19 +343,10 @@ export const Rolls = {
 	},
 
 	summon: function (evt) {
-		const options = evt.currentTarget.dataset;
-		let actor = game.actors.get(options.actor);
+		const options = duplicate(evt.currentTarget.dataset);
+		const [actor, effect] = Effect.fromDataset(options);
 
-		if (!actor) {
-			actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
-
-			if (!actor) {
-				return;
-			}
-		}
-
-		const effect = actor.data.obsidian.effects.get(options.effect);
-		if (!effect) {
+		if (!actor || !effect) {
 			return;
 		}
 
@@ -373,6 +364,7 @@ export const Rolls = {
 			return;
 		}
 
+		options.parentComponent = summon.uuid;
 		new ObsidianActorSelectorDialog(actor, summon.actors, options).render(true);
 	},
 
@@ -1040,18 +1032,9 @@ export const Rolls = {
 
 	placeTemplate: function (evt) {
 		const options = evt.currentTarget.dataset;
-		let actor = game.actors.get(options.actor);
+		const [actor, effect] = Effect.fromDataset(options);
 
-		if (!actor) {
-			actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
-
-			if (!actor) {
-				return;
-			}
-		}
-
-		const effect = actor.data.obsidian.effects.get(options.effect);
-		if (!effect) {
+		if (!actor || !effect) {
 			return;
 		}
 

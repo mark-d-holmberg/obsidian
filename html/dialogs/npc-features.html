@@ -1,4 +1,5 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	{{#unless isObject}}
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Features'}}</legend>
 		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
@@ -16,6 +17,7 @@
 			     contenteditable="true" data-edit="flags.obsidian.lair">{{{actor.flags.obsidian.lair}}}</div>
 		</div>
 	</fieldset>
+	{{/unless}}
 	<div class="form-group">
 		<label>{{localize 'OBSIDIAN.AddFeature'}}</label>
 		<select>

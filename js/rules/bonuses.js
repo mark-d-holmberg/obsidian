@@ -211,21 +211,20 @@ function bonusName (actorData, bonus) {
 	return item.name;
 }
 
-function getTokenActorDataSafe (activeEffect) {
+function getTokenActorDataSafe (ids) {
 	// Try to avoid causing an infinite recursion loop of Actor.prepareData().
-	const duration = activeEffect.flags.obsidian.duration;
-	if (duration.actor) {
-		const actor = game.actors?.get(duration.actor);
+	if (ids.actor) {
+		const actor = game.actors?.get(ids.actor);
 		if (actor) {
 			return actor.data;
 		}
 	} else {
-		const scene = game.scenes.get(duration.scene);
+		const scene = game.scenes.get(ids.scene);
 		if (!scene) {
 			return;
 		}
 
-		const tokenData = scene.getEmbeddedEntity('Token', duration.token);
+		const tokenData = scene.getEmbeddedEntity('Token', ids.token);
 		if (!tokenData) {
 			return;
 		}
@@ -244,14 +243,26 @@ function getTokenActorDataSafe (activeEffect) {
 }
 
 export function bonusToParts (actorData, bonus) {
+	let item;
 	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
-	if (effect && effect.activeEffect) {
-		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
-		if (item) {
-			const tokenActorData = getTokenActorDataSafe(item);
-			if (tokenActorData) {
-				actorData = tokenActorData;
-			}
+
+	if (effect) {
+		item = actorData.obsidian.itemsByID.get(effect.parentItem);
+	}
+
+	if (effect?.activeEffect && item) {
+		const tokenActorData = getTokenActorDataSafe(item.flags.obsidian.duration);
+		if (tokenActorData) {
+			actorData = tokenActorData;
+		}
+	}
+
+	if ((!bonus.formula || bonus.method === 'formula')
+		&& bonus.summoner && actorData.flags.obsidian?.summon)
+	{
+		const tokenActorData = getTokenActorDataSafe(actorData.flags.obsidian.summon);
+		if (tokenActorData) {
+			actorData = tokenActorData;
 		}
 	}
 
@@ -284,7 +295,7 @@ export function bonusToParts (actorData, bonus) {
 	}
 
 	let multiplier = 1;
-	if (bonus.operator === 'mult') {
+	if (bonus.formula && bonus.method === 'formula' && bonus.operator === 'mult') {
 		multiplier = bonus.constant || 0;
 	}
 
@@ -307,8 +318,18 @@ export function bonusToParts (actorData, bonus) {
 	}
 
 	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'abl') {
+		let mod = 0;
+		if (bonus.ability === 'spell' && item?.flags.obsidian?.source?.type === 'class') {
+			const cls = actorData.obsidian.itemsByID.get(item.flags.obsidian.source.class);
+			if (cls?.obsidian?.spellcasting?.enabled) {
+				mod = cls.obsidian.spellcasting.mod;
+			}
+		} else if (bonus.ability !== 'spell') {
+			mod = actorData.data.abilities[bonus.ability].mod;
+		}
+
 		parts.push({
-			mod: Math.floor(multiplier * actorData.data.abilities[bonus.ability].mod),
+			mod: Math.floor(multiplier * mod),
 			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
 		});
 	}

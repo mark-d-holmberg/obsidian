@@ -1,5 +1,5 @@
 import {OBSIDIAN} from '../global.js';
-import {ObsidianActor} from './actor.js';
+import {Summons} from './summons.js';
 
 export default class ObsidianActorPlacement extends Token {
 	static async fromUUID (uuid) {
@@ -62,7 +62,7 @@ export default class ObsidianActorPlacement extends Token {
 			const dest = canvas.grid.getSnappedPosition(this.x, this.y, 2);
 			this.data.x = dest.x;
 			this.data.y = dest.y;
-			ObsidianActor.summon(this.data.actorUUID, amount, dest.x, dest.y, options);
+			Summons.summon(this.data.actorUUID, amount, dest.x, dest.y, options);
 		};
 
 		canvas.stage.on('mousemove', handlers.mm);

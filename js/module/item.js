@@ -630,6 +630,15 @@ function prepareEffects (item) {
 					break;
 			}
 
+			if (item.data.type !== 'spell'
+				&& actorData.flags.obsidian?.summon
+				&& component.method === 'spell')
+			{
+				// This effect should be scaled by the level that this summon
+				// was cast at.
+				scaledAmount = actorData.flags.obsidian.summon.upcast || 0;
+			}
+
 			const scaling = Effect.getScaling(item.actor, effect, scaledAmount);
 			if (!scaling) {
 				return;

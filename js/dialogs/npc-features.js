@@ -15,6 +15,10 @@ export class ObsidianNPCFeaturesDialog extends ObsidianDialog {
 	activateListeners (html) {
 		const multiline = html.find('.obsidian-multiline-input');
 		const placeholder = evt => {
+			if (!evt) {
+				return;
+			}
+
 			const target = evt.currentTarget || evt;
 			if (target.innerText === '') {
 				target.innerText = target.dataset.placeholder;

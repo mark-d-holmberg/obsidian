@@ -937,6 +937,7 @@
 	"OBSIDIAN.BonusValue-prof": "Proficiency",
 	"OBSIDIAN.BonusValue-chr": "Character Level",
 	"OBSIDIAN.BonusValue-cls": "Class Level",
+	"OBSIDIAN.BonusValue-hp": "Max HP",
 	"OBSIDIAN.BonusValue-spell": "Spell Level",
 	"OBSIDIAN.BonusValue-upcast": "Upcast Levels",
 	"OBSIDIAN.RollingAt": "Rolling At",
@@ -1024,5 +1025,6 @@
 	"OBSIDIAN.BonusTemp": "Bonus Temp HP",
 	"OBSIDIAN.ReplaceProf": "Replace Proficiency",
 	"OBSIDIAN.ReplaceAttackRolls": "Replace Attack Rolls",
-	"OBSIDIAN.ReplaceSaveDCs": "Replace Save DCs"
+	"OBSIDIAN.ReplaceSaveDCs": "Replace Save DCs",
+	"OBSIDIAN.FromSummoner": "From Summoner"
 }

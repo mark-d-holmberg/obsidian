@@ -60,7 +60,11 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 				return;
 			}
 
-			resolving.push(fromUuid(uuid).then(actor => actors.push(actor)));
+			resolving.push(fromUuid(uuid).then(actor => {
+				if (actor) {
+					actors.push(actor);
+				}
+			}));
 		});
 
 		await Promise.all(resolving);
@@ -125,6 +129,7 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 		const target = evt.currentTarget;
 		const uuid = target.closest('.obsidian-tr').dataset.uuid;
 		const amount = Number(this.element.find('input[name="amount"]').val()) || 1;
+
 		ObsidianActorPlacement.fromUUID(uuid).then(placement => {
 			if (placement) {
 				placement.place(amount, this._options);
