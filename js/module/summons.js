@@ -272,8 +272,8 @@ export const Summons = {
 
 		flags.obsidian.summon = {
 			parentComponent: options.parentComponent,
-			spellLevel: options.spellLevel,
-			upcast: options.upcast,
+			spellLevel: options.spellLevel == null ? undefined : Number(options.spellLevel),
+			upcast: options.upcast == null ? undefined : Number(options.upcast),
 			actor: options.actor,
 			scene: options.scene,
 			token: options.token

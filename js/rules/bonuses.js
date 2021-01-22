@@ -238,22 +238,26 @@ function getTokenActorDataSafe (ids) {
 			return actor.data;
 		}
 
-		return mergeObject(actor.data, tokenData.actorData, {inplace: false});
+		const cached = game.actors.tokens.get(tokenData._id);
+		if (cached) {
+			return cached.data;
+		}
+
+		return mergeObject(actor._data, tokenData.actorData, {inplace: false});
 	}
 }
 
 export function bonusToParts (actorData, bonus) {
-	let item;
+	let summoningItem;
 	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
 
-	if (effect) {
-		item = actorData.obsidian.itemsByID.get(effect.parentItem);
-	}
-
-	if (effect?.activeEffect && item) {
-		const tokenActorData = getTokenActorDataSafe(item.flags.obsidian.duration);
-		if (tokenActorData) {
-			actorData = tokenActorData;
+	if (effect?.activeEffect) {
+		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
+		if (item?.flags.obsidian?.duration) {
+			const tokenActorData = getTokenActorDataSafe(item.flags.obsidian.duration);
+			if (tokenActorData) {
+				actorData = tokenActorData;
+			}
 		}
 	}
 
@@ -262,6 +266,17 @@ export function bonusToParts (actorData, bonus) {
 	{
 		const tokenActorData = getTokenActorDataSafe(actorData.flags.obsidian.summon);
 		if (tokenActorData) {
+			const component =
+				tokenActorData.obsidian.components.get(
+					actorData.flags.obsidian.summon.parentComponent);
+
+			if (component) {
+				const effect = tokenActorData.obsidian.effects.get(component.parentEffect);
+				if (effect) {
+					summoningItem = tokenActorData.obsidian.itemsByID.get(effect.parentItem);
+				}
+			}
+
 			actorData = tokenActorData;
 		}
 	}
@@ -319,8 +334,8 @@ export function bonusToParts (actorData, bonus) {
 
 	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'abl') {
 		let mod = 0;
-		if (bonus.ability === 'spell' && item?.flags.obsidian?.source?.type === 'class') {
-			const cls = actorData.obsidian.itemsByID.get(item.flags.obsidian.source.class);
+		if (bonus.ability === 'spell' && summoningItem?.flags.obsidian?.source?.type === 'class') {
+			const cls = actorData.obsidian.itemsByID.get(summoningItem.flags.obsidian.source.class);
 			if (cls?.obsidian?.spellcasting?.enabled) {
 				mod = cls.obsidian.spellcasting.mod;
 			}

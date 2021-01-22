@@ -252,14 +252,55 @@ export async function advanceDurations (combat) {
 		}
 	}
 
-	await cleanupExpired(expired);
+	await cleanupExpired(actor, expired);
 	await actor.deleteEmbeddedEntity('ActiveEffect', expired.map(item => item._id));
 	await actor.updateEmbeddedEntity('ActiveEffect', update);
 	renderDurations();
 }
 
-async function cleanupExpired (expired) {
+async function cleanupExpired (actor, expired) {
+	const summonedTokens =
+		canvas?.tokens.placeables.filter(t => t.data.actorData.flags?.obsidian.summon);
+
 	for (const duration of expired) {
+		const scenes = new Map();
+		const expiredTokens = summonedTokens.filter(t => {
+			const component =
+				actor.data.obsidian.components.get(
+					t.data.actorData.flags.obsidian.summon.parentComponent);
+
+			if (!component) {
+				return false;
+			}
+
+			return component.parentEffect === duration.flags.obsidian.ref;
+		});
+
+		expiredTokens.forEach(t => {
+			let scene = scenes.get(t.scene.data._id);
+			if (!scene) {
+				scene = [];
+				scenes.set(t.scene.data._id, scene);
+			}
+
+			scene.push(t.data._id);
+		});
+
+		if (expiredTokens.length) {
+			if (game.user.isGM) {
+				await Promise.all(
+					Array.from(scenes.entries()).map(([sceneID, tokenIDs]) => {
+						const scene = game.scenes.get(sceneID);
+						return scene.deleteEmbeddedEntity('Token', tokenIDs);
+					}));
+			} else {
+				await game.socket.emit('module.obsidian', {
+					action: 'DELETE.TOKENS',
+					tokens: Array.from(scenes.entries())
+				});
+			}
+		}
+
 		for (const [sceneID, tokenID] of duration.flags.obsidian.active || []) {
 			const actor = ObsidianActor.fromSceneTokenPair(sceneID, tokenID);
 			if (!actor) {
@@ -278,7 +319,7 @@ async function cleanupExpired (expired) {
 			if (game.user.isGM) {
 				await actor.deleteEmbeddedEntity('OwnedItem', items);
 			} else {
-				await game.socket.emit({
+				await game.socket.emit('module.obsidian', {
 					action: 'DELETE',
 					entity: 'OwnedItem',
 					sceneID: sceneID,
@@ -301,7 +342,7 @@ async function onDelete (html) {
 		return;
 	}
 
-	await cleanupExpired([duration.data]);
+	await cleanupExpired(actor, [duration.data]);
 	await actor.deleteEmbeddedEntity('ActiveEffect', duration.data._id);
 	renderDurations();
 }

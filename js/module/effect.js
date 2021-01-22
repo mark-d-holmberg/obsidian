@@ -593,10 +593,6 @@ export const Effect = {
 		return item && item.type === 'spell' && item.data.components.concentration;
 	},
 
-	isEagerScaling: function (effect) {
-		return ['cantrip', 'level', 'class'].includes(effect.scalingComponent.method);
-	},
-
 	isEmbeddedSpellsComponent: function (component) {
 		return component.type === 'spells'
 			&& component.source === 'individual'

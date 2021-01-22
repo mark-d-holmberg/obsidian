@@ -610,13 +610,23 @@ function prepareEffects (item) {
 			const scalingEffects =
 				derived.collection.scaling.filter(e => e.scalingComponent.ref === effect.uuid);
 
-			if (scalingEffects.length < 1 || !Effect.isEagerScaling(scalingEffects[0])) {
+			if (!scalingEffects.length) {
+				return;
+			}
+
+			const component = scalingEffects[0].scalingComponent;
+			const eagerScaling =
+				['cantrip', 'level', 'class'].includes(component.method)
+				|| (item.data.type !== 'spell'
+					&& actorData.flags.obsidian?.summon
+					&& component.method === 'spell');
+
+			if (!eagerScaling) {
 				return;
 			}
 
 			let scaledAmount = 0;
 			const actorLevel = actorData.data.details[actorData.type === 'npc' ? 'cr' : 'level'];
-			const component = scalingEffects[0].scalingComponent;
 
 			switch (component.method) {
 				case 'level':

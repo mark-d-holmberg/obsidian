@@ -11,6 +11,15 @@ function handleMsg (payload) {
 
 	if (payload.action === 'SET.WORLD') {
 		setWorld(payload);
+	} else if (payload.action === 'DELETE.TOKENS') {
+		payload.tokens.forEach(([sceneID, tokenIDs]) => {
+			const scene = game.scenes.get(sceneID);
+			if (!scene) {
+				return;
+			}
+
+			return scene.deleteEmbeddedEntity('Token', tokenIDs);
+		});
 	} else {
 		const actor = getActor(payload);
 		if (actor) {

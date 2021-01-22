@@ -751,7 +751,7 @@ export class ObsidianActor extends Actor5e {
 			return;
 		}
 
-		const token = new Token(tokenData, scene);
+		const token = new Token(tokenData);
 		return token.actor;
 	}
 
