@@ -1,6 +1,6 @@
 export const v13 = {
 	convertHD: function (data) {
-		const formula = data.data.attributes.hp.formula;
+		const formula = data.data?.attributes?.hp?.formula;
 		if (typeof formula !== 'string') {
 			return;
 		}
