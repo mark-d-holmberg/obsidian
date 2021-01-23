@@ -1,4 +1,4 @@
-{{#each (sort feats 'name') as |feat idx|}}
+{{#each (sort feats 'name' alreadySorted) as |feat idx|}}
 	{{#if ../component}}<section>{{/if}}
 	<div class="obsidian-feature item" data-item-id="{{feat._id}}" draggable="true">
 		{{#if (and ../heading (eq idx 0))}}

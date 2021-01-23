@@ -62,7 +62,7 @@
 						{{~else~}}
 						{{~lc data.details.type~}}
 					{{~/if~}}
-				</span>{{#if (and actor.obsidian.details.tags (not isObject))}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}{{#if (not isObject)}}<span>,</span>
+				</span>{{#if (and actor.obsidian.details.tags (not isObject))}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}{{#if (not isObject)}}{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2 data.details.alignment)}}<span>,</span>{{/if}}
 				<span>
 					{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2)}}
 						{{#if actor.flags.obsidian.details.alignment1}}
@@ -353,7 +353,7 @@
 			{{#if featCategories.action}}
 				<section>
 					{{> modules/obsidian/html/components/features.html feats=featCategories.action
-							heading='OBSIDIAN.Actions'}}
+							heading='OBSIDIAN.Actions' alreadySorted=true}}
 				</section>
 			{{/if}}
 			{{#if featCategories.reaction}}

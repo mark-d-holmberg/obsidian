@@ -386,7 +386,11 @@ export function registerHandlebarHelpers () {
 		return Array.range(start, end);
 	});
 
-	Handlebars.registerHelper('sort', function (list, by) {
+	Handlebars.registerHelper('sort', function (list, by, alreadySorted) {
+		if (alreadySorted) {
+			return list;
+		}
+
 		// Don't use duplicate to avoid trashing things like maps or sets,
 		// or running afoul of circular references.
 		const mapped = list.map((item, i) => {

@@ -60,6 +60,9 @@
 	{{#with tmp}}
 		{{> formula prefix=(add ../prefix '.tmp') content='OBSIDIAN.BonusTemp'}}
 	{{/with}}
+	{{#with dmg}}
+		{{> formula prefix=(add ../prefix '.dmg') content='OBSIDIAN.BonusDamage'}}
+	{{/with}}
 	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<label class="obsidian-inline">

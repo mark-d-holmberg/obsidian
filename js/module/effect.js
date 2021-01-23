@@ -321,6 +321,7 @@ export const Components = {
 			ac: {enabled: false},
 			hp: {enabled: false},
 			tmp: {enabled: false},
+			dmg: {enabled: false},
 			attack: '',
 			save: ''
 		},

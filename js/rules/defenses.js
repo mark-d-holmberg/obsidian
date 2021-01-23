@@ -176,11 +176,17 @@ export function hpAfterDamage (actor, damage, attack) {
 	const hp = actor.data.data.attributes.hp;
 	const defenses = actor.data.obsidian.defenses.parts.damage;
 	const dr = actor.data.obsidian.defenses.parts.dr;
+	const dt = actor.data.flags.obsidian.attributes.dt;
 	let current = hp.value;
 	let tmp = hp.temp;
 
 	if (tmp == null || tmp < 0) {
 		tmp = 0;
+	}
+
+	const total = Array.from(damage.values()).reduce((acc, dmg) => acc + dmg, 0);
+	if (dt && total < dt) {
+		return {};
 	}
 
 	for (let [type, dmg] of damage.entries()) {

@@ -4,6 +4,20 @@ import {Schema} from './schema.js';
 import {Effect} from './effect.js';
 
 export const Summons = {
+	addBonusDamage: function (summoner, summonData, bonus) {
+		const extra = Summons.calculateBonus(summoner, summonData.flags.obsidian.summon, bonus);
+		summonData.items.forEach(item => {
+			if (!item.flags?.obsidian?.effects?.length) {
+				return;
+			}
+
+			item.flags.obsidian.effects
+				.flatMap(e => e.components)
+				.filter(c => c.type === 'damage')
+				.forEach(c => c.bonus += extra);
+		});
+	},
+
 	applySummonOverrides: async function (options, summonData, summonType) {
 		let summoner = game.actors.get(options.actor);
 		if (!summoner) {
@@ -24,9 +38,10 @@ export const Summons = {
 
 		const summonFlags = summonData.flags.obsidian;
 		if (component.ac.enabled) {
+			const current = Number(summonFlags.attributes?.ac?.override);
 			mergeObject(summonFlags, {
 				'attributes.ac.override':
-					Summons.calculateBonus(summoner, summonFlags.summon, component.ac)
+					current + Summons.calculateBonus(summoner, summonFlags.summon, component.ac)
 			});
 		}
 
@@ -46,6 +61,10 @@ export const Summons = {
 			const extra = Summons.calculateBonus(summoner, summonFlags.summon, component.tmp);
 			const current = summonData.data.attributes.hp.temp;
 			mergeObject(summonData.data, {'attributes.hp.temp': current + extra});
+		}
+
+		if (component.dmg.enabled) {
+			Summons.addBonusDamage(summoner, summonData, component.dmg);
 		}
 
 		if (!OBSIDIAN.notDefinedOrEmpty(component.attack)) {

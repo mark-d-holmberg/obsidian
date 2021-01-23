@@ -75,7 +75,7 @@ export const Migrate = {
 			Migrate.v12.convertSenses(data);
 		}
 
-		if (data.flags.obsidian.version < 14 && source !== 'core' && data.type === 'npc') {
+		if (data.flags.obsidian.version < 14 && data.type === 'npc') {
 			Migrate.v13.convertHD(data);
 		}
 

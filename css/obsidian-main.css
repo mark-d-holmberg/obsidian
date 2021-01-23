@@ -465,6 +465,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 
 .obsidian-feature-header > div:first-child {
 	display: flex;
+	align-items: baseline;
 }
 
 .obsidian-feature-body {

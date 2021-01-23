@@ -1024,8 +1024,10 @@
 	"OBSIDIAN.BonusAC": "Bonus AC",
 	"OBSIDIAN.BonusHP": "Bonus HP",
 	"OBSIDIAN.BonusTemp": "Bonus Temp HP",
+	"OBSIDIAN.BonusDamage": "Bonus Damage",
 	"OBSIDIAN.ReplaceProf": "Replace Proficiency",
 	"OBSIDIAN.ReplaceAttackRolls": "Replace Attack Rolls",
 	"OBSIDIAN.ReplaceSaveDCs": "Replace Save DCs",
-	"OBSIDIAN.FromSummoner": "From Summoner"
+	"OBSIDIAN.FromSummoner": "From Summoner",
+	"OBSIDIAN.Multiattack": "Multiattack"
 }

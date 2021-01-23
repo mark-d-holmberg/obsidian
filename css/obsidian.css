@@ -254,6 +254,7 @@
 .obsidian-delete,
 .obsidian-view {
 	color: var(--obs-text-secondary);
+	font-size: 11px;
 }
 
 .obsidian-delete.obsidian-alert {

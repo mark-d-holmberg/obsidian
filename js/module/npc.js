@@ -142,6 +142,21 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
 		}
 
+		if (data.featCategories.action) {
+			const multiattack = game.i18n.localize('OBSIDIAN.Multiattack').toLowerCase();
+			data.featCategories.action.sort((a, b) => {
+				if (a.name.toLowerCase() === multiattack) {
+					return -1;
+				}
+
+				if (b.name.toLowerCase() === multiattack) {
+					return 1;
+				}
+
+				return a.name === b.name ? 0 : a.name > b.name ? 1 : -1;
+			});
+		}
+
 		Sheet.getSenses(data);
 		return data;
 	}
