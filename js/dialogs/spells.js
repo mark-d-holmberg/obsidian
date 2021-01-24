@@ -245,12 +245,9 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 
 			if (!OBSIDIAN.notDefinedOrEmpty(classID)) {
-				const cls =
-					this.parent.actor.data.obsidian.classes.find(cls => cls._id === classID);
-
-				if (getProperty(cls, 'flags.obsidian.spellcasting.spellList')) {
-					spell =
-						cls.flags.obsidian.spellcasting.spellList.find(spell => spell._id === id);
+				const cls = this.parent.actor.data.obsidian.itemsByID.get(classID);
+				if (getProperty(cls, 'obsidian.spellcasting.spellList')) {
+					spell = cls.obsidian.spellcasting.spellList.find(spell => spell._id === id);
 				}
 			}
 		}
