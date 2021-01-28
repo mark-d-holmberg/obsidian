@@ -523,8 +523,7 @@ export class ObsidianActor extends Actor5e {
 	rollHD (rolls) {
 		const totalDice = rolls.reduce((acc, [n, _]) => acc + n, 0);
 		const conBonus = this.data.data.abilities.con.mod * totalDice;
-		const results = Rolls.hd(this, rolls, conBonus);
-		const total = results.reduce((acc, die) => acc + die.total, 0);
+		const total = Rolls.hd(this, rolls, conBonus);
 		const hp = this.data.data.attributes.hp;
 		const hd = duplicate(this.data.flags.obsidian.attributes.hd);
 

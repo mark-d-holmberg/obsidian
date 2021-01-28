@@ -179,6 +179,8 @@ function formatFilter (filter) {
 				weaponAttacks(filter, parts);
 				parts[0] = `${localize('OBSIDIAN.DamageRollsWith')} ${parts[0]}`;
 			}
+		} else if (filter.roll === 'hd') {
+			parts.push(localize('OBSIDIAN.HitDiceRolls'));
 		}
 	} else if (filter.filter === 'score') {
 		if (filter.score === 'ability') {

@@ -5,6 +5,7 @@ export const Filters = {
 	isCheck: filter => filter.filter === 'roll' && filter.roll === 'check',
 	isDamage: filter => filter.filter === 'roll' && filter.roll === 'damage',
 	isSave: filter => filter.filter === 'roll' && filter.roll === 'save',
+	isHD: filter => filter.filter === 'roll' && filter.roll === 'hd',
 	isAbility: filter => filter.check === 'ability',
 	isInit: filter => filter.check === 'init',
 	damage: {

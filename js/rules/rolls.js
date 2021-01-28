@@ -891,28 +891,96 @@ export const Rolls = {
 	},
 
 	hd: function (actor, rolls, conBonus) {
-		const results = rolls.map(([n, d]) => new ObsidianDie(d).roll(n));
+		const rollMod = Effect.combineRollMods(actor.data.obsidian.filters.mods(Filters.isHD));
+		const bonuses =
+			actor.data.obsidian.filters.bonuses(Filters.isHD).flatMap(bonus =>
+				bonusToParts(actor.data, bonus));
+
+		const hdRolls = rolls.map(([n, d]) => {
+			const roll = new ObsidianDie(d).roll(n);
+			const rolls = roll.results.map(r => [r]);
+			Rolls.applyRollModifiers(roll, rolls, rollMod);
+			roll.modified = rolls;
+			roll.total = roll.modified.reduce((acc, r) => acc + r.last(), 0);
+			return roll;
+		});
+
+		let bonusConstTotal = 0;
+		let bonusRollTotal = bonuses.reduce((acc, mod) => {
+			bonusConstTotal += mod.mod;
+			if (mod.ndice === undefined) {
+				return acc;
+			}
+
+			let mult = 1;
+			if (mod.ndice < 0) {
+				mod.sgn = '-';
+				mult = -1;
+			} else {
+				mod.sgn = '+';
+			}
+
+			mod.roll = new ObsidianDie(mod.die).roll(mod.ndice * mult);
+			return acc + mod.roll.total * mult;
+		}, 0);
+
+		bonusRollTotal = Math.floor(bonusRollTotal);
+		const total =
+			hdRolls.reduce((acc, r) => acc + r.total, 0)
+			+ bonusRollTotal + bonusConstTotal + conBonus;
+
+		const allRolls = hdRolls.concat(bonuses.filter(mod => mod.roll).map(mod => mod.roll));
+		const data3d = {
+			formula: allRolls.map(r => `${r.results.length}d${r.faces}`).join('+'),
+			results: allRolls.flatMap(r => {
+				if (r.modified) {
+					return r.modified.map(r => r.last());
+				}
+
+				return r.results;
+			})
+		};
+
+		const breakdown = [];
+		breakdown.push(rolls.map(([n, d]) => `${n}d${d}`).join(' + '));
+		breakdown.push(bonuses.map(mod => {
+			if (mod.roll) {
+				return `${mod.ndice.sgnex()}d${mod.die}`;
+			}
+
+			return `${mod.mod.sgnex()} ${mod.name.length ? `[${mod.name}]` : ''}`;
+		}).join('').substr(1));
+
+		breakdown.push(
+			`${conBonus.sgnex().substr(1)} [${game.i18n.localize('OBSIDIAN.AbilityAbbr-con')}]`);
+
+		breakdown.push('=');
+		breakdown.push(
+			hdRolls.map(die =>
+				`(${die.modified.map(r => Rolls.compileRerolls(r, die.faces)).join('+')})`)
+				.join(' + '));
+
+		breakdown.push(
+			bonuses.filter(mod => mod.roll)
+				.map(mod => `${mod.sgn} (${mod.roll.results.join('+')})`)
+				.join(' '));
+
+		breakdown.push((bonusConstTotal + conBonus).sgnex().substr(1));
+
 		Rolls.toChat(actor, {
 			flags: {
 				obsidian: {
 					type: 'hd',
 					title: game.i18n.localize('OBSIDIAN.HD'),
 					results: [[{
-						data3d: {
-							formula: results.map(d => `${d.results.length}d${d.faces}`).join('+'),
-							results: results.flatMap(d => d.results)
-						},
-						total: results.reduce((acc, die) => acc + die.total, 0) + conBonus,
-						breakdown:
-							`${rolls.map(([n, d]) => `${n}d${d}`).join('+')}${conBonus.sgn()} = `
-							+ results.map(die => `(${die.results.join('+')})`).join(' + ')
-							+ conBonus.sgnex()
+						data3d, total,
+						breakdown: breakdown.filter(part => part.length).join(' ')
 					}]]
 				}
 			}
 		});
 
-		return results;
+		return total;
 	},
 
 	hp: function (actor, n, d, c) {
