@@ -175,11 +175,13 @@ export function updateApplyIcons (evt) {
 }
 
 export function applyRollDragover (evt) {
-	$('#chat-log .obsidian-dragover').removeClass('obsidian-dragover');
-	const target = evt.target.closest('.obsidian-dice-drop-target');
+	$('#chat-log .obsidian-dragover')
+		.removeClass('obsidian-dragover obsidian-dragover-positive obsidian-dragover-negative');
 
+	const target = evt.target.closest('.obsidian-dice-drop-target');
 	if (target) {
-		target.classList.add('obsidian-dragover');
+		target.classList.add(
+			'obsidian-dragover', `obsidian-dragover-${evt.shiftKey ? 'negative' : 'positive'}`);
 	}
 }
 
@@ -188,7 +190,8 @@ function initRollDrag (el) {
 		evt.dataTransfer.setData('application/json', JSON.stringify(el.dataset)));
 
 	el.addEventListener('dragend', () =>
-		$('#chat-log .obsidian-dragover').removeClass('obsidian-dragover'));
+		$('#chat-log .obsidian-dragover')
+			.removeClass('obsidian-dragover obsidian-dragover-positive obsidian-dragover-negative'));
 }
 
 function initRollDrop (el) {
@@ -216,6 +219,7 @@ function initRollDrop (el) {
 			return;
 		}
 
+		const value = evt.shiftKey ? data.value * -1 : data.value;
 		if (!mode && !isNaN(index) && flags.results.length) {
 			const results = duplicate(flags.results);
 			const result = results[index];
@@ -225,8 +229,8 @@ function initRollDrop (el) {
 			}
 
 			result.forEach(roll => {
-				roll.total += data.value;
-				roll.breakdown += `${data.value.sgnex()} [${data.flavour}]`;
+				roll.total += value;
+				roll.breakdown += `${value.sgnex()} [${data.flavour}]`;
 			});
 
 			msg.setFlag('obsidian', 'results', results);
@@ -243,11 +247,11 @@ function initRollDrop (el) {
 
 			damage.results.push({
 				type: first.type,
-				total: data.value,
-				breakdown: `${data.value} [${data.flavour}]`
+				total: value,
+				breakdown: `${value} [${data.flavour}]`
 			});
 
-			damage.total += data.value;
+			damage.total += value;
 			msg.setFlag('obsidian', `damage.${mode}`, damage);
 		}
 	});

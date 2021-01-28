@@ -1463,12 +1463,20 @@ input[type=checkbox].obsidian-hidden + label.obsidian-inline {
 	color: var(--obs-text-subtle);
 }
 
-.obsidian-msg-row.obsidian-dragover .obsidian-msg-roll-box {
-	border-color: var(--obs-highlight);
+.obsidian-msg-row.obsidian-dragover-negative .obsidian-msg-roll-box {
+	border-color: var(--obs-negative);
 }
 
-.obsidian-vertical-bisect.obsidian-dragover .obsidian-msg-wide-box {
-	border-color: var(--obs-highlight);
+.obsidian-vertical-bisect.obsidian-dragover-negative .obsidian-msg-wide-box {
+	border-color: var(--obs-negative);
+}
+
+.obsidian-msg-row.obsidian-dragover-positive .obsidian-msg-roll-box {
+	border-color: var(--obs-positive);
+}
+
+.obsidian-vertical-bisect.obsidian-dragover-positive .obsidian-msg-wide-box {
+	border-color: var(--obs-positive);
 }
 
 .obsidian-msg-value {
