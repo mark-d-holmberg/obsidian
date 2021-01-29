@@ -163,7 +163,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 	}
 }
 
-export function handleDurations (actor, item, effect, scaledAmount) {
+export function handleDurations (actor, item, effect, scaledAmount, rolledDuration) {
 	const durations = effect.components.filter(c => c.type === 'duration');
 	const magnitude = getProperty(item, 'flags.obsidian.duration.type');
 	const spellDuration =
@@ -171,7 +171,7 @@ export function handleDurations (actor, item, effect, scaledAmount) {
 
 	let duration;
 	if (durations.length) {
-		duration = durations[0].duration;
+		duration = rolledDuration === undefined ? durations[0].duration : rolledDuration;
 	} else if (spellDuration) {
 		duration = item.flags.obsidian.duration.n;
 		if (magnitude === 'min') {

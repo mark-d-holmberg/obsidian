@@ -72,6 +72,16 @@
 		{{/each}}
 	</section>
 	{{/if}}
+	{{#if message.flags.obsidian.duration}}
+	<div class="obsidian-msg-row">
+		<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+		<div class="obsidian-msg-value">
+			<div class="obsidian-msg-roll-box">{{message.flags.obsidian.duration.total}}</div>
+			<div class="obsidian-msg-tooltip">{{{message.flags.obsidian.duration.breakdown}}}</div>
+		</div>
+		<div class="obsidian-msg-flavour">{{lc (localize 'OBSIDIAN.Duration')}}</div>
+	</div>
+	{{/if}}
 	{{#if message.flags.obsidian.saves}}
 	<section class="obsidian-msg-save">
 		{{#each message.flags.obsidian.saves}}

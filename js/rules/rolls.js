@@ -747,8 +747,9 @@ export const Rolls = {
 			damage = Effect.scaleDamage(actor, scaling, scaledAmount, damage);
 		}
 
+		const duration = Rolls.rollDuration(actor, effect);
 		if (options.withDuration !== false) {
-			handleDurations(actor, item, effect, scaledAmount);
+			handleDurations(actor, item, effect, scaledAmount, duration?.total);
 		}
 
 		let scaledTargets = targets?.count || 1;
@@ -830,6 +831,7 @@ export const Rolls = {
 			results[0].item = item;
 			results[0].details = details;
 			results[0].open = !attacks.length && !damage.length;
+			results[0].duration = duration;
 
 			if (effect.components.some(c => c.type === 'target' && c.target === 'area')) {
 				results[0].aoe = effect.uuid;
@@ -1296,6 +1298,22 @@ export const Rolls = {
 					return acc;
 				}, [])
 			}
+		};
+	},
+
+	rollDuration: function (actor, effect) {
+		const duration = effect.components.find(c => c.type === 'duration');
+		if (!duration || !duration.ndice) {
+			return;
+		}
+
+		const roll = new ObsidianDie(duration.die).roll(duration.ndice);
+		const constant = duration.duration == null ? 0 : duration.duration;
+
+		return {
+			total: roll.results.reduce((acc, r) => acc + r, 0) + constant,
+			breakdown: `${duration.ndice}d${duration.die}${constant ? constant.sgnex() : ''} = `
+				+ `(${roll.results.join('+')})${constant ? constant.sgnex() : ''}`
 		};
 	},
 

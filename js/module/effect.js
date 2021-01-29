@@ -143,6 +143,8 @@ export const Components = {
 		data: {
 			type: 'duration',
 			duration: 1,
+			ndice: null,
+			die: 4,
 			concentration: false
 		},
 		metadata: {
