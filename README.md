@@ -4,17 +4,14 @@ A [Foundry VTT](https://foundryvtt.com/) module that provides dark themed charac
 ![example screenshot](https://bitbucket.org/Fyorl/obsidian/raw/master/example.jpg)
 
 ## Bug Reports
-If you discover an issue with the sheet, please report it in the [issue tracker](https://bitbucket.org/Fyorl/obsidian/issues) and ensure you include the following information:
+If you discover an issue with the sheet or any other functionality the module provides, please report it in the [issue tracker](https://bitbucket.org/Fyorl/obsidian/issues) and ensure you include the following information:
 
-1. The steps you took to encounter the issue.
-2. What you expected to happen.
-3. What actually happened.
-4. Whether you encountered the issue in the foundry client or in a web browser, or both (and which browser and OS, if applicable).
-
-In addition to the above information, it can be useful if you are able to do the following, too:
-
-1. Press F12 to bring up the console and copy and paste any error messages you find there into the bug report.
-2. Zip up your `actors.db` file and attach it to the report. It can be found in your foundry data directory under `Data/worlds/yourworld/data/actors.db`.
+1. The version of foundry, obsidian, and dnd5e that you are using.
+2. Whether the issue is a bug or a module incompatibility. You can tell the difference by first disabling all other modules apart from obsidian. If you still experience the issue then it is a bug, otherwise it is a module incompatibility.
+3. Any error messages that appear when the issue manifests, or any error messages that appear when the world first loads. You can see these messages by pressing F12 to bring up the console. Please include screenshots or copy-pastes of these errors if you see them.
+4. The steps you took to encounter the issue.
+5. What you expected to happen.
+6. What actually happened.
 
 ## License
 All source code (`*.html`, `*.css`, `*.js`, `*.json`) is copyright 2019-2021 Kim Mantas, with the exception of individual contributions which remain the copyright of their respective contributors, as specified in the `CONTRIBUTORS` file.

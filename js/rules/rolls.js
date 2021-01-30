@@ -8,8 +8,9 @@ import {applyEffects, handleDurations} from '../module/duration.js';
 import {ObsidianActor} from '../module/actor.js';
 import {hpAfterDamage} from './defenses.js';
 import {rollInitiative} from './combat.js';
-import ObsidianDie from '../module/die.js';
 import ObsidianActorSelectorDialog from '../dialogs/actor-selector.js';
+import {RollParts} from './roll-parts.js';
+import ObsidianDie from '../module/die.js';
 
 const DMG_COLOURS = {
 	acd: 'acid', cld: 'ice', fir: 'fire', frc: 'force', lig: 'lightning', ncr: 'necrotic',
@@ -18,7 +19,7 @@ const DMG_COLOURS = {
 };
 
 export const Rolls = {
-	abilityCheck: function (actor, ability, skill, mods = [], rollMod) {
+	abilityCheck: function (actor, ability, skill, parts = [], rollMod) {
 		if (!skill) {
 			rollMod =
 				Effect.determineRollMods(
@@ -26,7 +27,7 @@ export const Rolls = {
 					Effect.combineRollMods([rollMod, Effect.encumbranceRollMod(actor, ability)]),
 					mode =>	Filters.appliesTo.abilityChecks(ability, mode));
 
-			mods.push({
+			parts.push({
 				mod: actor.data.data.abilities[ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
 			}, ...actor.data.obsidian.abilities[ability].rollParts);
@@ -37,15 +38,18 @@ export const Rolls = {
 			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
 			parens: skill,
 			subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
-			mods: mods,
-			rollMod: rollMod
+			parts, rollMod
 		});
 	},
 
 	abilityRecharge: function (item, effect, component) {
 		const recharge = component.recharge;
-		const roll = new ObsidianDie(6).roll(1);
-		const success = roll.total >= recharge.roll;
+		const parts = [{mod: 0, ndice: 1, die: 6}];
+
+		RollParts.rollParts(parts);
+
+		const roll = parts[0].results[0].last();
+		const success = roll >= recharge.roll;
 
 		return {
 			flags: {
@@ -56,8 +60,8 @@ export const Rolls = {
 						: effect.name.length ? effect.name : item.name,
 					subtitle: `${game.i18n.localize('OBSIDIAN.Recharge')} ${recharge.roll}&mdash;6`,
 					results: [[{
-						total: roll.total,
-						breakdown: `1d6 = ${roll.total}`
+						total: RollParts.calculateTotal(parts),
+						breakdown: RollParts.compileBreakdown(parts)
 					}]],
 					addendum: {
 						success: success,
@@ -132,31 +136,6 @@ export const Rolls = {
 
 		for (const token of game.user.targets) {
 			await token.actor.update(hpAfterDamage(token.actor, damage, attack));
-		}
-	},
-
-	applyRollModifiers: function (roll, rolls, rollMod) {
-		const mult = rolls[0][0] < 0 ? -1 : 1;
-		if (rollMod.max) {
-			rolls.forEach(r => r.push(roll.faces * mult));
-			return;
-		}
-
-		if (rollMod.reroll > 1) {
-			const die = new Die({faces: roll.faces, number: 1});
-			rolls.forEach(r => {
-				if (Math.abs(r.last()) < rollMod.reroll) {
-					r.push(die.roll().result * mult);
-				}
-			});
-		}
-
-		if (rollMod.min > 1) {
-			rolls.forEach(r => {
-				if (Math.abs(r.last()) < rollMod.min) {
-					r.push(rollMod.min * mult);
-				}
-			});
 		}
 	},
 
@@ -262,10 +241,6 @@ export const Rolls = {
 		await applyEffects(actor, effect, targets, 'save');
 	},
 
-	compileBreakdown: mods =>
-		mods.filter(mod => mod.mod)
-			.map(mod => `${mod.mod.sgnex()} ${mod.name.length ? `[${mod.name}]` : ''}`).join(''),
-
 	compileExpression: function (roll) {
 		return roll.terms.map(part => {
 			if (part instanceof Die) {
@@ -278,36 +253,6 @@ export const Rolls = {
 
 			return part;
 		}).join(' ');
-	},
-
-	compileRerolls: (rolls, max, min = 1) => {
-		const annotated = [];
-		for (let i = 0; i < rolls.length; i++) {
-			const roll = rolls[i];
-			let cls;
-
-			if (i === rolls.length - 1) {
-				if (roll >= max) {
-					cls = 'positive';
-				} else if (roll <= min) {
-					cls = 'negative';
-				}
-			} else {
-				cls = 'grey';
-			}
-
-			if (cls) {
-				annotated.push(`<span class="obsidian-${cls}">${roll}</span>`);
-			} else {
-				annotated.push(roll.toString());
-			}
-		}
-
-		if (rolls.length > 1) {
-			return `[${annotated.join(',')}]`;
-		}
-
-		return annotated[0];
 	},
 
 	compileDC: function (actor, component) {
@@ -333,7 +278,7 @@ export const Rolls = {
 			}
 
 			result.dc = component.value;
-			result.breakdown = bonus + Rolls.compileBreakdown(component.rollParts);
+			result.breakdown = RollParts.compileBreakdown([{mod: bonus}, ...component.rollParts]);
 		} else {
 			result.dc = component.fixed;
 			result.breakdown = `${result.dc} [${game.i18n.localize('OBSIDIAN.Fixed')}]`;
@@ -471,25 +416,7 @@ export const Rolls = {
 		}
 	},
 
-	d20Breakdown: function (r, crit, total, mods) {
-		const extraRolls = mods.filter(mod => mod.roll);
-		if (!extraRolls.length) {
-			// Simplified breakdown.
-			return Rolls.compileRerolls(r, crit) + Rolls.compileBreakdown(mods);
-		}
-
-		const rollsTotal = extraRolls.reduce((acc, mod) =>
-			acc + mod.roll.total * (mod.sgn === '-' ? -1 : 1), 0);
-
-		return '1d20 '
-			+ extraRolls.map(mod => `${mod.ndice.sgnex()}d${mod.die}`).join(' ')
-			+ Rolls.compileBreakdown(mods) + ' = '
-			+ Rolls.compileRerolls(r, crit)
-			+ extraRolls.map(mod => ` ${mod.sgn} (${mod.roll.results.join('+')})`).join('')
-			+ (total - rollsTotal).sgnex();
-	},
-
-	d20Roll: function (actor, mods = [], crit = 20, fail = 1, rollMod) {
+	d20Roll: function (actor, parts = [], crit = 20, fail = 1, rollMod) {
 		if (crit == null) {
 			crit = 20;
 		} else {
@@ -497,38 +424,23 @@ export const Rolls = {
 		}
 
 		let n = 2;
-		if (rollMod) {
-			n += rollMod.ndice;
-			crit = Math.clamped(Math.min(crit, rollMod.mcrit), 0, 20);
-		}
-
-		const roll = new ObsidianDie(20).roll(n);
-		const rolls = roll.results.map(r => [r]);
 		let adv = [];
 
 		if (rollMod) {
-			Rolls.applyRollModifiers(roll, rolls, rollMod);
+			n += rollMod.ndice;
+			crit = Math.clamped(Math.min(crit, rollMod.mcrit), 0, 20);
 			adv = adv.concat(rollMod.mode);
 		}
 
-		let total = mods.reduce((acc, mod) => {
-			if (mod.ndice !== undefined) {
-				let mult = 1;
-				if (mod.ndice < 0) {
-					mod.sgn = '-';
-					mult = -1;
-				} else {
-					mod.sgn = '+';
-				}
+		const d20s = [];
+		for (let i = 0; i < n; i++) {
+			d20s.push({mod: 0, ndice: 1, die: 20, crit});
+		}
 
-				mod.roll = new ObsidianDie(mod.die).roll(mod.ndice * mult);
-				return acc + mod.roll.total * mult;
-			}
+		RollParts.rollParts(d20s);
+		RollParts.rollParts(parts);
+		RollParts.applyRollModifiers(d20s, rollMod);
 
-			return acc + mod.mod;
-		}, 0);
-
-		total = Math.floor(total);
 		const rollMode =
 			window.event?.altKey ? 1
 			: window.event?.ctrlKey ? -1
@@ -536,17 +448,22 @@ export const Rolls = {
 			: determineAdvantage(...adv);
 
 		if (game.settings.get('obsidian','rollOneDie') && rollMode === 0) {
-			rolls.pop();
+			d20s.pop();
 		}
 
-		const results = rolls.map(r => {
-			return {
-				data3d: {formula: '1d20', results: [r.last()]},
-				roll: r.last(),
-				total: r.last() + total,
-				breakdown: Rolls.d20Breakdown(r, crit, total, mods)
-			}
-		});
+		const results = [];
+		for (let i = 0; i < d20s.length; i++) {
+			const d20 = d20s[i];
+			const isFirst = i === 0;
+			const allParts = [d20, ...duplicate(parts)];
+
+			results.push({
+				data3d: RollParts.compileData3D(isFirst ? allParts : [d20]),
+				roll: d20.results[0].last(),
+				total: RollParts.calculateTotal(allParts),
+				breakdown: RollParts.compileBreakdown(allParts)
+			});
+		}
 
 		Rolls.annotateCrits(crit, fail, results);
 		Rolls.annotateAdvantage(rollMode, results);
@@ -608,15 +525,15 @@ export const Rolls = {
 	death: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
-		let mods = [{
+		let parts = [{
 			mod: (flags.saves.bonus || 0) + (flags.attributes.death.bonus || 0),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
 		const bonuses = actor.data.obsidian.filters.bonuses(Filters.appliesTo.deathSaves);
 		if (bonuses.length) {
-			mods.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
-			mods = highestProficiency(mods);
+			parts.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
+			parts = highestProficiency(parts);
 		}
 
 		const rollMod =
@@ -630,8 +547,7 @@ export const Rolls = {
 			type: 'save',
 			title: game.i18n.localize('OBSIDIAN.DeathSave'),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-			mods: mods,
-			rollMod: rollMod
+			parts, rollMod
 		});
 
 		// If no advantage or disadvantage, take the first roll, otherwise find
@@ -894,89 +810,32 @@ export const Rolls = {
 
 	hd: function (actor, rolls, conBonus) {
 		const rollMod = Effect.combineRollMods(actor.data.obsidian.filters.mods(Filters.isHD));
+		const parts = rolls.map(([n, d]) => {
+			return {mod: 0, ndice: n, die: d};
+		});
+
 		const bonuses =
 			actor.data.obsidian.filters.bonuses(Filters.isHD).flatMap(bonus =>
 				bonusToParts(actor.data, bonus));
 
-		const hdRolls = rolls.map(([n, d]) => {
-			const roll = new ObsidianDie(d).roll(n);
-			const rolls = roll.results.map(r => [r]);
-			Rolls.applyRollModifiers(roll, rolls, rollMod);
-			roll.modified = rolls;
-			roll.total = roll.modified.reduce((acc, r) => acc + r.last(), 0);
-			return roll;
-		});
+		RollParts.rollParts(parts);
+		RollParts.rollParts(bonuses);
+		RollParts.applyRollModifiers(parts, rollMod);
 
-		let bonusConstTotal = 0;
-		let bonusRollTotal = bonuses.reduce((acc, mod) => {
-			bonusConstTotal += mod.mod;
-			if (mod.ndice === undefined) {
-				return acc;
-			}
+		const allParts =
+			parts.concat(bonuses)
+				.concat([{mod: conBonus, name: game.i18n.localize('OBSIDIAN.AbilityAbbr-con')}]);
 
-			let mult = 1;
-			if (mod.ndice < 0) {
-				mod.sgn = '-';
-				mult = -1;
-			} else {
-				mod.sgn = '+';
-			}
-
-			mod.roll = new ObsidianDie(mod.die).roll(mod.ndice * mult);
-			return acc + mod.roll.total * mult;
-		}, 0);
-
-		bonusRollTotal = Math.floor(bonusRollTotal);
-		const total =
-			hdRolls.reduce((acc, r) => acc + r.total, 0)
-			+ bonusRollTotal + bonusConstTotal + conBonus;
-
-		const allRolls = hdRolls.concat(bonuses.filter(mod => mod.roll).map(mod => mod.roll));
-		const data3d = {
-			formula: allRolls.map(r => `${r.results.length}d${r.faces}`).join('+'),
-			results: allRolls.flatMap(r => {
-				if (r.modified) {
-					return r.modified.map(r => r.last());
-				}
-
-				return r.results;
-			})
-		};
-
-		const breakdown = [];
-		breakdown.push(rolls.map(([n, d]) => `${n}d${d}`).join(' + '));
-		breakdown.push(bonuses.map(mod => {
-			if (mod.roll) {
-				return `${mod.ndice.sgnex()}d${mod.die}`;
-			}
-
-			return `${mod.mod.sgnex()} ${mod.name.length ? `[${mod.name}]` : ''}`;
-		}).join('').substr(1));
-
-		breakdown.push(
-			`${conBonus.sgnex().substr(1)} [${game.i18n.localize('OBSIDIAN.AbilityAbbr-con')}]`);
-
-		breakdown.push('=');
-		breakdown.push(
-			hdRolls.map(die =>
-				`(${die.modified.map(r => Rolls.compileRerolls(r, die.faces)).join('+')})`)
-				.join(' + '));
-
-		breakdown.push(
-			bonuses.filter(mod => mod.roll)
-				.map(mod => `${mod.sgn} (${mod.roll.results.join('+')})`)
-				.join(' '));
-
-		breakdown.push((bonusConstTotal + conBonus).sgnex().substr(1));
-
+		const total = RollParts.calculateTotal(allParts);
 		Rolls.toChat(actor, {
 			flags: {
 				obsidian: {
 					type: 'hd',
 					title: game.i18n.localize('OBSIDIAN.HD'),
 					results: [[{
-						data3d, total,
-						breakdown: breakdown.filter(part => part.length).join(' ')
+						total,
+						data3d: RollParts.compileData3D(allParts),
+						breakdown: RollParts.compileBreakdown(allParts)
 					}]]
 				}
 			}
@@ -986,31 +845,30 @@ export const Rolls = {
 	},
 
 	hp: function (actor, n, d, c) {
-		const results = new ObsidianDie(d).roll(n);
-		results.total += c;
+		const parts = [{mod: c, ndice: n, die: d}];
+		RollParts.rollParts(parts);
 
+		const total = RollParts.calculateTotal(parts);
 		const data = Rolls.toMessage(actor, 'selfroll');
+
 		ChatMessage.create(mergeObject(data, {
 			flags: {
 				obsidian: {
 					type: 'hp',
 					title: game.i18n.localize('OBSIDIAN.HP'),
-					results: [[{
-						total: results.total,
-						breakdown: `${n}d${d} + ${c} = (${results.results.join('+')})${c.sgnex()}`
-					}]]
+					results: [[{total, breakdown: RollParts.compileBreakdown(parts)}]]
 				}
 			}
 		}));
 
-		return results;
+		return total;
 	},
 
 	initiative: function (actor) {
 		const data = actor.data.data;
 		const flags = actor.data.flags.obsidian;
 		const derived = actor.data.obsidian;
-		const mods = duplicate(derived.attributes.init.rollParts);
+		const parts = duplicate(derived.attributes.init.rollParts);
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
@@ -1020,24 +878,24 @@ export const Rolls = {
 				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
-			mods.push({
+			parts.push({
 				mod: data.abilities[flags.attributes.init.ability].mod,
 				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.attributes.init.ability}`)
 			});
 
 			if (flags.skills.joat) {
-				mods.push({
+				parts.push({
 					mod: Math.floor(data.attributes.prof / 2),
 					name: game.i18n.localize('OBSIDIAN.ProfAbbr')
 				});
 			}
 
-			mods.push({
+			parts.push({
 				mod: data.attributes.init.value,
 				name: game.i18n.localize('OBSIDIAN.Bonus')
 			});
 		} else {
-			mods.push({
+			parts.push({
 				mod: Number(flags.attributes.init.override),
 				name: game.i18n.localize('OBSIDIAN.Override')
 			});
@@ -1046,7 +904,7 @@ export const Rolls = {
 		const initiative =
 			Rolls.abilityCheck(
 				actor, flags.attributes.init.ability, game.i18n.localize('OBSIDIAN.Initiative'),
-				mods, rollMod);
+				parts, rollMod);
 
 		rollInitiative(actor, initiative.flags.obsidian.results[0].find(r => r.active).total);
 		return initiative;
@@ -1151,7 +1009,8 @@ export const Rolls = {
 
 	recharge: function (item, effect, component) {
 		const recharge = component.recharge;
-		const roll = new ObsidianDie(recharge.die).roll(recharge.ndice);
+		const parts = [{mod: recharge.bonus || 0, ndice: recharge.ndice, die: recharge.die}];
+		RollParts.rollParts(parts);
 
 		return {
 			flags: {
@@ -1160,10 +1019,8 @@ export const Rolls = {
 					title: item.name,
 					subtitle: component.label,
 					results: [[{
-						total: roll.results.reduce((acc, val) => acc + val, 0) + recharge.bonus,
-						breakdown:
-							`${recharge.ndice}d${recharge.die}${recharge.bonus.sgnex()} = `
-							+ `(${roll.results.join('+')})${recharge.bonus.sgnex()}`
+						total: RollParts.calculateTotal(parts),
+						breakdown:RollParts.compileBreakdown(parts)
 					}]]
 				}
 			}
@@ -1183,91 +1040,82 @@ export const Rolls = {
 					return mod;
 				}));
 
-		const rolls = damage.map(dmg => {
+		const diceParts = damage.map(dmg => {
 			if (dmg.calc === 'fixed' || !dmg.derived.ndice) {
 				return null;
 			}
 
-			const mult = dmg.derived.ndice < 0 ? -1 : 1;
-			const ndice = Math.abs(dmg.derived.ndice);
-			const hitRoll = new ObsidianDie(dmg.die).roll(ndice);
-			const critRoll = new ObsidianDie(dmg.die).roll(dmg.derived.ncrit || ndice);
-			const hitRolls = hitRoll.results.map(r => [r * mult]);
-			const critRolls = critRoll.results.map(r => [r * mult]);
-            const numRolls = ndice + (dmg.derived.ncrit || ndice);
-			let allRolls = hitRolls.concat(critRolls);
+			let ncrit = dmg.derived.ncrit;
+			const ndice = dmg.derived.ndice;
+			const mult = ndice < 0 ? -1 : 1;
+
+			if (ncrit == null) {
+				ncrit = ndice;
+			} else {
+				ncrit *= mult;
+			}
+
 			let colour = DMG_COLOURS[dmg.damage];
+			const numRolls = Math.abs(ndice) + Math.abs(ncrit);
+			const parts = [
+				{mod: 0, ndice: ndice, die: dmg.die},
+				{mod: 0, ndice: ncrit, die: dmg.die}
+			];
+
+			RollParts.rollParts(parts);
 
 			if (!colour) {
 				colour = 'black';
 			}
 
-			if (dmg.addMods === false) {
-				return {
-					hit: hitRolls,
-					crit: allRolls,
-					data3d: {
-						formula: `${numRolls}d${dmg.die}`,
-						results: allRolls.map(r => Math.abs(r.last())),
-						colours: Rolls.DSNColours(colour, hitRolls.length, allRolls.length)
-					}
-				};
-			}
+			if (dmg.addMods) {
+				const rollMods =
+					Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
 
-			const rollMods = Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
-			if (dmg.rollMod) {
-				rollMods.push(dmg.rollMod);
-			}
-
-			const rollMod = Effect.combineRollMods(rollMods);
-			Rolls.applyRollModifiers(hitRoll, hitRolls, rollMod);
-			Rolls.applyRollModifiers(critRoll, critRolls, rollMod);
-			allRolls = hitRolls.concat(critRolls);
-
-			return {
-				hit: hitRolls,
-				crit: allRolls,
-				data3d: {
-					formula: `${numRolls}d${dmg.die}`,
-					results: allRolls.map(r => Math.abs(r.last())),
-					colours: Rolls.DSNColours(colour, hitRolls.length, allRolls.length)
+				if (dmg.rollMod) {
+					rollMods.push(dmg.rollMod);
 				}
+
+				const rollMod = Effect.combineRollMods(rollMods);
+				RollParts.applyRollModifiers(parts, rollMod);
+			}
+
+			const data3d = RollParts.compileData3D(parts);
+			data3d.colours = Rolls.DSNColours(colour, Math.abs(ndice), numRolls);
+
+			const hitPart = parts[0];
+			const critPart = {
+				mod: 0, ndice: ndice + ncrit, die: dmg.die,
+				roll: ObsidianDie.combine(...parts.map(p => p.roll)),
+				results: parts[0].results.concat(parts[1].results)
 			};
+
+			return {hit: [hitPart], crit: [critPart], data3d};
 		});
 
-		const total = mode => rolls.reduce((acc, rolls) => {
-			if (rolls && rolls[mode]) {
-				return acc + rolls[mode].reduce((acc, r) => acc + r.last(), 0);
+		const total = mode => diceParts.reduce((acc, parts) => {
+			if (parts && parts[mode]) {
+				return acc + RollParts.calculateTotal(parts[mode]);
 			}
 
 			return acc;
-		}, 0) + damage.flatMap(dmg => dmg.rollParts).reduce((acc, mod) => acc + mod.mod, 0);
+		}, 0) + RollParts.calculateTotal(damage.flatMap(dmg => dmg.rollParts));
 
 		const results = mode => damage.map((dmg, i) => {
-			let subRolls = rolls[i];
-			if (subRolls) {
-				subRolls = subRolls[mode];
+			let subParts = [];
+			if (diceParts[i]) {
+				subParts = diceParts[i][mode];
 			}
 
-			const subTotal = Math.floor(dmg.rollParts.reduce((acc, mod) => acc + mod.mod, 0));
-			let total = subTotal;
-			let breakdown;
-
-			if (subRolls) {
-				total += subRolls.reduce((acc, r) => acc + r.last(), 0);
-				breakdown =
-					`${subRolls.length}d${dmg.die}${Rolls.compileBreakdown(dmg.rollParts)} = `
-					+ `(${subRolls.map(r => Rolls.compileRerolls(r, dmg.die)).join('+')})`
-					+ subTotal.sgnex();
-			} else {
-				breakdown =
-					`${Rolls.compileBreakdown(dmg.rollParts)} = ${total}`.substring(3);
+			if (!subParts) {
+				subParts = [];
 			}
 
+			const allParts = subParts.concat(dmg.rollParts);
 			return {
 				type: dmg.damage,
-				total: total,
-				breakdown: breakdown
+				total: RollParts.calculateTotal(allParts),
+				breakdown: RollParts.compileBreakdown(allParts)
 			};
 		});
 
@@ -1288,12 +1136,12 @@ export const Rolls = {
 			hit: {total: Math.floor(total('hit')), results: results('hit')},
 			crit: {total: Math.floor(total('crit')), results: results('crit')},
 			data3d: {
-				formula: rolls.filter(_ => _).map(r => r.data3d.formula).join('+'),
-				results: rolls.filter(_ => _).reduce((acc, r) => {
+				formula: diceParts.filter(_ => _).map(r => r.data3d.formula).join('+'),
+				results: diceParts.filter(_ => _).reduce((acc, r) => {
 					acc.push(...r.data3d.results);
 					return acc;
 				}, []),
-				colours: rolls.filter(_ => _).reduce((acc, r) => {
+				colours: diceParts.filter(_ => _).reduce((acc, r) => {
 					acc.push(...r.data3d.colours);
 					return acc;
 				}, [])
@@ -1307,13 +1155,12 @@ export const Rolls = {
 			return;
 		}
 
-		const roll = new ObsidianDie(duration.die).roll(duration.ndice);
-		const constant = duration.duration == null ? 0 : duration.duration;
+		const parts = [{mod: duration.duration || 0, ndice: duration.ndice, die: duration.die}];
+		RollParts.rollParts(parts);
 
 		return {
-			total: roll.results.reduce((acc, r) => acc + r, 0) + constant,
-			breakdown: `${duration.ndice}d${duration.die}${constant ? constant.sgnex() : ''} = `
-				+ `(${roll.results.join('+')})${constant ? constant.sgnex() : ''}`
+			total: RollParts.calculateTotal(parts),
+			breakdown: RollParts.compileBreakdown(parts)
 		};
 	},
 
@@ -1331,17 +1178,16 @@ export const Rolls = {
 	},
 
 	rollResource: function (resource, rolls) {
-		const roll = new ObsidianDie(resource.die).roll(rolls);
+		const parts = [{mod: 0, ndice: rolls, die: resource.die}];
+		RollParts.rollParts(parts);
+
 		return {
 			flavour: resource.name,
-			data3d: {
-				formula: `${rolls}d${resource.die}`,
-				results: roll.results
-			},
-			results: roll.results.map(r => {
+			data3d: RollParts.compileData3D(parts),
+			results: parts[0].results.map(r => {
 				return {
-					total: r,
-					breakdown: `1d${resource.die} = ${r}`
+					total: r.last(),
+					breakdown: `1d${resource.die} = ${r.last()}`
 				}
 			})
 		};
@@ -1368,8 +1214,8 @@ export const Rolls = {
 			type: 'save',
 			title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
-			mods: actor.data.obsidian.saves[save].rollParts,
-			rollMod: rollMod
+			parts: actor.data.obsidian.saves[save].rollParts,
+			rollMod
 		});
 	},
 
@@ -1390,7 +1236,7 @@ export const Rolls = {
 		}));
 	},
 
-	simpleRoll: function (actor, {type, title, parens, subtitle, mods = [], rollMod}) {
+	simpleRoll: function (actor, {type, title, parens, subtitle, parts = [], rollMod}) {
 		return {
 			flags: {
 				obsidian: {
@@ -1398,7 +1244,7 @@ export const Rolls = {
 					title: title,
 					parens: parens,
 					subtitle: subtitle,
-					results: [Rolls.d20Roll(actor, mods, 20, 1, rollMod)]
+					results: [Rolls.d20Roll(actor, parts, 20, 1, rollMod)]
 				}
 			}
 		}
@@ -1493,7 +1339,7 @@ export const Rolls = {
 		return chatData;
 	},
 
-	toHitRoll: function (actor, hit, extraMods = []) {
+	toHitRoll: function (actor, hit, extraParts = []) {
 		const rollMods = [
 			Effect.sheetGlobalRollMod(actor),
 			Effect.encumbranceRollMod(actor, hit.ability)
@@ -1506,6 +1352,6 @@ export const Rolls = {
 		const rollMod = Effect.determineRollMods(actor, Effect.combineRollMods(rollMods), mode =>
 			Filters.appliesTo.attackRolls(hit, mode));
 
-		return Rolls.d20Roll(actor, [...hit.rollParts, ...extraMods], hit.crit, 1, rollMod);
+		return Rolls.d20Roll(actor, [...hit.rollParts, ...extraParts], hit.crit, 1, rollMod);
 	}
 };

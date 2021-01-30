@@ -527,7 +527,7 @@ export class ObsidianActor extends Actor5e {
 		const hp = this.data.data.attributes.hp;
 		const hd = duplicate(this.data.flags.obsidian.attributes.hd);
 
-		let newHP = hp.value + total + conBonus;
+		let newHP = hp.value + total;
 		if (newHP > hp.max) {
 			newHP = hp.max;
 		}
@@ -561,8 +561,7 @@ export class ObsidianActor extends Actor5e {
 			const average = hd.die / 2 + .5;
 			total = Math.floor(average * totalDice + hd.const);
 		} else {
-			const results = Rolls.hp(this, totalDice, hd.die, hd.const);
-			total = results.total;
+			total = Rolls.hp(this, totalDice, hd.die, hd.const);
 		}
 
 		this.update({'data.attributes.hp': {value: total, max: total}});

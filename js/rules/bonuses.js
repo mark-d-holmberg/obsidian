@@ -194,7 +194,7 @@ export function applyProfBonus (actorData) {
 }
 
 function bonusName (actorData, bonus) {
-	if (bonus.name.length) {
+	if (bonus.name?.length) {
 		return bonus.name;
 	}
 
@@ -281,61 +281,19 @@ export function bonusToParts (actorData, bonus) {
 		}
 	}
 
-	let constant = 0;
+	// Is this an actual bonus component or has it been tacked onto a different
+	// component?
+	const isComponent = bonus.formula;
+	const prof = actorData.data.attributes.prof;
+	const summoningItemSource = summoningItem?.flags.obsidian?.source;
 	const parts = [];
 
-	if (bonus.ndice !== 0 && (!bonus.formula || bonus.method === 'dice')) {
-		const part = {mod: 0, ndice: bonus.ndice, die: bonus.die};
-		parts.push(part);
+	const createConstantPart = mod => parts.push({mod, name: bonusName(actorData, bonus)});
 
-		if (bonus.dmg?.enabled && bonus.dmg?.type !== 'wpn') {
-			part.damage = bonus.dmg.type;
-		}
-	}
-
-	if (bonus.formula && bonus.method === 'dice') {
-		constant = bonus.bonus;
-	}
-
-	if (bonus.formula
-		&& bonus.method === 'formula'
-		&& bonus.constant !== 0
-		&& bonus.operator === 'plus')
-	{
-		constant = bonus.constant;
-	}
-
-	if (constant !== 0) {
-		parts.push({mod: constant, name: bonusName(actorData, bonus)});
-	}
-
-	let multiplier = 1;
-	if (bonus.formula && bonus.method === 'formula' && bonus.operator === 'mult') {
-		multiplier = bonus.constant || 0;
-	}
-
-	if (!bonus.formula && !OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
-		parts.push({
-			mod: Math.floor(bonus.prof * actorData.data.attributes.prof),
-			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-			proficiency: true,
-			value: Number(bonus.prof)
-		});
-	}
-
-	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'prof') {
-		parts.push({
-			mod: Math.floor(multiplier * actorData.data.attributes.prof),
-			name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
-			proficiency: true,
-			value: multiplier
-		});
-	}
-
-	if (bonus.formula && bonus.method === 'formula' && bonus.value === 'abl') {
+	const createAbilityPart = (multiplier, constant) => {
 		let mod = 0;
-		if (bonus.ability === 'spell' && summoningItem?.flags.obsidian?.source?.type === 'class') {
-			const cls = actorData.obsidian.itemsByID.get(summoningItem.flags.obsidian.source.class);
+		if (bonus.ability === 'spell' && summoningItemSource?.type === 'class') {
+			const cls = actorData.obsidian.itemsByID.get(summoningItemSource.class);
 			if (cls?.obsidian?.spellcasting?.enabled) {
 				mod = cls.obsidian.spellcasting.mod;
 			}
@@ -344,30 +302,82 @@ export function bonusToParts (actorData, bonus) {
 		}
 
 		parts.push({
-			mod: Math.floor(multiplier * mod),
-			name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
+			mod: Math.floor(multiplier * mod + constant),
+			name:
+				bonus.name.length
+					? bonus.name
+					: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
 		});
-	}
+	};
 
-	if (!bonus.formula || bonus.method === 'formula') {
-		const levelKey = bonus.formula ? bonus.value : bonus.level;
-		if (['chr', 'cls'].includes(levelKey)) {
-			let level;
-			if (levelKey === 'chr') {
-				level = actorData.data.details.level;
-			} else if (levelKey === 'cls') {
-				const cls = actorData.obsidian.itemsByID.get(bonus.class);
-				if (cls) {
-					level = cls.data.levels;
-				}
+	const createProfPart = (mod, value, name) =>
+		parts.push({
+			value,
+			proficiency: true,
+			mod: Math.floor(mod),
+			name: name?.length ? name : game.i18n.localize('OBSIDIAN.ProfAbbr')
+		});
+
+	const createDicePart = (mod = 0) => {
+		const part = {mod, ndice: bonus.ndice, die: bonus.die, name: bonusName(actorData, bonus)};
+		if (bonus.dmg?.enabled && bonus.dmg?.type !== 'wpn') {
+			part.damage = bonus.dmg.type;
+		}
+
+		parts.push(part);
+	};
+
+	const createLevelPart = (key, multiplier = 1, constant = 0) => {
+		let level;
+		if (key === 'chr') {
+			level = actorData.data.details.level;
+		} else if (key === 'cls') {
+			const cls = actorData.obsidian.itemsByID.get(bonus.class);
+			level = cls?.data.levels;
+		}
+
+		if (level) {
+			parts.push({
+				mod: Math.floor(multiplier * level + constant),
+				name: bonusName(actorData, bonus)
+			});
+		}
+	};
+
+	if (isComponent) {
+		if (bonus.method === 'dice') {
+			createDicePart(bonus.bonus || 0);
+		} else if (bonus.method === 'formula') {
+			let constant = 0;
+			let multiplier = 1;
+
+			if (bonus.operator === 'plus') {
+				constant = bonus.constant || 0;
+			} else if (bonus.operator === 'mult') {
+				multiplier = bonus.constant || 0;
 			}
 
-			if (level !== undefined) {
-				parts.push({
-					mod: Math.floor(multiplier * level),
-					name: bonusName(actorData, bonus)
-				});
+			if (bonus.value === 'prof') {
+				createProfPart(multiplier * prof + constant, multiplier, bonus.name);
+			} else if (bonus.value === 'abl') {
+				createAbilityPart(multiplier, constant);
+			} else if (['chr', 'cls'].includes(bonus.value)) {
+				createLevelPart(bonus.value, multiplier, constant);
+			} else if (constant) {
+				createConstantPart(constant);
 			}
+		}
+	} else {
+		if (bonus.ndice) {
+			createDicePart();
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(bonus.prof)) {
+			createProfPart(bonus.prof * prof, Number(bonus.prof));
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(bonus.level)) {
+			createLevelPart(bonus.level);
 		}
 	}
 
