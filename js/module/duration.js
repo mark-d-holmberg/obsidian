@@ -260,7 +260,7 @@ export async function advanceDurations (combat) {
 
 async function cleanupExpired (actor, expired) {
 	const summonedTokens =
-		canvas?.tokens.placeables.filter(t => t.data.actorData.flags?.obsidian.summon);
+		canvas?.tokens.placeables.filter(t => t.data.actorData.flags?.obsidian?.summon);
 
 	for (const duration of expired) {
 		const scenes = new Map();
