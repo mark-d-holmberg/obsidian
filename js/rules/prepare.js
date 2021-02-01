@@ -35,6 +35,11 @@ export function determineAdvantage (...mods) {
 	return 0;
 }
 
+export function determineMode (...mods) {
+	const adv = determineAdvantage(...mods);
+	return adv > 0 ? 'adv' : adv === 0 ? 'reg' : 'dis';
+}
+
 export const Prepare = {
 	spellPart: function (component, data, cls) {
 		if (!OBSIDIAN.notDefinedOrEmpty(component.ability) && data) {

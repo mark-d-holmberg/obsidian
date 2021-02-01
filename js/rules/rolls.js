@@ -1,5 +1,5 @@
 import {OBSIDIAN} from '../global.js';
-import {determineAdvantage} from './prepare.js';
+import {determineAdvantage, determineMode} from './prepare.js';
 import {Effect} from '../module/effect.js';
 import {Filters} from './filters.js';
 import AbilityTemplate from '../../../../systems/dnd5e/module/pixi/ability-template.js';
@@ -530,18 +530,19 @@ export const Rolls = {
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
-		const bonuses = actor.data.obsidian.filters.bonuses(Filters.appliesTo.deathSaves);
-		if (bonuses.length) {
-			parts.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
-			parts = highestProficiency(parts);
-		}
-
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
 				Effect.makeModeRollMod([
 					flags.sheet.roll, flags.saves.roll, flags.attributes.death.roll]),
 				mode => Filters.appliesTo.deathSaves(mode));
+
+		const mode = determineMode(...rollMod.mode)
+		const bonuses = actor.data.obsidian.filters.bonuses(Filters.appliesTo.deathSaves(mode));
+		if (bonuses.length) {
+			parts.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
+			parts = highestProficiency(parts);
+		}
 
 		const roll = Rolls.simpleRoll(actor, {
 			type: 'save',

@@ -1,6 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {Filters} from '../rules/filters.js';
-import {determineAdvantage} from '../rules/prepare.js';
+import {determineMode} from '../rules/prepare.js';
 import {ObsidianActor} from './actor.js';
 
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
@@ -435,8 +435,7 @@ export const Effect = {
 
 		const mods = actor.data.obsidian.filters.mods;
 		const firstPass = mods(pred());
-		const adv = determineAdvantage(...Effect.combineRollMods(firstPass.concat(globalMod)).mode);
-		const mode = adv > 0 ? 'adv' : adv === 0 ? 'reg' : 'dis';
+		const mode = determineMode(...Effect.combineRollMods(firstPass.concat(globalMod)).mode);
 		const secondPass = mods(pred(mode));
 		return Effect.combineRollMods(secondPass.concat(globalMod));
 	},
