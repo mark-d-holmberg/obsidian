@@ -943,7 +943,16 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-table summary > div {
 	display: flex;
+	align-items: center;
+}
+
+.obsidian-table summary .obsidian-container-weight {
+	display: flex;
 	align-items: baseline;
+}
+
+.obsidian-table summary .obsidian-container-weight > div:first-child {
+	margin-right: 3px;
 }
 
 .obsidian-table summary > div > h3,
@@ -959,7 +968,7 @@ h3 > div > .obsidian-feature-recharge {
 	color: var(--obs-negative);
 }
 
-.obsidian-table summary > div > .obsidian-details-sub-text {
+.obsidian-table summary > div .obsidian-details-sub-text {
 	font-size: 13px;
 	font-family: var(--obs-font);
 	color: var(--obs-text-regular);
@@ -969,10 +978,6 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian-table .obsidian-negative .obsidian-details-sub-text {
 	color: var(--obs-negative);
-}
-
-.obsidian-table summary > div > .obsidian-table-sub-text {
-	margin-left: 4px;
 }
 
 .obsidian-table .obsidian-negative .obsidian-table-sub-text {
@@ -1924,4 +1929,17 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian-actor-select-window {
 	max-height: 800px;
+}
+
+.obsidian-equipped-box {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	border: 5px solid var(--obs-bg);
+	background-color: var(--obs-bg);
+	border-radius: 3px;
+}
+
+.obsidian-equipped-box.obsidian-equipped {
+	background-color: var(--obs-highlight);
 }

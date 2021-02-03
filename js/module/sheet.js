@@ -66,6 +66,7 @@ export const Sheet = {
 		html.find('.obsidian-add-custom-item').click(evt => Sheet.onAddItem(sheet, evt));
 		html.find('.obsidian-equip-action').click(evt => Sheet.onEquip(sheet, evt));
 		html.find('.obsidian-attune').click(evt => Sheet.onAttune(sheet, evt));
+		html.find('.obsidian-equipped-box').click(evt => Sheet.updateContainerEquipped(sheet, evt));
 		html.find('.obsidian-inv-container').click(evt => Sheet.saveContainerState(sheet, evt));
 		html.find('[data-uuid] .obsidian-feature-use').click(evt => Sheet.onUseClicked(sheet, evt));
 		html.find('.obsidian-view').click(evt => Sheet.viewItem(sheet, $(evt.currentTarget)));
@@ -641,6 +642,19 @@ export const Sheet = {
 				}
 			}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 		}
+	},
+
+	updateContainerEquipped: function (sheet, evt) {
+		evt.stopPropagation();
+		const id = evt.currentTarget.closest('summary').dataset.itemId;
+		const item = sheet.actor.items.get(id);
+		if (!item) {
+			return false;
+		}
+
+		const equipped = item.data.data.equipped;
+		item.update({'data.equipped': equipped === false});
+		return false;
 	},
 
 	viewItem: function (sheet, el) {

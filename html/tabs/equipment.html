@@ -111,11 +111,15 @@
 							obsidian-negative
 						{{~/if}} obsidian-inv-container" data-item-id="{{_id}}">
 							<div>
+								<div class="obsidian-equipped-box{{#unless (eq data.equipped false)}} obsidian-equipped{{/unless}}"
+								     title="{{localize 'DND5E.Equipped'}}"></div>
 								<h3>{{name}}</h3>
-								<div class="obsidian-details-sub-text">
-									&bull; {{numberFormat obsidian.carriedWeight decimals=2}}
+								<div class="obsidian-container-weight">
+									<div class="obsidian-details-sub-text">
+										&bull; {{numberFormat obsidian.carriedWeight decimals=2}}
+									</div>
+									<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
 								</div>
-								<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.PoundsAbbr'}}</div>
 							</div>
 							<div>
 								{{#each flags.obsidian.currency}}

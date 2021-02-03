@@ -319,7 +319,7 @@ export class ObsidianActor extends Actor5e {
 			const container = itemsByID.get(flags.parent);
 			if (container) {
 				container.obsidian.carriedWeight += totalWeight;
-				if (!container.data.capacity.weightless) {
+				if (!container.data.capacity.weightless && container.data.equipped !== false) {
 					inventory.weight += totalWeight;
 				}
 
@@ -330,7 +330,10 @@ export class ObsidianActor extends Actor5e {
 					container.obsidian.contents.push(item);
 				}
 			} else {
-				inventory.weight += totalWeight;
+				if (item.type !== 'backpack' || item.data.equipped !== false) {
+					inventory.weight += totalWeight;
+				}
+
 				if (item.type === 'backpack') {
 					inventory.containers.push(item);
 				} else {
