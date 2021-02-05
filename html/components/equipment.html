@@ -57,7 +57,7 @@
                        checked=item.flags.obsidian.addDex}}
 			<label class="obsidian-inline" data-selector-parent="add-dex">
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="data.armor.dex" value="{{data.armor.dex}}">
+				       data-dtype="Number" name="data.armor.dex" value="{{data.armor.dex}}">
 				<span>{{localize 'OBSIDIAN.Maximum'}}</span>
 			</label>
 		</div>
@@ -66,7 +66,7 @@
 		<div class="obsidian-fullwidth obsidian-checkbox-row">
 			<label class="obsidian-inline">
 				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="data.strength" value="{{item.data.strength}}">
+				       data-dtype="Number" name="data.strength" value="{{item.data.strength}}">
 				<span>{{localize 'OBSIDIAN.MinStr'}}</span>
 			</label>
 			{{fancy-checkbox 'data.stealth' content='OBSIDIAN.StealthDisadvantage'

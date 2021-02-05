@@ -40,6 +40,21 @@
 		</div>
 	</div>
 	{{/unless}}
+	{{#if rules}}
+		<h3>{{localize 'OBSIDIAN.Rules'}}</h3>
+		{{#each rules}}
+			<div class="obsidian-effect-row" data-rule="{{key}}">
+				<div class="{{#if active}}obsidian-radio-selected {{/if}}
+			            obsidian-radio obsidian-radio-negative">
+					<span></span>
+				</div>
+				<div class="obsidian-effect-row-content">
+					<strong>{{i18n-join 'OBSIDIAN.RulesKey-' key}}:</strong>
+					{{i18n-join 'OBSIDIAN.RulesVal-' key}}
+				</div>
+			</div>
+		{{/each}}
+	{{/if}}
 	{{#*inline 'effect'}}
 		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
 			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
@@ -56,7 +71,7 @@
 	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
 		{{> effect}}
 	{{/each}}
-	<h3 style="margin-top: 15px;">{{localize 'OBSIDIAN.Temporary'}}</h3>
+	<h3>{{localize 'OBSIDIAN.Temporary'}}</h3>
 	{{#each actor.obsidian.tempEffects}}
 		<fieldset data-item-id="{{_id}}" class="obsidian-temp-effect item">
 			<legend>

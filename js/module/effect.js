@@ -446,19 +446,21 @@ export const Effect = {
 
 	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),
 
-	encumbranceRollMod: (actor, ability) => {
-		const inventory = actor.data.obsidian.inventory;
-		const encumbrance = game.settings.get('obsidian', 'encumbrance');
-		let mode = 'reg';
-
-		if (encumbrance === 1
-			&& inventory.heavilyEncumbered
+	conditionsRollMod: (actorData, {ability, skill}) => {
+		let modes = ['reg'];
+		if (ObsidianActor.isRuleActive(actorData, 'heavilyEncumbered')
 			&& ['str', 'dex', 'con'].includes(ability))
 		{
-			mode = 'dis';
+			modes.push('dis');
 		}
 
-		return Effect.makeModeRollMod(mode);
+		if (ObsidianActor.isRuleActive(actorData, 'noisyArmour')
+			&& ability === 'dex' && skill === 'ste')
+		{
+			modes.push('dis');
+		}
+
+		return Effect.makeModeRollMod(determineMode(...modes));
 	},
 
 	filterDamage: (actorData, filter, dmg) => {

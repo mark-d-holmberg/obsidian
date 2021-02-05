@@ -1031,5 +1031,16 @@
 	"OBSIDIAN.ReplaceAttackRolls": "Replace Attack Rolls",
 	"OBSIDIAN.ReplaceSaveDCs": "Replace Save DCs",
 	"OBSIDIAN.FromSummoner": "From Summoner",
-	"OBSIDIAN.Multiattack": "Multiattack"
+	"OBSIDIAN.Multiattack": "Multiattack",
+	"OBSIDIAN.Rules": "Rules",
+	"OBSIDIAN.RulesKey-overCapacity": "Over Capacity",
+	"OBSIDIAN.RulesVal-overCapacity": "Speed reduced to 0",
+	"OBSIDIAN.RulesKey-heavilyEncumbered": "Heavily Encumbered",
+	"OBSIDIAN.RulesVal-heavilyEncumbered": "Speed reduced by 20, and disadvantage on ability checks, attack rolls, and saving throws that use Strength, Dexterity, or Constitution",
+	"OBSIDIAN.RulesKey-encumbered": "Encumbered",
+	"OBSIDIAN.RulesVal-encumbered": "Speed reduced by 10",
+	"OBSIDIAN.RulesKey-heavyArmour": "Heavy Armour",
+	"OBSIDIAN.RulesVal-heavyArmour": "Insufficient Strength for equipped armour, speed reduced by 10",
+	"OBSIDIAN.RulesKey-noisyArmour": "Noisy Armour",
+	"OBSIDIAN.RulesVal-noisyArmour": "Disadvantage on Dexterity (Stealth) checks"
 }

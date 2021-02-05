@@ -1943,3 +1943,11 @@ select[multiple] option:nth-child(2n) {
 .obsidian-equipped-box.obsidian-equipped {
 	background-color: var(--obs-highlight);
 }
+
+.obsidian-tab-container[data-tab=effects] h3 {
+	margin-top: 15px;
+}
+
+.obsidian-tab-container[data-tab=effects] h3:first-child {
+	margin-top: 0;
+}

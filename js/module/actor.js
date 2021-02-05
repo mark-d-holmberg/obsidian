@@ -55,6 +55,7 @@ export class ObsidianActor extends Actor5e {
 			itemsByID: new Map(),
 			itemsByType: new Partitioner(game.system.entityTypes.Item),
 			magicalItems: [],
+			rules: {},
 			spellbook: {concentration: [], rituals: []},
 			toggleable: [],
 			triggers: {}
@@ -234,6 +235,7 @@ export class ObsidianActor extends Actor5e {
 		applyProfBonus(this.data);
 		Prepare.abilities(this.data, data, flags, derived);
 		Prepare.ac(data, flags, derived);
+		Prepare.armour(data, flags, derived);
 		Prepare.init(data, flags, derived);
 		Prepare.conditions(this.data, data, flags, derived);
 
@@ -242,7 +244,6 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		Prepare.saves(this.data, data, flags, derived, originalSaves);
-		Prepare.armour(data, flags, derived);
 		Prepare.encumbrance(this.data, data, derived);
 
 		if (this.data.type === 'character') {
@@ -521,6 +522,16 @@ export class ObsidianActor extends Actor5e {
 
 	getItemParent (item) {
 		return this.items.get(item?.flags.obsidian.parent)?.data;
+	}
+
+	isRuleActive (rule) {
+		return ObsidianActor.isRuleActive(this.data, rule);
+	}
+
+	static isRuleActive (actorData, rule) {
+		const derived = actorData.obsidian;
+		const flags = actorData.flags.obsidian;
+		return (!flags?.rules || flags.rules[rule] !== false) && derived.rules[rule] === true;
 	}
 
 	rollHD (rolls) {

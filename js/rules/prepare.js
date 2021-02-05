@@ -364,6 +364,8 @@ export const Prepare = {
 	},
 
 	armour: function (data, flags, derived) {
+		derived.rules.heavyArmour = false;
+		derived.rules.noisyArmour = false;
 		derived.armour =
 			derived.itemsByType.get('equipment').filter(item => item.flags.obsidian?.armour);
 
@@ -402,6 +404,13 @@ export const Prepare = {
 
 					derived.attributes.ac += Math.min(data.abilities.dex.mod, maxDex);
 				}
+
+				if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.strength)) {
+					derived.rules.heavyArmour =
+						derived.abilities.str.value < bestArmour.data.strength;
+				}
+
+				derived.rules.noisyArmour = bestArmour.data.stealth;
 			}
 
 			if (bestShield) {
@@ -441,6 +450,7 @@ export const Prepare = {
 	},
 
 	encumbrance: function (actorData, data, derived) {
+		const rules = derived.rules;
 		const inventory = derived.inventory;
 		const str = derived.abilities.str.value;
 		const thresholds = Rules.ENCUMBRANCE_THRESHOLDS;
@@ -468,13 +478,13 @@ export const Prepare = {
 			}
 		}
 
-		inventory.encumbered = false;
-		inventory.heavilyEncumbered = false;
-		inventory.overCapacity = encumbrance < 2 && inventory.weight >= inventory.max;
+		rules.encumbered = false;
+		rules.heavilyEncumbered = false;
+		rules.overCapacity = encumbrance < 2 && inventory.weight >= inventory.max;
 
 		if (encumbrance === 1) {
-			inventory.encumbered = inventory.weight >= str * thresholds.encumbered;
-			inventory.heavilyEncumbered = inventory.weight >= str * thresholds.heavy;
+			rules.encumbered = inventory.weight >= str * thresholds.encumbered;
+			rules.heavilyEncumbered = inventory.weight >= str * thresholds.heavy;
 		}
 	},
 
@@ -615,10 +625,10 @@ export const Prepare = {
 			const rollMods =
 				derived.filters.mods(Filters.appliesTo.skillChecks(key, skill.ability));
 
-			let rollMod = {mode: ['reg']};
-			if (rollMods.length) {
-				rollMod = Effect.combineRollMods(rollMods);
-			}
+			const rollMod =
+				Effect.combineRollMods(
+					rollMods.concat(
+						Effect.conditionsRollMod(actorData, {ability: skill.ability, skill: key})));
 
 			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
 			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5

@@ -37,6 +37,7 @@ Schema.Actor = {
 			containers: []
 		}
 	},
+	rules: {},
 	saves: {
 		bonus: 0
 	},

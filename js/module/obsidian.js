@@ -193,6 +193,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		data.speed.value = data.actor.obsidian.attributes.speed[data.speed.label];
 		Sheet.getSenses(data);
+		Sheet.getRules(data);
 		console.debug(data);
 		return data;
 	}

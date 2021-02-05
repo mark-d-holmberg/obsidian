@@ -268,6 +268,15 @@ export const Sheet = {
 		}
 	},
 
+	getRules: function (data) {
+		data.rules =
+			Object.entries(data.actor.obsidian.rules)
+				.filter(([, active]) => active)
+				.map(([rule,]) => {
+					return {key: rule, active: ObsidianActor.isRuleActive(data.actor, rule)};
+				});
+	},
+
 	getSenses: function (data) {
 		data.senses = game.dnd5e.config.senses;
 		data.hasSenses =
@@ -436,13 +445,22 @@ export const Sheet = {
 	},
 
 	onEffectToggled: function (sheet, evt) {
-		const uuid = evt.currentTarget.closest('.obsidian-effect-row').dataset.uuid;
-		const effect = sheet.actor.data.obsidian.effects.get(uuid);
-		const item = sheet.actor.items.find(item => item.data._id === effect.parentItem);
-		const effects = duplicate(item.data.flags.obsidian.effects);
-		const newEffect = effects.find(e => e.uuid === uuid);
-		newEffect.toggle.active = !newEffect.toggle.active;
-		item.update({'flags.obsidian.effects': effects});
+		const row = evt.currentTarget.closest('.obsidian-effect-row');
+		const uuid = row.dataset.uuid;
+		const rule = row.dataset.rule;
+
+		if (uuid) {
+			const effect = sheet.actor.data.obsidian.effects.get(uuid);
+			const item = sheet.actor.items.find(item => item.data._id === effect.parentItem);
+			const effects = duplicate(item.data.flags.obsidian.effects);
+			const newEffect = effects.find(e => e.uuid === uuid);
+			newEffect.toggle.active = !newEffect.toggle.active;
+			item.update({'flags.obsidian.effects': effects});
+		} else if (rule) {
+			const rules = sheet.actor.data.flags.obsidian.rules;
+			const current = rules ? (rules[rule] ?? true) : true;
+			sheet.actor.update({[`flags.obsidian.rules.${rule}`]: !current});
+		}
 	},
 
 	onEquip: function (sheet, evt) {

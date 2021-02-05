@@ -24,7 +24,8 @@ export const Rolls = {
 			rollMod =
 				Effect.determineRollMods(
 					actor,
-					Effect.combineRollMods([rollMod, Effect.encumbranceRollMod(actor, ability)]),
+					Effect.combineRollMods(
+						[rollMod, Effect.conditionsRollMod(actor.data, {ability})]),
 					mode =>	Filters.appliesTo.abilityChecks(ability, mode));
 
 			parts.push({
@@ -875,7 +876,8 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
-					Effect.encumbranceRollMod(actor, flags.attributes.init.ability)]),
+					Effect.conditionsRollMod(
+						actor.data, {ability: flags.attributes.init.ability})]),
 				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
@@ -1208,7 +1210,7 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
-					Effect.encumbranceRollMod(actor, save)]),
+					Effect.conditionsRollMod(actor.data, {ability: save})]),
 				mode => Filters.appliesTo.savingThrows(save, mode));
 
 		return Rolls.simpleRoll(actor, {
@@ -1258,7 +1260,8 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
-					Effect.encumbranceRollMod(actor, skill.ability)]),
+					Effect.conditionsRollMod(
+						actor.data, {ability: skill.ability, skill: skill.key})]),
 				mode => filter(skill.key, skill.ability, mode));
 
 		return Rolls.abilityCheck(actor, skill.ability, skill.label, skill.rollParts, rollMod);
@@ -1343,7 +1346,7 @@ export const Rolls = {
 	toHitRoll: function (actor, hit, extraParts = []) {
 		const rollMods = [
 			Effect.sheetGlobalRollMod(actor),
-			Effect.encumbranceRollMod(actor, hit.ability)
+			Effect.conditionsRollMod(actor.data, {ability: hit.ability})
 		];
 
 		if (hit.rollMod) {

@@ -158,6 +158,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 
 		Sheet.getSenses(data);
+		Sheet.getRules(data);
 		return data;
 	}
 

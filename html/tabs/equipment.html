@@ -8,14 +8,14 @@
 				<span>{{numberFormat actor.obsidian.inventory.max decimals=0}}</span>
 				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 			</div>
-			<div{{#if (or actor.obsidian.inventory.encumbered
-					          actor.obsidian.inventory.heavilyEncumbered
-					          actor.obsidian.inventory.overCapacity)}} class="obsidian-negative"{{/if}}>
-				{{#if actor.obsidian.inventory.overCapacity}}
+			<div{{#if (or actor.obsidian.rules.encumbered
+					          actor.obsidian.rules.heavilyEncumbered
+					          actor.obsidian.rules.overCapacity)}} class="obsidian-negative"{{/if}}>
+				{{#if actor.obsidian.rules.overCapacity}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
-				{{else if actor.obsidian.inventory.heavilyEncumbered}}
+				{{else if actor.obsidian.rules.heavilyEncumbered}}
 					{{localize 'OBSIDIAN.HeavilyEncumbered'}}
-				{{else if actor.obsidian.inventory.encumbered}}
+				{{else if actor.obsidian.rules.encumbered}}
 					{{localize 'OBSIDIAN.Encumbered'}}
 				{{else}}
 					{{localize 'OBSIDIAN.Unencumbered'}}
