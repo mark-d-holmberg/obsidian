@@ -190,8 +190,8 @@ function initRollDrag (el) {
 		evt.dataTransfer.setData('application/json', JSON.stringify(el.dataset)));
 
 	el.addEventListener('dragend', () =>
-		$('#chat-log .obsidian-dragover')
-			.removeClass('obsidian-dragover obsidian-dragover-positive obsidian-dragover-negative'));
+		$('#chat-log .obsidian-dragover').removeClass(
+			'obsidian-dragover obsidian-dragover-positive obsidian-dragover-negative'));
 }
 
 function initRollDrop (el) {
@@ -203,7 +203,14 @@ function initRollDrop (el) {
 	el.addEventListener('drop', evt => {
 		evt.preventDefault();
 		const data = JSON.parse(evt.dataTransfer.getData('application/json'));
-		data.value = Number(data.value);
+
+		if (data.value) {
+			data.value = Number(data.value);
+		}
+
+		if (data.json) {
+			data.json = JSON.parse(unescape(data.json));
+		}
 
 		const mode = evt.currentTarget.dataset.mode;
 		const index = Number(evt.currentTarget.dataset.index);
@@ -220,7 +227,7 @@ function initRollDrop (el) {
 		}
 
 		const value = evt.shiftKey ? data.value * -1 : data.value;
-		if (!mode && !isNaN(index) && flags.results.length) {
+		if (!mode && !isNaN(index) && flags.results.length && !data.dmg && !data.json) {
 			const results = duplicate(flags.results);
 			const result = results[index];
 
@@ -230,7 +237,7 @@ function initRollDrop (el) {
 
 			result.forEach(roll => {
 				roll.total += value;
-				roll.breakdown += `${value.sgnex()} [${data.flavour}]`;
+				roll.breakdown += `${value.sgnex()} ${data.flavour ? `[${data.flavour}]` : ''}`;
 			});
 
 			msg.setFlag('obsidian', 'results', results);
@@ -238,6 +245,7 @@ function initRollDrop (el) {
 		}
 
 		if (flags.damage && flags.damage[mode]) {
+			const extra = data.json ? data.json : [{total: data.value, type: data.dmg}];
 			const damage = duplicate(flags.damage[mode]);
 			const first = damage.results[0];
 
@@ -245,13 +253,17 @@ function initRollDrop (el) {
 				return;
 			}
 
-			damage.results.push({
-				type: first.type,
-				total: value,
-				breakdown: `${value} [${data.flavour}]`
-			});
+			let total = damage.total;
+			damage.results.push(...extra.map(line => {
+				total += line.total;
+				return {
+					type: line.type ? line.type : first.type,
+					total: line.total,
+					breakdown: line.total.toString()
+				};
+			}));
 
-			damage.total += value;
+			damage.total = total;
 			msg.setFlag('obsidian', `damage.${mode}`, damage);
 		}
 	});

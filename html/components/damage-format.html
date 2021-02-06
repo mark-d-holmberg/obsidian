@@ -3,7 +3,10 @@
 	{{#each results}}
 		<div class="{{#if (is-gm)}}obsidian-msg-row-dmg{{else}}obsidian-msg-row{{/if}}">
 		{{#if (is-gm)}}<div>{{/if}}
-			<div class="obsidian-msg-roll-box">{{total}}</div>
+			<div class="obsidian-msg-roll-box" draggable="true" data-value="{{total}}"
+			     data-dmg="{{type}}">
+				{{total}}
+			</div>
 			<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
 			{{#if type}}
 				<div class="obsidian-icon-sm obsidian-icon-{{type}}"
@@ -18,7 +21,8 @@
 	</div>
 	{{/each}}
 	<div class="{{#if (is-gm)}}obsidian-msg-row-dmg{{else}}obsidian-msg-row{{/if}}">
-		<div class="obsidian-msg-roll-box obsidian-msg-wide-box" title="{{localize 'OBSIDIAN.Total'}}">
+		<div class="obsidian-msg-roll-box obsidian-msg-wide-box" title="{{localize 'OBSIDIAN.Total'}}"
+		     draggable="true" data-json="{{dmg-serialise results}}">
 			{{total}}
 		</div>
 		{{#if (is-gm)}}

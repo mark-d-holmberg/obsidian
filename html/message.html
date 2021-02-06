@@ -37,7 +37,7 @@
 					     {{#if positive}}obsidian-positive{{/if}}
 					     {{#if negative}}obsidian-negative{{/if}}
 					     {{#if grey}}obsidian-grey{{/if}}
-					     obsidian-msg-roll-box">
+					     obsidian-msg-roll-box" draggable="true" data-value="{{total}}">
 						{{total}}
 					</div>
 					<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
@@ -64,7 +64,10 @@
 		<div class="obsidian-msg-row">
 			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
 			<div class="obsidian-msg-value">
-				<div class="obsidian-msg-roll-box">{{total}}</div>
+				<div class="obsidian-msg-roll-box" draggable="true" data-value="{{total}}"
+				     data-flavour="{{flavour}}">
+					{{total}}
+				</div>
 				<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
 			</div>
 			<div class="obsidian-msg-flavour">{{flavour}}</div>

@@ -79,6 +79,12 @@ export function registerHandlebarHelpers () {
 		return arg ? '' : 'disabled';
 	});
 
+	Handlebars.registerHelper('dmg-serialise', function (lines) {
+		return escape(JSON.stringify(lines.map(line => {
+			return {total: line.total, type: line.type};
+		})));
+	});
+
 	Handlebars.registerHelper('exists', function (arg) {
 		return arg != null;
 	});
