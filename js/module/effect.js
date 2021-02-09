@@ -446,23 +446,6 @@ export const Effect = {
 
 	sheetGlobalRollMod: actor => Effect.makeModeRollMod(actor.data.flags.obsidian.sheet.roll),
 
-	conditionsRollMod: (actorData, {ability, skill}) => {
-		let modes = ['reg'];
-		if (ObsidianActor.isRuleActive(actorData, 'heavilyEncumbered')
-			&& ['str', 'dex', 'con'].includes(ability))
-		{
-			modes.push('dis');
-		}
-
-		if (ObsidianActor.isRuleActive(actorData, 'noisyArmour')
-			&& ability === 'dex' && skill === 'ste')
-		{
-			modes.push('dis');
-		}
-
-		return Effect.makeModeRollMod(determineMode(...modes));
-	},
-
 	filterDamage: (actorData, filter, dmg) => {
 		let attackPred = filter => Filters.damage.isAttack(filter) && filter.multi === 'any';
 		const parentEffect = actorData.obsidian.effects.get(dmg.parentEffect);

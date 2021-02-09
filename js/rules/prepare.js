@@ -3,6 +3,7 @@ import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
 import {Rules} from './rules.js';
+import {conditionsRollMod} from './conditions.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -628,7 +629,7 @@ export const Prepare = {
 			const rollMod =
 				Effect.combineRollMods(
 					rollMods.concat(
-						Effect.conditionsRollMod(actorData, {ability: skill.ability, skill: key})));
+						conditionsRollMod(actorData, {ability: skill.ability, skill: key})));
 
 			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
 			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5

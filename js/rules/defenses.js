@@ -1,4 +1,5 @@
 import {OBSIDIAN} from '../global.js';
+import {Rules} from './rules.js';
 
 export function prepareDefenses (data, flags, derived) {
 	derived.defenses = {
@@ -60,6 +61,14 @@ function prepareActiveDefenses (flags, derived) {
 
 	if (bestDR) {
 		derived.defenses.dr = bestDR;
+	}
+
+	if (derived.conditions.petrified) {
+		conditions.imm.push('disease');
+		conditions.imm.push('poisoned');
+		damage.res.push(...Rules.DAMAGE_TYPES.map(dmg => {
+			return {dmg, level: 'res', magic: '', material: ''};
+		}));
 	}
 }
 

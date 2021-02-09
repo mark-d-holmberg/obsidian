@@ -11,6 +11,7 @@ import {rollInitiative} from './combat.js';
 import ObsidianActorSelectorDialog from '../dialogs/actor-selector.js';
 import {RollParts} from './roll-parts.js';
 import ObsidianDie from '../module/die.js';
+import {conditionsAutoFail, conditionsRollMod} from './conditions.js';
 
 const DMG_COLOURS = {
 	acd: 'acid', cld: 'ice', fir: 'fire', frc: 'force', lig: 'lightning', ncr: 'necrotic',
@@ -24,8 +25,8 @@ export const Rolls = {
 			rollMod =
 				Effect.determineRollMods(
 					actor,
-					Effect.combineRollMods(
-						[rollMod, Effect.conditionsRollMod(actor.data, {ability})]),
+					Effect.combineRollMods([
+						rollMod, conditionsRollMod(actor.data, {ability, roll: 'ability'})]),
 					mode =>	Filters.appliesTo.abilityChecks(ability, mode));
 
 			parts.push({
@@ -221,7 +222,12 @@ export const Rolls = {
 			let failed = true;
 			if (!autoFail) {
 				const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
-				failed = roll < component.dc;
+				failed =
+					roll < component.dc ||
+					conditionsAutoFail(token.actor.data, {
+						roll: rolls[i].flags.obsidian.type,
+						ability: component.ability
+					});
 			}
 
 			if (failed) {
@@ -876,8 +882,9 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
-					Effect.conditionsRollMod(
-						actor.data, {ability: flags.attributes.init.ability})]),
+					conditionsRollMod(
+						actor.data, {ability: flags.attributes.init.ability, roll: 'ability'})
+				]),
 				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
@@ -1210,7 +1217,8 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
-					Effect.conditionsRollMod(actor.data, {ability: save})]),
+					conditionsRollMod(actor.data, {ability: save, roll: 'save'})
+				]),
 				mode => Filters.appliesTo.savingThrows(save, mode));
 
 		return Rolls.simpleRoll(actor, {
@@ -1260,9 +1268,8 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
-					Effect.conditionsRollMod(
-						actor.data, {ability: skill.ability, skill: skill.key})]),
-				mode => filter(skill.key, skill.ability, mode));
+					conditionsRollMod(actor.data, {ability: skill.ability, skill: skill.key})
+				]), mode => filter(skill.key, skill.ability, mode));
 
 		return Rolls.abilityCheck(actor, skill.ability, skill.label, skill.rollParts, rollMod);
 	},
@@ -1346,7 +1353,7 @@ export const Rolls = {
 	toHitRoll: function (actor, hit, extraParts = []) {
 		const rollMods = [
 			Effect.sheetGlobalRollMod(actor),
-			Effect.conditionsRollMod(actor.data, {ability: hit.ability})
+			conditionsRollMod(actor.data, {ability: hit.ability, roll: 'attack'})
 		];
 
 		if (hit.rollMod) {

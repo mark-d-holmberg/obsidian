@@ -1,3 +1,7 @@
+import {ObsidianActor} from '../module/actor.js';
+import {determineMode} from './prepare.js';
+import {Effect} from '../module/effect.js';
+
 const CONDITIONS = [
 	'dead', 'bleeding', 'blinded', 'charmed', 'deafened',
 	'dodging', 'frightened', 'grappled', 'incapacitated',
@@ -22,4 +26,55 @@ export function patchConditions () {
 			icon: `modules/obsidian/img/conditions/exhaust${i}.svg`
 		});
 	}
+}
+
+export function conditionsAutoFail (actorData, {ability, roll}) {
+	const conditions = actorData.obsidian?.conditions || {};
+	const isSave = roll === 'save';
+	return isSave && ['str', 'dex'].includes(ability) && (
+		conditions.paralysed || conditions.petrified || conditions.stunned
+		|| conditions.unconscious);
+}
+
+export function conditionsRollMod (actorData, {ability, skill, roll}) {
+	let modes = ['reg'];
+	const conditions = actorData.obsidian?.conditions || {};
+	const exhaustion = conditions.exhaustion || 0;
+	const isAttack = roll === 'attack';
+	const isCheck = roll === 'check' || skill;
+	const isSave = roll === 'save';
+
+	if (ObsidianActor.isRuleActive(actorData, 'heavilyEncumbered')
+		&& ['str', 'dex', 'con'].includes(ability))
+	{
+		modes.push('dis');
+	}
+
+	if (ObsidianActor.isRuleActive(actorData, 'noisyArmour')
+		&& ability === 'dex' && skill === 'ste')
+	{
+		modes.push('dis');
+	}
+
+	if (isAttack && (conditions.blinded || conditions.poisoned || conditions.prone)) {
+		modes.push('dis');
+	}
+
+	if (isCheck && (conditions.poisoned || exhaustion > 0)) {
+		modes.push('dis');
+	}
+
+	if (isSave && conditions.restrained && ability === 'dex') {
+		modes.push('dis');
+	}
+
+	if (isAttack && conditions.invisible) {
+		modes.push('adv');
+	}
+
+	if (exhaustion > 2 && (isSave || isAttack)) {
+		modes.push('dis');
+	}
+
+	return Effect.makeModeRollMod(determineMode(...modes));
 }

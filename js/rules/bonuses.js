@@ -76,6 +76,10 @@ function applyHPBonuses (actorData, data, derived) {
 			data.attributes.hp.max = setter.score;
 		}
 	}
+
+	if (actorData.obsidian.conditions.exhaustion > 3) {
+		data.attributes.hp.max = Math.floor(data.attributes.hp.max / 2);
+	}
 }
 
 function applySpellBonuses (actorData, derived) {
@@ -116,6 +120,9 @@ function applySpeedBonuses (actorData, data, derived) {
 		return;
 	}
 
+	const conditions = actorData.obsidian.conditions;
+	const exhaustion = conditions.exhaustion;
+
 	for (const speed of OBSIDIAN.Rules.SPEEDS) {
 		derived.attributes.speed[speed] = data.attributes.movement[speed];
 		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
@@ -147,9 +154,16 @@ function applySpeedBonuses (actorData, data, derived) {
 			}
 		}
 
-		if (ObsidianActor.isRuleActive(actorData, 'overCapacity')) {
+		if (exhaustion > 4 || conditions.grappled || conditions.paralysed || conditions.petrified
+			|| conditions.restrained || conditions.stunned || conditions.unconscious
+			|| ObsidianActor.isRuleActive(actorData, 'overCapacity'))
+		{
 			derived.attributes.speed[speed] = 0;
 			continue;
+		}
+
+		if (exhaustion > 1) {
+			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed] / 2);
 		}
 
 		if (ObsidianActor.isRuleActive(actorData, 'heavyArmour')) {
