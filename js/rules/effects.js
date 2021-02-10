@@ -13,6 +13,7 @@ export function prepareToggleableEffects (actorData) {
 					.concat(effect.active.multiplier.map(formatMultiplier))
 					.concat(effect.active.setter.map(formatSetter))
 					.concat(formatDefenses(effect.active.defense))
+					.concat(formatConditions(effect.active.condition))
 					.filter(part => part.length))
 				.capitalise();
 
@@ -290,6 +291,27 @@ function formatSetter (setter) {
 
 function formatMultiplier (multiplier) {
 	return localize('OBSIDIAN.MultipliesScoreBy').format(multiplier.multiplier);
+}
+
+function formatConditions (components) {
+	const allConditions = new Set();
+	components.forEach(c => allConditions.add(c.condition));
+
+	const conditions = Array.from(allConditions.values()).filter(c => c !== 'exhaustion');
+	const exhaustionPart = localize('OBSIDIAN.GainExhaustion');
+	const conditionPart =
+		localize('OBSIDIAN.BecomeCondition')
+			.format(oxfordComma(conditions.map(c => localize(`OBSIDIAN.Condition-${c}`))));
+
+	if (conditions.length && allConditions.has('exhaustion')) {
+		return oxfordComma([conditionPart, exhaustionPart]);
+	} else if (conditions.length) {
+		return conditionPart;
+	} else if (allConditions.has('exhaustion')) {
+		return exhaustionPart;
+	}
+
+	return '';
 }
 
 function formatDefenses (defs) {

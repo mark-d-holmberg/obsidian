@@ -288,6 +288,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/multiplier.svg');
 }
 
+.obsidian-icon-comp-condition {
+	background-image: url('../img/conditions/prone.svg');
+}
+
 .obsidian-icon-npc,
 .obsidian-icon-comp-summon,
 .obsidian-icon-entity-Actor {

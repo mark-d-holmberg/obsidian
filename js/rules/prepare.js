@@ -443,6 +443,17 @@ export const Prepare = {
 			derived.conditions[id] = true;
 		});
 
+		derived.filters.conditions.filter(component => component.temp).forEach(component => {
+			if (component.condition === 'exhaustion') {
+				derived.conditions.exhaustion++;
+				if (derived.conditions.exhaustion > 6) {
+					derived.conditions.exhaustion = 6;
+				}
+			} else {
+				derived.conditions[component.condition] = true;
+			}
+		});
+
 		derived.conditions.concentrating =
 			actorData.effects
 				.filter(item => getProperty(item, 'flags.obsidian.ref'))

@@ -142,6 +142,82 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		}
 	};
 
+	let exhaustion = false;
+	const permanentConditions = [];
+
+	effects.forEach(e => e.components = e.components.reduce((acc, component) => {
+		if (component.type === 'condition' || component.temp) {
+			acc.push(component);
+		} else if (component.condition === 'exhaustion') {
+			exhaustion = true;
+		} else {
+			permanentConditions.push(component.condition);
+		}
+
+		return acc;
+	}, []));
+
+	let existingExhaustion;
+	const existingConditions = new Set(target.actor.effects.reduce((acc, e) => {
+		const id = e.getFlag('core', 'statusId');
+		if (id?.startsWith('exhaust')) {
+			existingExhaustion = e;
+		} else if (id) {
+			acc.push(id);
+		}
+
+		return acc;
+	}, []));
+
+	const conditions =
+		permanentConditions
+			.filter(condition => !existingConditions.has(condition))
+			.map(condition => {
+				return {
+					label: game.i18n.localize(`OBSIDIAN.Condition-${condition}`),
+					icon: `modules/obsidian/img/conditions/${condition}.svg`,
+					'flags.core.statusId': condition
+				};
+			});
+
+	if (exhaustion && existingExhaustion) {
+		if (game.user.isGM) {
+			await target.actor.deleteEmbeddedEntity('ActiveEffect', existingExhaustion.data._id);
+		} else {
+			await game.socket.emit('module.obsidian', {
+				action: 'DELETE',
+				entity: 'ActiveEffect',
+				data: existingExhaustion.data._id
+			});
+		}
+	}
+
+	if (exhaustion) {
+		let level = 1;
+		if (existingExhaustion) {
+			const id = existingExhaustion.getFlag('core', 'statusId');
+			level = Number(id.substr(7));
+		}
+
+		conditions.push({
+			label: game.i18n.localize('OBSIDIAN.Condition-exhaustion'),
+			icon: `modules/obsidian/img/conditions/exhaust${level}.svg`,
+			'flags.core.statusId': `exhaust${level}`
+		});
+	}
+
+	if (conditions.length) {
+		if (game.user.isGM) {
+			await target.actor.createEmbeddedEntity('ActiveEffect', conditions);
+		} else {
+			await game.socket.emit('module.obsidian', {
+				action: 'CREATE',
+				entity: 'ActiveEffect',
+				data: conditions
+			});
+		}
+	}
+
 	const flags = item.flags.obsidian;
 	if (actor.isToken) {
 		flags.duration.scene = actor.token.scene.data._id;

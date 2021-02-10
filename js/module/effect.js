@@ -79,6 +79,17 @@ export const Components = {
 			tray: 'AbilityCheck'
 		}
 	},
+	condition: {
+		data: {
+			type: 'condition',
+			condition: 'blinded',
+			temp: false
+		},
+		metadata: {
+			category: 'special',
+			tray: 'Condition'
+		}
+	},
 	consume: {
 		data: {
 			type: 'consume',
@@ -360,7 +371,7 @@ export const Components = {
 export const Effect = {
 	metadata: {
 		components: Object.keys(Components),
-		active: new Set(['roll-mod', 'bonus', 'defense', 'setter', 'multiplier']),
+		active: new Set(['roll-mod', 'bonus', 'defense', 'setter', 'multiplier', 'condition']),
 		linked: ['applied', 'scaling'],
 		single: new Set(['applied', 'scaling', 'duration', 'target']),
 		rollable: new Set([

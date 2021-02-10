@@ -210,6 +210,7 @@ export class ObsidianActor extends Actor5e {
 			mods: Filters.mods(derived.toggleable),
 			bonuses: Filters.bonuses(derived.toggleable),
 			setters: Filters.setters(derived.toggleable),
+			conditions: Filters.conditions(derived.toggleable),
 			multipliers: Filters.multipliers(derived.toggleable)
 		};
 
@@ -582,18 +583,37 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	get temporaryEffects () {
+		const existingEffects = super.temporaryEffects.filter(effect => {
+			const id = effect.getFlag('core', 'statusId');
+			return !id?.startsWith('exhaust');
+		});
+
 		const effects =
 			(this.data.obsidian?.toggleable || [])
 				.filter(effect => effect.activeEffect && effect.toggle.active)
 				.map(effect => effect.img);
 
-		if (this.data.obsidian?.conditions.concentrating) {
+		const conditions = this.data.obsidian?.conditions || {};
+		if (conditions.concentrating) {
 			effects.push('modules/obsidian/img/conditions/concentrating.svg');
 		}
 
+		if (conditions.exhaustion) {
+			effects.push(`modules/obsidian/img/conditions/exhaust${conditions.exhaustion}.svg`);
+		}
+
+		const existingConditions =
+			new Set(
+				existingEffects.map(effect => effect.getFlag('core', 'statusId')).filter(_ => _));
+
+		effects.push(
+			...Rules.CONDITIONS
+				.filter(condition => conditions[condition] && !existingConditions.has(condition))
+				.map(condition => `modules/obsidian/img/conditions/${condition}.svg`));
+
 		return Array.from(new Set(effects).values()).map(icon => {
 			return {data: {icon: icon}, getFlag: () => false};
-		}).concat(super.temporaryEffects);
+		}).concat(existingEffects);
 	}
 
 	async shortRest (...args) {

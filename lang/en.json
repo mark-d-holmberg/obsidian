@@ -1042,5 +1042,9 @@
 	"OBSIDIAN.RulesKey-heavyArmour": "Heavy Armour",
 	"OBSIDIAN.RulesVal-heavyArmour": "Insufficient Strength for equipped armour, speed reduced by 10",
 	"OBSIDIAN.RulesKey-noisyArmour": "Noisy Armour",
-	"OBSIDIAN.RulesVal-noisyArmour": "Disadvantage on Dexterity (Stealth) checks"
+	"OBSIDIAN.RulesVal-noisyArmour": "Disadvantage on Dexterity (Stealth) checks",
+	"OBSIDIAN.Condition": "Condition",
+	"OBSIDIAN.ForDuration": "For Duration",
+	"OBSIDIAN.BecomeCondition": "become {0}",
+	"OBSIDIAN.GainExhaustion": "gain one level of exhaustion"
 }

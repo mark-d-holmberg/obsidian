@@ -38,6 +38,7 @@ export const Filters = {
 	mods: effects => pred => Filters.filterEffects(effects, 'roll-mod', pred),
 	bonuses: effects => pred => Filters.filterEffects(effects, 'bonus', pred),
 	setters: effects => pred => Filters.filterEffects(effects, 'setter', pred),
+	conditions: effects => Filters.filterEffects(effects, 'condition', () => true),
 	multipliers: effects => pred => Filters.filterEffects(effects, 'multiplier', pred),
 
 	appliesTo: {

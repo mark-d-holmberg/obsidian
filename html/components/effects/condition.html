@@ -1,0 +1,15 @@
+<fieldset data-uuid="{{uuid}}">
+	<legend>{{localize 'OBSIDIAN.Condition'}}</legend>
+	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+		<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<select name="{{prefix}}.condition">
+				{{#select condition}}
+					{{#each @root.ObsidianRules.CONVERT_CONDITIONS}}
+						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
+					{{/each}}
+				{{/select}}
+			</select>
+			{{fancy-checkbox prefix 'temp' content='OBSIDIAN.ForDuration' checked=temp}}
+		</div>
+	</div>
+</fieldset>
