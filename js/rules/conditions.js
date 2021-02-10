@@ -78,3 +78,28 @@ export function conditionsRollMod (actorData, {ability, skill, roll}) {
 
 	return Effect.makeModeRollMod(determineMode(...modes));
 }
+
+export function targetConditionsRollMod (actorData, attackerWithin5ft) {
+	let modes = ['reg'];
+	const conditions = actorData.obsidian?.conditions || {};
+
+	if (conditions.blinded || conditions.paralysed || conditions.petrified
+		|| conditions.restrained || conditions.stunned || conditions.unconscious)
+	{
+		modes.push('adv');
+	}
+
+	if (conditions.invisible) {
+		modes.push('dis');
+	}
+
+	if (conditions.prone) {
+		if (attackerWithin5ft) {
+			modes.push('adv');
+		} else {
+			modes.push('dis');
+		}
+	}
+
+	return Effect.makeModeRollMod(determineMode(...modes));
+}

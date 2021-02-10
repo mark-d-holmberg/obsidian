@@ -11,7 +11,7 @@ import {rollInitiative} from './combat.js';
 import ObsidianActorSelectorDialog from '../dialogs/actor-selector.js';
 import {RollParts} from './roll-parts.js';
 import ObsidianDie from '../module/die.js';
-import {conditionsAutoFail, conditionsRollMod} from './conditions.js';
+import {conditionsAutoFail, conditionsRollMod, targetConditionsRollMod} from './conditions.js';
 
 const DMG_COLOURS = {
 	acd: 'acid', cld: 'ice', fir: 'fire', frc: 'force', lig: 'lightning', ncr: 'necrotic',
@@ -1351,10 +1351,49 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraParts = []) {
+		let token = actor.token;
+		if (!token && canvas) {
+			const selected = new Set(canvas.tokens.controlled);
+			const {linked, unlinked} = canvas.tokens.placeables.reduce((acc, t) => {
+				if (!(t instanceof Token) || t.data.actorId !== actor.data._id) {
+					return acc;
+				}
+
+				if (t.data.actorLink) {
+					acc.linked.push(t);
+				} else {
+					acc.unlinked.push(t);
+				}
+
+				return acc;
+			}, {linked: [], unlinked: []});
+
+			const selectedLinked = linked.filter(t => selected.has(t));
+			const selectedUnlinked = unlinked.filter(t => selected.has(t));
+
+			if (selectedLinked.length) {
+				token = selectedLinked[0];
+			} else if (selectedUnlinked.length) {
+				token = selectedUnlinked[0];
+			} else if (linked.length) {
+				token = linked[0];
+			} else if (unlinked.length) {
+				token = unlinked[0];
+			}
+		}
+
 		const rollMods = [
 			Effect.sheetGlobalRollMod(actor),
 			conditionsRollMod(actor.data, {ability: hit.ability, roll: 'attack'})
 		];
+
+		if (token && game.user.targets.size === 1) {
+			const target = Array.from(game.user.targets.values())[0];
+			if (target.actor) {
+				rollMods.push(
+					targetConditionsRollMod(target.actor.data, token.within5ftOf(target)));
+			}
+		}
 
 		if (hit.rollMod) {
 			rollMods.push(hit.rollMod);
