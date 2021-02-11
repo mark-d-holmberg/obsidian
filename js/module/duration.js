@@ -110,7 +110,7 @@ async function createDuration (actor, rounds, effect, scaledAmount) {
 
 async function createActiveEffect (target, actor, effect, duration, on) {
 	const originalItem = actor.data.obsidian.itemsByID.get(effect.parentItem);
-	const effects =
+	let effects =
 		duplicate(
 			effect.applies
 				.map(uuid => actor.data.obsidian.effects.get(uuid))
@@ -146,7 +146,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 	const permanentConditions = [];
 
 	effects.forEach(e => e.components = e.components.reduce((acc, component) => {
-		if (component.type === 'condition' || component.temp) {
+		if (component.type !== 'condition' || component.temp) {
 			acc.push(component);
 		} else if (component.condition === 'exhaustion') {
 			exhaustion = true;
@@ -196,7 +196,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		let level = 1;
 		if (existingExhaustion) {
 			const id = existingExhaustion.getFlag('core', 'statusId');
-			level = Number(id.substr(7));
+			level = Number(id.substr(7)) + 1;
 		}
 
 		conditions.push({
@@ -226,16 +226,19 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		flags.duration.actor = actor.data._id;
 	}
 
-	if (game.user.isGM) {
-		await target.actor.createEmbeddedEntity('OwnedItem', item);
-	} else {
-		await game.socket.emit('module.obsidian', {
-			action: 'CREATE',
-			entity: 'OwnedItem',
-			sceneID: target.scene.data._id,
-			tokenID: target.data._id,
-			data: item
-		});
+	effects = effects.filter(e => e.components.length);
+	if (effects.length) {
+		if (game.user.isGM) {
+			await target.actor.createEmbeddedEntity('OwnedItem', item);
+		} else {
+			await game.socket.emit('module.obsidian', {
+				action: 'CREATE',
+				entity: 'OwnedItem',
+				sceneID: target.scene.data._id,
+				tokenID: target.data._id,
+				data: item
+			});
+		}
 	}
 }
 

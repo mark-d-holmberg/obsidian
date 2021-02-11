@@ -570,12 +570,16 @@ export const Sheet = {
 
 	setCondition: function (sheet, evt) {
 		const id = $(evt.currentTarget).data('value');
+		const current = sheet.actor.data.obsidian.conditions[id];
 		const existing =
 			sheet.actor.effects.find(effect => effect.getFlag('core', 'statusId') === id);
 
 		if (existing) {
 			existing.delete();
-		} else {
+		} else if (!current) {
+			// Avoid 'invisibly' turning on the condition when it was actually
+			// enabled through an automated effect rather than being manually
+			// switched on.
 			sheet.actor.createEmbeddedEntity('ActiveEffect', {
 				label: game.i18n.localize(`OBSIDIAN.Condition-${id}`),
 				icon: `modules/obsidian/img/conditions/${id}.svg`,
@@ -585,7 +589,21 @@ export const Sheet = {
 	},
 
 	setExhaustion: async function (sheet, evt) {
-		const current = sheet.actor.data.obsidian.conditions.exhaustion;
+		let current = 0;
+		const existing = sheet.actor.data.effects.filter(effect => {
+			const id = getProperty(effect, 'flags.core.statusId');
+			if (id?.startsWith('exhaust')) {
+				const value = Number(id.substr(7));
+				if (value > current) {
+					current = value;
+				}
+
+				return true;
+			}
+
+			return false;
+		}).map(effect => effect._id);
+
 		const value = Number(evt.currentTarget.dataset.value);
 		let update = current;
 
@@ -594,11 +612,6 @@ export const Sheet = {
 		} else {
 			update--;
 		}
-
-		const existing = sheet.actor.data.effects.filter(effect => {
-			const id = getProperty(effect, 'flags.core.statusId');
-			return id && id.startsWith('exhaust');
-		}).map(effect => effect._id);
 
 		if (existing.length) {
 			await sheet.actor.deleteEmbeddedEntity('ActiveEffect', existing);
