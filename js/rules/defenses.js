@@ -62,20 +62,10 @@ function prepareActiveDefenses (flags, derived) {
 	if (bestDR) {
 		derived.defenses.dr = bestDR;
 	}
-
-	if (derived.conditions.petrified) {
-		conditions.imm.push('disease');
-		conditions.imm.push('poisoned');
-		damage.res.push(...Rules.DAMAGE_TYPES.map(dmg => {
-			return {dmg, level: 'res', magic: '', material: ''};
-		}));
-	}
 }
 
 function prepareManualDefenses (flags, derived) {
 	const parts = derived.defenses.parts;
-	const display = derived.defenses.display;
-
 	flags.defenses.conditions.forEach(cond => {
 		parts.conditions[cond.level].push(cond.condition);
 	});
@@ -92,6 +82,20 @@ function prepareManualDefenses (flags, derived) {
 		// Override any derived value.
 		derived.defenses.parts.dr = flags.defenses.dr.value;
 	}
+
+	flags.defenses.damage.forEach(def => {
+		const collection = parts.damage[def.level];
+		if (collection instanceof Set) {
+			collection.add(def.dmg);
+		} else {
+			collection.push(def);
+		}
+	});
+}
+
+export function prepareDefenseDisplay (derived) {
+	const parts = derived.defenses.parts;
+	const display = derived.defenses.display;
 
 	Object.entries(parts.conditions).forEach(([level, conditions]) =>
 		conditions.forEach(condition => display.conditions[level].add(condition)));
@@ -113,15 +117,6 @@ function prepareManualDefenses (flags, derived) {
 			parts.conditions[mode]
 				.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`))
 				.join(', '));
-
-	flags.defenses.damage.forEach(def => {
-		const collection = parts.damage[def.level];
-		if (collection instanceof Set) {
-			collection.add(def.dmg);
-		} else {
-			collection.push(def);
-		}
-	});
 
 	display.damage.vuln =
 		Array.from(parts.damage.vuln.values())
@@ -206,7 +201,8 @@ export function hpAfterDamage (actor, damage, attack) {
 
 		const isImmune = hasDefenseAgainst(defenses, attack, type, 'imm');
 		const isResistant = hasDefenseAgainst(defenses, attack, type, 'res');
-		const isVulnerable = defenses.vuln.includes(type);
+		const isVulnerable =
+			defenses.vuln.includes(type) || (attack?.spell && defenses.vuln.includes('spell'));
 
 		if (isImmune) {
 			continue;
@@ -244,6 +240,10 @@ export function hpAfterDamage (actor, damage, attack) {
 
 function hasDefenseAgainst (defenses, attack, type, level) {
 	for (const def of defenses[level]) {
+		if (def.dmg === 'spell' && attack?.spell) {
+			return true;
+		}
+
 		if (def.dmg !== type) {
 			continue;
 		}

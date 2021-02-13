@@ -36,7 +36,7 @@
 		    </div>
 		  </div>
 			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth">
+				<div class="obsidian-fullwidth obsidian-checkbox-row">
 					<label class="obsidian-inline">
 						{{localize 'OBSIDIAN.Source'}}
 						<select name="flags.obsidian.source.type" data-selector="source">
@@ -65,6 +65,8 @@
 					       data-selector-parent="source" name="flags.obsidian.source.other"
 					       value="{{item.flags.obsidian.source.other}}"
 					       placeholder="{{localize 'OBSIDIAN.Source'}}">
+					{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical'
+					                 checked=item.flags.obsidian.magical}}
 				</div>
 			</div>
 		</div>

@@ -39,6 +39,10 @@
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
 					{{/each}}
 					<option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
+					{{#if (or (eq condition.level 'adv') (eq condition.level 'dis'))}}
+						<option value="spell">{{localize 'OBSIDIAN.Condition-spell'}}</option>
+						<option value="magic">{{localize 'OBSIDIAN.Condition-magic'}}</option>
+					{{/if}}
 				{{/select}}
 			</select>
 		</div>
@@ -58,8 +62,10 @@
 					{{#each @root.ObsidianRules.DAMAGE_TYPES}}
 						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 					{{/each}}
+					<option value="spell">{{localize 'OBSIDIAN.Damage-spell'}}</option>
 				{{/select}}
 			</select>
+			{{#unless (eq damage.dmg 'spell')}}
 			<select name="{{prefix}}.damage.magic" data-selector="{{prefix}}.damage.magic">
 				{{#select damage.magic}}
 					<option value="">&mdash;</option>
@@ -74,6 +80,7 @@
 					<option value="adm">{{localize 'OBSIDIAN.Defense-adm'}}</option>
 				{{/select}}
 			</select>
+			{{/unless}}
 		</div>
 	</div>
 </fieldset>

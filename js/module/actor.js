@@ -8,7 +8,7 @@ import {Schema} from './schema.js';
 import {prepareToggleableEffects} from '../rules/effects.js';
 import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
 import {prepareNPC, prepareNPCHD, prepareSpeed} from '../rules/npc.js';
-import {prepareDefenses} from '../rules/defenses.js';
+import {prepareDefenseDisplay, prepareDefenses} from '../rules/defenses.js';
 import {Rules} from '../rules/rules.js';
 import {Migrate} from '../migration/migrate.js';
 import {Obsidian} from './obsidian.js';
@@ -238,6 +238,7 @@ export class ObsidianActor extends Actor5e {
 		Prepare.ac(data, flags, derived);
 		Prepare.armour(data, flags, derived);
 		Prepare.init(data, flags, derived);
+		prepareDefenses(data, flags, derived);
 		Prepare.conditions(this.data, data, flags, derived);
 
 		if (this.data.type !== 'vehicle') {
@@ -290,7 +291,7 @@ export class ObsidianActor extends Actor5e {
 				&& (item.data.type !== 'spell' || item.data.obsidian?.visible))
 				.flatMap(item => item.data.obsidian.collection.attack);
 
-		prepareDefenses(data, flags, derived);
+		prepareDefenseDisplay(derived);
 		prepareToggleableEffects(this.data);
 		applyBonuses(this.data, data, flags, derived);
 

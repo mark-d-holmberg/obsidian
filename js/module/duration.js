@@ -169,9 +169,11 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		return acc;
 	}, []));
 
+	const conditionImmunities = new Set(target.actor.data.obsidian.defenses.parts.conditions.imm);
 	const conditions =
 		permanentConditions
 			.filter(condition => !existingConditions.has(condition))
+			.filter(condition => !conditionImmunities.has(condition))
 			.map(condition => {
 				return {
 					label: game.i18n.localize(`OBSIDIAN.Condition-${condition}`),
@@ -180,19 +182,16 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 				};
 			});
 
-	if (exhaustion && existingExhaustion) {
-		if (game.user.isGM) {
-			await target.actor.deleteEmbeddedEntity('ActiveEffect', existingExhaustion.data._id);
-		} else {
-			await game.socket.emit('module.obsidian', {
-				action: 'DELETE',
-				entity: 'ActiveEffect',
-				data: existingExhaustion.data._id
-			});
-		}
+	if (exhaustion && existingExhaustion && !conditionImmunities.has('exhaustion')) {
+		await dispatchUpdate({
+			target,
+			action: 'DELETE',
+			entity: 'ActiveEffect',
+			data: existingExhaustion.data._id
+		});
 	}
 
-	if (exhaustion) {
+	if (exhaustion && !conditionImmunities.has('exhaustion')) {
 		let level = 1;
 		if (existingExhaustion) {
 			const id = existingExhaustion.getFlag('core', 'statusId');
@@ -207,15 +206,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 	}
 
 	if (conditions.length) {
-		if (game.user.isGM) {
-			await target.actor.createEmbeddedEntity('ActiveEffect', conditions);
-		} else {
-			await game.socket.emit('module.obsidian', {
-				action: 'CREATE',
-				entity: 'ActiveEffect',
-				data: conditions
-			});
-		}
+		await dispatchUpdate({target, action: 'CREATE', entity: 'ActiveEffect', data: conditions});
 	}
 
 	const flags = item.flags.obsidian;
@@ -228,17 +219,19 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 	effects = effects.filter(e => e.components.length);
 	if (effects.length) {
-		if (game.user.isGM) {
-			await target.actor.createEmbeddedEntity('OwnedItem', item);
-		} else {
-			await game.socket.emit('module.obsidian', {
-				action: 'CREATE',
-				entity: 'OwnedItem',
-				sceneID: target.scene.data._id,
-				tokenID: target.data._id,
-				data: item
-			});
-		}
+		await dispatchUpdate({target, action: 'CREATE', entity: 'OwnedItem', data: item});
+	}
+}
+
+function dispatchUpdate ({target, action, entity, data}) {
+	if (game.user.isGM) {
+		return target.actor[`${action.toLowerCase()}EmbeddedEntity`](entity, data);
+	} else {
+		return game.socket.emit('module.obsidian', {
+			action, entity, data,
+			sceneID: target.scene.data._id,
+			tokenID: target.data._id
+		});
 	}
 }
 

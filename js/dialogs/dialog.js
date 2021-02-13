@@ -172,7 +172,7 @@ export class ObsidianDialog extends BaseEntitySheet {
 	 * @private
 	 */
 	_updateObject (event, formData) {
-		this.parent._updateObject(event, formData);
+		return this.parent._updateObject(event, formData);
 	}
 
 	static recalculateHeight (html) {

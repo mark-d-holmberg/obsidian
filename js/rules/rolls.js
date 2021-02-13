@@ -158,10 +158,32 @@ export const Rolls = {
 		const tokens = apply ? Array.from(game.user.targets) : canvas.tokens.controlled;
 		const component = flags[collection][idx];
 		const rolls = [];
+		let conditions;
+		let actor;
+
+		if (flags.realToken) {
+			actor = ObsidianActor.fromSceneTokenPair(flags.realScene, flags.realToken);
+		} else {
+			actor = game.actors.get(msg.data.speaker.actor);
+		}
+
+		const effect = actor?.data.obsidian.effects.get(flags.uuid);
+		const item = actor?.data.obsidian.itemsByID.get(effect?.parentItem);
+
+		if (actor && effect?.applies.length) {
+			conditions =
+				effect.applies
+					.map(uuid => actor.data.obsidian.effects.get(uuid))
+					.filter(_ => _)
+					.flatMap(e => e.components)
+					.filter(c => c.type === 'condition')
+					.map(c => c.condition);
+		}
 
 		if (!autoFail) {
 			if (collection === 'saves') {
-				rolls.push(...tokens.map(t => Rolls.savingThrow(t.actor, component.ability)));
+				rolls.push(...tokens.map(t =>
+					Rolls.savingThrow(t.actor, component.ability, {conditions, item})));
 			} else if (OBSIDIAN.notDefinedOrEmpty(component.skill)) {
 				rolls.push(...tokens.map(t =>
 					Rolls.abilityCheck(
@@ -191,35 +213,19 @@ export const Rolls = {
 			Rolls.sendMessages(tokens.map((t, i) => [rolls[i], t.actor]));
 		}
 
-		if (!apply) {
+		if (!apply || !actor || !effect) {
 			return;
 		}
 
 		const attack = flags.damage?.hit.attack;
 		const totalDamage = Rolls.getDamageFromMessage(msg, 'hit');
-		let actor;
-
-		if (flags.realToken) {
-			actor = ObsidianActor.fromSceneTokenPair(flags.realScene, flags.realToken);
-		} else {
-			actor = game.actors.get(msg.data.speaker.actor);
-		}
-
-		if (!actor) {
-			return;
-		}
-
-		const effect = actor.data.obsidian.effects.get(flags.uuid);
-		if (!effect) {
-			return;
-		}
-
 		const targets = [];
+
 		for (let i = 0; i < tokens.length; i++) {
 			const token = tokens[i];
 			const damage = new Map(Array.from(totalDamage.entries()));
-
 			let failed = true;
+
 			if (!autoFail) {
 				const roll = rolls[i].flags.obsidian.results[0].find(r => r.active).total;
 				failed =
@@ -1131,11 +1137,11 @@ export const Rolls = {
 
 		let attack;
 		if (item) {
-			attack = {};
+			attack = {magical: !!item.flags.obsidian.magical};
 			if (item.type === 'spell') {
 				attack.magical = true;
+				attack.spell = true;
 			} else if (item.type === 'weapon') {
-				attack.magical = item.flags.obsidian.magical;
 				attack.silver = item.flags.obsidian.tags.silver;
 				attack.adamantine = item.flags.obsidian.tags.adamantine;
 			}
@@ -1203,7 +1209,7 @@ export const Rolls = {
 		};
 	},
 
-	savingThrow: function (actor, save) {
+	savingThrow: function (actor, save, {conditions = [], item} = {}) {
 		const flags = actor.data.flags.obsidian;
 		const saveData = flags.saves[save];
 		const adv = [flags.saves.roll];
@@ -1212,12 +1218,29 @@ export const Rolls = {
 			adv.push(saveData.roll);
 		}
 
+		if (item) {
+			const defenses = actor.data.obsidian.defenses.parts.conditions;
+			['adv', 'dis'].forEach(mode => {
+				if (item.type === 'spell' && defenses[mode].includes('spell')) {
+					adv.push(mode);
+				}
+
+				if (item.flags.obsidian.magical && defenses[mode].includes('magic')) {
+					adv.push(mode);
+				}
+			});
+		}
+
 		const rollMod =
 			Effect.determineRollMods(
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
-					conditionsRollMod(actor.data, {ability: save, roll: 'save'})
+					conditionsRollMod(actor.data, {
+						ability: save,
+						roll: 'save',
+						applies: conditions
+					})
 				]),
 				mode => Filters.appliesTo.savingThrows(save, mode));
 

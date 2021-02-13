@@ -424,6 +424,7 @@ export const Prepare = {
 	},
 
 	conditions: function (actorData, data, flags, derived) {
+		const conditionImmunities = new Set(derived.defenses.parts.conditions.imm);
 		derived.conditions = {exhaustion: 0};
 		actorData.effects.forEach(effect => {
 			const id = effect.flags?.core?.statusId;
@@ -440,7 +441,7 @@ export const Prepare = {
 				return;
 			}
 
-			derived.conditions[id] = true;
+			derived.conditions[id] = !conditionImmunities.has(id);
 		});
 
 		derived.filters.conditions.filter(component => component.temp).forEach(component => {
@@ -450,9 +451,25 @@ export const Prepare = {
 					derived.conditions.exhaustion = 6;
 				}
 			} else {
-				derived.conditions[component.condition] = true;
+				derived.conditions[component.condition] =
+					!conditionImmunities.has(component.condition);
 			}
 		});
+
+		if (conditionImmunities.has('exhaustion')) {
+			derived.conditions.exhaustion = 0;
+		}
+
+		const conditionDefense = derived.defenses.parts.conditions;
+		const damageDefense = derived.defenses.parts.damage;
+
+		if (derived.conditions.petrified) {
+			conditionDefense.imm.push('disease');
+			conditionDefense.imm.push('poisoned');
+			damageDefense.res.push(...Rules.DAMAGE_TYPES.map(dmg => {
+				return {dmg, level: 'res', magic: '', material: ''};
+			}));
+		}
 
 		derived.conditions.concentrating =
 			actorData.effects

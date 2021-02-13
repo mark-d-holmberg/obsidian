@@ -41,15 +41,16 @@
 		        {{/each}}
 	        {{/select}}
 	      </select>
-	      <select name="flags.obsidian.defenses.damage.{{id}}.dmg">
+	      <select name="flags.obsidian.defenses.damage.{{id}}.dmg" data-selector="{{id}}.dmg">
 	        {{#select def.dmg}}
 		        {{#each ../ObsidianRules.DAMAGE_TYPES}}
 			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
 		        {{/each}}
-		        <option value="hlg">{{localize 'OBSIDIAN.Healing'}}</option>
+		        <option value="spell">{{localize 'OBSIDIAN.Damage-spell'}}</option>
 	        {{/select}}
 	      </select>
-		    <select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic">
+		    <select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic"
+		            data-selector-parent="{{id}}.dmg" data-hide="spell">
 			    {{#select def.magic}}
 				    <option value="">&mdash;</option>
 				    <option value="non">{{localize 'OBSIDIAN.Defense-non'}}</option>
@@ -78,7 +79,7 @@
   {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>
-		    <select name="flags.obsidian.defenses.conditions.{{id}}.level">
+		    <select name="flags.obsidian.defenses.conditions.{{id}}.level" data-selector="{{id}}.level">
 			    {{#select def.level}}
 				    {{#each @root.ObsidianRules.CONDITION_LEVELS}}
 					    <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
@@ -91,6 +92,12 @@
 			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
 		        {{/each}}
 		        <option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
+		        <option value="spell" data-selector-parent="{{id}}.level" data-hide="imm">
+			        {{localize 'OBSIDIAN.Condition-spell'}}
+		        </option>
+	          <option value="magic" data-selector-parent="{{id}}.level" data-hide="imm">
+		          {{localize 'OBSIDIAN.Condition-magic'}}
+	          </option>
 	        {{/select}}
 	      </select>
 	    </div>
