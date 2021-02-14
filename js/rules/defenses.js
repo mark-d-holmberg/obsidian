@@ -1,5 +1,4 @@
 import {OBSIDIAN} from '../global.js';
-import {Rules} from './rules.js';
 
 export function prepareDefenses (data, flags, derived) {
 	derived.defenses = {

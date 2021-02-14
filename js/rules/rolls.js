@@ -118,7 +118,7 @@ export const Rolls = {
 		const accumulate = (key, value) => damage.set(key, (damage.get(key) || 0) + Number(value));
 
 		if (target.data('apply-all')) {
-			target.closest('.obsidian-msg-row-dmg').parent().find('[data-dmg]').each((i, el) =>
+			target.closest('.obsidian-msg-row-dmg').parent().find('[data-type]').each((i, el) =>
 				accumulate(el.dataset.type, el.dataset.dmg));
 		} else {
 			accumulate(target.data('type'), target.data('dmg'));
