@@ -390,6 +390,15 @@ export const Prepare = {
 		const acOverride = flags.attributes.ac.override;
 		const armourDisplay = [];
 
+		if (bestArmour) {
+			if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.strength)) {
+				derived.rules.heavyArmour =
+					derived.abilities.str.value < bestArmour.data.strength;
+			}
+
+			derived.rules.noisyArmour = bestArmour.data.stealth;
+		}
+
 		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
 				armourDisplay.push(bestArmour.name.toLocaleLowerCase());
@@ -405,13 +414,6 @@ export const Prepare = {
 
 					derived.attributes.ac += Math.min(data.abilities.dex.mod, maxDex);
 				}
-
-				if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.strength)) {
-					derived.rules.heavyArmour =
-						derived.abilities.str.value < bestArmour.data.strength;
-				}
-
-				derived.rules.noisyArmour = bestArmour.data.stealth;
 			}
 
 			if (bestShield) {
@@ -421,6 +423,7 @@ export const Prepare = {
 		}
 
 		derived.armourDisplay = armourDisplay.join(', ');
+		data.attributes.ac.value = derived.attributes.ac;
 	},
 
 	conditions: function (actorData, data, flags, derived) {

@@ -17,7 +17,7 @@
 			</label>
 		</div>
 	</div>
-  <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
+  <div class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
     {{localize 'OBSIDIAN.Damage'}}
 	  <div class="obsidian-flex">
 		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-res">
@@ -30,7 +30,7 @@
 	      {{localize 'OBSIDIAN.Add'}}
 	    </button>
 	  </div>
-  </label>
+  </div>
   {{#each actor.flags.obsidian.defenses.damage as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>
@@ -70,12 +70,18 @@
 	    </button>
 	  </div>
   {{/each}}
-  <label class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
+  <div class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
     {{localize 'OBSIDIAN.ConditionImmunities'}}
-    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-cond">
-      {{localize 'OBSIDIAN.Add'}}
-    </button>
-  </label>
+	  <div class="obsidian-flex">
+		  <button type="button"
+		          class="obsidian-btn-compact obsidian-btn-outline obsidian-def-magic-res">
+			  {{localize 'OBSIDIAN.MagicResistanceAbbr'}}
+		  </button>
+	    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-cond">
+	      {{localize 'OBSIDIAN.Add'}}
+	    </button>
+	  </div>
+  </div>
   {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
 	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
 	    <div>

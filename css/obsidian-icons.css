@@ -292,6 +292,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/conditions/prone.svg');
 }
 
+.obsidian-icon-comp-extra-crit {
+	background-image: url('../img/extra-crit.svg');
+}
+
 .obsidian-icon-npc,
 .obsidian-icon-comp-summon,
 .obsidian-icon-entity-Actor {

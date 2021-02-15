@@ -1072,11 +1072,24 @@ export const Rolls = {
 			}
 
 			let colour = DMG_COLOURS[dmg.damage];
-			const numRolls = Math.abs(ndice) + Math.abs(ncrit);
+			let numRolls = Math.abs(ndice) + Math.abs(ncrit);
 			const parts = [
 				{mod: 0, ndice: ndice, die: dmg.die},
 				{mod: 0, ndice: ncrit, die: dmg.die}
 			];
+
+			if (dmg.extraCrit) {
+				if (dmg.extraCrit.ndice) {
+					numRolls += dmg.extraCrit.ndice;
+					parts.push({
+						mod: dmg.extraCrit.bonus || 0,
+						ndice: dmg.extraCrit.ndice,
+						die: dmg.extraCrit.die
+					});
+				} else if (dmg.extraCrit.bonus) {
+					parts[1].mod = dmg.extraCrit.bonus;
+				}
+			}
 
 			RollParts.rollParts(parts);
 
@@ -1100,13 +1113,17 @@ export const Rolls = {
 			data3d.colours = Rolls.DSNColours(colour, Math.abs(ndice), numRolls);
 
 			const hitPart = parts[0];
-			const critPart = {
-				mod: 0, ndice: ndice + ncrit, die: dmg.die,
+			const critParts = [{
+				mod: parts[1].mod, ndice: ndice + ncrit, die: dmg.die,
 				roll: ObsidianDie.combine(...parts.map(p => p.roll)),
 				results: parts[0].results.concat(parts[1].results)
-			};
+			}];
 
-			return {hit: [hitPart], crit: [critPart], data3d};
+			if (dmg.extraCrit?.ndice) {
+				critParts.push(parts[2]);
+			}
+
+			return {hit: [hitPart], crit: critParts, data3d};
 		});
 
 		const total = mode => diceParts.reduce((acc, parts) => {

@@ -122,7 +122,7 @@ export const Components = {
 		metadata: {
 			category: 'rolls',
 			tray: 'DamageHeal',
-			addons: ['roll-mod', 'bonus']
+			addons: ['roll-mod', 'bonus', 'extra-crit']
 		}
 	},
 	defense: {
@@ -172,6 +172,18 @@ export const Components = {
 		metadata: {
 			category: 'rolls',
 			tray: 'DiceExpression'
+		}
+	},
+	'extra-crit': {
+		data: {
+			type: 'extra-crit',
+			ndice: 1,
+			die: 4,
+			bonus: 0
+		},
+		metadata: {
+			addon: 'extraCrit',
+			tray: ['CritDamage', 'CritDamage']
 		}
 	},
 	filter: {

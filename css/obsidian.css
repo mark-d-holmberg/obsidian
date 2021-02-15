@@ -771,12 +771,17 @@ form.obsidian .rollable:hover {
 	margin-left: -10px;
 }
 
-.obsidian label.obsidian-label-lg {
+.obsidian label.obsidian-label-lg,
+.obsidian div.obsidian-label-lg {
 	align-items: flex-start;
 	margin: 0;
 	font-size: 16px;
 	text-transform: none;
 	font-weight: normal;
+	display: flex;
+	justify-content: space-between;
+	font-family: var(--obs-font-condensed);
+	color: var(--obs-text-secondary);
 }
 
 .obsidian label.obsidian-label-lg.obsidian-stacked-row {

@@ -21,20 +21,29 @@ export class ObsidianDefensesDialog extends ObsidianDialog {
 		html.find('.obsidian-rm-cond').click(this._onRemoveCondition.bind(this));
 		html.find('.obsidian-def-bps-res').click(this._addBPS.bind(this, 'res'));
 		html.find('.obsidian-def-bps-imm').click(this._addBPS.bind(this, 'imm'));
+		html.find('.obsidian-def-magic-res').click(this._addMagicRes.bind(this));
 		ObsidianDialog.recalculateHeight(html);
 	}
 
 	async _addBPS (level) {
 		const update = this._formData;
-		this.parent.actor.data.flags.obsidian.defenses.damage.push(...[
+		const damage = duplicate(this.parent.actor.data.flags.obsidian.defenses.damage);
+		damage.push(
 			{level: level, dmg: 'blg', magic: 'non'},
 			{level: level, dmg: 'prc', magic: 'non'},
 			{level: level, dmg: 'slh', magic: 'non'}
-		]);
+		);
 
-		update['flags.obsidian.defenses.damage'] =
-			duplicate(this.parent.actor.data.flags.obsidian.defenses.damage);
+		update['flags.obsidian.defenses.damage'] = damage;
+		await this.parent.actor.update(update);
+		this.render(false);
+	}
 
+	async _addMagicRes () {
+		const update = this._formData;
+		const conditions = duplicate(this.parent.actor.data.flags.obsidian.defenses.conditions);
+		conditions.push({level: 'adv', condition: 'spell'}, {level: 'adv', condition: 'magic'});
+		update['flags.obsidian.defenses.conditions'] = conditions;
 		await this.parent.actor.update(update);
 		this.render(false);
 	}

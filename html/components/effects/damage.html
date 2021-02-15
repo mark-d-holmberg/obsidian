@@ -64,4 +64,29 @@
 		{{> modules/obsidian/html/components/effects/roll-mod-body.html rollMod stacked=true
 				damage=true prefix=(add prefix '.rollMod')}}
 	{{/if}}
+	{{#if extraCrit}}
+	{{#with extraCrit}}
+	<fieldset class="obsidian-sub-group">
+		<legend>{{localize 'OBSIDIAN.ExtraCrit'}}</legend>
+		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
+			<div class="obsidian-fullwidth">
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" placeholder="0" name="{{../prefix}}.extraCrit.ndice"
+				       value="{{ndice}}">
+				<select name="{{../prefix}}.extraCrit.die" data-dtype="Number">
+					{{#select die}}
+						{{#each @root.ObsidianRules.DAMAGE_DICE}}
+							<option value="{{this}}">d{{this}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<span class="obsidian-binary-operator">&plus;</span>
+				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+				       data-dtype="Number" placeholder="0" name="{{../prefix}}.extraCrit.bonus"
+				       value="{{bonus}}">
+			</div>
+		</div>
+	</fieldset>
+	{{/with}}
+	{{/if}}
 </fieldset>

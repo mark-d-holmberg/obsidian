@@ -1049,5 +1049,8 @@
 	"OBSIDIAN.Condition": "Condition",
 	"OBSIDIAN.ForDuration": "For Duration",
 	"OBSIDIAN.BecomeCondition": "become {0}",
-	"OBSIDIAN.GainExhaustion": "gain one level of exhaustion"
+	"OBSIDIAN.GainExhaustion": "gain one level of exhaustion",
+	"OBSIDIAN.MagicResistanceAbbr": "Magic Res",
+	"OBSIDIAN.CritDamage": "Crit Damage",
+	"OBSIDIAN.ExtraCrit": "Additional Crit Damage"
 }
