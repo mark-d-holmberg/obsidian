@@ -51,6 +51,8 @@
 			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="{{prefix}}.method"
 			       data-hide="innate, item">
 			{{/if}}
+			{{fancy-checkbox prefix 'noSlot' content='OBSIDIAN.CastWithoutSlot' checked=noSlot
+			                 selectorParent=(add prefix '.method') show='known, prep'}}
 			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.method" data-show="innate">
 				{{#select ability}}
 					{{#each @root.ObsidianRules.ABILITIES}}

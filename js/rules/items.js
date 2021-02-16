@@ -399,6 +399,10 @@ export const ObsidianItems = {
 			return;
 		}
 
+		if (component && ['known', 'prep'].includes(component.method) && component.noSlot) {
+			options.spellLevel = spell.data.level;
+		}
+
 		if (options.spellLevel == null) {
 			if (spell.data.level > 0) {
 				ObsidianItems.selectSpellLevel(actor, options, spell.data.level);

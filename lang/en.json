@@ -1052,5 +1052,6 @@
 	"OBSIDIAN.GainExhaustion": "gain one level of exhaustion",
 	"OBSIDIAN.MagicResistanceAbbr": "Magic Res",
 	"OBSIDIAN.CritDamage": "Crit Damage",
-	"OBSIDIAN.ExtraCrit": "Additional Crit Damage"
+	"OBSIDIAN.ExtraCrit": "Additional Crit Damage",
+	"OBSIDIAN.CastWithoutSlot": "Cast Without Slot"
 }

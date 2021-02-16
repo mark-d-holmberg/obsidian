@@ -331,7 +331,8 @@ export const Components = {
 			class: '',
 			ability: 'cha',
 			upcast: false,
-			level: 0
+			level: 0,
+			noSlot: false
 		},
 		metadata: {
 			category: 'special',
@@ -512,6 +513,10 @@ export const Effect = {
 	},
 
 	getLinkedResource: function (actorData, consumer) {
+		if (['spell', 'qty'].includes(consumer.target)) {
+			return [];
+		}
+
 		const item =
 			actorData.obsidian.itemsByID.get(
 				consumer.target === 'feat' ? consumer.featID : consumer.itemID);
