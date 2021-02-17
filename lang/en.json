@@ -1053,5 +1053,8 @@
 	"OBSIDIAN.MagicResistanceAbbr": "Magic Res",
 	"OBSIDIAN.CritDamage": "Crit Damage",
 	"OBSIDIAN.ExtraCrit": "Additional Crit Damage",
-	"OBSIDIAN.CastWithoutSlot": "Cast Without Slot"
+	"OBSIDIAN.CastWithoutSlot": "Cast Without Slot",
+	"OBSIDIAN.BarSrc-bar1": "Bar 1 Source",
+	"OBSIDIAN.BarSrc-bar2": "Bar 2 Source",
+	"OBSIDIAN.Attributes": "Attributes"
 }

@@ -26,6 +26,7 @@ import ObsidianTable from './module/tables.js';
 import {addLootSheetHook} from './module/compat/loot-sheet.js';
 import {addCreateObjectHooks, convertObject} from './module/objects.js';
 import {OBSIDIAN} from './global.js';
+import {addTokenConfigHook} from './module/resources.js';
 
 runPatches();
 
@@ -90,6 +91,7 @@ Hooks.once('ready', function () {
 	addTransformHook();
 	addLootSheetHook();
 	addCreateObjectHooks();
+	addTokenConfigHook();
 });
 
 Hooks.on('renderCompendium', (compendium, html) => {
@@ -151,6 +153,7 @@ Hooks.on('preCreateActor', data => {
 	convertObject(data);
 	enrichActorFlags(data);
 });
+
 Hooks.on('preCreateItem', data => enrichItemFlags(data));
 Hooks.on('preCreateOwnedItem', (actor, data) => {
 	enrichItemFlags(data);

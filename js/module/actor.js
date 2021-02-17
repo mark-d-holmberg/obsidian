@@ -303,9 +303,14 @@ export class ObsidianActor extends Actor5e {
 			// If we are preparing data right after an update, this.token
 			// points to the old token that has since been replaced on the
 			// canvas. We need to make sure we get the new token.
-			canvas.tokens.get(this.token.data._id)?.drawEffects().catch(() => {});
+			const token = canvas.tokens.get(this.token.data._id);
+			token?.drawEffects().catch(() => {});
+			token?.drawBars();
 		} else if (canvas) {
-			this.getActiveTokens(true).forEach(token => token.drawEffects().catch(() => {}));
+			this.getActiveTokens(true).forEach(token => {
+				token.drawEffects().catch(() => {});
+				token.drawBars();
+			});
 		}
 	}
 
@@ -718,6 +723,29 @@ export class ObsidianActor extends Actor5e {
 
 			await this.update(OBSIDIAN.updateArrays(this.data, update));
 		}
+	}
+
+	async modifyTokenAttribute (attribute, value, isDelta = false, isBar = false) {
+		let current = getProperty(this.data.data, attribute);
+		if (current !== undefined) {
+			return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
+		}
+
+		const [itemID, effect, uuid] = attribute.split('.');
+		const item = this.items.get(itemID);
+		const component = this.data.obsidian.components.get(uuid);
+
+		if (!item || !component) {
+			return this;
+		}
+
+		if (isDelta) {
+			value = Math.clamped(0, Number(component.remaining) + value, component.max);
+		}
+
+		const effects = duplicate(item.getFlag('obsidian', 'effects'));
+		effects.find(e => e.uuid === effect).components.find(c => c.remaining = value);
+		return item.setFlag('obsidian', 'effects', effects);
 	}
 
 	/**
