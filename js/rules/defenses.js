@@ -59,7 +59,7 @@ function prepareActiveDefenses (flags, derived) {
 		});
 
 	if (bestDR) {
-		derived.defenses.dr = bestDR;
+		derived.defenses.parts.dr = bestDR;
 	}
 }
 
