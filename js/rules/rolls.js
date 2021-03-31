@@ -1097,7 +1097,7 @@ export const Rolls = {
 				colour = 'black';
 			}
 
-			if (dmg.addMods) {
+			if (dmg.addMods !== false) {
 				const rollMods =
 					Effect.filterDamage(actor.data, actor.data.obsidian.filters.mods, dmg);
 
