@@ -1,38 +1,34 @@
-<div class="obsidian-form-row{{#if stacked}} obsidian-stacked-row{{/if}} obsidian-mixed-form-row obsidian-inline">
-	<div class="obsidian-fullwidth obsidian-checkbox-row">
+<div class="obsidian-form-row{{#if stacked}} obsidian-stacked-row{{/if}}">
+	<div>
 		{{#unless damage}}
 		<select name="{{prefix}}.mode">
-			{{#select mode}}
-				{{#each @root.ObsidianRules.ROLL}}
-					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-				{{/each}}
-			{{/select}}
+			{{selectOptions @root.ObsidianLabels.Roll selected=mode}}
 		</select>
 		{{/unless}}
-		<label class="obsidian-inline" style="margin-right: 10px;">
+		<label style="margin-right: 10px;">
 			{{localize 'OBSIDIAN.Minimum'}}
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="1" name="{{prefix}}.min" value="{{min}}">
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="1"
+			       name="{{prefix}}.min" value="{{min}}">
 		</label>
-		<label class="obsidian-inline" style="margin-right: 20px;">
+		<label style="margin-right: 20px;">
 			{{localize 'OBSIDIAN.RerollLessThan'}}
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="1" name="{{prefix}}.reroll" value="{{reroll}}">
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="1"
+			       name="{{prefix}}.reroll" value="{{reroll}}">
 		</label>
 		{{#unless damage}}
-		<label class="obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="0" name="{{prefix}}.ndice" value="{{ndice}}">
+		<label>
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+			       name="{{prefix}}.ndice" value="{{ndice}}">
 			<span>{{localize 'OBSIDIAN.ExtraDice'}}</span>
 		</label>
 	</div>
 </div>
-<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-	<div class="obsidian-fullwidth obsidian-checkbox-row">
+<div class="obsidian-form-row obsidian-stacked-row">
+	<div>
 		{{#unless attack}}
-		<label class="obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				   data-dtype="Number" placeholder="20" name="{{prefix}}.mcrit" value="{{mcrit}}">
+		<label>
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="20"
+			       name="{{prefix}}.mcrit" value="{{mcrit}}">
 			<span>{{localize 'OBSIDIAN.CritRange'}}</span>
 		</label>
 		{{/unless}}

@@ -1,51 +1,47 @@
 <form class="obsidian" autocomplete="off">
-	<div class="obsidian-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
+	<div class="obsidian-form-row">
+		<div>
 			<select name="data.details.alignment">
-				{{#select data.details.alignment}}
-					{{#each ObsidianRules.ALIGNMENTS}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Alignment-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions ObsidianLabels.Alignment selected=data.details.alignment}}
 			</select>
 			<select name="data.traits.size">
 				{{#select data.traits.size}}
 					{{#each config.actorSizes}}
-						<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Size-' @key}}</option>
+						<option value="{{@key}}">{{obs-i18n 'Size' @key}}</option>
 					{{/each}}
 				{{/select}}
 			</select>
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
 		<div class="obsidian-dialog-2-col">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Faith'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Faith'}}"
 			       value="{{actor.flags.obsidian.details.faith}}" name="flags.obsidian.details.faith">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Gender'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Gender'}}"
 			       value="{{actor.flags.obsidian.details.gender}}" name="flags.obsidian.details.gender">
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
 		<div class="obsidian-dialog-2-col">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Eyes'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Eyes'}}"
 			       value="{{actor.flags.obsidian.details.eyes}}" name="flags.obsidian.details.eyes">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Hair'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Hair'}}"
 			       value="{{actor.flags.obsidian.details.hair}}" name="flags.obsidian.details.hair">
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
 		<div class="obsidian-dialog-2-col">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Skin'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Skin'}}"
 			       value="{{actor.flags.obsidian.details.skin}}" name="flags.obsidian.details.skin">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Age'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Age'}}"
 			       name="flags.obsidian.details.age" value="{{actor.flags.obsidian.details.age}}">
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
 		<div class="obsidian-dialog-2-col">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Height'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Height'}}"
 			       name="flags.obsidian.details.height" value="{{actor.flags.obsidian.details.height}}">
-			<input type="text" class="obsidian-input-compact" placeholder="{{localize 'OBSIDIAN.Weight'}}"
+			<input type="text" placeholder="{{localize 'OBSIDIAN.Weight'}}"
 			       name="flags.obsidian.details.weight" value="{{actor.flags.obsidian.details.weight}}">
 		</div>
 	</div>

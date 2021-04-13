@@ -1,66 +1,50 @@
 <fieldset data-uuid="{{uuid}}">
-	<legend>{{localize 'OBSIDIAN.Attack'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
+	<legend>{{localize 'OBSIDIAN.AttackTitle'}}</legend>
+	<div class="obsidian-form-row">
+		<div>
 			<select name="{{prefix}}.attack" data-selector="{{prefix}}.attack">
-				{{#select attack}}
-					{{#each @root.ObsidianRules.ATTACK_TYPES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.AttackType selected=attack}}
 			</select>
 			<select name="{{prefix}}.category">
-				{{#select category}}
-					{{#each @root.ObsidianRules.EFFECT_ATTACK_CATS}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackCat-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.AttackCat selected=category}}
 			</select>
 			<select name="{{prefix}}.ability">
-				{{#select ability}}
-					<option value="">&mdash;</option>
-					{{#each @root.ObsidianRules.EFFECT_ABILITIES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.AbilitySpell selected=ability blank='&mdash;'}}
 			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="0" name="{{prefix}}.bonus" value="{{bonus}}">
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="{{prefix}}.crit" value="{{crit}}" placeholder="20" data-dtype="Number">
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+			       name="{{prefix}}.bonus" value="{{bonus}}">
+			<label>
+				<input type="text" class="obsidian-input-num-sm" name="{{prefix}}.crit" value="{{crit}}"
+				       placeholder="20" data-dtype="Number">
 				<span>{{localize 'OBSIDIAN.Crit'}}</span>
 			</label>
-			{{fancy-checkbox (add prefix '.proficient') content='OBSIDIAN.Proficiency-prof'
-			                 checked=proficient}}
+			{{fancy-checkbox prefix 'proficient' content='OBSIDIAN.Proficiency.prof' checked=proficient}}
 		</div>
 	</div>
 	{{log @root}}
 	{{#unless @root.isCharacter}}
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-stacked-row obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
 		{{#unless (eq @root.item.type 'weapon')}}
-		<label class="obsidian-inline" data-selector-parent="{{prefix}}.attack" data-show="melee">
+		<label data-selector-parent="{{prefix}}.attack" data-show="melee">
 			{{localize 'OBSIDIAN.Reach'}}
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" name="{{prefix}}.reach" value="{{reach}}" placeholder="5">
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" name="{{prefix}}.reach"
+			       value="{{reach}}" placeholder="5">
 		</label>
-		<label class="obsidian-inline" data-selector-parent="{{prefix}}.attack" data-show="ranged">
+		<label data-selector-parent="{{prefix}}.attack" data-show="ranged">
 			{{localize 'OBSIDIAN.Range'}}
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-			       data-dtype="Number" name="{{prefix}}.range1" value="{{range1}}">
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" name="{{prefix}}.range1"
+			       value="{{range1}}">
 		</label>
 		<span class="obsidian-binary-operator" data-selector-parent="{{prefix}}.attack"
 		      data-show="ranged">
 			&sol;
 		</span>
-		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-		       data-dtype="Number" name="{{prefix}}.range2" value="{{range2}}" data-show="ranged"
-		       data-selector-parent="{{prefix}}.attack">
+		<input type="text" class="obsidian-input-num-md" data-dtype="Number" name="{{prefix}}.range2"
+		       value="{{range2}}" data-show="ranged" data-selector-parent="{{prefix}}.attack">
 		{{/unless}}
-		<input type="text" class="obsidian-input-compact obsidian-input-lg" name="{{prefix}}.target"
-		       style="flex: 1; max-width: none;" value="{{target}}"
-		       placeholder="{{localize 'OBSIDIAN.Target'}}">
+		<input type="text" class="obsidian-input-lg" name="{{prefix}}.target" value="{{target}}"
+		       style="flex: 1; max-width: none;" placeholder="{{localize 'OBSIDIAN.TargetTitle'}}">
 	</div>
 	{{/unless}}
 	{{#if extraBonus}}

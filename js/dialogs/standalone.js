@@ -1,3 +1,5 @@
+import {OBSIDIAN} from '../global.js';
+
 export class ObsidianStandaloneDialog extends Application {
 	constructor (config, options) {
 		super(options);
@@ -17,6 +19,7 @@ export class ObsidianStandaloneDialog extends Application {
 	getData (options) {
 		const data = super.getData(options);
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		if (this._config.actor) {
 			data.actor = duplicate(this._config.actor.data);

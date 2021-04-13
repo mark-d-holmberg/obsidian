@@ -10,7 +10,7 @@
 		<label>{{localize 'OBSIDIAN.AddFeature'}}</label>
 		<select>
 			{{#each featureList}}
-				<option value="{{this}}">{{i18n-join 'OBSIDIAN.Feat-' this}}</option>
+				<option value="{{this}}">{{obs-i18n 'Feat' this}}</option>
 			{{/each}}
 		</select>
 	</div>

@@ -101,6 +101,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		const data = super.getData();
 		data.items = this.actor.items.map(i => duplicate(i.data));
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.ObsidianLabels = OBSIDIAN.Labels;
 		data.isObject = data.actor.flags.obsidian?.details?.type === 'object';
 		data.featCategories = {};
 		data.skills = {};

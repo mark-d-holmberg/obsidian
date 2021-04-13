@@ -2,13 +2,12 @@
 	{{fancy-checkbox 'flags.obsidian.details.milestone' content='OBSIDIAN.MilestoneLevelling'
 	                 checked=actor.flags.obsidian.details.milestone}}
 	<div class="obsidian-form-row">
-		<label class="obsidian-inline">
+		<label>
 			<span>{{localize 'OBSIDIAN.SetXP'}}</span>
 			<input type="text" name="data.details.xp.value" value="{{data.details.xp.value}}"
-			       class="obsidian-input-compact obsidian-input-num" style="width: 75px;"
-			       data-dtype="Number">
+			       class="obsidian-input-num" style="width: 75px;" data-dtype="Number">
 		</label>
 	</div>
 	<input type="text" name="addRemoveXP" placeholder="{{localize 'OBSIDIAN.AddRemoveXP'}}"
-	       class="obsidian-input-compact" data-dtype="Number">
+	       data-dtype="Number">
 </form>

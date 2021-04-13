@@ -1,54 +1,30 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.Filter'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
-			<label class="obsidian-inline">
+	<div class="obsidian-form-row">
+		<div>
+			<label>
 				{{localize 'OBSIDIAN.Filter'}}
 				<select name="{{prefix}}.filter" data-selector="{{prefix}}.filter">
-					{{#select filter}}
-						{{#each @root.ObsidianRules.EFFECT_FILTERS}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Filters-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions @root.ObsidianLabels.Filter selected=filter}}
 				</select>
 			</label>
 			<select name="{{prefix}}.score" data-selector-parent="{{prefix}}.filter" data-show="score"
 			        data-selector="{{prefix}}.score">
-				{{#select score}}
-					{{#each @root.ObsidianRules.EFFECT_FILTER_SCORES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Scores-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.Scores selected=score}}
 			</select>
 			<select name="{{prefix}}.roll" data-selector-parent="{{prefix}}.filter" data-show="roll"
 			        data-selector="{{prefix}}.roll">
-				{{#select roll}}
-					{{#each @root.ObsidianRules.EFFECT_FILTER_ROLLS}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.FilterRoll selected=roll}}
 			</select>
 			<select name="{{prefix}}.check" data-selector-parent="{{prefix}}.roll" data-show="check">
-				{{#select check}}
-					{{#each @root.ObsidianRules.EFFECT_FILTER_CHECKS}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Check-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.Check selected=check}}
 			</select>
 			<select name="{{prefix}}.dmg" data-selector-parent="{{prefix}}.roll" data-show="damage">
-				{{#select dmg}}
-					{{#each @root.ObsidianRules.EFFECT_FILTER_DAMAGE}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.FilterDmg-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.FilterDmg selected=dmg}}
 			</select>
 			{{#if isMulti}}
 			<select name="{{prefix}}.multi">
-				{{#select multi}}
-					{{#each @root.ObsidianRules.EFFECT_FILTER_MULTI}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Multi-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.Multi selected=multi}}
 			</select>
 			{{/if}}
 		</div>
@@ -58,19 +34,13 @@
 		{{checkbox-grid availableSelections collection prefix 'collection'}}
 	</div>
 	{{/if}}
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline
-	     {{#unless isCollection}}obsidian-stacked-row{{/unless}}"
+	<div class="obsidian-form-row {{#unless isCollection}}obsidian-stacked-row{{/unless}}"
 	     data-selector-parent="{{prefix}}.filter" data-show="roll">
-		<div class="obsidian-fullwidth">
-			<label class="obsidian-inline">
+		<div>
+			<label>
 				{{localize 'OBSIDIAN.RollingAt'}}
 				<select name="{{prefix}}.mode">
-					{{#select mode}}
-						<option value="">&mdash;</option>
-						{{#each @root.ObsidianRules.ROLL}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions @root.ObsidianLabels.Roll selected=mode blank='&mdash;'}}
 				</select>
 			</label>
 		</div>

@@ -1,20 +1,16 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.CombatDuration'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			       data-dtype="Number" placeholder="0" name="{{prefix}}.ndice" value="{{ndice}}">
+	<div class="obsidian-form-row">
+		<div>
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+			       name="{{prefix}}.ndice" value="{{ndice}}">
 			<select name="{{prefix}}.die" data-dtype="Number">
-				{{#select die}}
-					{{#each @root.ObsidianRules.EFFECT_RESOURCE_DICE_POOL}}
-						<option value="{{this}}">d{{this}}</option>
-					{{/each}}
-				{{/select}}
+				{{select-dice 4 20 selected=die}}
 			</select>
 			<span class="obsidian-binary-operator">&plus;</span>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" placeholder="1" name="{{prefix}}.duration" value="{{duration}}">
+			<label>
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="1"
+				       name="{{prefix}}.duration" value="{{duration}}">
 				<span>{{localize 'OBSIDIAN.Rounds'}}</span>
 			</label>
 			{{fancy-checkbox (add prefix '.concentration') content='OBSIDIAN.Concentration'

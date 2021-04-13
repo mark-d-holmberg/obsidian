@@ -263,9 +263,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		data.usesAbilities = {};
-		Rules.ABILITIES.forEach(abl =>
-			data.usesAbilities[abl] = `OBSIDIAN.Ability-${abl}`);
-
+		Rules.ABILITIES.forEach(abl => data.usesAbilities[abl] = `OBSIDIAN.Ability.${abl}`);
 		return data;
 	}
 
@@ -398,7 +396,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		const [rule, i18n] = current || [];
 		if (rule && i18n) {
-			Rules[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}-${k}`));
+			Rules[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}.${k}`));
 		}
 
 		if (this.actor
@@ -421,7 +419,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				.concat(Rules.PROF_TOOLS_GAME)
 				.concat(Rules.PROF_TOOLS_ARTISAN)
 				.concat(Rules.PROF_TOOLS_INSTRUMENT)
-				.map(key => [key, game.i18n.localize(`OBSIDIAN.ToolProf-${key}`)]);
+				.map(key => [key, game.i18n.localize(`OBSIDIAN.ToolProf.${key}`)]);
 
 			tools.sort((a, b) => a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0);
 			tools.forEach(([key, label]) => selections[key] = label);

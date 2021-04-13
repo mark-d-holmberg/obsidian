@@ -5,14 +5,14 @@
 			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
 		<div>
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth">
-					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-					       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
+			<div class="obsidian-form-row">
+				<div>
+					<input type="text" class="obsidian-input-lg" name="name" value="{{item.name}}"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}">
 				</div>
 			</div>
-			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth">
+			<div class="obsidian-form-row obsidian-stacked-row">
+				<div>
 					{{> modules/obsidian/html/components/parts/weight-cost.html}}
 				</div>
 			</div>

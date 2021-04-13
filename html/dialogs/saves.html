@@ -1,19 +1,14 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.SavesUC'}}</legend>
-		<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
+		<div class="obsidian-form-row">
 			<div>
 				<select name="flags.obsidian.saves.roll">
-					{{#select actor.flags.obsidian.saves.roll}}
-						{{#each ObsidianRules.ROLL}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.Roll selected=actor.flags.obsidian.saves.roll}}
 				</select>
-				<label class="obsidian-inline">
-					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="flags.obsidian.saves.bonus" value="{{actor.flags.obsidian.saves.bonus}}"
-					       data-dtype="Number">
+				<label>
+					<input type="text" class="obsidian-input-num-sm" data-dtype="Number"
+					       name="flags.obsidian.saves.bonus" value="{{actor.flags.obsidian.saves.bonus}}">
 					<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 				</label>
 			</div>

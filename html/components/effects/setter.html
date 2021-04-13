@@ -1,10 +1,10 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.SetScore'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-				       data-dtype="Number" name="{{prefix}}.score" value="{{score}}" placeholder="0">
+	<div class="obsidian-form-row">
+		<div>
+			<label>
+				<input type="text" class="obsidian-input-num-md" data-dtype="Number" name="{{prefix}}.score"
+				       value="{{score}}" placeholder="0">
 				<span>{{localize 'OBSIDIAN.Score'}}</span>
 			</label>
 			{{fancy-checkbox prefix 'min' content='OBSIDIAN.NoEffectIfHigher' checked=min}}

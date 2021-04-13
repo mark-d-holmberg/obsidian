@@ -1,32 +1,24 @@
 <fieldset>
-	<legend>{{i18n-join 'OBSIDIAN.ItemType-' item.type}}</legend>
+	<legend>{{obs-i18n 'ItemType' item.type}}</legend>
 	<div class="obsidian-form-row-img">
 		<div>
 			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
 		<div>
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
-					<input class="obsidian-input-compact obsidian-input-lg" type="text" name="name"
-					       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
+			<div class="obsidian-form-row">
+				<div>
+					<input class="obsidian-input-lg" type="text" name="name" value="{{item.name}}"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}">
 					<select name="flags.obsidian.category">
-						{{#select item.flags.obsidian.category}}
-							{{#each ObsidianRules.WEAPON_CATEGORIES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.WeaponCat-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.WeaponCat selected=item.flags.obsidian.category}}
 					</select>
 					<select name="flags.obsidian.type">
-						{{#select item.flags.obsidian.type}}
-							{{#each ObsidianRules.ATTACK_TYPES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AttackType-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.AttackType selected=item.flags.obsidian.type}}
 					</select>
 				</div>
 			</div>
-			<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<div class="obsidian-form-row obsidian-stacked-row">
+				<div>
 					{{> modules/obsidian/html/components/parts/weight-cost.html}}
 					{{fancy-checkbox 'flags.obsidian.attunement' content='OBSIDIAN.RequiresAttunement'
 					                 checked=item.flags.obsidian.attunement}}
@@ -37,18 +29,16 @@
 	{{#if (eq item.flags.obsidian.category 'siege')}}
 		{{> modules/obsidian/html/components/mountable.html}}
 	{{/if}}
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline obsidian-range-part">
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
+			<label class="obsidian-range-part">
 				{{localize 'OBSIDIAN.Range'}}
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-				       data-dtype="Number" placeholder="&mdash;" name="data.range.value"
-				       value="{{item.data.range.value}}">
+				<input type="text" class="obsidian-input-num-md" data-dtype="Number" placeholder="&mdash;"
+				       name="data.range.value" value="{{item.data.range.value}}">
 			</label>
 			<span class="obsidian-binary-operator obsidian-range-part">&sol;</span>
-			<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md obsidian-range-part"
-			       data-dtype="Number" placeholder="&mdash;" name="data.range.long"
-			       value="{{item.data.range.long}}">
+			<input type="text" class="obsidian-input-num-md obsidian-range-part" data-dtype="Number"
+			       placeholder="&mdash;" name="data.range.long" value="{{item.data.range.long}}">
 			{{fancy-checkbox 'flags.obsidian.consumeThrown' content='OBSIDIAN.ConsumeWhenThrown'
 			                 checked=item.flags.obsidian.consumeThrown}}
 		</div>
@@ -59,13 +49,12 @@
 	<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
 	<div class="obsidian-checkbox-grid">
 		{{#each ObsidianRules.WEAPON_TAGS}}
-			{{fancy-checkbox (add 'flags.obsidian.tags.' this) content=(add 'OBSIDIAN.AtkTag-' this)
+			{{fancy-checkbox (add 'flags.obsidian.tags.' this) content=(add 'OBSIDIAN.AtkTag.' this)
 			                 checked=(lookup ../item.flags.obsidian.tags this)}}
 		{{/each}}
 	</div>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<input type="text" class="obsidian-input-compact obsidian-input-max"
-		       name="flags.obsidian.tags.custom" value="{{item.flags.obsidian.tags.custom}}"
-		       placeholder="{{localize 'OBSIDIAN.Custom'}}">
+	<div class="obsidian-form-row">
+		<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
+		       name="flags.obsidian.tags.custom" value="{{item.flags.obsidian.tags.custom}}">
 	</div>
 </fieldset>

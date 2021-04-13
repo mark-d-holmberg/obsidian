@@ -581,7 +581,7 @@ export const Sheet = {
 			// enabled through an automated effect rather than being manually
 			// switched on.
 			sheet.actor.createEmbeddedEntity('ActiveEffect', {
-				label: game.i18n.localize(`OBSIDIAN.Condition-${id}`),
+				label: game.i18n.localize(`OBSIDIAN.Condition.${id}`),
 				icon: `modules/obsidian/img/conditions/${id}.svg`,
 				'flags.core.statusId': id
 			});
@@ -619,7 +619,7 @@ export const Sheet = {
 
 		if (update > 0) {
 			sheet.actor.createEmbeddedEntity('ActiveEffect', {
-				label: game.i18n.localize('OBSIDIAN.Condition-exhaustion'),
+				label: game.i18n.localize('OBSIDIAN.Condition.exhaustion'),
 				icon: `modules/obsidian/img/conditions/exhaust${update}.svg`,
 				'flags.core.statusId': `exhaust${update}`
 			});

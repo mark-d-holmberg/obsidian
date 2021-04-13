@@ -58,7 +58,7 @@ async function onHotbarDrop (bar, data, slot) {
 
 			case 'abl': case 'save':
 				if (args.rollData.abl === 'init') {
-					name = game.i18n.localize(`OBSIDIAN.Check-init`);
+					name = game.i18n.localize(`OBSIDIAN.Check.init`);
 					break;
 				}
 
@@ -67,7 +67,7 @@ async function onHotbarDrop (bar, data, slot) {
 					game.i18n.localize(
 						`OBSIDIAN.${args.rollData.roll === 'abl' ? 'Check' : 'Save'}`);
 
-				name = `${game.i18n.localize(`OBSIDIAN.Ability-${abl}`)} ${rollTranslation}`;
+				name = `${game.i18n.localize(`OBSIDIAN.Ability.${abl}`)} ${rollTranslation}`;
 				break;
 		}
 	} else if (data.effectUUID) {

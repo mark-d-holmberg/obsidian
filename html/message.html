@@ -30,7 +30,7 @@
 	<section>
 		{{#each message.flags.obsidian.results}}
 		<div class="obsidian-msg-row obsidian-dice-drop-target" data-index="{{@index}}">
-			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.RollTitle'}}:</div>
 			<div class="obsidian-msg-value">
 				{{#each this}}
 					<div class="
@@ -47,7 +47,7 @@
 		{{/each}}
 		{{#if message.flags.obsidian.pools}}
 		<div class="obsidian-msg-row">
-			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.RollTitle'}}:</div>
 			<div class="obsidian-msg-value">
 				{{#each message.flags.obsidian.pools.results}}
 					<div class="obsidian-msg-roll-box" draggable="true" data-value="{{total}}"
@@ -62,7 +62,7 @@
 		{{/if}}
 		{{#each message.flags.obsidian.exprs}}
 		<div class="obsidian-msg-row">
-			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+			<div class="obsidian-msg-key">{{localize 'OBSIDIAN.RollTitle'}}:</div>
 			<div class="obsidian-msg-value">
 				<div class="obsidian-msg-roll-box" draggable="true" data-value="{{total}}"
 				     data-flavour="{{flavour}}">
@@ -77,12 +77,12 @@
 	{{/if}}
 	{{#if message.flags.obsidian.duration}}
 	<div class="obsidian-msg-row">
-		<div class="obsidian-msg-key">{{localize 'OBSIDIAN.Roll'}}:</div>
+		<div class="obsidian-msg-key">{{localize 'OBSIDIAN.RollTitle'}}:</div>
 		<div class="obsidian-msg-value">
 			<div class="obsidian-msg-roll-box">{{message.flags.obsidian.duration.total}}</div>
 			<div class="obsidian-msg-tooltip">{{{message.flags.obsidian.duration.breakdown}}}</div>
 		</div>
-		<div class="obsidian-msg-flavour">{{lc (localize 'OBSIDIAN.Duration')}}</div>
+		<div class="obsidian-msg-flavour">{{lc (localize 'OBSIDIAN.DurationTitle')}}</div>
 	</div>
 	{{/if}}
 	{{#if message.flags.obsidian.saves}}
@@ -114,7 +114,7 @@
 				{{localize 'OBSIDIAN.DC'}}
 				<div class="obsidian-msg-roll-box">{{dc}}</div>
 				<div class="obsidian-msg-tooltip">{{{breakdown}}}</div>
-				{{target}} {{localize 'OBSIDIAN.Check'}}
+				{{target}} {{localize 'OBSIDIAN.CheckTitle'}}
 				{{#if (is-gm)}}
 					<div title="{{localize 'OBSIDIAN.Apply'}}" class="obsidian-apply-check"
 					     data-index="{{@index}}">
@@ -142,7 +142,7 @@
 		        data-count="{{message.flags.obsidian.dmgCount}}"
 		        data-scaling="{{message.flags.obsidian.dmgScaling}}">
 			<i class="fas fa-dice-d20"></i>
-			{{localize 'OBSIDIAN.Damage'}}
+			{{localize 'OBSIDIAN.DamageTitle'}}
 		</button>
 		{{/if}}
 		{{#if (defined message.flags.obsidian.aoe)}}

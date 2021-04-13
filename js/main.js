@@ -27,6 +27,7 @@ import {addLootSheetHook} from './module/compat/loot-sheet.js';
 import {addCreateObjectHooks, convertObject} from './module/objects.js';
 import {OBSIDIAN} from './global.js';
 import {addTokenConfigHook} from './module/resources.js';
+import {translateLabels} from './labels.js';
 
 runPatches();
 
@@ -69,6 +70,8 @@ Hooks.once('init', async function () {
 	await preloadPartials();
 	await preloadTemplates();
 });
+
+Hooks.once('setup', translateLabels);
 
 Hooks.once('ready', function () {
 	let fontSheet = 'font';

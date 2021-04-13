@@ -11,9 +11,9 @@
 	<div class="obsidian-characteristics-grid">
 		<div class="obsidian-char-grid-row">
 			<div class="obsidian-char-grid-col"
-			     title="{{i18n-join 'OBSIDIAN.Alignment-' data.details.alignment}}">
-				<h4>{{localize 'OBSIDIAN.Alignment'}}</h4>
-				{{i18n-join 'OBSIDIAN.Alignment-' data.details.alignment}}
+			     title="{{obs-i18n 'Alignment' data.details.alignment}}">
+				<h4>{{localize 'OBSIDIAN.AlignmentTitle'}}</h4>
+				{{obs-i18n 'Alignment' data.details.alignment}}
 			</div>
 			<div class="obsidian-char-grid-col" title="{{actor.flags.obsidian.details.gender}}">
 				<h4>{{localize 'OBSIDIAN.Gender'}}</h4>
@@ -24,9 +24,9 @@
 				{{actor.flags.obsidian.details.eyes}}
 			</div>
 			<div class="obsidian-char-grid-col"
-			     title="{{i18n-join 'OBSIDIAN.Size-' actor.flags.obsidian.details.size}}">
-				<h4>{{localize 'OBSIDIAN.Size'}}</h4>
-				{{i18n-join 'OBSIDIAN.Size-' data.traits.size}}
+			     title="{{obs-i18n 'Size' actor.flags.obsidian.details.size}}">
+				<h4>{{localize 'OBSIDIAN.SizeTitle'}}</h4>
+				{{obs-i18n 'Size' data.traits.size}}
 			</div>
 			<div class="obsidian-char-grid-col" title="{{actor.flags.obsidian.details.height}}">
 				<h4>{{localize 'OBSIDIAN.Height'}}</h4>

@@ -1,29 +1,20 @@
-<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline
-	            obsidian-magic-item">
-	<div class="obsidian-fullwidth obsidian-checkbox-row">
+<div class="obsidian-form-row obsidian-stacked-row obsidian-magic-item">
+	<div>
 		{{fancy-checkbox 'flags.obsidian.magical' content='OBSIDIAN.Magical' selector='magic'
 		                 checked=item.flags.obsidian.magical}}
 		{{#if (or (eq item.type 'weapon') (eq item.flags.obsidian.subtype 'ammo'))}}
-		<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-		       data-selector-parent="magic" data-dtype="Number" name="flags.obsidian.magicBonus"
+		<input type="text" class="obsidian-input-num-sm" data-selector-parent="magic"
+		       data-dtype="Number" name="flags.obsidian.magicBonus"
 		       value="{{item.flags.obsidian.magicBonus}}">
 		{{/if}}
 		<select name="data.rarity" data-selector-parent="magic"
 			      {{#if (and (not (eq item.type 'weapon')) (not (eq item.flags.obsidian.subtype 'ammo')))}}
 			        style="margin-left: 10px;"
 			      {{/if}}>
-			{{#select data.rarity}}
-				{{#each ObsidianRules.ITEM_RARITY}}
-					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Rarity-' this}}</option>
-				{{/each}}
-			{{/select}}
+			{{selectOptions @root.ObsidianLabels.Rarity selected=data.rarity}}
 		</select>
 		<select name="flags.obsidian.subrarity" data-selector-parent="magic">
-			{{#select item.flags.obsidian.subrarity}}
-				{{#each ObsidianRules.ITEM_SUBRARITY}}
-					<option value="{{this}}">{{i18n-join 'OBSIDIAN.Subrarity-' this}}</option>
-				{{/each}}
-			{{/select}}
+			{{selectOptions @root.ObsidianLabels.Subrarity selected=items.flags.obsidian.subrarity}}
 		</select>
 	</div>
 </div>

@@ -8,7 +8,7 @@
 		<label>{{localize 'Type'}}</label>
 		<select name="type">
 			{{#each types}}
-				<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
+				<option value="{{this}}">{{obs-i18n 'ItemType' this}}</option>
 			{{/each}}
 		</select>
 	</div>

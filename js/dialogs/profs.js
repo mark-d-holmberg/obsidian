@@ -29,7 +29,7 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 			data[prop] = data[prop].map(k => {
 				return {
 					key: k,
-					label: game.i18n.localize(`OBSIDIAN.${pref}-${k}`)
+					label: game.i18n.localize(`OBSIDIAN.${pref}.${k}`)
 				}
 			});
 

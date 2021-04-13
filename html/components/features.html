@@ -44,7 +44,7 @@
 		</div>
 		<div class="obsidian-npc-stat-runon obsidian-npc-stat-runon-hp obsidian-condensed">
 			<strong>{{localize 'OBSIDIAN.HP'}}</strong>
-			<input type="text" class="obsidian-input-num obsidian-input-num-md" data-dtype="Number"
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number"
 			       placeholder="0" name="items.{{feat.idx}}.data.hp.value" value="{{feat.data.hp.value}}">
 			<span class="obsidian-binary-operator" style="margin-left: 10px;">&sol;</span>
 			<span class="obsidian-npc-max-hp">{{feat.data.hp.max}}</span>
@@ -62,7 +62,7 @@
 		</div>
 		{{#if feat.flags.obsidian.speed}}
 		<div class="obsidian-npc-stat-runon obsidian-condensed">
-			<strong>{{localize 'OBSIDIAN.Speed'}}</strong>
+			<strong>{{localize 'OBSIDIAN.SpeedTitle'}}</strong>
 			{{feat.data.speed.value}}
 			<span class="obsidian-npc-subtle">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 			{{#if feat.data.speed.conditions}}
@@ -80,11 +80,10 @@
 				{{#if (eq parentItem.type 'spell')}}
 					<div class="obsidian-icon obsidian-icon-school-{{parentItem.data.school}}"></div>
 				{{else if (eq parentItem.type 'weapon')}}
-					<div class="
+					<div data-uuid="{{uuid}}" class="
 						{{#if (is-attack-toggleable this)}}
 							obsidian-attack-toggle
-						{{/if}} obsidian-icon obsidian-icon-{{mode}}"
-					     data-uuid="{{uuid}}">
+						{{/if}} obsidian-icon obsidian-icon-{{mode}}">
 					</div>
 				{{else}}
 					<div class="obsidian-icon obsidian-icon-{{attack}}"></div>
@@ -112,14 +111,14 @@
 						<div class="obsidian-table-number-md">
 							{{parentItem.flags.obsidian.range.n}}
 							<span class="obsidian-table-unit">
-								{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' parentItem.flags.obsidian.range.type}}
+								{{obs-i18n 'SpellRangeAbbr' parentItem.flags.obsidian.range.type}}
 							</span>
 						</div>
 					{{else if (eq parentItem.flags.obsidian.range.type 'unlimited')}}
 						<div class="obsidian-table-number-md">&infin;</div>
 					{{else}}
 						<div class="obsidian-table-text">
-							{{i18n-join 'OBSIDIAN.SpellRange-' parentItem.flags.obsidian.range.type}}
+							{{obs-i18n 'SpellRange' parentItem.flags.obsidian.range.type}}
 						</div>
 					{{/if}}
 				{{else if (eq parentItem.type 'weapon')}}
@@ -167,7 +166,7 @@
 						<div class="obsidian-dmg-component">
 							{{display}}
 							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
-							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+							     title="{{obs-i18n 'Damage' damage}}"></div>
 						</div>
 					{{/each}}
 				</div>

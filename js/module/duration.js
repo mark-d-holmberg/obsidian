@@ -176,7 +176,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 			.filter(condition => !conditionImmunities.has(condition))
 			.map(condition => {
 				return {
-					label: game.i18n.localize(`OBSIDIAN.Condition-${condition}`),
+					label: game.i18n.localize(`OBSIDIAN.Condition.${condition}`),
 					icon: `modules/obsidian/img/conditions/${condition}.svg`,
 					'flags.core.statusId': condition
 				};
@@ -199,7 +199,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 		}
 
 		conditions.push({
-			label: game.i18n.localize('OBSIDIAN.Condition-exhaustion'),
+			label: game.i18n.localize('OBSIDIAN.Condition.exhaustion'),
 			icon: `modules/obsidian/img/conditions/exhaust${level}.svg`,
 			'flags.core.statusId': `exhaust${level}`
 		});
@@ -445,7 +445,7 @@ async function onEdit (html) {
 	});
 
 	new Dialog({
-		title: game.i18n.localize('OBSIDIAN.Duration'),
+		title: game.i18n.localize('OBSIDIAN.DurationTitle'),
 		content: dlg,
 		default: 'update',
 		buttons: {

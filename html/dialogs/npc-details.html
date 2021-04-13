@@ -1,45 +1,33 @@
 <form class="obsidian" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Creature'}}</legend>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<div class="obsidian-fullwidth">
-				<label class="obsidian-inline">
-					{{localize 'OBSIDIAN.Size'}}
+		<div class="obsidian-form-row">
+			<div>
+				<label>
+					{{localize 'OBSIDIAN.SizeTitle'}}
 					<select name="data.traits.size">
 						{{#select data.traits.size}}
 							{{#each config.actorSizes}}
-								<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Size-' @key}}</option>
+								<option value="{{@key}}">{{obs-i18n 'Size' @key}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 				</label>
-				<label class="obsidian-inline">
+				<label>
 					{{localize 'OBSIDIAN.Type'}}
 					<select name="flags.obsidian.details.type">
-						{{#select actor.flags.obsidian.details.type}}
-							{{#each ObsidianRules.CREATURE_TYPES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.CreatureType-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.CreatureType selected=actor.flags.obsidian.details.type}}
 					</select>
 				</label>
-				<label class="obsidian-inline">
-					{{localize 'OBSIDIAN.Alignment'}}
+				<label>
+					{{localize 'OBSIDIAN.AlignmentTitle'}}
 					<select name="flags.obsidian.details.alignment1">
-						{{#select actor.flags.obsidian.details.alignment1}}
-							<option value="">&mdash;</option>
-							{{#each ObsidianRules.ALIGNMENT_PARTS_1}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AlignmentPt1-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.AlignmentPt1 blank='&mdash;'
+						                selected=actor.flags.obsidian.details.alignment1}}
 					</select>
 					<select name="flags.obsidian.details.alignment2">
-						{{#select actor.flags.obsidian.details.alignment2}}
-							<option value="">&mdash;</option>
-							{{#each ObsidianRules.ALIGNMENT_PARTS_2}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.AlignmentPt2-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.AlignmentPt2 blank='&mdash;'
+						                selected=actor.flags.obsidian.details.alignment2}}
 					</select>
 				</label>
 			</div>
@@ -49,14 +37,13 @@
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.CREATURE_TAGS}}
-				{{fancy-checkbox (add 'flags.obsidian.details.tags.' this)
-				                 content=(add 'OBSIDIAN.CreatureTag-' this)
+				{{fancy-checkbox 'flags.obsidian.details.tags' this
+				                 content=(add 'OBSIDIAN.CreatureTag.' this)
 				                 checked=(lookup ../actor.flags.obsidian.details.tags this)}}
 			{{/each}}
 		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-max"
-			       placeholder="{{localize 'OBSIDIAN.Custom'}}"
+		<div class="obsidian-form-row">
+			<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
 			       name="flags.obsidian.details.tags.custom"
 			       value="{{actor.flags.obsidian.details.tags.custom}}">
 		</div>

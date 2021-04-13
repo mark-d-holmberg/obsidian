@@ -1,6 +1,11 @@
-export const Rules = {};
-Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+// The Rules object categorises and enumerates the various options available
+// when building characters, items, and effects in the system. Most of these
+// are informed by the game rules itself, but some are specific to obsidian's
+// implementation of them.
 
+export const Rules = {};
+
+Rules.ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 Rules.WEAPON_TAGS = [
 	'adamantine', 'ammunition', 'finesse', 'heavy', 'light', 'loading', 'lance', 'ma', 'net',
 	'offhand', 'reach', 'silver', 'thrown', 'twohanded', 'versatile'
@@ -111,7 +116,6 @@ Rules.EFFECT_BONUS_LEVEL = ['chr', 'cls'];
 Rules.EFFECT_BONUS_METHOD = ['dice', 'formula'];
 Rules.EFFECT_BONUS_VALUES = ['abl', 'prof', 'chr', 'cls'];
 Rules.EFFECT_CONSUME_CALC = ['fixed', 'var'];
-
 Rules.EFFECT_CONSUME_SLOTS = ['any', 'class'];
 Rules.EFFECT_DAMAGE_TYPES = [
 	'blg', 'prc', 'slh', 'acd', 'cld', 'fir', 'frc', 'lig', 'ncr', 'psn', 'psy', 'rad', 'thn', 'hlg'

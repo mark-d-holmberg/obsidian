@@ -2,11 +2,11 @@
 	<div class="obsidian-item-card-header">
 		<h3>
 			{{#if (eq data.level 0)}}
-				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school}}
+				{{obs-i18n 'SpellSchool' data.school}}
 				{{spell-level-format data.level cantrip=true}}
 			{{else}}
 				{{spell-level-format data.level level=true}}
-				{{i18n-join 'OBSIDIAN.SpellSchool-' data.school}}
+				{{obs-i18n 'SpellSchool' data.school}}
 			{{/if}}
 			{{#if data.components.ritual}}
 				({{localize 'OBSIDIAN.RitualLC'}})
@@ -18,10 +18,10 @@
 			</h4>
 		{{/if}}
 		<div class="obsidian-item-card-header-row">
-			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.CastTime'}}:</div>
+			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.CastTimeTitle'}}:</div>
 			<div class="obsidian-item-card-header-value">
 				{{flags.obsidian.time.n}}
-				{{lc (i18n-join 'OBSIDIAN.CastTime-' flags.obsidian.time.type)}}
+				{{lc (obs-i18n 'CastTime' flags.obsidian.time.type)}}
 				{{~#if (eq flags.obsidian.time.type 'react')~}}
 					, {{flags.obsidian.time.react}}
 				{{/if}}
@@ -33,10 +33,10 @@
 				{{#if (or (eq flags.obsidian.range.type 'short') (eq flags.obsidian.range.type 'long'))}}
 					{{flags.obsidian.range.n}}
 					<span class="obsidian-table-unit">
-						{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
+						{{obs-i18n 'SpellRangeAbbr' flags.obsidian.range.type}}
 					</span>
 				{{else}}
-					{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}
+					{{obs-i18n 'SpellRange' flags.obsidian.range.type}}
 				{{/if}}
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 			</div>
 		</div>
 		<div class="obsidian-item-card-header-row">
-			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Duration'}}:</div>
+			<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.DurationTitle'}}:</div>
 			<div class="obsidian-item-card-header-value">
 				{{#if data.components.concentration}}
 					{{localize 'OBSIDIAN.Concentration'}},

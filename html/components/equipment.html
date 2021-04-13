@@ -1,25 +1,25 @@
 <fieldset>
-	<legend>{{i18n-join 'OBSIDIAN.ItemType-' item.type}}</legend>
+	<legend>{{obs-i18n 'ItemType' item.type}}</legend>
 	<div class="obsidian-form-row-img">
 		<div>
 			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
 		<div>
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
-					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-					       placeholder="{{localize 'OBSIDIAN.Name'}}" value="{{item.name}}">
+			<div class="obsidian-form-row">
+				<div>
+					<input type="text" class="obsidian-input-lg" name="name" value="{{item.name}}"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}">
 					<select name="flags.obsidian.subtype" data-selector="subtype">
 						{{#select item.flags.obsidian.subtype}}
 							{{#each equipTypes}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.ItemType-' this}}</option>
+								<option value="{{this}}">{{obs-i18n 'ItemType' this}}</option>
 							{{/each}}
 						{{/select}}
 					</select>
 				</div>
 			</div>
-			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<div class="obsidian-form-row obsidian-stacked-row">
+				<div>
 					{{> modules/obsidian/html/components/parts/weight-cost.html}}
 					{{fancy-checkbox 'flags.obsidian.attunement' content='OBSIDIAN.RequiresAttunement'
 					                 checked=item.flags.obsidian.attunement}}
@@ -35,38 +35,33 @@
 {{#unless (eq item.flags.obsidian.subtype 'vehicle')}}
 <fieldset {{disabled (not item.flags.obsidian.armour)}}>
 	<legend>
-		{{fancy-checkbox 'flags.obsidian.armour' content='OBSIDIAN.ItemType-armour'
+		{{fancy-checkbox 'flags.obsidian.armour' content='OBSIDIAN.ItemType.armour'
 		                 checked=item.flags.obsidian.armour}}
 	</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
+	<div class="obsidian-form-row">
+		<div>
 			<select name="data.armor.type">
-				{{#select item.data.armor.type}}
-					{{#each ObsidianRules.ARMOUR_TYPES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.ArmourType-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions ObsidianLabels.ArmourType selected=item.data.armor.type}}
 			</select>
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       name="data.armor.value" value="{{item.data.armor.value}}" placeholder="0"
-				       data-dtype="Number">
+			<label>
+				<input type="text" class="obsidian-input-num-sm" name="data.armor.value" data-dtype="Number"
+				       value="{{item.data.armor.value}}" placeholder="0">
 				<span>{{localize 'OBSIDIAN.ACAbbr'}}</span>
 			</label>
 			{{fancy-checkbox 'flags.obsidian.addDex' content='OBSIDIAN.AddDexMod' selector='add-dex'
                        checked=item.flags.obsidian.addDex}}
-			<label class="obsidian-inline" data-selector-parent="add-dex">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" name="data.armor.dex" value="{{data.armor.dex}}">
+			<label data-selector-parent="add-dex">
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" name="data.armor.dex"
+				       value="{{data.armor.dex}}">
 				<span>{{localize 'OBSIDIAN.Maximum'}}</span>
 			</label>
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" name="data.strength" value="{{item.data.strength}}">
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
+			<label>
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" name="data.strength"
+				       value="{{item.data.strength}}">
 				<span>{{localize 'OBSIDIAN.MinStr'}}</span>
 			</label>
 			{{fancy-checkbox 'data.stealth' content='OBSIDIAN.StealthDisadvantage'

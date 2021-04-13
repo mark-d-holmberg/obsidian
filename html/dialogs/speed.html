@@ -1,28 +1,24 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
-		<legend>{{localize 'OBSIDIAN.Speed'}}</legend>
+		<legend>{{localize 'OBSIDIAN.SpeedTitle'}}</legend>
 		{{#unless dialogOptions.npc}}
 			<div class="obsidian-form-row">
-				<label class="obsidian-inline">
+				<label>
 					<select name="flags.obsidian.attributes.speedDisplay">
-						{{#select actor.flags.obsidian.attributes.speedDisplay}}
-							{{#each ObsidianRules.SPEEDS as |id|}}
-								<option value="{{id}}">{{i18n-join 'OBSIDIAN.Speed-' id}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.Speed
+						                selected=actor.flags.obsidian.attributes.speedDisplay}}
 					</select>
 					<span>{{localize 'OBSIDIAN.DisplaySpeed'}}</span>
 				</label>
 			</div>
 		{{/unless}}
 		{{#each ObsidianRules.SPEEDS as |id|}}
-			<div class="obsidian-form-row obsidian-inline">
+			<div class="obsidian-form-row">
 				<div class="obsidian-flex">
-					<label class="obsidian-inline">
-						<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-						       name="data.attributes.movement.{{id}}" data-dtype="Number" type="text"
-						       value="{{lookup ../data.attributes.movement id}}">
-						<span>{{i18n-join 'OBSIDIAN.Speed-' id}}</span>
+					<label>
+						<input class="obsidian-input-num-md" name="data.attributes.movement.{{id}}" type="text"
+						       data-dtype="Number" value="{{lookup ../data.attributes.movement id}}">
+						<span>{{obs-i18n 'Speed' id}}</span>
 					</label>
 					{{#if (eq id 'fly')}}
 						{{fancy-checkbox 'data.attributes.movement.hover' content='OBSIDIAN.Hover'

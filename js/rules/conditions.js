@@ -14,7 +14,7 @@ export function patchConditions () {
 	CONFIG.statusEffects = CONDITIONS.map(id => {
 		return {
 			id: id,
-			label: `OBSIDIAN.Condition-${id}`,
+			label: `OBSIDIAN.Condition.${id}`,
 			icon: `modules/obsidian/img/conditions/${id}.svg`
 		};
 	});
@@ -22,7 +22,7 @@ export function patchConditions () {
 	for (let i = 1; i < 7; i++) {
 		CONFIG.statusEffects.push({
 			id: `exhaust${i}`,
-			label: 'OBSIDIAN.Condition-exhaustion',
+			label: 'OBSIDIAN.Condition.exhaustion',
 			icon: `modules/obsidian/img/conditions/exhaust${i}.svg`
 		});
 	}

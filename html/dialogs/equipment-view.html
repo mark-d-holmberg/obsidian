@@ -5,7 +5,7 @@
 			<div class="obsidian-item-card-sub-header">
 				{{#if (eq item.flags.obsidian.subtype 'armour')}}
 					<div class="obsidian-table-note-text">
-						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' item.data.armor.type}}
+						{{obs-i18n 'ArmourTypeFull' item.data.armor.type}}
 					</div>
 				{{/if}}
 				{{#each item.obsidian.notes}}

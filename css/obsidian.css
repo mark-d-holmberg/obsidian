@@ -741,33 +741,29 @@ form.obsidian .rollable:hover {
 	box-shadow: none;
 }
 
-.obsidian input.obsidian-input-compact {
+.obsidian .obsidian-form-row input {
 	display: inline-block;
 	font-size: 14px;
 }
 
-.obsidian label.obsidian-inline {
+.obsidian label {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 6px;
 }
 
-.obsidian label.obsidian-inline .obsidian-icon {
+.obsidian label .obsidian-icon {
 	display: inline-block;
 }
 
-.obsidian .obsidian-mixed-form-row label.obsidian-inline,
-.obsidian .obsidian-stacked-row label.obsidian-inline {
+.obsidian .obsidian-form-row label {
+	display: inline-block;
+	margin-right: 20px;
 	margin-bottom: 0;
 }
 
-.obsidian .obsidian-inline label.obsidian-inline {
-	display: inline-block;
-	margin-right: 20px;
-}
-
-.obsidian .obsidian-inline label.obsidian-inline + select {
+.obsidian .obsidian-form-row label + select {
 	margin-left: -10px;
 }
 
@@ -788,19 +784,19 @@ form.obsidian .rollable:hover {
 	margin-top: 10px;
 }
 
-.obsidian label.obsidian-inline > input[type=text],
-.obsidian label.obsidian-inline > select {
+.obsidian label > input[type=text],
+.obsidian label > select {
 	margin: 0;
 	max-width: 70%;
 }
 
-.obsidian .obsidian-fullwidth label.obsidian-inline {
+.obsidian .obsidian-form-row label {
 	align-items: baseline;
 }
 
-.obsidian .obsidian-form-row label.obsidian-inline > input[type=text]:last-child,
-.obsidian .obsidian-form-row label.obsidian-inline > select:last-child,
-.obsidian .obsidian-form-row label.obsidian-inline > span:last-child,
+.obsidian .obsidian-form-row label > input[type=text]:last-child,
+.obsidian .obsidian-form-row label > select:last-child,
+.obsidian .obsidian-form-row label > span:last-child,
 .obsidian-label-icon span {
 	margin-left: 6px;
 }
@@ -816,7 +812,7 @@ form.obsidian .rollable:hover {
 	bottom: 6px;
 }
 
-.obsidian .obsidian-form-row.obsidian-align-labels label.obsidian-inline > span:last-child {
+.obsidian .obsidian-form-row.obsidian-align-labels label > span:last-child {
 	width: 28px;
 	display: inline-block;
 }
@@ -864,20 +860,15 @@ form.obsidian .rollable:hover {
 	max-width: 100%;
 }
 
-.obsidian .obsidian-form-row.obsidian-mixed-form-row input {
-	padding-bottom: 1px;
-}
-
-.obsidian .obsidian-form-row.obsidian-stacked-form-row input {
-	margin-bottom: 3px;
-}
-
 .obsidian .obsidian-form-row input.obsidian-input-num,
+.obsidian .obsidian-form-row input.obsidian-input-num-sm,
+.obsidian .obsidian-form-row input.obsidian-input-num-md,
+.obsidian .obsidian-form-row input.obsidian-input-num-lg,
 .obsidian .obsidian-class-row input.obsidian-input-num {
 	text-align: center;
 }
 
-.obsidian-form-row label.obsidian-inline + span {
+.obsidian-form-row label + span {
 	margin-left: -10px;
 }
 
@@ -887,16 +878,17 @@ form.obsidian .rollable:hover {
 	display: inline-block;
 }
 
-.obsidian-checkbox-row {
+.obsidian-form-row > div {
 	display: flex;
 	align-items: baseline;
+	width: 100%;
 }
 
-.obsidian-checkbox-row label+label {
+.obsidian-form-row > div label+label {
 	margin-left: 10px;
 }
 
-.obsidian-checkbox-row .fancy-checkbox {
+.obsidian-form-row > div .fancy-checkbox {
 	align-self: center;
 	margin-bottom: 0;
 }
@@ -916,7 +908,7 @@ form.obsidian .rollable:hover {
 	margin-left: 10px;
 }
 
-.obsidian-inline .fancy-checkbox {
+.fancy-checkbox {
 	display: inline-flex;
 }
 

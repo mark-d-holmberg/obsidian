@@ -29,11 +29,11 @@
 			       class="obsidian-char-charname obsidian-condensed"
 			       placeholder="{{localize 'OBSIDIAN.Name'}}">
 			<div class="obsidian-char-header-minor obsidian-condensed">
-				<span>{{i18n-join 'OBSIDIAN.Size-' data.traits.size}}</span>
+				<span>{{obs-i18n 'Size' data.traits.size}}</span>
 				<span>{{~lc (localize 'DND5E.Vehicle')~}}</span>
 				{{#if actor.flags.obsidian.details.type}}
 					<span>
-						({{lc (i18n-join 'OBSIDIAN.VehicleType-' actor.flags.obsidian.details.type)}})
+						({{lc (obs-i18n 'VehicleType' actor.flags.obsidian.details.type)}})
 					</span>
 				{{/if}}
 				{{#if data.traits.dimensions}}
@@ -46,13 +46,13 @@
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
 					        obsidian-global-advantage">
-						{{localize 'OBSIDIAN.Roll-adv'}}
+						{{localize 'OBSIDIAN.Roll.adv'}}
 					</button>
 					<button type="button" class="
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
 					        obsidian-global-disadvantage">
-						{{localize 'OBSIDIAN.Roll-dis'}}
+						{{localize 'OBSIDIAN.Roll.dis'}}
 					</button>
 				</div>
 			</div>
@@ -70,7 +70,7 @@
 					<div class="obsidian-npc-stat-key">{{localize 'DND5E.VehicleCargoCapacity'}}</div>
 					<div class="obsidian-npc-stat-value obsidian-vehicle-cargo-cap">
 						<input type="text" name="data.attributes.capacity.cargo" data-dtype="Number"
-						       class="obsidian-input-num obsidian-input-num-md" placeholder="0"
+						       class="obsidian-input-num-md" placeholder="0"
 						       value="{{data.attributes.capacity.cargo}}">
 						<span class="obsidian-npc-subtle">{{localize 'OBSIDIAN.Tons'}}</span>
 					</div>
@@ -129,7 +129,7 @@
 						<div class="obsidian-char-ability">
 							<div class="obsidian-char-ability-name rollable obsidian-condensed"
 							     data-roll="abl" data-abl="{{@key}}" draggable="true">
-								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+								{{obs-i18n 'AbilityAbbr' @key}}
 							</div>
 							<div class="obsidian-char-ability-mod">
 								{{numberFormat mod decimals=0 sign=true}}
@@ -153,7 +153,7 @@
 					{{#each data.abilities}}
 						<div class="obsidian-npc-stat-li">
 							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
-								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+								{{obs-i18n 'AbilityAbbr' @key}}
 							</span>
 							{{numberFormat save decimals=0 sign=true~}}
 						</div>

@@ -5,46 +5,38 @@
 			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
 		<div>
-		  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		    <div class="obsidian-fullwidth">
-		      <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-		             value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Feature'}}">
-			    <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-			           data-dtype="Number" name="data.activation.cost" placeholder="1"
-			           value="{{data.activation.cost}}" data-show="legendary"
+		  <div class="obsidian-form-row">
+		    <div>
+		      <input type="text" class="obsidian-input-lg" name="name" value="{{item.name}}"
+		             placeholder="{{localize 'OBSIDIAN.Feature'}}">
+			    <input type="text" class="obsidian-input-num-sm" data-dtype="Number" data-show="legendary"
+			           name="data.activation.cost" placeholder="1" value="{{data.activation.cost}}"
 			           data-selector-parent="activation">
 			    <select name="data.activation.type" data-selector="activation">
+
 				    {{#select item.data.activation.type}}
 					    {{#each ObsidianRules.FEAT_ACTION}}
-						    <option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatAction-' this}}</option>
+						    <option value="{{this}}">{{obs-i18n 'FeatAction' this}}</option>
 					    {{/each}}
 					    {{#if isNPC}}
-						    <option value="legendary">{{localize 'OBSIDIAN.FeatAction-legendary'}}</option>
-						    <option value="lair">{{localize 'OBSIDIAN.FeatAction-lair'}}</option>
+						    <option value="legendary">{{localize 'OBSIDIAN.FeatAction.legendary'}}</option>
+						    <option value="lair">{{localize 'OBSIDIAN.FeatAction.lair'}}</option>
 					    {{/if}}
 				    {{/select}}
 			    </select>
 			    <select name="flags.obsidian.trigger" data-selector-parent="activation"
 			            data-show="special">
-				    {{#select item.flags.obsidian.trigger}}
-					    <option value="">&mdash;</option>
-					    {{#each ObsidianRules.FEAT_TRIGGERS}}
-						    <option value="{{this}}">{{i18n-join 'OBSIDIAN.Trigger-' this}}</option>
-					    {{/each}}
-				    {{/select}}
+				    {{selectOptions ObsidianLabels.Trigger selected=item.flags.obsidian.trigger
+				                    blank='&mdash;'}}
 			    </select>
 		    </div>
 		  </div>
-			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
-					<label class="obsidian-inline">
+			<div class="obsidian-form-row obsidian-stacked-row">
+				<div>
+					<label>
 						{{localize 'OBSIDIAN.Source'}}
 						<select name="flags.obsidian.source.type" data-selector="source">
-							{{#select item.flags.obsidian.source.type}}
-								{{#each ObsidianRules.FEAT_SOURCE_TYPES}}
-									<option value="{{this}}">{{i18n-join 'OBSIDIAN.FeatSrc-' this}}</option>
-								{{/each}}
-							{{/select}}
+							{{selectOptions ObsidianLabels.FeatSrc selected=item.flags.obsidian.source.type}}
 						</select>
 					</label>
 					{{#if actor}}
@@ -57,11 +49,11 @@
 						{{/select}}
 					</select>
 					{{else}}
-					<input type="text" class="obsidian-input-compact" name="flags.obsidian.source.text"
-					       value="{{item.flags.obsidian.source.text}}" data-selector-parent="source"
-					       placeholder="{{localize 'OBSIDIAN.Class'}}" data-show="class">
+					<input type="text" name="flags.obsidian.source.text" data-selector-parent="source"
+					       value="{{item.flags.obsidian.source.text}}" data-show="class"
+					       placeholder="{{localize 'OBSIDIAN.ClassTitle'}}">
 					{{/if}}
-					<input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="other"
+					<input type="text" class="obsidian-input-lg" data-show="other"
 					       data-selector-parent="source" name="flags.obsidian.source.other"
 					       value="{{item.flags.obsidian.source.other}}"
 					       placeholder="{{localize 'OBSIDIAN.Source'}}">
@@ -72,16 +64,12 @@
 		</div>
 	</div>
 	{{#if isVehicle}}
-		<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-			<div class="obsidian-fullwidth">
-				<label class="obsidian-inline">
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div>
+				<label>
 					{{localize 'DND5E.Cover'}}
 					<select name="data.cover" data-dtype="Number">
-						{{#select item.data.cover}}
-							{{#each config.cover}}
-								<option value="{{@key}}">{{localize this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions config.cover selected=item.data.cover localize=true}}
 					</select>
 				</label>
 			</div>

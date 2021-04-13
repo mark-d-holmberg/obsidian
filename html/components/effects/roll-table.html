@@ -1,11 +1,11 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.RollableTable'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline">
+	<div class="obsidian-form-row">
+		<div>
+			<label>
 				{{localize 'OBSIDIAN.Rolls'}}
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" placeholder="1" name="{{prefix}}.nrolls" value="{{nrolls}}">
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="1"
+				       name="{{prefix}}.nrolls" value="{{nrolls}}">
 			</label>
 			{{fancy-checkbox prefix 'reset' content='OBSIDIAN.ResetAfterRoll' checked=reset}}
 		</div>

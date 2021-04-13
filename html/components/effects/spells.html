@@ -1,15 +1,11 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.ProvidesSpells'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
-			<label class="obsidian-inline">
+	<div class="obsidian-form-row">
+		<div>
+			<label>
 				{{localize 'OBSIDIAN.Source'}}
 				<select name="{{prefix}}.source" data-selector="{{prefix}}.source">
-					{{#select source}}
-						{{#each @root.ObsidianRules.EFFECT_ADD_SPELLS_SOURCE}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.AddSpellsSource-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions @root.ObsidianLabels.AddSpellsSource selected=source}}
 				</select>
 			</label>
 			<select name="{{prefix}}.list" data-selector-parent="{{prefix}}.source" data-show="list">
@@ -17,7 +13,7 @@
 					{{#each @root.spellLists}}
 						<option value="{{this}}">
 							{{#if (and (includes @root.ObsidianRules.CLASSES this) (not (eq this 'custom')))}}
-								{{i18n-join 'OBSIDIAN.Class-' this}}
+								{{obs-i18n 'Class' this}}
 							{{else}}
 								{{this}}
 							{{/if}}
@@ -27,38 +23,17 @@
 			</select>
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline"
-	     data-selector-parent="{{prefix}}.source" data-show="individual">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
+	<div class="obsidian-form-row obsidian-stacked-row" data-selector-parent="{{prefix}}.source"
+	     data-show="individual">
+		<div>
 			<select name="{{prefix}}.method" data-selector="{{prefix}}.method">
-				{{#select method}}
-					{{#each @root.ObsidianRules.EFFECT_ADD_SPELLS_METHOD}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.AddSpellsMethod-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.AddSpellsMethod selected=method}}
 			</select>
-			{{#if @root.actor}}
-			<select name="{{prefix}}.class" data-selector-parent="{{prefix}}.method"
-			        data-hide="innate, item">
-				{{#select class}}
-					{{#each @root.actor.data.obsidian.classes}}
-						<option value="{{_id}}">{{obsidian.label}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			{{else}}
-			<input type="text" class="obsidian-input-compact" name="{{prefix}}.text" value="{{text}}"
-			       placeholder="{{localize 'OBSIDIAN.Class'}}" data-selector-parent="{{prefix}}.method"
-			       data-hide="innate, item">
-			{{/if}}
+			{{> select-class parent='method' hide='innate, item'}}
 			{{fancy-checkbox prefix 'noSlot' content='OBSIDIAN.CastWithoutSlot' checked=noSlot
 			                 selectorParent=(add prefix '.method') show='known, prep'}}
 			<select name="{{prefix}}.ability" data-selector-parent="{{prefix}}.method" data-show="innate">
-				{{#select ability}}
-					{{#each @root.ObsidianRules.ABILITIES}}
-						<option value="{{this}}">{{i18n-join 'OBSIDIAN.Ability-' this}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.ObsidianLabels.Ability selected=ability}}
 			</select>
 			{{fancy-checkbox (add prefix '.upcast') content='OBSIDIAN.CastAtHigherLevel' checked=upcast
 											 selectorParent=(add prefix '.method') show='innate, item'

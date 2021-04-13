@@ -4,7 +4,7 @@ export class ObsidianSaveDialog extends ObsidianDialog {
 	constructor (parent, saveID) {
 		super(parent, {
 			title: `${game.i18n.localize('OBSIDIAN.ManageSave')}: `
-				+ game.i18n.localize(`OBSIDIAN.Ability-${saveID}`),
+				+ game.i18n.localize(`OBSIDIAN.Ability.${saveID}`),
 			width: 250
 		});
 

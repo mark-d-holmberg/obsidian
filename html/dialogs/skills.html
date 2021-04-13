@@ -1,22 +1,17 @@
 <form class="obsidian" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Skills'}}</legend>
-		<div class="obsidian-form-row obsidian-inline obsidian-mixed-form-row">
-			<div class="obsidian-fullwidth obsidian-checkbox-row">
-				<label class="obsidian-inline">
-					{{localize 'OBSIDIAN.Roll'}}
+		<div class="obsidian-form-row">
+			<div>
+				<label>
+					{{localize 'OBSIDIAN.RollTitle'}}
 					<select name="flags.obsidian.skills.roll">
-						{{#select actor.flags.obsidian.skills.roll}}
-							{{#each ObsidianRules.ROLL}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.Roll selected=actor.flags.obsidian.skills.roll}}
 					</select>
 				</label>
-				<label class="obsidian-inline">
-					<input type="text" placeholder="0" name="flags.obsidian.skills.bonus"
-					       value="{{actor.flags.obsidian.skills.bonus}}" data-dtype="Number"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm">
+				<label>
+					<input type="text" placeholder="0" name="flags.obsidian.skills.bonus" data-dtype="Number"
+					       value="{{actor.flags.obsidian.skills.bonus}}" class="obsidian-input-num-sm">
 					<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 				</label>
 				{{fancy-checkbox 'flags.obsidian.skills.joat' content='OBSIDIAN.JackOfAllTrades'
@@ -24,7 +19,7 @@
 			</div>
 		</div>
 	</fieldset>
-	<label class="obsidian-inline obsidian-label-lg">
+	<label class="obsidian-label-lg">
 		{{localize 'OBSIDIAN.CustomSkills'}}
 		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-skill">
 			{{localize 'OBSIDIAN.Add'}}
@@ -33,31 +28,20 @@
 	{{#each actor.flags.obsidian.skills.custom as |skill id|}}
 		<input type="hidden" name="flags.obsidian.skills.custom.{{id}}.custom" value="true"
 		       data-dtype="Boolean">
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+		<div class="obsidian-form-row" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">
-					{{#select skill.value}}
-						{{#each ../ObsidianRules.PROFICIENCY_LEVELS}}
-							<option value="{{@key}}">
-								{{i18n-join 'OBSIDIAN.Proficiency-' this}}
-							</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.Proficiency selected=skill.value}}
 				</select>
 				<select name="flags.obsidian.skills.custom.{{id}}.ability"
 				        style="text-transform: uppercase;">
-					{{#select (lc skill.ability)}}
-						{{#each ../data.abilities}}
-							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.AbilityAbbr selected=(lc skill.ability)}}
 				</select>
-				<input class="obsidian-input-compact" type="text" placeholder="Skill"
-				       name="flags.obsidian.skills.custom.{{id}}.label" value="{{skill.label}}">
+				<input type="text" placeholder="Skill" value="{{skill.label}}"
+				       name="flags.obsidian.skills.custom.{{id}}.label">
 				<span class="obsidian-binary-operator">&plus;</span>
-				<input class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" type="text"
-				       placeholder="0" value="{{skill.bonus}}" data-dtype="Number"
-				       name="flags.obsidian.skills.custom.{{id}}.bonus">
+				<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{skill.bonus}}"
+				       data-dtype="Number" name="flags.obsidian.skills.custom.{{id}}.bonus">
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
 				{{localize 'OBSIDIAN.Remove'}}

@@ -1,24 +1,24 @@
 <form class="obsidian" autocomplete="off">
-  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth obsidian-checkbox-row">
+  <div class="obsidian-form-row">
+    <div>
       {{fancy-checkbox 'flags.obsidian.defenses.disease' content='OBSIDIAN.ImmuneDisease'
                        checked=actor.flags.obsidian.defenses.disease}}
       {{fancy-checkbox 'flags.obsidian.defenses.sleep' content='OBSIDIAN.ImmuneSleep'
                        checked=actor.flags.obsidian.defenses.sleep}}
     </div>
   </div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
-			<label class="obsidian-inline">
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" name="flags.obsidian.defenses.dr.value"
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
+			<label>
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number"
+				       name="flags.obsidian.defenses.dr.value"
 				       value="{{actor.flags.obsidian.defenses.dr.value}}">
 				<span>{{localize 'OBSIDIAN.DamageReduction'}}</span>
 			</label>
 		</div>
 	</div>
-  <div class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
-    {{localize 'OBSIDIAN.Damage'}}
+  <div class="obsidian-label-lg" style="margin-top: 10px;">
+    {{localize 'OBSIDIAN.DamageTitle'}}
 	  <div class="obsidian-flex">
 		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-res">
 			  {{localize 'OBSIDIAN.BPSRes'}}
@@ -32,36 +32,27 @@
 	  </div>
   </div>
   {{#each actor.flags.obsidian.defenses.damage as |def id|}}
-	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+	  <div class="obsidian-form-row" data-item-id="{{id}}">
 	    <div>
 	      <select name="flags.obsidian.defenses.damage.{{id}}.level">
-	        {{#select def.level}}
-            {{#each ../ObsidianRules.DEFENSE_LEVELS}}
-			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
-		        {{/each}}
-	        {{/select}}
+		      {{selectOptions @root.ObsidianLabels.DefenseLevel selected=def.level}}
 	      </select>
 	      <select name="flags.obsidian.defenses.damage.{{id}}.dmg" data-selector="{{id}}.dmg">
-	        {{#select def.dmg}}
-		        {{#each ../ObsidianRules.DAMAGE_TYPES}}
-			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Damage-' this}}</option>
-		        {{/each}}
-		        <option value="spell">{{localize 'OBSIDIAN.Damage-spell'}}</option>
-	        {{/select}}
+		      {{selectOptions @root.ObsidianLabels.DamageOnlySpell selected=def.dmg}}
 	      </select>
 		    <select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic"
 		            data-selector-parent="{{id}}.dmg" data-hide="spell">
 			    {{#select def.magic}}
 				    <option value="">&mdash;</option>
-				    <option value="non">{{localize 'OBSIDIAN.Defense-non'}}</option>
+				    <option value="non">{{localize 'OBSIDIAN.Defense.non'}}</option>
 			    {{/select}}
 		    </select>
 		    <select name="flags.obsidian.defenses.damage.{{id}}.material" data-show="non"
 		            data-selector-parent="{{id}}.magic">
 			    {{#select def.material}}
 				    <option value="">&mdash;</option>
-				    <option value="sil">{{localize 'OBSIDIAN.Defense-sil'}}</option>
-				    <option value="adm">{{localize 'OBSIDIAN.Defense-adm'}}</option>
+				    <option value="sil">{{localize 'OBSIDIAN.Defense.sil'}}</option>
+				    <option value="adm">{{localize 'OBSIDIAN.Defense.adm'}}</option>
 			    {{/select}}
 		    </select>
 	    </div>
@@ -70,7 +61,7 @@
 	    </button>
 	  </div>
   {{/each}}
-  <div class="obsidian-inline obsidian-label-lg" style="margin-top: 10px;">
+  <div class="obsidian-label-lg" style="margin-top: 10px;">
     {{localize 'OBSIDIAN.ConditionImmunities'}}
 	  <div class="obsidian-flex">
 		  <button type="button"
@@ -83,26 +74,22 @@
 	  </div>
   </div>
   {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
-	  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline" data-item-id="{{id}}">
+	  <div class="obsidian-form-row" data-item-id="{{id}}">
 	    <div>
 		    <select name="flags.obsidian.defenses.conditions.{{id}}.level" data-selector="{{id}}.level">
-			    {{#select def.level}}
-				    {{#each @root.ObsidianRules.CONDITION_LEVELS}}
-					    <option value="{{this}}">{{i18n-join 'OBSIDIAN.DefenseLevel-' this}}</option>
-				    {{/each}}
-			    {{/select}}
+			    {{selectOptions @root.ObsidianLabels.ConditionLevel selected=def.level}}
 		    </select>
 	      <select name="flags.obsidian.defenses.conditions.{{id}}.condition">
 	        {{#select def.condition}}
 		        {{#each ../ObsidianRules.CONDITIONS}}
-			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Condition-' this}}</option>
+			        <option value="{{this}}">{{obs-i18n 'Condition' this}}</option>
 		        {{/each}}
 		        <option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
 		        <option value="spell" data-selector-parent="{{id}}.level" data-hide="imm">
-			        {{localize 'OBSIDIAN.Condition-spell'}}
+			        {{localize 'OBSIDIAN.Condition.spell'}}
 		        </option>
 	          <option value="magic" data-selector-parent="{{id}}.level" data-hide="imm">
-		          {{localize 'OBSIDIAN.Condition-magic'}}
+		          {{localize 'OBSIDIAN.Condition.magic'}}
 	          </option>
 	        {{/select}}
 	      </select>

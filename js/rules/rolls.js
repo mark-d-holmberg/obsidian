@@ -31,13 +31,13 @@ export const Rolls = {
 
 			parts.push({
 				mod: actor.data.data.abilities[ability].mod,
-				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${ability}`)
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${ability}`)
 			}, ...actor.data.obsidian.abilities[ability].rollParts);
 		}
 
 		return Rolls.simpleRoll(actor, {
 			type: 'abl',
-			title: game.i18n.localize(`OBSIDIAN.Ability-${ability}`),
+			title: game.i18n.localize(`OBSIDIAN.Ability.${ability}`),
 			parens: skill,
 			subtitle: game.i18n.localize('OBSIDIAN.AbilityCheck'),
 			parts, rollMod
@@ -60,7 +60,8 @@ export const Rolls = {
 					title: component.name.length
 						? component.name
 						: effect.name.length ? effect.name : item.name,
-					subtitle: `${game.i18n.localize('OBSIDIAN.Recharge')} ${recharge.roll}&mdash;6`,
+					subtitle:
+						`${game.i18n.localize('OBSIDIAN.RechargeTitle')} ${recharge.roll}&mdash;6`,
 					results: [[{
 						total: RollParts.calculateTotal(parts),
 						breakdown: RollParts.compileBreakdown(parts)
@@ -274,14 +275,14 @@ export const Rolls = {
 			effect: component.effect,
 			ability: component.target,
 			save: component.save,
-			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${component.target}`)
+			target: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${component.target}`)
 		};
 
 		if (!OBSIDIAN.notDefinedOrEmpty(component.skill)) {
 			result.skill =
 				component.skill === 'custom'
 					? component.custom
-					: game.i18n.localize(`OBSIDIAN.Skill-${component.skill}`);
+					: game.i18n.localize(`OBSIDIAN.Skill.${component.skill}`);
 		}
 
 		if (component.calc === 'formula') {
@@ -838,7 +839,7 @@ export const Rolls = {
 
 		const allParts =
 			parts.concat(bonuses)
-				.concat([{mod: conBonus, name: game.i18n.localize('OBSIDIAN.AbilityAbbr-con')}]);
+				.concat([{mod: conBonus, name: game.i18n.localize('OBSIDIAN.AbilityAbbr.con')}]);
 
 		const total = RollParts.calculateTotal(allParts);
 		Rolls.toChat(actor, {
@@ -896,7 +897,7 @@ export const Rolls = {
 		if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 			parts.push({
 				mod: data.abilities[flags.attributes.init.ability].mod,
-				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${flags.attributes.init.ability}`)
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${flags.attributes.init.ability}`)
 			});
 
 			if (flags.skills.joat) {
@@ -1263,7 +1264,7 @@ export const Rolls = {
 
 		return Rolls.simpleRoll(actor, {
 			type: 'save',
-			title: game.i18n.localize(`OBSIDIAN.Ability-${save}`),
+			title: game.i18n.localize(`OBSIDIAN.Ability.${save}`),
 			subtitle: game.i18n.localize('OBSIDIAN.SavingThrow'),
 			parts: actor.data.obsidian.saves[save].rollParts,
 			rollMod

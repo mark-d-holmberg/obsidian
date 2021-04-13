@@ -4,10 +4,10 @@
 		<div class="obsidian-thead">
 			{{#if (not-empty actor.obsidian.attacks)}}
 				<div class="obsidian-col-icon"></div>
-				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.Attack'}}</div>
+				<div class="obsidian-col-attack">{{localize 'OBSIDIAN.AttackTitle'}}</div>
 				<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
 				<div class="obsidian-col-hit">{{localize 'OBSIDIAN.HitDC'}}</div>
-				<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
+				<div class="obsidian-col-damage">{{localize 'OBSIDIAN.DamageTitle'}}</div>
 				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 			{{else}}
 				<div class="obsidian-col-empty">{{localize 'OBSIDIAN.Empty'}}</div>
@@ -64,14 +64,14 @@
 								<div class="obsidian-table-number-md">
 									{{parentItem.flags.obsidian.range.n}}
 									<span class="obsidian-table-unit">
-										{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' parentItem.flags.obsidian.range.type}}
+										{{obs-i18n 'SpellRangeAbbr' parentItem.flags.obsidian.range.type}}
 									</span>
 								</div>
 							{{else if (eq parentItem.flags.obsidian.range.type 'unlimited')}}
 								<div class="obsidian-table-number-md">&infin;</div>
 							{{else}}
 								<div class="obsidian-table-text">
-									{{i18n-join 'OBSIDIAN.SpellRange-' parentItem.flags.obsidian.range.type}}
+									{{obs-i18n 'SpellRange' parentItem.flags.obsidian.range.type}}
 								</div>
 							{{/if}}
 						{{else if (eq parentItem.type 'weapon')}}
@@ -95,7 +95,7 @@
 								<div class="obsidian-dmg-component">
 									{{display}}
 									<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
-									     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+									     title="{{obs-i18n 'Damage' damage}}"></div>
 								</div>
 							{{/each}}
 						</div>

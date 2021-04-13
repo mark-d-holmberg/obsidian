@@ -37,6 +37,7 @@ export class ObsidianItemSheet extends ItemSheet {
 		data.isNPC = this.actor?.data.type === 'npc';
 		data.isCharacter = this.actor?.data.type === 'character';
 		data.ObsidianRules = OBSIDIAN.Rules;
+		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		if (data.actor) {
 			data.actor.data.feats = data.actor.data.obsidian.itemsByType.get('feat');

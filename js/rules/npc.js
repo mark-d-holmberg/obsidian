@@ -10,7 +10,7 @@ export function prepareNPC (flags, derived) {
 			continue;
 		}
 
-		derived.details.tags.push(game.i18n.localize(`OBSIDIAN.CreatureTag-${tag}`));
+		derived.details.tags.push(game.i18n.localize(`OBSIDIAN.CreatureTag.${tag}`));
 	}
 
 	derived.details.tags = derived.details.tags.join(', ');
@@ -47,7 +47,7 @@ export function prepareSpeed (data, derived) {
 			continue;
 		}
 
-		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr-${spd}`)} ${value} ${feet}`;
+		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr.${spd}`)} ${value} ${feet}`;
 		if (spd === 'fly' && data.attributes.movement.hover) {
 			display += ` (${hover})`;
 		}

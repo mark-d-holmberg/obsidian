@@ -1,13 +1,12 @@
 <form class="obsidian" autocomplete="off">
 	<fieldset>
-		<legend>{{localize 'OBSIDIAN.Roll'}}</legend>
+		<legend>{{localize 'OBSIDIAN.RollTitle'}}</legend>
 		{{#each actor.flags.obsidian.attributes.hd as |hd die|}}
 			{{#if (or (gt hd.max 0) (defined-and-not-empty hd.override))}}
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth" style="display: flex; align-items: center;">
-					<label class="obsidian-inline">
-						<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-						       placeholder="0" name="hd.{{die}}">
+			<div class="obsidian-form-row">
+				<div style="display: flex; align-items: center;">
+					<label>
+						<input type="text" class="obsidian-input-num-sm" placeholder="0" name="hd.{{die}}">
 						<span style="font-weight: normal; text-transform: none; font-size: 14px;">{{die}}</span>
 					</label>
 				</div>
@@ -18,7 +17,7 @@
 	<div class="obsidian-btn-row" style="margin-top: 10px;">
 		<button type="button" class="obsidian-btn-outline">
 			<i class="fas fa-dice-d20"></i>
-			{{localize 'OBSIDIAN.Roll'}}
+			{{localize 'OBSIDIAN.RollTitle'}}
 		</button>
 	</div>
 </form>

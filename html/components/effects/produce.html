@@ -1,36 +1,28 @@
 <fieldset data-uuid="{{uuid}}">
 	<legend>{{localize 'OBSIDIAN.ProducesResource'}}</legend>
-	<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth">
-			<label class="obsidian-inline">
+	<div class="obsidian-form-row">
+		<div>
+			<label>
 				{{localize 'OBSIDIAN.Resource'}}
 				<select name="{{prefix}}.target" data-selector="{{prefix}}.target">
 					{{#select target}}
-						<option value="this-effect">{{localize 'OBSIDIAN.ConsumeTarget-this-effect'}}</option>
-						<option value="this-item">{{localize 'OBSIDIAN.ConsumeTarget-this-item'}}</option>
+						<option value="this-effect">{{localize 'OBSIDIAN.ConsumeTarget.this-effect'}}</option>
+						<option value="this-item">{{localize 'OBSIDIAN.ConsumeTarget.this-item'}}</option>
 						{{#if @root.actor}}
-						<option value="item">{{localize 'OBSIDIAN.ConsumeTarget-item'}}</option>
-						<option value="feat">{{localize 'OBSIDIAN.ConsumeTarget-feat'}}</option>
+						<option value="item">{{localize 'OBSIDIAN.ConsumeTarget.item'}}</option>
+						<option value="feat">{{localize 'OBSIDIAN.ConsumeTarget.feat'}}</option>
 						{{/if}}
-						<option value="spell">{{localize 'OBSIDIAN.ConsumeTarget-spell'}}</option>
-						<option value="qty">{{localize 'OBSIDIAN.ConsumeTarget-qty'}}</option>
+						<option value="spell">{{localize 'OBSIDIAN.ConsumeTarget.spell'}}</option>
+						<option value="qty">{{localize 'OBSIDIAN.ConsumeTarget.qty'}}</option>
 					{{/select}}
 				</select>
 			</label>
 			{{#if @root.actor}}
 			<select name="{{prefix}}.itemID" data-selector-parent="{{prefix}}.target" data-show="item">
-				{{#select itemID}}
-					{{#each @root.itemsWithResources}}
-						<option value="{{_id}}">{{name}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.itemsWithResources selected=itemID nameAttr='_id' labelAttr='name'}}
 			</select>
 			<select name="{{prefix}}.featID" data-selector-parent="{{prefix}}.target" data-show="feat">
-				{{#select featID}}
-					{{#each @root.featsWithResources}}
-						<option value="{{_id}}">{{name}}</option>
-					{{/each}}
-				{{/select}}
+				{{selectOptions @root.featsWithResources selected=featID nameAttr='_id' labelAttr='name'}}
 			</select>
 			{{/if}}
 			<select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target" data-hide="spell, qty">
@@ -44,15 +36,14 @@
 			</select>
 		</div>
 	</div>
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-		<div class="obsidian-fullwidth obsidian-checkbox-row">
-			<label class="obsidian-inline" data-selector-parent="{{prefix}}.target" data-hide="spell">
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
+			<label data-selector-parent="{{prefix}}.target" data-hide="spell">
 				{{localize 'OBSIDIAN.Amount'}}
-				<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       data-dtype="Number" placeholder="0" name="{{prefix}}.fixed" value="{{fixed}}">
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+				       name="{{prefix}}.fixed" value="{{fixed}}">
 			</label>
-			<label class="obsidian-inline" data-selector-parent="{{prefix}}.target" data-show="spell"
-			       style="margin-left: 0;">
+			<label data-selector-parent="{{prefix}}.target" data-show="spell" style="margin-left: 0;">
 				{{localize 'OBSIDIAN.Level'}}
 				<select name="{{prefix}}.slot">
 					{{#select slot}}

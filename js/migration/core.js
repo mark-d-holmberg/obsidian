@@ -229,7 +229,7 @@ export const core = {
 			|| data.data.requirements.replace(/\d+/g, '').trim().toLocaleLowerCase();
 
 		const cls = OBSIDIAN.Rules.CLASSES.find(cls =>
-			game.i18n.localize(`OBSIDIAN.Class-${cls}`).toLocaleLowerCase() === className);
+			game.i18n.localize(`OBSIDIAN.Class.${cls}`).toLocaleLowerCase() === className);
 
 		if (cls) {
 			data.flags.obsidian.source.type = 'class';
@@ -364,7 +364,7 @@ function getSpellEffect (data) {
 function getScalingEffect (data) {
 	if (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length) {
 		data.flags.obsidian.effects = [Effect.create()];
-		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.Scaling');
+		data.flags.obsidian.effects[0].name = game.i18n.localize('OBSIDIAN.ScalingTitle');
 		data.flags.obsidian.effects[0].components.push(Effect.createComponent('scaling'));
 	}
 
@@ -373,7 +373,7 @@ function getScalingEffect (data) {
 
 	if (!effect) {
 		effect = Effect.create();
-		effect.name = game.i18n.localize('OBSIDIAN.Scaling');
+		effect.name = game.i18n.localize('OBSIDIAN.ScalingTitle');
 		effect.components.push(Effect.createComponent('scaling'));
 		data.flags.obsidian.effects.push(effect);
 	}

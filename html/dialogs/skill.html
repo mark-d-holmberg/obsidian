@@ -1,43 +1,33 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
 		<legend>{{data.label}}</legend>
-		<div class="obsidian-form-row obsidian-inline">
+		<div class="obsidian-form-row">
 				<select name="flags.obsidian.{{prop}}.{{id}}.value" data-dtype="Number">
-					{{#select data.value}}
-						{{#each ObsidianRules.PROFICIENCY_LEVELS}}
-							<option value="{{@key}}">{{i18n-join 'OBSIDIAN.Proficiency-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.Proficiency selected=data.value}}
 				</select>
 				<select name="flags.obsidian.{{prop}}.{{id}}.roll">
-					{{#select data.roll}}
-						{{#each ObsidianRules.ROLL}}
-							<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.Roll selected=data.roll}}
 				</select>
 		</div>
-		<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
+		<div class="obsidian-form-row obsidian-stacked-row">
 			<div class="obsidian-flex">
-				<label class="obsidian-inline">
+				<label>
 					<input type="text" name="flags.obsidian.{{prop}}.{{id}}.bonus" data-dtype="Number"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       placeholder="0" value="{{data.bonus}}">
+					       class="obsidian-input-num-sm" placeholder="0" value="{{data.bonus}}">
 					<span>{{localize 'OBSIDIAN.Bonus'}}</span>
 				</label>
-				<label class="obsidian-inline">
-					<input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-					       name="flags.obsidian.{{prop}}.{{id}}.override" value="{{data.override}}">
+				<label>
+					<input type="text" class="obsidian-input-num-sm" value="{{data.override}}"
+					       name="flags.obsidian.{{prop}}.{{id}}.override">
 					<span>{{localize 'OBSIDIAN.Override'}}</span>
 				</label>
 			</div>
 		</div>
 		{{#unless tool}}
 		<div class="obsidian-form-row obsidian-stacked-row">
-			<label class="obsidian-inline">
+			<label>
 				<input type="text" name="flags.obsidian.{{prop}}.{{id}}.passiveBonus" data-dtype="Number"
-				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-				       placeholder="0" value="{{data.passiveBonus}}">
+				       class="obsidian-input-num-sm" placeholder="0" value="{{data.passiveBonus}}">
 				<span>{{localize 'OBSIDIAN.PassiveBonus'}}</span>
 			</label>
 		</div>

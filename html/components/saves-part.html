@@ -15,9 +15,8 @@
 				{{~/if~}}">
 				<span></span>
 			</div>
-			<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}"
-			     draggable="true">
-				{{i18n-join 'OBSIDIAN.Ability-' id}}
+			<div class="obsidian-save-name rollable" data-roll="save" data-save="{{id}}" draggable="true">
+				{{obs-i18n 'Ability' id}}
 			</div>
 			{{#if @root.dialogOptions.npc}}
 				<input type="text" name="flags.obsidian.saves.{{id}}.override" data-dtype="Number"

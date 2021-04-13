@@ -19,9 +19,8 @@
 		{{/if}}
 		{{#each item.flags.obsidian.effects as |effect effectIndex|}}
 			<div class="obsidian-effect" data-uuid="{{effect.uuid}}">
-				<input type="text" value="{{effect.name}}"
-				       name="flags.obsidian.effects.{{effectIndex}}.name"
-				       placeholder="{{localize 'OBSIDIAN.EffectName'}}">
+				<input type="text" value="{{effect.name}}" placeholder="{{localize 'OBSIDIAN.EffectName'}}"
+				       name="flags.obsidian.effects.{{effectIndex}}.name">
 				{{#each components}}
 					{{> (add 'modules/obsidian/html/components/effects/' type '.html')
 							prefix=(add 'flags.obsidian.effects.' effectIndex '.components.' @index)}}

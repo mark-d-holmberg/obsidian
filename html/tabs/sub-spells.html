@@ -27,7 +27,7 @@
 					<div class="obsidian-col-time">{{localize 'OBSIDIAN.Time'}}</div>
 					<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
 					<div class="obsidian-col-dc">{{localize 'OBSIDIAN.HitDC'}}</div>
-					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.Damage'}}</div>
+					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.DamageTitle'}}</div>
 					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
 				</div>
 				<div class="obsidian-tbody">
@@ -65,7 +65,7 @@
 									{{~#unless (eq flags.obsidian.time.type 'special')~}}
 										{{~flags.obsidian.time.n~}}
 									{{~/unless~}}
-									{{~i18n-join 'OBSIDIAN.CastTimeAbbr-' flags.obsidian.time.type~}}
+									{{~obs-i18n 'CastTimeAbbr' flags.obsidian.time.type~}}
 								</div>
 							</div>
 							<div class="obsidian-col-range">
@@ -73,14 +73,14 @@
 									<div class="obsidian-table-number-md">
 										{{flags.obsidian.range.n}}
 										<span class="obsidian-table-unit">
-											{{i18n-join 'OBSIDIAN.SpellRangeAbbr-' flags.obsidian.range.type}}
+											{{obs-i18n 'SpellRangeAbbr' flags.obsidian.range.type}}
 										</span>
 									</div>
 								{{else if (eq flags.obsidian.range.type 'unlimited')}}
 									<div class="obsidian-table-number-md">&infin;</div>
 								{{else}}
 									<div class="obsidian-table-text">
-										{{i18n-join 'OBSIDIAN.SpellRange-' flags.obsidian.range.type}}
+										{{obs-i18n 'SpellRange' flags.obsidian.range.type}}
 									</div>
 								{{/if}}
 							</div>
@@ -90,7 +90,7 @@
 										{{numberFormat obsidian.bestAttack.value decimals=0 sign=true}}
 									{{else if obsidian.bestSave}}
 										<div class="obsidian-table-sub-text obsidian-table-save">
-											{{i18n-join 'OBSIDIAN.AbilityAbbr-' obsidian.bestSave.target}}
+											{{obs-i18n 'AbilityAbbr' obsidian.bestSave.target}}
 										</div>
 										<div class="obsidian-table-number-md">{{obsidian.bestSave.value}}</div>
 									{{else}}
@@ -104,7 +104,7 @@
 										<div class="obsidian-dmg-component">
 											{{display}}
 											<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
-											     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+											     title="{{obs-i18n 'Damage' damage}}"></div>
 										</div>
 									{{/each}}
 								</div>

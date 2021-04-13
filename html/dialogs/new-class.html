@@ -1,9 +1,9 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
 	<div class="form-group">
-		<label>{{localize 'OBSIDIAN.Class'}}</label>
+		<label>{{localize 'OBSIDIAN.ClassTitle'}}</label>
 		<select name="cls" data-selector="cls" style="margin-bottom: 4px;">
 			{{#each ObsidianRules.CLASSES}}
-				<option value="{{this}}">{{i18n-join 'OBSIDIAN.Class-' this}}</option>
+				<option value="{{this}}">{{obs-i18n 'Class' this}}</option>
 			{{/each}}
 		</select>
 	</div>

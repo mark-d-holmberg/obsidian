@@ -93,7 +93,7 @@ function createSrc (config, bar) {
 	const src = config.token.getFlag('obsidian', `${bar}.src`) || 'attr';
 	return $(`
 		<div class="form-group">
-			<label>${game.i18n.localize(`OBSIDIAN.BarSrc-${bar}`)}</label>
+			<label>${game.i18n.localize(`OBSIDIAN.BarSrc.${bar}`)}</label>
 			<div class="form-fields">
 				<select class="obsidian-bar-src" data-bar="${bar}" name="flags.obsidian.${bar}.src">
 					<option value="attr" ${src === 'attr' ? 'selected' : ''}>

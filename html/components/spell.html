@@ -5,37 +5,29 @@
 		<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 	</div>
 	<div>
-  <div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth obsidian-checkbox-row">
-      <input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-             value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
+  <div class="obsidian-form-row">
+    <div>
+      <input type="text" class="obsidian-input-lg" name="name" value="{{item.name}}"
+             placeholder="{{localize 'OBSIDIAN.Name'}}">
       <select name="data.school">
-        {{#select data.school}}
-	        {{#each ObsidianRules.SPELL_SCHOOLS}}
-		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellSchool-' this}}</option>
-	        {{/each}}
-        {{/select}}
+	      {{selectOptions ObsidianLabels.SpellSchool selected=data.school}}
       </select>
-      <label class="obsidian-inline">
+      <label>
         {{localize 'OBSIDIAN.Level'}}
-        <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-               value="{{data.level}}" name="data.level" data-dtype="Number">
+        <input type="text" class="obsidian-input-num-sm" value="{{data.level}}" name="data.level"
+               data-dtype="Number">
       </label>
       {{fancy-checkbox 'data.components.ritual' content='OBSIDIAN.Ritual'
                        checked=data.components.ritual}}
     </div>
   </div>
 	{{#if (and actor (not item.flags.obsidian.isEmbedded) (not isNPC))}}
-	<div class="obsidian-form-row obsidian-stacked-row obsidian-inline">
-	  <div class="obsidian-fullwidth">
-	    <label class="obsidian-inline">
+	<div class="obsidian-form-row obsidian-stacked-row">
+	  <div>
+	    <label>
 	      {{localize 'OBSIDIAN.Source'}}
 	      <select name="flags.obsidian.source.type" data-selector="source">
-	        {{#select item.flags.obsidian.source.type}}
-		        {{#each ObsidianRules.SPELL_SOURCES}}
-			        <option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellSrc-' this}}</option>
-		        {{/each}}
-	        {{/select}}
+		      {{selectOptions ObsidianLabels.SpellSrc selected=item.flags.obsidian.source.type}}
 	      </select>
 	    </label>
 	    <select name="flags.obsidian.source.class" data-show="class" data-selector-parent="source">
@@ -45,9 +37,8 @@
 		      {{/each}}
 	      {{/select}}
 	    </select>
-	    <input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="custom"
-	           data-selector-parent="source" name="flags.obsidian.source.custom"
-	           placeholder="{{localize 'OBSIDIAN.Source'}}"
+	    <input type="text" class="obsidian-input-lg" data-show="custom" data-selector-parent="source"
+	           name="flags.obsidian.source.custom" placeholder="{{localize 'OBSIDIAN.Source'}}"
 	           value="{{item.flags.obsidian.source.custom}}">
 	  </div>
 	</div>
@@ -56,67 +47,55 @@
 		<input type="hidden" name="flags.obsidian.source.type" value="custom">
 		<input type="hidden" name="flags.obsidian.source.custom" value="{{localize 'OBSIDIAN.Custom'}}">
 	{{/if}}
-  <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth">
-      <label class="obsidian-inline">
-        {{localize 'OBSIDIAN.CastTime'}}
-        <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-               name="flags.obsidian.time.n" placeholder="1" data-selector-parent="cast-time"
-               value="{{item.flags.obsidian.time.n}}" data-hide="special" data-dtype="Number">
+  <div class="obsidian-form-row obsidian-stacked-row">
+    <div>
+      <label>
+        {{localize 'OBSIDIAN.CastTimeTitle'}}
+        <input type="text" class="obsidian-input-num-sm" name="flags.obsidian.time.n"
+               placeholder="1" data-selector-parent="cast-time" data-hide="special"
+               value="{{item.flags.obsidian.time.n}}" data-dtype="Number">
       </label>
       <select name="flags.obsidian.time.type" data-selector="cast-time">
-        {{#select item.flags.obsidian.time.type}}
-	        {{#each ObsidianRules.SPELL_CAST_TIMES}}
-		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.CastTime-' this}}</option>
-	        {{/each}}
-        {{/select}}
+	      {{selectOptions ObsidianLabels.CastTime selected=item.flags.obsidian.time.type}}
       </select>
-      <input type="text" class="obsidian-input-compact obsidian-input-lg" data-show="react"
+      <input type="text" class="obsidian-input-lg" data-show="react"
              value="{{item.flags.obsidian.time.react}}" data-selector-parent="cast-time"
-             placeholder="{{localize 'OBSIDIAN.CastTime-react'}}" name="flags.obsidian.time.react"
+             placeholder="{{localize 'OBSIDIAN.CastTime.react'}}" name="flags.obsidian.time.react"
              style="max-width: 220px;">
     </div>
   </div>
 	{{#if (or (not actor) item.flags.obsidian.isEmbedded isNPC)}}</div></div>{{/if}}
-  <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth">
-      <label class="obsidian-inline">
+  <div class="obsidian-form-row obsidian-stacked-row">
+    <div>
+      <label>
         {{localize 'OBSIDIAN.Range'}}
-        <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-md"
-               name="flags.obsidian.range.n" value="{{item.flags.obsidian.range.n}}"
-               data-dtype="Number" data-selector-parent="range" data-show="short, long">
+        <input type="text" class="obsidian-input-num-md" name="flags.obsidian.range.n"
+               value="{{item.flags.obsidian.range.n}}" data-dtype="Number"
+               data-selector-parent="range" data-show="short, long">
       </label>
       <select name="flags.obsidian.range.type" data-selector="range">
-        {{#select item.flags.obsidian.range.type}}
-	        {{#each ObsidianRules.SPELL_RANGES}}
-		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.SpellRange-' this}}</option>
-	        {{/each}}
-        {{/select}}
+	      {{selectOptions ObsidianLabels.SpellRange selected=item.flags.obsidian.range.type}}
       </select>
     </div>
   </div>
-  <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth obsidian-checkbox-row">
-      <label class="obsidian-inline">
-        {{localize 'OBSIDIAN.Duration'}}
-        <input type="text" class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
-               data-dtype="Number" data-selector-parent="duration" data-show="round, min, hour, day"
+  <div class="obsidian-form-row obsidian-stacked-row">
+    <div>
+      <label>
+        {{localize 'OBSIDIAN.DurationTitle'}}
+        <input type="text" class="obsidian-input-num-sm" data-dtype="Number"
+               data-selector-parent="duration" data-show="round, min, hour, day"
                name="flags.obsidian.duration.n" value="{{item.flags.obsidian.duration.n}}">
       </label>
       <select name="flags.obsidian.duration.type" data-selector="duration">
-        {{#select item.flags.obsidian.duration.type}}
-	        {{#each ObsidianRules.SPELL_DURATIONS}}
-		        <option value="{{this}}">{{i18n-join 'OBSIDIAN.Duration-' this}}</option>
-	        {{/each}}
-        {{/select}}
+	      {{selectOptions ObsidianLabels.Duration selected=item.flags.obsidian.duration.type}}
       </select>
       {{fancy-checkbox 'data.components.concentration' content='OBSIDIAN.Concentration'
                        checked=data.components.concentration selectorParent='duration'
                        show='round, min, hour, day'}}
     </div>
   </div>
-  <div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-    <div class="obsidian-fullwidth obsidian-checkbox-row">
+  <div class="obsidian-form-row obsidian-stacked-row">
+    <div>
       {{fancy-checkbox 'flags.obsidian.components.v' content='OBSIDIAN.VerbalAbbr'
                        checked=item.flags.obsidian.components.v}}
       {{fancy-checkbox 'flags.obsidian.components.s' content='OBSIDIAN.SomaticAbbr'
@@ -125,9 +104,9 @@
                        checked=item.flags.obsidian.components.r}}
       {{fancy-checkbox 'flags.obsidian.components.m' content='OBSIDIAN.MaterialAbbr'
                        checked=item.flags.obsidian.components.m}}
-      <input type="text" class="obsidian-input-compact obsidian-input-lg"
-             name="data.materials.value" value="{{data.materials.value}}"
-             placeholder="{{localize 'OBSIDIAN.Materials'}}" style="max-width: none; flex: 1">
+      <input type="text" class="obsidian-input-lg" name="data.materials.value"
+             value="{{data.materials.value}}" placeholder="{{localize 'OBSIDIAN.Materials'}}"
+             style="max-width: none; flex: 1">
     </div>
   </div>
 </fieldset>

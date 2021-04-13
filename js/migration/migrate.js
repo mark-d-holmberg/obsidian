@@ -244,7 +244,7 @@ export const Migrate = {
 		if (source === 'core') {
 			const official =
 				OBSIDIAN.Rules.CLASSES.find(cls =>
-					data.name === game.i18n.localize(`OBSIDIAN.Class-${cls}`));
+					data.name === game.i18n.localize(`OBSIDIAN.Class.${cls}`));
 
 			if (official) {
 				data.name = official;
@@ -440,7 +440,7 @@ export const Migrate = {
 			tools.custom.push(...custom.map(prof => {
 				return {
 					ability: 'str', bonus: 0, value: 1, custom: true, enabled: true,
-					label: translateOrElseOriginal(`OBSIDIAN.ToolProf-${prof}`, prof)
+					label: translateOrElseOriginal(`OBSIDIAN.ToolProf.${prof}`, prof)
 				}
 			}));
 		}
@@ -454,7 +454,7 @@ export const Migrate = {
 			&& getProperty(data, 'data.details') !== undefined)
 		{
 			for (const alignment of OBSIDIAN.Rules.ALIGNMENTS) {
-				const translation = game.i18n.localize(`OBSIDIAN.Alignment-${alignment}`);
+				const translation = game.i18n.localize(`OBSIDIAN.Alignment.${alignment}`);
 				if (translation.toLowerCase() === data.data.details.alignment.toLowerCase()) {
 					data.data.details.alignment = alignment;
 					break;
@@ -491,7 +491,7 @@ export const Migrate = {
 		const spellEffect = Effect.create();
 		const scalingEffect = Effect.create();
 		const resourceEffect = Effect.create();
-		scalingEffect.name = game.i18n.localize('OBSIDIAN.Scaling');
+		scalingEffect.name = game.i18n.localize('OBSIDIAN.ScalingTitle');
 
 		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
 			spellEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
@@ -697,7 +697,7 @@ function lazyConvert () {
 		convert.forEach(([p, t, r]) =>
 			CONVERT[key][p] =
 				new Map(Rules[r].map(key =>
-					[game.i18n.localize(`OBSIDIAN.${t}-${key}`).toLowerCase(), key])));
+					[game.i18n.localize(`OBSIDIAN.${t}.${key}`).toLowerCase(), key])));
 	};
 
 	convert('profs', [
@@ -722,7 +722,7 @@ function convertSpeeds () {
 
 	CONVERT.speeds =
 		new Map(Rules.SPEEDS.map(key =>
-			[game.i18n.localize(`OBSIDIAN.SpeedAbbr-${key}`).toLowerCase(), key]));
+			[game.i18n.localize(`OBSIDIAN.SpeedAbbr.${key}`).toLowerCase(), key]));
 
 	CONVERT.speeds.hover = new RegExp(`\(${game.i18n.localize('OBSIDIAN.Hover')}\)`);
 }

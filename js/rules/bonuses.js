@@ -320,7 +320,7 @@ export function bonusToParts (actorData, bonus) {
 			name:
 				bonus.name.length
 					? bonus.name
-					: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${bonus.ability}`)
+					: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${bonus.ability}`)
 		});
 	};
 

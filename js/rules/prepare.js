@@ -59,7 +59,7 @@ export const Prepare = {
 				i18n = 'OBSIDIAN.Spell';
 			} else {
 				mod = data.abilities[component.ability].mod;
-				i18n = `OBSIDIAN.AbilityAbbr-${component.ability}`;
+				i18n = `OBSIDIAN.AbilityAbbr.${component.ability}`;
 			}
 
 			component.rollParts.push({mod: mod, name: game.i18n.localize(i18n)});
@@ -272,7 +272,7 @@ export const Prepare = {
 				value: Number(prof)
 			}, {
 				mod: data.abilities[skill.ability].mod,
-				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${skill.ability}`)
+				name: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${skill.ability}`)
 			}, {
 				mod: (flags.skills.bonus || 0) + (skill.bonus || 0),
 				name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -590,7 +590,7 @@ export const Prepare = {
 					value: Number(ability.proficient)
 				}, {
 					mod: data.abilities[id].mod,
-					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr-${id}`)
+					name: game.i18n.localize(`OBSIDIAN.AbilityAbbr.${id}`)
 				}, {
 					mod: (flags.saves.bonus || 0) + (flags.saves[id].bonus || 0),
 					name: game.i18n.localize('OBSIDIAN.Bonus')
@@ -629,7 +629,7 @@ export const Prepare = {
 			if (!custom) {
 				flags.skills[id] = mergeObject(skill, flags.skills[id] || {}, {inplace: false});
 				skill = flags.skills[id];
-				skill.label = game.i18n.localize(`OBSIDIAN.Skill-${id}`);
+				skill.label = game.i18n.localize(`OBSIDIAN.Skill.${id}`);
 			}
 
 			let original;
@@ -723,7 +723,7 @@ export const Prepare = {
 			if (custom) {
 				tool.enabled = true;
 			} else {
-				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf-${id}`);
+				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf.${id}`);
 			}
 
 			Prepare.calculateSkill(data, flags, tool);

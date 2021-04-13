@@ -1,37 +1,29 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Initiative'}}</legend>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<div class="obsidian-fullwidth">
+		<div class="obsidian-form-row">
+			<div>
 				<select name="flags.obsidian.attributes.init.ability">
-					{{#select actor.flags.obsidian.attributes.init.ability}}
-						{{#each data.abilities as |ability id|}}
-							<option value="{{id}}">{{i18n-join 'OBSIDIAN.Ability-' id}}</option>
-						{{/each}}
-					{{/select}}
+					{{selectOptions ObsidianLabels.Ability
+					                selected=actor.flags.obsidian.attributes.init.ability}}
 				</select>
 				<span class="obsidian-binary-operator">&plus;</span>
 				<input type="text" name="data.attributes.init.value" value="{{data.attributes.init.value}}"
-				       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm" placeholder="0"
-				       data-dtype="Number">
-				<label class="obsidian-inline">
+				       class="obsidian-input-num-sm" placeholder="0" data-dtype="Number">
+				<label>
 					<input type="text" name="flags.obsidian.attributes.init.override"
-					       class="obsidian-input-compact obsidian-input-num obsidian-input-num-sm"
+					       class="obsidian-input-num-sm"
 					       value="{{actor.flags.obsidian.attributes.init.override}}">
 					<span>{{localize 'OBSIDIAN.Override'}}</span>
 				</label>
 			</div>
 		</div>
-		<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-			<div class="obsidian-fullwidth">
-				<label class="obsidian-inline">
-					{{localize 'OBSIDIAN.Roll'}}
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div>
+				<label>
+					{{localize 'OBSIDIAN.RollTitle'}}
 					<select name="flags.obsidian.attributes.init.roll">
-						{{#select actor.flags.obsidian.attributes.init.roll}}
-							{{#each ObsidianRules.ROLL}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.Roll-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.Roll selected=actor.flags.obsidian.attributes.init.roll}}
 					</select>
 				</label>
 			</div>

@@ -101,7 +101,7 @@ export function prepareDefenseDisplay (derived) {
 
 	Object.entries(display.conditions).forEach(([level, conditions]) =>
 		display.conditions[level] = Array.from(conditions.values()).map(cond => {
-			let i18n = `Condition-${cond}`;
+			let i18n = `Condition.${cond}`;
 			if (cond === 'sleep') {
 				i18n = 'MagicalSleep';
 			} else if (cond === 'disease') {
@@ -114,12 +114,12 @@ export function prepareDefenseDisplay (derived) {
 	['adv', 'dis'].forEach(mode =>
 		display.conditions[mode] =
 			parts.conditions[mode]
-				.map(cond => game.i18n.localize(`OBSIDIAN.Condition-${cond}`))
+				.map(cond => game.i18n.localize(`OBSIDIAN.Condition.${cond}`))
 				.join(', '));
 
 	display.damage.vuln =
 		Array.from(parts.damage.vuln.values())
-			.map(dmg => game.i18n.localize(`OBSIDIAN.Damage-${dmg}`))
+			.map(dmg => game.i18n.localize(`OBSIDIAN.Damage.${dmg}`))
 			.join(', ');
 
 	['imm', 'res'].forEach(level => {
@@ -129,7 +129,7 @@ export function prepareDefenseDisplay (derived) {
 		const nonMagicalAdm = new Set();
 
 		for (const def of parts.damage[level]) {
-			const i18n = game.i18n.localize(`OBSIDIAN.Damage-${def.dmg}`);
+			const i18n = game.i18n.localize(`OBSIDIAN.Damage.${def.dmg}`);
 			if (OBSIDIAN.notDefinedOrEmpty(def.magic)) {
 				noCondition.add(i18n);
 			} else {

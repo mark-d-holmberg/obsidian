@@ -55,10 +55,10 @@
 			       class="obsidian-char-charname obsidian-condensed"
 			       placeholder="{{localize 'OBSIDIAN.CharacterName'}}">
 			<div class="obsidian-char-header-minor obsidian-condensed">
-				<span>{{i18n-join 'OBSIDIAN.Size-' data.traits.size}}</span>
+				<span>{{obs-i18n 'Size' data.traits.size}}</span>
 				<span>
 					{{~#if actor.flags.obsidian.details.type~}}
-						{{~lc (i18n-join 'OBSIDIAN.CreatureType-' actor.flags.obsidian.details.type)~}}
+						{{~lc (obs-i18n 'CreatureType' actor.flags.obsidian.details.type)~}}
 						{{~else~}}
 						{{~lc data.details.type~}}
 					{{~/if~}}
@@ -66,10 +66,10 @@
 				<span>
 					{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2)}}
 						{{#if actor.flags.obsidian.details.alignment1}}
-							{{lc (i18n-join 'OBSIDIAN.AlignmentPt1-' actor.flags.obsidian.details.alignment1)}}
+							{{lc (obs-i18n 'AlignmentPt1' actor.flags.obsidian.details.alignment1)}}
 						{{/if}}
 						{{#if actor.flags.obsidian.details.alignment2}}
-							{{lc (i18n-join 'OBSIDIAN.AlignmentPt2-' actor.flags.obsidian.details.alignment2)}}
+							{{lc (obs-i18n 'AlignmentPt2' actor.flags.obsidian.details.alignment2)}}
 						{{/if}}
 					{{else}}
 						{{lc data.details.alignment}}
@@ -101,13 +101,13 @@
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
 					        obsidian-global-advantage">
-						{{localize 'OBSIDIAN.Roll-adv'}}
+						{{localize 'OBSIDIAN.Roll.adv'}}
 					</button>
 					<button type="button" class="
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
 					        obsidian-global-disadvantage">
-						{{localize 'OBSIDIAN.Roll-dis'}}
+						{{localize 'OBSIDIAN.Roll.dis'}}
 					</button>
 				</div>
 			</div>
@@ -177,7 +177,7 @@
 				<div class="obsidian-npc-stat-row obsidian-npc-speed obsidian-ptr obsidian-simple-dialog"
 				     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250" data-npc="true"
 				     data-template="speed.html">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.Speed'}}</div>
+					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.SpeedTitle'}}</div>
 					<div class="obsidian-npc-stat-value obsidian-font-13">
 						{{actor.obsidian.attributes.speed.display}}
 					</div>
@@ -185,9 +185,9 @@
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
 					<div class="obsidian-char-ability">
-						<div class="obsidian-char-ability-name rollable obsidian-condensed"
-						     data-roll="abl" data-abl="{{@key}}" draggable="true">
-							{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+						<div class="obsidian-char-ability-name rollable obsidian-condensed" draggable="true"
+						     data-roll="abl" data-abl="{{@key}}">
+							{{obs-i18n 'AbilityAbbr' @key}}
 						</div>
 						<div class="obsidian-char-ability-mod">
 							{{numberFormat mod decimals=0 sign=true}}
@@ -213,7 +213,7 @@
 					{{#each actor.obsidian.saves}}
 						<div class="obsidian-npc-stat-li">
 							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
-								{{i18n-join 'OBSIDIAN.AbilityAbbr-' @key}}
+								{{obs-i18n 'AbilityAbbr' @key}}
 							</span>
 							{{numberFormat save decimals=0 sign=true~}}
 						</div>
@@ -227,7 +227,7 @@
 					{{#each skills}}
 						<div class="obsidian-npc-stat-li">
 							<span class="rollable" data-roll="skl" data-skl="{{@key}}" draggable="true">
-								{{i18n-join 'OBSIDIAN.Skill-' @key}}
+								{{obs-i18n 'Skill' @key}}
 							</span>
 							{{numberFormat mod decimals=0 sign=true~}}
 						</div>
@@ -277,16 +277,16 @@
 					{{/if}}
 					<div class="obsidian-npc-stat-li">
 						{{localize 'OBSIDIAN.PassiveLC'}}
-						{{localize 'OBSIDIAN.Skill-prc'}}
+						{{localize 'OBSIDIAN.Skill.prc'}}
 						{{actor.obsidian.skills.prc.passive}}
 					</div>
 				</div>
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr"
-				     data-dialog="Proficiencies" data-npc="true">
+				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-npc="true"
+				     data-dialog="Proficiencies">
 					<strong>{{localize 'OBSIDIAN.Languages'}}</strong>
 					{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
 						{{#each data.traits.languages.value}}
-							<div class="obsidian-npc-stat-li">{{i18n-join 'OBSIDIAN.Lang-' this}}</div>
+							<div class="obsidian-npc-stat-li">{{obs-i18n 'Lang' this}}</div>
 						{{/each}}
 						{{#each actor.flags.obsidian.traits.profs.custom.langs}}
 							<div class="obsidian-npc-stat-li">{{lc this}}</div>

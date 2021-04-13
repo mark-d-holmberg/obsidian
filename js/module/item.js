@@ -93,7 +93,7 @@ const prepareItem = {
 		derived.label =
 			item.name === 'custom'
 				? flags.custom
-				: game.i18n.localize(`OBSIDIAN.Class-${item.name}`);
+				: game.i18n.localize(`OBSIDIAN.Class.${item.name}`);
 
 		if (!flags.spellcasting?.enabled) {
 			return;
@@ -175,13 +175,13 @@ const prepareItem = {
 			derived.notes.push(`${game.i18n.localize('OBSIDIAN.ACAbbr')} ${data.armor.value}`);
 			if (!OBSIDIAN.notDefinedOrEmpty(data.strength)) {
 				derived.notes.push(
-					`${game.i18n.localize('OBSIDIAN.AbilityAbbr-str')} ${data.strength}`);
+					`${game.i18n.localize('OBSIDIAN.AbilityAbbr.str')} ${data.strength}`);
 			}
 
 			if (data.stealth) {
 				derived.notes.push(`
 					<div class="obsidian-table-note-flex">
-						${game.i18n.localize('OBSIDIAN.Skill-ste')}
+						${game.i18n.localize('OBSIDIAN.Skill.ste')}
 						${cssIconHexagon('OBSIDIAN.DisadvantageAbbr', false)}
 					</div>
 				`);
@@ -230,7 +230,7 @@ const prepareItem = {
 
 		if (flags.time.type === 'react' && flags.time.react.length > 0) {
 			derived.notes.push(
-				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr-react')}}: ${flags.time.react}`);
+				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr.react')}}: ${flags.time.react}`);
 		}
 
 		derived.components =
@@ -245,7 +245,7 @@ const prepareItem = {
 		derived.visible = true;
 
 		if (flags.source === undefined) {
-			derived.source.display = game.i18n.localize('OBSIDIAN.Class-custom');
+			derived.source.display = game.i18n.localize('OBSIDIAN.Class.custom');
 		} else if (flags.source.type === 'custom') {
 			derived.source.display = flags.source.custom;
 		} else if (item.isOwnedByActor() && item.actor.data.obsidian) {
@@ -309,7 +309,7 @@ const prepareItem = {
 			derived.ammo = `
 				<select data-name="items.${item.data.idx}.flags.obsidian.ammo">
 					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
-						${game.i18n.localize('OBSIDIAN.AtkTag-ammunition')}
+						${game.i18n.localize('OBSIDIAN.AtkTag.ammunition')}
 					</option>
 					${item.actor.data.obsidian.ammo.map(ammo =>
 						`<option value="${ammo._id}" ${ammo._id === flags.ammo ? 'selected': ''}>
@@ -320,7 +320,7 @@ const prepareItem = {
 		}
 
 		if (flags.category) {
-			derived.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat-${flags.category}`));
+			derived.notes.push(game.i18n.localize(`OBSIDIAN.WeaponCat.${flags.category}`));
 		}
 
 		if (flags.magical) {
@@ -340,7 +340,7 @@ const prepareItem = {
 				return derived.ammo;
 			}
 
-			return game.i18n.localize(`OBSIDIAN.AtkTag-${tag}`);
+			return game.i18n.localize(`OBSIDIAN.AtkTag.${tag}`);
 		}).filter(tag => tag != null));
 
 		derived.display = TextEditor.enrichHTML(data.description.value || '', {
@@ -408,7 +408,7 @@ const prepareComponents = {
 		if (component.target === 'area' && !effect.isLinked) {
 			item.obsidian.notes.push(
 				`${component.distance} ${game.i18n.localize('OBSIDIAN.FeetAbbr')} `
-				+ game.i18n.localize(`OBSIDIAN.Target-${component.area}`));
+				+ game.i18n.localize(`OBSIDIAN.Target.${component.area}`));
 		}
 	},
 

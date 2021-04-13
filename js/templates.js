@@ -3,7 +3,6 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/spell-list.html',
 		'modules/obsidian/html/components/spell-card.html',
 		'modules/obsidian/html/components/inventory.html',
-		'modules/obsidian/html/components/tag-dropdown.html',
 		'modules/obsidian/html/components/consumable.html',
 		'modules/obsidian/html/components/container.html',
 		'modules/obsidian/html/components/equipment.html',

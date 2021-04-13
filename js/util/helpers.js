@@ -214,12 +214,12 @@ export function registerHandlebarHelpers () {
 
 		const duration = spell.flags.obsidian.duration;
 		if (!['round', 'min', 'hour'].includes(duration.type)) {
-			return game.i18n.localize(`OBSIDIAN.Duration-${duration.type}`);
+			return game.i18n.localize(`OBSIDIAN.Duration.${duration.type}`);
 		}
 
-		let prefix = 'OBSIDIAN.DurationPlural-';
+		let prefix = 'OBSIDIAN.DurationPlural.';
 		if (Number(duration.n) === 1) {
-			prefix = 'OBSIDIAN.Duration-';
+			prefix = 'OBSIDIAN.Duration.';
 		}
 
 		return `${duration.n} `
@@ -286,14 +286,12 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('i18n-class', function (cls) {
-		const key = `OBSIDIAN.Class-${cls}`;
-		const translation = game.i18n.localize(key);
-
-		if (translation === key) {
+		const key = `OBSIDIAN.Class.${cls}`;
+		if (!game.i18n.has(key)) {
 			return cls;
 		}
 
-		return translation;
+		return game.i18n.localize(key);
 	});
 
 	Handlebars.registerHelper('i18n-join', function (...args) {
@@ -383,6 +381,12 @@ export function registerHandlebarHelpers () {
 		return Intl.NumberFormat().format(n);
 	});
 
+	Handlebars.registerHelper('obs-i18n', function (...args) {
+		const options = args.pop();
+		const key = options.hash.key || 'OBSIDIAN';
+		return game.i18n.localize([key, ...args].join('.'));
+	});
+
 	Handlebars.registerHelper('range', function (start, end) {
 		if (end === undefined) {
 			end = start;
@@ -405,6 +409,18 @@ export function registerHandlebarHelpers () {
 
 		mapped.sort((a, b) => a.key === b.key ? 0 : a.key > b.key ? 1 : -1);
 		return mapped.map(item => list[item.idx]);
+	});
+
+	Handlebars.registerHelper('select-dice', function (min, max, options) {
+		let html = '';
+		const dice = [2, 3, 4, 6, 8, 10, 12, 20];
+		dice.filter(die => die >= min && die <= max).forEach(die => {
+			// noinspection EqualityComparisonWithCoercionJS
+			const selected = options.hash.selected == die ? 'selected' : '';
+			html += `<option value="${die}" ${selected}>d${die}</option>`;
+		});
+
+		return new Handlebars.SafeString(html);
 	});
 
 	Handlebars.registerHelper('spell-level-format', function (level, options) {
@@ -457,6 +473,27 @@ export function registerHandlebarHelpers () {
 			? attack.parentEffect.versatile
 			: attack.parentEffect.damage;
 	});
+
+	Handlebars.registerPartial('select-class', `
+		{{#if @root.actor}}
+			<select name="{{prefix}}.class"
+				{{#if parent}}data-selector-parent="{{prefix}}.{{parent}}"{{/if}}
+				{{#if show}}data-show="{{show}}"{{/if}}
+				{{#if hide}}data-hide="{{hide}}"{{/if}}>
+			{{#select class}}
+				{{#each @root.actor.data.obsidian.classes}}
+					<option value="{{_id}}">{{obsidian.label}}</option>
+				{{/each}}
+			{{/select}}
+			</select>
+		{{else}}
+			<input type="text" name="{{prefix}}.text" value="{{text}}"
+				placeholder="{{localize 'OBSIDIAN.ClassTitle'}}"
+				{{#if parent}}data-selector-parent="{{prefix}}.{{parent}}"{{/if}}
+				{{#if show}}data-show="{{show}}"{{/if}}
+				{{#if hide}}data-hide="{{hide}}"{{/if}}>
+		{{/if}}
+	`);
 }
 
 function formatRecharge (recharge) {
@@ -468,7 +505,7 @@ function formatRecharge (recharge) {
 
 		return `${game.i18n.localize('OBSIDIAN.Recharge')} ${roll}`;
 	} else {
-		return game.i18n.localize(`OBSIDIAN.Recharge-${recharge.time}`);
+		return game.i18n.localize(`OBSIDIAN.Recharge.${recharge.time}`);
 	}
 }
 

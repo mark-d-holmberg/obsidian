@@ -4,14 +4,14 @@
 		<legend>{{localize 'OBSIDIAN.Armour'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_ARMOUR}}
-				{{fancy-checkbox (add 'armorProf.' this) content=(add 'OBSIDIAN.ArmourProf-' this)
+				{{fancy-checkbox 'armorProf' content=(add 'OBSIDIAN.ArmourProf.' this)
 				                 checked=(lookup ../profs.armorProf this)}}
 			{{/each}}
 		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-max"
-			       placeholder="{{localize 'OBSIDIAN.Custom'}}" name="data.traits.armorProf.custom"
-			       value="{{data.traits.armorProf.custom}}" data-flag="armour">
+		<div class="obsidian-form-row">
+			<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
+			       name="data.traits.armorProf.custom" value="{{data.traits.armorProf.custom}}"
+			       data-flag="armour">
 		</div>
 	</fieldset>
 	<fieldset>
@@ -21,10 +21,10 @@
 				{{fancy-checkbox 'weaponProf' key label=label checked=(lookup ../profs.weaponProf key)}}
 			{{/each}}
 		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-max"
-			       placeholder="{{localize 'OBSIDIAN.Custom'}}" name="data.traits.weaponProf.custom"
-			       value="{{data.traits.weaponProf.custom}}" data-flag="weapons">
+		<div class="obsidian-form-row">
+			<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
+			       name="data.traits.weaponProf.custom" value="{{data.traits.weaponProf.custom}}"
+			       data-flag="weapons">
 		</div>
 	</fieldset>
 	{{/unless}}
@@ -35,10 +35,10 @@
 				{{fancy-checkbox 'languages' key label=label checked=(lookup ../profs.languages key)}}
 			{{/each}}
 		</div>
-		<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-			<input type="text" class="obsidian-input-compact obsidian-input-max"
-			       placeholder="{{localize 'OBSIDIAN.Custom'}}" name="data.traits.languages.custom"
-			       value="{{data.traits.languages.custom}}" data-flag="langs">
+		<div class="obsidian-form-row">
+			<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
+			       name="data.traits.languages.custom" value="{{data.traits.languages.custom}}"
+			       data-flag="langs">
 		</div>
 	</fieldset>
 </form>

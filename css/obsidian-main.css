@@ -1252,7 +1252,7 @@ form.obsidian .obsidian-table-input:hover {
 	background-color: var(--obs-dark);
 }
 
-input[type=checkbox].obsidian-hidden + label.obsidian-inline {
+input[type=checkbox].obsidian-hidden + label {
 	margin-left: 20px;
 }
 

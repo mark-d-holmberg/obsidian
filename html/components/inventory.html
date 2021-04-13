@@ -50,10 +50,10 @@
 					{{/if}}
 				{{else if (eq type 'equipment')}}
 					{{#if (eq flags.obsidian.subtype 'armour')}}
-						{{i18n-join 'OBSIDIAN.ArmourTypeFull-' data.armor.type}}
+						{{obs-i18n 'ArmourTypeFull' data.armor.type}}
 					{{/if}}
 				{{else if (eq type 'consumable')}}
-					{{i18n-join 'OBSIDIAN.ConsumableType-' flags.obsidian.subtype}}
+					{{obs-i18n 'ConsumableType' flags.obsidian.subtype}}
 				{{/if}}
 			</div>
 		</div>
@@ -89,9 +89,9 @@
 				{{~/if~}}
 			" title="
 				{{~#if (or (eq type 'equipment') (eq type 'consumable'))~}}
-					{{i18n-join 'OBSIDIAN.ItemType-' flags.obsidian.subtype}}
+					{{obs-i18n 'ItemType' flags.obsidian.subtype}}
 				{{~else~}}
-					{{i18n-join 'OBSIDIAN.ItemType-' type}}
+					{{obs-i18n 'ItemType' type}}
 				{{~/if~}}
 			"></div>
 		</div>

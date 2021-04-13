@@ -8,13 +8,13 @@
 				{{/each}}
 			</div>
 			<div class="obsidian-item-card-header-row">
-				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.Damage'}}:</div>
+				<div class="obsidian-item-card-header-key">{{localize 'OBSIDIAN.DamageTitle'}}:</div>
 				<div class="obsidian-item-card-header-value">
 					{{#each item.obsidian.collection.damage}}
 						<div class="obsidian-icon-value">
 							{{display}}
 							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
-							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+							     title="{{obs-i18n 'Damage' damage}}"></div>
 						</div>
 					{{/each}}
 				</div>
@@ -27,7 +27,7 @@
 						<div class="obsidian-icon-value">
 							{{display}}
 							<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
-							     title="{{i18n-join 'OBSIDIAN.Damage-' damage}}"></div>
+							     title="{{obs-i18n 'Damage' damage}}"></div>
 						</div>
 					{{/each}}
 				</div>

@@ -500,12 +500,10 @@ export class ObsidianActor extends Actor5e {
 			if (cls === undefined) {
 				const byName = this.data.obsidian.classes.find(cls => cls.name === needle);
 				if (byName === undefined) {
-					const i18n = `OBSIDIAN.Class-${needle}`;
+					const i18n = `OBSIDIAN.Class.${needle}`;
 					item.flags.obsidian.source.type = 'other';
 					item.flags.obsidian.source.other =
-						getProperty(game.i18n.translations, i18n)
-						|| getProperty(game.i18n._fallback, i18n)
-						|| needle;
+						game.i18n.has(i18n) ? game.i18n.localize(i18n) : needle;
 				} else {
 					item.flags.obsidian.source.class = byName._id;
 				}
@@ -518,7 +516,7 @@ export class ObsidianActor extends Actor5e {
 	 */
 	static _classFormat (classes) {
 		if (classes.length < 1) {
-			return game.i18n.localize('OBSIDIAN.Class');
+			return game.i18n.localize('OBSIDIAN.ClassTitle');
 		}
 
 		return classes.sort((a, b) => b.data.levels - a.data.levels).map(cls =>

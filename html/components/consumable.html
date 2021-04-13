@@ -5,23 +5,19 @@
 			<img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img">
 		</div>
 		<div>
-			<div class="obsidian-form-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
-					<input type="text" class="obsidian-input-compact obsidian-input-lg" name="name"
-					       value="{{item.name}}" placeholder="{{localize 'OBSIDIAN.Name'}}">
+			<div class="obsidian-form-row">
+				<div>
+					<input type="text" class="obsidian-input-lg" name="name" value="{{item.name}}"
+					       placeholder="{{localize 'OBSIDIAN.Name'}}">
 					<select name="flags.obsidian.subtype" data-selector="subtype">
-						{{#select item.flags.obsidian.subtype}}
-							{{#each ObsidianRules.CONSUMABLE_TYPES}}
-								<option value="{{this}}">{{i18n-join 'OBSIDIAN.ConsumableType-' this}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions ObsidianLabels.ConsumableType selected=item.flags.obsidian.subtype}}
 					</select>
 					{{fancy-checkbox 'data.uses.autoDestroy' content='OBSIDIAN.DestroyOnEmpty'
 					                 checked=data.uses.autoDestroy}}
 				</div>
 			</div>
-			<div class="obsidian-form-row obsidian-stacked-row obsidian-mixed-form-row obsidian-inline">
-				<div class="obsidian-fullwidth obsidian-checkbox-row">
+			<div class="obsidian-form-row obsidian-stacked-row">
+				<div>
 					{{> modules/obsidian/html/components/parts/weight-cost.html}}
 					{{fancy-checkbox 'flags.obsidian.attunement' content='OBSIDIAN.RequiresAttunement'
 					                 checked=item.flags.obsidian.attunement}}
