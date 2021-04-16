@@ -798,6 +798,11 @@ h3 > div > .obsidian-feature-recharge {
 	left: 2px;
 }
 
+.obsidian-2-pane-window .obsidian-input-search-container > i,
+.obsidian-2-pane-window .obsidian-input-search-container > span {
+	top: 0;
+}
+
 .obsidian-input-search-container > span,
 .obsidian-compendium .header-search > span {
 	top: 2px;

@@ -9,7 +9,6 @@ import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Migrate} from './migration/migrate.js';
 import {patchItem_prepareData} from './module/item.js';
-import {addCompendiumContextMenuHook} from './module/compendium-convert.js';
 import {addMacroHook, hotbarRender} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {advanceDurations, initDurations} from './module/duration.js';
@@ -141,8 +140,6 @@ Hooks.on('renderHotbar', hotbarRender);
 Hooks.on('obsidian.actorsPrepared', () => ui.hotbar.render());
 Hooks.on('updateOwnedItem', () => ui.hotbar.render());
 Hooks.on('updateToken', () => ui.hotbar.render());
-
-addCompendiumContextMenuHook();
 
 function enrichActorFlags (data) {
 	mergeObject(data, Migrate.convertActor(data));

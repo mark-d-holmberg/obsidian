@@ -3,6 +3,7 @@ import {Prepare} from '../rules/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
+import {cssIconHexagon, fancyCheckbox} from './html.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('attack-sort', function (list) {
@@ -19,15 +20,7 @@ export function registerHandlebarHelpers () {
 
 	Handlebars.registerHelper('badge', function (badge) {
 		const advantage = badge === 'adv';
-		const colour = `obsidian-css-icon-${advantage ? 'positive' : 'negative'}`;
-		const label = advantage ? 'A' : 'D';
-
-		return new Handlebars.SafeString(`
-		<div class="obsidian-css-icon obsidian-css-icon-hexagon ${colour}">
-			<div class="obsidian-css-icon-shape"></div>
-			<div class="obsidian-css-icon-label">${label}</div>
-		</div>
-	`);
+		return new Handlebars.SafeString(cssIconHexagon({advantage, disadvantage: !advantage}));
 	});
 
 	Handlebars.registerHelper('capitalise', function (str) {
@@ -507,35 +500,4 @@ function formatRecharge (recharge) {
 	} else {
 		return game.i18n.localize(`OBSIDIAN.Recharge.${recharge.time}`);
 	}
-}
-
-function fancyCheckbox (...args) {
-	const options = args.pop();
-	const prop = args.join('.');
-
-	return `
-	<div class="fancy-checkbox" data-bound="${prop}"
-		${options.hash.style ? ` style="${options.hash.style}"` : ''}
-		${options.hash.show ? ` data-show="${options.hash.show}"` : ''}
-		${options.hash.hide ? ` data-hide="${options.hash.hide}"` : ''}
-		${options.hash.selectorParent
-			? ` data-selector-parent="${options.hash.selectorParent}"`
-			: ''}>
-		<div class="checkbox-container">
-			<div class="checkbox-inner-box"></div>
-			<div class="checkmark-container">
-				<div class="checkmark">
-					<div class="checkmark-short"></div>
-					<div class="checkmark-long"></div>
-				</div>
-			</div>
-		</div>
-		<div class="checkbox-content">
-			${options.hash.label ? options.hash.label : game.i18n.localize(options.hash.content)}
-		</div>
-	</div>
-	<input type="checkbox" name="${prop}" class="obsidian-hidden"
-	       ${options.hash.checked ? 'checked' : ''}
-	       ${options.hash.selector ? `data-selector="${options.hash.selector}"` : ''}>
-	`;
 }

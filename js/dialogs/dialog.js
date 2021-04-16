@@ -177,12 +177,8 @@ export class ObsidianDialog extends BaseEntitySheet {
 
 	static recalculateHeight (html) {
 		let total = 0;
-		// TODO check use of .obsidian-inline after cleanup
-		const labels = html.children('label:not(.obsidian-inline)');
 		const richText = html.children('.obsidian-rich-text').length > 0;
-		html.children('div, fieldset, label.obsidian-inline')
-			.add(labels.children('input'))
-			.each((i, el) => total += $(el).outerHeight(true));
+		html.children('div, fieldset, label').each((i, el) => total += $(el).outerHeight(true));
 
 		const content = html.closest('.window-content');
 		html.height(total);

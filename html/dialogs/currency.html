@@ -2,14 +2,12 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Currency'}}</legend>
 		{{#each data.currency}}
-			<div class="obsidian-form-row">
+			<div class="obsidian-form-row obsidian-currency-row">
 				<div>
-					<label>
-						<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></div>
-						<input type="text" class="obsidian-input-num-lg" name="data.currency.{{@key}}"
-						       data-dtype="Number" placeholder="0"
-						       value="{{get-property ../data.currency @key}}">
-					</label>
+					<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></div>
+					<input type="text" class="obsidian-input-num-lg" name="data.currency.{{@key}}"
+					       data-dtype="Number" placeholder="0"
+					       value="{{get-property ../data.currency @key}}">
 					<input type="text" class="obsidian-add-remove" data-key="{{@key}}"
 					       placeholder="{{localize 'OBSIDIAN.AddRemove'}}" style="width: 200px;">
 				</div>

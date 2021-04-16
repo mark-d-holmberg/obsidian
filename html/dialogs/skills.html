@@ -31,11 +31,11 @@
 		<div class="obsidian-form-row" data-item-id="{{id}}">
 			<div>
 				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">
-					{{selectOptions ObsidianLabels.Proficiency selected=skill.value}}
+					{{selectOptions @root.ObsidianLabels.Proficiency selected=skill.value}}
 				</select>
 				<select name="flags.obsidian.skills.custom.{{id}}.ability"
 				        style="text-transform: uppercase;">
-					{{selectOptions ObsidianLabels.AbilityAbbr selected=(lc skill.ability)}}
+					{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc skill.ability)}}
 				</select>
 				<input type="text" placeholder="Skill" value="{{skill.label}}"
 				       name="flags.obsidian.skills.custom.{{id}}.label">

@@ -4,7 +4,7 @@
 		<legend>{{localize 'OBSIDIAN.Armour'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianRules.PROF_ARMOUR}}
-				{{fancy-checkbox 'armorProf' content=(add 'OBSIDIAN.ArmourProf.' this)
+				{{fancy-checkbox 'armorProf' this content=(add 'OBSIDIAN.ArmourProf.' this)
 				                 checked=(lookup ../profs.armorProf this)}}
 			{{/each}}
 		</div>

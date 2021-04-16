@@ -1,5 +1,6 @@
 import {OBSIDIAN} from './global.js';
 import {Rules} from './rules/rules.js';
+import {cssIconHexagon} from './util/html.js';
 
 // Since the options available in the Rules object are so frequently displayed
 // in the UI, we make some attempt at matching them up with their corresponding
@@ -82,7 +83,9 @@ const additionalTranslations = {
 };
 
 export function translateLabels () {
+	const localize = key => game.i18n.localize(`OBSIDIAN.${key}`);
 	const allEntries = Object.entries(translations).concat(Object.entries(additionalTranslations));
+
 	for (let [rulesKey, translationKeys] of allEntries) {
 		translationKeys = translationKeys instanceof Array ? translationKeys : [translationKeys];
 		translationKeys = translationKeys.map(item => {
@@ -116,9 +119,9 @@ export function translateLabels () {
 		for (const {i18n, alias} of translationKeys) {
 			OBSIDIAN.Labels[alias] = {};
 			for (const [k, v] of Object.entries(data)) {
-				const translation = `OBSIDIAN.${i18n}.${v}`;
-				if (game.i18n.has(translation)) {
-					OBSIDIAN.Labels[alias][k] = game.i18n.localize(translation);
+				const translation = `${i18n}.${v}`;
+				if (game.i18n.has(`OBSIDIAN.${translation}`)) {
+					OBSIDIAN.Labels[alias][k] = localize(translation);
 				}
 			}
 		}
@@ -126,19 +129,36 @@ export function translateLabels () {
 
 	// And finally some special ones.
 	OBSIDIAN.Labels.DamageOnlySpell =
-		{...OBSIDIAN.Labels.DamageOnly, spell: game.i18n.localize('OBSIDIAN.Damage.spell')};
+		{...OBSIDIAN.Labels.DamageOnly, spell: localize('Damage.spell')};
 
-	OBSIDIAN.Labels.DamageSpell =
-		{...OBSIDIAN.Labels.Damage, spell: game.i18n.localize('OBSIDIAN.Damage.spell')};
+	OBSIDIAN.Labels.ConditionExh =
+		{...OBSIDIAN.Labels.Condition, exhaustion: localize('Condition.exhaustion')};
 
-	OBSIDIAN.Labels.DamageWpn =
-		{wpn: game.i18n.localize('OBSIDIAN.Damage.wpn'), ...OBSIDIAN.Labels.Damage};
+	OBSIDIAN.Labels.DamageWpn = {wpn: localize('Damage.wpn'), ...OBSIDIAN.Labels.Damage};
+	OBSIDIAN.Labels.SkillCustom = {...OBSIDIAN.Labels.Skill, custom: localize('Custom')};
+	OBSIDIAN.Labels.DamageSpell = {...OBSIDIAN.Labels.Damage, spell: localize('Damage.spell')};
 
-	OBSIDIAN.Labels.SkillCustom =
-		{...OBSIDIAN.Labels.Skill, custom: game.i18n.localize('OBSIDIAN.Custom')};
+	addRules(localize);
+}
 
-	OBSIDIAN.Labels.ConditionExh = {
-		...OBSIDIAN.Labels.Condition,
-		exhaustion: game.i18n.localize('OBSIDIAN.Condition.exhaustion')
-	};
+function addRules (localize) {
+	OBSIDIAN.Labels.Rules = {};
+	const rules = OBSIDIAN.Labels.Rules;
+	const physical = ['str', 'dex', 'con'];
+	const ability = abl => localize(`AbilityAbbr.${abl}`);
+	const abilities = (...abls) => abls.map(abl => ability(abl)).join('&sol;');
+	const disadvantageOn = (roll, ...abls) =>
+		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize(roll)} `
+		+ `(${abilities(...abls)})`;
+
+	rules.encumbered = `<strong>-10</strong> ${localize('Speed')}`;
+	rules.heavyArmour = `<strong>-10</strong> ${localize('Speed')}`;
+	rules.overCapacity = `${localize('Speed')} <strong>0</strong>`;
+	rules.noisyArmour =
+		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize('Skill.ste')}`;
+	rules.heavilyEncumbered =
+		`<strong>-20</strong> ${localize('Speed')}; `
+		+ `${disadvantageOn('AbilityChecks', ...physical)}; `
+		+ `${disadvantageOn('AttackRolls', ...physical)}; `
+		+ `${disadvantageOn('SavingThrowsLC', ...physical)}`;
 }

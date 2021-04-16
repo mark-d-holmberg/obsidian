@@ -1,296 +1,229 @@
 import {OBSIDIAN} from '../global.js';
+import {cssIconDiamond, cssIconHexagon} from '../util/html.js';
 
 let localize;
-const multipliers = {0.5: 'OBSIDIAN.Half', 2: 'OBSIDIAN.Twice'}
 
 export function prepareToggleableEffects (actorData) {
-	localize = game.i18n.localize.bind(game.i18n);
+	localize = key => game.i18n.localize(`OBSIDIAN.${key}`);
 	for (const effect of actorData.obsidian.toggleable) {
+		const filter =
+			effect.filters.length ? ` ${effect.filters.map(formatFilter).join(', ')}` : '';
+
 		effect.toggle.display =
-			oxfordComma(
-				effect.active.bonus.map(bonus => formatBonus(actorData, bonus))
-					.concat(effect.active['roll-mod'].map(formatRollMod))
-					.concat(effect.active.multiplier.map(formatMultiplier))
-					.concat(effect.active.setter.map(formatSetter))
-					.concat(formatDefenses(effect.active.defense))
-					.concat(formatConditions(effect.active.condition))
-					.filter(part => part.length))
-				.capitalise();
-
-		if (effect.filters.length) {
-			let preposition = 'OBSIDIAN.On';
-			if (!effect.active['roll-mod'].length
-				&& !effect.active.setter.length
-				&& !effect.active.multiplier.length)
-			{
-				preposition = 'OBSIDIAN.To';
-			}
-
-			effect.toggle.display += ` ${localize(preposition)} ${formatFilters(effect.filters)}`;
-		}
+			effect.active.bonus.map(bonus =>
+				formatBonus(actorData, bonus)
+				+ (filter.length && effect.filters[0].filter === 'roll'
+					? ` ${localize('On')}${filter}`
+					: filter))
+				.concat(effect.active['roll-mod'].map(mod =>
+					formatRollMod(mod)
+					+ (filter.length && mod.mode === 'reg' ? ` ${localize('On')}${filter}` : filter)))
+				.concat(effect.active.multiplier.map(multiplier =>
+					`${formatMultiplier(multiplier)}${filter}`))
+				.concat(effect.active.setter.map(setter => `${filter}${formatSetter(setter)}`))
+				.concat(formatDefenses(effect.active.defense))
+				.concat(formatConditions(effect.active.condition))
+				.filter(part => part.length)
+				.join('; ');
 	}
-}
-
-function formatFilters (filters) {
-	const parts = [];
-	for (const filter of filters) {
-		parts.push(formatFilter(filter));
-	}
-
-	return oxfordComma(parts);
 }
 
 function formatBonus (actorData, bonus) {
-	const parts = [];
 	if (bonus.method === 'dice') {
 		if (bonus.ndice !== 0) {
-			let i18n = 'OBSIDIAN.AddLC';
-			let ndice = bonus.ndice;
-
-			if (ndice < 0) {
-				i18n = 'OBSIDIAN.Subtract';
-				ndice *= -1;
-			}
-
-			parts.push(`${localize(i18n)} ${ndice}d${bonus.die}`);
+			return `<strong>${bonus.ndice.sgn()}d${bonus.die}</strong>`;
 		}
 
 		if (bonus.bonus !== 0) {
-			let operator = '&plus;';
-			let mod = bonus.bonus;
-
-			if (bonus.bonus < 0) {
-				operator = '&minus;';
-				mod *= -1;
-			}
-
-			parts.push(`<strong>${operator}${mod}</strong>`);
+			return `<strong>${bonus.bonus.sgn()}</strong>`;
 		}
 	}
 
 	if (bonus.method === 'formula') {
-		let multiplier = '';
-		const bonusApplies =
-			bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '');
-
-		if (bonus.operator === 'mult') {
-			const naturalLang = multipliers[bonus.constant];
-			if (naturalLang) {
-				multiplier = `${localize(naturalLang)} `;
-			} else if (bonus.constant !== 1) {
-				multiplier = `${bonus.constant} &times; `;
+		if (bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '')) {
+			let str = bonus.constant < 0 ? '-' : '+';
+			if (bonus.operator === 'mult') {
+				str += ` ${bonus.constant === 0.5 ? '½' : `${bonus.constant}`}&times;`;
 			}
-		} else if (bonus.constant !== 0) {
-			multiplier = `${bonus.constant} &plus; `;
-		}
 
-		let addOrSubtract = localize('OBSIDIAN.AddLC');
-		if (bonusApplies && bonus.constant < 0) {
-			addOrSubtract = localize('OBSIDIAN.Subtract');
-		}
-
-		if (bonusApplies && bonus.value === 'prof') {
-			parts.push(localize('OBSIDIAN.BonusProf').format(addOrSubtract, multiplier));
-		}
-
-		if (bonusApplies && bonus.value === 'abl') {
-			parts.push(localize('OBSIDIAN.BonusAbilityMod')
-				.format(addOrSubtract, multiplier, localize(`OBSIDIAN.Ability-${bonus.ability}`)));
-		}
-
-		if (bonusApplies && bonus.value === 'chr') {
-			parts.push(localize('OBSIDIAN.BonusCharLevel').format(addOrSubtract, multiplier));
-		}
-
-		if (bonusApplies && bonus.value === 'cls') {
-			const cls = actorData.obsidian.classes.find(cls => cls._id === bonus.class);
-			if (cls) {
-				parts.push(localize('OBSIDIAN.BonusClassLevel')
-					.format(addOrSubtract, multiplier, cls.obsidian.label));
+			if (bonus.value === 'abl') {
+				str += localize(`AbilityAbbr.${bonus.ability}`);
+			} else if (bonus.value === 'cls') {
+				const cls = actorData.obsidian.itemsByID.get(bonus.class);
+				if (cls) {
+					str += `${
+						cls.name === 'custom' ? cls.custom : localize(`Class.${cls.name}`)
+					} ${localize('Level')}`;
+				}
+			} else {
+				str += localize(`BonusValue.${bonus.value}`);
 			}
+
+			return `<strong>${str}</strong>`;
 		}
 	}
 
-	return oxfordComma(parts);
+	return '';
 }
 
 function formatFilter (filter) {
 	const parts = [];
+	const some = filter.multi !== 'any' && filter.collection.length;
+	const collection = (i18n, items) =>` (${
+		items.map(item => item.label ? item.label : localize(`${i18n}.${item.key}`)).join('&sol;')
+	})`;
+
+	const weaponAttacks = items => {
+		if (items.length < 2) {
+			return localize(`AttackFullLC.${items[0].key}`);
+		} else if (items.every(item => item.key[0] === 'm')) {
+			return localize('MeleeAttacks');
+		} else if (items.every(item => item.key[0] === 'r')) {
+			return localize('RangedAttacks');
+		} else if (items.every(item => item.key[1] === 'w')) {
+			return localize('WeaponAttacks');
+		} else if (items.every(item => item.key[1] === 's')) {
+			return localize('SpellAttacks');
+		} else {
+			return `${localize('AttackRolls')} (${
+				items.map(item => localize(`AttackFullLC.${item.key}`)).join('&sol;')
+			})`;
+		}
+	};
+
+	const checks = (translationAny, translationSome, items) =>
+		some
+			? items
+				.map(item => item.label ? item.label : localize(`${translationSome}.${item.key}`))
+				.join('&sol;')
+			: localize(translationAny);
+
 	if (filter.filter === 'roll') {
 		if (filter.roll === 'attack') {
 			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.AttackRolls'));
+				parts.push(localize('AttackRolls'));
 			} else if (filter.collection.length) {
-				weaponAttacks(filter, parts);
+				parts.push(weaponAttacks(filter.collection));
 			}
 		} else if (filter.roll === 'check') {
 			if (filter.check === 'ability') {
-				if (filter.multi === 'any') {
-					parts.push(localize('OBSIDIAN.AbilityChecks'));
-				} else if (filter.collection.length) {
-					parts.push(...filter.collection.map(item =>
-						localize(`OBSIDIAN.Ability-${item.key}`)));
-					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
-				}
+				parts.push(
+					localize('AbilityChecks')
+					+ (some ? collection('AbilityAbbr', filter.collection) : ''));
 			} else if (filter.check === 'skill') {
-				if (filter.multi === 'any') {
-					parts.push(localize('OBSIDIAN.SkillChecks'));
-				} else if (filter.collection.length) {
-					parts.push(...filter.collection.map(item => {
-						if (item.label) {
-							return item.label;
-						} else {
-							return localize(`OBSIDIAN.Skill-${item.key}`);
-						}
-					}));
-					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
-				}
+				parts.push(checks('SkillChecks', 'Skill', filter.collection));
 			} else if (filter.check === 'tool') {
-				if (filter.multi === 'any') {
-					parts.push(localize('OBSIDIAN.ToolChecks'));
-				} else if (filter.collection.length) {
-					parts.push(...filter.collection.map(item => {
-						if (item.label) {
-							return item.label;
-						} else {
-							return localize(`OBSIDIAN.ToolProf-${item.key}`);
-						}
-					}));
-					parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
-				}
+				parts.push(checks('ToolChecks', 'ToolProf', filter.collection));
 			} else if (filter.check === 'init') {
-				parts.push(localize('OBSIDIAN.InitiativeRolls'));
+				parts.push(localize('InitiativeLC'));
 			}
 		} else if (filter.roll === 'save') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.SavingThrowsLC'));
-			} else if (filter.collection.length) {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.Ability-${item.key}`)));
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Saves')}`;
-			}
+			parts.push(
+				localize('SavingThrowsLC')
+				+ (some ? collection('AbilityAbbr', filter.collection) : ''));
 		} else if (filter.roll === 'damage') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.DamageRolls'));
-			} else if (filter.collection.length && filter.dmg === 'damage') {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.Damage-${item.key}`)));
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DamageRolls')}`;
-			} else if (filter.collection.length && filter.dmg === 'attack') {
-				weaponAttacks(filter, parts);
-				parts[0] = `${localize('OBSIDIAN.DamageRollsWith')} ${parts[0]}`;
+			let str = localize('DamageRolls');
+			if (some) {
+				if (filter.dmg === 'damage') {
+					str += ` (${
+						filter.collection.map(item => localize(`Damage.${item.key}`)).join('&sol;')
+					})`;
+				} else if (filter.dmg === 'attack') {
+					str += ` (${weaponAttacks(filter.collection)})`;
+				}
 			}
+
+			parts.push(str);
 		} else if (filter.roll === 'hd') {
-			parts.push(localize('OBSIDIAN.HitDiceRolls'));
+			parts.push(localize('HitDiceRolls'));
 		}
 	} else if (filter.filter === 'score') {
 		if (filter.score === 'ability') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.AbilityScores'));
-			} else if (filter.collection.length) {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.Ability-${item.key}`)));
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.AbilityScores')}`;
-			}
+			parts.push(
+				some
+					? filter.collection.map(item => localize(`Ability.${item.key}`)).join('&sol;')
+					: localize('AbilityScores'));
 		} else if (filter.score === 'ac') {
-			parts.push(localize('OBSIDIAN.ACAbbr'));
+			parts.push(localize('ACAbbr'));
 		} else if (filter.score === 'max-hp') {
-			parts.push(localize('OBSIDIAN.MaxHPLC'));
+			parts.push(localize('MaxHPLC'));
 		} else if (filter.score === 'passive') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.PassiveChecks'));
-			} else {
-				parts.push(...filter.collection.map(item => {
-					if (item.label) {
-						return item.label;
-					} else {
-						return localize(`OBSIDIAN.Skill-${item.key}`);
-					}
-				}));
-				parts[0] = `${localize('OBSIDIAN.PassiveLC')} ${parts[0]}`;
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.Checks')}`;
-			}
+			parts.push(
+				localize('PassiveChecks')
+				+ (some ? collection('Skill', filter.collection) : ''));
 		} else if (filter.score === 'speed') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.YourSpeed'));
-			} else {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.Speed-${item.key}`)));
-				parts[0] = `${localize('OBSIDIAN.Your')} ${parts[0]}`;
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.SpeedLC')}`;
-			}
+			parts.push(localize('Speed') + (some ? collection('Speed', filter.collection) : ''));
 		} else if (filter.score === 'dc') {
-			if (filter.multi === 'any') {
-				parts.push(localize('OBSIDIAN.SaveDCs'));
-			} else {
-				parts.push(...filter.collection.map(item =>
-					localize(`OBSIDIAN.Ability-${item.key}`)));
-				parts[0] = `${localize('OBSIDIAN.Your')} ${parts[0]}`;
-				parts[parts.length - 1] += ` ${localize('OBSIDIAN.DCs')}`;
-			}
+			parts.push(
+				localize('SaveDCs')
+				+ (some ? collection('AbilityAbbr', filter.collection) : ''));
 		} else if (filter.score === 'prof') {
-			parts.push(localize('OBSIDIAN.ProfBonusLC'));
+			parts.push(localize('ProfBonusLC'));
 		} else if (filter.score === 'carry') {
-			parts.push(localize('OBSIDIAN.Scores-carry'));
+			parts.push(localize('Scores.carry'));
 		}
 	}
 
 	if (parts.length && !OBSIDIAN.notDefinedOrEmpty(filter.mode)) {
-		parts[parts.length - 1] += ' ' +
-			localize('OBSIDIAN.WhenRollingAt')
-				.format(localize(`OBSIDIAN.Roll-${filter.mode}`).toLowerCase());
+		if (filter.mode === 'reg') {
+			parts.push(`(${localize('StraightRollsOnly')})`);
+		} else {
+			const advantage = filter.mode === 'adv';
+			parts.push(
+				`(${cssIconHexagon({advantage, disadvantage: !advantage, wrapped: true})} `
+				+ `${localize('Only')})`);
+		}
 	}
 
 	if (parts.length && !OBSIDIAN.notDefinedOrEmpty(filter.usesAbility)) {
-		parts[parts.length - 1] += ` ${localize('OBSIDIAN.Using')} `
-			+ oxfordComma(
-				Object.entries(filter.usesAbility.abilities)
-					.filter(([_, v]) => v)
-					.map(([k, _]) => localize(`OBSIDIAN.Ability-${k}`)),
-				true);
+		parts.push(`(${
+			Object.entries(filter.usesAbility.abilities)
+				.filter(([, v]) => v)
+				.map(([k,]) => localize(`AbilityAbbr.${k}`))
+				.join('&sol;')
+		} ${localize('Only')})`);
 	}
 
-	return oxfordComma(parts);
+	return parts.join(' ');
 }
 
 function formatRollMod (mod) {
 	const parts = [];
 	if (mod.min > 1) {
-		parts.push(localize('OBSIDIAN.RollModMin').format(mod.min));
+		parts.push(localize('RollModMin') + ` <strong>${mod.min}</strong>`);
 	}
 
 	if (mod.reroll > 1) {
-		parts.push(localize('OBSIDIAN.RollModReroll').format(mod.reroll));
+		parts.push(localize('RollModReroll') + ` <strong>${mod.reroll}</strong>`);
 	}
 
 	if (mod.ndice > 0) {
 		parts.push(
-			localize('OBSIDIAN.RollModExtraDice')
-				.format(mod.ndice, localize(mod.ndice > 1 ? 'OBSIDIAN.Dice' : 'OBSIDIAN.Die')));
-	}
-
-	if (mod.mode !== 'reg') {
-		parts.push(localize(`OBSIDIAN.Roll-${mod.mode}`));
+			`<strong>${mod.ndice.sgn()} ${localize(mod.ndice > 1 ? 'Dice' : 'Die')}</strong>`);
 	}
 
 	if (mod.max) {
-		parts.push(localize('OBSIDIAN.MaxRoll'));
+		parts.push(localize('MaxRoll'));
 	}
 
 	if (mod.mcrit > 0 && mod.mcrit < 20) {
-		parts.push(localize('OBSIDIAN.RollModCritRange').format(mod.mcrit));
+		parts.push(`${localize('RollModCritRange')} ${mod.mcrit}&mdash;20`);
 	}
 
-	return oxfordComma(parts);
+	if (mod.mode !== 'reg') {
+		const advantage = mod.mode === 'adv';
+		parts.push(cssIconHexagon({advantage, disadvantage: !advantage}));
+	}
+
+	return parts.join(', ');
 }
 
 function formatSetter (setter) {
-	return localize('OBSIDIAN.SetScoreTo')
-		.format(setter.score, setter.min ? ` ${localize('OBSIDIAN.IfNotHigher')}` : '');
+	return `${setter.min ? `(${localize('IfNotHigher')}) ` : ''}<strong>${setter.score}</strong>`;
 }
 
 function formatMultiplier (multiplier) {
-	return localize('OBSIDIAN.MultipliesScoreBy').format(multiplier.multiplier);
+	return `<strong>&times;${multiplier.multiplier}</strong>`;
 }
 
 function formatConditions (components) {
@@ -298,13 +231,13 @@ function formatConditions (components) {
 	components.forEach(c => allConditions.add(c.condition));
 
 	const conditions = Array.from(allConditions.values()).filter(c => c !== 'exhaustion');
-	const exhaustionPart = localize('OBSIDIAN.GainExhaustion');
+	const exhaustionPart = localize('GainExhaustion');
 	const conditionPart =
-		localize('OBSIDIAN.BecomeCondition')
-			.format(oxfordComma(conditions.map(c => localize(`OBSIDIAN.Condition-${c}`))));
+		localize('BecomeCondition')
+			.format(conditions.map(c => localize(`Condition-${c}`)).join(', '));
 
 	if (conditions.length && allConditions.has('exhaustion')) {
-		return oxfordComma([conditionPart, exhaustionPart]);
+		return `${conditionPart}, ${exhaustionPart}`;
 	} else if (conditions.length) {
 		return conditionPart;
 	} else if (allConditions.has('exhaustion')) {
@@ -315,7 +248,7 @@ function formatConditions (components) {
 }
 
 function formatDefenses (defs) {
-	const dmg = dmg => localize(`OBSIDIAN.Damage-${dmg}`);
+	const dmg = dmg => localize(`Damage.${dmg}`);
 	const vuln = new Set();
 	const res = {
 		noCondition: new Set(),
@@ -376,24 +309,34 @@ function formatDefenses (defs) {
 	const parts = [];
 	if (vuln.size) {
 		parts.push(
-			localize('OBSIDIAN.VulnTo').format(oxfordComma(Array.from(vuln.values()).map(dmg))));
+			cssIconDiamond({level: 'vuln', wrapped: true})
+			+ ` ${Array.from(vuln.values()).map(dmg).join(', ')}`);
 	}
 
 	if (bestDR) {
-		parts.push(localize('OBSIDIAN.PhysicalDamageReduction').format(bestDR));
+		parts.push(`
+			<div class="obsidian-icon-sm obsidian-icon-damage-reduction"
+			     title="${localize('DamageReduction')}">
+				<strong>${bestDR}</strong>
+			</div>
+		`);
 	}
 
-	[['imm', 'ImmuneTo'], ['adv', 'AdvantageSave'], ['dis', 'DisadvantageSave']]
-		.forEach(([level, i18n]) => {
-			if (!conds[level].size) {
-				return;
-			}
+	['imm', 'adv', 'dis'].forEach(level => {
+		if (!conds[level].size) {
+			return;
+		}
 
-			parts.push(localize(`OBSIDIAN.${i18n}`).format(
-				oxfordComma(
-					Array.from(conds[level].values())
-						.map(cond => localize(`OBSIDIAN.Condition-${cond}`)))));
-		});
+		parts.push(
+			(level === 'imm'
+				? cssIconDiamond({level, wrapped: true})
+				: cssIconHexagon({
+					advantage: level === 'adv',
+					disadvantage: level === 'dis',
+					wrapped: true
+				}))
+			+ ` ${Array.from(conds[level].values()).map(cond => localize(`Condition.${cond}`))}`);
+	});
 
 	[res, imm].forEach(level => {
 		const subParts = [];
@@ -407,12 +350,9 @@ function formatDefenses (defs) {
 				return;
 			}
 
-			let s =
-				oxfordComma(Array.from(level[p].values()).map(dmg))
-				+ ` ${localize('OBSIDIAN.DamageLC')}`;
-
+			let s = Array.from(level[p].values()).map(dmg).join(', ') + ` ${localize('DamageLC')}`;
 			if (t.length) {
-				s += ` ${localize(`OBSIDIAN.${t}`)}`;
+				s += ` ${localize(t)}`;
 			}
 
 			subParts.push(s);
@@ -423,46 +363,9 @@ function formatDefenses (defs) {
 		}
 
 		parts.push(
-			localize('OBSIDIAN.DefString').format(
-				localize(`OBSIDIAN.${level === res ? 'Resistant' : 'Immune'}`),
-				oxfordComma(subParts)));
+			cssIconDiamond({level: level === res ? 'res' : 'imm', wrapped: true})
+			+ subParts.join(', '));
 	});
 
-	return oxfordComma(parts);
-}
-
-function oxfordComma (parts, or) {
-	if (parts.length) {
-		if (parts.length < 2) {
-			return parts[0];
-		} else {
-			let comma = ',';
-			if (parts.length === 2) {
-				comma = '';
-			}
-
-			const last = parts.pop();
-			const conjunction = localize(or ? 'OBSIDIAN.Or' : 'OBSIDIAN.And');
-			return `${parts.join(', ')}${comma} ${conjunction} ${last}`;
-		}
-	}
-
-	return '';
-}
-
-function weaponAttacks (filter, parts) {
-	if (filter.collection.length < 2) {
-		parts.push(localize(`OBSIDIAN.AttackFullLC-${filter.collection[0].key}`));
-	} else if (filter.collection.every(item => item.key[0] === 'm')) {
-		parts.push(localize('OBSIDIAN.MeleeAttacks'));
-	} else if (filter.collection.every(item => item.key[0] === 'r')) {
-		parts.push(localize('OBSIDIAN.RangedAttacks'));
-	} else if (filter.collection.every(item => item.key[1] === 'w')) {
-		parts.push(localize('OBSIDIAN.WeaponAttacks'));
-	} else if (filter.collection.every(item => item.key[1] === 's')) {
-		parts.push(localize('OBSIDIAN.SpellAttacks'));
-	} else {
-		parts.push(...filter.collection.map(item =>
-			localize(`OBSIDIAN.AttackFullLC-${item.key}`)));
-	}
+	return parts.join('; ');
 }

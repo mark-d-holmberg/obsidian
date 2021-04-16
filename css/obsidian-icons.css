@@ -346,8 +346,26 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/compendium.svg');
 }
 
+.obsidian-css-icon-inline-diamond,
+.obsidian-css-icon-inline-hexagon {
+	display: inline-block;
+	width: 20px;
+	position: relative;
+}
+.obsidian-css-icon-inline-diamond {
+	height: 14px;
+}
+
+.obsidian-css-icon-inline-hexagon {
+	height: 11px;
+}
+
 .obsidian-css-icon {
 	position: relative;
+}
+
+.obsidian-css-icon-inline .obsidian-css-icon {
+	position: absolute;
 }
 
 .obsidian-css-icon-sm {
@@ -391,7 +409,8 @@ li.context-item .obsidian-icon {
 }
 
 .obsidian-css-icon-circle .obsidian-css-icon-label,
-.obsidian-css-icon-diamond .obsidian-css-icon-label {
+.obsidian-css-icon-diamond .obsidian-css-icon-label,
+.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-label {
 	font-weight: bold;
 }
 

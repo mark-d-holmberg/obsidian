@@ -30,14 +30,12 @@
 <fieldset>
 	<legend>{{localize 'OBSIDIAN.Currency'}}</legend>
 	{{#each ObsidianRules.CURRENCY}}
-		<div class="obsidian-form-row">
+		<div class="obsidian-form-row obsidian-currency-row">
 			<div>
-				<label>
-					<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{this}}"></div>
-					<input type="text" name="flags.obsidian.currency.{{this}}" data-dtype="Number"
-					       class="obsidian-input-num-lg" placeholder="0"
-					       value="{{lookup ../item.flags.obsidian.currency this}}">
-				</label>
+				<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{this}}"></div>
+				<input type="text" name="flags.obsidian.currency.{{this}}" data-dtype="Number"
+				       class="obsidian-input-num-lg" placeholder="0"
+				       value="{{lookup ../item.flags.obsidian.currency this}}">
 				<input type="text" class="obsidian-add-remove" data-key="{{this}}" style="width: 200px;"
 				       placeholder="{{localize 'OBSIDIAN.AddRemove'}}">
 			</div>
