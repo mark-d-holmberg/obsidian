@@ -43,7 +43,9 @@ function formatBonus (actorData, bonus) {
 		if (bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '')) {
 			let str = bonus.constant < 0 ? '-' : '+';
 			if (bonus.operator === 'mult') {
-				str += ` ${bonus.constant === 0.5 ? '½' : `${bonus.constant}`}&times;`;
+				str += `${bonus.constant === 0.5 ? '½' : `${bonus.constant}`}&times; `;
+			} else {
+				str += bonus.constant;
 			}
 
 			if (bonus.value === 'abl') {
@@ -55,7 +57,7 @@ function formatBonus (actorData, bonus) {
 						cls.name === 'custom' ? cls.custom : localize(`Class.${cls.name}`)
 					} ${localize('Level')}`;
 				}
-			} else {
+			} else if (bonus.value.length) {
 				str += localize(`BonusValue.${bonus.value}`);
 			}
 

@@ -12,7 +12,7 @@ export class ObsidianSkillDialog extends ObsidianDialog {
 			title: `${game.i18n.localize(`OBSIDIAN.Manage${tool ? 'Tool' : 'Skill'}`)}: `
 				+ (data.custom
 					? data.label
-					: game.i18n.localize(`OBSIDIAN.${tool ? 'ToolProf' : 'Skill'}-${id}`)),
+					: game.i18n.localize(`OBSIDIAN.${tool ? 'ToolProf' : 'Skill'}.${id}`)),
 			width: 300
 		});
 
