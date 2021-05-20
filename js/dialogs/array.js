@@ -1,5 +1,4 @@
 import {ObsidianDialog} from './dialog.js';
-import {ObsidianItemSheet} from '../sheets/item-sheet.js';
 
 export class ObsidianArrayDialog extends ObsidianDialog {
 	/**

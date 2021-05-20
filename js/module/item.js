@@ -8,10 +8,15 @@ import {Rules} from '../rules/rules.js';
 import {Schema} from './schema.js';
 import {Migrate} from '../migration/migrate.js';
 
-export function patchItem_prepareData () {
+export function patchItem5e () {
 	Item5e.prototype.prepareData = (function () {
 		const cached = Item5e.prototype.prepareData;
 		return function () {
+			// Temporary stopgap for getting it working in 0.8.
+			if (!this.options) {
+				this.options = {};
+			}
+
 			if (!this.data.data.preparation) {
 				this.data.data.preparation = {};
 			}
@@ -22,6 +27,25 @@ export function patchItem_prepareData () {
 				prepareData(this);
 				prepareEffects(this);
 			}
+		};
+	})();
+
+	Item5e.prototype._onDelete = (function () {
+		const cached = Item5e.prototype._onDelete;
+		return async function (options) {
+			await cached.apply(this, arguments);
+			if (!this.isEmbedded || !this.isObsidian()) {
+				return;
+			}
+
+			const orphanedSpells =
+				this.data.flags.obsidian.effects
+					.flatMap(e => e.components)
+					.filter(c => c.type === 'spells')
+					.flatMap(c => c.spells)
+					.filter(spell => typeof spell === 'string');
+
+			return this.parent.deleteEmbeddedDocuments('Item', orphanedSpells, options);
 		};
 	})();
 
@@ -36,19 +60,31 @@ export function patchItem_prepareData () {
 			prepareEffects(this);
 		}
 	};
+
+	Item5e.prototype.isObsidian = function () {
+		return this.data.flags?.obsidian != null;
+	};
+
+	Object.defineProperty(Item5e.prototype, 'obsidian', {
+		get () {
+			return this.data.obsidian;
+		}
+	});
+
+	Object.defineProperty(Item5e.prototype, 'idx', {
+		get () {
+			return this.data.idx;
+		}
+	});
 }
 
-export function getSourceClass (actorData, source) {
+export function getSourceClass (actor, source) {
 	if (source.type === 'class') {
-		return actorData.obsidian.classes.find(cls => cls._id === source.class);
+		return actor.items.get(source.class);
 	} if (source.type === 'item') {
-		const parent = actorData.obsidian.itemsByID.get(source.item);
-		if (parent
-			&& getProperty(parent, 'flags.obsidian.source')
-			&& parent.flags.obsidian.source.type === 'class')
-		{
-			return actorData.obsidian.classes.find(cls =>
-				cls._id === parent.flags.obsidian.source.class);
+		const parent = actor.items.get(source.item);
+		if (parent?.data.flags.obsidian?.source?.type === 'class') {
+			return actor.items.get(parent.data.flags.obsidian.source.class);
 		}
 	}
 }
@@ -99,8 +135,8 @@ const prepareItem = {
 			return;
 		}
 
-		if (data.spellcasting === 'none') {
-			data.spellcasting = Rules.CLASS_SPELL_PROGRESSION[item.name] || 'none';
+		if (data.spellcasting?.progression === 'none') {
+			data.spellcasting.progession = Rules.CLASS_SPELL_PROGRESSION[item.name] || 'none';
 		}
 
 		if (flags.spellcasting.preparation === undefined) {
@@ -111,7 +147,7 @@ const prepareItem = {
 			flags.spellcasting.rituals = Rules.CLASS_RITUALS[item.name] || 'none';
 		}
 
-		derived.spellcasting = duplicate(flags.spellcasting);
+		derived.spellcasting = {...duplicate(flags.spellcasting), ...duplicate(data.spellcasting)};
 		const spellcasting = derived.spellcasting;
 		const levels = data.levels;
 
@@ -123,13 +159,13 @@ const prepareItem = {
 			spellcasting.spellList = [].concat(originalList);
 		}
 
-		if (spellcasting.spell === undefined) {
-			spellcasting.spell = Rules.CLASS_SPELL_MODS[item.name];
+		if (spellcasting.ability === undefined) {
+			spellcasting.ability = Rules.CLASS_SPELL_MODS[item.name];
 		}
 
-		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.spell) && item.isOwnedByActor()) {
+		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.ability) && item.isOwnedByActor()) {
 			const actorData = item.actor.data.data;
-			const mod = actorData.abilities[spellcasting.spell].mod;
+			const mod = actorData.abilities[spellcasting.ability].mod;
 			spellcasting.mod = mod;
 			spellcasting.attack = mod + actorData.attributes.prof;
 			spellcasting.save = mod + actorData.attributes.prof + 8;
@@ -160,7 +196,7 @@ const prepareItem = {
 				entities: false,
 				links: false,
 				rollData: item.actor.getRollData(),
-				secrets: item.actor.owner
+				secrets: item.actor.isOwner
 			});
 		}
 
@@ -195,13 +231,13 @@ const prepareItem = {
 		}
 
 		if (flags.source.type === 'class') {
-			const cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
+			const cls = item.actor.items.get(flags.source.class);
 			derived.source = {className: cls?.obsidian.label};
 		}
 
 		// Check CONFIG is ready first.
 		try {
-			CONFIG.JournalEntry.entityClass.collection;
+			CONFIG.JournalEntry.documentClass.collection;
 		} catch {
 			return;
 		}
@@ -210,7 +246,7 @@ const prepareItem = {
 			entities: true,
 			links: true,
 			rollData: item.actor.getRollData(),
-			secrets: item.actor.owner
+			secrets: item.actor.isOwner
 		});
 	},
 
@@ -250,13 +286,13 @@ const prepareItem = {
 			derived.source.display = flags.source.custom;
 		} else if (item.isOwnedByActor() && item.actor.data.obsidian) {
 			if (flags.source.type === 'class') {
-				cls = item.actor.data.obsidian.itemsByID.get(flags.source.class);
+				cls = item.actor.items.get(flags.source.class);
 				derived.source.display = cls?.obsidian.label;
 			} else if (flags.source.type === 'item') {
-				const src = item.actor.data.obsidian.itemsByID.get(flags.source.item);
+				const src = item.actor.items.get(flags.source.item);
 				derived.source.display = src?.name;
 
-				if (src?.flags.obsidian.attunement && !src?.data.attuned) {
+				if (src?.data.flags.obsidian.attunement && !src?.data.data.attuned) {
 					derived.visible = false;
 				}
 			}
@@ -305,14 +341,14 @@ const prepareItem = {
 			}
 		}
 
-		if (flags.tags.ammunition && item.isOwnedByActor() && item.actor.data.obsidian) {
+		if (flags.tags.ammunition && item.isOwnedByActor() && item.actor.obsidian) {
 			derived.ammo = `
-				<select data-name="items.${item.data.idx}.flags.obsidian.ammo">
+				<select data-name="items.${item.idx}.flags.obsidian.ammo">
 					<option value="" ${OBSIDIAN.notDefinedOrEmpty(flags.ammo) ? 'selected' : ''}>
 						${game.i18n.localize('OBSIDIAN.AtkTag.ammunition')}
 					</option>
-					${item.actor.data.obsidian.ammo.map(ammo =>
-						`<option value="${ammo._id}" ${ammo._id === flags.ammo ? 'selected': ''}>
+					${item.actor.obsidian.ammo.map(ammo =>
+						`<option value="${ammo.id}" ${ammo.id === flags.ammo ? 'selected': ''}>
 							${ammo.name}
 						</option>`)}
 				</select>
@@ -347,15 +383,15 @@ const prepareItem = {
 			entities: false,
 			links: false,
 			rollData: item.actor?.getRollData(),
-			secrets: !!item.actor?.owner
+			secrets: item.actor?.isOwner
 		});
 	}
 };
 
 const prepareComponents = {
 	attack: function (actor, item, effect, component, cls) {
-		Prepare.calculateHit(actor?.data, item, component, cls);
-		Prepare.calculateAttackType(item.flags.obsidian, component);
+		Prepare.calculateHit(actor, item, component, cls);
+		Prepare.calculateAttackType(item.data.flags.obsidian, component);
 	},
 
 	check: function (actor, item, effect, component, cls) {
@@ -364,11 +400,11 @@ const prepareComponents = {
 			pred = () => Filters.appliesTo.spellDCs;
 		}
 
-		Prepare.calculateDC(actor?.data, item, component, cls, pred);
+		Prepare.calculateDC(actor, item, component, cls, pred);
 	},
 
 	damage: function (actor, item, effect, component, cls) {
-		Prepare.calculateDamage(actor?.data, item, component, cls);
+		Prepare.calculateDamage(actor, item, component, cls);
 	},
 
 	description: function (actor, item, effect, component) {
@@ -376,16 +412,16 @@ const prepareComponents = {
 			entities: true,
 			links: true,
 			rollData: actor?.getRollData(),
-			secrets: actor?.owner
+			secrets: actor?.isOwner
 		});
 	},
 
 	save: function (actor, item, effect, component, cls) {
-		Prepare.calculateDC(actor?.data, item, component, cls, Filters.appliesTo.saveDCs);
+		Prepare.calculateDC(actor, item, component, cls, Filters.appliesTo.saveDCs);
 	},
 
 	resource: function (actor, item, effect, component) {
-		Prepare.calculateResources(actor?.data, item, effect, component);
+		Prepare.calculateResources(actor, item, effect, component);
 
 		component.label =
 			component.name.length ? component.name : game.i18n.localize('OBSIDIAN.Unnamed');
@@ -418,7 +454,7 @@ const prepareComponents = {
 		}
 
 		if (component.target === 'this-item' || component.target === 'this-effect') {
-			component.itemID = item._id;
+			component.itemID = item.id;
 		}
 	},
 
@@ -427,11 +463,10 @@ const prepareComponents = {
 			return;
 		}
 
-		const actorData = actor.data;
 		if (component.source === 'individual' && component.method === 'list') {
-			const cls = actorData.obsidian.classes.find(cls => cls._id === component.class);
+			const cls = actor.items.get(component.class);
 			component.spells.forEach(id => {
-				const spell = actorData.obsidian.itemsByID.get(id);
+				const spell = actor.items.get(id);
 				if (!spell) {
 					return;
 				}
@@ -442,33 +477,31 @@ const prepareComponents = {
 				}
 			});
 		} else if (component.source === 'list'
-			&& getProperty(item, 'flags.obsidian.source.type') === 'class'
+			&& item.getFlag('obsidian', 'source.type') === 'class'
 			&& OBSIDIAN.Data.SPELLS_BY_CLASS
 			&& OBSIDIAN.Data.SPELLS_BY_CLASS[component.list])
 		{
-			const cls = actorData.obsidian.classes.find(cls =>
-				cls._id === item.flags.obsidian.source.class);
-
+			const cls = actor.items.get(item.data.flags.obsidian.source.class);
 			if (!cls || !getProperty(cls, 'obsidian.spellcasting.spellList')) {
 				return;
 			}
 
 			const list = cls.obsidian.spellcasting.spellList;
-			const existing = new Set(list.map(spell => spell._id));
+			const existing = new Set(list.map(spell => spell.id));
 
 			cls.obsidian.spellcasting.spellList =
 				list.concat(
 					OBSIDIAN.Data.SPELLS_BY_CLASS[component.list]
-						.filter(spell => !existing.has(spell._id)));
+						.filter(spell => !existing.has(spell.id)));
 		}
 
 		if (component.source === 'individual' && component.method === 'item') {
 			item.obsidian.notes.push(...component.spells
-				.map(id => actorData.obsidian.itemsByID.get(id))
+				.map(id => actor.items.get(id))
 				.filter(_ => _)
 				.map(spell =>
 					'<div class="obsidian-table-note-flex">'
-					+ `<div data-roll="item" data-id="${spell._id}" class="rollable">`
+					+ `<div data-roll="item" data-id="${spell.id}" class="rollable">`
 					+ `${spell.name}</div></div>`));
 		}
 	}
@@ -493,7 +526,7 @@ function prepareEffects (item) {
 	}
 
 	if (flags.source && item.isOwnedByActor() && actorData.obsidian) {
-		cls = getSourceClass(actorData, flags.source);
+		cls = getSourceClass(item.actor, flags.source);
 	}
 
 	for (let effectIdx = 0; effectIdx < effects.length; effectIdx++) {
@@ -504,12 +537,8 @@ function prepareEffects (item) {
 			actorData.obsidian.effects.set(effect.uuid, effect);
 		}
 
-		if (!effect.toggle) {
-			effect.toggle = {active: true, display: ''};
-		}
-
 		effect.parentActor = actorData?._id;
-		effect.parentItem = item.data._id;
+		effect.parentItem = item.id;
 		effect.idx = effectIdx;
 		effect.label = getEffectLabel(effect);
 		effect.applies = [];
@@ -553,7 +582,7 @@ function prepareEffects (item) {
 
 			const prepare = prepareComponents[component.type];
 			if (prepare) {
-				prepare(item.actor, item.data, effect, component, cls);
+				prepare(item.actor, item, effect, component, cls);
 			}
 		}
 
@@ -571,7 +600,7 @@ function prepareEffects (item) {
 			effect.selfApplied || effect.components.some(c => Effect.metadata.rollable.has(c.type));
 
 		if (isRollable
-			&& item.data.type !== 'spell'
+			&& item.type !== 'spell'
 			&& !effect.components.some(c =>
 				c.type === 'resource' || c.type === 'attack'
 				|| (c.type === 'spells' && c.source === 'individual' && c.method === 'item')))
@@ -595,7 +624,7 @@ function prepareEffects (item) {
 			return spells.flatMap(component =>
 				component.spells.map(entry => {
 					if (item.isOwnedByActor() && actorData.obsidian) {
-						return actorData.obsidian.itemsByID.get(entry);
+						return item.actor.items.get(entry);
 					}
 
 					return entry;
@@ -636,7 +665,7 @@ function prepareEffects (item) {
 					scaledAmount = Math.round((actorLevel + 1) / 6 + .5) - 1;
 					break;
 				case 'class':
-					scaledAmount = actorData.obsidian.itemsByID.get(component.class)?.data.levels;
+					scaledAmount = item.actor.items.get(component.class)?.data.data.levels;
 					break;
 			}
 

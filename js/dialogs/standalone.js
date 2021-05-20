@@ -4,6 +4,10 @@ export class ObsidianStandaloneDialog extends Application {
 	constructor (config, options) {
 		super(options);
 		this._config = config;
+
+		if (this._config.parent && this._config.parent.setModal) {
+			this._config.parent.setModal(true);
+		}
 	}
 
 	static get defaultOptions () {
@@ -22,7 +26,7 @@ export class ObsidianStandaloneDialog extends Application {
 		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		if (this._config.actor) {
-			data.actor = duplicate(this._config.actor.data);
+			data.actor = duplicate(this._config.actor.toObject(false));
 		}
 
 		return data;
@@ -34,13 +38,5 @@ export class ObsidianStandaloneDialog extends Application {
 		}
 
 		return super.close();
-	}
-
-	render (force = false, options = {}) {
-		if (this._config.parent && this._config.parent.setModal) {
-			this._config.parent.setModal(true);
-		}
-
-		return super.render(force, options);
 	}
 }

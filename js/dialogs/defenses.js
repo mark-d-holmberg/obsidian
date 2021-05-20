@@ -66,9 +66,9 @@ export class ObsidianDefensesDialog extends ObsidianDialog {
 	 */
 	async _onAddDamage () {
 		const update = this._formData;
-		this.parent.actor.data.flags.obsidian.defenses.damage.push({level: 'res', dmg: 'acd'});
 		update['flags.obsidian.defenses.damage'] =
 			duplicate(this.parent.actor.data.flags.obsidian.defenses.damage);
+		update['flags.obsidian.defenses.damage'].push({level: 'res', dmg: 'acd'});
 		await this.parent.actor.update(update);
 		this.render(false);
 	}

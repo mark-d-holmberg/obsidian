@@ -8,13 +8,13 @@ import {Sheet} from './sheet.js';
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
 		super(...args);
-		game.settings.register('obsidian', this.object.data._id, {
+		game.settings.register('obsidian', this.actor.id, {
 			default: '',
 			scope: 'client',
 			onChange: settings => this.settings = JSON.parse(settings)
 		});
 
-		this.settings = game.settings.get('obsidian', this.object.data._id);
+		this.settings = game.settings.get('obsidian', this.actor.id);
 		if (this.settings === '') {
 			this.settings = {};
 		} else {
@@ -99,10 +99,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	getData () {
 		const data = super.getData();
-		data.items = this.actor.items.map(i => duplicate(i.data));
+		data.actor = duplicate(this.actor.toObject(false));
+		data.items = this.actor.items.map(item => duplicate(item.toObject(false)));
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.ObsidianLabels = OBSIDIAN.Labels;
-		data.isObject = data.actor.flags.obsidian?.details?.type === 'object';
+		data.isObject = data.data.details?.type?.value === 'object';
 		data.featCategories = {};
 		data.skills = {};
 		data.summonLevel = this._getSummonLevel();
@@ -158,6 +159,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			});
 		}
 
+		data.creatureType = this._formatCreatureType();
 		Sheet.getSenses(data);
 		Sheet.getRules(data);
 		return data;
@@ -255,6 +257,69 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		});
 	}
 
+	_formatCreatureType () {
+		const data = this.actor.data.data;
+		const flags = this.actor.data.flags.obsidian;
+		const derived = this.actor.obsidian;
+		let mainType = '';
+		let subtype = '';
+		let comma = '';
+		let alignment = '';
+
+		if (data.details.type != null && typeof data.details.type === 'object') {
+			let type = game.i18n.localize(`OBSIDIAN.CreatureType.${data.details.type.value}`);
+			if (!OBSIDIAN.notDefinedOrEmpty(data.details.type.swarm)) {
+				type =
+					game.i18n.localize('OBSIDIAN.CreatureSwarmPhrase')
+						.format(
+							game.i18n.localize(`OBSIDIAN.Size.${data.details.type.swarm}`),
+							game.i18n.localize(
+								`OBSIDIAN.CreatureTypePl.${data.details.type.value}`)
+								.toLocaleLowerCase());
+			}
+
+			mainType = `<span>${type}</span>`;
+		}
+
+		if (data.details.type?.value !== 'object'
+			&& (derived.details.tags || data.details.type?.subtype))
+		{
+			const tags =
+				[derived.details.tags || '', data.details.type?.subtype || '']
+					.filter(tag => tag.length)
+					.map(tag => tag.toLocaleLowerCase())
+					.join(', ');
+
+			subtype = `<span style="margin-left: 3px;">(${tags})</span>`;
+		}
+
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.details.alignment1)
+			|| !OBSIDIAN.notDefinedOrEmpty(flags.details.alignment2)
+			|| !OBSIDIAN.notDefinedOrEmpty(data.details.alignment))
+		{
+			comma = '<span>,</span> ';
+			alignment =
+				[1, 2].filter(n => !OBSIDIAN.notDefinedOrEmpty(flags.details[`alignment${n}`]))
+					.map(n =>
+						game.i18n.localize(
+							`OBSIDIAN.AlignmentPt${n}.${flags.details[`alignment${n}`]}`))
+					.join(' ');
+
+			if (!alignment.length) {
+				alignment = data.details.alignment;
+			}
+
+			if (alignment.length) {
+				alignment = `<span>${alignment.toLocaleLowerCase()}</span>`;
+			}
+		}
+
+		return `
+			<span>${game.i18n.localize(`OBSIDIAN.Size.${data.traits.size}`)}</span>
+			${mainType}${subtype}${comma}${alignment}
+		`;
+	}
+
 	_getSummonLevel () {
 		const level = this.actor.data.flags.obsidian?.summon?.spellLevel;
 		if (level == null || level < 1) {
@@ -305,8 +370,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		this.actor.rollHP(evt.shiftKey);
 	}
 
-	_restoreScrollPositions (html, selectors) {
+	_restoreScrollPositions (html) {
+		const selectors = this.options.scrollY || [];
 		const positions = this._scrollPositions || {};
+
 		for (const sel of selectors) {
 			const el = this.element.find(sel);
 			if (el.length === 1) {
@@ -315,8 +382,8 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 	}
 
-	_updateObject (event, formData) {
-		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
+	async _updateObject (event, formData) {
+		return super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data._source, formData));
 	}
 
 	_useLegendaryAction (evt) {

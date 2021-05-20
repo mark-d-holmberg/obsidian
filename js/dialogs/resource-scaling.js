@@ -7,7 +7,7 @@ export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
 		super({parent: options.parent, actor: actor});
 		this._actor = actor;
 		this._options = options;
-		this._item = actor.data.obsidian.itemsByID.get(options.id);
+		this._item = actor.items.get(options.id);
 		this._effect = actor.data.obsidian.effects.get(options.uuid);
 		this._resources = this._effect.components.filter(c => c.type === 'resource');
 		this._consumers = this._effect.components.filter(c => c.type === 'consume');
@@ -41,10 +41,10 @@ export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
 			data.available = this._resources[0].remaining;
 		} else if (this._consumers.length) {
 			if (this._consumers[0].target === 'qty') {
-				data.available = this._item.data.quantity;
+				data.available = this._item.data.data.quantity;
 			} else {
 				const [, , resource] =
-					Effect.getLinkedResource(this._actor.data, this._consumers[0]);
+					Effect.getLinkedResource(this._actor, this._consumers[0]);
 
 				if (resource) {
 					data.available = resource.remaining;

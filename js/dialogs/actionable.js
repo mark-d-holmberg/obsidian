@@ -6,7 +6,7 @@ export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 		super({parent: options.parent, actor: actor});
 		this._actor = actor;
 		this._options = options;
-		this._item = actor.data.obsidian.itemsByID.get(options.id);
+		this._item = actor.items.get(options.id);
 	}
 
 	static get defaultOptions () {
@@ -32,7 +32,7 @@ export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 
 	getData () {
 		const data = super.getData();
-		data.item = this._item;
+		data.item = this._item.data;
 		return data;
 	}
 }

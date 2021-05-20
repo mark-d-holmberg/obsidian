@@ -12,8 +12,8 @@ OBSIDIAN.spellComparator = (a, b) => {
 
 const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 OBSIDIAN.collateSpells = async (compendium) => {
-	const spells = await game.packs.find(pack => pack.collection === compendium).getContent();
-	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell.data]));
+	const spells = await game.packs.get(compendium).getDocuments();
+	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell]));
 };
 
 OBSIDIAN.computeSpellsByClass = lists => {
@@ -44,7 +44,7 @@ export async function loadSpellData () {
 
 	await OBSIDIAN.collateSpells(compendium);
 	OBSIDIAN.computeSpellsByClass(spellLists);
-	game.actors.entities.forEach(actor => actor.prepareData());
+	game.actors.contents.forEach(actor => actor.prepareData());
 	Object.values(game.actors.tokens).forEach(actor => actor.prepareData());
 	Hooks.callAll('obsidian.actorsPrepared');
 }

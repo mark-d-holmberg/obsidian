@@ -8,8 +8,8 @@ export function addTokenConfigHook () {
 		};
 	})();
 
-	Token.prototype.getBarAttribute = (function () {
-		const cached = Token.prototype.getBarAttribute;
+	TokenDocument.prototype.getBarAttribute = (function () {
+		const cached = TokenDocument.prototype.getBarAttribute;
 		return function (bar) {
 			const src = this.getFlag('obsidian', `${bar}.src`);
 			const prop = this.getFlag('obsidian', `${bar}.res`);
@@ -121,7 +121,7 @@ function createResourceSelect (config, bar) {
 				e.components.filter(c => c.type === 'resource')
 					.map(c => {
 						return {
-							value: `${i.data._id}.${e.uuid}.${c.uuid}`,
+							value: `${i.id}.${e.uuid}.${c.uuid}`,
 							label: `[${i.name}] ${c.name}`
 						};
 					})));
@@ -141,7 +141,13 @@ function getResourceData (actor, prop) {
 	const component = actor.data.obsidian.components.get(uuid);
 
 	if (component) {
-		return {type: 'bar', value: component.remaining, max: component.max, attribute: prop};
+		return {
+			type: 'bar',
+			value: component.remaining,
+			max: component.max,
+			attribute: prop,
+			editable: true
+		};
 	}
 
 	return null;

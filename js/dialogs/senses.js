@@ -63,7 +63,7 @@ export class ObsidianSensesDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		const passives = [];
 		this.element.find('select').each((i, el) => {
 			const id = $(el).val();
@@ -73,6 +73,6 @@ export class ObsidianSensesDialog extends ObsidianDialog {
 		});
 
 		formData['flags.obsidian.skills.passives'] = passives;
-		super._updateObject(event, formData);
+		return super._updateObject(event, formData);
 	}
 }

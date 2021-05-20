@@ -6,17 +6,13 @@
 				<label>
 					{{localize 'OBSIDIAN.SizeTitle'}}
 					<select name="data.traits.size">
-						{{#select data.traits.size}}
-							{{#each config.actorSizes}}
-								<option value="{{@key}}">{{obs-i18n 'Size' @key}}</option>
-							{{/each}}
-						{{/select}}
+						{{selectOptions config.actorSizes selected=data.traits.size}}
 					</select>
 				</label>
 				<label>
 					{{localize 'OBSIDIAN.Type'}}
-					<select name="flags.obsidian.details.type">
-						{{selectOptions ObsidianLabels.CreatureType selected=actor.flags.obsidian.details.type}}
+					<select name="data.details.type.value">
+						{{selectOptions ObsidianLabels.CreatureType selected=data.details.type.value}}
 					</select>
 				</label>
 				<label>
@@ -32,6 +28,16 @@
 				</label>
 			</div>
 		</div>
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div>
+				{{fancy-checkbox 'flags.obsidian.details.swarm' content='DND5E.CreatureSwarm'
+				                 selector='swarm' checked=actor.flags.obsidian.details.swarm}}
+				<select name="data.details.type.swarm" style="margin-left: 10px;"
+				        data-selector-parent="swarm">
+					{{selectOptions config.actorSizes selected=data.details.type.swarm blank='&mdash;'}}
+				</select>
+			</div>
+		</div>
 	</fieldset>
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
@@ -44,8 +50,8 @@
 		</div>
 		<div class="obsidian-form-row">
 			<input type="text" class="obsidian-input-max" placeholder="{{localize 'OBSIDIAN.Custom'}}"
-			       name="flags.obsidian.details.tags.custom"
-			       value="{{actor.flags.obsidian.details.tags.custom}}">
+			       name="data.details.type.subtype"
+			       value="{{data.details.type.subtype}}">
 		</div>
 	</fieldset>
 </form>

@@ -8,7 +8,7 @@ import {ObsidianActor} from './module/actor.js';
 import {ObsidianClassSheet} from './sheets/class.js';
 import {ObsidianEffectSheet} from './sheets/effect.js';
 import {Migrate} from './migration/migrate.js';
-import {patchItem_prepareData} from './module/item.js';
+import {patchItem5e} from './module/item.js';
 import {addMacroHook, hotbarRender} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {advanceDurations, initDurations} from './module/duration.js';
@@ -21,18 +21,20 @@ import {sendTriggers} from './module/triggers.js';
 import {applyRollDragover, updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
 import {ObsidianVehicle} from './module/vehicle.js';
-import ObsidianTable from './module/tables.js';
+import ObsidianTable from './module/roll-table.js';
 import {addLootSheetHook} from './module/compat/loot-sheet.js';
 import {addCreateObjectHooks, convertObject} from './module/objects.js';
 import {OBSIDIAN} from './global.js';
 import {addTokenConfigHook} from './module/resources.js';
 import {translateLabels} from './labels.js';
+import ObsidianTableResult from './module/table-result.js';
 
 runPatches();
 
 Hooks.once('init', async function () {
-	CONFIG.RollTable.entityClass = ObsidianTable;
-	CONFIG.Actor.entityClass = ObsidianActor;
+	CONFIG.TableResult.documentClass = ObsidianTableResult;
+	CONFIG.RollTable.documentClass = ObsidianTable;
+	CONFIG.Actor.documentClass = ObsidianActor;
 	Actors.registerSheet('dnd5e', Obsidian, {
 		types: ['character'],
 		makeDefault: true,
@@ -59,7 +61,7 @@ Hooks.once('init', async function () {
 		label: 'OBSIDIAN.ItemSheet'
 	});
 
-	patchItem_prepareData();
+	patchItem5e();
 	patchConditions();
 
 	// We need to set the game config first, before doing any async work
@@ -115,7 +117,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 			evt.dataTransfer.setData('text/plain', JSON.stringify({
 				type: 'Compendium',
 				id: pack.collection,
-				entity: pack.entity
+				entity: pack.documentName
 			}));
 		});
 
@@ -138,7 +140,7 @@ Hooks.on('renderActorDirectory', (directory, html) => {
 
 Hooks.on('renderHotbar', hotbarRender);
 Hooks.on('obsidian.actorsPrepared', () => ui.hotbar.render());
-Hooks.on('updateOwnedItem', () => ui.hotbar.render());
+Hooks.on('updateItem', () => ui.hotbar.render());
 Hooks.on('updateToken', () => ui.hotbar.render());
 
 function enrichActorFlags (data) {
@@ -149,32 +151,14 @@ function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
 }
 
-Hooks.on('preCreateActor', data => {
-	convertObject(data);
-	enrichActorFlags(data);
+Hooks.on('preCreateActor', actor => {
+	convertObject(actor.data._source);
+	enrichActorFlags(actor.data._source);
 });
 
-Hooks.on('preCreateItem', data => enrichItemFlags(data));
-Hooks.on('preCreateOwnedItem', (actor, data) => {
-	enrichItemFlags(data);
-	actor.linkClasses(data);
-});
-
-Hooks.on('preUpdateToken', (scene, token, data) => {
-	// Synthetic actors do not fire createOwnedItem hooks so we need to
-	// simulate it here.
-	if (token.actorLink || data.actorData?.items == null) {
-		return true;
-	}
-
-	const actor = canvas.tokens.get(token.id)?.actor;
-	const existing = new Set((token.actorData?.items || []).map(item => item._id));
-	data.actorData.items.filter(item => !existing.has(item._id)).forEach(item => {
-		enrichItemFlags(item);
-		if (actor) {
-			actor.linkClasses(item);
-		}
-	});
+Hooks.on('preCreateItem', item => {
+	enrichItemFlags(item.data._source);
+	item.parent?.linkClasses(item.data._source);
 });
 
 Hooks.on('updateCombat', async combat => {

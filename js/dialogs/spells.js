@@ -1,5 +1,6 @@
 import {ObsidianDialog} from './dialog.js';
 import {OBSIDIAN} from '../global.js';
+import {ObsidianActor} from '../module/actor.js';
 
 export class ObsidianSpellsDialog extends ObsidianDialog {
 	constructor (...args) {
@@ -54,13 +55,13 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 				if (spellcasting.spellList) {
 					const listKey = cls.name === 'custom' ? cls.flags.obsidian.custom : cls.name;
-					data.spellsByClass[listKey] = spellcasting.spellList;
+					data.spellsByClass[listKey] = duplicate(spellcasting.spellList);
 				}
 
 				return [cls._id, cls];
 			}));
 
-		data.actor.obsidian.spells = {custom: []};
+		setProperty(data.actor, 'obsidian.spells', {custom: []});
 		Object.values(data.spellsByClass).forEach(list => list.sort(OBSIDIAN.spellComparator));
 		Object.keys(data.spellsByClass)
 			.forEach(key => data.actor.obsidian.spells[key] = {known: [], prepared: [], book: []});
@@ -73,7 +74,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 
 			if (flags.source.type === 'item') {
-				if (!this.parent.actor.data.obsidian.itemsByID.get(flags.source.item)) {
+				if (!this.parent.actor.items.get(flags.source.item)) {
 					data.actor.obsidian.spells.custom.push(spell);
 				}
 
@@ -127,6 +128,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			}
 		});
 
+		console.debug(data);
 		return data;
 	}
 
@@ -238,16 +240,16 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		let spell;
 
 		if (owned) {
-			spell = this.parent.actor.items.get(id)?.data;
+			spell = this.parent.actor.items.get(id);
 		} else {
 			if (OBSIDIAN.Data.SPELLS_BY_CLASS[list]) {
-				spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item._id === id);
+				spell = OBSIDIAN.Data.SPELLS_BY_CLASS[list].find(item => item.id === id);
 			}
 
 			if (!OBSIDIAN.notDefinedOrEmpty(classID)) {
-				const cls = this.parent.actor.data.obsidian.itemsByID.get(classID);
+				const cls = this.parent.actor.items.get(classID);
 				if (getProperty(cls, 'obsidian.spellcasting.spellList')) {
-					spell = cls.obsidian.spellcasting.spellList.find(spell => spell._id === id);
+					spell = cls.obsidian.spellcasting.spellList.find(spell => spell.id === id);
 				}
 			}
 		}
@@ -256,54 +258,41 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 			return;
 		}
 
-		const flags = spell.flags.obsidian;
+		const flags = spell.data.flags.obsidian;
 		if (owned) {
 			if (flags.source.type === 'class') {
-				const cls =
-					this.parent.actor.data.obsidian.classes.find(cls =>
-						cls._id === flags.source.class);
+				const cls = this.parent.actor.items.get(flags.source.class);
 
 				if (cls) {
-					if (spell.data.level === 0
-						|| cls.flags.obsidian.spellcasting.preparation !== 'book')
+					if (spell.data.data.level === 0
+						|| cls.data.flags.obsidian.spellcasting.preparation !== 'book')
 					{
-						await this.parent.actor.deleteEmbeddedEntity('OwnedItem', id);
+						await this.parent.actor.deleteEmbeddedDocuments('Item', [id]);
 					} else {
-						await this.parent.actor.updateEmbeddedEntity(
-							'OwnedItem',
-							{_id: id, 'flags.obsidian.prepared': !flags.prepared});
+						await this.parent.actor.updateEmbeddedDocuments('Item', [{
+							_id: id,
+							'flags.obsidian.prepared': !flags.prepared
+						}]);
 					}
 				}
 			} else {
-				await this.parent.actor.deleteEmbeddedEntity('OwnedItem', id);
+				await this.parent.actor.deleteEmbeddedDocuments('Item', [id]);
 			}
 		} else {
 			const exists =
-				this.parent.actor.data.items.find(item =>
+				this.parent.actor.items.contents.find(item =>
 					item.type === 'spell'
 					&& item.name === spell.name
-					&& !getProperty(item, 'flags.obsidian.isEmbedded'));
+					&& !item.getFlag('obsidian', 'isEmbedded'));
 
 			if (exists) {
-				await this.parent.actor.deleteEmbeddedEntity('OwnedItem', exists._id);
+				await this.parent.actor.deleteEmbeddedDocuments('Item', [exists.id]);
 			} else {
-				spell = duplicate(spell);
-				if (!spell.flags) {
-					spell.flags = {};
-				}
-
-				if (!spell.flags.obsidian) {
-					spell.flags.obsidian = {};
-				}
-
-				if (!spell.flags.obsidian.source) {
-					spell.flags.obsidian.source = {};
-				}
-
-				spell.flags.obsidian.source.type = 'class';
-				spell.flags.obsidian.source.class = classID;
-				spell.flags.obsidian.isEmbedded = false;
-				await this.parent.actor.createEmbeddedEntity('OwnedItem', spell);
+				spell = ObsidianActor.duplicateItem(spell);
+				setProperty(spell.data._source, 'flags.obsidian.source.type', 'class');
+				setProperty(spell.data._source, 'flags.obsidian.source.class', classID);
+				setProperty(spell.data._source, 'flags.obsidian.isEmbedded', false);
+				await this.parent.actor.createEmbeddedDocuments('Item', [spell.toJSON()]);
 			}
 		}
 

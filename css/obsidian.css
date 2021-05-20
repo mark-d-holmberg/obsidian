@@ -1349,7 +1349,7 @@ legend .fancy-checkbox {
 	align-items: center;
 }
 
-.obsidian-compendium .sidebar-tab .directory-list .directory-item img {
+.obsidian-compendium .directory-list .directory-item img {
 	width: 24px;
 	height: 24px;
 	flex: 0 0 24px;

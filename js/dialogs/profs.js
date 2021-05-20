@@ -45,7 +45,7 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		formData = {};
 		['weaponProf', 'armorProf', 'languages'].forEach(prop =>
 			formData[`data.traits.${prop}.value`] = []);
@@ -65,6 +65,6 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 			}
 		});
 
-		super._updateObject(event, formData);
+		return super._updateObject(event, formData);
 	}
 }

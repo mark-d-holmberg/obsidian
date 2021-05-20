@@ -2,7 +2,7 @@ import {Rolls} from '../rules/rolls.js';
 
 export function sendTriggers (combat) {
 	const actor = combat.combatant?.actor;
-	if (!actor || !actor.data.obsidian?.triggers?.start?.length) {
+	if (!actor?.obsidian?.triggers?.start?.length) {
 		return;
 	}
 
@@ -16,8 +16,8 @@ export function sendTriggers (combat) {
 	};
 
 	if (actor.isToken) {
-		chatData.flags.obsidian.realToken = actor.token.data._id;
-		chatData.flags.obsidian.realScene = actor.token.scene.data._id;
+		chatData.flags.obsidian.realToken = actor.token.id;
+		chatData.flags.obsidian.realScene = actor.token.parent.id;
 	}
 
 	ChatMessage.create(chatData);

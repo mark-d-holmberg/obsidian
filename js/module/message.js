@@ -5,8 +5,8 @@ import {ObsidianActor} from './actor.js';
 import {ObsidianItems} from '../rules/items.js';
 
 export function patchChatMessage () {
-	ChatMessage.prototype.render = (function () {
-		const cached = ChatMessage.prototype.render;
+	ChatMessage.prototype.getHTML = (function () {
+		const cached = ChatMessage.prototype.getHTML;
 		return async function (force, options) {
 			if (!this.data.flags || !this.data.flags.obsidian) {
 				return cached.apply(this, arguments);
@@ -32,8 +32,8 @@ export function patchChatMessage () {
 				user: game.user,
 				author: this.user,
 				alias: this.alias,
-				message: duplicate(this.data),
-				isWhisper: this.data.whisper.length,
+				message: this.toObject(false),
+				isWhisper: this.data.whisper.some(id => id !== game.user.id),
 				triggers: triggers,
 				popout: options?.popout,
 				whisperTo:
@@ -45,8 +45,8 @@ export function patchChatMessage () {
 					!this.data.whisper.length
 					|| game.user.isGM
 					|| (!this.data.blind
-						&& (this.data.whisper.includes(game.user.data._id)
-							|| this.data.user === game.user.data._id))
+						&& (this.data.whisper.includes(game.userId)
+							|| this.data.user === game.userId))
 			};
 
 			await loadTemplates(['modules/obsidian/html/components/damage-format.html']);
@@ -170,7 +170,7 @@ export function updateApplyIcons (evt) {
 	}
 
 	const chat = document.getElementById('chat-log');
-	chat.querySelectorAll('[data-dmg], [data-apply-all]').forEach(el => el.innerHTML = dmg);
+	chat.querySelectorAll('[data-apply-dmg], [data-apply-all]').forEach(el => el.innerHTML = dmg);
 	chat.querySelectorAll('.obsidian-apply-save').forEach(el => el.innerHTML = save);
 }
 
@@ -221,7 +221,7 @@ function initRollDrop (el) {
 			return;
 		}
 
-		const flags = msg.data.flags.obsidian;
+		const flags = msg.data._source.flags.obsidian;
 		if (!flags) {
 			return;
 		}

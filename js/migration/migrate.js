@@ -5,7 +5,6 @@ import {Effect} from '../module/effect.js';
 import {Rules} from '../rules/rules.js';
 import {CONVERT} from './convert.js';
 import {core} from './core.js';
-import {v1} from './v1.js';
 import {v3} from './v3.js';
 import {v4} from './v4.js';
 import {v5} from './v5.js';
@@ -153,34 +152,30 @@ export const Migrate = {
 			data.flags.obsidian.version = 0;
 		}
 
-		if (data.flags.obsidian.version < 2) {
-			Migrate.deOrphan(data);
-			if (data.type === 'backpack') {
-				Migrate.convertContainer(data);
-			} else if (data.type === 'consumable') {
-				Migrate.convertConsumable(data, source);
+		if (source === 'core') {
+			if (data.type === 'consumable') {
+				Migrate.convertConsumable(data);
 			} else if (data.type === 'equipment') {
-				Migrate.convertEquipment(data, source);
+				Migrate.convertEquipment(data);
 			} else if (data.type === 'feat') {
-				Migrate.convertFeature(data, source, actorData);
+				Migrate.convertFeature(data);
 			} else if (data.type === 'spell') {
-				Migrate.convertSpell(data, source, actorData);
+				Migrate.convertSpell(data);
 			} else if (data.type === 'weapon') {
-				Migrate.convertWeapon(data, source);
+				Migrate.convertWeapon(data);
 			}
 
-			if (source === 'core') {
-				Migrate.core.convertActivation(data);
-				Migrate.core.convertAttack(data);
-			}
+			Migrate.core.convertActivation(data);
+			Migrate.core.convertAttack(data);
 		}
 
 		if (data.type === 'feat' && source === 'core') {
 			Migrate.core.convertClassFeature(data);
 		}
 
-		if (data.type === 'weapon' && data.flags.obsidian.version < 2
-			&& (!data.flags.obsidian.effects || !data.flags.obsidian.effects.length))
+		if (data.type === 'weapon'
+			&& data.flags.obsidian.version < 2
+			&& !data.flags.obsidian.effects?.length)
 		{
 			data.flags.obsidian.effects = [Effect.create()];
 			data.flags.obsidian.effects[0].components =
@@ -280,58 +275,12 @@ export const Migrate = {
 		}
 	},
 
-	convertConsumable: function (data, source) {
-		const primaryEffect = Effect.create();
-		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
-			Migrate.v1.convertConsumableUses(data, primaryEffect);
-		}
-
-		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
-			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
-		}
-
-		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
-			const attack = data.flags.obsidian.hit;
-			primaryEffect.components.push(
-				Migrate.v1.convertAttack(attack, attack.attack, 'weapon'));
-		}
-
-		for (const dmg of data.flags.obsidian.damage || []) {
-			primaryEffect.components.push(Migrate.v1.convertDamage(dmg));
-		}
-
-		if (primaryEffect.components.length) {
-			data.flags.obsidian.effects.push(primaryEffect);
-		}
-
-		if (source === 'core' && CONVERT.consumable[data.data.consumableType]) {
-			data.flags.obsidian.subtype = CONVERT.consumable[data.data.consumableType];
-		}
+	convertConsumable: function (data) {
+		data.flags.obsidian.subtype = CONVERT.consumable[data.data.consumableType];
 	},
 
-	convertContainer: function (data) {
-		if (getProperty(data, 'flags.obsidian.weightless')) {
-			data.data.capacity.weightless = true;
-		}
-	},
-
-	convertEquipment: function (data, source) {
+	convertEquipment: function (data) {
 		if (!data.data.armor) {
-			return;
-		}
-
-		if (data.flags.obsidian.maxDex !== undefined) {
-			data.data.armor.dex = String(data.flags.obsidian.maxDex);
-		}
-
-		data.flags.obsidian.magical = !!data.flags.obsidian.magic;
-		data.data.armor.value += data.flags.obsidian.magic || 0;
-
-		if (isNaN(Number(data.data.strength))) {
-			data.data.strength = '';
-		}
-
-		if (source !== 'core') {
 			return;
 		}
 
@@ -345,50 +294,8 @@ export const Migrate = {
 		}
 	},
 
-	convertFeature: function (data, source, actorData) {
-		const classMap = new Map();
-		if (actorData) {
-			actorData.items
-				.filter(item =>
-					item.type === 'class' && item.flags && item.flags.obsidian
-					&& item.flags.obsidian.uuid)
-				.forEach(cls => classMap.set(cls.flags.obsidian.uuid, cls));
-		}
-
-		const primaryEffect = Effect.create();
-		if (data.flags.obsidian.uses && data.flags.obsidian.uses.enabled) {
-			primaryEffect.components.push(
-				Migrate.v1.convertUses(data.flags.obsidian.uses, classMap));
-		}
-
-		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
-			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
-		}
-
-		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
-			const attack = data.flags.obsidian.hit;
-			primaryEffect.components.push(
-				Migrate.v1.convertAttack(attack, attack.attack, attack.type));
-		}
-
-		for (const dmg of data.flags.obsidian.damage || []) {
-			primaryEffect.components.push(Migrate.v1.convertDamage(dmg));
-		}
-
-		if (primaryEffect.components.length) {
-			data.flags.obsidian.effects.push(primaryEffect);
-		}
-
-		if (data.flags.obsidian.source && data.flags.obsidian.source.type === 'class') {
-			const cls = classMap.get(data.flags.obsidian.source.class);
-			if (cls) {
-				data.flags.obsidian.source.class = cls._id;
-			}
-		}
-
-		if (source === 'core') {
-			data.flags.obsidian.source.type = 'other';
-		}
+	convertFeature: function (data) {
+		data.flags.obsidian.source.type = 'other';
 	},
 
 	convertProficiencies: function (data, source) {
@@ -478,170 +385,15 @@ export const Migrate = {
 		}
 	},
 
-	convertSpell: function (data, source, actorData) {
-		const classMap = new Map();
-		if (actorData) {
-			actorData.items
-				.filter(item =>
-					item.type === 'class' && item.flags && item.flags.obsidian
-					&& item.flags.obsidian.uuid)
-				.forEach(cls => classMap.set(cls.flags.obsidian.uuid, cls));
-		}
-
-		const spellEffect = Effect.create();
-		const scalingEffect = Effect.create();
-		const resourceEffect = Effect.create();
-		scalingEffect.name = game.i18n.localize('OBSIDIAN.ScalingTitle');
-
-		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
-			spellEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
-		}
-
-		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
-			const attack = data.flags.obsidian.hit;
-			spellEffect.components.push(Migrate.v1.convertAttack(attack, attack.attack, 'spell'));
-
-			if (attack.count > 1) {
-				const component = Effect.createComponent('target');
-				spellEffect.components.push(component);
-				component.count = attack.count;
-			}
-		}
-
-		for (const dmg of data.flags.obsidian.damage || []) {
-			spellEffect.components.push(Migrate.v1.convertDamage(dmg));
-		}
-
-		if (spellEffect.components.length) {
-			data.flags.obsidian.effects.push(spellEffect);
-		}
-
-		if (data.flags.obsidian.upcast
-			&& (data.flags.obsidian.upcast.enabled || data.data.level < 1))
-		{
-			const upcast = data.flags.obsidian.upcast;
-			if (upcast.natk > 0 && upcast.nlvl > 0) {
-				const component = Effect.createComponent('target');
-				scalingEffect.components.push(component);
-				component.count = upcast.natk / upcast.nlvl;
-			}
-
-			for (const dmg of upcast.damage || []) {
-				scalingEffect.components.push(Migrate.v1.convertDamage(dmg));
-			}
-		}
-
-		if (scalingEffect.components.length) {
-			const scaling = Effect.createComponent('scaling');
-			scalingEffect.components.unshift(scaling);
-			scaling.method = data.data.level < 1 ? 'cantrip' : 'spell';
-			scaling.ref = spellEffect.uuid;
-			data.flags.obsidian.effects.push(scalingEffect);
-		}
-
-		if (data.flags.obsidian.uses
-			&& data.flags.obsidian.uses.enabled
-			&& data.flags.obsidian.uses.limit !== 'unlimited')
-		{
-			data.flags.obsidian.effects.push(resourceEffect);
-			Migrate.v1.convertConsumableUses(data, resourceEffect);
-		}
-
-		if (data.flags.obsidian.source && data.flags.obsidian.source.type === 'class') {
-			const cls = classMap.get(data.flags.obsidian.source.class);
-			if (cls) {
-				data.flags.obsidian.source.class = cls._id;
-			}
-		}
-
-		if (data.flags.obsidian.time && typeof data.flags.obsidian.time.n === 'string') {
-			data.flags.obsidian.time.n = Number(data.flags.obsidian.time.n);
-			if (isNaN(data.flags.obsidian.time.n)) {
-				data.flags.obsidian.time.n = 0;
-			}
-		}
-
-		if (data.data.components && source === 'core') {
-			Object.entries(data.data.components)
-				.filter(([_, v]) => v)
-				.map(([k, _]) => CONVERT.spellComponents[k])
-				.filter(component => component)
-				.forEach(component => data.flags.obsidian.components[component] = true);
-		}
+	convertSpell: function (data) {
+		Object.entries(data.data.components)
+			.filter(([_, v]) => v)
+			.map(([k, _]) => CONVERT.spellComponents[k])
+			.filter(component => component)
+			.forEach(component => data.flags.obsidian.components[component] = true);
 	},
 
-	convertWeapon: function (data, source) {
-		if (data.flags.obsidian.type === 'unarmed') {
-			data.flags.obsidian.type = 'melee';
-			data.flags.obsidian.category = 'unarmed';
-		}
-
-		const primaryEffect = Effect.create();
-		const magic = data.flags.obsidian.magic;
-		data.flags.obsidian.magical = !!magic;
-
-		if (data.flags.obsidian.type === 'unarmed') {
-			data.flags.obsidian.type = 'melee';
-			data.flags.obsidian.category = 'unarmed';
-		}
-
-		if (data.flags.obsidian.type === 'ranged') {
-			data.data.range.value = data.flags.obsidian.range1;
-			data.data.range.long = data.flags.obsidian.range2;
-		}
-
-		if (data.flags.obsidian.charges && data.flags.obsidian.charges.enabled) {
-			primaryEffect.components.push(Migrate.v1.convertCharges(data.flags.obsidian.charges));
-		}
-
-		if (data.flags.obsidian.dc && data.flags.obsidian.dc.enabled) {
-			primaryEffect.components.push(Migrate.v1.convertSave(data.flags.obsidian.dc));
-		}
-
-		if (data.flags.obsidian.hit && data.flags.obsidian.hit.enabled) {
-			primaryEffect.components.push(
-				Migrate.v1.convertAttack(
-					data.flags.obsidian.hit, data.flags.obsidian.type, 'weapon', magic));
-		}
-
-		let dmgs = [];
-		if (data.flags.obsidian.damage && data.flags.obsidian.damage.length) {
-			dmgs = dmgs.concat(data.flags.obsidian.damage.map(dmg => [dmg, false]));
-		}
-
-		if (data.flags.obsidian.versatile && data.flags.obsidian.versatile.length) {
-			dmgs = dmgs.concat(data.flags.obsidian.versatile.map(dmg => [dmg, true]));
-		}
-
-		for (const [dmg, versatile] of dmgs) {
-			primaryEffect.components.push(Migrate.v1.convertDamage(dmg, versatile, magic));
-		}
-
-		if (primaryEffect.components.length) {
-			data.flags.obsidian.effects.push(primaryEffect);
-		}
-
-		if (data.flags.obsidian.special && data.flags.obsidian.special.length) {
-			for (const special of data.flags.obsidian.special) {
-				const effect = Effect.create();
-				const component = Effect.createComponent('resource');
-
-				effect.name = special.name;
-				data.flags.obsidian.effects.push(effect);
-				effect.components.push(component);
-				component.fixed = special.uses.max;
-				component.remaining = special.uses.remaining;
-			}
-		}
-
-		if (data.flags.obsidian.tags.custom && data.flags.obsidian.tags.custom.length) {
-			data.flags.obsidian.tags.custom = data.flags.obsidian.tags.custom.join(', ');
-		}
-
-		if (source !== 'core') {
-			return;
-		}
-
+	convertWeapon: function (data) {
 		if (data.data.weaponType) {
 			const type = data.data.weaponType;
 			if (type.startsWith('martial')) {
@@ -664,18 +416,10 @@ export const Migrate = {
 				.filter(tag => tag)
 				.forEach(tag => data.flags.obsidian.tags[tag] = true);
 		}
-	},
-
-	deOrphan: function (data) {
-		if (Number.isNumeric(getProperty(data, 'flags.obsidian.parent'))) {
-			data.flags.obsidian.parent = null;
-			data['-=flags.obsidian.parent'] = null;
-		}
 	}
 };
 
 Migrate.core = core;
-Migrate.v1 = v1;
 Migrate.v3 = v3;
 Migrate.v4 = v4;
 Migrate.v5 = v5;

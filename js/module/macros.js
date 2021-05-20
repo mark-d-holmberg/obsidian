@@ -87,7 +87,7 @@ async function onHotbarDrop (bar, data, slot) {
 	}
 
 	let macro =
-		game.macros.entities.find(macro => macro.name === name && macro.command === command);
+		game.macros.contents.find(macro => macro.name === name && macro.command === command);
 
 	if (!macro) {
 		macro = await Macro.create({
@@ -157,7 +157,7 @@ function resourcesFromEffect (actor, uuid) {
 }
 
 function resourcesFromItem (actor, id) {
-	const item = actor.data.obsidian.itemsByID.get(id);
+	const item = actor.items.get(id);
 	if (!item) {
 		return [null, null];
 	}
@@ -168,19 +168,19 @@ function resourcesFromItem (actor, id) {
 
 	const consumer = item.obsidian.collection.consume[0];
 	if (consumer) {
-		const [, , resource] = Effect.getLinkedResource(actor.data, consumer);
+		const [, , resource] = Effect.getLinkedResource(actor, consumer);
 		if (resource) {
 			return [resource.remaining, resource.max];
 		}
 	}
 
-	const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo);
+	const ammo = actor.items.get(item.data.flags.obsidian.ammo);
 	if (ammo) {
-		return [ammo.data.quantity, null];
+		return [ammo.data.data.quantity, null];
 	}
 
 	if (item.data.quantity > 1) {
-		return [item.data.quantity, null];
+		return [item.data.data.quantity, null];
 	}
 
 	return [null, null];

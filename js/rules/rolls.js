@@ -26,7 +26,7 @@ export const Rolls = {
 				Effect.determineRollMods(
 					actor,
 					Effect.combineRollMods([
-						rollMod, conditionsRollMod(actor.data, {ability, roll: 'ability'})]),
+						rollMod, conditionsRollMod(actor, {ability, roll: 'ability'})]),
 					mode =>	Filters.appliesTo.abilityChecks(ability, mode));
 
 			parts.push({
@@ -169,7 +169,7 @@ export const Rolls = {
 		}
 
 		const effect = actor?.data.obsidian.effects.get(flags.uuid);
-		const item = actor?.data.obsidian.itemsByID.get(effect?.parentItem);
+		const item = actor?.items.get(effect?.parentItem);
 
 		if (actor && effect?.applies.length) {
 			conditions =
@@ -350,7 +350,7 @@ export const Rolls = {
 				return;
 			}
 
-			const item = actor.data.obsidian.itemsByID.get(options.id);
+			const item = actor.items.get(options.id);
 			if (!item) {
 				return;
 			}
@@ -494,7 +494,7 @@ export const Rolls = {
 			count = 1;
 		}
 
-		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = actor.items.get(effect.parentItem);
 		const isVersatile =
 			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
 		let damage =
@@ -554,7 +554,7 @@ export const Rolls = {
 		const mode = determineMode(...rollMod.mode)
 		const bonuses = actor.data.obsidian.filters.bonuses(Filters.appliesTo.deathSaves(mode));
 		if (bonuses.length) {
-			parts.push(...bonuses.flatMap(bonus => bonusToParts(actor.data, bonus)));
+			parts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 			parts = highestProficiency(parts);
 		}
 
@@ -653,7 +653,7 @@ export const Rolls = {
 	},
 
 	effectRoll: function (actor, effect, options, {name, isFirst = true} = {}) {
-		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = actor.items.get(effect.parentItem);
 		const attacks = effect.components.filter(c => c.type === 'attack');
 		const saves = effect.components.filter(c => c.type === 'save');
 		const checks = effect.components.filter(c => c.type === 'check');
@@ -667,7 +667,7 @@ export const Rolls = {
 		let damage = duplicate(effect.components.filter(c => c.type === 'damage'));
 
 		if (item.type === 'spell') {
-			scaledAmount = Math.max(0, options.spellLevel - item.data.level);
+			scaledAmount = Math.max(0, options.spellLevel - item.data.data.level);
 		}
 
 		const scaling =
@@ -752,14 +752,14 @@ export const Rolls = {
 			}
 		}
 
-		let details = item.flags.obsidian.display || item.data.description.value;
+		let details = item.data.flags.obsidian.display || item.data.data.description.value;
 		if (desc) {
 			details = desc.display;
 		}
 
 		if (isFirst) {
 			results[0].upcast = scaledAmount;
-			results[0].item = item;
+			results[0].item = item.data;
 			results[0].details = details;
 			results[0].open = !attacks.length && !damage.length;
 			results[0].duration = duration;
@@ -806,7 +806,7 @@ export const Rolls = {
 		const consumer = effect.components.find(c => c.type === 'consume');
 
 		if (consumer && !['qty', 'spell'].includes(consumer.target)) {
-			const [, , refResource] = Effect.getLinkedResource(actor.data, consumer);
+			const [, , refResource] = Effect.getLinkedResource(actor, consumer);
 			if (refResource?.pool) {
 				resource = refResource;
 			}
@@ -831,7 +831,7 @@ export const Rolls = {
 
 		const bonuses =
 			actor.data.obsidian.filters.bonuses(Filters.isHD).flatMap(bonus =>
-				bonusToParts(actor.data, bonus));
+				bonusToParts(actor, bonus));
 
 		RollParts.rollParts(parts);
 		RollParts.rollParts(bonuses);
@@ -890,7 +890,7 @@ export const Rolls = {
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.attributes.init.roll]),
 					conditionsRollMod(
-						actor.data, {ability: flags.attributes.init.ability, roll: 'ability'})
+						actor, {ability: flags.attributes.init.ability, roll: 'ability'})
 				]),
 				mode => Filters.appliesTo.initiative(flags.attributes.init.ability, mode));
 
@@ -928,16 +928,19 @@ export const Rolls = {
 	},
 
 	itemRoll: function (actor, item, options) {
-		if (!item.flags.obsidian || !item.flags.obsidian.effects) {
+		const itemData = item.data;
+		const itemFlags = itemData.flags.obsidian;
+
+		if (!itemFlags?.effects) {
 			return [];
 		}
 
 		let upcast;
 		if (item.type === 'spell') {
-			upcast = Math.max(0, options.spellLevel - item.data.level);
+			upcast = Math.max(0, options.spellLevel - itemData.data.level);
 		}
 
-		const effects = item.flags.obsidian.effects.filter(effect => !effect.isLinked);
+		const effects = itemFlags.effects.filter(effect => !effect.isLinked);
 		if (!effects.length) {
 			return [{
 				flags: {
@@ -945,7 +948,7 @@ export const Rolls = {
 						type: item.type === 'spell' ? 'spl' : 'fx',
 						title: item.name,
 						item: item,
-						details: item.obsidian.display || item.data.description.value,
+						details: item.obsidian.display || itemData.data.description.value,
 						open: true,
 						upcast: upcast
 					}
@@ -1155,13 +1158,13 @@ export const Rolls = {
 
 		let attack;
 		if (item) {
-			attack = {magical: !!item.flags.obsidian.magical};
+			attack = {magical: !!item.data.flags.obsidian.magical};
 			if (item.type === 'spell') {
 				attack.magical = true;
 				attack.spell = true;
 			} else if (item.type === 'weapon') {
-				attack.silver = item.flags.obsidian.tags.silver;
-				attack.adamantine = item.flags.obsidian.tags.adamantine;
+				attack.silver = item.data.flags.obsidian.tags.silver;
+				attack.adamantine = item.data.flags.obsidian.tags.adamantine;
 			}
 		}
 
@@ -1243,7 +1246,7 @@ export const Rolls = {
 					adv.push(mode);
 				}
 
-				if (item.flags.obsidian.magical && defenses[mode].includes('magic')) {
+				if (item.data.flags.obsidian.magical && defenses[mode].includes('magic')) {
 					adv.push(mode);
 				}
 			});
@@ -1254,7 +1257,7 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, ...adv]),
-					conditionsRollMod(actor.data, {
+					conditionsRollMod(actor, {
 						ability: save,
 						roll: 'save',
 						applies: conditions
@@ -1279,11 +1282,11 @@ export const Rolls = {
 			}
 
 			if (actor.isToken) {
-				msg.flags.obsidian.realToken = actor.token.data._id;
-				msg.flags.obsidian.realScene = actor.token.scene.data._id;
+				msg.flags.obsidian.realToken = actor.token.id;
+				msg.flags.obsidian.realScene = actor.token.parent.id;
 			}
 
-			msg.flags.obsidian.npc = actor.data.type === 'npc';
+			msg.flags.obsidian.npc = actor.type === 'npc';
 			return mergeObject(data, msg);
 		}));
 	},
@@ -1309,7 +1312,7 @@ export const Rolls = {
 				actor,
 				Effect.combineRollMods([
 					Effect.makeModeRollMod([flags.sheet.roll, flags.skills.roll, skill.roll]),
-					conditionsRollMod(actor.data, {ability: skill.ability, skill: skill.key})
+					conditionsRollMod(actor, {ability: skill.ability, skill: skill.key})
 				]), mode => filter(skill.key, skill.ability, mode));
 
 		return Rolls.abilityCheck(actor, skill.ability, skill.label, skill.rollParts, rollMod);
@@ -1347,9 +1350,9 @@ export const Rolls = {
 			const whisper = [];
 
 			if (['gmroll', 'blindroll'].includes(rollMode)) {
-				whisper.push(...game.users.entities.filter(user => user.isGM).map(user => user._id));
+				whisper.push(...game.users.contents.filter(user => user.isGM).map(user => user.id));
 			} else if(rollMode === "selfroll") {
-				whisper.push(game.user.data._id);
+				whisper.push(game.user.id);
 			}
 
 			await game.dice3d.show(
@@ -1370,14 +1373,14 @@ export const Rolls = {
 
 		const chatData = {
 			speaker: ChatMessage.getSpeaker({actor: actor}),
-			user: game.user.data._id,
+			user: game.user.id,
 			rollMode: rollMode,
 			sound: CONFIG.sounds.dice,
 			content: 'N/A' // This can't be blank for some reason.
 		};
 
 		if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
-			chatData.whisper = game.users.entities.filter(user => user.isGM).map(user => user._id);
+			chatData.whisper = game.users.contents.filter(user => user.isGM).map(user => user.id);
 			if (chatData.rollMode === 'blindroll') {
 				chatData.blind = true;
 				AudioHelper.play({src: chatData.sound});
@@ -1385,7 +1388,7 @@ export const Rolls = {
 		}
 
 		if (chatData.rollMode === 'selfroll') {
-			chatData.whisper = [game.user.data._id];
+			chatData.whisper = [game.user.id];
 		}
 
 		return chatData;
@@ -1396,7 +1399,7 @@ export const Rolls = {
 		if (!token && canvas) {
 			const selected = new Set(canvas.tokens.controlled);
 			const {linked, unlinked} = canvas.tokens.placeables.reduce((acc, t) => {
-				if (!(t instanceof Token) || t.data.actorId !== actor.data._id) {
+				if (!(t instanceof Token) || t.data.actorId !== actor.id) {
 					return acc;
 				}
 
@@ -1425,7 +1428,7 @@ export const Rolls = {
 
 		const rollMods = [
 			Effect.sheetGlobalRollMod(actor),
-			conditionsRollMod(actor.data, {ability: hit.ability, roll: 'attack'})
+			conditionsRollMod(actor, {ability: hit.ability, roll: 'attack'})
 		];
 
 		if (token && game.user.targets.size === 1) {
@@ -1440,8 +1443,9 @@ export const Rolls = {
 			rollMods.push(hit.rollMod);
 		}
 
-		const rollMod = Effect.determineRollMods(actor, Effect.combineRollMods(rollMods), mode =>
-			Filters.appliesTo.attackRolls(hit, mode));
+		const rollMod =
+			Effect.determineRollMods(actor, Effect.combineRollMods(rollMods), mode =>
+				Filters.appliesTo.attackRolls(hit, mode));
 
 		return Rolls.d20Roll(actor, [...hit.rollParts, ...extraParts], hit.crit, 1, rollMod);
 	}

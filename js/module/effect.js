@@ -87,7 +87,7 @@ export const Components = {
 		},
 		metadata: {
 			category: 'special',
-			tray: 'Condition'
+			tray: 'ConditionTitle'
 		}
 	},
 	consume: {
@@ -397,7 +397,8 @@ export const Effect = {
 		return {
 			name: '',
 			uuid: OBSIDIAN.uuid(),
-			components: []
+			components: [],
+			toggle: {active: true, display: ''}
 		};
 	},
 
@@ -512,16 +513,15 @@ export const Effect = {
 		return [actor, effect];
 	},
 
-	getLinkedResource: function (actorData, consumer) {
+	getLinkedResource: function (actor, consumer) {
 		if (['spell', 'qty'].includes(consumer.target)) {
 			return [];
 		}
 
 		const item =
-			actorData.obsidian.itemsByID.get(
-				consumer.target === 'feat' ? consumer.featID : consumer.itemID);
+			actor.items.get(consumer.target === 'feat' ? consumer.featID : consumer.itemID);
 
-		if (!item || !getProperty(item, 'flags.obsidian.effects.length')) {
+		if (!item?.getFlag('obsidian', 'effects.length')) {
 			return [];
 		}
 
@@ -529,7 +529,7 @@ export const Effect = {
 		let resource;
 
 		outer:
-		for (const e of item.flags.obsidian.effects) {
+		for (const e of item.data.flags.obsidian.effects) {
 			for (const c of e.components) {
 				if (c.uuid === consumer.ref) {
 					resource = c;
@@ -547,7 +547,7 @@ export const Effect = {
 	},
 
 	getScaling: function (actor, effect, value) {
-		const item = actor.data.obsidian.itemsByID.get(effect.parentItem);
+		const item = actor.items.get(effect.parentItem);
 		if (!item) {
 			return;
 		}
@@ -588,24 +588,24 @@ export const Effect = {
 			return false;
 		}
 
-		if (item.flags.obsidian.attunement && !item.data.attuned) {
+		if (item.data.flags.obsidian.attunement && !item.data.data.attuned) {
 			return false;
 		}
 
-		if (item.obsidian.equippable && !item.data.equipped) {
+		if (item.data.obsidian.equippable && !item.data.data.equipped) {
 			return false;
 		}
 
 		return true;
 	},
 
-	isConcentration: function (derived, effect) {
+	isConcentration: function (actor, effect) {
 		if (effect.durationComponent && effect.durationComponent.concentration) {
 			return true;
 		}
 
-		const item = derived.itemsByID.get(effect.parentItem);
-		return item && item.type === 'spell' && item.data.components.concentration;
+		const item = actor.items.get(effect.parentItem);
+		return item && item.type === 'spell' && item.data.data.components.concentration;
 	},
 
 	isEmbeddedSpellsComponent: function (component) {

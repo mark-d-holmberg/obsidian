@@ -18,12 +18,13 @@ function handleMsg (payload) {
 				return;
 			}
 
-			return scene.deleteEmbeddedEntity('Token', tokenIDs);
+			return scene.deleteEmbeddedDocuments('Token', tokenIDs);
 		});
 	} else {
 		const actor = getActor(payload);
 		if (actor) {
-			actor[`${payload.action.toLowerCase()}EmbeddedEntity`](payload.entity, payload.data);
+			const data = Array.isArray(payload.data) ? payload.data : [payload.data];
+			actor[`${payload.action.toLowerCase()}EmbeddedDocuments`](payload.entity, data);
 		}
 	}
 }

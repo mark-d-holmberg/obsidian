@@ -111,17 +111,17 @@ export const Sheet = {
 		}
 
 		const id = evt.currentTarget.parentElement.dataset.itemId;
-		const item = sheet.actor.getEmbeddedEntity('OwnedItem', id);
+		const item = sheet.actor.items.get(id);
 
 		if (!item) {
 			return;
 		}
 
-		const collapsed = !!item.flags.obsidian.collapsed;
-		sheet.actor.updateEmbeddedEntity('OwnedItem', {
+		const collapsed = !!item.data.flags.obsidian.collapsed;
+		sheet.actor.updateEmbeddedDocuments('Item', [{
 			_id: id,
 			'flags.obsidian.collapsed': !collapsed
-		});
+		}]);
 	},
 
 	contextMenu: function (sheet, html, npc = false) {
@@ -132,8 +132,8 @@ export const Sheet = {
 			condition: li => {
 				const actor = sheet.actor || sheet.parent.actor;
 				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
-					return item.type !== 'spell' || !item.flags.obsidian.parentComponent
+					const item = actor.items.get(li.data('item-id'));
+					return item.type !== 'spell' || !item.data.flags.obsidian.parentComponent;
 				}
 			}
 		};
@@ -151,7 +151,7 @@ export const Sheet = {
 			condition: li => {
 				const actor = sheet.actor || sheet.parent.actor;
 				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
+					const item = actor.items.get(li.data('item-id'));
 					return item.type !== 'tool' && item.type !== 'loot';
 				}
 			}
@@ -164,8 +164,8 @@ export const Sheet = {
 			condition: li => {
 				const actor = sheet.actor || sheet.parent.actor;
 				if (actor) {
-					const item = actor.data.obsidian.itemsByID.get(li.data('item-id'));
-					return item.data.quantity > 1;
+					const item = actor.items.get(li.data('item-id'));
+					return item.data.data.quantity > 1;
 				}
 			}
 		};
@@ -197,7 +197,7 @@ export const Sheet = {
 	deleteItem: async function (sheet, el) {
 		const id = el.data('item-id');
 		const item = sheet.actor.items.get(id);
-		await sheet.actor.deleteEmbeddedEntity('OwnedItem', id);
+		await sheet.actor.deleteEmbeddedDocuments('Item', [id]);
 		sheet.actor.updateEquipment(item);
 	},
 
@@ -313,8 +313,9 @@ export const Sheet = {
 					icon: '<i class="fas fa-check"></i>',
 					label: game.i18n.localize('OBSIDIAN.CreateItem'),
 					callback: dlg =>
-						sheet.actor.createEmbeddedEntity(
-							'OwnedItem', new FormDataExtended(dlg.find('form')[0]).toObject())
+						sheet.actor.createEmbeddedDocuments(
+							'Item', [new FormDataExtended(dlg.find('form')[0]).toObject()],
+							{renderSheet: true})
 				}
 			},
 			default: 'create'
@@ -325,10 +326,10 @@ export const Sheet = {
 		evt.preventDefault();
 		evt.stopPropagation();
 
-		sheet.actor.createEmbeddedEntity('OwnedItem', {
+		sheet.actor.createEmbeddedDocuments('Item', [{
 			type: 'spell',
 			name: game.i18n.localize('OBSIDIAN.NewSpell')
-		}).then(spell => sheet.actor.items.get(spell._id).sheet.render(true));
+		}]).then(spells => spells.shift().sheet.render(true));
 	},
 
 	onAttackToggle: function (sheet, evt) {
@@ -336,8 +337,8 @@ export const Sheet = {
 		const uuid = evt.currentTarget.dataset.uuid;
 		const attack = sheet.actor.data.obsidian.components.get(uuid);
 		const effect = sheet.actor.data.obsidian.effects.get(attack.parentEffect);
-		const item = sheet.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
-		const tags = item.flags.obsidian.tags;
+		const item = sheet.actor.items.get(effect.parentItem);
+		const tags = item.data.flags.obsidian.tags;
 		const current = attack.mode;
 		let mode = 'melee';
 
@@ -356,24 +357,25 @@ export const Sheet = {
 		}
 
 		const update = {
-			_id: item._id,
+			_id: item.id,
 			[`flags.obsidian.effects.${effect.idx}.components.${attack.idx}.mode`]: mode
 		};
 
-		sheet.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
+		sheet.actor.updateEmbeddedDocuments(
+			'Item', [OBSIDIAN.updateArrays(item.data._source, update)]);
 	},
 
 	onAttune: function (sheet, evt) {
 		evt.preventDefault();
 		const id = evt.currentTarget.closest('.obsidian-tr.item').dataset.itemId;
-		const item = sheet.actor.data.obsidian.itemsByID.get(id);
+		const item = sheet.actor.items.get(id);
 
 		if (!item) {
 			return;
 		}
 
-		const attuned = !!item.data.attuned;
-		sheet.actor.updateEmbeddedEntity('OwnedItem', {_id: item._id, 'data.attuned': !attuned});
+		const attuned = !!item.data.data.attuned;
+		sheet.actor.updateEmbeddedDocuments('Item', [{_id: item.id, 'data.attuned': !attuned}]);
 	},
 
 	onContenteditableUnfocus: function (sheet, evt) {
@@ -391,7 +393,7 @@ export const Sheet = {
 			return;
 		}
 
-		sheet.actor.deleteEmbeddedEntity('OwnedItem', target.closest('.item').dataset.itemId);
+		sheet.actor.deleteEmbeddedDocuments('Item', [target.closest('.item').dataset.itemId]);
 	},
 
 	onDragItemStart: function (sheet, event) {
@@ -408,14 +410,14 @@ export const Sheet = {
 		};
 
 		if (sheet.actor.isToken) {
-			dragData.tokenID = sheet.actor.token.data._id;
-			dragData.sceneID = sheet.actor.token.scene.data._id;
+			dragData.tokenID = sheet.actor.token.id;
+			dragData.sceneID = sheet.actor.token.parent.id;
 		}
 
-		const item = sheet.actor.data.obsidian.itemsByID.get(target.dataset.itemId);
+		const item = sheet.actor.items.get(target.dataset.itemId);
 		if (item) {
 			dragData.type = 'Item';
-			dragData.data = item;
+			dragData.data = item.data._source;
 			dragData.effectUUID = target.dataset.uuid;
 		}
 
@@ -451,8 +453,8 @@ export const Sheet = {
 
 		if (uuid) {
 			const effect = sheet.actor.data.obsidian.effects.get(uuid);
-			const item = sheet.actor.items.find(item => item.data._id === effect.parentItem);
-			const effects = duplicate(item.data.flags.obsidian.effects);
+			const item = sheet.actor.items.get(effect.parentItem);
+			const effects = duplicate(item.data._source.flags.obsidian.effects);
 			const newEffect = effects.find(e => e.uuid === uuid);
 			newEffect.toggle.active = !newEffect.toggle.active;
 			item.update({'flags.obsidian.effects': effects});
@@ -472,9 +474,8 @@ export const Sheet = {
 		}
 
 		if (item.data.obsidian.equippable) {
-			sheet.actor.updateEmbeddedEntity(
-				'OwnedItem',
-				{_id: id, 'data.equipped': !item.data.data.equipped});
+			sheet.actor.updateEmbeddedDocuments(
+				'Item', [{_id: id, 'data.equipped': !item.data.data.equipped}]);
 		} else {
 			evt.currentTarget.dataset.roll = 'item';
 			evt.currentTarget.dataset.id = id;
@@ -502,18 +503,18 @@ export const Sheet = {
 		const target = evt.currentTarget;
 		const uuid = target.parentElement.dataset.uuid;
 		const n = Number(target.dataset.n);
-		const resource = sheet.actor.data.obsidian.components.get(uuid);
+		const resource = sheet.actor.obsidian.components.get(uuid);
 
 		if (!resource) {
 			return;
 		}
 
-		const effect = sheet.actor.data.obsidian.effects.get(resource.parentEffect);
+		const effect = sheet.actor.obsidian.effects.get(resource.parentEffect);
 		if (!effect) {
 			return;
 		}
 
-		const item = sheet.actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
+		const item = sheet.actor.items.get(effect.parentItem);
 		if (!item) {
 			return;
 		}
@@ -532,26 +533,25 @@ export const Sheet = {
 		}
 
 		const update = {
-			_id: item._id,
+			_id: item.id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
 			max - used
 		};
 
-		return sheet.actor.updateEmbeddedEntity('OwnedItem', OBSIDIAN.updateArrays(item, update));
+		return sheet.actor.updateEmbeddedDocuments(
+			'Item', [OBSIDIAN.updateArrays(item.data._source, update)]);
 	},
 
 	saveContainerState: function (sheet, evt) {
 		const target = evt.currentTarget;
 		const id = target.dataset.itemId;
 
-		// Doesn't seem to be a way to do this without re-rendering the sheet,
-		// which is unfortunate as this could easily just be passively saved.
-
 		// The click event fires before the open state is toggled so we invert
 		// it here to represent what the state will be right after this event.
-		sheet.actor.updateEmbeddedEntity(
-			'OwnedItem',
-			{_id: id, 'flags.obsidian.open': !target.parentNode.open});
+		sheet.actor.updateEmbeddedDocuments(
+			'Item',
+			[{_id: id, 'flags.obsidian.open': !target.parentNode.open}],
+			{render: false});
 	},
 
 	setAttributeLevel: function (sheet, prop, evt) {
@@ -580,18 +580,18 @@ export const Sheet = {
 			// Avoid 'invisibly' turning on the condition when it was actually
 			// enabled through an automated effect rather than being manually
 			// switched on.
-			sheet.actor.createEmbeddedEntity('ActiveEffect', {
+			sheet.actor.createEmbeddedDocuments('ActiveEffect', [{
 				label: game.i18n.localize(`OBSIDIAN.Condition.${id}`),
 				icon: `modules/obsidian/img/conditions/${id}.svg`,
 				'flags.core.statusId': id
-			});
+			}]);
 		}
 	},
 
 	setExhaustion: async function (sheet, evt) {
 		let current = 0;
-		const existing = sheet.actor.data.effects.filter(effect => {
-			const id = getProperty(effect, 'flags.core.statusId');
+		const existing = sheet.actor.effects.filter(effect => {
+			const id = effect.getFlag('core', 'statusId');
 			if (id?.startsWith('exhaust')) {
 				const value = Number(id.substr(7));
 				if (value > current) {
@@ -602,7 +602,7 @@ export const Sheet = {
 			}
 
 			return false;
-		}).map(effect => effect._id);
+		}).map(effect => effect.id);
 
 		const value = Number(evt.currentTarget.dataset.value);
 		let update = current;
@@ -614,15 +614,15 @@ export const Sheet = {
 		}
 
 		if (existing.length) {
-			await sheet.actor.deleteEmbeddedEntity('ActiveEffect', existing);
+			await sheet.actor.deleteEmbeddedDocuments('ActiveEffect', existing);
 		}
 
 		if (update > 0) {
-			sheet.actor.createEmbeddedEntity('ActiveEffect', {
+			sheet.actor.createEmbeddedDocuments('ActiveEffect', [{
 				label: game.i18n.localize('OBSIDIAN.Condition.exhaustion'),
 				icon: `modules/obsidian/img/conditions/exhaust${update}.svg`,
 				'flags.core.statusId': `exhaust${update}`
-			});
+			}]);
 		}
 	},
 
@@ -637,26 +637,26 @@ export const Sheet = {
 	},
 
 	splitItem: async function (sheet, li) {
-		const item = sheet.actor.data.obsidian.itemsByID.get(li.data('item-id'));
+		const item = sheet.actor.items.get(li.data('item-id'));
 		if (!item) {
 			return;
 		}
 
 		const doSplit = async qty => {
 			const newItem = ObsidianActor.duplicateItem(item);
-			newItem.data.quantity = qty;
-			await sheet.actor.createEmbeddedEntity('OwnedItem', newItem);
-			sheet.actor.updateEmbeddedEntity('OwnedItem', {
-				_id: item._id,
-				'data.quantity': item.data.quantity - qty
-			});
+			newItem.data.data.quantity = qty;
+			await sheet.actor.createEmbeddedDocuments('Item', [newItem.toJSON()]);
+			sheet.actor.updateEmbeddedDocuments('Item', [{
+				_id: item.id,
+				'data.quantity': item.data.data.quantity - qty
+			}]);
 		};
 
-		if (item.data.quantity < 3) {
+		if (item.data.data.quantity < 3) {
 			doSplit(1);
 		} else {
 			const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer.html', {
-				max: item.data.quantity - 1,
+				max: item.data.data.quantity - 1,
 				name: item.name
 			});
 
@@ -692,7 +692,7 @@ export const Sheet = {
 		const id = el.data('item-id');
 		const existing =
 			Object.values(sheet.actor.apps).find(app =>
-				app.constructor === ObsidianViewDialog && app.item._id === id);
+				app.constructor === ObsidianViewDialog && app.item.id === id);
 
 		if (existing) {
 			existing.render(true);

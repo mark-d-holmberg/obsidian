@@ -41,21 +41,22 @@ export class ObsidianNPCFeaturesDialog extends ObsidianDialog {
 
 	async _onAddFeature () {
 		const selection = this.element.find('select').val();
-		const item = await this.parent.actor.createEmbeddedEntity('OwnedItem', {
+		const created = await this.parent.actor.createEmbeddedDocuments('Item', [{
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			type: 'feat',
 			data: {activation: {type: selection}}
-		});
+		}]);
 
-		this.parent.actor.items.get(item._id).sheet.render(true);
+		const item = created.shift();
+		item.sheet.render(true);
 		this.close();
 	}
 
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		if (formData['flags.obsidian.lair'] === game.i18n.localize('OBSIDIAN.LairRules')) {
 			formData['flags.obsidian.lair'] = '';
 		}
 
-		super._updateObject(event, formData);
+		return super._updateObject(event, formData);
 	}
 }

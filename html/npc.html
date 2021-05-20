@@ -54,28 +54,7 @@
 			<input name="name" type="text" value="{{actor.name}}"
 			       class="obsidian-char-charname obsidian-condensed"
 			       placeholder="{{localize 'OBSIDIAN.CharacterName'}}">
-			<div class="obsidian-char-header-minor obsidian-condensed">
-				<span>{{obs-i18n 'Size' data.traits.size}}</span>
-				<span>
-					{{~#if actor.flags.obsidian.details.type~}}
-						{{~lc (obs-i18n 'CreatureType' actor.flags.obsidian.details.type)~}}
-						{{~else~}}
-						{{~lc data.details.type~}}
-					{{~/if~}}
-				</span>{{#if (and actor.obsidian.details.tags (not isObject))}}<span style="margin-left: 3px;">({{{lc actor.obsidian.details.tags}}})</span>{{/if}}{{#if (not isObject)}}{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2 data.details.alignment)}}<span>,</span>{{/if}}
-				<span>
-					{{#if (or actor.flags.obsidian.details.alignment1 actor.flags.obsidian.details.alignment2)}}
-						{{#if actor.flags.obsidian.details.alignment1}}
-							{{lc (obs-i18n 'AlignmentPt1' actor.flags.obsidian.details.alignment1)}}
-						{{/if}}
-						{{#if actor.flags.obsidian.details.alignment2}}
-							{{lc (obs-i18n 'AlignmentPt2' actor.flags.obsidian.details.alignment2)}}
-						{{/if}}
-					{{else}}
-						{{lc data.details.alignment}}
-					{{/if}}
-				</span>{{/if}}
-			</div>
+			<div class="obsidian-char-header-minor obsidian-condensed">{{{creatureType}}}</div>
 			{{#if summonLevel}}
 			<div class="obsidian-char-header-minor obsidian-condensed obsidian-summon-level">
 				{{summonLevel}}

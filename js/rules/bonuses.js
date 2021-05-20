@@ -3,33 +3,33 @@ import {OBSIDIAN} from '../global.js';
 import {Effect} from '../module/effect.js';
 import {ObsidianActor} from '../module/actor.js';
 
-export function applyBonuses (actorData, data, flags, derived) {
-	applySpeedBonuses(actorData, data, derived);
-	applyInitBonuses(actorData, data, flags, derived);
-	applyACBonuses(actorData, flags, derived);
-	applyHPBonuses(actorData, data, derived);
-	applySpellBonuses(actorData, derived);
+export function applyBonuses (actor, data, flags, derived) {
+	applySpeedBonuses(actor, data, derived);
+	applyInitBonuses(actor, data, flags, derived);
+	applyACBonuses(actor, flags, derived);
+	applyHPBonuses(actor, data, derived);
+	applySpellBonuses(actor, derived);
 }
 
-function applyInitBonuses (actorData, data, flags, derived) {
+function applyInitBonuses (actor, data, flags, derived) {
 	const bonuses =
 		derived.filters.bonuses(Filters.appliesTo.initiative(flags.attributes.init.ability));
 
 	if (bonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
 		derived.attributes.init.rollParts.push(
-			...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 		data.attributes.init.mod +=
 			derived.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		data.attributes.init.mod = Math.floor(data.attributes.init.mod);
 	}
 }
 
-function applyACBonuses (actorData, flags, derived) {
+function applyACBonuses (actor, flags, derived) {
 	const bonuses = derived.filters.bonuses(Filters.isAC);
 	if (bonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
 		derived.attributes.ac +=
 			bonuses.reduce((acc, bonus) =>
-				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
+				acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
 		derived.attributes.ac = Math.floor(derived.attributes.ac);
 	}
@@ -51,12 +51,14 @@ function applyACBonuses (actorData, flags, derived) {
 	}
 }
 
-function applyHPBonuses (actorData, data, derived) {
+function applyHPBonuses (actor, data, derived) {
+	const actorData = actor.data;
 	const bonuses = derived.filters.bonuses(Filters.isHP);
+
 	if (bonuses.length) {
 		data.attributes.hp.max +=
 			bonuses.reduce((acc, bonus) =>
-				acc + bonusToParts(actorData, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
+				acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
 		data.attributes.hp.max = Math.floor(data.attributes.hp.max);
 	}
@@ -82,12 +84,12 @@ function applyHPBonuses (actorData, data, derived) {
 	}
 }
 
-function applySpellBonuses (actorData, derived) {
+function applySpellBonuses (actor, derived) {
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
 		const bonuses = derived.filters.bonuses(Filters.appliesTo[filter]);
 		if (bonuses.length) {
 			let total =
-				bonuses.flatMap(bonus => bonusToParts(actorData, bonus))
+				bonuses.flatMap(bonus => bonusToParts(actor, bonus))
 					.reduce((acc, part) => acc + part.mod, 0);
 
 			total = Math.floor(total);
@@ -115,8 +117,9 @@ function applySpellBonuses (actorData, derived) {
 	}
 }
 
-function applySpeedBonuses (actorData, data, derived) {
-	if (actorData.type === 'vehicle') {
+function applySpeedBonuses (actor, data, derived) {
+	const actorData = actor.data;
+	if (actor.type === 'vehicle') {
 		return;
 	}
 
@@ -130,8 +133,7 @@ function applySpeedBonuses (actorData, data, derived) {
 		if (bonuses.length) {
 			derived.attributes.speed[speed] +=
 				bonuses.reduce((acc, bonus) =>
-					acc + bonusToParts(actorData, bonus)
-						.reduce((acc, part) => acc + part.mod, 0), 0);
+					acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
 
 			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed]);
 		}
@@ -178,7 +180,8 @@ function applySpeedBonuses (actorData, data, derived) {
 	}
 }
 
-export function applyProfBonus (actorData) {
+export function applyProfBonus (actor) {
+	const actorData = actor.data;
 	const attr = actorData.data.attributes;
 	const bonuses = actorData.obsidian.filters.bonuses(Filters.isProf);
 	const setters = actorData.obsidian.filters.setters(Filters.isProf);
@@ -189,7 +192,7 @@ export function applyProfBonus (actorData) {
 			Math.floor(
 				attr.prof +
 				bonuses
-					.flatMap(bonus => bonusToParts(actorData, bonus))
+					.flatMap(bonus => bonusToParts(actor, bonus))
 					.reduce((acc, part) => acc + part.mod, 0));
 	}
 
@@ -207,12 +210,12 @@ export function applyProfBonus (actorData) {
 	}
 }
 
-function bonusName (actorData, bonus) {
+function bonusName (actor, bonus) {
 	if (bonus.name?.length) {
 		return bonus.name;
 	}
 
-	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
+	const effect = actor.obsidian.effects.get(bonus.parentEffect);
 	if (!effect) {
 		return '';
 	}
@@ -221,7 +224,7 @@ function bonusName (actorData, bonus) {
 		return effect.name;
 	}
 
-	const item = actorData.obsidian.itemsByID.get(effect.parentItem);
+	const item = actor.items.get(effect.parentItem);
 	return item.name;
 }
 
@@ -238,37 +241,38 @@ function getTokenActorDataSafe (ids) {
 			return;
 		}
 
-		const tokenData = scene.getEmbeddedEntity('Token', ids.token);
+		const tokenData = scene.tokens.get(ids.token);
 		if (!tokenData) {
 			return;
 		}
 
-		const actor = game.actors.get(tokenData.actorId);
+		const actor = game.actors.get(tokenData.data.actorId);
 		if (!actor) {
 			return;
 		}
 
-		if (tokenData.actorLink) {
+		if (tokenData.data.actorLink) {
 			return actor.data;
 		}
 
-		const cached = game.actors.tokens.get(tokenData._id);
+		const cached = game.actors.tokens.get(tokenData.id);
 		if (cached) {
 			return cached.data;
 		}
 
-		return mergeObject(actor._data, tokenData.actorData, {inplace: false});
+		return mergeObject(actor._data, tokenData.data.actorData, {inplace: false});
 	}
 }
 
-export function bonusToParts (actorData, bonus) {
+export function bonusToParts (actor, bonus) {
 	let summoningItem;
-	const effect = actorData.obsidian.effects.get(bonus.parentEffect);
+	let actorData = actor.data;
+	const effect = actor.obsidian.effects.get(bonus.parentEffect);
 
 	if (effect?.activeEffect) {
-		const item = actorData.obsidian.itemsByID.get(effect.parentItem);
-		if (item?.flags.obsidian?.duration) {
-			const tokenActorData = getTokenActorDataSafe(item.flags.obsidian.duration);
+		const item = actor.items.get(effect.parentItem);
+		if (item?.data.flags.obsidian?.duration) {
+			const tokenActorData = getTokenActorDataSafe(item.data.flags.obsidian.duration);
 			if (tokenActorData) {
 				actorData = tokenActorData;
 			}
@@ -287,7 +291,7 @@ export function bonusToParts (actorData, bonus) {
 			if (component) {
 				const effect = tokenActorData.obsidian.effects.get(component.parentEffect);
 				if (effect) {
-					summoningItem = tokenActorData.obsidian.itemsByID.get(effect.parentItem);
+					summoningItem = tokenActorData.items.find(i => i._id === effect.parentItem);
 				}
 			}
 
@@ -302,12 +306,12 @@ export function bonusToParts (actorData, bonus) {
 	const summoningItemSource = summoningItem?.flags.obsidian?.source;
 	const parts = [];
 
-	const createConstantPart = mod => parts.push({mod, name: bonusName(actorData, bonus)});
+	const createConstantPart = mod => parts.push({mod, name: bonusName(actor, bonus)});
 
 	const createAbilityPart = (multiplier, constant) => {
 		let mod = 0;
 		if (bonus.ability === 'spell' && summoningItemSource?.type === 'class') {
-			const cls = actorData.obsidian.itemsByID.get(summoningItemSource.class);
+			const cls = actor.items.get(summoningItemSource.class);
 			if (cls?.obsidian?.spellcasting?.enabled) {
 				mod = cls.obsidian.spellcasting.mod;
 			}
@@ -333,7 +337,7 @@ export function bonusToParts (actorData, bonus) {
 		});
 
 	const createDicePart = (mod = 0) => {
-		const part = {mod, ndice: bonus.ndice, die: bonus.die, name: bonusName(actorData, bonus)};
+		const part = {mod, ndice: bonus.ndice, die: bonus.die, name: bonusName(actor, bonus)};
 		if (bonus.dmg?.enabled && bonus.dmg?.type !== 'wpn') {
 			part.damage = bonus.dmg.type;
 		}
@@ -346,14 +350,14 @@ export function bonusToParts (actorData, bonus) {
 		if (key === 'chr') {
 			level = actorData.data.details.level;
 		} else if (key === 'cls') {
-			const cls = actorData.obsidian.itemsByID.get(bonus.class);
-			level = cls?.data.levels;
+			const cls = actor.items.get(bonus.class);
+			level = cls?.data.data.levels;
 		}
 
 		if (level) {
 			parts.push({
 				mod: Math.floor(multiplier * level + constant),
-				name: bonusName(actorData, bonus)
+				name: bonusName(actor, bonus)
 			});
 		}
 	};

@@ -19,10 +19,10 @@
 			</label>
 			{{#if @root.actor}}
 			<select name="{{prefix}}.itemID" data-selector-parent="{{prefix}}.target" data-show="item">
-				{{selectOptions @root.itemsWithResources selected=itemID nameAttr='_id' labelAttr='name'}}
+				{{selectOptions @root.itemsWithResources selected=itemID nameAttr='id' labelAttr='name'}}
 			</select>
 			<select name="{{prefix}}.featID" data-selector-parent="{{prefix}}.target" data-show="feat">
-				{{selectOptions @root.featsWithResources selected=featID nameAttr='_id' labelAttr='name'}}
+				{{selectOptions @root.featsWithResources selected=featID nameAttr='id' labelAttr='name'}}
 			</select>
 			{{/if}}
 			<select name="{{prefix}}.ref" data-selector-parent="{{prefix}}.target" data-hide="spell, qty">

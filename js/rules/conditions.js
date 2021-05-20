@@ -36,22 +36,22 @@ export function conditionsAutoFail (actorData, {ability, roll}) {
 		|| conditions.unconscious);
 }
 
-export function conditionsRollMod (actorData, {ability, skill, roll, applies}) {
-	const defenses = actorData.obsidian?.defenses.parts.conditions || {adv: [], dis: []};
-	const conditions = actorData.obsidian?.conditions || {};
+export function conditionsRollMod (actor, {ability, skill, roll, applies}) {
+	const defenses = actor.obsidian?.defenses.parts.conditions || {adv: [], dis: []};
+	const conditions = actor.obsidian?.conditions || {};
 	const exhaustion = conditions.exhaustion || 0;
 	const isCheck = roll === 'check' || skill;
 	const isAttack = roll === 'attack';
 	const isSave = roll === 'save';
 	let modes = ['reg'];
 
-	if (ObsidianActor.isRuleActive(actorData, 'heavilyEncumbered')
+	if (ObsidianActor.isRuleActive(actor.data, 'heavilyEncumbered')
 		&& ['str', 'dex', 'con'].includes(ability))
 	{
 		modes.push('dis');
 	}
 
-	if (ObsidianActor.isRuleActive(actorData, 'noisyArmour')
+	if (ObsidianActor.isRuleActive(actor.data, 'noisyArmour')
 		&& ability === 'dex' && skill === 'ste')
 	{
 		modes.push('dis');

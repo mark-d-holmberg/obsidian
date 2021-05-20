@@ -83,7 +83,7 @@ export class ObsidianHDDialog extends ObsidianDialog {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		const overrides = {};
 		this.element.find('select').each((i, el) => {
 			const jqel = $(el);
@@ -116,6 +116,6 @@ export class ObsidianHDDialog extends ObsidianDialog {
 			}
 		}
 
-		super._updateObject(event, {'flags.obsidian.attributes.hd': hd});
+		return super._updateObject(event, {'flags.obsidian.attributes.hd': hd});
 	}
 }

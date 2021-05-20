@@ -33,23 +33,24 @@ export const ObsidianItems = {
 		return Array.from(unique.values());
 	},
 
-	consumeQuantity: function (actor, item, n, updates) {
-		if (item.parentEffect) {
-			const effect = actor.data.obsidian.effects.get(item.parentEffect);
+	consumeQuantity: function (actor, component, n, updates) {
+		let item;
+		if (component.parentEffect) {
+			const effect = actor.data.obsidian.effects.get(component.parentEffect);
 			if (!effect) {
 				return;
 			}
 
-			item = actor.getEmbeddedEntity('OwnedItem', effect.parentItem);
+			item = actor.items.get(effect.parentItem);
 		}
 
 		if (!item) {
 			return;
 		}
 
-		const quantity = item.data.quantity - n;
+		const quantity = item.data.data.quantity - n;
 		if (quantity >= 0) {
-			updates.push({_id: item._id, 'data.quantity': quantity});
+			updates.push({_id: item.id, 'data.quantity': quantity});
 		}
 	},
 
@@ -60,7 +61,7 @@ export const ObsidianItems = {
 			actor = game.actors.get(actor);
 		}
 
-		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
+		if (!actor || !getProperty(actor, 'data.obsidian')) {
 			return;
 		}
 
@@ -74,7 +75,7 @@ export const ObsidianItems = {
 			actor = game.actors.get(actor);
 		}
 
-		if (!actor || !getProperty(actor, 'data.obsidian.itemsByID')) {
+		if (!actor || !getProperty(actor, 'data.obsidian')) {
 			return;
 		}
 
@@ -114,8 +115,8 @@ export const ObsidianItems = {
 
 	refreshConsumable: function (actor, item, effect, resource, n = 1, updates) {
 		updates.push({
-			_id: item._id,
-			'data.quantity': item.data.quantity - 1,
+			_id: item.id,
+			'data.quantity': item.data.data.quantity - 1,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]:
 			resource.max - (n - resource.remaining)
 		});
@@ -123,7 +124,7 @@ export const ObsidianItems = {
 
 	resolveEffect: function (actor, options) {
 		const updates = [];
-		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const item = actor.items.get(options.id);
 		const effect = actor.data.obsidian.effects.get(options.uuid);
 		const resources = effect.components.filter(c => c.type === 'resource');
 		const consumers = effect.components.filter(c => c.type === 'consume');
@@ -153,14 +154,14 @@ export const ObsidianItems = {
 		}
 
 		if (options.spell && options.spellLevel == null) {
-			const spell = actor.data.obsidian.itemsByID.get(options.spell);
+			const spell = actor.items.get(options.spell);
 			const component =
-				actor.data.obsidian.components.get(spell.flags?.obsidian?.parentComponent);
+				actor.data.obsidian.components.get(spell.getFlag('obsidian', 'parentComponent'));
 
 			if (component?.source === 'individual'
 				&& ['innate', 'item'].includes(component.method))
 			{
-				options.spellLevel = spell.data.level;
+				options.spellLevel = spell.data.data.level;
 				if (component.upcast) {
 					options.spellLevel = component.level;
 				}
@@ -174,8 +175,7 @@ export const ObsidianItems = {
 			if (consumer.target === 'qty') {
 				ObsidianItems.consumeQuantity(actor, consumer, options.consumed, updates);
 			} else if (consumer.target !== 'spell') {
-				const [refItem, refEffect, resource] =
-					Effect.getLinkedResource(actor.data, consumer);
+				const [refItem, refEffect, resource] = Effect.getLinkedResource(actor, consumer);
 
 				if (refItem && refEffect && resource) {
 					ObsidianItems.useResource(
@@ -190,8 +190,8 @@ export const ObsidianItems = {
 
 			if (resource.remaining - used < 1
 				&& item.type === 'consumable'
-				&& item.data.quantity > 0
-				&& item.data.uses.autoDestroy)
+				&& item.data.data.quantity > 0
+				&& item.data.data.uses.autoDestroy)
 			{
 				ObsidianItems.refreshConsumable(actor, item, effect, resource, used, updates);
 			} else {
@@ -205,12 +205,12 @@ export const ObsidianItems = {
 
 			if (produced > 0) {
 				if (producer.target === 'qty') {
-					ObsidianItems.consumeQuantity(actor, producer, produced + -1, updates);
+					ObsidianItems.consumeQuantity(actor, producer, produced * -1, updates);
 				} else if (producer.target === 'spell') {
 					ObsidianItems.produceSpellSlot(actor, producer.slot, producer.unlimited);
 				} else {
 					const [refItem, refEffect, resource] =
-						Effect.getLinkedResource(actor.data, producer);
+						Effect.getLinkedResource(actor, producer);
 
 					if (refItem && refEffect && resource) {
 						ObsidianItems.useResource(
@@ -222,13 +222,13 @@ export const ObsidianItems = {
 		}
 
 		if (item.type === 'weapon'
-			&& item.flags.obsidian.type === 'melee'
-			&& item.flags.obsidian.consumeThrown
-			&& item.flags.obsidian.tags.thrown)
+			&& item.data.flags.obsidian.type === 'melee'
+			&& item.data.flags.obsidian.consumeThrown
+			&& item.data.flags.obsidian.tags.thrown)
 		{
 			const attack = effect.components.find(c => c.type === 'attack');
 			if (attack && attack.mode === 'ranged') {
-				updates.push({_id: item._id, 'data.quantity': item.data.quantity - 1});
+				updates.push({_id: item.id, 'data.quantity': item.data.data.quantity - 1});
 			}
 		}
 
@@ -247,23 +247,23 @@ export const ObsidianItems = {
 			Rolls.create(actor, options);
 		}
 
-		if (!OBSIDIAN.notDefinedOrEmpty(getProperty(item, 'flags.obsidian.ammo'))) {
-			const ammo = actor.data.obsidian.itemsByID.get(item.flags.obsidian.ammo);
+		if (!OBSIDIAN.notDefinedOrEmpty(item.getFlag('obsidian', 'ammo'))) {
+			const ammo = actor.items.get(item.data.flags.obsidian.ammo);
 			const collection = ammo.obsidian.collection;
 			const suppressCard =
 				(collection.attack.length + collection.damage.length + collection.save.length) < 1;
 
 			if (ammo) {
-				ObsidianItems.roll(actor, {roll: 'item', id: ammo._id, suppressCard: suppressCard});
+				ObsidianItems.roll(actor, {roll: 'item', id: ammo.id, suppressCard: suppressCard});
 			}
 		}
 
 		if (tables.length) {
 			tables.forEach(component => {
-				const RollTable = CONFIG.RollTable.entityClass;
+				const RollTable = CONFIG.RollTable.documentClass;
 				component.tables.map(table =>
 					new RollTable(table, {
-						parentItem: CONFIG.Item.entityClass.createOwned(item, actor)
+						parentItem: CONFIG.Item.documentClass.createOwned(item.data, actor)
 					})).forEach(table => {
 						table.drawMany(component.nrolls).then(() => {
 							if (component.reset) {
@@ -301,12 +301,12 @@ export const ObsidianItems = {
 	},
 
 	rollActionable: function (actor, index, options) {
-		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const item = actor.items.get(options.id);
 		const action = item.obsidian.actionable[index];
 
 		if (action.type === 'spell') {
 			options.roll = 'item';
-			options.id = action._id;
+			options.id = action.id;
 		} else {
 			options.roll = 'fx';
 			options.uuid = action.uuid;
@@ -319,7 +319,7 @@ export const ObsidianItems = {
 		const effect = actor.data.obsidian.effects.get(options.uuid);
 		options.id = effect.parentItem;
 
-		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const item = actor.items.get(options.id);
 		const consumer = effect.components.find(c => c.type === 'consume');
 		const scaling = item.obsidian.collection.scaling.find(e =>
 			e.scalingComponent.ref === effect.uuid && e.scalingComponent.method === 'resource');
@@ -348,17 +348,17 @@ export const ObsidianItems = {
 	},
 
 	rollItem: async function (actor, options) {
-		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const item = actor.items.get(options.id);
 		if (!item || !item.obsidian) {
 			Rolls.create(actor, options);
 			return;
 		}
 
-		if (item.type === 'feat' && item.data.activation.type === 'legendary') {
+		if (item.type === 'feat' && item.data.data.activation.type === 'legendary') {
 			const legact = actor.data.data.resources.legact;
 			await actor.update({
 				'data.resources.legact.value':
-					Math.min(legact.max, legact.value + item.data.activation.cost)
+					Math.min(legact.max, legact.value + item.data.data.activation.cost)
 			});
 		}
 
@@ -381,11 +381,12 @@ export const ObsidianItems = {
 	},
 
 	rollSpellItem: function (actor, options) {
-		const spell = actor.data.obsidian.itemsByID.get(options.id);
+		const spell = actor.items.get(options.id);
 		let component;
 
-		if (getProperty(spell, 'flags.obsidian.parentComponent')) {
-			component = actor.data.obsidian.components.get(spell.flags.obsidian.parentComponent);
+		if (spell.getFlag('obsidian', 'parentComponent')) {
+			component =
+				actor.data.obsidian.components.get(spell.data.flags.obsidian.parentComponent);
 		}
 
 		if (component && ['item', 'innate'].includes(component.method) && !options.parentResolved) {
@@ -393,19 +394,19 @@ export const ObsidianItems = {
 			options.roll = 'fx';
 			options.uuid = effect.uuid;
 			options.id = effect.parentItem;
-			options.spell = spell._id;
+			options.spell = spell.id;
 			options.parentResolved = false;
 			ObsidianItems.roll(actor, options);
 			return;
 		}
 
 		if (component && ['known', 'prep'].includes(component.method) && component.noSlot) {
-			options.spellLevel = spell.data.level;
+			options.spellLevel = spell.data.data.level;
 		}
 
 		if (options.spellLevel == null) {
-			if (spell.data.level > 0) {
-				ObsidianItems.selectSpellLevel(actor, options, spell.data.level);
+			if (spell.data.data.level > 0) {
+				ObsidianItems.selectSpellLevel(actor, options, spell.data.data.level);
 				return;
 			} else {
 				options.spellLevel = 0;
@@ -421,7 +422,7 @@ export const ObsidianItems = {
 	},
 
 	rollToolItem: function (actor, options) {
-		const tool = actor.data.obsidian.itemsByID.get(options.id);
+		const tool = actor.items.get(options.id);
 		if (tool.obsidian.actionable.length) {
 			ObsidianItems.selectActionable(actor, options);
 			return;
@@ -439,7 +440,7 @@ export const ObsidianItems = {
 	},
 
 	selectActionable: function (actor, options) {
-		const item = actor.data.obsidian.itemsByID.get(options.id);
+		const item = actor.items.get(options.id);
 		if (item.obsidian.actionable.length > 1) {
 			new ObsidianActionableDialog(actor, options).render(true);
 		} else {
@@ -466,7 +467,7 @@ export const ObsidianItems = {
 		}
 
 		updates.push({
-			_id: item._id,
+			_id: item.id,
 			[`flags.obsidian.effects.${effect.idx}.components.${resource.idx}.remaining`]: remaining
 		});
 	}

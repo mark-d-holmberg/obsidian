@@ -8,7 +8,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 		this._actor = actor;
 		this._options = options;
 		this._min = min;
-		this._item = actor.data.obsidian.itemsByID.get(options.id);
+		this._item = actor.items.get(options.id);
 	}
 
 	static get defaultOptions () {
@@ -36,9 +36,9 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 			this._actor.data.data.spells.pact
 			&& this._actor.data.data.spells.pact.level >= data.min;
 
-		if (this._item.type === 'spell' && getProperty(this._item, 'flags.obsidian.source')) {
-			const cls = getSourceClass(this._actor.data, this._item.flags.obsidian.source);
-			data.ritual = cls && getProperty(cls, 'flags.obsidian.spellcasting.rituals') !== 'none';
+		if (this._item.type === 'spell' && this._item.getFlag('obsidian', 'source')) {
+			const cls = getSourceClass(this._actor, this._item.getFlag('obsidian', 'source'));
+			data.ritual = cls && cls.getFlag('obsidian', 'spellcasting.rituals') !== 'none';
 		}
 
 		return data;
@@ -56,7 +56,7 @@ export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 		if (isPact) {
 			level = this._actor.data.data.spells.pact.level;
 		} else if (isRitual && this._item.type === 'spell') {
-			level = this._item.data.level;
+			level = this._item.data.data.level;
 		}
 
 		if (!isRitual) {

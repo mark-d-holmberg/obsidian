@@ -9,13 +9,13 @@ import {ObsidianVehicleDetailsDialog} from '../dialogs/vehicle-details.js';
 export class ObsidianVehicle extends ActorSheet5eVehicle {
 	constructor (...args) {
 		super(...args);
-		game.settings.register('obsidian', this.object.data._id, {
+		game.settings.register('obsidian', this.actor.id, {
 			default: '',
 			scope: 'client',
 			onChange: settings => this.settings = JSON.parse(settings)
 		});
 
-		this.settings = game.settings.get('obsidian', this.object.data._id);
+		this.settings = game.settings.get('obsidian', this.actor.id);
 		if (this.settings === '') {
 			this.settings = {};
 		} else {
@@ -92,7 +92,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	getData () {
 		const data = super.getData();
 		const type = data.actor.flags.obsidian.details.type;
-		data.items = this.actor.items.map(i => duplicate(i.data));
+		data.items = this.actor.items.map(item => duplicate(item.toObject(false)));
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 		data.landVehicle = type === 'land';
@@ -164,7 +164,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		let name;
 		if (data.pack) {
 			const index = await game.packs.get(data.pack).getIndex();
-			const entry = index.find(entry => entry._id === data.id);
+			const entry = index.get(data.id);
 
 			if (entry) {
 				name = entry.name;
@@ -245,6 +245,6 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	}
 
 	async _updateObject (event, formData) {
-		return super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
+		return super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data._source, formData));
 	}
 }

@@ -52,16 +52,17 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 			delete itemData.data;
 		}
 
-		const item = await this.parent.actor.createEmbeddedEntity('OwnedItem', itemData);
-		this.parent.actor.items.get(item._id).sheet.render(true);
+		const created = await this.parent.actor.createEmbeddedDocuments('Item', [itemData]);
+		const item = created.shift();
+		item.sheet.render(true);
 		this.close();
 	}
 
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		if (formData['flags.obsidian.actions'] === game.i18n.localize('OBSIDIAN.ActionRules')) {
 			formData['flags.obsidian.actions'] = '';
 		}
 
-		super._updateObject(event, formData);
+		return super._updateObject(event, formData);
 	}
 }

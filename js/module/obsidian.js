@@ -52,7 +52,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		super(object, options);
-		game.settings.register('obsidian', this.object.data._id, {
+		game.settings.register('obsidian', this.actor.id, {
 			name: 'Obsidian settings',
 			default: '',
 			type: String,
@@ -60,11 +60,11 @@ export class Obsidian extends ActorSheet5eCharacter {
 			onChange: settings => this.settings = JSON.parse(settings)
 		});
 
-		let settings = game.settings.get('obsidian', this.object.data._id);
+		let settings = game.settings.get('obsidian', this.actor.id);
 		if (settings === '') {
 			settings = {};
 			settings.portraitCollapsed = false;
-			game.settings.set('obsidian', this.object.data._id, JSON.stringify(settings));
+			game.settings.set('obsidian', this.actor.id, JSON.stringify(settings));
 		} else {
 			settings = JSON.parse(settings);
 		}
@@ -176,23 +176,25 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	getData () {
 		const data = super.getData();
-		data.base = duplicate(this.actor._data);
+		data.actor = duplicate(this.actor.toObject(false));
+		data.base = duplicate(this.actor.data);
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.ObsidianLabels = OBSIDIAN.Labels;
-		data.actor.obsidian.feats = duplicate(this.actor.data.obsidian.itemsByType.get('feat'));
+
+		data.actor.obsidian.feats =
+			this.actor.obsidian.itemsByType.get('feat').map(i => duplicate(i.toObject(false)));
+
 		data.actor.obsidian.attacks.forEach(this._reifyAttackLinks, this);
 		data.actor.obsidian.tempEffects =
 			data.actor.obsidian.feats.filter(feat => feat.flags.obsidian?.activeEffect);
 
-		data.speed = {
-			label: data.actor.flags.obsidian.attributes.speedDisplay
-		};
+		data.speed = {label: data.actor.flags.obsidian.attributes.speedDisplay};
 
 		if (!data.speed.label) {
 			data.speed.label = 'walk';
 		}
 
-		data.speed.value = data.actor.obsidian.attributes.speed[data.speed.label];
+		data.speed.value = this.actor.obsidian.attributes.speed[data.speed.label];
 		Sheet.getSenses(data);
 		Sheet.getRules(data);
 		console.debug(data);
@@ -339,21 +341,20 @@ export class Obsidian extends ActorSheet5eCharacter {
 		if (evt.currentTarget.dataset.source) {
 			flags.obsidian.source = {type: evt.currentTarget.dataset.source};
 			if (flags.obsidian.source.type === 'class') {
-				if (this.actor.data.obsidian.classes.length > 0) {
-					flags.obsidian.source.class =
-						this.actor.data.obsidian.classes[0]._id;
+				if (this.actor.obsidian.classes.length) {
+					flags.obsidian.source.class = this.actor.obsidian.classes[0].id;
 				} else {
 					flags.obsidian.source.type = 'other';
 				}
 			}
 		}
 
-		this.actor.createEmbeddedEntity('OwnedItem', {
+		this.actor.createEmbeddedDocuments('Item', [{
 			type: 'feat',
 			name: game.i18n.localize('OBSIDIAN.NewFeature'),
 			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
-		}).then(item => this.actor.items.get(item._id).sheet.render(true));
+		}]).then(items => items.shift().sheet.render(true));
 	}
 
 	_onCollapseNotes (evt) {
@@ -362,8 +363,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 		}
 
 		const note = evt.currentTarget.dataset.notes;
-		const collapsed = !!getProperty(this.actor.data, `flags.obsidian.notes.${note}`);
-		this.actor.update({[`flags.obsidian.notes.${note}`]: !collapsed});
+		const collapsed = !!this.actor.getFlag('obsidian', `notes.${note}`);
+		this.actor.setFlag('obsidian', `notes.${note}`, !collapsed);
 	}
 
 	/**
@@ -373,7 +374,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		super._onResize(event);
 		this.settings.width = this.position.width;
 		this.settings.height = this.position.height;
-		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
 	}
 
 	/**
@@ -387,7 +388,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 				// array each time.
 				const components = name.split('.');
 				const idx = Number(components[1]);
-				const item = this.actor.data.items[idx];
+				const item = this.actor.data._source.items[idx];
 				const property = components.slice(2).join('.');
 				const update = {_id: item._id};
 
@@ -399,9 +400,8 @@ export class Obsidian extends ActorSheet5eCharacter {
 				}
 
 				update[property] = value;
-				return this.actor.updateEmbeddedEntity(
-					'OwnedItem',
-					OBSIDIAN.updateArrays(item, update));
+				return this.actor.updateEmbeddedDocuments(
+					'Item', [OBSIDIAN.updateArrays(item, update)]);
 			}
 		}
 
@@ -414,7 +414,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 			atk.parentEffect.components.filter(c => c.type === 'damage' && !c.versatile);
 		atk.parentEffect.versatile =
 			atk.parentEffect.components.filter(c => c.type === 'damage' && c.versatile);
-		atk.parentItem = this.actor.data.obsidian.itemsByID.get(atk.parentEffect.parentItem);
+		atk.parentItem = this.actor.items.get(atk.parentEffect.parentItem).data;
 	}
 
 	/**
@@ -572,7 +572,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		const update = {};
 		if (id.includes('.')) {
 			const [key, idx] = id.split('.');
-			const newSkills = duplicate(this.actor.data.flags.obsidian[prop][key]);
+			const newSkills = duplicate(this.actor.data._source.flags.obsidian[prop][key]);
 			newSkills[idx].value = newValue;
 			update[`flags.obsidian.${prop}.${key}`] = newSkills;
 		} else {
@@ -611,11 +611,10 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		$(this.form).closest('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
-		game.settings.set('obsidian', this.object.data._id, JSON.stringify(this.settings));
+		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
 	}
 
-	_updateObject (event, formData) {
-		// TODO: Handle tokens.
-		super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data, formData));
+	async _updateObject (event, formData) {
+		return super._updateObject(event, OBSIDIAN.updateArrays(this.actor.data._source, formData));
 	}
 }

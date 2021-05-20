@@ -9,31 +9,11 @@ export function convertObject (data) {
 		return;
 	}
 
+	const damageDefenses = data.flags?.obsidian?.defenses?.damage || [];
+	damageDefenses.push({level: 'imm', dmg: 'psn'}, {level: 'imm', dmg: 'psy'});
+	setProperty(data, 'flags.obsidian.details.type', 'object');
+	setProperty(data, 'flags.obsidian.defenses.damage', damageDefenses);
 	data.type = 'npc';
-	if (!data.flags) {
-		data.flags = {};
-	}
-
-	if (!data.flags.obsidian) {
-		data.flags.obsidian = {};
-	}
-
-	if (!data.flags.obsidian.defenses) {
-		data.flags.obsidian.defenses = {};
-	}
-
-	if (!data.flags.obsidian.defenses.damage) {
-		data.flags.obsidian.defenses.damage = [];
-	}
-
-	if (!data.flags.obsidian.details) {
-		data.flags.obsidian.details = {};
-	}
-
-	data.flags.obsidian.details.type = 'object';
-	data.flags.obsidian.defenses.damage.push(
-		{level: 'imm', dmg: 'psn'},
-		{level: 'imm', dmg: 'psy'});
 
 	if (!data.flags.obsidian.version) {
 		data.flags.obsidian.version = Schema.VERSION;

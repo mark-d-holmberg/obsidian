@@ -89,7 +89,6 @@ export const Summons = {
 
 		const actorData = actor.data;
 		const data = actorData.data;
-		const derived = actorData.obsidian;
 
 		if (bonus.key === 'abl') {
 			total = data.abilities[bonus.ability].mod;
@@ -98,7 +97,7 @@ export const Summons = {
 		} else if (bonus.key === 'chr') {
 			total = actorData.type === 'npc' ? data.details.cr : data.details.level;
 		} else if (bonus.key === 'cls') {
-			total = derived.itemsByID.get(bonus.class).data.levels;
+			total = actor.items.get(bonus.class).data.data.levels;
 		} else if (bonus.key === 'hp') {
 			total = data.attributes.hp.max;
 		} else if (bonus.key === 'spell') {
@@ -123,8 +122,8 @@ export const Summons = {
 
 	getGenericActor: async function (type) {
 		const actor =
-			game.actors.entities.find(actor =>
-				actor.data.name === OBSIDIAN.GENERIC_ACTOR && actor.data.type === type);
+			game.actors.contents.find(actor =>
+				actor.name === OBSIDIAN.GENERIC_ACTOR && actor.type === type);
 
 		if (actor) {
 			return actor;
@@ -137,14 +136,14 @@ export const Summons = {
 		const derived = actor.data.obsidian;
 		const component = derived.components.get(summon.parentComponent);
 		const effect = derived.effects.get(component.parentEffect);
-		const item = derived.itemsByID.get(effect.parentItem);
-		const source = item.flags.obsidian.source;
+		const item = actor.items.get(effect.parentItem);
+		const source = item.data.flags.obsidian.source;
 
 		if (source.type !== 'class') {
 			return;
 		}
 
-		const cls = derived.itemsByID.get(source.class);
+		const cls = actor.items.get(source.class);
 		if (!cls?.obsidian?.spellcasting?.enabled) {
 			return;
 		}
@@ -207,25 +206,7 @@ export const Summons = {
 		filter.score = 'prof';
 		effect.components.push(setter, filter);
 		feat.flags.obsidian.effects.push(effect);
-
-		// We just need an actor that we own in order to create the OwnedItem
-		// data, we don't actually create the item on this actor.
-
-		let created;
-		if (game.user.isGM) {
-			// We're the GM so we can use any actor.
-			created = await summoner.createEmbeddedEntity('OwnedItem', feat, {temporary: true});
-		} else if (game.user.character) {
-			// If we're not the GM, we should have at least one character that
-			// we definitely own.
-			created =
-				await game.user.character.createEmbeddedEntity(
-					'OwnedItem', feat, {temporary: true});
-		}
-
-		if (created) {
-			summonData.items.push(created);
-		}
+		summonData.items.push(CONFIG.Item.documentClass.create(feat, {temporary: true}));
 	},
 
 	replaceSaveDCs: function (summoner, summonData, ability) {
@@ -263,15 +244,15 @@ export const Summons = {
 			// exists inside a compendium, we reference a generic actor, and
 			// override all its data with the desired actor. This way we avoid
 			// creating a world actor every time we want to summon something.
-			const template = await Summons.getGenericActor(actor.data.type);
+			const template = await Summons.getGenericActor(actor.type);
 			token.data.actorId = template.id;
 		}
 
 		token.data.actorData = {
 			name: actor.name,
-			data: duplicate(actor.data.data),
-			flags: duplicate(actor.data.flags),
-			items: duplicate(actor.data.items)
+			data: duplicate(actor.data._source.data),
+			flags: duplicate(actor.data._source.flags),
+			items: duplicate(actor.data._source.items)
 		};
 
 		// Make sure the summoner has access to their summon.
@@ -298,7 +279,7 @@ export const Summons = {
 			token: options.token
 		};
 
-		await Summons.applySummonOverrides(options, token.data.actorData, actor.data.type);
+		await Summons.applySummonOverrides(options, token.data.actorData, actor.type);
 
 		const tokens = [];
 		amount = Math.clamped(amount, 0, 32);
@@ -307,6 +288,6 @@ export const Summons = {
 			tokens.push(duplicate(token.data));
 		}
 
-		return Token.create(tokens);
+		return canvas.scene.createEmbeddedDocuments('Token', tokens);
 	}
 };

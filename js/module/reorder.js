@@ -90,21 +90,24 @@ export const Reorder = {
 					return false;
 				}
 
-				const packItem = await pack.getEntity(data.id);
+				const packItem = await pack.getDocument(data.id);
 				delete packItem.data._id;
-				const item =
-					await actor.createEmbeddedEntity(
-						'OwnedItem', ObsidianActor.duplicateItem(packItem.data));
+				const items =
+					await actor.createEmbeddedDocuments(
+						'Item', [ObsidianActor.duplicateItem(packItem).toJSON()]);
 
+				const item = items.shift();
 				if (item) {
 					src = item;
 				} else {
 					return false;
 				}
 			} else {
-				src =
-					await actor.createEmbeddedEntity(
-						'OwnedItem', ObsidianActor.duplicateItem(game.items.get(data.id).data));
+				const created =
+					await actor.createEmbeddedDocuments(
+						'Item', [ObsidianActor.duplicateItem(game.items.get(data.id)).toJSON()]);
+
+				src = created.shift();
 			}
 		}
 
@@ -135,8 +138,8 @@ export const Reorder = {
 			return false;
 		}
 
-		Reorder.insert(actor, src.data, dest?.data, where, update);
-		actor.update(OBSIDIAN.updateArrays(actor.data, update), {diff: false});
+		Reorder.insert(actor, src, dest, where, update);
+		actor.update(OBSIDIAN.updateArrays(actor.data._source, update), {diff: false});
 		return false;
 	},
 
@@ -180,10 +183,9 @@ export const Reorder = {
 			siblings = dest.obsidian.contents;
 		}
 
-		siblings = siblings.map(i => {return {data: i};});
-		const existing = siblings.find(i => i.data._id === src._id) || {data: src};
+		const existing = siblings.find(i => i.id === src.id) || src;
 		const updates = SortingHelpers.performIntegerSort(existing, {
-			target: siblings.find(i => i.data._id === dest?._id),
+			target: siblings.find(i => i.id === dest?.id),
 			siblings: siblings,
 			sortBefore: where === 'before'
 		});
@@ -191,11 +193,11 @@ export const Reorder = {
 		updates.forEach(u => update[`items.${u.target.data.idx}.sort`] = u.update.sort);
 
 		const parentKey = `items.${src.idx}.flags.obsidian.parent`;
-		update[parentKey] = destParent?._id || null;
+		update[parentKey] = destParent?.id || null;
 
 		if (src.type !== 'backpack' && dest?.type === 'backpack') {
 			// Moving an item into a backpack.
-			update[parentKey] = dest._id;
+			update[parentKey] = dest.id;
 		}
 	},
 
@@ -212,12 +214,12 @@ export const Reorder = {
 			}
 
 			if (remaining === 0 && transfer.data.type !== 'consumable') {
-				otherActor.deleteEmbeddedEntity('OwnedItem', transfer.data._id);
+				otherActor.deleteEmbeddedDocuments('Item', [transfer.id]);
 			} else {
-				otherActor.updateEmbeddedEntity('OwnedItem', {
-					_id: transfer.data._id,
+				otherActor.updateEmbeddedDocuments('Item', [{
+					_id: transfer.id,
 					'data.quantity': remaining
-				});
+				}]);
 			}
 
 			transfer.data.data.quantity = qty;
@@ -226,14 +228,14 @@ export const Reorder = {
 			}
 
 			const item = ObsidianActor.duplicateItem(transfer.data);
-			if (actor.owner) {
-				actor.createEmbeddedEntity('OwnedItem', item);
+			if (actor.isOwner) {
+				actor.createEmbeddedDocuments('Item', [item.toJSON()]);
 			} else {
 				game.socket.emit('module.obsidian', {
 					action: 'CREATE',
-					entity: 'OwnedItem',
+					entity: 'Item',
 					actorID: actor.id,
-					data: item
+					data: item.data
 				});
 			}
 		};

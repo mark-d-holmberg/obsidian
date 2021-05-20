@@ -166,27 +166,27 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		data.spellLists = Object.keys(OBSIDIAN.Data.SPELLS_BY_CLASS);
 		data.categories = this._categories;
 		data.uncategorised = data.categories.get('none').components;
-		data.isVehicle = data.actor?.data.type === 'vehicle';
+		data.isVehicle = data.actor?.type === 'vehicle';
 		data.config = {cover: DND5E.cover};
 
-		if (data.actor && data.item.flags?.obsidian?.effects) {
+		if (this.actor && data.item.flags?.obsidian?.effects) {
 			const hasResource = item =>
-				item.flags?.obsidian?.effects?.some(e =>
+				item.data.flags?.obsidian?.effects?.some(e =>
 					e.components.some(c => c.type === 'resource'));
 
 			data.itemsWithResources =
-				data.actor.data.obsidian.itemsByType.not('class', 'spell', 'feat')
+				this.actor.obsidian.itemsByType.not('class', 'spell', 'feat')
 					.filter(hasResource);
 
 			data.featsWithResources =
-				data.actor.data.obsidian.itemsByType.get('feat').filter(hasResource);
+				this.actor.obsidian.itemsByType.get('feat').filter(hasResource);
 
 			data.item.flags.obsidian.effects
 				.flatMap(e => e.components)
 				.filter(c => c.type === 'spells')
 				.forEach(component =>
 					component.spells = component.spells.map(id =>
-						this.actor.data.obsidian.itemsByID.get(id)));
+						this.actor.items.get(id).toObject(false)));
 		}
 
 		if (data.item.flags?.obsidian?.effects?.length) {
@@ -196,8 +196,9 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					let item = data.item;
 					if (data.actor) {
 						item =
-							data.actor.data.obsidian.itemsByID.get(
-								component.target === 'feat' ? component.featID : component.itemID);
+							data.actor.items.get(
+								component.target === 'feat' ? component.featID : component.itemID)
+								.toObject(false);
 					}
 
 					if (item) {
@@ -248,7 +249,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 						component.processed.push({
 							uuid: uuid,
-							entity: entity.entity,
+							entity: entity.documentName,
 							name: entity.name
 						});
 					}));
@@ -324,7 +325,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					component.raw = ed.mce.getContent();
 					await this._updateEffects(
 						null,
-						OBSIDIAN.updateArrays(this.item.data, {'flags.obsidian.effects': effects}));
+						OBSIDIAN.updateArrays(
+							this.item.data._source, {'flags.obsidian.effects': effects}));
 				}
 			}
 
@@ -340,7 +342,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	}
 
 	get _formData () {
-		const expanded = OBSIDIAN.updateArrays(this.item.data, this._getSubmitData());
+		const expanded = OBSIDIAN.updateArrays(this.item.data._source, this._getSubmitData());
 		if (!expanded['flags.obsidian.effects']) {
 			return expanded;
 		}
@@ -400,7 +402,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		if (this.actor
-			&& getProperty(this.actor, 'data.flags.obsidian.skills.custom.length')
+			&& this.actor.getFlag('obsidian', 'skills.custom.length')
 			&& ((component.filter === 'score' && component.score === 'passive')
 				|| (component.filter === 'roll'
 					&& component.roll === 'check'
@@ -437,7 +439,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
 		const fieldset = pill.closest('fieldset');
 		const component =
-			this.item.data.flags.obsidian.effects
+			this.item.data._source.flags.obsidian.effects
 				.flatMap(e => e.components)
 				.find(c => c.uuid === fieldset.dataset.uuid);
 
@@ -450,10 +452,12 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
-		const item = new CONFIG[entity].entityClass(data, {
+		const item = new CONFIG[entity].documentClass(data);
+		// Temporary stopgap for getting it working in 0.8.
+		item.options = {
 			parentComponent: component.uuid,
 			parentItem: this.item
-		});
+		};
 
 		item.sheet.render(true);
 	}
@@ -582,7 +586,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return;
 		}
 
-		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const effects = duplicate(this.item.data._source.flags.obsidian.effects);
 		const fieldset = evt.target.closest('fieldset');
 		const effectDiv = fieldset.closest('.obsidian-effect');
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
@@ -602,7 +606,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			let entity;
 			if (data.pack) {
 				const pack = game.packs.get(data.pack);
-				entity = await pack.getEntity(data.id);
+				entity = await pack.getDocument(data.id);
 			} else {
 				entity = game.actors.get(data.id);
 			}
@@ -622,21 +626,21 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	 */
 	async _onDropSpell (evt) {
 		const [effects, component, item] = await this._processDrop(evt);
-		if (!item || item.type !== 'spell') {
+		if (item?.type !== 'spell') {
 			return false;
 		}
 
-		item.flags.obsidian.source = {
+		item.data._source.flags.obsidian.source = {
 			type: 'item',
-			item: this.item.data._id,
-			display: this.item.data.name
+			item: this.item.id,
+			display: this.item.name
 		};
 
 		if (this.actor) {
-			const created = await this.actor.createEmbeddedEntity('OwnedItem', item);
-			component.spells.push(created._id);
+			const created = await this.actor.createEmbeddedDocuments('Item', [item.toJSON()]);
+			component.spells.push(created.shift().id);
 		} else {
-			component.spells.push(item);
+			component.spells.push(item.data._source);
 		}
 
 		this._updateEffects(null, {'flags.obsidian.effects': effects});
@@ -651,7 +655,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return false;
 		}
 
-		component.tables.push(item);
+		component.tables.push(item.data._source);
 		this._updateEffects(null, {'flags.obsidian.effects': effects});
 	}
 
@@ -689,8 +693,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	_onEditSpell (evt) {
 		if (this.actor) {
 			const item =
-				this.actor.items.find(item =>
-					item.id === evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.id);
+				this.actor.items.get(
+					evt.currentTarget.closest('.obsidian-item-drop-pill').dataset.id);
 
 			if (!item) {
 				return;
@@ -770,7 +774,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		if (orphanedSpells.length && this.actor) {
-			await this.actor.deleteEmbeddedEntity('OwnedItem', orphanedSpells);
+			await this.actor.deleteEmbeddedDocuments('Item', orphanedSpells);
 		}
 
 		this._updateEffects(null, formData);
@@ -800,7 +804,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		});
 
 		if (this.actor) {
-			this.actor.deleteEmbeddedEntity('OwnedItem', extractID);
+			return this.actor.deleteEmbeddedDocuments('Item', [extractID]);
 		}
 	}
 
@@ -829,27 +833,24 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return [];
 		}
 
-		let itemData;
+		let item;
 		if (data.pack) {
 			const pack = game.packs.get(data.pack);
 			if (!pack) {
 				return [];
 			}
 
-			itemData = await pack.getEntry(data.id);
+			item = await pack.getDocument(data.id);
 		} else {
-			const item = CONFIG[entity].collection.instance.get(data.id);
-			if (item) {
-				itemData = duplicate(item.data);
-			}
+			item = CONFIG[entity].collection.instance.get(data.id);
 		}
 
-		if (!itemData) {
+		if (!item) {
 			return [];
 		}
 
-		itemData = ObsidianActor.duplicateItem(itemData);
-		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const dupe = ObsidianActor.duplicateItem(item, entity);
+		const effects = duplicate(this.item.data._source.flags.obsidian.effects);
 		const fieldset = evt.target.closest('fieldset');
 		const effectDiv = fieldset.closest('.obsidian-effect');
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
@@ -863,21 +864,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			return [];
 		}
 
-		if (!itemData.flags) {
-			itemData.flags = {};
-		}
-
-		if (!itemData.flags.obsidian) {
-			itemData.flags.obsidian = {};
-		}
-
-		itemData.flags.obsidian.isEmbedded = true;
-		itemData.flags.obsidian.parentComponent = component.uuid;
-		return [effects, component, itemData];
+		setProperty(dupe.data._source, 'flags.obsidian.isEmbedded', true);
+		setProperty(dupe.data._source, 'flags.obsidian.parentComponent', component.uuid);
+		return [effects, component, dupe];
 	}
 
 	_removeEmbeddedEntity (evt, remove) {
-		const effects = duplicate(this.item.data.flags.obsidian.effects);
+		const effects = duplicate(this.item.data._source.flags.obsidian.effects);
 		const pill = evt.currentTarget.closest('.obsidian-item-drop-pill');
 		const fieldset = pill.closest('fieldset');
 		const effectDiv = fieldset.closest('.obsidian-effect');
@@ -973,26 +966,31 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 	}
 
 	async _updateEffects (event, data) {
-		if (getProperty(this.item, 'data.flags.obsidian.isEmbedded')
+		if (this.item.getFlag('obsidian', 'isEmbedded')
 			&& this.item.options.parentItem
 			&& this.item.options.parentComponent
 			&& !this.actor)
 		{
-			const newData = mergeObject(this.item.data, expandObject(data), {inplace: false});
-			const effects = duplicate(this.item.options.parentItem.data.flags.obsidian.effects);
+			const newData =
+				mergeObject(this.item.data._source, expandObject(data), {inplace: false});
+
+			const effects =
+				duplicate(this.item.options.parentItem.data._source.flags.obsidian.effects);
+
 			const component =
 				effects
 					.flatMap(e => e.components)
 					.find(c => c.uuid === this.item.options.parentComponent);
 
-			const idx = component.spells.findIndex(spell => spell._id === this.item.data._id);
+			const idx = component.spells.findIndex(spell => spell._id === this.item.id);
 			component.spells[idx] = newData;
 
-			await this.item.options.parentItem.update({'flags.obsidian.effects': effects});
-			this.item.data = newData;
+			await this.item.options.parentItem.setFlag('obsidian', 'effects', effects);
+			this.item.data.update(newData);
 			this.render(false);
+			return this.item;
 		} else {
-			super._updateObject(event, data);
+			return super._updateObject(event, data);
 		}
 	}
 }

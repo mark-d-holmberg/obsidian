@@ -7,7 +7,7 @@ import {within5ftOf} from '../module/token.js';
 export function runPatches () {
 	Combat.prototype.rollInitiative = async function (ids) {
 		ids = typeof ids === 'string' ? [ids] : ids;
-		const currentID = this.combatant._id;
+		const currentID = this.combatant.id;
 		const updates = [];
 		const messages = [];
 
@@ -40,8 +40,8 @@ export function runPatches () {
 			return this;
 		}
 
-		await this.updateEmbeddedEntity('Combatant', updates);
-		await this.update({turn: this.turns.findIndex(turn => turn._id === currentID)});
+		await this.updateEmbeddedDocuments('Combatant', updates);
+		await this.update({turn: this.turns.findIndex(turn => turn.id === currentID)});
 		await ChatMessage.create(messages);
 		return this;
 	};
@@ -60,6 +60,31 @@ export function runPatches () {
 		return within5ftOf(this, other);
 	};
 
+	Actor.schema.prototype.toObject = (function () {
+		const cached = Actor.schema.prototype.toObject;
+		return function (source = true) {
+			const data = cached.apply(this, arguments);
+			if (!source) {
+				data.obsidian = cloneWithObject(this.obsidian, false);
+			}
+
+			return data;
+		};
+	})();
+
+	Item.schema.prototype.toObject = (function () {
+		const cached = Item.schema.prototype.toObject;
+		return function (source = true) {
+			const data = cached.apply(this, arguments);
+			if (!source) {
+				data.idx = this.idx;
+				data.obsidian = cloneWithObject(this.obsidian, false);
+			}
+
+			return data;
+		};
+	})();
+
 	patchChatMessage();
 	patchOnEscape();
 }
@@ -74,7 +99,7 @@ OBSIDIAN.detectArrays = function (original, updates) {
 				path.push(prop);
 				const val = target[prop];
 				if (Array.isArray(val)) {
-					arrays.add(`${path.join('.')}.`);
+					arrays.add(path.join('.'));
 					break;
 				} else {
 					target = val;
@@ -91,20 +116,15 @@ OBSIDIAN.detectArrays = function (original, updates) {
 OBSIDIAN.updateArrays = function (original, changed) {
 	const arrays = OBSIDIAN.detectArrays(original, changed);
 	const expanded = {};
-
-	arrays.forEach(prop => {
-		const p = prop.substr(0, prop.length - 1);
-		expanded[p] = duplicate(getProperty(original, p));
-	});
+	arrays.forEach(p => expanded[p] = duplicate(getProperty(original, p)));
 
 	if (arrays.length > 0) {
 		for (const [k, v] of Object.entries(changed)) {
 			let found = false;
-			for (const pref of arrays) {
-				if (k.startsWith(pref)) {
+			for (const p of arrays) {
+				if (k.startsWith(`${p}.`)) {
 					found = true;
-					const p = pref.substr(0, pref.length - 1);
-					setProperty(expanded[p], k.substr(pref.length), v);
+					setProperty(expanded[p], k.substr(p.length + 1), v);
 				}
 			}
 
@@ -120,7 +140,7 @@ OBSIDIAN.updateArrays = function (original, changed) {
 OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 	if (actor.isToken) {
 		const byID = new Map(data.map(item => [item._id, item]));
-		const items = duplicate(actor.data.items);
+		const items = duplicate(actor.data._source.items);
 
 		items.forEach(item => {
 			const update = byID.get(item._id);
@@ -133,7 +153,7 @@ OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 	}
 
 	const expanded = data.map(update =>
-		OBSIDIAN.updateArrays(actor.data.obsidian.itemsByID.get(update._id), update));
+		OBSIDIAN.updateArrays(actor.items.get(update._id).data._source, update));
 
-	return actor.updateEmbeddedEntity('OwnedItem', expanded);
+	return actor.updateEmbeddedDocuments('Item', expanded);
 };

@@ -56,7 +56,7 @@ export function registerSettings () {
 
 function getSpellCompendiumChoices () {
 	const choices = {};
-	game.packs.filter(pack => pack.entity === 'Item').forEach(pack =>
+	game.packs.filter(pack => pack.documentName === 'Item').forEach(pack =>
 		choices[pack.collection] =
 			`[${pack.metadata.module
 				? pack.metadata.module

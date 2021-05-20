@@ -1,11 +1,15 @@
-export class ObsidianDialog extends BaseEntitySheet {
+export class ObsidianDialog extends DocumentSheet {
 	constructor (parent, options = {register: false}) {
 		super(parent.object, options);
 		this.parent = parent;
 
 		if (!options.register) {
 			// Deregister the sheet as this is just a modal dialog.
-			delete this.entity.apps[this.appId];
+			delete this.document.apps[this.appId];
+		}
+
+		if (this.parent.setModal && this.options.modal) {
+			this.parent.setModal(true);
 		}
 	}
 
@@ -154,14 +158,6 @@ export class ObsidianDialog extends BaseEntitySheet {
 		ObsidianDialog.recalculateHeight($(this.form));
 	}
 
-	render (force = false, options = {}) {
-		if (this.parent.setModal && this.options.modal) {
-			this.parent.setModal(true);
-		}
-
-		return super.render(force, options);
-	}
-
 	activateEditor (name, options = {}, initialContent = '') {
 		options.content_css =
 			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
@@ -171,7 +167,7 @@ export class ObsidianDialog extends BaseEntitySheet {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
+	async _updateObject (event, formData) {
 		return this.parent._updateObject(event, formData);
 	}
 

@@ -3,15 +3,15 @@ import {cssIconDiamond, cssIconHexagon} from '../util/html.js';
 
 let localize;
 
-export function prepareToggleableEffects (actorData) {
+export function prepareToggleableEffects (actor) {
 	localize = key => game.i18n.localize(`OBSIDIAN.${key}`);
-	for (const effect of actorData.obsidian.toggleable) {
+	for (const effect of actor.obsidian.toggleable) {
 		const filter =
 			effect.filters.length ? ` ${effect.filters.map(formatFilter).join(', ')}` : '';
 
 		effect.toggle.display =
 			effect.active.bonus.map(bonus =>
-				formatBonus(actorData, bonus)
+				formatBonus(actor, bonus)
 				+ (filter.length && effect.filters[0].filter === 'roll'
 					? ` ${localize('On')}${filter}`
 					: filter))
@@ -28,7 +28,7 @@ export function prepareToggleableEffects (actorData) {
 	}
 }
 
-function formatBonus (actorData, bonus) {
+function formatBonus (actor, bonus) {
 	if (bonus.method === 'dice') {
 		if (bonus.ndice !== 0) {
 			return `<strong>${bonus.ndice.sgn()}d${bonus.die}</strong>`;
@@ -43,18 +43,24 @@ function formatBonus (actorData, bonus) {
 		if (bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '')) {
 			let str = bonus.constant < 0 ? '-' : '+';
 			if (bonus.operator === 'mult') {
-				str += `${bonus.constant === 0.5 ? '½' : `${bonus.constant}`}&times; `;
-			} else {
-				str += bonus.constant;
+				str += ` ${bonus.constant === 0.5 ? '½' : bonus.constant}`;
+			} else if (bonus.constant) {
+				str = bonus.constant.toString();
+			}
+
+			if (bonus.value.length) {
+				str += bonus.operator === 'mult' ? '&times; ' : ' &plus; ';
 			}
 
 			if (bonus.value === 'abl') {
 				str += localize(`AbilityAbbr.${bonus.ability}`);
 			} else if (bonus.value === 'cls') {
-				const cls = actorData.obsidian.itemsByID.get(bonus.class);
+				const cls = actor.items.get(bonus.class);
 				if (cls) {
 					str += `${
-						cls.name === 'custom' ? cls.custom : localize(`Class.${cls.name}`)
+						cls.name === 'custom'
+							? cls.getFlag('obsidian', 'custom')
+							: localize(`Class.${cls.name}`)
 					} ${localize('Level')}`;
 				}
 			} else if (bonus.value.length) {

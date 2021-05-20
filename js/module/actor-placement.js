@@ -4,7 +4,7 @@ import {Summons} from './summons.js';
 export default class ObsidianActorPlacement extends Token {
 	static async fromUUID (uuid) {
 		const actor = await fromUuid(uuid);
-		if (!actor || actor.entity !== 'Actor') {
+		if (!actor || actor.documentName !== 'Actor') {
 			return null;
 		}
 

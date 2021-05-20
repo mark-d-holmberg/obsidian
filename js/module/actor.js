@@ -33,6 +33,10 @@ export class ObsidianActor extends Actor5e {
 		xp.pct = Math.floor(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100);
 	}
 
+	get obsidian () {
+		return this.data.obsidian;
+	}
+
 	prepareBaseData () {
 		super.prepareBaseData();
 		if (!OBSIDIAN.isMigrated()) {
@@ -52,7 +56,6 @@ export class ObsidianActor extends Actor5e {
 			components: new Map(),
 			details: {},
 			effects: new Map(),
-			itemsByID: new Map(),
 			itemsByType: new Partitioner(game.system.entityTypes.Item),
 			magicalItems: [],
 			rules: {},
@@ -91,18 +94,17 @@ export class ObsidianActor extends Actor5e {
 			containers: []
 		};
 
-		for (let i = 0; i < items.length; i++) {
-			const item = items[i];
-			if (!item.obsidian) {
-				item.obsidian = {};
+		let i = 0;
+		for (const item of items) {
+			if (!item.data.obsidian) {
+				item.data.obsidian = {};
 			}
 
-			const data = item.data;
-			const flags = item.flags.obsidian;
-			const derived = item.obsidian;
+			const data = item.data.data;
+			const flags = item.data.flags.obsidian;
+			const derived = item.data.obsidian;
 
-			item.idx = i;
-			actorDerived.itemsByID.set(item._id, item);
+			item.data.idx = i++;
 			derived.consumable = item.type === 'consumable';
 			derived.equippable =
 				item.type === 'weapon'
@@ -173,21 +175,6 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
-	prepareEmbeddedEntities () {
-		// Many items have a dependency on class items as their source, so they
-		// need to be prepared first.
-		this.data.items.filter(i => i.type === 'class').forEach(cls => {
-			// Small patch to fix spell slot progression.
-			if (!cls.flags.obsidian?.spellcasting?.enabled) {
-				cls.data.spellcasting = 'none';
-			}
-
-			Item.createOwned(cls, this);
-		});
-
-		super.prepareEmbeddedEntities();
-	}
-
 	prepareDerivedData () {
 		super.prepareDerivedData();
 		if (!OBSIDIAN.isMigrated()) {
@@ -197,13 +184,13 @@ export class ObsidianActor extends Actor5e {
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
 		const derived = this.data.obsidian;
-		const items = (this.items || []).map(i => i.data);
 
-		derived.itemsByType.partition(items, item => item.type);
-		this._collateOwnedItems(derived, items);
+		derived.itemsByType.partition(this.items.values(), item => item.type);
+		this._collateOwnedItems(derived, this.items.values());
 
 		if (this.data.type === 'character') {
-			derived.classes = derived.itemsByType.get('class').filter(item => item.flags.obsidian);
+			derived.classes =
+				derived.itemsByType.get('class').filter(item => item.isObsidian());
 		}
 
 		derived.filters = {
@@ -232,26 +219,26 @@ export class ObsidianActor extends Actor5e {
 			}
 		}
 
-		this._prepareInventory(data, derived.inventory, derived.itemsByID);
-		applyProfBonus(this.data);
-		Prepare.abilities(this.data, data, flags, derived);
+		this._prepareInventory(data, derived.inventory);
+		applyProfBonus(this);
+		Prepare.abilities(this, data, flags, derived);
 		Prepare.ac(data, flags, derived);
 		Prepare.armour(data, flags, derived);
 		Prepare.init(data, flags, derived);
 		prepareDefenses(data, flags, derived);
-		Prepare.conditions(this.data, data, flags, derived);
+		Prepare.conditions(this, data, flags, derived);
 
-		if (this.data.type !== 'vehicle') {
-			Prepare.skills(this.data, data, flags, derived, originalSkills);
+		if (this.type !== 'vehicle') {
+			Prepare.skills(this, data, flags, derived, originalSkills);
 		}
 
-		Prepare.saves(this.data, data, flags, derived, originalSaves);
-		Prepare.encumbrance(this.data, data, derived);
+		Prepare.saves(this, data, flags, derived, originalSaves);
+		Prepare.encumbrance(this, data, derived);
 
-		if (this.data.type === 'character') {
+		if (this.type === 'character') {
 			Prepare.hd(flags, derived);
-			Prepare.tools(this.data, data, flags, derived);
-		} else if (this.data.type === 'npc') {
+			Prepare.tools(this, data, flags, derived);
+		} else if (this.type === 'npc') {
 			prepareNPCHD(data, flags, derived);
 		}
 
@@ -261,7 +248,11 @@ export class ObsidianActor extends Actor5e {
 		// with the now-updated actor data.
 		const nonClassItems = this.items.reduce((acc, item) => {
 			// Make sure we prepare class items first.
-			if (item.data.type === 'class') {
+			if (item.type === 'class') {
+				if (!item.getFlag('obsidian', 'spellcasting.enabled')) {
+					item.data.data.spellcasting = 'none';
+				}
+
 				item.prepareObsidianEffects();
 				return acc;
 			}
@@ -276,26 +267,26 @@ export class ObsidianActor extends Actor5e {
 			abl.mod = Math.floor((derived.abilities[id].value - 10) / 2);
 		}
 
-		if (this.data.type === 'character') {
+		if (this.type === 'character') {
 			derived.details.class = ObsidianActor._classFormat(derived.classes);
 		}
 
-		if (this.data.type !== 'vehicle') {
+		if (this.type !== 'vehicle') {
 			prepareSpellcasting(this.data, data, flags, derived);
 		}
 
 		derived.attacks =
 			this.items.filter(item =>
-				item.data.obsidian?.collection.attack.length
-				&& (item.data.type !== 'weapon' || item.data.data.equipped)
-				&& (item.data.type !== 'spell' || item.data.obsidian?.visible))
-				.flatMap(item => item.data.obsidian.collection.attack);
+				item.obsidian?.collection.attack.length
+				&& (item.type !== 'weapon' || item.data.data.equipped)
+				&& (item.type !== 'spell' || item.obsidian?.visible))
+				.flatMap(item => item.obsidian.collection.attack);
 
 		prepareDefenseDisplay(derived);
-		prepareToggleableEffects(this.data);
-		applyBonuses(this.data, data, flags, derived);
+		prepareToggleableEffects(this);
+		applyBonuses(this, data, flags, derived);
 
-		if (this.data.type === 'npc') {
+		if (this.type === 'npc') {
 			prepareSpeed(data, derived);
 		}
 
@@ -303,7 +294,7 @@ export class ObsidianActor extends Actor5e {
 			// If we are preparing data right after an update, this.token
 			// points to the old token that has since been replaced on the
 			// canvas. We need to make sure we get the new token.
-			const token = canvas.tokens.get(this.token.data._id);
+			const token = canvas.tokens.get(this.token.id);
 			token?.drawEffects().catch(() => {});
 			token?.drawBars();
 		} else if (canvas) {
@@ -314,20 +305,22 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
-	_prepareInventory (actorData, inventory, itemsByID) {
+	_prepareInventory (actorData, inventory) {
 		for (const item of inventory.items) {
-			const data = item.data;
-			const flags = item.flags.obsidian;
+			const data = item.data.data;
+			const flags = item.data.flags.obsidian;
 			const totalWeight = (data.weight || 0) * (data.quantity ?? 1);
 
 			if (flags.attunement && data.attuned) {
 				inventory.attunements++;
 			}
 
-			const container = itemsByID.get(flags.parent);
+			const container = this.items.get(flags.parent);
 			if (container) {
 				container.obsidian.carriedWeight += totalWeight;
-				if (!container.data.capacity.weightless && container.data.equipped !== false) {
+				if (!container.data.data.capacity.weightless
+					&& container.data.data.equipped !== false)
+				{
 					inventory.weight += totalWeight;
 				}
 
@@ -338,7 +331,7 @@ export class ObsidianActor extends Actor5e {
 					container.obsidian.contents.push(item);
 				}
 			} else {
-				if (item.type !== 'backpack' || item.data.equipped !== false) {
+				if (item.type !== 'backpack' || data.equipped !== false) {
 					inventory.weight += totalWeight;
 				}
 
@@ -358,78 +351,51 @@ export class ObsidianActor extends Actor5e {
 			inventory.weight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight;
 		}
 
-		const sort = (a, b) => a.sort - b.sort;
+		const sort = (a, b) => a.data.sort - b.data.sort;
 		inventory.root.sort(sort);
 		inventory.containers.sort(sort);
 		inventory.containers.forEach(container => container.obsidian.contents.sort(sort));
 	}
 
-	async deleteEmbeddedEntity (embeddedName, data, options = {}) {
-		let deleted = await super.deleteEmbeddedEntity(embeddedName, data, options);
-		deleted = Array.isArray(deleted) ? deleted : [deleted];
-
-		if (embeddedName === 'OwnedItem') {
-			const orphanedSpells =
-				deleted.flatMap(item => item.flags.obsidian?.effects || [])
-					.flatMap(e => e.components)
-					.filter(c => c.type === 'spells')
-					.flatMap(c => c.spells)
-					.filter(spell => typeof spell === 'string');
-
-			if (orphanedSpells.length) {
-				await this.deleteEmbeddedEntity('OwnedItem', orphanedSpells, options);
-			}
+	async createEmbeddedDocuments (embeddedName, data, options = {}) {
+		if (embeddedName !== 'Item') {
+			return super.createEmbeddedDocuments(embeddedName, data, options);
 		}
 
-		return deleted;
-	}
-
-	async importFromJSON (json) {
-		const data = Migrate.convertActor(JSON.parse(json));
-		delete data._id;
-		data.flags.obsidian.skills = duplicate(data.data.skills);
-
-		return this.update(data);
-	}
-
-	async createEmbeddedEntity (embeddedName, data, options = {}) {
-		if (embeddedName !== 'OwnedItem') {
-			return super.createEmbeddedEntity(embeddedName, data, options);
-		}
-
-		let items = await super.createEmbeddedEntity('OwnedItem', data, options);
-		items = Array.isArray(items) ? items : [items];
-
+		let items = await super.createEmbeddedDocuments('Item', data, options);
 		let spells = this._importSpellsFromItem(data, options, items);
-		if (spells.length) {
-			const updates = [];
-			spells = await this.createEmbeddedEntity('OwnedItem', spells, options);
-			spells = Array.isArray(spells) ? spells : [spells];
 
-			for (const parentItem of items) {
-				const effects = duplicate(parentItem.flags.obsidian?.effects || []);
-				const components =
-					effects.flatMap(e => e.components).filter(Effect.isEmbeddedSpellsComponent);
+		if (!spells.length) {
+			return items;
+		}
 
-				if (!components?.length) {
-					continue;
-				}
+		const updates = [];
+		spells = await this.createEmbeddedDocuments('Item', spells, options);
 
-				updates.push({_id: parentItem._id, 'flags.obsidian.effects': effects});
-				for (const component of components) {
-					component.spells =
-						spells.filter(spell =>
-							spell.flags.obsidian.parentComponent === component.uuid)
-							.map(spell => spell._id);
-				}
+		for (const parentItem of items) {
+			const effects = duplicate(parentItem.data._source.flags.obsidian?.effects || []);
+			const components =
+				effects.flatMap(e => e.components).filter(Effect.isEmbeddedSpellsComponent);
+
+			if (!components?.length) {
+				continue;
 			}
 
-			if (updates.length) {
-				await this.updateEmbeddedEntity('OwnedItem', updates);
+			updates.push({_id: parentItem.id, 'flags.obsidian.effects': effects});
+			for (const component of components) {
+				component.spells =
+					spells
+						.filter(spell =>
+							spell.data.flags.obsidian.parentComponent === component.uuid)
+						.map(spell => spell.id);
 			}
 		}
 
-		return items.length === 1 ? items[0] : items;
+		if (updates.length) {
+			await this.updateEmbeddedDocuments('Item', updates);
+		}
+
+		return items;
 	}
 
 	_importSpellsFromItem (data, {temporary = false} = {}, items) {
@@ -439,11 +405,11 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		for (const item of items) {
-			if (!getProperty(item, 'flags.obsidian.effects.length')) {
+			const effects = item.getFlag('obsidian', 'effects');
+			if (!effects?.length) {
 				continue;
 			}
 
-			const effects = duplicate(item.flags.obsidian.effects);
 			spells.push(
 				...effects.flatMap(e => e.components)
 					.filter(c =>
@@ -451,7 +417,8 @@ export class ObsidianActor extends Actor5e {
 						&& typeof c.spells[0] === 'object')
 					.flatMap(c =>
 						c.spells.filter(spell => spell.flags.obsidian.isEmbedded).map(spell => {
-							spell.flags.obsidian.source.item = item._id;
+							spell = duplicate(spell);
+							spell.flags.obsidian.source.item = item.id;
 							spell.flags.obsidian.parentComponent = c.uuid;
 							return spell;
 						})));
@@ -471,10 +438,9 @@ export class ObsidianActor extends Actor5e {
 			.forEach(c => {
 				const needle = c.text.toLowerCase();
 				const cls =
-					this.data.obsidian.classes.find(cls =>
-						cls.obsidian.label.toLowerCase() === needle);
+					this.obsidian.classes.find(cls => cls.obsidian.label.toLowerCase() === needle);
 
-				c.class = cls ? cls._id : '';
+				c.class = cls?.id || '';
 			});
 
 		if (!item.flags.obsidian.source || item.flags.obsidian.source.type !== 'class') {
@@ -484,28 +450,27 @@ export class ObsidianActor extends Actor5e {
 		if (!OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.source.text)) {
 			const needle = item.flags.obsidian.source.text.toLowerCase();
 			const cls =
-				this.data.obsidian.classes.find(cls =>
-					cls.obsidian.label.toLowerCase() === needle);
+				this.obsidian.classes.find(cls => cls.obsidian.label.toLowerCase() === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
 				item.flags.obsidian.source.other = item.flags.obsidian.source.text;
 			} else {
-				item.flags.obsidian.source.class = cls._id;
+				item.flags.obsidian.source.class = cls.id;
 			}
 		} else {
 			const needle = item.flags.obsidian.source.class;
-			const cls = this.data.obsidian.classes.find(cls => cls._id === needle);
+			const cls = this.obsidian.classes.find(cls => cls.id === needle);
 
 			if (cls === undefined) {
-				const byName = this.data.obsidian.classes.find(cls => cls.name === needle);
+				const byName = this.obsidian.classes.find(cls => cls.name === needle);
 				if (byName === undefined) {
 					const i18n = `OBSIDIAN.Class.${needle}`;
 					item.flags.obsidian.source.type = 'other';
 					item.flags.obsidian.source.other =
 						game.i18n.has(i18n) ? game.i18n.localize(i18n) : needle;
 				} else {
-					item.flags.obsidian.source.class = byName._id;
+					item.flags.obsidian.source.class = byName.id;
 				}
 			}
 		}
@@ -519,14 +484,14 @@ export class ObsidianActor extends Actor5e {
 			return game.i18n.localize('OBSIDIAN.ClassTitle');
 		}
 
-		return classes.sort((a, b) => b.data.levels - a.data.levels).map(cls =>
-			(cls.data.subclass?.length ? `${cls.data.subclass} ` : '')
-			+ `${cls.obsidian.label} ${cls.data.levels}`
+		return classes.sort((a, b) => b.data.data.levels - a.data.data.levels).map(cls =>
+			(cls.data.data.subclass?.length ? `${cls.data.data.subclass} ` : '')
+			+ `${cls.obsidian.label} ${cls.data.data.levels}`
 		).join(' / ');
 	}
 
 	getItemParent (item) {
-		return this.items.get(item?.flags.obsidian.parent)?.data;
+		return this.items.get(item?.data.flags.obsidian.parent);
 	}
 
 	isRuleActive (rule) {
@@ -544,7 +509,7 @@ export class ObsidianActor extends Actor5e {
 		const conBonus = this.data.data.abilities.con.mod * totalDice;
 		const total = Rolls.hd(this, rolls, conBonus);
 		const hp = this.data.data.attributes.hp;
-		const hd = duplicate(this.data.flags.obsidian.attributes.hd);
+		const hd = duplicate(this.data._source.flags.obsidian.attributes.hd);
 
 		let newHP = hp.value + total;
 		if (newHP > hp.max) {
@@ -719,7 +684,7 @@ export class ObsidianActor extends Actor5e {
 				});
 			}
 
-			await this.update(OBSIDIAN.updateArrays(this.data, update));
+			await this.update(OBSIDIAN.updateArrays(this.data._source, update));
 		}
 	}
 
@@ -773,11 +738,11 @@ export class ObsidianActor extends Actor5e {
 	_resourceUpdates (validTimes) {
 		const itemUpdates = [];
 		for (const item of this.items) {
-			if (!getProperty(item.data, 'flags.obsidian.effects.length')) {
+			if (!item.getFlag('obsidian', 'effects.length')) {
 				continue;
 			}
 
-			const updates = {_id: item.data._id};
+			const updates = {_id: item.id};
 			for (const effect of item.data.flags.obsidian.effects) {
 				for (const component of effect.components) {
 					if (component.type !== 'resource'
@@ -787,12 +752,12 @@ export class ObsidianActor extends Actor5e {
 						continue;
 					}
 
-					this._recharge(item.data, effect, component, updates);
+					this._recharge(item, effect, component, updates);
 				}
 			}
 
 			if (Object.keys(updates).length > 1) {
-				itemUpdates.push(OBSIDIAN.updateArrays(item.data, updates));
+				itemUpdates.push(OBSIDIAN.updateArrays(item.data._source, updates));
 			}
 		}
 
@@ -805,16 +770,15 @@ export class ObsidianActor extends Actor5e {
 			return;
 		}
 
-		const tokenData = scene.getEmbeddedEntity('Token', tokenID);
-		if (!tokenData) {
+		const token = scene.tokens.get(tokenID);
+		if (!token) {
 			return;
 		}
 
-		const token = new Token(tokenData);
 		return token.actor;
 	}
 
-	static duplicateItem (original) {
+	static duplicateItem (original, entity = 'Item') {
 		const dupe = duplicate(original);
 
 		// Give all the effects and components new UUIDs, but maintain a
@@ -848,6 +812,6 @@ export class ObsidianActor extends Actor5e {
 			}
 		});
 
-		return dupe;
+		return new CONFIG[entity].documentClass(dupe);
 	}
 }

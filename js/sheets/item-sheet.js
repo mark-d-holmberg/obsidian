@@ -2,6 +2,15 @@ import {OBSIDIAN} from '../global.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 
 export class ObsidianItemSheet extends ItemSheet {
+	constructor (...args) {
+		super(...args);
+		if (this.actor && this.actor.apps) {
+			Object.values(this.actor.apps)
+				.filter(app => app.setModal)
+				.forEach(app => app.setModal(true));
+		}
+	}
+
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		options.width = 520;
@@ -17,12 +26,6 @@ export class ObsidianItemSheet extends ItemSheet {
 	 * @return undefined
 	 */
 	activateListeners (html) {
-		if (this.actor && this.actor.apps) {
-			Object.values(this.actor.apps)
-				.filter(app => app.setModal)
-				.forEach(app => app.setModal(true));
-		}
-
 		super.activateListeners(html);
 		console.debug(this.item);
 		ObsidianDialog.initialiseComponents(html);
@@ -33,14 +36,17 @@ export class ObsidianItemSheet extends ItemSheet {
 
 	getData () {
 		const data = super.getData();
+		data.item = this.item.toObject(false);
+		data.data = data.item.data;
 		data.actor = this.actor;
-		data.isNPC = this.actor?.data.type === 'npc';
-		data.isCharacter = this.actor?.data.type === 'character';
+		data.isNPC = this.actor?.type === 'npc';
+		data.isCharacter = this.actor?.type === 'character';
 		data.ObsidianRules = OBSIDIAN.Rules;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		if (data.actor) {
-			data.actor.data.feats = data.actor.data.obsidian.itemsByType.get('feat');
+			data.actor.data.feats =
+				data.actor.obsidian.itemsByType.get('feat').map(i => duplicate(i.toObject(false)));
 		}
 
 		return data;
@@ -77,7 +83,7 @@ export class ObsidianItemSheet extends ItemSheet {
 	/**
 	 * @private
 	 */
-	_updateObject (event, formData) {
-		super._updateObject(event, OBSIDIAN.updateArrays(this.item.data, formData));
+	async _updateObject (event, formData) {
+		return super._updateObject(event, OBSIDIAN.updateArrays(this.item.data._source, formData));
 	}
 }

@@ -49,7 +49,7 @@ export const Prepare = {
 
 			if (component.ability === 'spell') {
 				component.spellMod = 0;
-				if (cls && getProperty(cls, 'obsidian.spellcasting')) {
+				if (cls?.obsidian?.spellcasting != null) {
 					component.spellMod = cls.obsidian.spellcasting.mod;
 				} else if (!OBSIDIAN.notDefinedOrEmpty(data.attributes.spellcasting)) {
 					component.spellMod = data.abilities[data.attributes.spellcasting].mod;
@@ -66,8 +66,10 @@ export const Prepare = {
 		}
 	},
 
-	calculateDC: function (actorData, item, component, cls, pred) {
+	calculateDC: function (actor, item, component, cls, pred) {
+		const actorData = actor?.data;
 		const data = actorData?.data;
+
 		if (component.calc === 'fixed') {
 			component.value = component.fixed;
 			return;
@@ -86,9 +88,9 @@ export const Prepare = {
 		}];
 
 		component.spellMod = 0;
-		if (getProperty(item, 'flags.obsidian.parentComponent')) {
+		if (item.getFlag('obsidian', 'parentComponent')) {
 			const provider =
-				actorData?.obsidian?.components.get(item.flags.obsidian.parentComponent);
+				actorData?.obsidian?.components.get(item.data.flags.obsidian.parentComponent);
 
 			if (provider && provider.method === 'innate') {
 				component.spellMod = data.abilities[provider.ability].mod;
@@ -105,7 +107,7 @@ export const Prepare = {
 
 		const bonuses = actorData?.obsidian?.filters.bonuses(pred(component)) || [];
 		if (bonuses.length) {
-			component.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			component.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 		}
 
 		component.value =
@@ -128,10 +130,12 @@ export const Prepare = {
 		}
 	},
 
-	calculateHit: function (actorData, item, hit, cls) {
+	calculateHit: function (actor, item, hit, cls) {
+		const actorData = actor?.data;
 		const data = actorData?.data;
+
 		hit.rollParts = [{
-			mod: (hit.bonus || 0) + weaponBonus(actorData, item),
+			mod: (hit.bonus || 0) + weaponBonus(actor, item),
 			name: game.i18n.localize('OBSIDIAN.Bonus')
 		}];
 
@@ -148,15 +152,13 @@ export const Prepare = {
 			});
 		}
 
-		const bonuses =
-			actorData?.obsidian?.filters.bonuses(Filters.appliesTo.attackRolls(hit)) || [];
-
+		const bonuses = actor?.obsidian?.filters.bonuses(Filters.appliesTo.attackRolls(hit)) || [];
 		if (bonuses.length) {
-			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 		}
 
 		if (hit.extraBonus) {
-			hit.rollParts.push(...bonusToParts(actorData, hit.extraBonus));
+			hit.rollParts.push(...bonusToParts(actor, hit.extraBonus));
 		}
 
 		hit.rollParts = highestProficiency(hit.rollParts);
@@ -166,28 +168,30 @@ export const Prepare = {
 				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
 	},
 
-	calculateDamage: function (actorData, item, dmg, cls) {
+	calculateDamage: function (actor, item, dmg, cls) {
+		const actorData = actor?.data;
 		const data = actorData?.data;
+
 		dmg.rollParts = [{
 			mod: dmg.bonus || 0,
 			name: game.i18n.localize('OBSIDIAN.Bonus'),
 			constant: true
 		}, {
-			mod: weaponBonus(actorData, item),
+			mod: weaponBonus(actor, item),
 			name: game.i18n.localize('OBSIDIAN.Magic')
 		}];
 
 		Prepare.spellPart(dmg, data, cls);
 
-		if (actorData?.obsidian) {
+		if (actor?.obsidian) {
 			const bonuses = Effect.filterDamage(actorData, actorData.obsidian.filters.bonuses, dmg);
 			if (bonuses.length) {
-				dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+				dmg.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 			}
 		}
 
 		if (dmg.extraBonus) {
-			dmg.rollParts.push(...bonusToParts(actorData, dmg.extraBonus));
+			dmg.rollParts.push(...bonusToParts(actor, dmg.extraBonus));
 		}
 
 		dmg.mod = dmg.rollParts.reduce((acc, part) => acc + part.mod, 0);
@@ -199,8 +203,10 @@ export const Prepare = {
 		}
 	},
 
-	calculateResources: function (actorData, item, effect, resource) {
+	calculateResources: function (actor, item, effect, resource) {
+		const actorData = actor?.data;
 		const data = actorData?.data;
+
 		if (resource.calc === 'fixed') {
 			resource.max = resource.fixed;
 		} else if (actorData) {
@@ -210,9 +216,9 @@ export const Prepare = {
 			} else if (resource.key === 'chr') {
 				resource.max = op(resource.bonus, data.details.level);
 			} else if (resource.key === 'cls' && actorData.obsidian) {
-				const cls = actorData.obsidian.itemsByID.get(resource.class);
+				const cls = actor.items.get(resource.class);
 				if (cls) {
-					resource.max = op(resource.bonus, cls.data.levels);
+					resource.max = op(resource.bonus, cls.data.data.levels);
 				}
 			} else if (resource.key === 'prof') {
 				resource.max = op(resource.bonus, data.attributes.prof);
@@ -323,7 +329,7 @@ export const Prepare = {
 		}
 	},
 
-	abilities: function (actorData, data, flags, derived) {
+	abilities: function (actor, data, flags, derived) {
 		derived.abilities = {};
 		for (const [id, ability] of Object.entries(data.abilities)) {
 			derived.abilities[id] = {rollParts: [], value: ability.value};
@@ -331,14 +337,14 @@ export const Prepare = {
 
 			if (abilityBonuses.length) {
 				derived.abilities[id].rollParts.push(
-					...abilityBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+					...abilityBonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 			}
 
 			const scoreBonuses = derived.filters.bonuses(Filters.appliesTo.abilityScores(id));
 			if (scoreBonuses.length) {
 				derived.abilities[id].value +=
 					scoreBonuses.reduce((acc, bonus) =>
-						acc + bonusToParts(actorData, bonus)
+						acc + bonusToParts(actor, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
 				derived.abilities[id].value = Math.floor(derived.abilities[id].value);
@@ -368,20 +374,25 @@ export const Prepare = {
 		derived.rules.heavyArmour = false;
 		derived.rules.noisyArmour = false;
 		derived.armour =
-			derived.itemsByType.get('equipment').filter(item => item.flags.obsidian?.armour);
+			derived.itemsByType.get('equipment').filter(item => item.data.flags.obsidian?.armour);
 
 		let bestArmour;
 		let bestShield;
 
 		for (const armour of derived.armour) {
-			const baseAC = armour.data.armor.value;
+			const armourData = armour.data.data;
+			const baseAC = armourData.armor.value;
 
-			if (armour.data.armor.type === 'shield') {
-				if (armour.data.equipped && (!bestShield || bestShield.data.armor.value < baseAC)) {
+			if (armourData.armor.type === 'shield') {
+				if (armourData.equipped
+					&& (!bestShield || bestShield.data.data.armor.value < baseAC))
+				{
 					bestShield = armour;
 				}
 			} else {
-				if (armour.data.equipped && (!bestArmour || bestArmour.data.armor.value < baseAC)) {
+				if (armourData.equipped
+					&& (!bestArmour || bestArmour.data.data.armor.value < baseAC))
+				{
 					bestArmour = armour;
 				}
 			}
@@ -391,21 +402,21 @@ export const Prepare = {
 		const armourDisplay = [];
 
 		if (bestArmour) {
-			if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.strength)) {
+			if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.data.strength)) {
 				derived.rules.heavyArmour =
-					derived.abilities.str.value < bestArmour.data.strength;
+					derived.abilities.str.value < bestArmour.data.data.strength;
 			}
 
-			derived.rules.noisyArmour = bestArmour.data.stealth;
+			derived.rules.noisyArmour = bestArmour.data.data.stealth;
 		}
 
 		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
 			if (bestArmour) {
 				armourDisplay.push(bestArmour.name.toLocaleLowerCase());
-				derived.attributes.ac = bestArmour.data.armor.value;
+				derived.attributes.ac = bestArmour.data.data.armor.value;
 
-				if (bestArmour.flags.obsidian.addDex) {
-					let maxDex = bestArmour.data.armor.dex;
+				if (bestArmour.data.flags.obsidian.addDex) {
+					let maxDex = bestArmour.data.data.armor.dex;
 					if (OBSIDIAN.notDefinedOrEmpty(maxDex)) {
 						maxDex = Infinity;
 					} else {
@@ -418,7 +429,7 @@ export const Prepare = {
 
 			if (bestShield) {
 				armourDisplay.push(bestShield.name.toLocaleLowerCase());
-				derived.attributes.ac += bestShield.data.armor.value;
+				derived.attributes.ac += bestShield.data.data.armor.value;
 			}
 		}
 
@@ -426,7 +437,8 @@ export const Prepare = {
 		data.attributes.ac.value = derived.attributes.ac;
 	},
 
-	conditions: function (actorData, data, flags, derived) {
+	conditions: function (actor, data, flags, derived) {
+		const actorData = actor.data;
 		const conditionImmunities = new Set(derived.defenses.parts.conditions.imm);
 		derived.conditions = {exhaustion: 0};
 		actorData.effects.forEach(effect => {
@@ -478,10 +490,10 @@ export const Prepare = {
 			actorData.effects
 				.filter(item => getProperty(item, 'flags.obsidian.ref'))
 				.map(duration => derived.effects.get(duration.flags.obsidian.ref))
-				.some(effect => effect && Effect.isConcentration(derived, effect));
+				.some(effect => effect && Effect.isConcentration(actor, effect));
 	},
 
-	encumbrance: function (actorData, data, derived) {
+	encumbrance: function (actor, data, derived) {
 		const rules = derived.rules;
 		const inventory = derived.inventory;
 		const str = derived.abilities.str.value;
@@ -495,7 +507,7 @@ export const Prepare = {
 
 		if (bonuses.length) {
 			inventory.max +=
-				bonuses.flatMap(bonus => bonusToParts(actorData, bonus))
+				bonuses.flatMap(bonus => bonusToParts(actor, bonus))
 					.reduce((acc, part) => acc + part.mod, 0);
 		}
 
@@ -525,9 +537,9 @@ export const Prepare = {
 		const existingHD = flags.attributes.hd;
 
 		for (const cls of derived.classes) {
-			const die = cls.data.hitDice;
+			const die = cls.data.data.hitDice;
 			let hd = classHD[die] || 0;
-			hd += cls.data.levels;
+			hd += cls.data.data.levels;
 			classHD[die] = hd;
 		}
 
@@ -567,7 +579,7 @@ export const Prepare = {
 		}
 	},
 
-	saves: function (actorData, data, flags, derived, originalSaves) {
+	saves: function (actor, data, flags, derived, originalSaves) {
 		derived.saves = {};
 		for (const [id, ability] of Object.entries(data.abilities)) {
 			const save = {};
@@ -599,7 +611,7 @@ export const Prepare = {
 				const saveBonuses = derived.filters.bonuses(Filters.appliesTo.savingThrows(id));
 				if (saveBonuses.length) {
 					save.rollParts.push(
-						...saveBonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+						...saveBonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					save.rollParts = highestProficiency(save.rollParts);
 				}
 
@@ -620,7 +632,7 @@ export const Prepare = {
 		}
 	},
 
-	skills: function (actorData, data, flags, derived, originalSkills) {
+	skills: function (actor, data, flags, derived, originalSkills) {
 		derived.skills = {};
 		for (let [id, skill] of
 			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
@@ -649,7 +661,7 @@ export const Prepare = {
 
 				if (bonuses.length) {
 					skill.rollParts.push(
-						...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+						...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					skill.rollParts = highestProficiency(skill.rollParts);
 				}
 			}
@@ -660,7 +672,7 @@ export const Prepare = {
 			const rollMod =
 				Effect.combineRollMods(
 					rollMods.concat(
-						conditionsRollMod(actorData, {ability: skill.ability, skill: key})));
+						conditionsRollMod(actor, {ability: skill.ability, skill: key})));
 
 			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
 			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5
@@ -678,7 +690,7 @@ export const Prepare = {
 			if (passiveBonuses.length) {
 				skill.passive +=
 					passiveBonuses.reduce((acc, bonus) =>
-						acc + bonusToParts(actorData, bonus)
+						acc + bonusToParts(actor, bonus)
 							.reduce((acc, part) => acc + part.mod, 0), 0);
 
 				skill.passive = Math.floor(skill.passive);
@@ -702,7 +714,7 @@ export const Prepare = {
 		}
 	},
 
-	tools: function (actorData, data, flags, derived) {
+	tools: function (actor, data, flags, derived) {
 		derived.tools = {};
 		const tools = Rules.ALL_TOOLS.map(t => {
 			const tool = mergeObject(
@@ -734,7 +746,7 @@ export const Prepare = {
 
 				if (bonuses.length) {
 					tool.rollParts.push(
-						...bonuses.flatMap(bonus => bonusToParts(actorData, bonus)));
+						...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					tool.rollParts = highestProficiency(tool.rollParts);
 				}
 			}
@@ -782,22 +794,23 @@ export const Prepare = {
 	}
 };
 
-function weaponBonus (actorData, item) {
+function weaponBonus (actor, item) {
 	let bonus = 0;
 	if (item.type !== 'weapon') {
 		return bonus;
 	}
 
-	if (item.flags.obsidian.magical && item.flags.obsidian.magicBonus) {
-		bonus += item.flags.obsidian.magicBonus;
+	const flags = item.data.flags.obsidian;
+	if (flags.magical && flags.magicBonus) {
+		bonus += flags.magicBonus;
 	}
 
-	if (item.flags.obsidian.tags?.ammunition
-		&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.ammo))
-	{
-		const ammo = actorData?.obsidian?.itemsByID.get(item.flags.obsidian.ammo);
-		if (ammo && ammo.flags.obsidian.magical && ammo.flags.obsidian.magicBonus) {
-			bonus += ammo.flags.obsidian.magicBonus;
+	if (flags.tags.ammunition && !OBSIDIAN.notDefinedOrEmpty(flags.ammo)) {
+		const ammo = actor?.items.get(flags.ammo);
+		const ammoFlags = ammo.data.flags.obsidian;
+
+		if (ammoFlags.magical && ammoFlags.magicBonus) {
+			bonus += ammoFlags.magicBonus;
 		}
 	}
 

@@ -1,7 +1,7 @@
 export async function rollInitiative (actor, initiative) {
 	let combat = ui.combat.combat;
 	if (!combat && game.user.isGM) {
-		combat = await game.combats.object.create({scene: canvas.scene._id, active: true});
+		combat = await game.combats.documentClass.create({scene: canvas.scene.id, active: true});
 	} else if (!game.combats.active && !game.user.isGM) {
 		return;
 	}
@@ -20,14 +20,14 @@ export async function rollInitiative (actor, initiative) {
 		return;
 	}
 
-	const combatant = combat.getCombatantByToken(token.data._id);
+	const combatant = combat.getCombatantByToken(token.id);
 	if (combatant) {
-		return combat.setInitiative(combatant._id, initiative);
+		return combat.setInitiative(combatant.id, initiative);
 	} else {
-		return combat.createEmbeddedEntity("Combatant", {
-			tokenId: token.data._id,
+		return combat.createEmbeddedDocuments("Combatant", [{
+			tokenId: token.id,
 			hidden: token.data.hidden,
 			initiative: initiative
-		});
+		}]);
 	}
 }

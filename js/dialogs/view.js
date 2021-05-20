@@ -5,7 +5,7 @@ import {ObsidianItems} from '../rules/items.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {
-		const item = parent.actor.data.obsidian.itemsByID.get(itemID);
+		const item = parent.actor.items.get(itemID);
 		if (item.type === 'backpack') {
 			options.width = 578;
 			options.height = 600;
@@ -17,7 +17,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		if (item.type === 'backpack') {
 			const hook = `renderObsidian${parent.actor.data.type === 'npc' ? 'NPC' : ''}`;
 			this._hook = Hooks.on(hook, () => {
-				this.item = this.parent.actor.data.obsidian.itemsByID.get(itemID);
+				this.item = this.parent.actor.items.get(itemID);
 				this.render(false)
 			});
 		}
@@ -70,7 +70,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		});
 
 		html.find('[data-sheet]').click(() => {
-			const Item = CONFIG.Item.entityClass;
+			const Item = CONFIG.Item.documentClass;
 			const item = new Item(this.item, {actor: this.parent.actor});
 			item.sheet.render(true);
 		});

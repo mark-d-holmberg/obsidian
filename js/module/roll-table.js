@@ -1,7 +1,12 @@
 import {OBSIDIAN} from '../global.js';
 
 export default class ObsidianTable extends RollTable {
-	get isEmbedded () {
+	constructor (data = {}, context = {}) {
+		super(data, context);
+		this.options = context;
+	}
+
+	get hasParentComponent () {
 		return this.getFlag('obsidian', 'isEmbedded')
 			&& this.getFlag('obsidian', 'parentComponent')
 			&& this.options.parentItem;
@@ -19,41 +24,35 @@ export default class ObsidianTable extends RollTable {
 	_updateEmbeddedResults (results) {
 		const [effects, table] = this._getEmbeddedTable();
 		table.results = results;
-		this.data.results = results;
+		this.data.update(table, {recursive: false});
 		this.sheet.render(false);
 		return this.options.parentItem.setFlag('obsidian', 'effects', effects);
 	}
 
-	getEmbeddedEntity (embeddedName, id, {strict = false} = {}) {
-		if (this.isEmbedded) {
+	getEmbeddedDocument (embeddedName, id, {strict = false} = {}) {
+		if (this.hasParentComponent) {
 			const [, table] = this._getEmbeddedTable();
-			return table.results.find(result => result._id === id);
+			const result = table.results.find(result => result._id === id);
+			return new CONFIG[embeddedName].documentClass(result, {parent: this});
 		} else {
-			return super.getEmbeddedEntity(embeddedName, id, {strict});
+			return super.getEmbeddedDocument(embeddedName, id, {strict});
 		}
 	}
 
-	async createEmbeddedEntity (embeddedName, data, options = {}) {
-		if (this.isEmbedded) {
+	async createEmbeddedDocuments (embeddedName, data, options = {}) {
+		if (this.hasParentComponent) {
 			options.temporary = true;
-			const newResults = await super.createEmbeddedEntity(embeddedName, data, options);
+			const newResults = await super.createEmbeddedDocuments(embeddedName, data, options);
 			const [, table] = this._getEmbeddedTable();
-
-			if (Array.isArray(newResults)) {
-				table.results.push(...newResults);
-			} else {
-				table.results.push(newResults);
-			}
-
+			table.results.push(...newResults.map(r => r.toObject()));
 			return this._updateEmbeddedResults(table.results);
 		} else {
-			return super.createEmbeddedEntity(embeddedName, data, options);
+			return super.createEmbeddedDocuments(embeddedName, data, options);
 		}
 	}
 
-	async updateEmbeddedEntity (embeddedName, data, options = {}) {
-		if (this.isEmbedded) {
-			data = Array.isArray(data) ? data : [data];
+	async updateEmbeddedDocuments (embeddedName, data, options = {}) {
+		if (this.hasParentComponent) {
 			const dataByID = new Map(data.map(datum => [datum._id, datum]));
 			const [, table] = this._getEmbeddedTable();
 			for (const result of table.results) {
@@ -65,29 +64,28 @@ export default class ObsidianTable extends RollTable {
 
 			return this._updateEmbeddedResults(table.results);
 		} else {
-			return super.updateEmbeddedEntity(embeddedName, data, options);
+			return super.updateEmbeddedDocuments(embeddedName, data, options);
 		}
 	}
 
-	async deleteEmbeddedEntity (embeddedName, data, options = {}) {
-		if (this.isEmbedded) {
+	async deleteEmbeddedDocuments (embeddedName, data, options = {}) {
+		if (this.hasParentComponent) {
 			const [, table] = this._getEmbeddedTable();
-			data = Array.isArray(data) ? data : [data];
 			table.results = table.results.filter(result => !data.includes(result._id));
 			return this._updateEmbeddedResults(table.results);
 		} else {
-			return super.deleteEmbeddedEntity(embeddedName, data, options);
+			return super.deleteEmbeddedDocuments(embeddedName, data, options);
 		}
 	}
 
 	async update (data, options = {}) {
-		if (this.isEmbedded) {
+		if (this.hasParentComponent) {
 			const parentItem = this.options.parentItem;
 			const parentComponent = this.getFlag('obsidian', 'parentComponent');
 			const newData =
 				mergeObject(
-					this.data,
-					expandObject(OBSIDIAN.updateArrays(this.data, data)),
+					this.data._source,
+					expandObject(OBSIDIAN.updateArrays(this.data._source, data)),
 					{inplace: false});
 
 			const effects = duplicate(parentItem.getFlag('obsidian', 'effects'));
@@ -98,8 +96,15 @@ export default class ObsidianTable extends RollTable {
 			component.tables[idx] = newData;
 
 			await parentItem.setFlag('obsidian', 'effects', effects);
-			this.data = newData;
-			this.sheet.render(false);
+			this.data.update(newData, {recursive: false});
+
+			// We have to bypass the normal render and instead return the async
+			// _render for the case where _onSubmit is called before deleting
+			// a TableResult. The _onSubmit is awaited, but since we don't
+			// return a Promise with render, the TableResult is deleted while
+			// the sheet hasn't re-rendered from the initial _onSubmit event,
+			// causing the re-render after TableResult deletion to exit early.
+			return this.sheet._render(false);
 		} else {
 			return super.update(data, options);
 		}

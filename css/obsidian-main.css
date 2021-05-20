@@ -728,7 +728,7 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian input.obsidian-input-search,
 .dnd5e.sheet form.obsidian input.obsidian-input-search,
-.obsidian-compendium .sidebar-tab .directory-header .header-search input {
+.obsidian-compendium .directory-header .header-search input {
 	color: var(--obs-text-bright);
 	background-color: var(--obs-mid);
 	border: 1px solid var(--obs-border-subtle);
@@ -744,7 +744,7 @@ h3 > div > .obsidian-feature-recharge {
 	margin-bottom: 0;
 }
 
-.obsidian-compendium .sidebar-tab .directory-header .header-search input {
+.obsidian-compendium .directory-header .header-search input {
 	width: calc(100% - 3px);
 	margin-bottom: 10px;
 }
@@ -756,13 +756,13 @@ h3 > div > .obsidian-feature-recharge {
 
 .obsidian .obsidian-input-search::placeholder,
 .dnd5e.sheet form.obsidian .obsidian-input-search::placeholder,
-.obsidian-compendium .sidebar-tab .directory-header .header-search input::placeholder {
+.obsidian-compendium .directory-header .header-search input::placeholder {
 	color: var(--obs-text-placeholder);
 }
 
 .obsidian input.obsidian-input-search:focus,
 .dnd5e.sheet form.obsidian input.obsidian-input-search:focus,
-.obsidian-compendium .sidebar-tab .directory-header .header-search input:focus {
+.obsidian-compendium .directory-header .header-search input:focus {
 	color: var(--obs-text-inverse);
 	background-color: var(--obs-light);
 	border-color: var(--obs-light);
@@ -924,7 +924,7 @@ h3 > div > .obsidian-feature-recharge {
 	border-left: none;
 }
 
-.obsidian details > summary::-webkit-details-marker {
+.obsidian details > summary::marker {
 	display: none;
 }
 

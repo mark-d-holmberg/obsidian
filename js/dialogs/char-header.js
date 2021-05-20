@@ -105,7 +105,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			item.flags.obsidian.custom = cls.custom;
 		}
 
-		await this.parent.actor.createEmbeddedEntity('OwnedItem', item, {renderSheet: false});
+		await this.parent.actor.createEmbeddedDocuments('Item', [item], {renderSheet: false});
 		this.render(false);
 	}
 
@@ -115,7 +115,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	async _onRemoveClass (evt) {
 		evt.preventDefault();
 		const itemID = $(evt.currentTarget).closest('.obsidian-class-row').data('item-id');
-		await this.parent.actor.deleteEmbeddedEntity('OwnedItem', itemID);
+		await this.parent.actor.deleteEmbeddedDocuments('Item', [itemID]);
 		this.render(false);
 	}
 

@@ -31,7 +31,7 @@ function prepareActiveDefenses (flags, derived) {
 	const damage = derived.defenses.parts.damage;
 
 	derived.toggleable
-		.filter(effect => effect.toggle.active)
+		.filter(effect => effect.toggle?.active)
 		.filter(effect => effect.active.defense.length)
 		.flatMap(effect => effect.active.defense)
 		.forEach(def => {
