@@ -1,4 +1,4 @@
-import ObsidianSpellLists from '../rules/spell-lists.js';
+import ObsidianSpellLists from '../data/spell-lists.js';
 import {OBSIDIAN} from '../global.js';
 
 export function registerSettings () {

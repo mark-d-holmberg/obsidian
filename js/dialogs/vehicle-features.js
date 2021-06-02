@@ -22,8 +22,8 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 		const data = super.getData();
 		data.featureList =
 			data.landVehicle
-				? OBSIDIAN.Rules.VEHICLE_LAND_FEATURES
-				: OBSIDIAN.Rules.VEHICLE_WATER_FEATURES;
+				? OBSIDIAN.Config.VEHICLE_LAND_FEATURES
+				: OBSIDIAN.Config.VEHICLE_WATER_FEATURES;
 
 		return data;
 	}

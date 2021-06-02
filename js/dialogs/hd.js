@@ -43,7 +43,7 @@ export class ObsidianHDDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const hd = duplicate(this.parent.actor.data.flags.obsidian.attributes.hd);
 		const existingHD = Object.keys(hd);
-		const dice = OBSIDIAN.Rules.HD.map(die => `d${die}`);
+		const dice = OBSIDIAN.Config.HD.map(die => `d${die}`);
 		const availableHD =
 			dice.filter(die => {
 				return !existingHD.includes(die)

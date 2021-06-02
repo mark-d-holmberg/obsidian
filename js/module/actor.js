@@ -1,21 +1,21 @@
 import Actor5e from '../../../../systems/dnd5e/module/actor/entity.js';
 import {OBSIDIAN} from '../global.js';
-import {Prepare} from '../rules/prepare.js';
-import {prepareSpellcasting} from '../rules/spellcasting.js';
-import {Rolls} from '../rules/rolls.js';
+import {Prepare} from '../data/prepare.js';
+import {prepareSpellcasting} from '../data/spellcasting.js';
+import {Rolls} from './rolls.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
-import {Schema} from './schema.js';
-import {prepareToggleableEffects} from '../rules/effects.js';
-import {applyBonuses, applyProfBonus} from '../rules/bonuses.js';
-import {prepareNPC, prepareNPCHD, prepareSpeed} from '../rules/npc.js';
-import {prepareDefenseDisplay, prepareDefenses} from '../rules/defenses.js';
-import {Rules} from '../rules/rules.js';
+import {Schema} from '../data/schema.js';
+import {prepareToggleableEffects} from '../data/effects.js';
+import {applyBonuses, applyProfBonus} from '../data/bonuses.js';
+import {prepareNPC, prepareNPCHD, prepareSpeed} from '../data/npc.js';
+import {prepareDefenseDisplay, prepareDefenses} from '../data/defenses.js';
+import {Config} from '../data/config.js';
 import {Migrate} from '../migration/migrate.js';
-import {Obsidian} from './obsidian.js';
-import {ObsidianNPC} from './npc.js';
+import {ObsidianNPC} from '../sheets/npc.js';
 import {Partitioner} from '../util/partition.js';
 import {Effect} from './effect.js';
-import {Filters} from '../rules/filters.js';
+import {Filters} from '../data/filters.js';
+import {ObsidianCharacter} from '../sheets/obsidian.js';
 
 export class ObsidianActor extends Actor5e {
 	static _deriveLevelFromXP (data, derived) {
@@ -67,7 +67,7 @@ export class ObsidianActor extends Actor5e {
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
 		const derived = this.data.obsidian;
-		Rules.FEAT_TRIGGERS.forEach(trigger => derived.triggers[trigger] = []);
+		Config.FEAT_TRIGGERS.forEach(trigger => derived.triggers[trigger] = []);
 
 		if (this.data.type === 'vehicle') {
 			data.attributes.prof = 0;
@@ -118,7 +118,7 @@ export class ObsidianActor extends Actor5e {
 				actorDerived.magicalItems.push(item);
 			}
 
-			if (flags && Rules.INVENTORY_ITEMS.has(item.type)
+			if (flags && Config.INVENTORY_ITEMS.has(item.type)
 				&& (item.type !== 'weapon' || flags.type !== 'unarmed'))
 			{
 				actorDerived.inventory.items.push(item);
@@ -295,8 +295,14 @@ export class ObsidianActor extends Actor5e {
 			// points to the old token that has since been replaced on the
 			// canvas. We need to make sure we get the new token.
 			const token = canvas.tokens.get(this.token.id);
-			token?.drawEffects().catch(() => {});
-			token?.drawBars();
+
+			// Need to be careful to not initialise a new synthetic actor if
+			// one doesn't exist yet, as this causes an infinite preparation
+			// loop.
+			if (token?._actor != null) {
+				token?.drawEffects().catch(() => {});
+				token?.drawBars();
+			}
 		} else if (canvas) {
 			this.getActiveTokens(true).forEach(token => {
 				token.drawEffects().catch(() => {});
@@ -576,7 +582,7 @@ export class ObsidianActor extends Actor5e {
 				existingEffects.map(effect => effect.getFlag('core', 'statusId')).filter(_ => _));
 
 		effects.push(
-			...Rules.CONDITIONS
+			...Config.CONDITIONS
 				.filter(condition => conditions[condition] && !existingConditions.has(condition))
 				.map(condition => `modules/obsidian/img/conditions/${condition}.svg`));
 
@@ -603,7 +609,7 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	async longRest (...args) {
-		if (!(this.sheet instanceof Obsidian) && !(this.sheet instanceof ObsidianNPC)) {
+		if (!(this.sheet instanceof ObsidianCharacter) && !(this.sheet instanceof ObsidianNPC)) {
 			return super.longRest(...args);
 		}
 

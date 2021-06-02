@@ -1,8 +1,8 @@
-import {Schema} from '../module/schema.js';
+import {Schema} from '../data/schema.js';
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from '../module/effect.js';
-import {Rules} from '../rules/rules.js';
+import {Config} from '../data/config.js';
 import {CONVERT} from './convert.js';
 import {core} from './core.js';
 import {v3} from './v3.js';
@@ -15,8 +15,10 @@ import {v10} from './v10.js';
 import {v11} from './v11.js';
 import {v12} from './v12.js';
 import {v13} from './v13.js';
+import {v14} from './v14.js';
 
 export const Migrate = {
+	core, v3, v4, v5, v6, v7, v9, v10, v11, v12, v13, v14,
 	convertActor: function (data) {
 		lazyConvert();
 
@@ -78,9 +80,13 @@ export const Migrate = {
 			Migrate.v13.convertHD(data);
 		}
 
+		if (data.flags.obsidian.version < 15 && data.type === 'npc' && source !== 'core') {
+			Migrate.v14.convertCreatureType(data);
+		}
+
 		if (data.items?.length) {
 			data.items = data.items.map(item => {
-				const updated = Migrate.convertItem(item, data);
+				const updated = Migrate.convertItem(item);
 				if (data.type === 'npc' && (item.type === 'weapon' || item.flags.obsidian.armour)) {
 					item.data.equipped = true;
 				}
@@ -97,7 +103,7 @@ export const Migrate = {
 		return data;
 	},
 
-	convertItem: function (data, actorData) {
+	convertItem: function (data) {
 		if (!data.data) {
 			data.data = {};
 		}
@@ -225,12 +231,16 @@ export const Migrate = {
 			Migrate.v10.convertBonuses(data);
 		}
 
+		if (data.flags.obsidian.version < 15 && source !== 'core') {
+			Migrate.v14.convertSpellcasting(data);
+		}
+
 		data.flags.obsidian.version = Schema.VERSION;
 		return data;
 	},
 
 	convertAC: function (data) {
-		if (!data.items.some(item => item.flags.obsidian.armour)) {
+		if (!data.items.some(item => item.flags?.obsidian?.armour)) {
 			data.flags.obsidian.attributes.ac.override = data.data.attributes.ac.value?.toString();
 		}
 	},
@@ -238,7 +248,7 @@ export const Migrate = {
 	convertClass: function (data, source) {
 		if (source === 'core') {
 			const official =
-				OBSIDIAN.Rules.CLASSES.find(cls =>
+				OBSIDIAN.Config.CLASSES.find(cls =>
 					data.name === game.i18n.localize(`OBSIDIAN.Class.${cls}`));
 
 			if (official) {
@@ -250,7 +260,7 @@ export const Migrate = {
 			}
 
 			if (!data.data.spellcasting || data.data.spellcasting === 'none') {
-				data.data.spellcasting = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[data.name] || 'none';
+				data.data.spellcasting = OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[data.name] || 'none';
 			}
 		}
 
@@ -263,15 +273,11 @@ export const Migrate = {
 				ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
 		}
 
-		if (source !== 'core'
-			&& data.flags.obsidian.version < 7
-			&& data.flags.obsidian.spellcasting.progression)
-		{
-			data.data.spellcasting = data.flags.obsidian.spellcasting.progression;
-		}
-
 		if (!data.data.spellcasting) {
-			data.data.spellcasting = OBSIDIAN.Rules.CLASS_SPELL_PROGRESSION[data.name] || 'none';
+			data.data.spellcasting = {
+				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[data.name] || 'none',
+				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[data.name] || ''
+			};
 		}
 	},
 
@@ -360,7 +366,7 @@ export const Migrate = {
 			&& data.type === 'character'
 			&& getProperty(data, 'data.details') !== undefined)
 		{
-			for (const alignment of OBSIDIAN.Rules.ALIGNMENTS) {
+			for (const alignment of OBSIDIAN.Config.ALIGNMENTS) {
 				const translation = game.i18n.localize(`OBSIDIAN.Alignment.${alignment}`);
 				if (translation.toLowerCase() === data.data.details.alignment.toLowerCase()) {
 					data.data.details.alignment = alignment;
@@ -419,18 +425,6 @@ export const Migrate = {
 	}
 };
 
-Migrate.core = core;
-Migrate.v3 = v3;
-Migrate.v4 = v4;
-Migrate.v5 = v5;
-Migrate.v6 = v6;
-Migrate.v7 = v7;
-Migrate.v9 = v9;
-Migrate.v10 = v10;
-Migrate.v11 = v11;
-Migrate.v12 = v12;
-Migrate.v13 = v13;
-
 function lazyConvert () {
 	const convert = (key, convert) => {
 		if (CONVERT[key]) {
@@ -440,7 +434,7 @@ function lazyConvert () {
 		CONVERT[key] = {};
 		convert.forEach(([p, t, r]) =>
 			CONVERT[key][p] =
-				new Map(Rules[r].map(key =>
+				new Map(Config[r].map(key =>
 					[game.i18n.localize(`OBSIDIAN.${t}.${key}`).toLowerCase(), key])));
 	};
 
@@ -465,7 +459,7 @@ function convertSpeeds () {
 	}
 
 	CONVERT.speeds =
-		new Map(Rules.SPEEDS.map(key =>
+		new Map(Config.SPEEDS.map(key =>
 			[game.i18n.localize(`OBSIDIAN.SpeedAbbr.${key}`).toLowerCase(), key]));
 
 	CONVERT.speeds.hover = new RegExp(`\(${game.i18n.localize('OBSIDIAN.Hover')}\)`);

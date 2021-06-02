@@ -3,7 +3,7 @@
 	{{#unless isCharacter}}
 	<h3>{{localize 'OBSIDIAN.Conditions'}}</h3>
 	<div class="obsidian-npc-grid obsidian-npc-condition-grid">
-		{{#each ObsidianRules.CONDITIONS}}
+		{{#each ObsidianConfig.CONDITIONS}}
 			<div class="obsidian-npc-grid-item">
 				<div class="
 				{{#if (lookup ../actor.obsidian.conditions this)}}

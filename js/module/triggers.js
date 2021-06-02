@@ -1,4 +1,4 @@
-import {Rolls} from '../rules/rolls.js';
+import {Rolls} from './rolls.js';
 
 export function sendTriggers (combat) {
 	const actor = combat.combatant?.actor;

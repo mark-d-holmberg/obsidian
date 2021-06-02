@@ -15,7 +15,7 @@
 			    <select name="data.activation.type" data-selector="activation">
 
 				    {{#select item.data.activation.type}}
-					    {{#each ObsidianRules.FEAT_ACTION}}
+					    {{#each ObsidianConfig.FEAT_ACTION}}
 						    <option value="{{this}}">{{obs-i18n 'FeatAction' this}}</option>
 					    {{/each}}
 					    {{#if isNPC}}

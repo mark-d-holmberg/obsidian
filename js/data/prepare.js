@@ -2,8 +2,8 @@ import {OBSIDIAN} from '../global.js';
 import {Filters} from './filters.js';
 import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
-import {Rules} from './rules.js';
-import {conditionsRollMod} from './conditions.js';
+import {Config} from './config.js';
+import {conditionsRollMod} from '../module/conditions.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -441,8 +441,8 @@ export const Prepare = {
 		const actorData = actor.data;
 		const conditionImmunities = new Set(derived.defenses.parts.conditions.imm);
 		derived.conditions = {exhaustion: 0};
-		actorData.effects.forEach(effect => {
-			const id = effect.flags?.core?.statusId;
+		actor.effects.forEach(effect => {
+			const id = effect.getFlag('core', 'statusId');
 			if (!id) {
 				return;
 			}
@@ -481,7 +481,7 @@ export const Prepare = {
 		if (derived.conditions.petrified) {
 			conditionDefense.imm.push('disease');
 			conditionDefense.imm.push('poisoned');
-			damageDefense.res.push(...Rules.DAMAGE_TYPES.map(dmg => {
+			damageDefense.res.push(...Config.DAMAGE_TYPES.map(dmg => {
 				return {dmg, level: 'res', magic: '', material: ''};
 			}));
 		}
@@ -497,9 +497,9 @@ export const Prepare = {
 		const rules = derived.rules;
 		const inventory = derived.inventory;
 		const str = derived.abilities.str.value;
-		const thresholds = Rules.ENCUMBRANCE_THRESHOLDS;
+		const thresholds = Config.ENCUMBRANCE_THRESHOLDS;
 		const encumbrance = game.settings.get('obsidian', 'encumbrance');
-		const sizeMod = Rules.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
+		const sizeMod = Config.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
 		const bonuses = derived.filters.bonuses(Filters.isCarry);
 		const setters = derived.filters.setters(Filters.isCarry);
 		const multipliers = derived.filters.multipliers(Filters.isCarry);
@@ -716,7 +716,7 @@ export const Prepare = {
 
 	tools: function (actor, data, flags, derived) {
 		derived.tools = {};
-		const tools = Rules.ALL_TOOLS.map(t => {
+		const tools = Config.ALL_TOOLS.map(t => {
 			const tool = mergeObject(
 				{ability: 'str', bonus: 0, value: 0, label: '', enabled: false},
 				flags.tools[t] || {});

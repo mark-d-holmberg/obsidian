@@ -21,7 +21,7 @@
 	<div class="form-group">
 		<label>{{localize 'OBSIDIAN.AddFeature'}}</label>
 		<select>
-			{{#each ObsidianRules.NPC_FEATURES}}
+			{{#each ObsidianConfig.NPC_FEATURES}}
 				<option value="{{this}}">{{obs-i18n 'Feat'}}</option>
 			{{/each}}
 		</select>

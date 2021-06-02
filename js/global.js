@@ -1,12 +1,12 @@
-import {ObsidianItems} from './rules/items.js';
-import {Schema} from './module/schema.js';
-import {Rules} from './rules/rules.js';
+import {ObsidianItems} from './module/items.js';
+import {Schema} from './data/schema.js';
+import {Config} from './data/config.js';
 import {Migrate} from './migration/migrate.js';
 
 export const OBSIDIAN = {};
 OBSIDIAN.Items = ObsidianItems;
 OBSIDIAN.Schema = Schema;
-OBSIDIAN.Rules = Rules;
+OBSIDIAN.Config = Config;
 OBSIDIAN.Migrate = Migrate;
 OBSIDIAN.Labels = {};
 OBSIDIAN.GENERIC_ACTOR = '_OBSIDIAN_GenericActor';

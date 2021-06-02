@@ -1,6 +1,6 @@
-import {ObsidianActor} from '../module/actor.js';
-import {determineMode} from './prepare.js';
-import {Effect} from '../module/effect.js';
+import {ObsidianActor} from './actor.js';
+import {determineMode} from '../data/prepare.js';
+import {Effect} from './effect.js';
 
 const CONDITIONS = [
 	'dead', 'bleeding', 'blinded', 'charmed', 'deafened',

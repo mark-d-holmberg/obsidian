@@ -1,5 +1,5 @@
 import {OBSIDIAN} from '../global.js';
-import {Prepare} from '../rules/prepare.js';
+import {Prepare} from '../data/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';

@@ -1,8 +1,8 @@
 import {OBSIDIAN} from './global.js';
-import {Rules} from './rules/rules.js';
+import {Config} from './data/config.js';
 import {cssIconHexagon} from './util/html.js';
 
-// Since the options available in the Rules object are so frequently displayed
+// Since the options available in the Config object are so frequently displayed
 // in the UI, we make some attempt at matching them up with their corresponding
 // translation strings here so that we can pre-translate them and save a little
 // overhead in template rendering (at the cost of a bit more memory).
@@ -96,12 +96,12 @@ export function translateLabels () {
 			return item;
 		});
 
-		const dataList = Rules[rulesKey];
+		const dataList = Config[rulesKey];
 
 		// We want our data to be in the form of {dataKey: translationKey, ...}
 		// so that we can pass it to the selectOptions handlebar helper later.
 		// In most cases the key we use internally is the same as the key we
-		// use for translation (see Rules.PROFICIENCY_LEVELS for an example of
+		// use for translation (see Config.PROFICIENCY_LEVELS for an example of
 		// an exception to this). So we simply convert those arrays to objects
 		// where the key and value are identical. For any that are already
 		// objects, we do not need to change them at all, as they are already

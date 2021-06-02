@@ -48,7 +48,7 @@
 <fieldset>
 	<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
 	<div class="obsidian-checkbox-grid">
-		{{#each ObsidianRules.WEAPON_TAGS}}
+		{{#each ObsidianConfig.WEAPON_TAGS}}
 			{{fancy-checkbox (add 'flags.obsidian.tags.' this) content=(add 'OBSIDIAN.AtkTag.' this)
 			                 checked=(lookup ../item.flags.obsidian.tags this)}}
 		{{/each}}

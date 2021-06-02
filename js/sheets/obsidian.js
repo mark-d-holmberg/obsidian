@@ -1,13 +1,13 @@
 import {OBSIDIAN} from '../global.js';
-import {Reorder} from './reorder.js';
+import {Reorder} from '../module/reorder.js';
 import ActorSheet5eCharacter from '../../../../systems/dnd5e/module/actor/sheets/character.js';
 import {ObsidianDialog} from '../dialogs/dialog.js';
 import {ObsidianSaveDialog} from '../dialogs/save.js';
 import {ObsidianSkillDialog} from '../dialogs/skill.js';
 import {ObsidianSpellsDialog} from '../dialogs/spells.js';
-import {Sheet} from './sheet.js';
-import {ObsidianTabs} from './tabs.js';
-import {Rules} from '../rules/rules.js';
+import {Sheet} from '../module/sheet.js';
+import {ObsidianTabs} from '../module/tabs.js';
+import {Config} from '../data/config.js';
 
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
@@ -43,7 +43,7 @@ import {ObsidianNPCFeaturesDialog} from '../dialogs/npc-features.js';
 // noinspection ES6UnusedImports
 import {ObsidianVehicleFeaturesDialog} from '../dialogs/vehicle-features.js';
 
-export class Obsidian extends ActorSheet5eCharacter {
+export class ObsidianCharacter extends ActorSheet5eCharacter {
 	constructor (object, options) {
 		if (!game.user.isGM && object.limited) {
 			options.width = 880;
@@ -123,7 +123,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 						Sheet.filterEquipment(this);
 					}
 
-					Obsidian._resizeTabs(html);
+					ObsidianCharacter._resizeTabs(html);
 				}
 			});
 		});
@@ -131,7 +131,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		Sheet.activateFiltering(this, html);
 		Sheet.contextMenu(this, html);
-		Obsidian._resizeMain(html);
+		ObsidianCharacter._resizeMain(html);
 
 		if (!this.options.editable) {
 			return;
@@ -176,13 +176,13 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	getData () {
 		const data = super.getData();
-		data.actor = duplicate(this.actor.toObject(false));
-		data.base = duplicate(this.actor.data);
-		data.ObsidianRules = OBSIDIAN.Rules;
+		data.actor = this.actor.toObject(false);
+		data.base = this.actor.toObject();
+		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		data.actor.obsidian.feats =
-			this.actor.obsidian.itemsByType.get('feat').map(i => duplicate(i.toObject(false)));
+			this.actor.obsidian.itemsByType.get('feat').map(i => i.toObject(false));
 
 		data.actor.obsidian.attacks.forEach(this._reifyAttackLinks, this);
 		data.actor.obsidian.tempEffects =
@@ -203,7 +203,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 	async maximize () {
 		await super.maximize();
-		Obsidian._resizeMain(this.element);
+		ObsidianCharacter._resizeMain(this.element);
 	}
 
 	render (force = false, options = {}) {
@@ -277,12 +277,12 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		const currentSpeed = this.actor.data.flags.obsidian.attributes.speedDisplay || 'walk';
 		const speeds = this.actor.data.obsidian.attributes.speed;
-		const startIdx = Rules.SPEEDS.indexOf(currentSpeed);
+		const startIdx = Config.SPEEDS.indexOf(currentSpeed);
 		let newSpeed = null;
 
-		for (let i = 1; i < Rules.SPEEDS.length; i++) {
-			const nextIdx = (startIdx + i) % Rules.SPEEDS.length;
-			const speedKey = Rules.SPEEDS[nextIdx];
+		for (let i = 1; i < Config.SPEEDS.length; i++) {
+			const nextIdx = (startIdx + i) % Config.SPEEDS.length;
+			const speedKey = Config.SPEEDS[nextIdx];
 			const speed = speeds[speedKey];
 
 			if (speed) {
@@ -327,7 +327,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 		 */
 		$('body').append(html);
 		this._element = html;
-		html.hide().fadeIn(200, Obsidian._resizeMain.bind(this, html));
+		html.hide().fadeIn(200, ObsidianCharacter._resizeMain.bind(this, html));
 	}
 
 	/**
@@ -436,7 +436,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 
 		total -= html.find('.obsidian-conditions-box').outerHeight() + 13;
 		html.find('.obsidian-main').css('height', `${total}px`);
-		Obsidian._resizeTabs(html);
+		ObsidianCharacter._resizeTabs(html);
 	}
 
 	/**
@@ -488,7 +488,7 @@ export class Obsidian extends ActorSheet5eCharacter {
 	}
 
 	_rollHighestHD () {
-		const highest = Rules.HD.reduce((max, hd) => {
+		const highest = Config.HD.reduce((max, hd) => {
 			const actorHD = this.actor.data.flags.obsidian.attributes.hd[`d${hd}`];
 			if (actorHD && actorHD.value && hd > max) {
 				return hd;

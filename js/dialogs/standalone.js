@@ -22,7 +22,7 @@ export class ObsidianStandaloneDialog extends Application {
 
 	getData (options) {
 		const data = super.getData(options);
-		data.ObsidianRules = OBSIDIAN.Rules;
+		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 
 		if (this._config.actor) {

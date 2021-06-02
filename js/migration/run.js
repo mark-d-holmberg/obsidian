@@ -1,5 +1,5 @@
 import {Migrate} from './migrate.js';
-import {Schema} from '../module/schema.js';
+import {Schema} from '../data/schema.js';
 
 async function beginMigration (html) {
 	html.find('.obsidian-migrate-buttons').css('display', 'none');
@@ -14,10 +14,12 @@ async function beginMigration (html) {
 			return;
 		}
 
-		bar.css('width', `${pct}%`);
+		bar.css('width', `${progress}%`);
 	}, 1000);
 
 	const migrationFailed = () => {
+		clearInterval(progressInterval);
+		bar.css('background-color', 'var(--obs-negative)');
 		html.find('p').remove();
 		html.find('.obsidian-migrate-box')
 			.append(`<p>${game.i18n.localize('OBSIDIAN.MigrateFailed')}</p>`);
@@ -63,13 +65,20 @@ async function beginMigration (html) {
 			console.debug(`Migrating scene '${scene.name}'...`);
 			for (const token of scene.tokens.contents) {
 				console.debug(`Migrating token '${token.name}'...`);
-				const actorData = duplicate(token.toObject().actorData);
+				const actorData = duplicate(token.toJSON().actorData);
 				if (!Object.keys(actorData).length) {
 					continue;
 				}
 
+				setProperty(
+					actorData,
+					'flags.obsidian.version',
+					token.actor.getFlag('obsidian', 'version'));
+
 				Migrate.convertActor(actorData);
-				updates.push(actorData);
+
+				delete actorData.flags.obsidian.version;
+				updates.push({_id: token.id, actorData});
 			}
 
 			console.debug('Persisting Scene updates...');

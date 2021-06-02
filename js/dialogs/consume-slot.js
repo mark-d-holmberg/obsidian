@@ -1,6 +1,6 @@
 import {ObsidianStandaloneDialog} from './standalone.js';
 import {getSourceClass} from '../module/item.js';
-import {ObsidianItems} from '../rules/items.js';
+import {ObsidianItems} from '../module/items.js';
 
 export class ObsidianConsumeSlotDialog extends ObsidianStandaloneDialog {
 	constructor (actor, options, min) {

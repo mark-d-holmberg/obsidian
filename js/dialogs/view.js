@@ -1,7 +1,7 @@
 import {ObsidianDialog} from './dialog.js';
 import {Reorder} from '../module/reorder.js';
 import {Sheet} from '../module/sheet.js';
-import {ObsidianItems} from '../rules/items.js';
+import {ObsidianItems} from '../module/items.js';
 
 export class ObsidianViewDialog extends ObsidianDialog {
 	constructor (itemID, parent, options = {}) {

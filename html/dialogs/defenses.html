@@ -81,7 +81,7 @@
 		    </select>
 	      <select name="flags.obsidian.defenses.conditions.{{id}}.condition">
 	        {{#select def.condition}}
-		        {{#each ../ObsidianRules.CONDITIONS}}
+		        {{#each ../ObsidianConfig.CONDITIONS}}
 			        <option value="{{this}}">{{obs-i18n 'Condition' this}}</option>
 		        {{/each}}
 		        <option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>

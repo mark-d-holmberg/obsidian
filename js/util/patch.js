@@ -1,6 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
-import {Rolls} from '../rules/rolls.js';
+import {Rolls} from '../module/rolls.js';
 import {patchOnEscape} from '../module/actor-placement.js';
 import {within5ftOf} from '../module/token.js';
 

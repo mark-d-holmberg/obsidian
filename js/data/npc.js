@@ -1,6 +1,6 @@
 import {OBSIDIAN} from '../global.js';
-import {Rules} from './rules.js';
-import {Rolls} from './rolls.js';
+import {Config} from './config.js';
+import {Rolls} from '../module/rolls.js';
 
 export function prepareNPC (flags, derived) {
 	derived.details.tags = [];
@@ -29,7 +29,7 @@ export function prepareNPCHD (data, flags, derived) {
 	const maxHD = flags.attributes.hd.max || 0;
 
 	derived.attributes.hd = {
-		die: Rules.NPC_SIZE_HD[size],
+		die: Config.NPC_SIZE_HD[size],
 		const: maxHD * conMod
 	};
 }
@@ -41,7 +41,7 @@ export function prepareSpeed (data, derived) {
 	const walk = derived.attributes.speed.walk || 0;
 	speed.push(`${walk} ${feet}`);
 
-	for (const spd of Rules.SPEEDS) {
+	for (const spd of Config.SPEEDS) {
 		const value = derived.attributes.speed[spd];
 		if (spd === 'walk' || !value) {
 			continue;

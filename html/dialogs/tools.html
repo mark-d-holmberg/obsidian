@@ -2,7 +2,7 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tools'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_TOOLS as |tool|}}
+			{{#each ObsidianConfig.PROF_TOOLS as |tool|}}
 				{{#with (lookup ../actor.obsidian.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
@@ -13,7 +13,7 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.ToolProf.game'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_TOOLS_GAME as |tool|}}
+			{{#each ObsidianConfig.PROF_TOOLS_GAME as |tool|}}
 				{{#with (lookup ../actor.obsidian.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
@@ -24,7 +24,7 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.ToolProf.music'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_TOOLS_INSTRUMENT as |tool|}}
+			{{#each ObsidianConfig.PROF_TOOLS_INSTRUMENT as |tool|}}
 				{{#with (lookup ../actor.obsidian.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
@@ -35,7 +35,7 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.ToolProf.art'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.PROF_TOOLS_ARTISAN as |tool|}}
+			{{#each ObsidianConfig.PROF_TOOLS_ARTISAN as |tool|}}
 				{{#with (lookup ../actor.obsidian.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}

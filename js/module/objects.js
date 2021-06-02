@@ -1,4 +1,4 @@
-import {Schema} from './schema.js';
+import {Schema} from '../data/schema.js';
 
 export function addCreateObjectHooks () {
 	Hooks.on('renderDialog', onRenderDialog);

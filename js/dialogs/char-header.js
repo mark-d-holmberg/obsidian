@@ -41,7 +41,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			return 'd6';
 		}
 
-		return `d${OBSIDIAN.Rules.CLASS_HIT_DICE[cls]}`;
+		return `d${OBSIDIAN.Config.CLASS_HIT_DICE[cls]}`;
 	}
 
 	static determineSpellcasting (cls) {
@@ -49,15 +49,14 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			return {enabled: false};
 		}
 
-		if (OBSIDIAN.Rules.NON_CASTERS.includes(cls)) {
+		if (OBSIDIAN.Config.NON_CASTERS.includes(cls)) {
 			return {enabled: false};
 		}
 
 		return {
 			enabled: true,
-			spell: OBSIDIAN.Rules.CLASS_SPELL_MODS[cls],
-			preparation: OBSIDIAN.Rules.CLASS_SPELL_PREP[cls],
-			rituals: OBSIDIAN.Rules.CLASS_RITUALS[cls]
+			preparation: OBSIDIAN.Config.CLASS_SPELL_PREP[cls],
+			rituals: OBSIDIAN.Config.CLASS_RITUALS[cls]
 		};
 	}
 

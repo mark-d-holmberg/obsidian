@@ -126,7 +126,7 @@ function applySpeedBonuses (actor, data, derived) {
 	const conditions = actorData.obsidian.conditions;
 	const exhaustion = conditions.exhaustion;
 
-	for (const speed of OBSIDIAN.Rules.SPEEDS) {
+	for (const speed of OBSIDIAN.Config.SPEEDS) {
 		derived.attributes.speed[speed] = data.attributes.movement[speed];
 		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
 

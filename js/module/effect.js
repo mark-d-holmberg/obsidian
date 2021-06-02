@@ -1,6 +1,6 @@
 import {OBSIDIAN} from '../global.js';
-import {Filters} from '../rules/filters.js';
-import {determineMode} from '../rules/prepare.js';
+import {Filters} from '../data/filters.js';
+import {determineMode} from '../data/prepare.js';
 import {ObsidianActor} from './actor.js';
 
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
@@ -410,7 +410,7 @@ export const Effect = {
 
 	determineMulti: function (filter) {
 		let prop = 'filter';
-		let tree = OBSIDIAN.Rules.EFFECT_FILTER_IS_MULTI;
+		let tree = OBSIDIAN.Config.EFFECT_FILTER_IS_MULTI;
 
 		do {
 			prop = filter[prop];

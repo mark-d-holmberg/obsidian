@@ -11,7 +11,7 @@
 			<div>
 				<select {{#if hd.derived}}disabled{{/if}}>
 					{{#select die}}
-						{{#each ../ObsidianRules.HD}}
+						{{#each ../ObsidianConfig.HD}}
 							<option value="d{{this}}">d{{this}}</option>
 						{{/each}}
 					{{/select}}

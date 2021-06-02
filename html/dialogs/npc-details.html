@@ -42,7 +42,7 @@
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.Tags'}}</legend>
 		<div class="obsidian-checkbox-grid">
-			{{#each ObsidianRules.CREATURE_TAGS}}
+			{{#each ObsidianConfig.CREATURE_TAGS}}
 				{{fancy-checkbox 'flags.obsidian.details.tags' this
 				                 content=(add 'OBSIDIAN.CreatureTag.' this)
 				                 checked=(lookup ../actor.flags.obsidian.details.tags this)}}

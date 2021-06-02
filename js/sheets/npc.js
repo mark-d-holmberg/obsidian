@@ -1,9 +1,9 @@
 import ActorSheet5eNPC from '../../../../systems/dnd5e/module/actor/sheets/npc.js';
-import {Obsidian} from './obsidian.js';
+import {ObsidianCharacter} from './obsidian.js';
 import {ObsidianNPCDetailsDialog} from '../dialogs/npc-details.js';
 import {OBSIDIAN} from '../global.js';
-import {Reorder} from './reorder.js';
-import {Sheet} from './sheet.js';
+import {Reorder} from '../module/reorder.js';
+import {Sheet} from '../module/sheet.js';
 
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
@@ -94,14 +94,14 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
-		Obsidian.prototype._activateDialogs.apply(this, arguments);
+		ObsidianCharacter.prototype._activateDialogs.apply(this, arguments);
 	}
 
 	getData () {
 		const data = super.getData();
-		data.actor = duplicate(this.actor.toObject(false));
-		data.items = this.actor.items.map(item => duplicate(item.toObject(false)));
-		data.ObsidianRules = OBSIDIAN.Rules;
+		data.actor = this.actor.toObject(false);
+		data.items = this.actor.items.map(item => item.toObject(false));
+		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 		data.isObject = data.data.details?.type?.value === 'object';
 		data.featCategories = {};
@@ -141,7 +141,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			}
 
 			category.push(item);
-			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
+			item.obsidian.collection.attack.forEach(ObsidianCharacter.prototype._reifyAttackLinks, this);
 		}
 
 		if (data.featCategories.action) {
@@ -166,12 +166,12 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	}
 
 	render (force = false, options = {}) {
-		Obsidian.prototype._applySettings.apply(this);
+		ObsidianCharacter.prototype._applySettings.apply(this);
 		return super.render(force, options);
 	}
 
 	setModal () {
-		Obsidian.prototype.setModal.apply(this, arguments);
+		ObsidianCharacter.prototype.setModal.apply(this, arguments);
 	}
 
 	_calculateEditorHeight () {
@@ -349,12 +349,12 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	}
 
 	_onResize (event) {
-		Obsidian.prototype._onResize.apply(this, arguments);
+		ObsidianCharacter.prototype._onResize.apply(this, arguments);
 		this.element.find('.tox-tinymce').css('height', `${this._calculateEditorHeight()}px`);
 	}
 
 	async _onSubmit (event, {updateData = null, preventClose = false, preventRender = false} = {}) {
-		return Obsidian.prototype._onSubmit.apply(this, arguments);
+		return ObsidianCharacter.prototype._onSubmit.apply(this, arguments);
 	}
 
 	_rollHD () {

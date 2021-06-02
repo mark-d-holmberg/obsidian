@@ -26,7 +26,7 @@
 			<select name="{{prefix}}.condition.condition" data-selector-parent="{{prefix}}.defense"
 			        data-show="condition">
 				{{#select condition.condition}}
-					{{#each @root.ObsidianRules.CONDITIONS}}
+					{{#each @root.ObsidianConfig.CONDITIONS}}
 						<option value="{{this}}">{{obs-i18n 'Condition' this}}</option>
 					{{/each}}
 					<option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>

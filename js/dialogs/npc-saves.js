@@ -1,5 +1,5 @@
 import {ObsidianDialog} from './dialog.js';
-import {Obsidian} from '../module/obsidian.js';
+import {ObsidianCharacter} from '../sheets/obsidian.js';
 
 export class ObsidianNPCSavesDialog extends ObsidianDialog {
 	static get defaultOptions () {
@@ -14,7 +14,7 @@ export class ObsidianNPCSavesDialog extends ObsidianDialog {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('.obsidian-save-item .obsidian-radio').click(async evt => {
-			await Obsidian.prototype._setSaveProficiency.apply(this.parent, [evt]);
+			await ObsidianCharacter.prototype._setSaveProficiency.apply(this.parent, [evt]);
 			this.render(true);
 		});
 	}

@@ -138,7 +138,7 @@ function createResourceSelect (config, bar) {
 
 function getResourceData (actor, prop) {
 	const [, , uuid] = prop.split('.');
-	const component = actor.data.obsidian.components.get(uuid);
+	const component = actor.data.obsidian?.components.get(uuid);
 
 	if (component) {
 		return {

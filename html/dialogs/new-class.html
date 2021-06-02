@@ -2,7 +2,7 @@
 	<div class="form-group">
 		<label>{{localize 'OBSIDIAN.ClassTitle'}}</label>
 		<select name="cls" data-selector="cls" style="margin-bottom: 4px;">
-			{{#each ObsidianRules.CLASSES}}
+			{{#each ObsidianConfig.CLASSES}}
 				<option value="{{this}}">{{obs-i18n 'Class' this}}</option>
 			{{/each}}
 		</select>

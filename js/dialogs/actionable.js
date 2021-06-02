@@ -1,5 +1,5 @@
 import {ObsidianStandaloneDialog} from './standalone.js';
-import {ObsidianItems} from '../rules/items.js';
+import {ObsidianItems} from '../module/items.js';
 
 export class ObsidianActionableDialog extends ObsidianStandaloneDialog {
 	constructor (actor, options) {

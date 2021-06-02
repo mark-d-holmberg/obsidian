@@ -1,9 +1,9 @@
 import {ObsidianItemSheet} from './item-sheet.js';
 import {Categories, Components, Effect} from '../module/effect.js';
 import {OBSIDIAN} from '../global.js';
-import {Schema} from '../module/schema.js';
+import {Schema} from '../data/schema.js';
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
-import {Rules} from '../rules/rules.js';
+import {Config} from '../data/config.js';
 import {ObsidianStandaloneDialog} from '../dialogs/standalone.js';
 import {ObsidianActor} from '../module/actor.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
@@ -264,7 +264,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		data.usesAbilities = {};
-		Rules.ABILITIES.forEach(abl => data.usesAbilities[abl] = `OBSIDIAN.Ability.${abl}`);
+		Config.ABILITIES.forEach(abl => data.usesAbilities[abl] = `OBSIDIAN.Ability.${abl}`);
 		return data;
 	}
 
@@ -398,7 +398,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 		const [rule, i18n] = current || [];
 		if (rule && i18n) {
-			Rules[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}.${k}`));
+			Config[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}.${k}`));
 		}
 
 		if (this.actor
@@ -417,10 +417,10 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			&& component.roll === 'check'
 			&& component.check === 'tool')
 		{
-			const tools = Rules.PROF_TOOLS
-				.concat(Rules.PROF_TOOLS_GAME)
-				.concat(Rules.PROF_TOOLS_ARTISAN)
-				.concat(Rules.PROF_TOOLS_INSTRUMENT)
+			const tools = Config.PROF_TOOLS
+				.concat(Config.PROF_TOOLS_GAME)
+				.concat(Config.PROF_TOOLS_ARTISAN)
+				.concat(Config.PROF_TOOLS_INSTRUMENT)
 				.map(key => [key, game.i18n.localize(`OBSIDIAN.ToolProf.${key}`)]);
 
 			tools.sort((a, b) => a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0);

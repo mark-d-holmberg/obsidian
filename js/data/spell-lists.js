@@ -186,7 +186,7 @@ class ObsidianCustomListManager extends Application {
 		const data = super.getData(options);
 		data.classes =
 			Object.keys(JSON.parse(game.settings.get('obsidian', 'spell-class-lists')))
-				.filter(cls => !OBSIDIAN.Rules.CLASSES.includes(cls));
+				.filter(cls => !OBSIDIAN.Config.CLASSES.includes(cls));
 		return data;
 	}
 
@@ -224,7 +224,7 @@ class ObsidianCustomListManager extends Application {
 		const lists = JSON.parse(game.settings.get('obsidian', 'spell-class-lists'));
 		const classes = Array.from(this.element.find('input')).map(input => input.value);
 		for (const key of Object.keys(lists)) {
-			if (!OBSIDIAN.Rules.CLASSES.includes(key) && !classes.includes(key)) {
+			if (!OBSIDIAN.Config.CLASSES.includes(key) && !classes.includes(key)) {
 				delete lists[key];
 			}
 		}

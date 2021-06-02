@@ -1,4 +1,4 @@
-import {Rules} from '../rules/rules.js';
+import {Config} from '../data/config.js';
 
 export const v11 = {
 	convertSpeed: function (data) {
@@ -9,7 +9,7 @@ export const v11 = {
 		const oldSpeed = data.flags.obsidian.attributes.speed;
 		const movement = data.data.attributes.movement;
 
-		Rules.SPEEDS.forEach(spd => {
+		Config.SPEEDS.forEach(spd => {
 			if (oldSpeed[spd]) {
 				movement[spd] = oldSpeed[spd].override;
 

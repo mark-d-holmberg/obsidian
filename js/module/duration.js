@@ -1,8 +1,8 @@
 import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
-import {Rolls} from '../rules/rolls.js';
-import {Schema} from './schema.js';
-import {ObsidianItems} from '../rules/items.js';
+import {Rolls} from './rolls.js';
+import {Schema} from '../data/schema.js';
+import {ObsidianItems} from './items.js';
 
 export function initDurations () {
 	Hooks.on('controlToken', renderDurations);

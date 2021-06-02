@@ -228,7 +228,7 @@ export const core = {
 			data.flags?.srd5e?.className
 			|| data.data.requirements.replace(/\d+/g, '').trim().toLocaleLowerCase();
 
-		const cls = OBSIDIAN.Rules.CLASSES.find(cls =>
+		const cls = OBSIDIAN.Config.CLASSES.find(cls =>
 			game.i18n.localize(`OBSIDIAN.Class.${cls}`).toLocaleLowerCase() === className);
 
 		if (cls) {

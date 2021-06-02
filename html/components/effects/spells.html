@@ -12,7 +12,7 @@
 				{{#select list}}
 					{{#each @root.spellLists}}
 						<option value="{{this}}">
-							{{#if (and (includes @root.ObsidianRules.CLASSES this) (not (eq this 'custom')))}}
+							{{#if (and (includes @root.ObsidianConfig.CLASSES this) (not (eq this 'custom')))}}
 								{{obs-i18n 'Class' this}}
 							{{else}}
 								{{this}}

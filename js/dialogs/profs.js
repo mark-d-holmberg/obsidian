@@ -1,5 +1,5 @@
 import {ObsidianDialog} from './dialog.js';
-import {Rules} from '../rules/rules.js';
+import {Config} from '../data/config.js';
 
 export class ObsidianProficienciesDialog extends ObsidianDialog {
 	static get defaultOptions () {
@@ -12,8 +12,8 @@ export class ObsidianProficienciesDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.langs = Rules.PROF_LANG;
-		data.weapons = Rules.PROF_WEAPON;
+		data.langs = Config.PROF_LANG;
+		data.weapons = Config.PROF_WEAPON;
 		data.profs = {};
 
 		['weaponProf', 'armorProf', 'languages'].forEach(prop => {

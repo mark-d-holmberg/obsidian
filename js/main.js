@@ -1,4 +1,3 @@
-import {Obsidian} from './module/obsidian.js';
 import {preloadPartials, preloadTemplates} from './templates.js';
 import {loadSpellData} from './data.js';
 import {runPatches} from './util/patch.js';
@@ -12,15 +11,15 @@ import {patchItem5e} from './module/item.js';
 import {addMacroHook, hotbarRender} from './module/macros.js';
 import {addSocketListener} from './module/socket.js';
 import {advanceDurations, initDurations} from './module/duration.js';
-import {patchConditions} from './rules/conditions.js';
-import {ObsidianNPC} from './module/npc.js';
+import {patchConditions} from './module/conditions.js';
+import {ObsidianNPC} from './sheets/npc.js';
 import {checkVersion} from './migration/run.js';
-import {refreshNPC} from './rules/npc.js';
-import {addTransformHook} from './rules/transform.js';
+import {refreshNPC} from './data/npc.js';
+import {addTransformHook} from './data/transform.js';
 import {sendTriggers} from './module/triggers.js';
 import {applyRollDragover, updateApplyIcons} from './module/message.js';
 import {registerSettings} from './module/settings.js';
-import {ObsidianVehicle} from './module/vehicle.js';
+import {ObsidianVehicle} from './sheets/vehicle.js';
 import ObsidianTable from './module/roll-table.js';
 import {addLootSheetHook} from './module/compat/loot-sheet.js';
 import {addCreateObjectHooks, convertObject} from './module/objects.js';
@@ -28,6 +27,7 @@ import {OBSIDIAN} from './global.js';
 import {addTokenConfigHook} from './module/resources.js';
 import {translateLabels} from './labels.js';
 import ObsidianTableResult from './module/table-result.js';
+import {ObsidianCharacter} from './sheets/obsidian.js';
 
 runPatches();
 
@@ -35,7 +35,7 @@ Hooks.once('init', async function () {
 	CONFIG.TableResult.documentClass = ObsidianTableResult;
 	CONFIG.RollTable.documentClass = ObsidianTable;
 	CONFIG.Actor.documentClass = ObsidianActor;
-	Actors.registerSheet('dnd5e', Obsidian, {
+	Actors.registerSheet('dnd5e', ObsidianCharacter, {
 		types: ['character'],
 		makeDefault: true,
 		label: 'OBSIDIAN.ActorSheet'

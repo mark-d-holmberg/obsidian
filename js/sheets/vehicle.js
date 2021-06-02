@@ -1,7 +1,7 @@
 import ActorSheet5eVehicle from '../../../../systems/dnd5e/module/actor/sheets/vehicle.js';
-import {Sheet} from './sheet.js';
-import {Reorder} from './reorder.js';
-import {Obsidian} from './obsidian.js';
+import {Sheet} from '../module/sheet.js';
+import {Reorder} from '../module/reorder.js';
+import {ObsidianCharacter} from './obsidian.js';
 import {ObsidianNPC} from './npc.js';
 import {OBSIDIAN} from '../global.js';
 import {ObsidianVehicleDetailsDialog} from '../dialogs/vehicle-details.js';
@@ -86,14 +86,14 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
-		Obsidian.prototype._activateDialogs.apply(this, arguments);
+		ObsidianCharacter.prototype._activateDialogs.apply(this, arguments);
 	}
 
 	getData () {
 		const data = super.getData();
 		const type = data.actor.flags.obsidian.details.type;
-		data.items = this.actor.items.map(item => duplicate(item.toObject(false)));
-		data.ObsidianRules = OBSIDIAN.Rules;
+		data.items = this.actor.items.map(item => item.toObject(false));
+		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 		data.landVehicle = type === 'land';
 		data.waterVehicle = !type || type === 'water';
@@ -123,19 +123,19 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 			}
 
 			category.push(item);
-			item.obsidian.collection.attack.forEach(Obsidian.prototype._reifyAttackLinks, this);
+			item.obsidian.collection.attack.forEach(ObsidianCharacter.prototype._reifyAttackLinks, this);
 		}
 
 		return data;
 	}
 
 	render (force = false, options = {}) {
-		Obsidian.prototype._applySettings.apply(this);
+		ObsidianCharacter.prototype._applySettings.apply(this);
 		return super.render(force, options);
 	}
 
 	setModal () {
-		Obsidian.prototype.setModal.apply(this, arguments);
+		ObsidianCharacter.prototype.setModal.apply(this, arguments);
 	}
 
 	async _addCrew (evt, data) {
@@ -237,7 +237,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	}
 
 	async _onSubmit (event, {updateData = null, preventClose = false, preventRender = false} = {}) {
-		return Obsidian.prototype._onSubmit.apply(this, arguments);
+		return ObsidianCharacter.prototype._onSubmit.apply(this, arguments);
 	}
 
 	_restoreScrollPositions (html, selectors) {

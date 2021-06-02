@@ -1,6 +1,6 @@
 import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
-import {Schema} from './schema.js';
+import {Schema} from '../data/schema.js';
 import {Effect} from './effect.js';
 
 export const Summons = {

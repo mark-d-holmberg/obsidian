@@ -1,8 +1,8 @@
 // Is monkey-patching better than extending ChatMessage and changing the
 // entityClass? ¯\_(ツ)_/¯
-import {Rolls} from '../rules/rolls.js';
+import {Rolls} from './rolls.js';
 import {ObsidianActor} from './actor.js';
-import {ObsidianItems} from '../rules/items.js';
+import {ObsidianItems} from './items.js';
 
 export function patchChatMessage () {
 	ChatMessage.prototype.getHTML = (function () {

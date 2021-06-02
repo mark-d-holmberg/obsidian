@@ -1,6 +1,6 @@
 import {Effect} from '../module/effect.js';
 import {ObsidianStandaloneDialog} from './standalone.js';
-import {ObsidianItems} from '../rules/items.js';
+import {ObsidianItems} from '../module/items.js';
 
 export class ObsidianResourceScalingDialog extends ObsidianStandaloneDialog {
 	constructor (actor, options) {

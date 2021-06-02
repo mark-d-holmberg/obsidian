@@ -1,11 +1,11 @@
 import Item5e from '../../../../systems/dnd5e/module/item/entity.js';
-import {Prepare} from '../rules/prepare.js';
+import {Prepare} from '../data/prepare.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
-import {Filters} from '../rules/filters.js';
+import {Filters} from '../data/filters.js';
 import {cssIconHexagon} from '../util/html.js';
-import {Rules} from '../rules/rules.js';
-import {Schema} from './schema.js';
+import {Config} from '../data/config.js';
+import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
 
 export function patchItem5e () {
@@ -136,15 +136,15 @@ const prepareItem = {
 		}
 
 		if (data.spellcasting?.progression === 'none') {
-			data.spellcasting.progession = Rules.CLASS_SPELL_PROGRESSION[item.name] || 'none';
+			data.spellcasting.progession = Config.CLASS_SPELL_PROGRESSION[item.name] || 'none';
 		}
 
 		if (flags.spellcasting.preparation === undefined) {
-			flags.spellcasting.preparation = Rules.CLASS_SPELL_PREP[item.name];
+			flags.spellcasting.preparation = Config.CLASS_SPELL_PREP[item.name];
 		}
 
 		if (flags.spellcasting.rituals === undefined) {
-			flags.spellcasting.rituals = Rules.CLASS_RITUALS[item.name] || 'none';
+			flags.spellcasting.rituals = Config.CLASS_RITUALS[item.name] || 'none';
 		}
 
 		derived.spellcasting = {...duplicate(flags.spellcasting), ...duplicate(data.spellcasting)};
@@ -160,7 +160,7 @@ const prepareItem = {
 		}
 
 		if (spellcasting.ability === undefined) {
-			spellcasting.ability = Rules.CLASS_SPELL_MODS[item.name];
+			spellcasting.ability = Config.CLASS_SPELL_MODS[item.name];
 		}
 
 		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.ability) && item.isOwnedByActor()) {
@@ -171,7 +171,7 @@ const prepareItem = {
 			spellcasting.save = mod + actorData.attributes.prof + 8;
 		}
 
-		const spellsKnown = Rules.SPELLS_KNOWN_TABLE[item.name];
+		const spellsKnown = Config.SPELLS_KNOWN_TABLE[item.name];
 		if (spellsKnown !== undefined) {
 			spellcasting.maxKnown = spellsKnown.known[levels - 1];
 			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
@@ -266,13 +266,13 @@ const prepareItem = {
 
 		if (flags.time.type === 'react' && flags.time.react.length > 0) {
 			derived.notes.push(
-				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr.react')}}: ${flags.time.react}`);
+				`${game.i18n.localize('OBSIDIAN.CastTimeAbbr.react')}: ${flags.time.react}`);
 		}
 
 		derived.components =
 			Object.entries(flags.components)
 				.filter(([, val]) => val)
-				.map(([key,]) => Rules.SPELL_COMPONENT_MAP[key])
+				.map(([key,]) => Config.SPELL_COMPONENT_MAP[key])
 				.filter(_ => _)
 				.map(s => game.i18n.localize(`OBSIDIAN.${s}Abbr`))
 				.join(', ');
