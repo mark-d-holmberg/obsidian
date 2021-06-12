@@ -1,10 +1,11 @@
+import {OBSIDIAN} from '../global.js';
 import {ObsidianActor} from './actor.js';
 
 export function addSocketListener () {
 	game.socket.on('module.obsidian', handleMsg);
 }
 
-function handleMsg (payload) {
+async function handleMsg (payload) {
 	if (!isPrimaryGM()) {
 		return;
 	}
@@ -12,16 +13,9 @@ function handleMsg (payload) {
 	if (payload.action === 'SET.WORLD') {
 		setWorld(payload);
 	} else if (payload.action === 'DELETE.TOKENS') {
-		payload.tokens.forEach(([sceneID, tokenIDs]) => {
-			const scene = game.scenes.get(sceneID);
-			if (!scene) {
-				return;
-			}
-
-			return scene.deleteEmbeddedDocuments('Token', tokenIDs);
-		});
+		OBSIDIAN.deleteManyTokens(payload.tokens);
 	} else {
-		const actor = getActor(payload);
+		const actor = await ObsidianActor.fromUUID(payload.uuid);
 		if (actor) {
 			const data = Array.isArray(payload.data) ? payload.data : [payload.data];
 			actor[`${payload.action.toLowerCase()}EmbeddedDocuments`](payload.entity, data);
@@ -31,14 +25,6 @@ function handleMsg (payload) {
 
 function setWorld (payload) {
 	game.settings.set('obsidian', payload.key, payload.value);
-}
-
-function getActor (payload) {
-	if (payload.actorID) {
-		return game.actors.get(payload.actorID);
-	} else {
-		return ObsidianActor.fromSceneTokenPair(payload.sceneID, payload.tokenID);
-	}
 }
 
 function isPrimaryGM () {

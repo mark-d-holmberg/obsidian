@@ -24,7 +24,7 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('capitalise', function (str) {
-		return str ? str.capitalise() : '';
+		return str ? str.capitalize() : '';
 	});
 
 	Handlebars.registerHelper('checkbox-grid', function (selections, selected, ...prefix) {

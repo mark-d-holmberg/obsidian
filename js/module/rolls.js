@@ -154,19 +154,13 @@ export const Rolls = {
 
 		// Only apply effects if there are targeted tokens. Otherwise we just
 		// roll for the selected tokens and do nothing else.
-		const apply = game.user.targets.size > 0;
 		const flags = msg.data.flags.obsidian;
+		const apply = game.user.targets.size > 0;
+		const actor = ChatMessage.getSpeakerActor(msg.data.speaker);
 		const tokens = apply ? Array.from(game.user.targets) : canvas.tokens.controlled;
 		const component = flags[collection][idx];
 		const rolls = [];
 		let conditions;
-		let actor;
-
-		if (flags.realToken) {
-			actor = ObsidianActor.fromSceneTokenPair(flags.realScene, flags.realToken);
-		} else {
-			actor = game.actors.get(msg.data.speaker.actor);
-		}
 
 		const effect = actor?.data.obsidian.effects.get(flags.uuid);
 		const item = actor?.items.get(effect?.parentItem);
@@ -302,8 +296,9 @@ export const Rolls = {
 	},
 
 	summon: function (evt) {
+		const msg = game.messages.get(evt.currentTarget.closest('.obsidian-msg').dataset.messageId);
 		const options = duplicate(evt.currentTarget.dataset);
-		const [actor, effect] = Effect.fromDataset(options);
+		const [actor, effect] = Effect.fromMessage(msg);
 
 		if (!actor || !effect) {
 			return;
@@ -323,6 +318,7 @@ export const Rolls = {
 			return;
 		}
 
+		options.summoner = actor.uuid;
 		options.parentComponent = summon.uuid;
 		new ObsidianActorSelectorDialog(actor, summon.actors, options).render(true);
 	},
@@ -979,8 +975,9 @@ export const Rolls = {
 	},
 
 	placeTemplate: function (evt) {
+		const msg = game.messages.get(evt.currentTarget.closest('.obsidian-msg').dataset.messageId);
 		const options = evt.currentTarget.dataset;
-		const [actor, effect] = Effect.fromDataset(options);
+		const [actor, effect] = Effect.fromMessage(msg);
 
 		if (!actor || !effect) {
 			return;
@@ -999,8 +996,8 @@ export const Rolls = {
 		let scaledDistance = aoe.distance;
 		const scaledAmount = options.scaling || 0;
 		const scaling =
-			Effect.getScaling(actor, effect,
-				options.consumed || options.spellLevel || options.scaling);
+			Effect.getScaling(
+				actor, effect, options.consumed || options.spellLevel || options.scaling);
 
 		if (scaledAmount && scaling) {
 			const aoeScaling =
@@ -1012,7 +1009,6 @@ export const Rolls = {
 						scaling, scaledAmount, scaledDistance, aoeScaling.distance);
 			}
 		}
-
 
 		// Temporarily set the core data to the AoE so we can interface with
 		// AbilityTemplate.
@@ -1279,11 +1275,6 @@ export const Rolls = {
 			const data = Rolls.toMessage(actor);
 			if (i > 0 || dice3d) {
 				data.sound = null;
-			}
-
-			if (actor.isToken) {
-				msg.flags.obsidian.realToken = actor.token.id;
-				msg.flags.obsidian.realScene = actor.token.parent.id;
 			}
 
 			msg.flags.obsidian.npc = actor.type === 'npc';

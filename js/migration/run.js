@@ -25,6 +25,17 @@ async function beginMigration (html) {
 			.append(`<p>${game.i18n.localize('OBSIDIAN.MigrateFailed')}</p>`);
 	};
 
+	if (game.settings.get('obsidian', 'version') < 15) {
+		// One time clear of all durations.
+		try {
+			await clearDurations();
+		} catch (e) {
+			console.error(e);
+			migrationFailed();
+			return;
+		}
+	}
+
 	try {
 		const updates = [];
 		for (const item of game.items.contents) {
@@ -35,7 +46,7 @@ async function beginMigration (html) {
 		}
 
 		console.debug('Persisting Item updates...');
-		await Item.updateDocuments(updates);
+		await Item.updateDocuments(updates, {diff: false, recursive: false});
 	} catch (e) {
 		console.error(e);
 		migrationFailed();
@@ -52,7 +63,7 @@ async function beginMigration (html) {
 		}
 
 		console.debug('Persisting Actor updates...');
-		await Actor.updateDocuments(updates);
+		await Actor.updateDocuments(updates, {diff: false, recursive: false});
 	} catch (e) {
 		console.error(e);
 		migrationFailed();
@@ -82,7 +93,7 @@ async function beginMigration (html) {
 			}
 
 			console.debug('Persisting Scene updates...');
-			await scene.updateEmbeddedDocuments('Token', updates);
+			await scene.updateEmbeddedDocuments('Token', updates, {diff: false});
 		}
 	} catch (e) {
 		console.error(e);
@@ -92,6 +103,39 @@ async function beginMigration (html) {
 
 	await game.settings.set('obsidian', 'version', Schema.VERSION);
 	location.reload();
+}
+
+async function clearDurations () {
+	console.debug('Clearing durations...');
+
+	const actorUpdates = [];
+	for (const actor of game.actors.contents) {
+		console.debug(`Clearing durations from '${actor.name}...'`);
+		const effects = duplicate(actor.toObject().effects);
+		const filtered = effects.filter(e => !e.flags?.obsidian?.duration);
+
+		if (effects.length !== filtered.length) {
+			actorUpdates.push({_id: actor.id, effects: filtered});
+		}
+	}
+
+	await Actor.updateDocuments(actorUpdates, {diff: false, recursive: false});
+
+	for (const scene of game.scenes.contents) {
+		const updates = [];
+		console.debug(`Clearing durations from '${scene.name}'...`);
+		for (const token of scene.tokens.contents) {
+			console.debug(`Clearing durations from '${token.name}'...`);
+			const effects = duplicate(token.toJSON().actorData?.effects || []);
+			const filtered = effects.filter(e => !e.flags?.obsidian?.duration);
+
+			if (effects.length !== filtered.length) {
+				updates.push({_id: token.id, 'actorData.effects': filtered});
+			}
+		}
+
+		await scene.updateEmbeddedDocuments('Token', updates, {diff: false, recursive: false});
+	}
 }
 
 function launchMigrationDialog () {

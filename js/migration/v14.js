@@ -13,5 +13,22 @@ export const v14 = {
 		if (data.flags.obsidian.details?.tags?.custom) {
 			data.data.details.type.subtype = data.flags.obsidian.details.tags.custom;
 		}
+	},
+
+	convertSummon: function (data) {
+		const summon = data.flags?.obsidian?.summon;
+		if (!summon) {
+			return;
+		}
+
+		if (summon.scene && summon.token) {
+			summon.summoner = `Scene.${summon.scene}.Token.${summon.token}`;
+		} else {
+			summon.summoner = `Actor.${summon.actor}`;
+		}
+
+		summon['-=scene'] = null;
+		summon['-=token'] = null;
+		summon['-=actor'] = null;
 	}
 };

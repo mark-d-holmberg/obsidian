@@ -165,7 +165,7 @@ export const Prepare = {
 		hit.value = hit.rollParts.reduce((acc, part) => acc + part.mod, 0);
 		hit.attackType =
 			game.i18n.localize(
-				`OBSIDIAN.${hit.attack.capitalise()}${hit.category.capitalise()}Attack`);
+				`OBSIDIAN.${hit.attack.capitalize()}${hit.category.capitalize()}Attack`);
 	},
 
 	calculateDamage: function (actor, item, dmg, cls) {
@@ -239,7 +239,7 @@ export const Prepare = {
 	calculateAttackType: function (flags, atk) {
 		if (atk.category === 'spell' || flags.category === undefined) {
 			atk.attackType =
-				`OBSIDIAN.${atk.attack.capitalise()}${atk.category.capitalise()}Attack`;
+				`OBSIDIAN.${atk.attack.capitalize()}${atk.category.capitalize()}Attack`;
 			return;
 		}
 

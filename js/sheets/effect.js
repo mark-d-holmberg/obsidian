@@ -37,7 +37,7 @@ function lazyInitialiseCategories () {
 	}
 
 	categories = new Map(Categories.map(cat => [cat, {
-		label: game.i18n.localize(`OBSIDIAN.${cat.capitalise()}`),
+		label: game.i18n.localize(`OBSIDIAN.${cat.capitalize()}`),
 		components: []
 	}]));
 

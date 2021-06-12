@@ -157,3 +157,18 @@ OBSIDIAN.updateManyOwnedItems = function (actor, data) {
 
 	return actor.updateEmbeddedDocuments('Item', expanded);
 };
+
+OBSIDIAN.deleteManyTokens = async function (tokens) {
+	const scenes = new Map();
+	const promises = tokens.map(async uuid => {
+		const token = await fromUuid(uuid);
+		const tokens = scenes.computeIfAbsent(token.parent.id, () => []);
+		tokens.push(token.id);
+	});
+
+	await Promise.all(promises);
+	for (const [sceneID, tokenIDs] of scenes) {
+		const scene = game.scenes.get(sceneID);
+		await scene.deleteEmbeddedDocuments('Token', tokenIDs);
+	}
+};

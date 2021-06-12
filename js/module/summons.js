@@ -1,7 +1,7 @@
-import {ObsidianActor} from './actor.js';
 import {OBSIDIAN} from '../global.js';
 import {Schema} from '../data/schema.js';
 import {Effect} from './effect.js';
+import {ObsidianActor} from './actor.js';
 
 export const Summons = {
 	addBonusDamage: function (summoner, summonData, bonus) {
@@ -19,12 +19,9 @@ export const Summons = {
 	},
 
 	applySummonOverrides: async function (options, summonData, summonType) {
-		let summoner = game.actors.get(options.actor);
+		const summoner = await ObsidianActor.fromUUID(options.summoner);
 		if (!summoner) {
-			summoner = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
-			if (!summoner) {
-				return;
-			}
+			return;
 		}
 
 		const component = summoner.data.obsidian.components.get(options.parentComponent);
@@ -236,8 +233,8 @@ export const Summons = {
 			return;
 		}
 
-		const token =
-			await Token.fromActor(actor, {x, y, actorLink: false, actorData: {flags: {}}});
+		const tokenData =
+			(await actor.getTokenData({x, y, actorLink: false, actorData: {flags: {}}})).toJSON();
 
 		if (actor.compendium) {
 			// Since this actor doesn't actually exist in the world, and only
@@ -245,10 +242,10 @@ export const Summons = {
 			// override all its data with the desired actor. This way we avoid
 			// creating a world actor every time we want to summon something.
 			const template = await Summons.getGenericActor(actor.type);
-			token.data.actorId = template.id;
+			tokenData.actorId = template.id;
 		}
 
-		token.data.actorData = {
+		tokenData.actorData = {
 			name: actor.name,
 			data: duplicate(actor.data._source.data),
 			flags: duplicate(actor.data._source.flags),
@@ -256,12 +253,12 @@ export const Summons = {
 		};
 
 		// Make sure the summoner has access to their summon.
-		token.data.actorData.permission = duplicate(actor.data.permission);
+		tokenData.actorData.permission = duplicate(actor.data.permission);
 		if (!game.user.isGM) {
-			token.data.actorData.permission[game.userId] = 3;
+			tokenData.actorData.permission[game.userId] = 3;
 		}
 
-		const flags = token.data.actorData.flags;
+		const flags = tokenData.actorData.flags;
 		if (!flags.obsidian) {
 			flags.obsidian = {};
 		}
@@ -274,18 +271,16 @@ export const Summons = {
 			parentComponent: options.parentComponent,
 			spellLevel: options.spellLevel == null ? undefined : Number(options.spellLevel),
 			upcast: options.upcast == null ? undefined : Number(options.upcast),
-			actor: options.actor,
-			scene: options.scene,
-			token: options.token
+			summoner: options.summoner
 		};
 
-		await Summons.applySummonOverrides(options, token.data.actorData, actor.type);
+		await Summons.applySummonOverrides(options, tokenData.actorData, actor.type);
 
 		const tokens = [];
 		amount = Math.clamped(amount, 0, 32);
 
 		for (let i = 0; i < amount; i++) {
-			tokens.push(duplicate(token.data));
+			tokens.push(duplicate(tokenData));
 		}
 
 		return canvas.scene.createEmbeddedDocuments('Token', tokens);

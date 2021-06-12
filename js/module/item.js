@@ -547,8 +547,8 @@ function prepareEffects (item) {
 		Effect.metadata.single.forEach(single => effect[`${single}Component`] = null);
 		Effect.metadata.linked.forEach(linked => {
 			const found = effect.components.find(c => c.type === linked);
-			const bool = `is${linked.capitalise()}`;
-			const self = `self${linked.capitalise()}`;
+			const bool = `is${linked.capitalize()}`;
+			const self = `self${linked.capitalize()}`;
 			const component = `${linked}Component`;
 			effect[bool] = !!found;
 			effect[self] = found && found.ref === effect.uuid;

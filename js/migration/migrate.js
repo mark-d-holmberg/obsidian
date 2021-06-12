@@ -80,8 +80,12 @@ export const Migrate = {
 			Migrate.v13.convertHD(data);
 		}
 
-		if (data.flags.obsidian.version < 15 && data.type === 'npc' && source !== 'core') {
-			Migrate.v14.convertCreatureType(data);
+		if (data.flags.obsidian.version < 15 && source !== 'core') {
+			if (data.type === 'npc') {
+				Migrate.v14.convertCreatureType(data);
+			}
+
+			Migrate.v14.convertSummon(data);
 		}
 
 		if (data.items?.length) {

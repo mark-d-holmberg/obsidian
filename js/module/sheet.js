@@ -218,7 +218,7 @@ export const Sheet = {
 			const nameMatch = name.length < 1 || el.dataset.name.toLowerCase().includes(name);
 			const categoryMatch =
 				filter === 'all'
-				|| el.dataset[`filter${filter.capitalise()}`] === 'true'
+				|| el.dataset[`filter${filter.capitalize()}`] === 'true'
 				|| (filter === 'other'
 					&& !Object.keys(el.dataset).some(key => key.startsWith('filter')));
 

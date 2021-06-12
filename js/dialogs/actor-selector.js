@@ -84,7 +84,7 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 				img: actor.img,
 				name: actor.name,
 				cr: fraction ? fraction : cr,
-				type: type.capitalise(),
+				type: type.capitalize(),
 				uuid: actor.uuid
 			};
 		}).sort((a, b) => {

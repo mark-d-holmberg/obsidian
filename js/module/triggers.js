@@ -15,10 +15,5 @@ export function sendTriggers (combat) {
 		}
 	};
 
-	if (actor.isToken) {
-		chatData.flags.obsidian.realToken = actor.token.id;
-		chatData.flags.obsidian.realScene = actor.token.parent.id;
-	}
-
 	ChatMessage.create(chatData);
 }

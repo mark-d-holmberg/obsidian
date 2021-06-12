@@ -784,6 +784,19 @@ export class ObsidianActor extends Actor5e {
 		return token.actor;
 	}
 
+	static async fromUUID (uuid) {
+		const doc = await fromUuid(uuid);
+		if (!doc) {
+			return;
+		}
+
+		if (doc.documentName === 'Token') {
+			return doc.actor;
+		}
+
+		return doc;
+	}
+
 	static duplicateItem (original, entity = 'Item') {
 		const dupe = duplicate(original);
 

@@ -8,11 +8,15 @@ export default class ObsidianActorPlacement extends Token {
 			return null;
 		}
 
-		const tokenData = duplicate(actor.data.token);
+		const tokenData = game.actors.fromCompendium(actor).token;
 		tokenData.actorLink = false;
 		tokenData.effects = [];
-		tokenData.actorUUID = uuid;
-		return new this(tokenData);
+
+		const doc = new CONFIG.Token.documentClass(tokenData, {parent: canvas.scene});
+		const object = new this(doc);
+		object.actorUUID = uuid;
+
+		return object;
 	}
 
 	place (amount, options) {
@@ -62,7 +66,7 @@ export default class ObsidianActorPlacement extends Token {
 			const dest = canvas.grid.getSnappedPosition(this.x, this.y, 2);
 			this.data.x = dest.x;
 			this.data.y = dest.y;
-			Summons.summon(this.data.actorUUID, amount, dest.x, dest.y, options);
+			Summons.summon(this.actorUUID, amount, dest.x, dest.y, options);
 		};
 
 		canvas.stage.on('mousemove', handlers.mm);

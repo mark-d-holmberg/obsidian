@@ -12,19 +12,10 @@ export function patchChatMessage () {
 				return cached.apply(this, arguments);
 			}
 
-			let actor;
 			let triggers;
+			const actor = ChatMessage.getSpeakerActor(this.data.speaker);
 
-			if (this.data.flags?.obsidian?.realToken) {
-				actor =
-					ObsidianActor.fromSceneTokenPair(
-						this.data.flags.obsidian.realScene,
-						this.data.flags.obsidian.realToken);
-			} else {
-				actor = game.actors.get(this.data.speaker.actor);
-			}
-
-			if (actor && actor.data.obsidian?.triggers) {
+			if (actor?.data.obsidian?.triggers) {
 				triggers = duplicate(actor.data.obsidian.triggers);
 			}
 

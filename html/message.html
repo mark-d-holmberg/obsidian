@@ -132,12 +132,6 @@
 	<section class="obsidian-msg-btn-row">
 		{{#if (defined message.flags.obsidian.dmgBtn)}}
 		<button type="button" class="obsidian-btn-outline" data-roll="dmg"
-		        {{#if message.flags.obsidian.realToken}}
-			        data-scene="{{message.flags.obsidian.realScene}}"
-			        data-token="{{message.flags.obsidian.realToken}}"
-		        {{else}}
-		          data-actor="{{message.speaker.actor}}"
-		        {{/if}}
 		        data-effect="{{message.flags.obsidian.dmgBtn}}"
 		        data-count="{{message.flags.obsidian.dmgCount}}"
 		        data-scaling="{{message.flags.obsidian.dmgScaling}}">
@@ -147,13 +141,6 @@
 		{{/if}}
 		{{#if (defined message.flags.obsidian.aoe)}}
 		<button type="button" class="obsidian-btn-outline obsidian-place-template"
-		        {{#if message.flags.obsidian.realToken}}
-			        data-scene="{{message.flags.obsidian.realScene}}"
-			        data-token="{{message.flags.obsidian.realToken}}"
-		        {{else}}
-		          data-actor="{{message.speaker.actor}}"
-		        {{/if}}
-		        data-effect="{{message.flags.obsidian.aoe}}"
 		        data-scaling="{{message.flags.obsidian.upcast}}"
 		        data-consumed="{{message.flags.obsidian.consumed}}"
 		        data-spell-level="{{message.flags.obsidian.spellLevel}}">
@@ -163,13 +150,6 @@
 		{{/if}}
 		{{#if (defined message.flags.obsidian.summon)}}
 		<button type="button" class="obsidian-btn-outline obsidian-summon"
-		        {{#if message.flags.obsidian.realToken}}
-			        data-scene="{{message.flags.obsidian.realScene}}"
-			        data-token="{{message.flags.obsidian.realToken}}"
-		        {{else}}
-			        data-actor="{{message.speaker.actor}}"
-		        {{/if}}
-			      data-effect="{{message.flags.obsidian.summon}}"
 		        data-upcast="{{message.flags.obsidian.upcast}}"
 		        data-consumed="{{message.flags.obsidian.consumed}}"
 			      data-spell-level="{{message.flags.obsidian.spellLevel}}">
@@ -179,13 +159,7 @@
 		{{/if}}
 		{{#if (and (not-empty triggers.hit) message.flags.obsidian.hit)}}
 		{{#each triggers.hit}}
-		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}"
-		        {{#if ../message.flags.obsidian.realToken}}
-			        data-scene="{{../message.flags.obsidian.realScene}}"
-			        data-token="{{../message.flags.obsidian.realToken}}"
-		        {{else}}
-			        data-actor="{{../message.speaker.actor}}"
-		        {{/if}}>
+		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}">
 			<i class="fas fa-dice-d20"></i>
 			{{name}}
 		</button>
@@ -193,13 +167,7 @@
 		{{/if}}
 		{{#if (and (not-empty triggers.start) message.flags.obsidian.start)}}
 		{{#each triggers.start}}
-		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}"
-			      {{#if ../message.flags.obsidian.realToken}}
-			        data-scene="{{../message.flags.obsidian.realScene}}"
-			        data-token="{{../message.flags.obsidian.realToken}}"
-			      {{else}}
-			        data-actor="{{../message.speaker.actor}}"
-			      {{/if}}>
+		<button type="button" class="obsidian-btn-outline" data-roll="item" data-id="{{_id}}">
 			<i class="fas fa-dice-d20"></i>
 			{{name}}
 		</button>

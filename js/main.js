@@ -28,8 +28,10 @@ import {addTokenConfigHook} from './module/resources.js';
 import {translateLabels} from './labels.js';
 import ObsidianTableResult from './module/table-result.js';
 import {ObsidianCharacter} from './sheets/obsidian.js';
+import {extendPrimitives} from './util/primitives.js';
 
 runPatches();
+extendPrimitives();
 
 Hooks.once('init', async function () {
 	CONFIG.TableResult.documentClass = ObsidianTableResult;

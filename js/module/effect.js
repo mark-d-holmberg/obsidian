@@ -496,16 +496,17 @@ export const Effect = {
 			Filters.isDamage(filter) && (attackPred(filter) || damagePred(filter)));
 	},
 
-	fromDataset: dataset => {
-		let actor = game.actors.get(dataset.actor);
-		if (!actor) {
-			actor = ObsidianActor.fromSceneTokenPair(dataset.scene, dataset.token);
-			if (!actor) {
-				return [];
-			}
+	fromMessage: msg => {
+		if (!msg) {
+			return [];
 		}
 
-		const effect = actor.data.obsidian.effects.get(dataset.effect);
+		const actor = ChatMessage.getSpeakerActor(msg.data.speaker);
+		if (!actor) {
+			return [];
+		}
+
+		const effect = actor.data.obsidian.effects.get(msg.getFlag('obsidian', 'uuid'));
 		if (!effect) {
 			return [];
 		}
