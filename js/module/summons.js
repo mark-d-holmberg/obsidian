@@ -19,7 +19,7 @@ export const Summons = {
 	},
 
 	applySummonOverrides: async function (options, summonData, summonType) {
-		const summoner = await ObsidianActor.fromUUID(options.summoner);
+		const summoner = ObsidianActor.fromUUID(options.summoner);
 		if (!summoner) {
 			return;
 		}

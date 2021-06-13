@@ -26,9 +26,10 @@ async function beginMigration (html) {
 	};
 
 	if (game.settings.get('obsidian', 'version') < 15) {
-		// One time clear of all durations.
+		// One time clear of all durations, and macro migration.
 		try {
 			await clearDurations();
+			await migrateMacros();
 		} catch (e) {
 			console.error(e);
 			migrationFailed();
@@ -136,6 +137,33 @@ async function clearDurations () {
 
 		await scene.updateEmbeddedDocuments('Token', updates, {diff: false, recursive: false});
 	}
+}
+
+async function migrateMacros () {
+	console.debug('Migrating macros...');
+
+	const macroUpdates = [];
+	for (const macro of game.macros.contents) {
+		const args = macro.getFlag('obsidian', 'args');
+		if (!args) {
+			continue;
+		}
+
+		console.debug(`Migrating macro '${macro.name}...'`);
+		if (args.scene && args.token) {
+			args.uuid = `Scene.${args.scene}.Token.${args.token}`;
+		} else if (args.actor) {
+			args.uuid = `Actor.${args.actor}`;
+		}
+
+		args['-=actor'] = null;
+		args['-=scene'] = null;
+		args['-=token'] = null;
+
+		macroUpdates.push({_id: macro.id, 'flags.obsidian.args': args});
+	}
+
+	return Macro.updateDocuments(macroUpdates, {diff: false, recursive: false});
 }
 
 function launchMigrationDialog () {

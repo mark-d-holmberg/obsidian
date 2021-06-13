@@ -237,6 +237,7 @@ export const Migrate = {
 
 		if (data.flags.obsidian.version < 15 && source !== 'core') {
 			Migrate.v14.convertSpellcasting(data);
+			Migrate.v14.convertActiveEffect(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;

@@ -17,7 +17,7 @@
 			{{#each (attack-sort actor.obsidian.attacks)}}
 				<div class="obsidian-tr obsidian-atk-tr item" data-item-id="{{parentItem._id}}"
 				     draggable="true"
-				     {{#unless (eq parentItem.type 'spell')}}data-uuid="{{parentEffect.uuid}}"{{/unless}}>
+				     {{#unless (eq parentItem.type 'spell')}}data-effect-id="{{parentEffect.uuid}}"{{/unless}}>
 					<div class="obsidian-col-icon">
 						{{#if (eq parentItem.type 'spell')}}
 							<div class="obsidian-icon obsidian-icon-school-{{parentItem.data.school}}"></div>
@@ -25,8 +25,7 @@
 							<div class="
 								{{~#if (is-attack-toggleable this)~}}
 									obsidian-attack-toggle
-								{{~/if}} obsidian-icon obsidian-icon-{{mode}}"
-							     data-uuid="{{uuid}}">
+								{{~/if}} obsidian-icon obsidian-icon-{{mode}}" data-component-id="{{uuid}}">
 							</div>
 						{{else}}
 							<div class="obsidian-icon obsidian-icon-{{attack}}"></div>
@@ -37,7 +36,7 @@
 							{{#if (eq parentItem.type 'spell')}}
 								data-roll="item" data-id="{{parentItem._id}}"
 							{{else}}
-								data-roll="fx" data-uuid="{{parentEffect.uuid}}"
+								data-roll="fx" data-effect-id="{{parentEffect.uuid}}"
 							{{/if}}>
 							{{#if (eq parentEffect.name '')}}
 								{{parentItem.name}}

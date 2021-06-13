@@ -327,11 +327,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		}
 
 		let n;
-		if (level === '1') {
+		if (level === 1) {
 			n = game.i18n.localize('OBSIDIAN.FirstN');
-		} else if (level === '2') {
+		} else if (level === 2) {
 			n = game.i18n.localize('OBSIDIAN.SecondN');
-		} else if (level === '3') {
+		} else if (level === 3) {
 			n = game.i18n.localize('OBSIDIAN.ThirdN');
 		} else {
 			n = level + game.i18n.localize('OBSIDIAN.th');

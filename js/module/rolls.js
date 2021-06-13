@@ -5,7 +5,6 @@ import {Filters} from '../data/filters.js';
 import AbilityTemplate from '../../../../systems/dnd5e/module/pixi/ability-template.js';
 import {bonusToParts, highestProficiency} from '../data/bonuses.js';
 import {applyEffects, handleDurations} from './duration.js';
-import {ObsidianActor} from './actor.js';
 import {hpAfterDamage} from '../data/defenses.js';
 import {rollInitiative} from './combat.js';
 import ObsidianActorSelectorDialog from '../dialogs/actor-selector.js';
@@ -162,7 +161,7 @@ export const Rolls = {
 		const rolls = [];
 		let conditions;
 
-		const effect = actor?.data.obsidian.effects.get(flags.uuid);
+		const effect = actor?.data.obsidian.effects.get(flags.effectId);
 		const item = actor?.items.get(effect?.parentItem);
 
 		if (actor && effect?.applies.length) {
@@ -329,11 +328,7 @@ export const Rolls = {
 		}
 
 		if (!actor) {
-			if (options.actor) {
-				actor = game.actors.get(options.actor);
-			} else if (options.scene && options.token) {
-				actor = ObsidianActor.fromSceneTokenPair(options.scene, options.token);
-			}
+			actor = game.actors.get(options.actor);
 		}
 
 		if (!actor) {
@@ -353,11 +348,11 @@ export const Rolls = {
 
 			Rolls.toChat(actor, ...Rolls.itemRoll(actor, item, options));
 		} else if (roll === 'fx') {
-			if (options.uuid === undefined) {
+			if (options.effectId === undefined) {
 				return;
 			}
 
-			const effect = actor.data.obsidian.effects.get(options.uuid);
+			const effect = actor.data.obsidian.effects.get(options.effectId);
 			if (!effect) {
 				return;
 			}
@@ -698,7 +693,7 @@ export const Rolls = {
 			results.push({
 				type: item.type === 'spell' ? 'spl' : 'fx',
 				title: name ? name : effect.name.length ? effect.name : item.name,
-				uuid: effect.uuid
+				effectId: effect.uuid
 			});
 		}
 

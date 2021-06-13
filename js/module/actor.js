@@ -592,7 +592,7 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	async shortRest (...args) {
-		if (!(this.sheet instanceof Obsidian) && !(this.sheet instanceof ObsidianNPC)) {
+		if (!(this.sheet instanceof ObsidianCharacter) && !(this.sheet instanceof ObsidianNPC)) {
 			return super.shortRest(...args);
 		}
 
@@ -770,31 +770,13 @@ export class ObsidianActor extends Actor5e {
 		return itemUpdates;
 	}
 
-	static fromSceneTokenPair (sceneID, tokenID) {
-		const scene = game.scenes.get(sceneID);
-		if (!scene) {
-			return;
+	static fromUUID (uuid) {
+		const parts = uuid.split('.');
+		if (parts[0] === 'Actor') {
+			return game.actors.get(parts[1]);
+		} else if (parts[0] === 'Scene' && parts[2] === 'Token') {
+			return game.scenes.get(parts[1])?.tokens.get(parts[3])?.actor;
 		}
-
-		const token = scene.tokens.get(tokenID);
-		if (!token) {
-			return;
-		}
-
-		return token.actor;
-	}
-
-	static async fromUUID (uuid) {
-		const doc = await fromUuid(uuid);
-		if (!doc) {
-			return;
-		}
-
-		if (doc.documentName === 'Token') {
-			return doc.actor;
-		}
-
-		return doc;
 	}
 
 	static duplicateItem (original, entity = 'Item') {

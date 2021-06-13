@@ -5,7 +5,7 @@ export function addSocketListener () {
 	game.socket.on('module.obsidian', handleMsg);
 }
 
-async function handleMsg (payload) {
+function handleMsg (payload) {
 	if (!isPrimaryGM()) {
 		return;
 	}
@@ -15,7 +15,7 @@ async function handleMsg (payload) {
 	} else if (payload.action === 'DELETE.TOKENS') {
 		OBSIDIAN.deleteManyTokens(payload.tokens);
 	} else {
-		const actor = await ObsidianActor.fromUUID(payload.uuid);
+		const actor = ObsidianActor.fromUUID(payload.uuid);
 		if (actor) {
 			const data = Array.isArray(payload.data) ? payload.data : [payload.data];
 			actor[`${payload.action.toLowerCase()}EmbeddedDocuments`](payload.entity, data);

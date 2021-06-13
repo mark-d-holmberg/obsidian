@@ -1,4 +1,21 @@
 export const v14 = {
+	convertActiveEffect: function (data) {
+		if (data.type !== 'feat' || !data.flags?.obsidian?.activeEffect) {
+			return;
+		}
+
+		const duration = data.flags.obsidian.duration;
+		if (duration.scene && duration.token) {
+			duration.uuid = `Scene.${duration.scene}.Token.${duration.token}`;
+		} else if (duration.actor) {
+			duration.uuid = `Actor.${duration.actor}`;
+		}
+
+		duration['-=scene'] = null;
+		duration['-=token'] = null;
+		duration['-=actor'] = null;
+	},
+
 	convertSpellcasting: function (data) {
 		if (data.flags.obsidian?.spellcasting?.enabled && data.data.spellcasting) {
 			data.data.spellcasting.ability = data.flags.obsidian.spellcasting.spell;
@@ -23,7 +40,7 @@ export const v14 = {
 
 		if (summon.scene && summon.token) {
 			summon.summoner = `Scene.${summon.scene}.Token.${summon.token}`;
-		} else {
+		} else if (summon.actor) {
 			summon.summoner = `Actor.${summon.actor}`;
 		}
 

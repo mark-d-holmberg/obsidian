@@ -81,9 +81,9 @@ export function patchChatMessage () {
 			html.find('[data-roll]').click(evt => {
 				const roll = evt.currentTarget.dataset.roll;
 				if (roll === 'item') {
-					ObsidianItems.roll(null, evt.currentTarget.dataset);
+					ObsidianItems.roll(actor, evt.currentTarget.dataset);
 				} else {
-					Rolls.fromClick(null, evt);
+					Rolls.fromClick(actor, evt);
 				}
 			});
 

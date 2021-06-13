@@ -506,7 +506,7 @@ export const Effect = {
 			return [];
 		}
 
-		const effect = actor.data.obsidian.effects.get(msg.getFlag('obsidian', 'uuid'));
+		const effect = actor.data.obsidian.effects.get(msg.getFlag('obsidian', 'effectId'));
 		if (!effect) {
 			return [];
 		}

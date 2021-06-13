@@ -769,7 +769,7 @@ export const Prepare = {
 			used = 0;
 		}
 
-		let out = `<div class="obsidian-feature-uses" data-uuid="${resource.uuid}">`;
+		let out = `<div class="obsidian-feature-uses" data-component-id="${resource.uuid}">`;
 		if (max <= threshold) {
 			for (let i = 0; i < max; i++) {
 				out += `

@@ -68,7 +68,8 @@ export const Sheet = {
 		html.find('.obsidian-attune').click(evt => Sheet.onAttune(sheet, evt));
 		html.find('.obsidian-equipped-box').click(evt => Sheet.updateContainerEquipped(sheet, evt));
 		html.find('.obsidian-inv-container').click(evt => Sheet.saveContainerState(sheet, evt));
-		html.find('[data-uuid] .obsidian-feature-use').click(evt => Sheet.onUseClicked(sheet, evt));
+		html.find('[data-component-id] .obsidian-feature-use')
+			.click(evt => Sheet.onUseClicked(sheet, evt));
 		html.find('.obsidian-view').click(evt => Sheet.viewItem(sheet, $(evt.currentTarget)));
 		html.find('[contenteditable]').focusout(evt => Sheet.onContenteditableUnfocus(sheet, evt));
 		html.find('.obsidian-short-rest').click(sheet.actor.shortRest.bind(sheet.actor));
@@ -334,7 +335,7 @@ export const Sheet = {
 
 	onAttackToggle: function (sheet, evt) {
 		evt.preventDefault();
-		const uuid = evt.currentTarget.dataset.uuid;
+		const uuid = evt.currentTarget.dataset.componentId;
 		const attack = sheet.actor.data.obsidian.components.get(uuid);
 		const effect = sheet.actor.data.obsidian.effects.get(attack.parentEffect);
 		const item = sheet.actor.items.get(effect.parentItem);
@@ -406,19 +407,15 @@ export const Sheet = {
 		}
 
 		const dragData = {
-			actorId: sheet.actor.id
+			actorId: sheet.actor.id,
+			uuid: sheet.actor.uuid
 		};
-
-		if (sheet.actor.isToken) {
-			dragData.tokenID = sheet.actor.token.id;
-			dragData.sceneID = sheet.actor.token.parent.id;
-		}
 
 		const item = sheet.actor.items.get(target.dataset.itemId);
 		if (item) {
 			dragData.type = 'Item';
 			dragData.data = item.data._source;
-			dragData.effectUUID = target.dataset.uuid;
+			dragData.effectId = target.dataset.effectId;
 		}
 
 		if (['skl', 'tool', 'save', 'abl'].includes(target.dataset.roll)) {
@@ -501,7 +498,7 @@ export const Sheet = {
 
 	onUseClicked: function (sheet, evt) {
 		const target = evt.currentTarget;
-		const uuid = target.parentElement.dataset.uuid;
+		const uuid = target.parentElement.dataset.componentId;
 		const n = Number(target.dataset.n);
 		const resource = sheet.actor.obsidian.components.get(uuid);
 

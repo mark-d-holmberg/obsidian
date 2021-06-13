@@ -41,11 +41,12 @@ function formatBonus (actor, bonus) {
 
 	if (bonus.method === 'formula') {
 		if (bonus.constant !== 0 || (bonus.operator === 'plus' && bonus.value !== '')) {
-			let str = bonus.constant < 0 ? '-' : '+';
+			let str = '';
 			if (bonus.operator === 'mult') {
-				str += ` ${bonus.constant === 0.5 ? '½' : bonus.constant}`;
+				str += bonus.constant < 0 ? '-' : '+' +
+					`${bonus.constant === 0.5 ? '½' : bonus.constant}`;
 			} else if (bonus.constant) {
-				str = bonus.constant.toString();
+				str = `${bonus.constant < 0 ? '-' : '+'}${bonus.constant}`;
 			}
 
 			if (bonus.value.length) {

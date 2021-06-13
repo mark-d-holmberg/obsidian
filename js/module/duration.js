@@ -41,7 +41,7 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 	if (roll && (!effect.isScaling || effect.selfScaling)) {
 		Rolls.create(actor, {
 			roll: 'fx',
-			uuid: effect.uuid,
+			effectId: effect.uuid,
 			scaling: duration.data.flags.obsidian.scaledAmount,
 			withDuration: false
 		});
@@ -137,7 +137,8 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 				activeEffect: true,
 				effects: effects,
 				duration: {
-					src: duration?.id
+					src: duration?.id,
+					uuid: actor.uuid
 				}
 			}
 		}
@@ -208,14 +209,6 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 	if (conditions.length) {
 		await dispatchUpdate({target, action: 'CREATE', entity: 'ActiveEffect', data: conditions});
-	}
-
-	const flags = item.flags.obsidian;
-	if (actor.isToken) {
-		flags.duration.scene = actor.token.parent.id;
-		flags.duration.token = actor.token.id;
-	} else {
-		flags.duration.actor = actor.id;
 	}
 
 	effects = effects.filter(e => e.components.length);
@@ -356,7 +349,7 @@ async function cleanupExpired (actor, expired) {
 		}
 
 		for (const uuid of duration.getFlag('obsidian', 'active') || []) {
-			const actor = await ObsidianActor.fromUUID(uuid);
+			const actor = ObsidianActor.fromUUID(uuid);
 			if (!actor) {
 				continue;
 			}

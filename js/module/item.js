@@ -428,7 +428,7 @@ const prepareComponents = {
 
 		item.obsidian.notes.push(
 			'<div class="obsidian-table-note-flex">'
-				+ `<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">`
+				+ `<div data-roll="fx" data-effect-id="${effect.uuid}" class="rollable">`
 					+ component.label
 				+ `</div>: ${component.display}`
 			+ '</div>');
@@ -607,7 +607,7 @@ function prepareEffects (item) {
 		{
 			derived.notes.push(`
 				<div class="obsidian-table-note-flex">
-					<div data-roll="fx" data-uuid="${effect.uuid}" class="rollable">
+					<div data-roll="fx" data-effect-id="${effect.uuid}" class="rollable">
 						${effect.label}
 					</div>
 				</div>

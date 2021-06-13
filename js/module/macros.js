@@ -37,12 +37,7 @@ async function onHotbarDrop (bar, data, slot) {
 	let command;
 	let name;
 
-	const args = {
-		actor: data.actorId,
-		token: data.tokenID,
-		scene: data.sceneID
-	};
-
+	const args = {uuid: data.uuid};
 	if (data.type === 'obsidian-roll') {
 		args.rollData = data.data;
 		command = `OBSIDIAN.Items.rollMacro(${JSON.stringify(args)})`;
@@ -70,12 +65,12 @@ async function onHotbarDrop (bar, data, slot) {
 				name = `${game.i18n.localize(`OBSIDIAN.Ability.${abl}`)} ${rollTranslation}`;
 				break;
 		}
-	} else if (data.effectUUID) {
-		args.effect = data.effectUUID;
+	} else if (data.effectId) {
+		args.effect = data.effectId;
 		command = `OBSIDIAN.Items.effectMacro(${JSON.stringify(args)})`;
 
 		const effect =
-			data.data.flags.obsidian.effects.find(effect => effect.uuid === data.effectUUID);
+			data.data.flags.obsidian.effects.find(effect => effect.uuid === data.effectId);
 
 		if (effect) {
 			name = OBSIDIAN.notDefinedOrEmpty(effect.name) ? data.data.name : effect.name;

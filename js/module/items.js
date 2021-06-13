@@ -2,9 +2,9 @@ import {ObsidianConsumeSlotDialog} from '../dialogs/consume-slot.js';
 import {ObsidianResourceScalingDialog} from '../dialogs/resource-scaling.js';
 import {ObsidianActionableDialog} from '../dialogs/actionable.js';
 import {Rolls} from './rolls.js';
-import {Effect} from '../module/effect.js';
+import {Effect} from './effect.js';
 import {OBSIDIAN} from '../global.js';
-import {ObsidianActor} from '../module/actor.js';
+import {ObsidianActor} from './actor.js';
 
 export const ObsidianItems = {
 	consolidateUpdates: function (updates) {
@@ -54,13 +54,20 @@ export const ObsidianItems = {
 		}
 	},
 
-	effectMacro: function ({actor, token, scene, effect}) {
-		if (token && scene) {
-			actor = ObsidianActor.fromSceneTokenPair(scene, token);
+	legacyUUID: function ({actor, token, scene}) {
+		if (scene && token) {
+			return `Scene.${scene}.Token.${token}`;
 		} else {
-			actor = game.actors.get(actor);
+			return `Actor.${actor}`;
+		}
+	},
+
+	effectMacro: function ({actor, token, scene, effect, uuid}) {
+		if (!uuid) {
+			uuid = ObsidianItems.legacyUUID({actor, token, scene});
 		}
 
+		actor = ObsidianActor.fromUUID(uuid);
 		if (!actor || !getProperty(actor, 'data.obsidian')) {
 			return;
 		}
@@ -68,13 +75,12 @@ export const ObsidianItems = {
 		ObsidianItems.roll(actor, {roll: 'fx', uuid: effect});
 	},
 
-	itemMacro: function ({actor, token, scene, item}) {
-		if (token && scene) {
-			actor = ObsidianActor.fromSceneTokenPair(scene, token);
-		} else {
-			actor = game.actors.get(actor);
+	itemMacro: function ({actor, token, scene, item, uuid}) {
+		if (!uuid) {
+			uuid = ObsidianItems.legacyUUID({actor, token, scene});
 		}
 
+		actor = ObsidianActor.fromUUID(uuid);
 		if (!actor || !getProperty(actor, 'data.obsidian')) {
 			return;
 		}
@@ -82,13 +88,12 @@ export const ObsidianItems = {
 		ObsidianItems.roll(actor, {roll: 'item', id: item});
 	},
 
-	rollMacro: function ({actor, token, scene, rollData}) {
-		if (token && scene) {
-			actor = ObsidianActor.fromSceneTokenPair(scene, token);
-		} else {
-			actor = game.actors.get(actor);
+	rollMacro: function ({actor, token, scene, rollData, uuid}) {
+		if (!uuid) {
+			uuid = ObsidianItems.legacyUUID({actor, token, scene});
 		}
 
+		actor = ObsidianActor.fromUUID(uuid);
 		if (!actor) {
 			return;
 		}
@@ -125,7 +130,7 @@ export const ObsidianItems = {
 	resolveEffect: function (actor, options) {
 		const updates = [];
 		const item = actor.items.get(options.id);
-		const effect = actor.data.obsidian.effects.get(options.uuid);
+		const effect = actor.data.obsidian.effects.get(options.effectId);
 		const resources = effect.components.filter(c => c.type === 'resource');
 		const consumers = effect.components.filter(c => c.type === 'consume');
 		const producers = effect.components.filter(c => c.type === 'produce');
@@ -227,7 +232,7 @@ export const ObsidianItems = {
 			&& item.data.flags.obsidian.tags.thrown)
 		{
 			const attack = effect.components.find(c => c.type === 'attack');
-			if (attack && attack.mode === 'ranged') {
+			if (attack?.mode === 'ranged') {
 				updates.push({_id: item.id, 'data.quantity': item.data.data.quantity - 1});
 			}
 		}
@@ -309,14 +314,14 @@ export const ObsidianItems = {
 			options.id = action.id;
 		} else {
 			options.roll = 'fx';
-			options.uuid = action.uuid;
+			options.effectId = action.uuid;
 		}
 
 		ObsidianItems.roll(actor, options);
 	},
 
 	rollEffect: function (actor, options) {
-		const effect = actor.data.obsidian.effects.get(options.uuid);
+		const effect = actor.data.obsidian.effects.get(options.effectId);
 		options.id = effect.parentItem;
 
 		const item = actor.items.get(options.id);
@@ -392,7 +397,7 @@ export const ObsidianItems = {
 		if (component && ['item', 'innate'].includes(component.method) && !options.parentResolved) {
 			const effect = actor.data.obsidian.effects.get(component.parentEffect);
 			options.roll = 'fx';
-			options.uuid = effect.uuid;
+			options.effectId = effect.uuid;
 			options.id = effect.parentItem;
 			options.spell = spell.id;
 			options.parentResolved = false;
