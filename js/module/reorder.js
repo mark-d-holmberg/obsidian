@@ -84,31 +84,10 @@ export const Reorder = {
 		}
 
 		if (data && !idData) {
-			if (data.pack) {
-				const pack = game.packs.get(data.pack);
-				if (pack.metadata.entity !== 'Item') {
-					return false;
-				}
-
-				const packItem = await pack.getDocument(data.id);
-				delete packItem.data._id;
-				const items =
-					await actor.createEmbeddedDocuments(
-						'Item', [ObsidianActor.duplicateItem(packItem).toJSON()]);
-
-				const item = items.shift();
-				if (item) {
-					src = item;
-				} else {
-					return false;
-				}
-			} else {
-				const created =
-					await actor.createEmbeddedDocuments(
-						'Item', [ObsidianActor.duplicateItem(game.items.get(data.id)).toJSON()]);
-
-				src = created.shift();
-			}
+			const item = await Item.implementation.fromDropData(data);
+			const dupe = ObsidianActor.duplicateItem(item);
+			const created = await actor.createEmbeddedDocuments('Item', [dupe.toObject()]);
+			src = created.shift();
 		}
 
 		const [row, container, contents] = Reorder.detectElementBeneath(event);
@@ -214,10 +193,10 @@ export const Reorder = {
 			}
 
 			if (remaining === 0 && transfer.data.type !== 'consumable') {
-				otherActor.deleteEmbeddedDocuments('Item', [transfer.id]);
+				otherActor.deleteEmbeddedDocuments('Item', [transfer.data._id]);
 			} else {
 				otherActor.updateEmbeddedDocuments('Item', [{
-					_id: transfer.id,
+					_id: transfer.data._id,
 					'data.quantity': remaining
 				}]);
 			}
@@ -229,13 +208,13 @@ export const Reorder = {
 
 			const item = ObsidianActor.duplicateItem(transfer.data);
 			if (actor.isOwner) {
-				actor.createEmbeddedDocuments('Item', [item.toJSON()]);
+				actor.createEmbeddedDocuments('Item', [item.toObject()]);
 			} else {
 				game.socket.emit('module.obsidian', {
 					action: 'CREATE',
 					entity: 'Item',
 					actorID: actor.id,
-					data: item.data
+					data: item.toObject()
 				});
 			}
 		};

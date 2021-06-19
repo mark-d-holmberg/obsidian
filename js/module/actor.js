@@ -604,8 +604,6 @@ export class ObsidianActor extends Actor5e {
 		if (itemUpdates.length > 0) {
 			return OBSIDIAN.updateManyOwnedItems(this, itemUpdates);
 		}
-
-		return Promise.resolve();
 	}
 
 	async longRest (...args) {
@@ -616,9 +614,10 @@ export class ObsidianActor extends Actor5e {
 		await this.shortRest();
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
+		const hp = data.attributes.hp;
 		const update = {};
 
-		update['data.attributes.hp.value'] = data.attributes.hp.max;
+		update['data.attributes.hp.value'] = hp.max + (hp.tempmax || 0);
 
 		const hds = duplicate(flags.attributes.hd);
 		Object.values(hds)
@@ -677,8 +676,6 @@ export class ObsidianActor extends Actor5e {
 		if (itemUpdates.length > 0) {
 			return OBSIDIAN.updateManyOwnedItems(this, itemUpdates);
 		}
-
-		return Promise.resolve();
 	}
 
 	async updateEquipment (deleted) {

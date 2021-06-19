@@ -47,7 +47,7 @@ export function runPatches () {
 	};
 
 	ChatPopout.prototype._renderInner = async function () {
-		const html = await this.message.render(false, {popout: true});
+		const html = await this.message.getHTML(false, {popout: true});
 		html.find('.message-delete').remove();
 		return html;
 	};

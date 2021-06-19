@@ -60,7 +60,7 @@ async function onHotbarDrop (bar, data, slot) {
 				const abl = args.rollData[args.rollData.roll];
 				const rollTranslation =
 					game.i18n.localize(
-						`OBSIDIAN.${args.rollData.roll === 'abl' ? 'Check' : 'Save'}`);
+						`OBSIDIAN.${args.rollData.roll === 'abl' ? 'CheckTitle' : 'Save'}`);
 
 				name = `${game.i18n.localize(`OBSIDIAN.Ability.${abl}`)} ${rollTranslation}`;
 				break;

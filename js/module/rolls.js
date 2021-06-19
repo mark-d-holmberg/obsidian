@@ -592,8 +592,15 @@ export const Rolls = {
 			actor.update({
 				'data.attributes.death.success': 0,
 				'data.attributes.death.failure': 0,
-				'data.attributes.hp.value': hp,
-				'flags.obsidian.attributes.conditions.unconscious': false
+				'data.attributes.hp.value': hp
+			}).then(() => {
+				const unconscious =
+					actor.effects.find(effect =>
+						effect.getFlag('core', 'statusId') === 'unconscious');
+
+				if (unconscious) {
+					unconscious.delete();
+				}
 			});
 		} else {
 			actor.update({[`data.attributes.death.${key}`]: tally});

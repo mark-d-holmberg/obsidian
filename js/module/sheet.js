@@ -414,7 +414,7 @@ export const Sheet = {
 		const item = sheet.actor.items.get(target.dataset.itemId);
 		if (item) {
 			dragData.type = 'Item';
-			dragData.data = item.data._source;
+			dragData.data = item.toObject();
 			dragData.effectId = target.dataset.effectId;
 		}
 
