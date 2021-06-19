@@ -74,7 +74,6 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		if (this.data.type === 'character') {
-			data.attributes.hp.max = data.attributes.hp.max + flags.attributes.hpMaxMod;
 			if (flags.details.milestone) {
 				derived.details.level = data.details.level;
 			} else {
@@ -219,10 +218,11 @@ export class ObsidianActor extends Actor5e {
 			}
 		}
 
+		data.attributes.hp.max += data.attributes.hp.tempmax;
 		this._prepareInventory(data, derived.inventory);
 		applyProfBonus(this);
 		Prepare.abilities(this, data, flags, derived);
-		Prepare.ac(data, flags, derived);
+		Prepare.ac(data, flags);
 		Prepare.armour(data, flags, derived);
 		Prepare.init(data, flags, derived);
 		prepareDefenses(data, flags, derived);
@@ -262,10 +262,6 @@ export class ObsidianActor extends Actor5e {
 		}, []);
 
 		nonClassItems.forEach(item => item.prepareObsidianEffects());
-
-		for (const [id, abl] of Object.entries(data.abilities)) {
-			abl.mod = Math.floor((derived.abilities[id].value - 10) / 2);
-		}
 
 		if (this.type === 'character') {
 			derived.details.class = ObsidianActor._classFormat(derived.classes);
@@ -614,10 +610,9 @@ export class ObsidianActor extends Actor5e {
 		await this.shortRest();
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
-		const hp = data.attributes.hp;
 		const update = {};
 
-		update['data.attributes.hp.value'] = hp.max + (hp.tempmax || 0);
+		update['data.attributes.hp.value'] = data.attributes.hp.max;
 
 		const hds = duplicate(flags.attributes.hd);
 		Object.values(hds)

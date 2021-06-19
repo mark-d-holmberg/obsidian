@@ -100,6 +100,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	getData () {
 		const data = super.getData();
 		data.actor = this.actor.toObject(false);
+		data.base = this.actor.toObject();
 		data.items = this.actor.items.map(item => item.toObject(false));
 		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;

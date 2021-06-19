@@ -6,16 +6,20 @@ import {ObsidianActor} from '../module/actor.js';
 export function applyBonuses (actor, data, flags, derived) {
 	applySpeedBonuses(actor, data, derived);
 	applyInitBonuses(actor, data, flags, derived);
-	applyACBonuses(actor, flags, derived);
+	applyACBonuses(actor, flags, data);
 	applyHPBonuses(actor, data, derived);
 	applySpellBonuses(actor, derived);
 }
 
 function applyInitBonuses (actor, data, flags, derived) {
+	if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
+		return;
+	}
+
 	const bonuses =
 		derived.filters.bonuses(Filters.appliesTo.initiative(flags.attributes.init.ability));
 
-	if (bonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {
+	if (bonuses.length) {
 		derived.attributes.init.rollParts.push(
 			...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 		data.attributes.init.mod +=
@@ -24,77 +28,32 @@ function applyInitBonuses (actor, data, flags, derived) {
 	}
 }
 
-function applyACBonuses (actor, flags, derived) {
-	const bonuses = derived.filters.bonuses(Filters.isAC);
-	if (bonuses.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-		derived.attributes.ac +=
-			bonuses.reduce((acc, bonus) =>
-				acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
-
-		derived.attributes.ac = Math.floor(derived.attributes.ac);
+function applyACBonuses (actor, data, flags) {
+	if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+		return;
 	}
 
-	const multipliers = derived.filters.multipliers(Filters.isAC);
-	if (multipliers.length) {
-		derived.attributes.ac =
-			Math.floor(
-				derived.attributes.ac
-				* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-	}
-
-	const setters = derived.filters.setters(Filters.isAC);
-	if (setters.length && OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-		const setter = Effect.combineSetters(setters);
-		if (!setter.min || setter.score > derived.attributes.ac) {
-			derived.attributes.ac = setter.score;
-		}
-	}
+	const ac = data.attributes.ac;
+	ac.value += Effect.applyBonuses(actor, Filters.isAC);
+	ac.value = Effect.applyMultipliers(actor, Filters.isAC, ac.value);
+	ac.value = Effect.applySetters(actor, Filters.isAC, ac.value);
 }
 
 function applyHPBonuses (actor, data, derived) {
-	const actorData = actor.data;
-	const bonuses = derived.filters.bonuses(Filters.isHP);
+	const hp = data.attributes.hp;
+	hp.max += Effect.applyBonuses(actor, Filters.isHP);
+	hp.max = Effect.applyMultipliers(actor, Filters.isHP, hp.max);
+	hp.max = Effect.applySetters(actor, Filters.isHP, hp.max);
 
-	if (bonuses.length) {
-		data.attributes.hp.max +=
-			bonuses.reduce((acc, bonus) =>
-				acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
-
-		data.attributes.hp.max = Math.floor(data.attributes.hp.max);
-	}
-
-	const multipliers = derived.filters.multipliers(Filters.isHP);
-	if (multipliers.length) {
-		data.attributes.hp.max =
-			Math.floor(
-				data.attributes.hp.max
-				* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-	}
-
-	const setters = derived.filters.setters(Filters.isHP);
-	if (setters.length) {
-		const setter = Effect.combineSetters(setters);
-		if (!setter.min || setter.score > data.attributes.hp.max) {
-			data.attributes.hp.max = setter.score;
-		}
-	}
-
-	if (actorData.obsidian.conditions.exhaustion > 3) {
+	if (derived.conditions.exhaustion > 3) {
 		data.attributes.hp.max = Math.floor(data.attributes.hp.max / 2);
 	}
 }
 
 function applySpellBonuses (actor, derived) {
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
-		const bonuses = derived.filters.bonuses(Filters.appliesTo[filter]);
-		if (bonuses.length) {
-			let total =
-				bonuses.flatMap(bonus => bonusToParts(actor, bonus))
-					.reduce((acc, part) => acc + part.mod, 0);
-
-			total = Math.floor(total);
-			derived.spellcasting[key] = derived.spellcasting[key].map(val => val + total);
-		}
+		const total = Effect.applyBonuses(actor, Filters.appliesTo[filter]);
+		derived.spellcasting[key] = derived.spellcasting[key].map(val => val + total);
 	});
 
 	const multipliers = derived.filters.multipliers(Filters.appliesTo.spellDCs);
@@ -118,64 +77,45 @@ function applySpellBonuses (actor, derived) {
 }
 
 function applySpeedBonuses (actor, data, derived) {
-	const actorData = actor.data;
 	if (actor.type === 'vehicle') {
 		return;
 	}
 
-	const conditions = actorData.obsidian.conditions;
+	const actorData = actor.data;
+	const conditions = derived.conditions;
 	const exhaustion = conditions.exhaustion;
 
-	for (const speed of OBSIDIAN.Config.SPEEDS) {
-		derived.attributes.speed[speed] = data.attributes.movement[speed];
-		const bonuses = derived.filters.bonuses(Filters.appliesTo.speedScores(speed));
-
-		if (bonuses.length) {
-			derived.attributes.speed[speed] +=
-				bonuses.reduce((acc, bonus) =>
-					acc + bonusToParts(actor, bonus).reduce((acc, part) => acc + part.mod, 0), 0);
-
-			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed]);
+	for (const key of OBSIDIAN.Config.SPEEDS) {
+		const speeds = data.attributes.movement;
+		if (speeds[key] === null) {
+			continue;
 		}
 
-		const multipliers = derived.filters.multipliers(Filters.appliesTo.speedScores(speed));
-		if (multipliers.length) {
-			derived.attributes.speed[speed] =
-				Math.floor(
-					derived.attributes.speed[speed]
-					* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-		}
-
-		const setters = derived.filters.setters(Filters.appliesTo.speedScores(speed));
-		if (setters.length) {
-			const setter = Effect.combineSetters(setters);
-			const spd = derived.attributes.speed;
-
-			if (!setter.min || setter.score > spd[speed]) {
-				spd[speed] = setter.score;
-			}
-		}
+		const filter = Filters.appliesTo.speedScores(key);
+		speeds[key] += Effect.applyBonuses(actor, filter);
+		speeds[key] = Effect.applyMultipliers(actor, filter, speeds[key]);
+		speeds[key] = Effect.applySetters(actor, filter, speeds[key]);
 
 		if (exhaustion > 4 || conditions.grappled || conditions.paralysed || conditions.petrified
 			|| conditions.restrained || conditions.stunned || conditions.unconscious
 			|| ObsidianActor.isRuleActive(actorData, 'overCapacity'))
 		{
-			derived.attributes.speed[speed] = 0;
+			speeds[key] = 0;
 			continue;
 		}
 
 		if (exhaustion > 1) {
-			derived.attributes.speed[speed] = Math.floor(derived.attributes.speed[speed] / 2);
+			speeds[key] = Math.floor(speeds[key] / 2);
 		}
 
 		if (ObsidianActor.isRuleActive(actorData, 'heavyArmour')) {
-			derived.attributes.speed[speed] -= 10;
+			speeds[key] -= 10;
 		}
 
 		if (ObsidianActor.isRuleActive(actorData, 'heavilyEncumbered')) {
-			derived.attributes.speed[speed] -= 20;
+			speeds[key] -= 20;
 		} else if (ObsidianActor.isRuleActive(actorData, 'encumbered')) {
-			derived.attributes.speed[speed] -= 10;
+			speeds[key] -= 10;
 		}
 	}
 }
@@ -183,31 +123,10 @@ function applySpeedBonuses (actor, data, derived) {
 export function applyProfBonus (actor) {
 	const actorData = actor.data;
 	const attr = actorData.data.attributes;
-	const bonuses = actorData.obsidian.filters.bonuses(Filters.isProf);
-	const setters = actorData.obsidian.filters.setters(Filters.isProf);
-	const multipliers = actorData.obsidian.filters.multipliers(Filters.isProf);
 
-	if (bonuses.length) {
-		attr.prof =
-			Math.floor(
-				attr.prof +
-				bonuses
-					.flatMap(bonus => bonusToParts(actor, bonus))
-					.reduce((acc, part) => acc + part.mod, 0));
-	}
-
-	if (multipliers.length) {
-		attr.prof =
-			Math.floor(
-				attr.prof * multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-	}
-
-	if (setters.length) {
-		const setter = Effect.combineSetters(setters);
-		if (!setter.min || setter.score > attr.prof) {
-			attr.prof = setter.score;
-		}
-	}
+	attr.prof += Effect.applyBonuses(actor, Filters.isProf);
+	attr.prof = Effect.applyMultipliers(actor, Filters.isProf, attr.prof);
+	attr.prof = Effect.applySetters(actor, Filters.isProf, attr.prof);
 }
 
 function bonusName (actorData, bonus) {
@@ -261,8 +180,8 @@ function getTokenActorDataSafe (uuid) {
 			return cached.data;
 		}
 
-		const merged = mergeObject(actor.toObject(true), token.toObject(true), {inplace: false});
-		return new CONFIG.Actor.documentClass.schema(merged);
+		const merged = mergeObject(actor.toObject(false), token.toObject(false), {inplace: false});
+		return new Actor.implementation.schema(merged);
 	}
 }
 

@@ -134,17 +134,17 @@
 							<div class="obsidian-char-ability-mod">
 								{{numberFormat mod decimals=0 sign=true}}
 							</div>
-							{{#with (lookup ../actor.obsidian.abilities @key)}}
-								<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
+							{{#with (lookup ../base.data.abilities @key)}}
+								<input type="text" value="{{../value}}" placeholder="10" name="abl-facade-{{@key}}"
 								       class="obsidian-char-ability-score
-									{{#if (gt value ../value)}}
+									{{#if (gt ../value value)}}
 										obsidian-positive
-									{{else if (lt value ../value)}}
+									{{else if (lt ../value value)}}
 										obsidian-negative
 									{{/if}}">
+								<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
+								       data-dtype="Number">
 							{{/with}}
-							<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
-							       data-dtype="Number">
 						</div>
 					{{/each}}
 				</div>

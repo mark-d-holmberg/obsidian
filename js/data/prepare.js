@@ -113,20 +113,10 @@ export const Prepare = {
 		component.value =
 			Math.floor(bonus + component.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-		const multipliers = actorData?.obsidian?.filters.multipliers(pred(component)) || [];
-		if (multipliers.length) {
-			component.value =
-				Math.floor(
-					component.value
-					* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-		}
-
-		const setters = actorData?.obsidian?.filters.setters(pred(component)) || [];
-		if (setters.length) {
-			const setter = Effect.combineSetters(setters);
-			if (!setter.min || setter.score > component.value) {
-				component.value = setter.score;
-			}
+		if (actorData?.obsidian) {
+			const filter = pred(component);
+			component.value = Effect.applyMultipliers(actor, filter, component.value);
+			component.value = Effect.applySetters(actor, filter, component.value);
 		}
 	},
 
@@ -318,21 +308,25 @@ export const Prepare = {
 		return out;
 	},
 
-	ac: function (data, flags, derived) {
-		derived.attributes.ac =
-			flags.attributes.ac.base
-			+ data.abilities[flags.attributes.ac.ability1].mod
-			+ (flags.attributes.ac.ability2 ? data.abilities[flags.attributes.ac.ability2].mod : 0);
+	ac: function (data, flags) {
+		const ac = data.attributes.ac;
+		const acFlags = flags.attributes.ac;
 
-		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
-			derived.attributes.ac = Number(flags.attributes.ac.override);
+		if (!OBSIDIAN.notDefinedOrEmpty(acFlags.override)) {
+			ac.value = Number(acFlags.override);
+			return;
+		}
+
+		ac.value = acFlags.base + data.abilities[acFlags.ability1].mod;
+		if (!OBSIDIAN.notDefinedOrEmpty(acFlags.ability2)) {
+			ac.value += data.abilities[acFlags.ability2].mod;
 		}
 	},
 
 	abilities: function (actor, data, flags, derived) {
 		derived.abilities = {};
 		for (const [id, ability] of Object.entries(data.abilities)) {
-			derived.abilities[id] = {rollParts: [], value: ability.value};
+			derived.abilities[id] = {rollParts: []};
 			const abilityBonuses = derived.filters.bonuses(Filters.appliesTo.abilityChecks(id));
 
 			if (abilityBonuses.length) {
@@ -340,33 +334,11 @@ export const Prepare = {
 					...abilityBonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 			}
 
-			const scoreBonuses = derived.filters.bonuses(Filters.appliesTo.abilityScores(id));
-			if (scoreBonuses.length) {
-				derived.abilities[id].value +=
-					scoreBonuses.reduce((acc, bonus) =>
-						acc + bonusToParts(actor, bonus)
-							.reduce((acc, part) => acc + part.mod, 0), 0);
-
-				derived.abilities[id].value = Math.floor(derived.abilities[id].value);
-			}
-
-			const multipliers = derived.filters.multipliers(Filters.appliesTo.abilityScores(id));
-			if (multipliers.length) {
-				derived.abilities[id].value =
-					Math.floor(
-						derived.abilities[id].value
-						* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-			}
-
-			const abilitySetters = derived.filters.setters(Filters.appliesTo.abilityScores(id));
-			if (abilitySetters.length) {
-				const setter = Effect.combineSetters(abilitySetters);
-				if (!setter.min || setter.score > ability.value) {
-					derived.abilities[id].value = setter.score;
-				}
-			}
-
-			ability.mod = Math.floor((derived.abilities[id].value - 10) / 2);
+			const filter = Filters.appliesTo.abilityScores(id);
+			ability.value += Effect.applyBonuses(actor, filter);
+			ability.value = Effect.applyMultipliers(actor, filter, ability.value);
+			ability.value = Effect.applySetters(actor, filter, ability.value);
+			ability.mod = Math.floor((ability.value - 10) / 2);
 		}
 	},
 
@@ -376,70 +348,60 @@ export const Prepare = {
 		derived.armour =
 			derived.itemsByType.get('equipment').filter(item => item.data.flags.obsidian?.armour);
 
-		let bestArmour;
-		let bestShield;
+		const {armour, shield} = derived.armour.reduce((acc, item) => {
+			const data = item.data.data;
+			if (!data.equipped) {
+				return acc;
+			}
 
-		for (const armour of derived.armour) {
-			const armourData = armour.data.data;
-			const baseAC = armourData.armor.value;
-
-			if (armourData.armor.type === 'shield') {
-				if (armourData.equipped
-					&& (!bestShield || bestShield.data.data.armor.value < baseAC))
-				{
-					bestShield = armour;
-				}
+			if (data.armor.type === 'shield') {
+				acc.shield = item;
 			} else {
-				if (armourData.equipped
-					&& (!bestArmour || bestArmour.data.data.armor.value < baseAC))
-				{
-					bestArmour = armour;
-				}
+				acc.armour = item;
 			}
+
+			return acc;
+		}, {});
+
+		if (armour) {
+			if (!OBSIDIAN.notDefinedOrEmpty(armour.data.data.strength)) {
+				derived.rules.heavyArmour = data.abilities.str.value < armour.data.data.strength;
+			}
+
+			derived.rules.noisyArmour = armour.data.data.stealth;
 		}
 
-		const acOverride = flags.attributes.ac.override;
+		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.ac.override)) {
+			derived.armourDisplay = '';
+			return;
+		}
+
 		const armourDisplay = [];
+		const ac = data.attributes.ac;
 
-		if (bestArmour) {
-			if (!OBSIDIAN.notDefinedOrEmpty(bestArmour.data.data.strength)) {
-				derived.rules.heavyArmour =
-					derived.abilities.str.value < bestArmour.data.data.strength;
+		if (armour) {
+			const armourData = armour.data.data.armor;
+			const armourFlags = armour.data.flags.obsidian;
+			armourDisplay.push(armour.name.toLocaleLowerCase());
+			ac.value = armourData.value;
+
+			if (armourFlags.addDex) {
+				ac.value += Math.min(data.abilities.dex.mod, armourData.dex ?? Infinity);
 			}
-
-			derived.rules.noisyArmour = bestArmour.data.data.stealth;
 		}
 
-		if (OBSIDIAN.notDefinedOrEmpty(acOverride)) {
-			if (bestArmour) {
-				armourDisplay.push(bestArmour.name.toLocaleLowerCase());
-				derived.attributes.ac = bestArmour.data.data.armor.value;
-
-				if (bestArmour.data.flags.obsidian.addDex) {
-					let maxDex = bestArmour.data.data.armor.dex;
-					if (OBSIDIAN.notDefinedOrEmpty(maxDex)) {
-						maxDex = Infinity;
-					} else {
-						maxDex = Number(maxDex);
-					}
-
-					derived.attributes.ac += Math.min(data.abilities.dex.mod, maxDex);
-				}
-			}
-
-			if (bestShield) {
-				armourDisplay.push(bestShield.name.toLocaleLowerCase());
-				derived.attributes.ac += bestShield.data.data.armor.value;
-			}
+		if (shield) {
+			armourDisplay.push(shield.name.toLocaleLowerCase());
+			ac.value += shield.data.data.armor.value;
 		}
 
 		derived.armourDisplay = armourDisplay.join(', ');
-		data.attributes.ac.value = derived.attributes.ac;
 	},
 
 	conditions: function (actor, data, flags, derived) {
 		const actorData = actor.data;
 		const conditionImmunities = new Set(derived.defenses.parts.conditions.imm);
+
 		derived.conditions = {exhaustion: 0};
 		actor.effects.forEach(effect => {
 			const id = effect.getFlag('core', 'statusId');
@@ -496,31 +458,15 @@ export const Prepare = {
 	encumbrance: function (actor, data, derived) {
 		const rules = derived.rules;
 		const inventory = derived.inventory;
-		const str = derived.abilities.str.value;
+		const str = data.abilities.str.value;
 		const thresholds = Config.ENCUMBRANCE_THRESHOLDS;
 		const encumbrance = game.settings.get('obsidian', 'encumbrance');
 		const sizeMod = Config.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
-		const bonuses = derived.filters.bonuses(Filters.isCarry);
-		const setters = derived.filters.setters(Filters.isCarry);
-		const multipliers = derived.filters.multipliers(Filters.isCarry);
+
 		inventory.max = str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier;
-
-		if (bonuses.length) {
-			inventory.max +=
-				bonuses.flatMap(bonus => bonusToParts(actor, bonus))
-					.reduce((acc, part) => acc + part.mod, 0);
-		}
-
-		if (multipliers.length) {
-			inventory.max *= multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1);
-		}
-
-		if (setters.length) {
-			const setter = Effect.combineSetters(setters);
-			if (!setter.min || setter.score > inventory.max) {
-				inventory.max = setter.score;
-			}
-		}
+		inventory.max += Effect.applyBonuses(actor, Filters.isCarry);
+		inventory.max = Effect.applyMultipliers(actor, Filters.isCarry, inventory.max);
+		inventory.max = Effect.applySetters(actor, Filters.isCarry, inventory.max);
 
 		rules.encumbered = false;
 		rules.heavilyEncumbered = false;
@@ -614,8 +560,6 @@ export const Prepare = {
 						...saveBonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					save.rollParts = highestProficiency(save.rollParts);
 				}
-
-				save.proficiency = save.rollParts.find(part => part.proficiency);
 			} else {
 				save.rollParts = [{
 					mod: Number(flags.saves[id].override),
@@ -623,11 +567,11 @@ export const Prepare = {
 				}];
 			}
 
-			save.proficient = save.proficiency?.value || 0;
-			save.save = Math.floor(save.rollParts.reduce((acc, part) => acc + part.mod, 0));
+			ability.proficient = save.rollParts.find(p => p.proficiency)?.value || 0;
+			ability.save = Math.floor(save.rollParts.reduce((acc, part) => acc + part.mod, 0));
 
-			if (save.proficient > 0 && original && original.save > save.save) {
-				save.save = original.save;
+			if (ability.proficient > 0 && original && original.save > ability.save) {
+				ability.save = original.save;
 			}
 		}
 	},

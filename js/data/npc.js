@@ -38,17 +38,17 @@ export function prepareSpeed (data, derived) {
 	const speed = [];
 	const feet = game.i18n.localize('OBSIDIAN.FeetAbbr');
 	const hover = game.i18n.localize('OBSIDIAN.Hover').toLowerCase();
-	const walk = derived.attributes.speed.walk || 0;
+	const walk = data.attributes.movement.walk || 0;
 	speed.push(`${walk} ${feet}`);
 
-	for (const spd of Config.SPEEDS) {
-		const value = derived.attributes.speed[spd];
-		if (spd === 'walk' || !value) {
+	for (const key of Config.SPEEDS) {
+		const value = data.attributes.movement[key];
+		if (key === 'walk' || !value) {
 			continue;
 		}
 
-		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr.${spd}`)} ${value} ${feet}`;
-		if (spd === 'fly' && data.attributes.movement.hover) {
+		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr.${key}`)} ${value} ${feet}`;
+		if (key === 'fly' && data.attributes.movement.hover) {
 			display += ` (${hover})`;
 		}
 

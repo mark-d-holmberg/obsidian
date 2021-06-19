@@ -6,7 +6,7 @@ export function prepareSpellcasting (actorData, data, flags, derived) {
 	const saves = [];
 	const existing = {};
 
-	derived.spellcasting = {mods: mods, attacks: attacks, saves: saves};
+	derived.spellcasting = {mods, attacks, saves};
 	for (const cls of derived.classes) {
 		const spellcasting = cls.obsidian.spellcasting;
 		if (spellcasting?.enabled

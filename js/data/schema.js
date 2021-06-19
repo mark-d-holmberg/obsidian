@@ -14,7 +14,6 @@ Schema.Actor = {
 			threshold: 10
 		},
 		hd: {},
-		hpMaxMod: 0,
 		init: {
 			ability: 'dex'
 		}

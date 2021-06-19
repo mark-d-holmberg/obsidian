@@ -169,7 +169,7 @@
 						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html"
 						     data-width="450">
-							{{actor.obsidian.attributes.ac}}
+							{{data.attributes.ac.value}}
 						</div>
 					</div>
 					<button type="button" class="
@@ -183,26 +183,26 @@
 		</div>
 		<div class="obsidian-char-header-container">
 			<div class="obsidian-char-abilities">
-				{{#each data.abilities as |ability id|}}
+				{{#each data.abilities}}
 				<div class="obsidian-char-ability">
 					<div class="obsidian-char-ability-name rollable obsidian-condensed" data-roll="abl"
-					     data-abl="{{id}}" draggable="true">
-						{{obs-i18n 'AbilityAbbr' id}}
+					     data-abl="{{@key}}" draggable="true">
+						{{obs-i18n 'AbilityAbbr' @key}}
 					</div>
 					<div class="obsidian-char-ability-mod">
-						{{numberFormat ability.mod decimals=0 sign=true}}
+						{{numberFormat mod decimals=0 sign=true}}
 					</div>
-					{{#with (lookup ../actor.obsidian.abilities id)}}
-						<input type="text" value="{{value}}" placeholder="10" name="abl-facade-{{@key}}"
+					{{#with (lookup ../base.data.abilities @key)}}
+						<input type="text" value="{{../value}}" placeholder="10" name="abl-facade-{{@key}}"
 							class="obsidian-char-ability-score
-								{{#if (gt value ability.value)}}
+								{{#if (gt ../value value)}}
 									obsidian-positive
-								{{else if (lt value ability.value) }}
+								{{else if (lt ../value value) }}
 									obsidian-negative
 								{{/if}}">
+						<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
+						       data-dtype="Number">
 					{{/with}}
-					<input name="data.abilities.{{id}}.value" type="hidden" value="{{ability.value}}"
-					       data-dtype="Number">
 				</div>
 				{{/each}}
 			</div>

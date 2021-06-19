@@ -2,6 +2,7 @@ import {OBSIDIAN} from '../global.js';
 import {Filters} from '../data/filters.js';
 import {determineMode} from '../data/prepare.js';
 import {ObsidianActor} from './actor.js';
+import {bonusToParts} from '../data/bonuses.js';
 
 export const Categories = ['rolls', 'resources', 'modifiers', 'special'];
 
@@ -662,5 +663,36 @@ export const Effect = {
 
 		existing.derived.ncrit =
 			Effect.scaleConstant(scaling, scaledAmount, existing.derived.ncrit, dmg.derived.ncrit);
+	},
+
+	applyBonuses: function (actor, filter) {
+		const derived = actor.data.obsidian;
+		const bonuses = derived.filters.bonuses(filter);
+		const total =
+			bonuses.flatMap(bonus => bonusToParts(actor, bonus))
+			       .reduce((acc, part) => acc + part.mod, 0);
+
+		return Math.floor(total);
+	},
+
+	applyMultipliers: function (actor, filter, score) {
+		const derived = actor.data.obsidian;
+		const multipliers = derived.filters.multipliers(filter);
+		const multiplier = multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1);
+		return Math.floor(score * multiplier);
+	},
+
+	applySetters: function (actor, filter, score) {
+		const derived = actor.data.obsidian;
+		const setters = derived.filters.setters(filter);
+
+		if (setters.length) {
+			const setter = Effect.combineSetters(setters);
+			if (!setter.min || setter.score > score) {
+				return setter.score;
+			}
+		}
+
+		return score;
 	}
 };

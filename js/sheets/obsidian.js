@@ -194,7 +194,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			data.speed.label = 'walk';
 		}
 
-		data.speed.value = this.actor.obsidian.attributes.speed[data.speed.label];
+		data.speed.value = this.actor.data.data.attributes.movement[data.speed.label];
 		Sheet.getSenses(data);
 		Sheet.getRules(data);
 		console.debug(data);
@@ -276,7 +276,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		}
 
 		const currentSpeed = this.actor.data.flags.obsidian.attributes.speedDisplay || 'walk';
-		const speeds = this.actor.data.obsidian.attributes.speed;
+		const speeds = this.actor.data.data.attributes.movement;
 		const startIdx = Config.SPEEDS.indexOf(currentSpeed);
 		let newSpeed = null;
 
@@ -541,7 +541,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 	 */
 	_setSaveProficiency (evt) {
 		const save = $(evt.currentTarget).closest('.obsidian-save-item').data('value');
-		let state = this.actor._data.data.abilities[save].proficient;
+		let state = this.actor.data._source.data.abilities[save].proficient;
 
 		if (state === undefined || state === 0) {
 			state = 1;
