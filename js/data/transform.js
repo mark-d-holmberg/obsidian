@@ -8,7 +8,7 @@ function transform (original, target, data) {
 	if (data.flags.dnd5e.transformOptions.mergeSkills) {
 		let originalSkills = original.data.data.skills;
 		if (original.data.obsidian?.skills) {
-			originalSkills = original.data.obsidian.skills;
+			originalSkills = original.data.data.skills;
 		}
 
 		for (const [id, skill] of Object.entries(originalSkills)) {

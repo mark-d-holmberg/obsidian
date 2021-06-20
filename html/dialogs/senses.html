@@ -23,7 +23,7 @@
 		<div class="obsidian-form-row">
 			<select>
 				{{#select passive}}
-					{{#each ../actor.obsidian.skills as |skill id|}}
+					{{#each ../data.skills as |skill id|}}
 						<option value="{{id}}">{{skill.label}}</option>
 					{{/each}}
 				{{/select}}

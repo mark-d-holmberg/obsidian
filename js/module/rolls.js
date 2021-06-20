@@ -385,7 +385,7 @@ export const Rolls = {
 				return;
 			}
 
-			const skill = actor.data.obsidian.skills[options.skl];
+			const skill = actor.data.data.skills[options.skl];
 			if (!skill) {
 				return;
 			}
@@ -397,7 +397,7 @@ export const Rolls = {
 				return;
 			}
 
-			const tool = actor.data.obsidian.tools[options.tool];
+			const tool = actor.data.data.tools[options.tool];
 			if (!tool) {
 				return;
 			}
@@ -962,7 +962,7 @@ export const Rolls = {
 	},
 
 	findSkill: function (actor, skill) {
-		const skills = actor.data.obsidian.skills;
+		const skills = actor.data.data.skills;
 		if (skill.skill !== 'custom') {
 			return skills[skill.skill];
 		}
@@ -972,7 +972,7 @@ export const Rolls = {
 	},
 
 	findTool: function (actor, tool) {
-		return Object.values(actor.data.obsidian.tools).find(entry =>
+		return Object.values(actor.data.data.tools).find(entry =>
 			entry.label?.toLocaleLowerCase() === tool.custom.toLocaleLowerCase());
 	},
 

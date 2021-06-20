@@ -11,8 +11,6 @@ import {Config} from '../data/config.js';
 
 // These are all used in eval() for dynamic dialog creation.
 // noinspection ES6UnusedImports
-import {ObsidianArrayDialog} from '../dialogs/array.js';
-// noinspection ES6UnusedImports
 import {ObsidianHeaderDetailsDialog} from '../dialogs/char-header.js';
 // noinspection ES6UnusedImports
 import {ObsidianCurrencyDialog} from '../dialogs/currency.js';
@@ -30,8 +28,6 @@ import {ObsidianRollHDDialog} from '../dialogs/roll-hd.js';
 import {ObsidianSensesDialog} from '../dialogs/senses.js';
 // noinspection ES6UnusedImports
 import {ObsidianSkillsDialog} from '../dialogs/skills.js';
-// noinspection ES6UnusedImports
-import {ObsidianToolsDialog} from '../dialogs/tools.js';
 // noinspection ES6UnusedImports
 import {ObsidianXPDialog} from '../dialogs/xp.js';
 // noinspection ES6UnusedImports
@@ -180,6 +176,11 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		data.base = this.actor.toObject();
 		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
+
+		for (const [id, skill] of Object.entries(data.data.skills)) {
+			// Undo some upstream overwriting of skill labels
+			skill.label = this.actor.data.data.skills[id].label;
+		}
 
 		data.actor.obsidian.feats =
 			this.actor.obsidian.itemsByType.get('feat').map(i => i.toObject(false));

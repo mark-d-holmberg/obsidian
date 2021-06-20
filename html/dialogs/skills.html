@@ -25,23 +25,22 @@
 			{{localize 'OBSIDIAN.Add'}}
 		</button>
 	</label>
-	{{#each actor.flags.obsidian.skills.custom as |skill id|}}
-		<input type="hidden" name="flags.obsidian.skills.custom.{{id}}.custom" value="true"
+	{{#each custom}}
+		<input type="hidden" name="flags.obsidian.skills.{{key}}.custom" value="true"
 		       data-dtype="Boolean">
-		<div class="obsidian-form-row" data-item-id="{{id}}">
+		<div class="obsidian-form-row" data-item-id="{{key}}">
 			<div>
-				<select name="flags.obsidian.skills.custom.{{id}}.value" data-dtype="Number">
-					{{selectOptions @root.ObsidianLabels.Proficiency selected=skill.value}}
+				<select name="flags.obsidian.skills.{{key}}.value" data-dtype="Number">
+					{{selectOptions @root.ObsidianLabels.Proficiency selected=value}}
 				</select>
-				<select name="flags.obsidian.skills.custom.{{id}}.ability"
-				        style="text-transform: uppercase;">
-					{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc skill.ability)}}
+				<select name="flags.obsidian.skills.{{key}}.ability" style="text-transform: uppercase;">
+					{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc ability)}}
 				</select>
-				<input type="text" placeholder="Skill" value="{{skill.label}}"
-				       name="flags.obsidian.skills.custom.{{id}}.label">
+				<input type="text" placeholder="Skill" value="{{label}}"
+				       name="flags.obsidian.skills.{{key}}.label">
 				<span class="obsidian-binary-operator">&plus;</span>
-				<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{skill.bonus}}"
-				       data-dtype="Number" name="flags.obsidian.skills.custom.{{id}}.bonus">
+				<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{bonus}}"
+				       data-dtype="Number" name="flags.obsidian.skills.{{key}}.bonus">
 			</div>
 			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
 				{{localize 'OBSIDIAN.Remove'}}

@@ -110,7 +110,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		data.summonLevel = this._getSummonLevel();
 		data.actor.obsidian.tempEffects = [];
 
-		for (const skill of Object.values(data.actor.obsidian.skills)) {
+		for (const skill of Object.values(data.actor.data.skills)) {
 			if (skill?.value || skill?.override) {
 				data.skills[skill.key] = skill;
 			}

@@ -3,7 +3,7 @@
 		<legend>{{localize 'OBSIDIAN.Tools'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianConfig.PROF_TOOLS as |tool|}}
-				{{#with (lookup ../actor.obsidian.tools tool)}}
+				{{#with (lookup ../data.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
 				{{/with}}
@@ -14,7 +14,7 @@
 		<legend>{{localize 'OBSIDIAN.ToolProf.game'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianConfig.PROF_TOOLS_GAME as |tool|}}
-				{{#with (lookup ../actor.obsidian.tools tool)}}
+				{{#with (lookup ../data.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
 				{{/with}}
@@ -25,7 +25,7 @@
 		<legend>{{localize 'OBSIDIAN.ToolProf.music'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianConfig.PROF_TOOLS_INSTRUMENT as |tool|}}
-				{{#with (lookup ../actor.obsidian.tools tool)}}
+				{{#with (lookup ../data.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
 				{{/with}}
@@ -36,7 +36,7 @@
 		<legend>{{localize 'OBSIDIAN.ToolProf.art'}}</legend>
 		<div class="obsidian-checkbox-grid">
 			{{#each ObsidianConfig.PROF_TOOLS_ARTISAN as |tool|}}
-				{{#with (lookup ../actor.obsidian.tools tool)}}
+				{{#with (lookup ../data.tools tool)}}
 					{{fancy-checkbox 'flags.obsidian.tools' key 'enabled' checked=enabled
 					                 content=(add 'OBSIDIAN.ToolProf.' key)}}
 				{{/with}}
@@ -50,23 +50,22 @@
 				{{localize 'OBSIDIAN.Add'}}
 			</button>
 		</legend>
-		{{#each actor.flags.obsidian.tools.custom as |tool id|}}
-			<input type="hidden" name="flags.obsidian.tools.custom.{{id}}.custom" value="true"
+		{{#each custom}}
+			<input type="hidden" name="flags.obsidian.tools.{{key}}.custom" value="true"
 			       data-dtype="Boolean">
-			<div class="obsidian-form-row" data-item-id="{{id}}">
+			<div class="obsidian-form-row" data-item-id="{{key}}">
 				<div>
-					<select name="flags.obsidian.tools.custom.{{id}}.value" data-dtype="Number">
-						{{selectOptions @root.ObsidianLabels.Proficiency selected=tool.value}}
+					<select name="flags.obsidian.tools.{{key}}.value" data-dtype="Number">
+						{{selectOptions @root.ObsidianLabels.Proficiency selected=value}}
 					</select>
-					<select name="flags.obsidian.tools.custom.{{id}}.ability"
-					        style="text-transform: uppercase;">
-						{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc tool.ability)}}
+					<select name="flags.obsidian.tools.{{key}}.ability" style="text-transform: uppercase;">
+						{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc ability)}}
 					</select>
-					<input type="text" value="{{tool.label}}" placeholder="{{localize 'OBSIDIAN.Tool'}}"
-					       name="flags.obsidian.tools.custom.{{id}}.label">
+					<input type="text" value="{{label}}" placeholder="{{localize 'OBSIDIAN.Tool'}}"
+					       name="flags.obsidian.tools.{{key}}.label">
 					<span class="obsidian-binary-operator">&plus;</span>
-					<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{tool.bonus}}"
-					       data-dtype="Number" name="flags.obsidian.tools.custom.{{id}}.bonus">
+					<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{bonus}}"
+					       data-dtype="Number" name="flags.obsidian.tools.{{key}}.bonus">
 				</div>
 				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-tool">
 					{{localize 'OBSIDIAN.Remove'}}

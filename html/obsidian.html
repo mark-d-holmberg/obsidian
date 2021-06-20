@@ -353,13 +353,13 @@
 					<div class="obsidian-char-box-text">
 						{{localize 'OBSIDIAN.Skills'}}
 						<a title="{{localize 'OBSIDIAN.ManageSkills'}}" class="obsidian-edit"
-						   data-dialog="Skills" data-data-path="flags.obsidian.skills.custom"
-						   data-template="skills.html" data-title="{{localize 'OBSIDIAN.ManageSkills'}}">
+						   data-dialog="Skills" data-property="skills" data-template="skills.html"
+						   data-title="{{localize 'OBSIDIAN.ManageSkills'}}" data-width="440">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each actor.obsidian.skills as |skill id|}}
+						{{#each data.skills as |skill id|}}
 							<div class="obsidian-skill-item" data-skill-id="{{id}}">
 								<div class="obsidian-prof obsidian-ptr {{#if (eq 0.5 skill.proficiency.value)~}}
 									obsidian-half-proficient
@@ -399,13 +399,13 @@
 					<div class="obsidian-char-box-text">
 						{{localize 'OBSIDIAN.Tools'}}
 						<a title="{{localize 'OBSIDIAN.ManageTools'}}" class="obsidian-edit"
-						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Tools"
-						   data-data-path="flags.obsidian.tools.custom" data-template="tools.html">
+						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Skills"
+						   data-property="tools" data-template="tools.html" data-width="650">
 							<i class="fas fa-edit"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
-						{{#each actor.obsidian.tools as |tool id|}}
+						{{#each data.tools as |tool id|}}
 							{{#if tool.enabled}}
 							<div class="obsidian-skill-item" data-tool-id="{{id}}">
 								<div class="
@@ -453,7 +453,7 @@
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
 						{{#each actor.flags.obsidian.skills.passives}}
-						{{#with (get-property ../actor.obsidian.skills this)}}
+						{{#with (get-property ../data.skills this)}}
 							<div class="obsidian-passive-item">
 								<div class="obsidian-skill-name">{{localize 'OBSIDIAN.Passive'}} {{label}}</div>
 								<div class="obsidian-skill-passive">{{passive}}</div>

@@ -51,6 +51,10 @@ function applyHPBonuses (actor, data, derived) {
 }
 
 function applySpellBonuses (actor, derived) {
+	if (actor.type === 'vehicle') {
+		return;
+	}
+
 	[['spellAttacks', 'attacks'], ['spellDCs', 'saves']].forEach(([filter, key]) => {
 		const total = Effect.applyBonuses(actor, Filters.appliesTo[filter]);
 		derived.spellcasting[key] = derived.spellcasting[key].map(val => val + total);

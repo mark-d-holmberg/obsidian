@@ -37,7 +37,7 @@ export class ObsidianSensesDialog extends ObsidianDialog {
 		evt.preventDefault();
 		const passives = duplicate(this.parent.actor.data.flags.obsidian.skills.passives);
 		const passive =
-			Object.keys(this.parent.actor.data.obsidian.skills)
+			Object.keys(this.parent.actor.data.data.skills)
 				.filter(id => !passives.includes(id))[0];
 
 		if (passive !== undefined) {

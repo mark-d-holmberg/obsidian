@@ -309,7 +309,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		});
 
 		dialog.activateEditor = super.activateEditor;
-
 		dialog.editors = {};
 
 		dialog.activateListeners = html => {
@@ -355,24 +354,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 				const collection = [];
 				for (const prop in component.collection) {
-					if (component.collection.hasOwnProperty(prop)
-						&& !Number.isNumeric(prop)
-						&& component.collection[prop])
-					{
-						const lookup = `${component.check}s`;
-						if (prop === 'custom') {
-							collection.push(
-								...Object.entries(component.collection[prop])
-								.filter(([_, v]) => v)
-								.map(([k, _]) => {
-									return {
-										key: `${prop}.${k}`,
-										label: this.actor.data.flags.obsidian[lookup][prop][k].label
-									};
-								}));
-						} else {
-							collection.push({key: prop});
-						}
+					if (component.collection.hasOwnProperty(prop) && component.collection[prop]) {
+						collection.push({key: prop});
 					}
 				}
 
@@ -401,19 +384,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			Config[rule].forEach(k => selections[k] = game.i18n.localize(`OBSIDIAN.${i18n}.${k}`));
 		}
 
-		if (this.actor
-			&& this.actor.getFlag('obsidian', 'skills.custom.length')
-			&& ((component.filter === 'score' && component.score === 'passive')
-				|| (component.filter === 'roll'
-					&& component.roll === 'check'
-					&& component.check === 'skill')))
-		{
-			this.actor.data.flags.obsidian.skills.custom.forEach((v, i) =>
-				selections[`custom.${i}`] = v.label);
-		}
-
-		if (this.actor
-			&& component.filter === 'roll'
+		if (component.filter === 'roll'
 			&& component.roll === 'check'
 			&& component.check === 'tool')
 		{
@@ -425,11 +396,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 
 			tools.sort((a, b) => a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0);
 			tools.forEach(([key, label]) => selections[key] = label);
-
-			if (this.actor.data.flags.obsidian.tools.custom.length) {
-				this.actor.data.flags.obsidian.tools.custom.forEach((v, i) =>
-					selections[`custom.${i}`] = v.label);
-			}
 		}
 
 		return selections;

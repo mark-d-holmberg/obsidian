@@ -44,11 +44,11 @@ async function onHotbarDrop (bar, data, slot) {
 
 		switch (args.rollData.roll) {
 			case 'tool':
-				name = actor.data.obsidian.tools[args.rollData.tool].label;
+				name = actor.data.data.tools[args.rollData.tool].label;
 				break;
 
 			case 'skl':
-				name = actor.data.obsidian.skills[args.rollData.skl].label;
+				name = actor.data.data.skills[args.rollData.skl].label;
 				break;
 
 			case 'abl': case 'save':

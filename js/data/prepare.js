@@ -4,6 +4,7 @@ import {bonusToParts, highestProficiency} from './bonuses.js';
 import {Effect} from '../module/effect.js';
 import {Config} from './config.js';
 import {conditionsRollMod} from '../module/conditions.js';
+import {Schema} from './schema.js';
 
 const ops = {
 	plus: (a, b) => a + b,
@@ -577,125 +578,90 @@ export const Prepare = {
 	},
 
 	skills: function (actor, data, flags, derived, originalSkills) {
-		derived.skills = {};
-		for (let [id, skill] of
-			Object.entries(data.skills).concat(Object.entries(flags.skills.custom)))
-		{
-			const custom = !isNaN(Number(id));
-			if (!custom) {
-				flags.skills[id] = mergeObject(skill, flags.skills[id] || {}, {inplace: false});
-				skill = flags.skills[id];
+		const skills = new Set(Object.keys(data.skills).concat(Object.keys(flags.skills)));
+		const skip = new Set(['bonus', 'joat', 'passives', 'roll']);
+
+		for (const id of skills) {
+			if (skip.has(id)) {
+				continue;
+			}
+
+			const fromData = data.skills[id] || {};
+			const fromFlags = flags.skills[id] || {};
+			const skill = mergeObject(fromData, fromFlags, {inplace: false});
+			data.skills[id] = skill;
+
+			let original;
+			if (originalSkills) {
+				original = originalSkills[id];
+			}
+
+			if (!skill.custom) {
 				skill.label = game.i18n.localize(`OBSIDIAN.Skill.${id}`);
 			}
 
-			let original;
-			const key = custom ? `custom.${id}` : id;
-
-			if (originalSkills) {
-				original = originalSkills[key];
-			}
-
-			derived.skills[key] = duplicate(skill);
-			skill = derived.skills[key];
 			Prepare.calculateSkill(data, flags, skill, original);
+			let filter = Filters.appliesTo.skillChecks(id, skill.ability);
 
 			if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
-				const bonuses =
-					derived.filters.bonuses(Filters.appliesTo.skillChecks(key, skill.ability));
-
+				const bonuses = derived.filters.bonuses(filter);
 				if (bonuses.length) {
-					skill.rollParts.push(
-						...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
+					skill.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					skill.rollParts = highestProficiency(skill.rollParts);
 				}
 			}
 
-			const rollMods =
-				derived.filters.mods(Filters.appliesTo.skillChecks(key, skill.ability));
-
+			const rollMods = derived.filters.mods(filter);
 			const rollMod =
 				Effect.combineRollMods(
-					rollMods.concat(
-						conditionsRollMod(actor, {ability: skill.ability, skill: key})));
+					rollMods.concat(conditionsRollMod(actor, {ability: skill.ability, skill: id})));
 
 			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
-			if (skill.rollParts.find(p => p.proficiency)?.value > 0.5
-				&& original && original.mod > skill.mod)
-			{
+			skill.proficiency = skill.rollParts.find(part => part.proficiency);
+
+			if (skill.proficiency?.value > 0.5 && original && original.mod > skill.mod) {
 				skill.mod = original.mod;
 			}
 
-			skill.key = key;
+			filter = Filters.appliesTo.passiveScores(id);
+			skill.key = id;
 			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
-			skill.proficiency = skill.rollParts.find(part => part.proficiency);
-
-			const passiveBonuses = derived.filters.bonuses(Filters.appliesTo.passiveScores(key));
-			if (passiveBonuses.length) {
-				skill.passive +=
-					passiveBonuses.reduce((acc, bonus) =>
-						acc + bonusToParts(actor, bonus)
-							.reduce((acc, part) => acc + part.mod, 0), 0);
-
-				skill.passive = Math.floor(skill.passive);
-			}
-
-			const multipliers = derived.filters.multipliers(Filters.appliesTo.passiveScores(key));
-			if (multipliers.length) {
-				skill.passive =
-					Math.floor(
-						skill.passive
-						* multipliers.reduce((acc, mult) => acc * (mult.multiplier ?? 1), 1));
-			}
-
-			const passiveSetters = derived.filters.setters(Filters.appliesTo.passiveScores(key));
-			if (passiveSetters.length) {
-				const setter = Effect.combineSetters(passiveSetters);
-				if (!setter.min || setter.score > skill.passive) {
-					skill.passive = setter.score;
-				}
-			}
+			skill.passive += Effect.applyBonuses(actor, filter);
+			skill.passive = Effect.applyMultipliers(actor, filter, skill.passive);
+			skill.passive = Effect.applySetters(actor, filter, skill.passive);
 		}
 	},
 
 	tools: function (actor, data, flags, derived) {
-		derived.tools = {};
-		const tools = Config.ALL_TOOLS.map(t => {
-			const tool = mergeObject(
-				{ability: 'str', bonus: 0, value: 0, label: '', enabled: false},
-				flags.tools[t] || {});
+		if (!data.tools) {
+			data.tools = {};
+		}
 
-			flags.tools[t] = tool;
-			return [t, tool];
-		});
+		const tools = new Set(Config.ALL_TOOLS.concat(Object.keys(flags.tools)));
+		for (const id of tools) {
+			const tool = duplicate(Schema.Tool);
+			mergeObject(tool, flags.tools[id] || {});
+			flags.tools[id] = data.tools[id] = tool;
 
-		for (let [id, tool] of tools.concat(Object.entries(flags.tools.custom))) {
-			const custom = !isNaN(Number(id));
-			const key = custom ? `custom.${id}` : id;
-
-			derived.tools[key] = duplicate(tool);
-			tool = derived.tools[key];
-
-			if (custom) {
+			if (tool.custom) {
 				tool.enabled = true;
 			} else {
 				tool.label = game.i18n.localize(`OBSIDIAN.ToolProf.${id}`);
 			}
 
 			Prepare.calculateSkill(data, flags, tool);
-
 			if (OBSIDIAN.notDefinedOrEmpty(tool.override)) {
 				const bonuses =
-					derived.filters.bonuses(Filters.appliesTo.toolChecks(key, tool.ability));
+					derived.filters.bonuses(Filters.appliesTo.toolChecks(id, tool.ability));
 
 				if (bonuses.length) {
-					tool.rollParts.push(
-						...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
+					tool.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 					tool.rollParts = highestProficiency(tool.rollParts);
 				}
 			}
 
-			tool.key = key;
+			tool.key = id;
 			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			tool.proficiency = tool.rollParts.find(part => part.proficiency);
 		}

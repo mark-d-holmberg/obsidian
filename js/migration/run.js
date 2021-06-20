@@ -102,6 +102,17 @@ async function beginMigration (html) {
 		return;
 	}
 
+	if (game.settings.get('obsidian', 'version') < 15) {
+		// One time cleanup of old skill data.
+		try {
+			await cleanupSkills();
+		} catch (e) {
+			console.error(e);
+			migrationFailed();
+			return;
+		}
+	}
+
 	await game.settings.set('obsidian', 'version', Schema.VERSION);
 	location.reload();
 }
@@ -136,6 +147,58 @@ async function clearDurations () {
 		}
 
 		await scene.updateEmbeddedDocuments('Token', updates, {diff: false, recursive: false});
+	}
+}
+
+async function cleanupSkills () {
+	console.debug('Cleaning up skills...');
+
+	const actorUpdates = [];
+	for (const actor of game.actors.contents) {
+		console.debug(`Cleaning up skills for '${actor.name}'...`);
+		actorUpdates.push({
+			_id: actor.id,
+			'flags.obsidian.skills.-=custom': null,
+			'flags.obsidian.skills.-=tools': null,
+			'flags.obsidian.skills.-=value': null,
+			'flags.obsidian.tools.-=custom': null
+		});
+	}
+
+	await Actor.updateDocuments(actorUpdates, {diff: false});
+
+	for (const scene of game.scenes.contents) {
+		const updates = [];
+		console.debug(`Cleaning up skills in '${scene.name}'...`);
+		for (const token of scene.tokens.contents) {
+			console.debug(`Cleaning up skills in ${token.name}...`);
+			if (token.data.actorLink) {
+				continue;
+			}
+
+			const obsidian = token.data.actorData?.flags?.obsidian;
+			if (!obsidian) {
+				continue;
+			}
+
+			const update = {_id: token.id};
+			if (obsidian.skills || obsidian.tools) {
+				updates.push(update);
+			} else {
+				continue;
+			}
+
+			if (obsidian.skills) {
+				update['actorData.flags.obsidian.skills.-=custom'] = null;
+				update['actorData.flags.obsidian.skills.-=tools'] = null;
+			}
+
+			if (obsidian.tools) {
+				update['actorData.flags.obsidian.tools.-=custom'] = null;
+			}
+		}
+
+		await scene.updateEmbeddedDocuments('Token', updates, {diff: false});
 	}
 }
 

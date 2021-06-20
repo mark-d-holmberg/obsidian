@@ -86,6 +86,8 @@ export const Migrate = {
 			}
 
 			Migrate.v14.convertSummon(data);
+			Migrate.v14.convertTempMaxHP(data);
+			Migrate.v14.convertSkills(data);
 		}
 
 		if (data.items?.length) {

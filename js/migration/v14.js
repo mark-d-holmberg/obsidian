@@ -1,3 +1,5 @@
+import {OBSIDIAN} from '../global.js';
+
 export const v14 = {
 	convertActiveEffect: function (data) {
 		if (data.type !== 'feat' || !data.flags?.obsidian?.activeEffect) {
@@ -10,10 +12,6 @@ export const v14 = {
 		} else if (duration.actor) {
 			duration.uuid = `Actor.${duration.actor}`;
 		}
-
-		duration['-=scene'] = null;
-		duration['-=token'] = null;
-		duration['-=actor'] = null;
 	},
 
 	convertSpellcasting: function (data) {
@@ -43,9 +41,42 @@ export const v14 = {
 		} else if (summon.actor) {
 			summon.summoner = `Actor.${summon.actor}`;
 		}
+	},
 
-		summon['-=scene'] = null;
-		summon['-=token'] = null;
-		summon['-=actor'] = null;
+	convertTempMaxHP: function (data) {
+		let hpMaxMod = data.flags?.obsidian?.attributes?.hpMaxMod;
+		if (OBSIDIAN.notDefinedOrEmpty(hpMaxMod)) {
+			return;
+		}
+
+		hpMaxMod = Number(hpMaxMod);
+		if (isNaN(hpMaxMod)) {
+			return;
+		}
+
+		data.data.attributes.hp.tempmax = hpMaxMod;
+	},
+
+	convertSkills: function (data) {
+		const skills = data.flags?.obsidian?.skills;
+		const tools = data.flags?.obsidian?.tools;
+
+		for (const skill of skills?.custom || []) {
+			if (OBSIDIAN.notDefinedOrEmpty(skill.label)) {
+				continue;
+			}
+
+			const key = skill.label.slugify({strict: true});
+			skills[key] = duplicate(skill);
+		}
+
+		for (const tool of tools?.custom || []) {
+			if (OBSIDIAN.notDefinedOrEmpty(tool.label)) {
+				continue;
+			}
+
+			const key = tool.label.slugify({strict: true});
+			tools[key] = duplicate(tool);
+		}
 	}
 };

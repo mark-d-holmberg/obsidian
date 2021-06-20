@@ -46,15 +46,12 @@ Schema.Actor = {
 	skills: {
 		bonus: 0,
 		joat: false,
-		custom: [],
 		passives: ['prc', 'inv']
 	},
 	spells: {
 		slots: {}
 	},
-	tools: {
-		custom: []
-	},
+	tools: {},
 	traits: {
 		profs: {
 			custom: {
@@ -87,6 +84,9 @@ Schema.Spell = {
 	components: {},
 	source: {type: 'custom'}
 };
+
+Schema.Skill = {ability: 'str', bonus: 0, value: 0, label: '', custom: false};
+Schema.Tool = {ability: 'str', bonus: 0, value: 0, label: '', enabled: false, custom: false};
 
 Schema.Weapon = {
 	category: 'simple',
