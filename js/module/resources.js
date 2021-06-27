@@ -111,7 +111,7 @@ function createSrc (config, bar) {
 function createResourceSelect (config, bar) {
 	const res = config.token.getFlag('obsidian', `${bar}.res`);
 	const itemsWithResources =
-		config.actor.items.entries.filter(i =>
+		config.actor.items.contents.filter(i =>
 			i.data.flags.obsidian.effects.some(e => e.components.some(c => c.type === 'resource')));
 
 	itemsWithResources.sort((a, b) => a.name.localeCompare(b.name));
@@ -137,6 +137,10 @@ function createResourceSelect (config, bar) {
 }
 
 function getResourceData (actor, prop) {
+	if (!prop) {
+		return null;
+	}
+
 	const [, , uuid] = prop.split('.');
 	const component = actor.data.obsidian?.components.get(uuid);
 

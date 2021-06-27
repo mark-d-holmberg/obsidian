@@ -7,6 +7,7 @@ import {cssIconHexagon} from '../util/html.js';
 import {Config} from '../data/config.js';
 import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
+import {ObsidianItemDerived} from './derived.js';
 
 export function patchItem5e () {
 	Item5e.prototype.prepareData = (function () {
@@ -22,6 +23,8 @@ export function patchItem5e () {
 			}
 
 			cached.apply(this, arguments);
+			this.data.obsidian = new ObsidianItemDerived();
+
 			if (OBSIDIAN.isMigrated() && !this.isOwnedByActor()) {
 				// Owned items will be prepared at a later stage.
 				prepareData(this);
@@ -94,20 +97,11 @@ function prepareData (item) {
 		Migrate.convertItem(item.data, item.actor?.data);
 	}
 
-	if (!item.data.obsidian) {
-		item.data.obsidian = {};
-	}
-
 	const data = item.data.data;
 	const flags = item.data.flags.obsidian;
 	const derived = item.data.obsidian;
-	derived.actionable = [];
-	derived.attributes = {};
-	derived.collection = {versatile: []};
-	derived.notes = [];
-	Effect.metadata.components.forEach(c => derived.collection[c] = []);
-
 	const prepare = prepareItem[item.data.type];
+
 	if (prepare) {
 		prepare(item, data, flags, derived);
 	}

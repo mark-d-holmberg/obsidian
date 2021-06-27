@@ -12,10 +12,10 @@ import {prepareDefenseDisplay, prepareDefenses} from '../data/defenses.js';
 import {Config} from '../data/config.js';
 import {Migrate} from '../migration/migrate.js';
 import {ObsidianNPC} from '../sheets/npc.js';
-import {Partitioner} from '../util/partition.js';
 import {Effect} from './effect.js';
 import {Filters} from '../data/filters.js';
 import {ObsidianCharacter} from '../sheets/obsidian.js';
+import {ObsidianActorDerived} from './derived.js';
 
 export class ObsidianActor extends Actor5e {
 	static _deriveLevelFromXP (data, derived) {
@@ -49,21 +49,7 @@ export class ObsidianActor extends Actor5e {
 			Migrate.convertActor(this.data);
 		}
 
-		this.data.obsidian = {
-			ammo: [],
-			attributes: {init: {}, speed: {}},
-			classes: [],
-			components: new Map(),
-			details: {},
-			effects: new Map(),
-			itemsByType: new Partitioner(game.system.entityTypes.Item),
-			magicalItems: [],
-			rules: {},
-			spellbook: {concentration: [], rituals: []},
-			toggleable: [],
-			triggers: {}
-		};
-
+		this.data.obsidian = new ObsidianActorDerived();
 		const data = this.data.data;
 		const flags = this.data.flags.obsidian;
 		const derived = this.data.obsidian;
@@ -85,20 +71,8 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	_collateOwnedItems (actorDerived, items) {
-		actorDerived.inventory = {
-			weight: 0,
-			attunements: 0,
-			items: [],
-			root: [],
-			containers: []
-		};
-
 		let i = 0;
 		for (const item of items) {
-			if (!item.data.obsidian) {
-				item.data.obsidian = {};
-			}
-
 			const data = item.data.data;
 			const flags = item.data.flags.obsidian;
 			const derived = item.data.obsidian;

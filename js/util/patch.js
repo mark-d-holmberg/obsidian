@@ -65,7 +65,7 @@ export function runPatches () {
 		return function (source = true) {
 			const data = cached.apply(this, arguments);
 			if (!source) {
-				data.obsidian = cloneWithObject(this.obsidian, false);
+				data.obsidian = this.obsidian.toObject(source);
 			}
 
 			return data;
@@ -78,7 +78,7 @@ export function runPatches () {
 			const data = cached.apply(this, arguments);
 			if (!source) {
 				data.idx = this.idx;
-				data.obsidian = cloneWithObject(this.obsidian, false);
+				data.obsidian = this.obsidian.toObject(source);
 			}
 
 			return data;
