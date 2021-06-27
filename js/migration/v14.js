@@ -1,4 +1,5 @@
 import {OBSIDIAN} from '../global.js';
+import {Config} from '../data/config.js';
 
 export const v14 = {
 	convertActiveEffect: function (data) {
@@ -77,6 +78,20 @@ export const v14 = {
 
 			const key = tool.label.slugify({strict: true});
 			tools[key] = duplicate(tool);
+		}
+	},
+
+	convertClass: function (data) {
+		if (data.type !== 'class') {
+			return;
+		}
+
+		if (Config.CLASSES.includes(data.name)) {
+			if (data.name === 'custom') {
+				data.name = data.flags.obsidian.custom;
+			} else {
+				data.name = game.i18n.localize(`OBSIDIAN.Class.${data.name}`);
+			}
 		}
 	}
 };

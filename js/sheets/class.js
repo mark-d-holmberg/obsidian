@@ -1,4 +1,5 @@
 import {ObsidianItemSheet} from './item-sheet.js';
+import {OBSIDIAN} from '../global.js';
 
 export class ObsidianClassSheet extends ObsidianItemSheet {
 	static get defaultOptions () {
@@ -18,6 +19,8 @@ export class ObsidianClassSheet extends ObsidianItemSheet {
 
 	getData () {
 		const data = super.getData();
+		data.isCustom = !OBSIDIAN.Config.CLASSES.includes(this.item.data.obsidian.key);
+
 		if (this.item.isOwned) {
 			data.rollData = this.item.actor.getRollData();
 		}

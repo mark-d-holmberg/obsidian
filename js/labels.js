@@ -137,6 +137,8 @@ export function translateLabels () {
 	OBSIDIAN.Labels.DamageWpn = {wpn: localize('Damage.wpn'), ...OBSIDIAN.Labels.Damage};
 	OBSIDIAN.Labels.SkillCustom = {...OBSIDIAN.Labels.Skill, custom: localize('Custom')};
 	OBSIDIAN.Labels.DamageSpell = {...OBSIDIAN.Labels.Damage, spell: localize('Damage.spell')};
+	OBSIDIAN.Labels.ClassMap =
+		new Map(Object.entries(OBSIDIAN.Labels.Class).map(([k, v]) => [v.toLocaleLowerCase(), k]));
 
 	addRules(localize);
 }

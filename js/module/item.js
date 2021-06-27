@@ -126,10 +126,8 @@ const prepareItem = {
 
 	'class': function (item, data, flags, derived) {
 		data.levels = Number(data.levels);
-		derived.label =
-			item.name === 'custom'
-				? flags.custom
-				: game.i18n.localize(`OBSIDIAN.Class.${item.name}`);
+		derived.label = item.name;
+		derived.key = OBSIDIAN.Labels.ClassMap?.get(item.name.toLocaleLowerCase());
 
 		if (!flags.spellcasting?.enabled) {
 			return;

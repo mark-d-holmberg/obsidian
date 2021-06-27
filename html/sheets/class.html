@@ -4,8 +4,8 @@
 		<legend>{{item.obsidian.label}}</legend>
 		<div class="obsidian-form-row">
 			<div>
-				{{#if (eq item.name 'custom')}}
-				<input type="text" name="flags.obsidian.custom" value="{{item.flags.obsidian.custom}}">
+				{{#if isCustom}}
+				<input type="text" name="name" value="{{name}}">
 				{{/if}}
 				<input type="text" name="data.subclass" placeholder="{{localize 'OBSIDIAN.Subclass'}}"
 				       value="{{data.subclass}}">

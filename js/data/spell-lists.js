@@ -64,7 +64,11 @@ export default class ObsidianSpellLists extends FormApplication {
 	_computeDifference () {
 		const matchesFilter = (filter, spell) => {
 			const levels =
-				this._filters[filter].map((f, i) => [f, i]).filter(([f, _]) => f).map(([_, i]) => i);
+				this._filters[filter]
+					.map((f, i) => [f, i])
+					.filter(([f, _]) => f)
+					.map(([_, i]) => i);
+
 			const name =
 				this.element.find(`.obsidian-input-search[data-prop="${filter}"]`)
 					.val().toLowerCase();
@@ -172,7 +176,6 @@ class ObsidianCustomListManager extends Application {
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('.obsidian-add-class').click(this._onAddClass.bind(this));
-		html.find('.obsidian-rm-class').click(this._onRemoveClass.bind(this));
 	}
 
 	async close () {
@@ -187,6 +190,8 @@ class ObsidianCustomListManager extends Application {
 		data.classes =
 			Object.keys(JSON.parse(game.settings.get('obsidian', 'spell-class-lists')))
 				.filter(cls => !OBSIDIAN.Config.CLASSES.includes(cls));
+
+		data.max = Math.max(data.classes.length, 9);
 		return data;
 	}
 
@@ -194,27 +199,10 @@ class ObsidianCustomListManager extends Application {
 	 * @private
 	 */
 	async _onAddClass () {
-		await this._save();
-		const lists = JSON.parse(game.settings.get('obsidian', 'spell-class-lists'));
-		if (lists['']) {
-			return;
-		}
-
-		lists[''] = [];
-		await game.settings.set('obsidian', 'spell-class-lists', JSON.stringify(lists));
-		this.render(false);
-	}
-
-	/**
-	 * @private
-	 */
-	async _onRemoveClass (evt) {
-		await this._save();
-		const lists = JSON.parse(game.settings.get('obsidian', 'spell-class-lists'));
-		const cls = $(evt.currentTarget).prev().val();
-		delete lists[cls];
-		await game.settings.set('obsidian', 'spell-class-lists', JSON.stringify(lists));
-		this.render(false);
+		this.element.find('form').append($(`
+			<div class="obsidian-form-row">
+				<input type="text" class="obsidian-input-lg obsidian-input-max">
+			</div>`));
 	}
 
 	/**
@@ -222,7 +210,14 @@ class ObsidianCustomListManager extends Application {
 	 */
 	_save () {
 		const lists = JSON.parse(game.settings.get('obsidian', 'spell-class-lists'));
-		const classes = Array.from(this.element.find('input')).map(input => input.value);
+		const classes = Array.from(this.element.find('input')).reduce((acc, input) => {
+			if (input.value.length) {
+				acc.push(input.value);
+			}
+
+			return acc;
+		}, []);
+
 		for (const key of Object.keys(lists)) {
 			if (!OBSIDIAN.Config.CLASSES.includes(key) && !classes.includes(key)) {
 				delete lists[key];

@@ -250,7 +250,7 @@ export class ObsidianActor extends Actor5e {
 			// Make sure we prepare class items first.
 			if (item.type === 'class') {
 				if (!item.getFlag('obsidian', 'spellcasting.enabled')) {
-					item.data.data.spellcasting = 'none';
+					item.data.data.spellcasting = {progression: 'none', ability: ''};
 				}
 
 				item.prepareObsidianEffects();

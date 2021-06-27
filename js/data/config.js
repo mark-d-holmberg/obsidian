@@ -159,7 +159,6 @@ Config.ITEM_RARITY = ['c', 'uc', 'r', 'vr', 'l', 'a'];
 Config.ITEM_RECHARGE = ['long', 'short', 'dawn', 'dusk', 'never', 'roll'];
 Config.ITEM_SUBRARITY = ['min', 'maj'];
 Config.MAX_LEVEL = 20;
-Config.NON_CASTERS = ['brb', 'fgt', 'mnk', 'rog'];
 Config.NPC_SIZE_HD = {tiny: 4, sm: 6, med: 8, lg: 10, huge: 12, grg: 20};
 Config.PROF_ARMOUR = ['lgt', 'med', 'hvy', 'shl'];
 Config.PROF_WEAPON = [

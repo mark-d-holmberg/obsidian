@@ -45,11 +45,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	}
 
 	static determineSpellcasting (cls) {
-		if (cls === 'custom') {
-			return {enabled: false};
-		}
-
-		if (OBSIDIAN.Config.NON_CASTERS.includes(cls)) {
+		if (!Object.keys(OBSIDIAN.Config.CLASS_SPELL_PREP).includes(cls)) {
 			return {enabled: false};
 		}
 
@@ -94,17 +90,23 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onNewClass (cls) {
 		const item = {
-			name: cls.name,
+			name: game.i18n.localize(`OBSIDIAN.Class.${cls.name}`),
 			type: 'class',
 			data: {levels: 1},
 			flags: {obsidian: {}}
 		};
 
 		if (cls.name === 'custom') {
-			item.flags.obsidian.custom = cls.custom;
+			item.name = cls.custom;
 		}
 
-		await this.parent.actor.createEmbeddedDocuments('Item', [item], {renderSheet: false});
+		await this.parent.actor.createEmbeddedDocuments('Item', [item], {
+			renderSheet: false,
+			render: false,
+			addFeatures: false,
+			promptAddFeatures: false
+		});
+
 		this.render(false);
 	}
 
@@ -130,10 +132,14 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 			};
 		});
 
-		await OBSIDIAN.updateManyOwnedItems(this.parent.actor, data);
+		await OBSIDIAN.updateManyOwnedItems(this.parent.actor, data, {
+			addFeatures: false,
+			promptAddFeatures: false
+		});
+
 		return this.parent.actor.update({
-			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
 			'data.details.race': formData['data.details.race'],
+			'flags.obsidian.details.gender': formData['flags.obsidian.details.gender'],
 			'flags.obsidian.details.subrace': formData['flags.obsidian.details.subrace']
 		});
 	}

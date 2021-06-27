@@ -6,7 +6,7 @@
 	"minimumCoreVersion": "0.7.9",
 	"compatibleCoreVersion": "0.7.9",
 	"author": "Kim Mantas",
-	"systems": ["dnd5e"],
+	"system": ["dnd5e"],
 	"esmodules": ["js/main.js"],
 	"socket": true,
 	"styles": [

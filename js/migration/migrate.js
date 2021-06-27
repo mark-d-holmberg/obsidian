@@ -133,7 +133,7 @@ export const Migrate = {
 		}
 
 		if (data.type === 'class') {
-			Migrate.convertClass(data, source);
+			Migrate.convertClass(data);
 		} else if (data.type === 'consumable') {
 			data.flags.obsidian =
 				mergeObject(Schema.Consumable, data.flags.obsidian || {}, {inplace: false});
@@ -240,6 +240,7 @@ export const Migrate = {
 		if (data.flags.obsidian.version < 15 && source !== 'core') {
 			Migrate.v14.convertSpellcasting(data);
 			Migrate.v14.convertActiveEffect(data);
+			Migrate.v14.convertClass(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -252,38 +253,21 @@ export const Migrate = {
 		}
 	},
 
-	convertClass: function (data, source) {
-		if (source === 'core') {
-			const official =
-				OBSIDIAN.Config.CLASSES.find(cls =>
-					data.name === game.i18n.localize(`OBSIDIAN.Class.${cls}`));
-
-			if (official) {
-				data.name = official;
-			} else {
-				const name = data.name;
-				data.name = 'custom';
-				data.flags.obsidian.custom = name;
-			}
-
-			if (!data.data.spellcasting || data.data.spellcasting === 'none') {
-				data.data.spellcasting = OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[data.name] || 'none';
-			}
-		}
-
+	convertClass: function (data) {
+		const key = OBSIDIAN.Labels.ClassMap.get(data.name.toLocaleLowerCase());
 		if (!data.data.hitDice) {
-			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(data.name);
+			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(key);
 		}
 
 		if (!data.flags.obsidian.spellcasting) {
 			data.flags.obsidian.spellcasting =
-				ObsidianHeaderDetailsDialog.determineSpellcasting(data.name);
+				ObsidianHeaderDetailsDialog.determineSpellcasting(key);
 		}
 
 		if (!data.data.spellcasting) {
 			data.data.spellcasting = {
-				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[data.name] || 'none',
-				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[data.name] || ''
+				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[key] || 'none',
+				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[key] || ''
 			};
 		}
 	},
