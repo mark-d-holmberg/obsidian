@@ -1,11 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 
 export default class ObsidianTable extends RollTable {
-	constructor (data = {}, context = {}) {
-		super(data, context);
-		this.options = context;
-	}
-
 	get hasParentComponent () {
 		return this.getFlag('obsidian', 'isEmbedded')
 			&& this.getFlag('obsidian', 'parentComponent')
@@ -79,34 +74,34 @@ export default class ObsidianTable extends RollTable {
 	}
 
 	async update (data, options = {}) {
-		if (this.hasParentComponent) {
-			const parentItem = this.options.parentItem;
-			const parentComponent = this.getFlag('obsidian', 'parentComponent');
-			const newData =
-				mergeObject(
-					this.data._source,
-					expandObject(OBSIDIAN.updateArrays(this.data._source, data)),
-					{inplace: false});
-
-			const effects = duplicate(parentItem.getFlag('obsidian', 'effects'));
-			const component =
-				effects.flatMap(e => e.components).find(c => c.uuid === parentComponent);
-
-			const idx = component.tables.findIndex(table => table._id === this.id);
-			component.tables[idx] = newData;
-
-			await parentItem.setFlag('obsidian', 'effects', effects);
-			this.data.update(newData, {recursive: false});
-
-			// We have to bypass the normal render and instead return the async
-			// _render for the case where _onSubmit is called before deleting
-			// a TableResult. The _onSubmit is awaited, but since we don't
-			// return a Promise with render, the TableResult is deleted while
-			// the sheet hasn't re-rendered from the initial _onSubmit event,
-			// causing the re-render after TableResult deletion to exit early.
-			return this.sheet._render(false);
-		} else {
+		if (!this.hasParentComponent) {
 			return super.update(data, options);
 		}
+
+		const parentItem = this.options.parentItem;
+		const parentComponent = this.getFlag('obsidian', 'parentComponent');
+		const newData =
+			mergeObject(
+				this.data._source,
+				expandObject(OBSIDIAN.updateArrays(this.data._source, data)),
+				{inplace: false});
+
+		const effects = duplicate(parentItem.getFlag('obsidian', 'effects'));
+		const component =
+			effects.flatMap(e => e.components).find(c => c.uuid === parentComponent);
+
+		const idx = component.tables.findIndex(table => table._id === this.id);
+		component.tables[idx] = newData;
+
+		await parentItem.setFlag('obsidian', 'effects', effects);
+		this.data.update(newData, {recursive: false});
+
+		// We have to bypass the normal render and instead return the async
+		// _render for the case where _onSubmit is called before deleting
+		// a TableResult. The _onSubmit is awaited, but since we don't
+		// return a Promise with render, the TableResult is deleted while
+		// the sheet hasn't re-rendered from the initial _onSubmit event,
+		// causing the re-render after TableResult deletion to exit early.
+		return this.sheet._render(false);
 	}
 }

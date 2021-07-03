@@ -322,7 +322,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				const ed = editors[0];
 				if (ed.mce) {
 					component.raw = ed.mce.getContent();
-					await this._updateEffects(
+					await this._updateObject(
 						null,
 						OBSIDIAN.updateArrays(
 							this.item.data._source, {'flags.obsidian.effects': effects}));
@@ -353,8 +353,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				}
 
 				const collection = [];
-				for (const prop in component.collection) {
-					if (component.collection.hasOwnProperty(prop) && component.collection[prop]) {
+				for (const prop of Object.keys(component.collection)) {
+					if (!Number.isNumeric(prop) && component.collection[prop]) {
 						collection.push({key: prop});
 					}
 				}
@@ -419,7 +419,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		const item = new CONFIG[entity].documentClass(data);
-		// Temporary stopgap for getting it working in 0.8.
 		item.options = {
 			parentComponent: component.uuid,
 			parentItem: this.item
@@ -441,7 +440,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		effects.push(Effect.create());
-		this._updateEffects(null, formData);
+		this._updateObject(null, formData);
 		this._interacting = false;
 	}
 
@@ -470,7 +469,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			}
 		}
 
-		this._updateEffects(null, formData);
+		this._updateObject(null, formData);
 		this._interacting = false;
 	}
 
@@ -584,7 +583,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			component.actors.push(entity.uuid);
 		}
 
-		this._updateEffects(null, {'flags.obsidian.effects': effects});
+		this._updateObject(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -603,13 +602,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		};
 
 		if (this.actor) {
-			const created = await this.actor.createEmbeddedDocuments('Item', [item.toJSON()]);
+			const created = await this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
 			component.spells.push(created.shift().id);
 		} else {
 			component.spells.push(item.data._source);
 		}
 
-		this._updateEffects(null, {'flags.obsidian.effects': effects});
+		this._updateObject(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -622,7 +621,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		component.tables.push(item.data._source);
-		this._updateEffects(null, {'flags.obsidian.effects': effects});
+		this._updateObject(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -743,7 +742,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			await this.actor.deleteEmbeddedDocuments('Item', orphanedSpells);
 		}
 
-		this._updateEffects(null, formData);
+		this._updateObject(null, formData);
 		this._interacting = false;
 	}
 
@@ -843,7 +842,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
 		remove(component, pill.dataset.id);
-		return this._updateEffects(null, {'flags.obsidian.effects': effects});
+		return this._updateObject(null, {'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -921,42 +920,6 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 					this.element.find(`.obsidian-rm-${sub}`).removeClass('obsidian-hidden');
 				}
 			});
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	async _updateObject (event, formData) {
-		return this._updateEffects(event, this._formData);
-	}
-
-	async _updateEffects (event, data) {
-		if (this.item.getFlag('obsidian', 'isEmbedded')
-			&& this.item.options.parentItem
-			&& this.item.options.parentComponent
-			&& !this.actor)
-		{
-			const newData =
-				mergeObject(this.item.data._source, expandObject(data), {inplace: false});
-
-			const effects =
-				duplicate(this.item.options.parentItem.data._source.flags.obsidian.effects);
-
-			const component =
-				effects
-					.flatMap(e => e.components)
-					.find(c => c.uuid === this.item.options.parentComponent);
-
-			const idx = component.spells.findIndex(spell => spell._id === this.item.id);
-			component.spells[idx] = newData;
-
-			await this.item.options.parentItem.setFlag('obsidian', 'effects', effects);
-			this.item.data.update(newData);
-			this.render(false);
-			return this.item;
-		} else {
-			return super._updateObject(event, data);
 		}
 	}
 }

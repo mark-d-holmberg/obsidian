@@ -9,15 +9,13 @@ import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
 import {ObsidianItemDerived} from './derived.js';
 
+// We could reconfigure the Item documentClass like we did with a RollTable
+// but patching should play more nicely with other modules and Item is a lot
+// more important than RollTable.
 export function patchItem5e () {
 	Item5e.prototype.prepareData = (function () {
 		const cached = Item5e.prototype.prepareData;
 		return function () {
-			// Temporary stopgap for getting it working in 0.8.
-			if (!this.options) {
-				this.options = {};
-			}
-
 			if (!this.data.data.preparation) {
 				this.data.data.preparation = {};
 			}
@@ -79,6 +77,52 @@ export function patchItem5e () {
 			return this.data.idx;
 		}
 	});
+
+	Object.defineProperty(Item5e.prototype, 'options', {
+		get () {
+			return this._options || {};
+		},
+
+		set (options) {
+			this._options = options;
+		}
+	});
+
+	Object.defineProperty(Item5e.prototype, 'hasParentComponent', {
+		get () {
+			return this.getFlag('obsidian', 'isEmbedded')
+				&& this.getFlag('obsidian', 'parentComponent')
+				&& this.options.parentItem;
+		}
+	});
+
+	Item5e.prototype.update = (function () {
+		const cached = Item5e.prototype.update;
+		return async function (data = {}, context = {}) {
+			if (!this.hasParentComponent) {
+				return cached.apply(this, arguments);
+			}
+
+			const parentItem = this.options.parentItem;
+			const parentComponent = this.getFlag('obsidian', 'parentComponent');
+			const newData =
+				mergeObject(
+					this.data._source,
+					expandObject(OBSIDIAN.updateArrays(this.data._source, data)),
+					{inplace: false});
+
+			const effects = duplicate(parentItem.getFlag('obsidian', 'effects'));
+			const component =
+				effects.flatMap(e => e.components).find(c => c.uuid === parentComponent);
+
+			const idx = component.spells.findIndex(spell => spell._id === this.id);
+			component.spells[idx] = newData;
+
+			await parentItem.setFlag('obsidian', 'effects', effects);
+			this.data.update(newData, {recursive: false});
+			return this.sheet._render(false);
+		};
+	})();
 }
 
 export function getSourceClass (actor, source) {
