@@ -58,6 +58,7 @@ export class ObsidianItemDerived extends ObsidianDerived {
 		this.attributes = {};
 		this.collection = {versatile: []};
 		this.notes = [];
+		this.source = {display: ''};
 
 		Effect.metadata.components.forEach(c => this.collection[c] = []);
 	}

@@ -82,7 +82,10 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	async _onAddClass (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
-		new ObsidianNewClassDialog(this, {callback: this._onNewClass.bind(this)}).render(true);
+		new ObsidianNewClassDialog(this, {
+			callback: this._onNewClass.bind(this),
+			id: `new-class-${this.document.id}`
+		}).render(true);
 	}
 
 	/**

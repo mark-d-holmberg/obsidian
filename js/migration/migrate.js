@@ -341,12 +341,13 @@ export const Migrate = {
 					.map(prof => prof.trim())
 					.filter(prof => prof.length));
 
-			tools.custom.push(...custom.map(prof => {
-				return {
+			for (const tool of custom) {
+				const id = tool.slugify({strict: true});
+				tools[id] = {
 					ability: 'str', bonus: 0, value: 1, custom: true, enabled: true,
-					label: translateOrElseOriginal(`OBSIDIAN.ToolProf.${prof}`, prof)
-				}
-			}));
+					label: translateOrElseOriginal(`OBSIDIAN.ToolProf.${tool}`, tool)
+				};
+			}
 		}
 	},
 

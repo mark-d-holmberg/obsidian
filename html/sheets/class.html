@@ -1,11 +1,10 @@
 <form class="obsidian" autocomplete="off">
-	{{log item}}
 	<fieldset>
 		<legend>{{item.obsidian.label}}</legend>
 		<div class="obsidian-form-row">
 			<div>
 				{{#if isCustom}}
-				<input type="text" name="name" value="{{name}}">
+				<input type="text" name="name" value="{{item.name}}">
 				{{/if}}
 				<input type="text" name="data.subclass" placeholder="{{localize 'OBSIDIAN.Subclass'}}"
 				       value="{{data.subclass}}">

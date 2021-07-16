@@ -3,11 +3,6 @@ export class ObsidianDialog extends DocumentSheet {
 		super(parent.object, options);
 		this.parent = parent;
 
-		if (!options.register) {
-			// Deregister the sheet as this is just a modal dialog.
-			delete this.document.apps[this.appId];
-		}
-
 		if (this.parent.setModal && this.options.modal) {
 			this.parent.setModal(true);
 		}
@@ -162,6 +157,14 @@ export class ObsidianDialog extends DocumentSheet {
 		options.content_css =
 			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
 		super.activateEditor(name, options, initialContent);
+	}
+
+	render (force, options = {}) {
+		super.render(force, options);
+		if (!options.register) {
+			// Deregister the sheet as this is just a modal dialog.
+			delete this.document.apps[this.appId];
+		}
 	}
 
 	/**

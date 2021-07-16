@@ -20,6 +20,10 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		return 'modules/obsidian/html/dialogs/spells.html';
 	}
 
+	get id () {
+		return `manage-spells-${this.document.id}`;
+	}
+
 	/**
 	 * @param html {JQuery}
 	 * @return undefined
@@ -54,7 +58,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				spellcasting.totalKnown = 0;
 
 				if (spellcasting.spellList) {
-					const listKey = cls.name === 'custom' ? cls.flags.obsidian.custom : cls.name;
+					const listKey = cls.obsidian.key ?? cls.name;
 					data.spellsByClass[listKey] = duplicate(spellcasting.spellList);
 				}
 
@@ -68,7 +72,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 
 		for (const spell of Object.values(data.items.filter(item => item.type === 'spell'))) {
 			const flags = spell.flags.obsidian;
-			if (!flags || !flags.source || !['class', 'item'].includes(flags.source.type)) {
+			if (!['class', 'item'].includes(flags?.source?.type)) {
 				data.actor.obsidian.spells.custom.push(spell);
 				continue;
 			}

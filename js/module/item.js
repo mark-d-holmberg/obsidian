@@ -172,22 +172,22 @@ const prepareItem = {
 		}
 
 		if (data.spellcasting?.progression === 'none') {
-			data.spellcasting.progession = Config.CLASS_SPELL_PROGRESSION[item.name] || 'none';
+			data.spellcasting.progession = Config.CLASS_SPELL_PROGRESSION[derived.key] || 'none';
 		}
 
 		if (flags.spellcasting.preparation === undefined) {
-			flags.spellcasting.preparation = Config.CLASS_SPELL_PREP[item.name];
+			flags.spellcasting.preparation = Config.CLASS_SPELL_PREP[derived.key];
 		}
 
 		if (flags.spellcasting.rituals === undefined) {
-			flags.spellcasting.rituals = Config.CLASS_RITUALS[item.name] || 'none';
+			flags.spellcasting.rituals = Config.CLASS_RITUALS[derived.key] || 'none';
 		}
 
 		derived.spellcasting = {...duplicate(flags.spellcasting), ...duplicate(data.spellcasting)};
 		const spellcasting = derived.spellcasting;
 		const levels = data.levels;
 
-		spellcasting.list = item.name === 'custom' ? flags.custom : item.name;
+		spellcasting.list = derived.key ?? item.name;
 		spellcasting.spellList = [];
 
 		if (OBSIDIAN.Data.SPELLS_BY_CLASS && OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list]) {
@@ -196,7 +196,7 @@ const prepareItem = {
 		}
 
 		if (spellcasting.ability === undefined) {
-			spellcasting.ability = Config.CLASS_SPELL_MODS[item.name];
+			spellcasting.ability = Config.CLASS_SPELL_MODS[derived.key];
 		}
 
 		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.ability) && item.isOwnedByActor()) {
@@ -207,7 +207,7 @@ const prepareItem = {
 			spellcasting.save = mod + actorData.attributes.prof + 8;
 		}
 
-		const spellsKnown = Config.SPELLS_KNOWN_TABLE[item.name];
+		const spellsKnown = Config.SPELLS_KNOWN_TABLE[derived.key];
 		if (spellsKnown !== undefined) {
 			spellcasting.maxKnown = spellsKnown.known[levels - 1];
 			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
@@ -218,11 +218,13 @@ const prepareItem = {
 
 		if (spellcasting.preparation === 'prep') {
 			spellcasting.maxPrepared = spellcasting.mod || 0;
-			switch (data.spellcasting) {
+			switch (spellcasting.progression) {
 				case 'third': spellcasting.maxPrepared += Math.floor(levels / 3); break;
 				case 'half': case 'artificer': spellcasting.maxPrepared += Math.floor(levels / 2); break;
 				case 'full': spellcasting.maxPrepared += levels; break;
 			}
+
+			spellcasting.maxPrepared = Math.max(spellcasting.maxPrepared, 1);
 		}
 	},
 
@@ -287,8 +289,6 @@ const prepareItem = {
 	},
 
 	spell: function (item, data, flags, derived) {
-		derived.source = {display: ''};
-
 		if (OBSIDIAN.notDefinedOrEmpty(flags.time.n)) {
 			flags.time.n = 1;
 		} else {
@@ -330,6 +330,27 @@ const prepareItem = {
 
 				if (src?.data.flags.obsidian.attunement && !src?.data.data.attuned) {
 					derived.visible = false;
+				}
+
+				const parentComponent = item.getFlag('obsidian', 'parentComponent');
+				const cls = item.actor.items.get(src?.data.flags.obsidian?.source?.class);
+
+				if (parentComponent
+					&& src?.data.flags.obsidian?.source?.type === 'class'
+					&& cls?.obsidian.spellcasting?.enabled)
+				{
+					const prep = cls.obsidian.spellcasting.preparation;
+					const component = item.actor.obsidian.components.get(parentComponent);
+
+					if (component.type === 'spells'
+						&& component.source === 'individual'
+						&& component.method === 'list')
+					{
+						derived.visible =
+							(prep === 'known' && flags.known)
+							|| (prep === 'prep' && flags.prepared)
+							|| (prep === 'book' && flags.book && flags.prepared);
+					}
 				}
 			}
 		}
@@ -495,7 +516,7 @@ const prepareComponents = {
 	},
 
 	spells: function (actor, item, effect, component) {
-		if (!actor || !actor.data.obsidian) {
+		if (!actor?.obsidian) {
 			return;
 		}
 
