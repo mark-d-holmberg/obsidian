@@ -186,6 +186,11 @@
 	width: 40px;
 }
 
+.obsidian-col-action .obsidian-blank {
+	display: inline-block;
+	padding-left: 10px;
+}
+
 .obsidian-col-icon a {
 	font-size: 14px;
 }
