@@ -78,7 +78,7 @@ async function beginMigration (html) {
 			for (const token of scene.tokens.contents) {
 				console.debug(`Migrating token '${token.name}'...`);
 				const actorData = duplicate(token.toJSON().actorData);
-				if (!Object.keys(actorData).length) {
+				if (!Object.keys(actorData).length || !token.actor) {
 					continue;
 				}
 
