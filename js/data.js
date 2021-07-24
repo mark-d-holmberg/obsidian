@@ -12,7 +12,14 @@ OBSIDIAN.spellComparator = (a, b) => {
 
 const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 OBSIDIAN.collateSpells = async (compendium) => {
-	const spells = await game.packs.get(compendium).getDocuments();
+	let pack = game.packs.get(compendium);
+	if (!pack) {
+		console.warn(
+			`Unable to load spell compendium '${compendium}', falling back to 'dnd5e.spells'.`);
+		pack = game.packs.get('dnd5e.spells');
+	}
+
+	const spells = await pack.getDocuments();
 	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell]));
 };
 

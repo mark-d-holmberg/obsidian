@@ -32,6 +32,11 @@ export class ObsidianSkillDialog extends ObsidianDialog {
 		data.prop = this._prop;
 		data.id = this._id;
 		data.data = this._data;
+		data.data.label =
+			this._data.custom
+				? this._data.label
+				: game.i18n.localize(`OBSIDIAN.${this._tool ? 'ToolProf' : 'Skill'}.${this._id}`);
+
 		return data;
 	}
 }

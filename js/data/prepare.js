@@ -581,6 +581,11 @@ export const Prepare = {
 		const skills = new Set(Object.keys(data.skills).concat(Object.keys(flags.skills)));
 		const skip = new Set(['bonus', 'joat', 'passives', 'roll']);
 
+		// Legacy data.
+		if (skills.has('custom') && Array.isArray(flags.skills?.custom)) {
+			skills.delete('custom');
+		}
+
 		for (const id of skills) {
 			if (skip.has(id)) {
 				continue;
@@ -639,6 +644,12 @@ export const Prepare = {
 		}
 
 		const tools = new Set(Config.ALL_TOOLS.concat(Object.keys(flags.tools)));
+
+		// Legacy data.
+		if (tools.has('custom') && Array.isArray(flags.tools?.custom)) {
+			tools.delete('custom');
+		}
+
 		for (const id of tools) {
 			const tool = duplicate(Schema.Tool);
 			mergeObject(tool, flags.tools[id] || {});
