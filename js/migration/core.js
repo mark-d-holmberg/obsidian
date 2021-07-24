@@ -316,6 +316,10 @@ export const core = {
 				};
 			}));
 
+			if (!def.custom) {
+				return;
+			}
+
 			def.custom.split(';').forEach(def => {
 				if (CONVERT.defs.damage.get(def.trim().toLowerCase()) === 'nonmagical') {
 					defenses.damage.push(...['blg', 'prc', 'slh'].map(dmg => {
