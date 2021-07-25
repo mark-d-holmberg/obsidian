@@ -254,11 +254,12 @@ export const ObsidianItems = {
 
 		if (!OBSIDIAN.notDefinedOrEmpty(item.getFlag('obsidian', 'ammo'))) {
 			const ammo = actor.items.get(item.data.flags.obsidian.ammo);
-			const collection = ammo.obsidian.collection;
-			const suppressCard =
-				(collection.attack.length + collection.damage.length + collection.save.length) < 1;
-
 			if (ammo) {
+				const collection = ammo.obsidian.collection;
+				const suppressCard = (
+					collection.attack.length + collection.damage.length + collection.save.length
+				) < 1;
+
 				ObsidianItems.roll(actor, {roll: 'item', id: ammo.id, suppressCard: suppressCard});
 			}
 		}

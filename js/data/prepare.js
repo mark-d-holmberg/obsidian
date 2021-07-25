@@ -728,10 +728,11 @@ function weaponBonus (actor, item) {
 
 	if (flags.tags.ammunition && !OBSIDIAN.notDefinedOrEmpty(flags.ammo)) {
 		const ammo = actor?.items.get(flags.ammo);
-		const ammoFlags = ammo.data.flags.obsidian;
-
-		if (ammoFlags.magical && ammoFlags.magicBonus) {
-			bonus += ammoFlags.magicBonus;
+		if (ammo) {
+			const ammoFlags = ammo.data.flags.obsidian;
+			if (ammoFlags.magical && ammoFlags.magicBonus) {
+				bonus += ammoFlags.magicBonus;
+			}
 		}
 	}
 
