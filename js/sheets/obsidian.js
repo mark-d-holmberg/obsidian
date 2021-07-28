@@ -73,7 +73,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 
 	get template () {
 		return 'modules/obsidian/html/'
-			+ (!game.user.isGM && this.actor.limited ? 'limited.html' : 'obsidian.html');
+			+ (!this.actor.isOwner && this.actor.limited ? 'limited.html' : 'obsidian.html');
 	}
 
 	static get defaultOptions () {
@@ -99,7 +99,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		this.form.ondragover = Reorder.dragOver;
 		this.form.ondrop = evt => Sheet.onDrop(this, evt);
 
-		if (this.actor.limited) {
+		if (!this.actor.isOwner && this.actor.limited) {
 			return;
 		}
 

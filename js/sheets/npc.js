@@ -25,7 +25,8 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	}
 
 	get template () {
-		return `modules/obsidian/html/npc${this.actor.limited ? '-limited' : ''}.html`;
+		const limited = !this.actor.isOwner && this.actor.limited;
+		return `modules/obsidian/html/npc${limited ? '-limited' : ''}.html`;
 	}
 
 	static get defaultOptions () {
@@ -64,7 +65,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		this.form.ondragover = Reorder.dragOver;
 		this.form.ondrop = evt => Sheet.onDrop(this, evt);
 
-		if (this.actor.limited) {
+		if (!this.actor.isOwner && this.actor.limited) {
 			return;
 		}
 

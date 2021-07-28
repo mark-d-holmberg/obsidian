@@ -26,7 +26,8 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 	}
 
 	get template () {
-		return 'modules/obsidian/html/vehicle.html';
+		const limited = !this.actor.isOwner && this.actor.limited;
+		return `modules/obsidian/html/vehicle${limited ? '-limited' : ''}.html`;
 	}
 
 	static get defaultOptions () {

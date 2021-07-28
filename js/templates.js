@@ -48,6 +48,11 @@ export const preloadPartials = function () {
 export const preloadTemplates = function () {
 	return loadTemplates([
 		'modules/obsidian/html/obsidian.html',
+		'modules/obsidian/html/limited.html',
+		'modules/obsidian/html/npc.html',
+		'modules/obsidian/html/npc-limited.html',
+		'modules/obsidian/html/vehicle.html',
+		'modules/obsidian/html/vehicle-limited.html',
 		'modules/obsidian/html/tabs/actions.html',
 		'modules/obsidian/html/tabs/attacks.html',
 		'modules/obsidian/html/tabs/sub-actions.html',
