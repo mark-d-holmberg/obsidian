@@ -85,7 +85,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 
 	getData () {
 		const data = super.getData();
-		data.item = this.item;
+		data.item = this.item.toObject(false);
 		return data;
 	}
 }
