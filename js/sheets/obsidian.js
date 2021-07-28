@@ -171,11 +171,24 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 	}
 
 	getData () {
-		const data = super.getData();
+		const data = {
+			owner: this.actor.isOwner,
+			limited: this.actor.limited,
+			options: this.options,
+			editable: this.isEditable,
+			cssClass: this.actor.isOwner ? 'editable' : 'locked',
+			isCharacter: true,
+			config: CONFIG.DND5E,
+			rollData: this.actor.getRollData.bind(this.actor)
+		};
+
 		data.actor = this.actor.toObject(false);
 		data.base = this.actor.toObject();
+		data.data = data.actor.data;
 		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
+		data.items = data.actor.items;
+		this._prepareItems(data);
 
 		for (const [id, skill] of Object.entries(data.data.skills)) {
 			// Undo some upstream overwriting of skill labels
