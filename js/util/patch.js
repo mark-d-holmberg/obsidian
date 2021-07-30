@@ -2,7 +2,6 @@ import {OBSIDIAN} from '../global.js';
 import {patchChatMessage} from '../module/message.js';
 import {Rolls} from '../module/rolls.js';
 import {patchOnEscape} from '../module/actor-placement.js';
-import {within5ftOf} from '../module/token.js';
 
 export function runPatches () {
 	Combat.prototype.rollInitiative = async function (ids) {
@@ -50,14 +49,6 @@ export function runPatches () {
 		const html = await this.message.getHTML(false, {popout: true});
 		html.find('.message-delete').remove();
 		return html;
-	};
-
-	Token.prototype.within5ftOf = function (other) {
-		if (!other || !(other instanceof Token)) {
-			return false;
-		}
-
-		return within5ftOf(this, other);
 	};
 
 	Actor.schema.prototype.toObject = (function () {

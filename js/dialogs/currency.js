@@ -27,10 +27,10 @@ export class ObsidianCurrencyDialog extends ObsidianDialog {
 			return;
 		}
 
-		const target = $(evt.currentTarget);
-		const currency = target.prev().find('input');
-		const current = Number(currency.val());
-		currency.val(current + Number(target.val()));
-		target.val('');
+		const target = evt.currentTarget;
+		const currency = target.previousElementSibling;
+		const current = Number(currency.value);
+		currency.value = current + Number(target.value);
+		target.value = '';
 	}
 }

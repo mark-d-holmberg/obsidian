@@ -29,6 +29,7 @@ import {translateLabels} from './labels.js';
 import ObsidianTableResult from './module/table-result.js';
 import {ObsidianCharacter} from './sheets/obsidian.js';
 import {extendPrimitives} from './util/primitives.js';
+import {patchToken} from './module/token.js';
 
 runPatches();
 extendPrimitives();
@@ -65,6 +66,7 @@ Hooks.once('init', async function () {
 
 	patchItem5e();
 	patchConditions();
+	patchToken();
 
 	// We need to set the game config first, before doing any async work
 	// otherwise we yield execution and the game continues to initialise.

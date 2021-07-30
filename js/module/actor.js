@@ -324,7 +324,7 @@ export class ObsidianActor extends Actor5e {
 				Object.values(actorData.currency).reduce((acc, currency) =>
 					acc + Math.max(currency, 0), 0);
 
-			inventory.weight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight;
+			inventory.weight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
 		}
 
 		const sort = (a, b) => a.data.sort - b.data.sort;

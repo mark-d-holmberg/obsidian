@@ -158,7 +158,7 @@ const prepareItem = {
 				Object.values(flags.currency).reduce((acc, currency) =>
 					acc + Math.max(currency, 0), 0);
 
-			derived.carriedWeight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight;
+			derived.carriedWeight += coins / CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
 		}
 	},
 
@@ -330,26 +330,33 @@ const prepareItem = {
 
 				if (src?.data.flags.obsidian.attunement && !src?.data.data.attuned) {
 					derived.visible = false;
-				}
+				} else {
+					const parentComponent = item.getFlag('obsidian', 'parentComponent');
+					if (parentComponent) {
+						const component = item.actor.obsidian.components.get(parentComponent);
+						if (component.type === 'spells'
+							&& component.source === 'individual'
+							&& component.method === 'list')
+						{
+							cls = item.actor.items.get(component.class);
+							const spellList = cls?.obsidian?.spellcasting?.spellList || [];
 
-				const parentComponent = item.getFlag('obsidian', 'parentComponent');
-				const cls = item.actor.items.get(src?.data.flags.obsidian?.source?.class);
+							if (!spellList.includes(item)) {
+								spellList.push(item);
+							}
 
-				if (parentComponent
-					&& src?.data.flags.obsidian?.source?.type === 'class'
-					&& cls?.obsidian.spellcasting?.enabled)
-				{
-					const prep = cls.obsidian.spellcasting.preparation;
-					const component = item.actor.obsidian.components.get(parentComponent);
+							if (flags.known === undefined) {
+								flags.known = false;
+							}
 
-					if (component.type === 'spells'
-						&& component.source === 'individual'
-						&& component.method === 'list')
-					{
-						derived.visible =
-							(prep === 'known' && flags.known)
-							|| (prep === 'prep' && flags.prepared)
-							|| (prep === 'book' && flags.book && flags.prepared);
+							if (flags.prepared === undefined) {
+								flags.prepared = false;
+							}
+
+							if (flags.book === undefined) {
+								flags.book = false;
+							}
+						}
 					}
 				}
 			}

@@ -77,15 +77,25 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				continue;
 			}
 
+			let cls;
 			if (flags.source.type === 'item') {
 				if (!this.parent.actor.items.get(flags.source.item)) {
 					data.actor.obsidian.spells.custom.push(spell);
 				}
 
-				continue;
+				const component = this.parent.actor.obsidian.components.get(flags.parentComponent);
+				if (component?.type === 'spells'
+					|| component?.source === 'individual'
+					|| component?.method === 'list')
+				{
+					cls = classByID.get(component.class);
+				} else {
+					continue;
+				}
+			} else {
+				cls = classByID.get(flags.source.class);
 			}
 
-			const cls = classByID.get(flags.source.class);
 			if (cls === undefined) {
 				data.actor.obsidian.spells.custom.push(spell);
 				continue;
@@ -263,6 +273,29 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 		}
 
 		const flags = spell.data.flags.obsidian;
+		if (flags.source.type === 'item' && flags.parentComponent) {
+			const component = this.parent.actor.obsidian.components.get(flags.parentComponent);
+			const cls = this.parent.actor.items.get(component.class);
+			const spellcasting = cls?.obsidian?.spellcasting;
+
+			if (component?.type === 'spells'
+				&& component?.source === 'individual'
+				&& component?.method === 'list'
+				&& spellcasting?.enabled)
+			{
+				let flag = 'known';
+				if (spellcasting?.preparation === 'prep') {
+					flag = 'prepared';
+				} else if (spellcasting?.preparation === 'book') {
+					flag = flags.book ? 'prepared' : 'book';
+				}
+
+				await spell.setFlag('obsidian', flag, !flags[flag]);
+				this.render(false);
+				return;
+			}
+		}
+
 		if (owned) {
 			if (flags.source.type === 'class') {
 				const cls = this.parent.actor.items.get(flags.source.class);

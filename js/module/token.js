@@ -1,4 +1,14 @@
-export function within5ftOf (a, b) {
+export function patchToken () {
+	CONFIG.Token.objectClass.prototype.within5ftOf = function (other) {
+		if (!other || !(other instanceof Token)) {
+			return false;
+		}
+
+		return within5ftOf(this, other);
+	};
+}
+
+function within5ftOf (a, b) {
 	// First just check if token B's centre is inside token A's space.
 	if (isPointInsideRectangle(a, b.center)) {
 		return true;
