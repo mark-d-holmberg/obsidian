@@ -194,11 +194,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			components.filter(c => c.type === 'consume' || c.type === 'produce')
 				.forEach(component => {
 					let item = data.item;
+					component.itemResourceComponents = [];
+
 					if (data.actor) {
 						item =
 							data.actor.items.get(
 								component.target === 'feat' ? component.featID : component.itemID)
-								.toObject(false);
+								?.toObject(false);
 					}
 
 					if (item) {
