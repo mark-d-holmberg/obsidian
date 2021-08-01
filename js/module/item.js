@@ -719,14 +719,23 @@ function prepareEffects (item) {
 			}
 
 			let scaledAmount = 0;
-			const actorLevel = actorData.data.details[actorData.type === 'npc' ? 'cr' : 'level'];
+			let actorLevel;
+			let spellcastingLevel;
+
+			if (actorData.type === 'npc') {
+				actorLevel = actorData.data.details.cr;
+				spellcastingLevel = actorData.data.details.spellLevel || actorLevel;
+			} else {
+				actorLevel = actorData.data.details.level;
+				spellcastingLevel = actorLevel;
+			}
 
 			switch (component.method) {
 				case 'level':
 					scaledAmount = actorLevel;
 					break;
 				case 'cantrip':
-					scaledAmount = Math.round((actorLevel + 1) / 6 + .5) - 1;
+					scaledAmount = Math.round((spellcastingLevel + 1) / 6 + .5) - 1;
 					break;
 				case 'class':
 					scaledAmount = item.actor.items.get(component.class)?.data.data.levels;
