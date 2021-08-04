@@ -13,7 +13,9 @@
 			<div class="obsidian-char-grid-col"
 			     title="{{obs-i18n 'Alignment' data.details.alignment}}">
 				<h4>{{localize 'OBSIDIAN.AlignmentTitle'}}</h4>
-				{{obs-i18n 'Alignment' data.details.alignment}}
+				{{#if data.details.alignment}}
+					{{obs-i18n 'Alignment' data.details.alignment}}
+				{{/if}}
 			</div>
 			<div class="obsidian-char-grid-col" title="{{actor.flags.obsidian.details.gender}}">
 				<h4>{{localize 'OBSIDIAN.Gender'}}</h4>
