@@ -16,7 +16,7 @@ export class ObsidianNPCSkillsDialog extends ObsidianDialog {
 
 	async _setSkillProficiency (evt) {
 		const id = evt.currentTarget.dataset.skill;
-		const skill = this.parent.actor.data.flags.obsidian.skills[id];
+		const skill = this.parent.actor.data.data.skills[id];
 
 		let newValue = 0;
 		if (skill.value === 0) {
