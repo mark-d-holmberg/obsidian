@@ -254,6 +254,14 @@ export const Rolls = {
 				return part.total;
 			}
 
+			if (part instanceof NumericTerm) {
+				return part.number;
+			}
+
+			if (part instanceof OperatorTerm) {
+				return part.operator;
+			}
+
 			if (part instanceof DicePool) {
 				return `{${part.rolls.map(r => Rolls.compileExpression(r)).join(', ')}}`;
 			}

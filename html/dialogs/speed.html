@@ -17,12 +17,12 @@
 				<div class="obsidian-flex">
 					<label>
 						<input class="obsidian-input-num-md" name="data.attributes.movement.{{id}}" type="text"
-						       data-dtype="Number" value="{{lookup ../data.attributes.movement id}}">
+						       data-dtype="Number" value="{{lookup ../base.data.attributes.movement id}}">
 						<span>{{obs-i18n 'Speed' id}}</span>
 					</label>
 					{{#if (eq id 'fly')}}
 						{{fancy-checkbox 'data.attributes.movement.hover' content='OBSIDIAN.Hover'
-						                 checked=../data.attributes.movement.hover}}
+						                 checked=../base.data.attributes.movement.hover}}
 					{{/if}}
 				</div>
 			</div>

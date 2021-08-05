@@ -161,7 +161,7 @@ function formatFilter (filter) {
 				localize('PassiveChecks')
 				+ (some ? collection('Skill', filter.collection) : ''));
 		} else if (filter.score === 'speed') {
-			parts.push(localize('Speed') + (some ? collection('Speed', filter.collection) : ''));
+			parts.push(localize('SpeedLC') + (some ? collection('Speed', filter.collection) : ''));
 		} else if (filter.score === 'dc') {
 			parts.push(
 				localize('SaveDCs')

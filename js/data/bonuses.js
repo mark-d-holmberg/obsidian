@@ -6,7 +6,7 @@ import {ObsidianActor} from '../module/actor.js';
 export function applyBonuses (actor, data, flags, derived) {
 	applySpeedBonuses(actor, data, derived);
 	applyInitBonuses(actor, data, flags, derived);
-	applyACBonuses(actor, flags, data);
+	applyACBonuses(actor, data, flags);
 	applyHPBonuses(actor, data, derived);
 	applySpellBonuses(actor, derived);
 }

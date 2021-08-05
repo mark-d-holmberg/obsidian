@@ -38,6 +38,7 @@ export const Migrate = {
 			data.flags.obsidian.version = 0;
 		}
 
+		const version = data.flags.obsidian.version;
 		if (source === 'core') {
 			if (data.type === 'vehicle') {
 				Migrate.core.convertVehicle(data);
@@ -46,41 +47,41 @@ export const Migrate = {
 			Migrate.core.convertDefenses(data);
 		}
 
-		if (data.flags.obsidian.version < 2) {
+		if (version < 2) {
 			Migrate.convertNotes(data, source);
 			Migrate.convertProficiencies(data, source);
 			Migrate.convertSpecial(data, source);
 		}
 
-		if (data.flags.obsidian.version < 5 && source !== 'core') {
+		if (version < 5 && source !== 'core') {
 			Migrate.v4.convertSpellcasting(data);
 		}
 
-		if (data.flags.obsidian.version < 6 && source !== 'core') {
+		if (version < 6 && source !== 'core') {
 			Migrate.v5.convertProficiencies(data);
 		}
 
-		if (data.flags.obsidian.version < 8 && source !== 'core') {
+		if (version < 8 && source !== 'core') {
 			Migrate.v7.convertActorDefenses(data);
 		}
 
-		if (data.flags.obsidian.version < 10 && source !== 'core') {
+		if (version < 10 && source !== 'core') {
 			Migrate.v9.convertTools(data);
 		}
 
-		if (data.flags.obsidian.version < 12 && source !== 'core') {
+		if (version < 12 && source !== 'core') {
 			Migrate.v11.convertSpeed(data);
 		}
 
-		if (data.flags.obsidian.version < 13 && source !== 'core') {
+		if (version < 13 && source !== 'core') {
 			Migrate.v12.convertSenses(data);
 		}
 
-		if (data.flags.obsidian.version < 14 && data.type === 'npc') {
+		if (version < 14 && data.type === 'npc') {
 			Migrate.v13.convertHD(data);
 		}
 
-		if (data.flags.obsidian.version < 15 && source !== 'core') {
+		if (version < 15 && source !== 'core') {
 			if (data.type === 'npc') {
 				Migrate.v14.convertCreatureType(data);
 			}
@@ -164,6 +165,7 @@ export const Migrate = {
 			data.flags.obsidian.version = 0;
 		}
 
+		const version = data.flags.obsidian.version;
 		if (source === 'core') {
 			if (data.type === 'consumable') {
 				Migrate.convertConsumable(data);
@@ -185,18 +187,15 @@ export const Migrate = {
 			Migrate.core.convertClassFeature(data);
 		}
 
-		if (data.type === 'weapon'
-			&& data.flags.obsidian.version < 2
-			&& !data.flags.obsidian.effects?.length)
-		{
+		if (data.type === 'weapon' && version < 2 && !data.flags.obsidian.effects?.length) {
 			data.flags.obsidian.effects = [Effect.create()];
 			data.flags.obsidian.effects[0].components =
 				[Effect.createComponent('attack'), Effect.createComponent('damage')];
 			data.flags.obsidian.effects[0].components[0].proficient = true;
 		}
 
-		if (data.type === 'consumable'
-			&& data.flags.obsidian.version < 2
+		if (version < 2
+			&& data.type === 'consumable'
 			&& !data.flags.obsidian.unlimited
 			&& (!data.flags.obsidian.effects
 				|| !data.flags.obsidian.effects.length
@@ -212,32 +211,32 @@ export const Migrate = {
 			data.flags.obsidian.effects[0].components.push(component);
 		}
 
-		if (data.type === 'class' && data.flags.obsidian.version < 4 && source !== 'core') {
+		if (data.type === 'class' && version < 4 && source !== 'core') {
 			Migrate.v3.convertHD(data);
 		}
 
-		if (data.type === 'feat' && data.flags.obsidian.version < 6 && source !== 'core') {
+		if (data.type === 'feat' && version < 6 && source !== 'core') {
 			Migrate.v5.convertActivation(data);
 		}
 
-		if (data.flags.obsidian.version < 7 && source !== 'core') {
+		if (version < 7 && source !== 'core') {
 			Migrate.v6.convertBonuses(data);
 		}
 
-		if (data.flags.obsidian.version < 8 && source !== 'core') {
+		if (version < 8 && source !== 'core') {
 			Migrate.v7.convertItemDefenses(data);
 		}
 
-		if (data.flags.obsidian.version < 10 && source !== 'core') {
+		if (version < 10 && source !== 'core') {
 			Migrate.v9.convertToolFilters(data);
 		}
 
-		if (data.flags.obsidian.version < 11 && source !== 'core') {
+		if (version < 11 && source !== 'core') {
 			Migrate.v10.convertAmmo(data);
 			Migrate.v10.convertBonuses(data);
 		}
 
-		if (data.flags.obsidian.version < 15 && source !== 'core') {
+		if (version < 15 && source !== 'core') {
 			Migrate.v14.convertSpellcasting(data);
 			Migrate.v14.convertActiveEffect(data);
 			Migrate.v14.convertClass(data);

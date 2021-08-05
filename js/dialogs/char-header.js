@@ -37,7 +37,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	}
 
 	static determineHD (cls) {
-		if (cls === 'custom') {
+		if (!Object.keys(OBSIDIAN.Config.CLASS_HIT_DICE).includes(cls)) {
 			return 'd6';
 		}
 
@@ -52,7 +52,8 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		return {
 			enabled: true,
 			preparation: OBSIDIAN.Config.CLASS_SPELL_PREP[cls],
-			rituals: OBSIDIAN.Config.CLASS_RITUALS[cls]
+			rituals: OBSIDIAN.Config.CLASS_RITUALS[cls],
+			spell: OBSIDIAN.Config.CLASS_SPELL_MODS[cls]
 		};
 	}
 
@@ -101,6 +102,15 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 		if (cls.name === 'custom') {
 			item.name = cls.custom;
+		}
+
+		const key = OBSIDIAN.Labels.ClassMap.get(item.name.toLocaleLowerCase());
+		if (key) {
+			item.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(key);
+			item.data.spellcasting = {
+				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[key] || 'none',
+				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[key] || ''
+			};
 		}
 
 		await this.parent.actor.createEmbeddedDocuments('Item', [item], {

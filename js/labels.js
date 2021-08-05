@@ -153,13 +153,13 @@ function addRules (localize) {
 		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize(roll)} `
 		+ `(${abilities(...abls)})`;
 
-	rules.encumbered = `<strong>-10</strong> ${localize('Speed')}`;
-	rules.heavyArmour = `<strong>-10</strong> ${localize('Speed')}`;
-	rules.overCapacity = `${localize('Speed')} <strong>0</strong>`;
+	rules.encumbered = `<strong>-10</strong> ${localize('SpeedLC')}`;
+	rules.heavyArmour = `<strong>-10</strong> ${localize('SpeedLC')}`;
+	rules.overCapacity = `${localize('SpeedLC')} <strong>0</strong>`;
 	rules.noisyArmour =
 		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize('Skill.ste')}`;
 	rules.heavilyEncumbered =
-		`<strong>-20</strong> ${localize('Speed')}; `
+		`<strong>-20</strong> ${localize('SpeedLC')}; `
 		+ `${disadvantageOn('AbilityChecks', ...physical)}; `
 		+ `${disadvantageOn('AttackRolls', ...physical)}; `
 		+ `${disadvantageOn('SavingThrowsLC', ...physical)}`;
