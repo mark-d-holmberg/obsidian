@@ -243,7 +243,7 @@ function formatConditions (components) {
 	const exhaustionPart = localize('GainExhaustion');
 	const conditionPart =
 		localize('BecomeCondition')
-			.format(conditions.map(c => localize(`Condition-${c}`)).join(', '));
+			.format(conditions.map(c => localize(`Condition.${c}`)).join(', '));
 
 	if (conditions.length && allConditions.has('exhaustion')) {
 		return `${conditionPart}, ${exhaustionPart}`;
@@ -344,7 +344,8 @@ function formatDefenses (defs) {
 					disadvantage: level === 'dis',
 					wrapped: true
 				}))
-			+ ` ${Array.from(conds[level].values()).map(cond => localize(`Condition.${cond}`))}`);
+			+ ` ${Array.from(conds[level].values()).map(cond =>
+					localize(`Condition.${cond}`)).join(', ')}`);
 	});
 
 	[res, imm].forEach(level => {

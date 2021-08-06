@@ -76,7 +76,7 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 
 			let type = actor.data.flags.obsidian?.details.type;
 			if (!type) {
-				type = actor.data.data.details.type;
+				type = actor.data.data.details.type.value;
 			}
 
 			const fraction = DEC_TO_FRAC[cr];

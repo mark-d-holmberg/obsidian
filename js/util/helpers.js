@@ -302,30 +302,6 @@ export function registerHandlebarHelpers () {
 		return haystack.includes(needle);
 	});
 
-	Handlebars.registerHelper('tinymce', function (options) {
-		const owner = Boolean(options.hash.owner);
-		const content = TextEditor.enrichHTML(options.hash.content || '', {
-			secrets: owner,
-			entities: true,
-			rollData: options.hash.rollData
-		});
-
-		const editor = $(`
-			<div class="editor">
-				<div class="editor-content" data-edit="${options.hash.target}">${content}</div>
-			</div>
-		`);
-
-		const button = Boolean(options.hash.button);
-		const editable = Boolean(options.hash.editable);
-
-		if (button && editable) {
-			editor.append($('<a class="editor-edit"><i class="fas fa-edit"></i></a>'));
-		}
-
-		return new Handlebars.SafeString(editor[0].outerHTML);
-	});
-
 	Handlebars.registerHelper('is-attack-toggleable', function (attack) {
 		const type = attack.parentItem.flags.obsidian.type;
 		const tags = attack.parentItem.flags.obsidian.tags;
