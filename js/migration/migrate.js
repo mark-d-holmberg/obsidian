@@ -295,7 +295,7 @@ export const Migrate = {
 	},
 
 	convertProficiencies: function (data, source) {
-		if (!data.data) {
+		if (!data.data?.traits) {
 			return;
 		}
 
