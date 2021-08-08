@@ -472,7 +472,7 @@ function formatRecharge (recharge) {
 			roll += '&mdash;6';
 		}
 
-		return `${game.i18n.localize('OBSIDIAN.Recharge')} ${roll}`;
+		return `${game.i18n.localize('OBSIDIAN.RechargeTitle')} ${roll}`;
 	} else {
 		return game.i18n.localize(`OBSIDIAN.Recharge.${recharge.time}`);
 	}

@@ -7,7 +7,7 @@
 					<input class="obsidian-input-num-md" type="text" name="data.attributes.senses.{{@key}}"
 					       data-dtype="Number" placeholder="&mdash;"
 					       value="{{lookup ../data.attributes.senses @key}}">
-					<span>{{this}}</span>
+					<span>{{obs-i18n 'Sense' @key}}</span>
 				</label>
 			</div>
 		{{/each}}

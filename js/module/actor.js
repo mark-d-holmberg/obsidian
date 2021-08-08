@@ -247,9 +247,9 @@ export class ObsidianActor extends Actor5e {
 
 		derived.attacks =
 			this.items.filter(item =>
-				item.obsidian?.collection.attack.length
-				&& (item.type !== 'weapon' || item.data.data.equipped)
-				&& (item.type !== 'spell' || item.obsidian?.visible))
+					item.obsidian?.collection.attack.length
+					&& (item.type !== 'weapon' || item.data.data.equipped)
+					&& (item.type !== 'spell' || item.obsidian?.visible))
 				.flatMap(item => item.obsidian.collection.attack);
 
 		prepareDefenseDisplay(derived);

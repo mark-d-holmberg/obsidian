@@ -80,8 +80,8 @@
 				<div class="obsidian-npc-stat-row" style="height: 17px;">
 					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.AC'}}</div>
 					<div class="obsidian-npc-stat-value obsidian-vehicle-ac">
-						<input type="text" name="data.attributes.ac.value" data-dtype="Number"
-						       class="obsidian-input-num" value="{{data.attributes.ac.value}}"
+						<input type="text" name="data.attributes.ac.flat" data-dtype="Number"
+						       class="obsidian-input-num" value="{{data.attributes.ac.flat}}"
 						       placeholder="&mdash;">
 					</div>
 				</div>
@@ -92,7 +92,7 @@
 						       value="{{data.attributes.hp.value}}" data-dtype="Number">
 						<span class="obsidian-binary-operator" style="color: var(--obs-text-subtle);">&sol;</span>
 						<input type="text" name="data.attributes.hp.max" class="obsidian-input-num"
-						       value="{{data.attributes.hp.max}}">
+						       value="{{data.attributes.hp.max}}" data-dtype="Number">
 					</div>
 				</div>
 				<div class="obsidian-npc-stat-row" style="height: 17px;">
