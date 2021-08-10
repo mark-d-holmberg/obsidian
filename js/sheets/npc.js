@@ -269,7 +269,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		let alignment = '';
 
 		if (data.details.type != null && typeof data.details.type === 'object') {
-			let type = game.i18n.localize(`OBSIDIAN.CreatureType.${data.details.type.value}`);
+			let type = '';
+			if (!OBSIDIAN.notDefinedOrEmpty(data.details.type.value)) {
+				type = game.i18n.localize(`OBSIDIAN.CreatureType.${data.details.type.value}`);
+			}
+
 			if (!OBSIDIAN.notDefinedOrEmpty(data.details.type.swarm)) {
 				type =
 					game.i18n.localize('OBSIDIAN.CreatureSwarmPhrase')

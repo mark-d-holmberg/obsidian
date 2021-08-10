@@ -30,7 +30,7 @@ async function applyDuration (duration, actor, uuid, roll, active) {
 		for (let target of targets) {
 			target = target instanceof CONFIG.Token.documentClass ? target : target.document;
 			if (!target.actor.items.contents.some(item =>
-					item.getFlag('obsidian', 'duration.src') === duration.id))
+					item.data.flags?.obsidian?.duration?.src === duration.id))
 			{
 				active.push(target.uuid);
 				await createActiveEffect(target, actor, effect, duration, 'target');
@@ -219,6 +219,10 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 function dispatchUpdate ({target, action, entity, data}) {
 	data = Array.isArray(data) ? data : [data];
+	if (target instanceof CONFIG.Token.documentClass) {
+		target = target.document;
+	}
+
 	if (game.user.isGM) {
 		return target.actor[`${action.toLowerCase()}EmbeddedDocuments`](entity, data);
 	} else {
@@ -356,7 +360,7 @@ async function cleanupExpired (actor, expired) {
 
 			const items =
 				actor.items
-					.filter(item => item.getFlag('obsidian', 'duration.src') === duration.id)
+					.filter(item => item.data.flags?.obsidian?.duration?.src === duration.id)
 					.map(item => item.id);
 
 			if (!items.length) {

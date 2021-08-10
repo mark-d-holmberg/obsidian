@@ -324,8 +324,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				const ed = editors[0];
 				if (ed.mce) {
 					component.raw = ed.mce.getContent();
-					await this._updateObject(
-						null,
+					await this._updateEffects(
 						OBSIDIAN.updateArrays(
 							this.item.data._source, {'flags.obsidian.effects': effects}));
 				}
@@ -442,7 +441,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		effects.push(Effect.create());
-		this._updateObject(null, formData);
+		this._updateEffects(formData);
 		this._interacting = false;
 	}
 
@@ -471,7 +470,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			}
 		}
 
-		this._updateObject(null, formData);
+		this._updateEffects(formData);
 		this._interacting = false;
 	}
 
@@ -585,7 +584,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			component.actors.push(entity.uuid);
 		}
 
-		this._updateObject(null, {'flags.obsidian.effects': effects});
+		this._updateEffects({'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -610,7 +609,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			component.spells.push(item.data._source);
 		}
 
-		this._updateObject(null, {'flags.obsidian.effects': effects});
+		this._updateEffects({'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -623,7 +622,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		}
 
 		component.tables.push(item.data._source);
-		this._updateObject(null, {'flags.obsidian.effects': effects});
+		this._updateEffects({'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -744,7 +743,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 			await this.actor.deleteEmbeddedDocuments('Item', orphanedSpells);
 		}
 
-		this._updateObject(null, formData);
+		this._updateEffects(formData);
 		this._interacting = false;
 	}
 
@@ -844,7 +843,7 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 		const effect = effects.find(e => e.uuid === effectDiv.dataset.uuid);
 		const component = effect.components.find(c => c.uuid === fieldset.dataset.uuid);
 		remove(component, pill.dataset.id);
-		return this._updateObject(null, {'flags.obsidian.effects': effects});
+		return this._updateEffects({'flags.obsidian.effects': effects});
 	}
 
 	/**
@@ -923,5 +922,13 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 				}
 			});
 		}
+	}
+
+	async _updateObject (event, formData) {
+		return super._updateObject(event, this._formData);
+	}
+
+	_updateEffects (data) {
+		return super._updateObject(null, data);
 	}
 }

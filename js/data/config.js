@@ -12,7 +12,7 @@ Config.WEAPON_TAGS = [
 ];
 
 Config.ALIGNMENTS = ['lg', 'ln', 'le', 'ng', 'n', 'ne', 'cg', 'cn', 'ce'];
-Config.ALIGNMENT_PARTS_1 = ['l', 'c'];
+Config.ALIGNMENT_PARTS_1 = ['l', 'n', 'c'];
 Config.ALIGNMENT_PARTS_2 = ['g', 'n', 'e', 'u'];
 Config.ATTACK_TYPES = ['melee', 'ranged'];
 Config.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];

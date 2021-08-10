@@ -1396,7 +1396,7 @@ export const Rolls = {
 	},
 
 	toHitRoll: function (actor, hit, extraParts = []) {
-		let token = actor.token;
+		let token = actor.token?.object;
 		if (!token && canvas) {
 			const selected = new Set(canvas.tokens.controlled);
 			const {linked, unlinked} = canvas.tokens.placeables.reduce((acc, t) => {
