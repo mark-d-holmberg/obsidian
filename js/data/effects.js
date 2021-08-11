@@ -221,7 +221,7 @@ function formatRollMod (mod) {
 
 	if (mod.mode !== 'reg') {
 		const advantage = mod.mode === 'adv';
-		parts.push(cssIconHexagon({advantage, disadvantage: !advantage}));
+		parts.push(cssIconHexagon({advantage, disadvantage: !advantage, wrapped: true}));
 	}
 
 	return parts.join(', ');
