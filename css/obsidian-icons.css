@@ -168,6 +168,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/gear.svg');
 }
 
+.obsidian-icon-food {
+	background-image: url('../img/food.svg');
+}
+
 .obsidian-icon-loot {
 	background-image: url('../img/loot.svg');
 }

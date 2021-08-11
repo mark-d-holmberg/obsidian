@@ -16,7 +16,7 @@ Config.ALIGNMENT_PARTS_1 = ['l', 'n', 'c'];
 Config.ALIGNMENT_PARTS_2 = ['g', 'n', 'e', 'u'];
 Config.ATTACK_TYPES = ['melee', 'ranged'];
 Config.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
-Config.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear'];
+Config.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear', 'food'];
 Config.CLASSES = [
 	'art', 'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz',
 	'custom'

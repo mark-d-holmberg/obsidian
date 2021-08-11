@@ -12,7 +12,7 @@ export const CONVERT = {
 	},
 	consumable: {
 		potion: 'potion', poison: 'potion', scroll: 'scroll', wand: 'wand', rod: 'rod',
-		trinket: 'trinket'
+		trinket: 'trinket', food: 'food'
 	},
 	damage: DAMAGE_CONVERT,
 	duration: {

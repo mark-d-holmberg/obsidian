@@ -30,7 +30,7 @@ The following SVG images found in the `img` directory are used and redistributed
 
 * [Delapouite](http://delapouite.com/): `versatile.svg`, `healing.svg`, `boots.svg`, `gauntlet.svg`, `bracers.svg`, `cloak.svg`, `belt.svg`, `ring.svg`, `gear.svg`, `ammo.svg`, `trinket.svg`, `provides-spells.svg`, `roll-modifier.svg`, `filter.svg`, `petrified.svg`, `produce-resource.svg`, `uses-ability.svg`, `description.svg`, `roll-table.svg`
 * [Lorc](http://lorcblog.blogspot.com/): `melee.svg`, `ranged.svg`, `bludgeoning.svg`, `piercing.svg`, `slashing.svg`, `psychic.svg`, `radiant.svg`, `thunder.svg`, `poison.svg`, `acid.svg`, `cold.svg`, `force.svg`, `lightning.svg`, `weapon.svg`, `tool.svg`, `armour.svg`, `helm.svg`, `consumable.svg`, `amulet.svg`, `effect.svg`, `demolish.svg`, `resource.svg`, `damage.svg`, `save.svg`, `scaling.svg`, `target.svg`, `consume-resource.svg`, `scroll.svg`, `bonus.svg`, `duration.svg`, `npc.svg`, `unconscious.svg`, `burning.svg`, `charmed.svg`, `frightened.svg`, `poisoned.svg`, `restrained.svg`, `stunned.svg`, `exhaust.svg`, `grappled.svg`, `incapacitated.svg`, `paralysed.svg`, `concentrating.svg`, `surprised.svg`, `loot.svg`, `expression.svg`, `bleeding.svg`, `dodging.svg`, `applied-effect.svg`, `defense.svg`, `set-score.svg`, `check.svg`, `extra-crit.svg`
-* [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`, `wand.svg`, `blinded.svg`, `deafened.svg`
+* [Skoll](https://game-icons.net/): `unarmed.svg`, `necrotic.svg`, `wand.svg`, `blinded.svg`, `deafened.svg`, `food.svg`
 * [sbed](https://opengameart.org/content/95-game-icons): `fire.svg`, `dead.svg`, `marked.svg`, `prone.svg`
 * [Willdabeast](http://wjbstories.blogspot.com/): `rod.svg`
 

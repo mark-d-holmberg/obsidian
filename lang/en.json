@@ -255,6 +255,7 @@
 	"OBSIDIAN.Configure": "Configure",
 	"OBSIDIAN.Consumable": "Consumable",
 	"OBSIDIAN.ConsumableType.ammo": "Ammunition",
+	"OBSIDIAN.ConsumableType.food": "Food",
 	"OBSIDIAN.ConsumableType.gear": "Adventuring Gear",
 	"OBSIDIAN.ConsumableType.potion": "Potion",
 	"OBSIDIAN.ConsumableType.rod": "Rod",
