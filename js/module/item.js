@@ -31,8 +31,8 @@ export function patchItem5e () {
 		};
 	})();
 
-	Item5e.prototype._onDelete = (function () {
-		const cached = Item5e.prototype._onDelete;
+	Item5e.prototype._preDelete = (function () {
+		const cached = Item5e.prototype._preDelete;
 		return async function (options) {
 			await cached.apply(this, arguments);
 			if (!this.isEmbedded || !this.isObsidian()) {
