@@ -80,7 +80,7 @@
 				{{#if (eq parentItem.type 'spell')}}
 					<div class="obsidian-icon obsidian-icon-school-{{parentItem.data.school}}"></div>
 				{{else if (eq parentItem.type 'weapon')}}
-					<div data-uuid="{{uuid}}" class="
+					<div data-component-id="{{uuid}}" class="
 						{{#if (is-attack-toggleable this)}}
 							obsidian-attack-toggle
 						{{/if}} obsidian-icon obsidian-icon-{{mode}}">
