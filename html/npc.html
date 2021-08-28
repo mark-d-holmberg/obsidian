@@ -245,7 +245,7 @@
 						{{#each senses}}
 							{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
 							<div class="obsidian-npc-stat-li">
-								{{lc this}}
+								{{obs-i18n 'Sense' @key}}
 								{{lookup ../data.attributes.senses @key}}
 								{{localize 'OBSIDIAN.FeetAbbr'~}}
 							</div>

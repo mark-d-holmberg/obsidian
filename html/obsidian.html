@@ -465,7 +465,7 @@
 							{{#each senses}}
 								{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
 									<span>
-										{{this}}&nbsp;{{lookup ../data.attributes.senses @key}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
+										{{obs-i18n 'Sense' @key}}&nbsp;{{lookup ../data.attributes.senses @key}}&nbsp;{{localize 'OBSIDIAN.FeetAbbr'}}
 									</span>
 								{{/if}}
 							{{/each}}
