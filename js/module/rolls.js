@@ -496,11 +496,10 @@ export const Rolls = {
 		const item = actor.items.get(effect.parentItem);
 		const isVersatile =
 			effect.components.some(c => c.type === 'attack' && c.mode === 'versatile');
-		let damage =
-			duplicate(
-				effect.components.filter(c => c.type === 'damage' && c.versatile === isVersatile));
 
+		let damage = Effect.getEagerlyScaledDamage(item, effect, isVersatile);
 		let scaling;
+
 		if (scaledAmount) {
 			scaling = Effect.getScaling(actor, effect, scaledAmount);
 		}
@@ -670,7 +669,8 @@ export const Rolls = {
 
 		const results = [];
 		let scaledAmount = options.scaling || 0;
-		let damage = duplicate(effect.components.filter(c => c.type === 'damage'));
+		const isVersatile = attacks.some(c => c.mode === 'versatile');
+		let damage = Effect.getEagerlyScaledDamage(item, effect, isVersatile);
 
 		if (item.type === 'spell') {
 			scaledAmount = Math.max(0, options.spellLevel - item.data.data.level);

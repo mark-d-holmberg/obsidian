@@ -515,6 +515,27 @@ export const Effect = {
 		return [actor, effect];
 	},
 
+	getEagerlyScaledDamage: function (item, effect, isVersatile) {
+		// Retrieve damage components that were scaled at preparation time
+		// rather than dynamically, if any.
+		const scalingEffects =
+			new Set(
+				item.obsidian.collection.scaling
+					.filter(e => e.scalingComponent.ref === effect.uuid)
+					.map(e => e.uuid));
+
+		let damage =
+			item.obsidian.collection.damage.filter(c =>
+				scalingEffects.has(c.parentEffect) && c.versatile === isVersatile);
+
+		if (!damage.length) {
+			damage = effect.components.filter(c =>
+				c.type === 'damage' && c.versatile === isVersatile);
+		}
+
+		return duplicate(damage);
+	},
+
 	getLinkedResource: function (actor, consumer) {
 		if (['spell', 'qty'].includes(consumer.target)) {
 			return [];
