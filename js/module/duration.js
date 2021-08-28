@@ -3,6 +3,7 @@ import {Rolls} from './rolls.js';
 import {Schema} from '../data/schema.js';
 import {ObsidianItems} from './items.js';
 import {ObsidianActor} from './actor.js';
+import {Effect} from './effect.js';
 
 export function initDurations () {
 	Hooks.on('controlToken', renderDurations);
@@ -121,7 +122,8 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 	effects.forEach(e => {
 		e.uuid = OBSIDIAN.uuid();
-		e.components = e.components.filter(c => c.type !== 'duration' && c.type !== 'applied');
+		e.components =
+			e.components.filter(c => Effect.metadata.active.has(c.type) || c.type === 'filter');
 		e.components.forEach(c => c.uuid = OBSIDIAN.uuid());
 		e.activeEffect = true;
 		e.toggle = {active: true};
@@ -219,9 +221,7 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 function dispatchUpdate ({target, action, entity, data}) {
 	data = Array.isArray(data) ? data : [data];
-	if (target instanceof CONFIG.Token.documentClass) {
-		target = target.document;
-	}
+	target = target instanceof CONFIG.Token.documentClass ? target : target.documentClass;
 
 	if (game.user.isGM) {
 		return target.actor[`${action.toLowerCase()}EmbeddedDocuments`](entity, data);
