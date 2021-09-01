@@ -1,9 +1,11 @@
 export async function rollInitiative (actor, initiative) {
-	let combat = ui.combat.combat;
-	if (!combat && game.user.isGM) {
-		combat = await game.combats.documentClass.create({scene: canvas.scene.id, active: true});
-	} else if (!game.combats.active && !game.user.isGM) {
-		return;
+	let combat = game.combat;
+	if (!combat) {
+		if (!game.user.isGM) {
+			return;
+		}
+
+		combat = await Combat.implementation.create({scene: canvas.scene.id, active: true});
 	}
 
 	let token;

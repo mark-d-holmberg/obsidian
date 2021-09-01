@@ -221,14 +221,14 @@ async function createActiveEffect (target, actor, effect, duration, on) {
 
 function dispatchUpdate ({target, action, entity, data}) {
 	data = Array.isArray(data) ? data : [data];
-	target = target instanceof CONFIG.Token.documentClass ? target : target.documentClass;
+	target = target instanceof CONFIG.Token.documentClass ? target : target.document;
 
 	if (game.user.isGM) {
 		return target.actor[`${action.toLowerCase()}EmbeddedDocuments`](entity, data);
 	} else {
 		return game.socket.emit('module.obsidian', {
 			action, entity, data,
-			uuid: target.document.uuid
+			uuid: target.uuid
 		});
 	}
 }
