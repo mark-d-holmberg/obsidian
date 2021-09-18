@@ -427,6 +427,10 @@ export const Sheet = {
 			}
 		}
 
+		if (target.classList.contains('obsidian-char-inv-header-currency')) {
+			dragData.type = 'obsidian-currency';
+		}
+
 		event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
 		return Reorder.dragStart(event);
 	},
@@ -437,6 +441,9 @@ export const Sheet = {
 			data = JSON.parse(event.dataTransfer.getData('text/plain'));
 			if (data.type === 'Actor') {
 				return ActorSheet5e.prototype._onDropActor.call(sheet, event, data);
+			} else if (data.type === 'obsidian-currency') {
+				const from = ObsidianActor.fromUUID(data.uuid);
+				return Sheet.transferCurrency(from, sheet.actor);
 			}
 		} catch (ignored) {}
 
@@ -670,6 +677,59 @@ export const Sheet = {
 				}
 			}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 		}
+	},
+
+	transferCurrency: async function (from, to) {
+		if (!from || !to) {
+			return;
+		}
+
+		const existing = from.data.data.currency;
+		const doTransfer = dlg => {
+			const transfer = {};
+			const remaining = {...existing};
+
+			dlg.find('input').each((i, el) => {
+				const denom = el.name;
+				const value = Number(el.value);
+
+				if (isNaN(value) || value < 1) {
+					return;
+				}
+
+				transfer[denom] = Math.min(value, existing[denom]);
+				remaining[denom] -= transfer[denom];
+			});
+
+			from.update({'data.currency': remaining});
+
+			if (to.isOwner) {
+				to.receiveCurrency(transfer);
+			} else {
+				game.socket.emit('module.obsidian', {
+					action: 'CURRENCY',
+					uuid: to.uuid,
+					currency: transfer
+				});
+			}
+		};
+
+		const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer-currency.html', {
+			currency: existing
+		});
+
+		new Dialog({
+			title: game.i18n.localize('OBSIDIAN.TransferCurrencyTo').format(to.name),
+			content: dlg,
+			default: 'transfer',
+			buttons: {
+				transfer: {
+					icon: '<i class="fas fa-share"></i>',
+					label: game.i18n.localize('OBSIDIAN.Transfer'),
+					callback: doTransfer
+				}
+			}
+		}, {jQuery: true, classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 	},
 
 	updateContainerEquipped: function (sheet, evt) {

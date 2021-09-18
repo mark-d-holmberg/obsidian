@@ -1,0 +1,16 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off" onsubmit="event.preventDefault();">
+	<fieldset style="margin-bottom: 10px;">
+		<legend>{{localize 'OBSIDIAN.Currency'}}</legend>
+		{{#each currency}}
+			<div class="obsidian-form-row obsidian-currency-row">
+				<div>
+					<div class="obsidian-icon obsidian-icon-sm obsidian-icon-{{@key}}"></div>
+					<input type="text" class="obsidian-input-num-lg" name="{{@key}}" data-dtype="Number"
+					       placeholder="0">
+					<span class="obsidian-binary-operator">&sol;</span>
+					<span class="obsidian-feature-max">{{this}}</span>
+				</div>
+			</div>
+		{{/each}}
+	</fieldset>
+</form>

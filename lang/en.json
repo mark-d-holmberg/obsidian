@@ -988,6 +988,7 @@
 	"OBSIDIAN.Tools": "Tools",
 	"OBSIDIAN.Total": "Total",
 	"OBSIDIAN.Transfer": "Transfer",
+	"OBSIDIAN.TransferCurrencyTo": "Transfer Currency To {0}",
 	"OBSIDIAN.TravelPace": "Travel Pace",
 	"OBSIDIAN.Trigger.hit": "On Hit",
 	"OBSIDIAN.Trigger.start": "Start of Turn",

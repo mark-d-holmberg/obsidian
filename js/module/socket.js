@@ -14,6 +14,9 @@ function handleMsg (payload) {
 		setWorld(payload);
 	} else if (payload.action === 'DELETE.TOKENS') {
 		OBSIDIAN.deleteManyTokens(payload.tokens);
+	} else if (payload.action === 'CURRENCY') {
+		const actor = ObsidianActor.fromUUID(payload.uuid);
+		actor?.receiveCurrency(payload.currency);
 	} else {
 		const actor = ObsidianActor.fromUUID(payload.uuid);
 		if (actor) {

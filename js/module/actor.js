@@ -683,6 +683,12 @@ export class ObsidianActor extends Actor5e {
 		return item.setFlag('obsidian', 'effects', effects);
 	}
 
+	receiveCurrency (currency) {
+		const update = {...this.data.data.currency};
+		Object.entries(currency).forEach(([denom, amount]) => update[denom] += amount);
+		return this.update({'data.currency': update});
+	}
+
 	/**
 	 * @private
 	 */
