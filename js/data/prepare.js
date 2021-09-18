@@ -148,7 +148,7 @@ export const Prepare = {
 			hit.rollParts.push(...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
 		}
 
-		if (hit.extraBonus) {
+		if (hit.extraBonus && actor) {
 			hit.rollParts.push(...bonusToParts(actor, hit.extraBonus));
 		}
 
@@ -181,7 +181,7 @@ export const Prepare = {
 			}
 		}
 
-		if (dmg.extraBonus) {
+		if (dmg.extraBonus && actor) {
 			dmg.rollParts.push(...bonusToParts(actor, dmg.extraBonus));
 		}
 

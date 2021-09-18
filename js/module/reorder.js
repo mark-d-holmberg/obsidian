@@ -213,7 +213,7 @@ export const Reorder = {
 				game.socket.emit('module.obsidian', {
 					action: 'CREATE',
 					entity: 'Item',
-					actorID: actor.id,
+					uuid: actor.uuid,
 					data: item.toObject()
 				});
 			}
