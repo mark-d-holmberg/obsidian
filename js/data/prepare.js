@@ -262,6 +262,7 @@ export const Prepare = {
 		}
 
 		if (OBSIDIAN.notDefinedOrEmpty(skill.override)) {
+			skill.mod = data.abilities[skill.ability].mod;
 			skill.rollParts = [{
 				mod: Math.floor(data.attributes.prof * prof),
 				name: game.i18n.localize('OBSIDIAN.ProfAbbr'),
@@ -275,6 +276,7 @@ export const Prepare = {
 				name: game.i18n.localize('OBSIDIAN.Bonus')
 			}];
 		} else {
+			skill.mod = 0;
 			skill.rollParts = [{
 				mod: Number(skill.override),
 				name: game.i18n.localize('OBSIDIAN.Override')
@@ -621,16 +623,16 @@ export const Prepare = {
 				Effect.combineRollMods(
 					rollMods.concat(conditionsRollMod(actor, {ability: skill.ability, skill: id})));
 
-			skill.mod = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
+			skill.total = Math.floor(skill.rollParts.reduce((acc, part) => acc + part.mod, 0));
 			skill.proficiency = skill.rollParts.find(part => part.proficiency);
 
-			if (skill.proficiency?.value > 0.5 && original && original.mod > skill.mod) {
-				skill.mod = original.mod;
+			if (skill.proficiency?.value > 0.5 && original && original.total > skill.total) {
+				skill.total = original.total;
 			}
 
 			filter = Filters.appliesTo.passiveScores(id);
 			skill.key = id;
-			skill.passive = 10 + skill.mod + (skill.passiveBonus || 0);
+			skill.passive = 10 + skill.total + (skill.passiveBonus || 0);
 			skill.passive += 5 * determineAdvantage(skill.roll, flags.skills.roll, ...rollMod.mode);
 			skill.passive += Effect.applyBonuses(actor, filter);
 			skill.passive = Effect.applyMultipliers(actor, filter, skill.passive);
@@ -673,7 +675,7 @@ export const Prepare = {
 			}
 
 			tool.key = id;
-			tool.mod = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
+			tool.total = tool.rollParts.reduce((acc, part) => acc + part.mod, 0);
 			tool.proficiency = tool.rollParts.find(part => part.proficiency);
 		}
 	},
