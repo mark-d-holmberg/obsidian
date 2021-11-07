@@ -385,8 +385,8 @@ function getScalingEffect (data) {
 function getTerms (formula) {
 	const ops = Object.keys(OPERATORS).concat(['(', ')']);
 	const split = new RegExp(ops.map(term => `\\${term}`).join('|'), 'g');
-	const regex = /\[\w+]/gm;
-	const terms = formula.replace(regex, '').replace(split, term => `;${term};`).split(';');
+	const terms =
+		formula.replace(RollTerm.FLAVOR_REGEXP, '').replace(split, term => `;${term};`).split(';');
 	return terms.map(term => term.trim()).filter(term => term !== '').filter((term, i, arr) => {
 		return !((term === '+') && (arr[i - 1] === '+'));
 	});
