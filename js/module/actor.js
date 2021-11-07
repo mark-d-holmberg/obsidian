@@ -16,6 +16,7 @@ import {Effect} from './effect.js';
 import {Filters} from '../data/filters.js';
 import {ObsidianCharacter} from '../sheets/obsidian.js';
 import {ObsidianActorDerived} from './derived.js';
+import {ObsidianVehicle} from '../sheets/vehicle.js';
 
 export class ObsidianActor extends Actor5e {
 	static _deriveLevelFromXP (data, derived) {
@@ -35,6 +36,10 @@ export class ObsidianActor extends Actor5e {
 
 	get obsidian () {
 		return this.data.obsidian;
+	}
+
+	get isObsidianSheet () {
+		return [ObsidianCharacter, ObsidianNPC, ObsidianVehicle].includes(this.sheet.constructor);
 	}
 
 	prepareBaseData () {
@@ -196,8 +201,12 @@ export class ObsidianActor extends Actor5e {
 		this._prepareInventory(data, derived.inventory);
 		applyProfBonus(this);
 		Prepare.abilities(this, data, flags, derived);
-		Prepare.ac(data, flags);
-		Prepare.armour(data, flags, derived);
+
+		if (this.isObsidianSheet) {
+			Prepare.ac(data, flags);
+			Prepare.armour(data, flags, derived);
+		}
+
 		Prepare.init(data, flags, derived);
 		prepareDefenses(data, flags, derived);
 		Prepare.conditions(this, data, flags, derived);
