@@ -123,7 +123,7 @@ async function clearDurations () {
 	const actorUpdates = [];
 	for (const actor of game.actors.contents) {
 		console.debug(`Clearing durations from '${actor.name}...'`);
-		const effects = duplicate(actor.toObject().effects);
+		const effects = duplicate(actor.toObject().effects || []);
 		const filtered = effects.filter(e => !e.flags?.obsidian?.duration);
 
 		if (effects.length !== filtered.length) {

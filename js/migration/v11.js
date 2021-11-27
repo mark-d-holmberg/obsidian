@@ -6,8 +6,11 @@ export const v11 = {
 			return;
 		}
 
-		const oldSpeed = data.flags.obsidian.attributes.speed;
+		const oldSpeed = data.flags.obsidian.attributes?.speed;
 		const movement = data.data.attributes.movement;
+		if (!oldSpeed) {
+			return;
+		}
 
 		Config.SPEEDS.forEach(spd => {
 			if (oldSpeed[spd]) {
