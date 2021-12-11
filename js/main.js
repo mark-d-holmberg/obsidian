@@ -84,6 +84,10 @@ Hooks.once('ready', function () {
 		fontSheet = 'ja';
 	}
 
+	if (game.i18n.lang === 'zh-TW') {
+		fontSheet = 'zh-TW';
+	}
+
 	const link = document.createElement('link');
 	link.type = 'text/css';
 	link.rel = 'stylesheet';
