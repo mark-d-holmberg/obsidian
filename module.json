@@ -39,5 +39,9 @@
 		"lang": "ja",
 		"name": "日本語",
 		"path": "lang/ja.json"
+	}, {
+		"lang": "zh-TW",
+		"name": "正體中文",
+		"path": "lang/zh-TW.json"
 	}]
 }
