@@ -329,7 +329,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				setProperty(spell.data._source, 'flags.obsidian.source.type', 'class');
 				setProperty(spell.data._source, 'flags.obsidian.source.class', classID);
 				setProperty(spell.data._source, 'flags.obsidian.isEmbedded', false);
-				await this.parent.actor.createEmbeddedDocuments('Item', [spell.toJSON()]);
+				await this.parent.actor.createEmbeddedDocuments('Item', [spell.toObject()]);
 			}
 		}
 

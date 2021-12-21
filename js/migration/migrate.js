@@ -133,6 +133,13 @@ export const Migrate = {
 			source = 'core';
 		}
 
+		if (data.flags.ddbimporter) {
+			// This is a DDB imported item, so we still want to apply most core
+			// conversions, but try to avoid clobbering any obsidian flags that
+			// may have been pre-emptively set.
+			source = 'core';
+		}
+
 		if (data.type === 'class') {
 			Migrate.convertClass(data);
 		} else if (data.type === 'consumable') {
@@ -291,6 +298,10 @@ export const Migrate = {
 	},
 
 	convertFeature: function (data) {
+		if (data.flags.obsidian.source?.type) {
+			return;
+		}
+
 		data.flags.obsidian.source.type = 'other';
 	},
 

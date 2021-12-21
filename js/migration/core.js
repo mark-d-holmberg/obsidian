@@ -220,7 +220,7 @@ export const core = {
 	},
 
 	convertClassFeature: function (data) {
-		if (!data.data.requirements) {
+		if (!data.data.requirements || data.flags.obsidian.source.type !== 'other') {
 			return;
 		}
 

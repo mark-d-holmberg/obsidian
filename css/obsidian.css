@@ -1312,10 +1312,13 @@ legend .fancy-checkbox {
 #compendium li.compendium-pack {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 #compendium li.compendium-pack h4.pack-title {
-	margin-bottom: 3px;
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
 }
 
 #compendium li.compendium-pack .entity-type {
@@ -1329,7 +1332,6 @@ legend .fancy-checkbox {
 }
 
 #compendium li.compendium-pack .status-icons {
-	top: 0;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -1343,7 +1345,7 @@ legend .fancy-checkbox {
 	color: var(--obs-text-bright);
 }
 
-.obsidian-compendium .directory-list .directory-item {
+.obsidian-compendium .compendium.directory .directory-list .directory-item {
 	line-height: normal;
 	border-bottom: 1px solid var(--obs-mid);
 	align-items: center;

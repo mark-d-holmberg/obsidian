@@ -129,6 +129,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 			}));
 		});
 
+	html.find('.compendium-footer .document-type').remove();
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
@@ -137,7 +138,7 @@ Hooks.on('renderActorDirectory', (directory, html) => {
 	const actors = html.find('.actor');
 	for (let i = 0; i < actors.length; i++) {
 		const actor = actors[i];
-		const name = actor.querySelector('.entity-name a');
+		const name = actor.querySelector('.document-name a');
 
 		if (name?.textContent === OBSIDIAN.GENERIC_ACTOR) {
 			actor.remove();

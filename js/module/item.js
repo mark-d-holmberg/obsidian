@@ -231,7 +231,7 @@ const prepareItem = {
 	equipment: function (item, data, flags, derived) {
 		if (item.isOwnedByActor() && flags.subtype === 'vehicle') {
 			derived.display = TextEditor.enrichHTML(data.description.value || '', {
-				entities: false,
+				documents: false,
 				links: false,
 				rollData: item.actor.getRollData(),
 				secrets: item.actor.isOwner
@@ -281,7 +281,7 @@ const prepareItem = {
 		}
 
 		derived.display = TextEditor.enrichHTML(data.description.value || '', {
-			entities: true,
+			documents: true,
 			links: true,
 			rollData: item.actor.getRollData(),
 			secrets: item.actor.isOwner
@@ -444,7 +444,7 @@ const prepareItem = {
 		}).filter(tag => tag != null));
 
 		derived.display = TextEditor.enrichHTML(data.description.value || '', {
-			entities: false,
+			documents: false,
 			links: false,
 			rollData: item.actor?.getRollData(),
 			secrets: item.actor?.isOwner
@@ -473,7 +473,7 @@ const prepareComponents = {
 
 	description: function (actor, item, effect, component) {
 		component.display = TextEditor.enrichHTML(component.raw || '', {
-			entities: true,
+			documents: true,
 			links: true,
 			rollData: actor?.getRollData(),
 			secrets: actor?.isOwner

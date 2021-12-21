@@ -1879,8 +1879,8 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .inline-roll,
 .obsidian-msg .inline-roll,
-.obsidian .entity-link,
-.obsidiam-msg .entity-link {
+.obsidian .content-link,
+.obsidiam-msg .content-link {
 	cursor: default;
 	font-weight: bold;
 	color: var(--obs-text-regular);
@@ -1890,8 +1890,8 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .inline-roll:hover,
 .obsidian-msg .inline-roll:hover,
-.obsidian .entity-link:hover,
-.obsidiam-msg .entity-link:hover {
+.obsidian .content-link:hover,
+.obsidiam-msg .content-link:hover {
 	text-shadow: none;
 }
 
@@ -1902,8 +1902,8 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .inline-roll.roll,
 .obsidian-msg .inline-roll.roll,
-.obsidian .entity-link,
-.obsidiam-msg .entity-link {
+.obsidian .content-link,
+.obsidiam-msg .content-link {
 	display: inline-block;
 	cursor: pointer;
 	font-weight: normal;
@@ -1915,16 +1915,16 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .inline-roll.roll i,
 .obsidian-msg .inline-roll.roll i,
-.obsidian .entity-link i,
-.obsidiam-msg .entity-link i {
+.obsidian .content-link i,
+.obsidiam-msg .content-link i {
 	display: inline-block;
 	color: var(--obs-text-regular);
 }
 
 .obsidian .inline-roll.roll:hover,
 .obsidian-msg .inline-roll.roll:hover,
-.obsidian .entity-link:hover,
-.obsidiam-msg .entity-link:hover {
+.obsidian .content-link:hover,
+.obsidiam-msg .content-link:hover {
 	background: var(--obs-dark);
 	color: var(--obs-text-bright);
 	box-shadow: 0 0 5px red;
@@ -1932,8 +1932,8 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian .inline-roll.roll:hover i,
 .obsidian-msg .inline-roll.roll:hover i,
-.obsidian .entity-link:hover i,
-.obsidiam-msg .entity-link:hover i {
+.obsidian .content-link:hover i,
+.obsidiam-msg .content-link:hover i {
 	color: var(--obs-text-bright);
 }
 
