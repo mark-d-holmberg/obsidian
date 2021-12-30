@@ -12,7 +12,7 @@ export function runPatches () {
 
 		for (let i = 0; i < ids.length; i++) {
 			const id = ids[i];
-			const combatant = this.getCombatant(id);
+			const combatant = this.combatants.get(id);
 
 			if (!combatant || !combatant.actor) {
 				continue;
