@@ -1,3 +1,5 @@
+import {OBSIDIAN} from '../global.js';
+
 export class ObsidianDialog extends DocumentSheet {
 	constructor (parent, options = {register: false}) {
 		super(parent.object, options);
@@ -154,8 +156,11 @@ export class ObsidianDialog extends DocumentSheet {
 	}
 
 	activateEditor (name, options = {}, initialContent = '') {
-		options.content_css =
-			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		options.content_css = [
+			...CONFIG.TinyMCE.content_css,
+			OBSIDIAN.getFont(),
+			'modules/obsidian/css/obsidian-mce.css'
+		].join(',');
 		super.activateEditor(name, options, initialContent);
 	}
 

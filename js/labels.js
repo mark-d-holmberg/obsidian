@@ -1,6 +1,6 @@
 import {OBSIDIAN} from './global.js';
 import {Config} from './data/config.js';
-import {cssIconHexagon} from './util/html.js';
+import {iconD20} from './util/html.js';
 
 // Since the options available in the Config object are so frequently displayed
 // in the UI, we make some attempt at matching them up with their corresponding
@@ -150,14 +150,13 @@ function addRules (localize) {
 	const ability = abl => localize(`AbilityAbbr.${abl}`);
 	const abilities = (...abls) => abls.map(abl => ability(abl)).join('&sol;');
 	const disadvantageOn = (roll, ...abls) =>
-		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize(roll)} `
+		`${iconD20({advantage: false})} ${localize(roll)} `
 		+ `(${abilities(...abls)})`;
 
 	rules.encumbered = `<strong>-10</strong> ${localize('SpeedLC')}`;
 	rules.heavyArmour = `<strong>-10</strong> ${localize('SpeedLC')}`;
 	rules.overCapacity = `${localize('SpeedLC')} <strong>0</strong>`;
-	rules.noisyArmour =
-		`${cssIconHexagon({disadvantage: true, wrapped: true})} ${localize('Skill.ste')}`;
+	rules.noisyArmour = `${iconD20({advantage: false})} ${localize('Skill.ste')}`;
 	rules.heavilyEncumbered =
 		`<strong>-20</strong> ${localize('SpeedLC')}; `
 		+ `${disadvantageOn('AbilityChecks', ...physical)}; `

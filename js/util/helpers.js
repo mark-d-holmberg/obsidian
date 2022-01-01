@@ -3,7 +3,7 @@ import {Prepare} from '../data/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
-import {cssIconHexagon, fancyCheckbox} from './html.js';
+import {fancyCheckbox, iconD20} from './html.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('attack-sort', function (list) {
@@ -20,7 +20,7 @@ export function registerHandlebarHelpers () {
 
 	Handlebars.registerHelper('badge', function (badge) {
 		const advantage = badge === 'adv';
-		return new Handlebars.SafeString(cssIconHexagon({advantage, disadvantage: !advantage}));
+		return new Handlebars.SafeString(iconD20({advantage}));
 	});
 
 	Handlebars.registerHelper('capitalise', function (str) {

@@ -61,7 +61,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		this.form.ondragover = Reorder.dragOver;
 		this.form.ondrop = evt => this._onDrop(evt);
 
-		if (this.actor.limited) {
+		if (!this.actor.isOwner && this.actor.limited) {
 			return;
 		}
 

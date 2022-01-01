@@ -1,15 +1,23 @@
-export function cssIconHexagon ({advantage, label, positive, wrapped} = {}) {
-	positive = positive || advantage;
-	label = label || `OBSIDIAN.${advantage ? 'Advantage' : 'Disadvantage'}Abbr`;
+export function iconD20 ({advantage, positive, label, title} = {}) {
+	positive = positive ?? advantage;
+	title =  title ?? `OBSIDIAN.${advantage ? 'Advantage' : 'Disadvantage'}`;
+	label = label ?? `OBSIDIAN.${advantage ? 'Advantage' : 'Disadvantage'}Abbr`;
+	const onload = `
+		const style = getComputedStyle(document.documentElement);
+		const positive = style.getPropertyValue('--obs-positive').trim();
+		const negative = style.getPropertyValue('--obs-negative').trim();
+		const isPositive = this.dataset.positive === 'true';
+		const g = this.contentDocument.getElementsByTagName('g')[0];
+		g.setAttribute('fill', isPositive ? positive : negative);
+	`;
 
 	return `
-		${wrapped ? '<div class="obsidian-css-icon-inline-hexagon">' : ''}
-		<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
-		            obsidian-css-icon-${positive ? 'positive' : 'negative'}">
-			<div class="obsidian-css-icon-shape"></div>
-			<div class="obsidian-css-icon-label">${game.i18n.localize(label)}</div>
+		<div class="obsidian-svg-icon obsidian-svg-icon-${positive ? 'positive' : 'negative'}"
+		     title="${game.i18n.localize(title)}">
+			<object type="image/svg+xml" data="modules/obsidian/img/d20.svg" height="16" width="16"
+			        data-positive="${positive}" onload="${onload}"></object>
+	        <label>${game.i18n.localize(label)}</label>
 		</div>
-		${wrapped ? '</div>' : ''}
 	`;
 }
 

@@ -152,6 +152,8 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('h3[data-notes]').mouseup(this._onCollapseNotes.bind(this));
+		html.find('.obsidian-sidebar .obsidian-char-box-text')
+			.mouseup(this._onCollapseDetails.bind(this));
 		html.find('.obsidian-speed').mouseup(this._cycleSpeed.bind(this));
 
 		Sheet.activateListeners(this, html);
@@ -173,13 +175,14 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 	getData () {
 		const data = {
 			owner: this.actor.isOwner,
-			limited: this.actor.limited,
+			limited: !this.actor.isOwner && this.actor.limited,
 			options: this.options,
 			editable: this.isEditable,
 			cssClass: this.actor.isOwner ? 'editable' : 'locked',
 			isCharacter: true,
 			config: CONFIG.DND5E,
-			rollData: this.actor.getRollData.bind(this.actor)
+			rollData: this.actor.getRollData.bind(this.actor),
+			detailsCollapsed: this.settings.detailsCollapsed
 		};
 
 		data.actor = this.actor.toObject(false);
@@ -369,6 +372,23 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
 		}]).then(items => items.shift().sheet.render(true));
+	}
+
+	_onCollapseDetails (evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+
+		const detail = evt.currentTarget.dataset.detail;
+		const collapsed = !!this.settings.detailsCollapsed?.[detail];
+		evt.currentTarget.parentElement.classList.toggle('obsidian-collapsed', !collapsed);
+
+		if (!this.settings.detailsCollapsed) {
+			this.settings.detailsCollapsed = {};
+		}
+
+		this.settings.detailsCollapsed[detail] = !collapsed;
+		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
 	}
 
 	_onCollapseNotes (evt) {

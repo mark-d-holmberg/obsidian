@@ -24,6 +24,7 @@
 	--obs-horizontal-space: 10px;
 	--obs-vertical-space: 20px;
 	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
+	--obs-bg-translucent: rgb(0 0 0 / 20%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -295,13 +296,43 @@
 	display: none;
 }
 
-.obsidian-sidebar .obsidian-char-box {
+.obsidian-sidebar .obsidian-char-box,
+.npc .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 100%;
 	font-weight: normal;
 	text-align: left;
 	color: var(--obs-text-regular);
 	font-size: 13px;
-	padding: 8px;
+	padding: 16px;
+	border: none;
+	border-radius: 0 0 10px 10px;
+	background: var(--obs-bg-translucent);
+}
+
+.obsidian-sidebar .obsidian-char-box-text,
+.npc .obsidian [data-tab=desc] .obsidian-char-box-text {
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 12px 12px 12px 16px;
+	font-size: 13px;
+	font-family: var(--obs-font);
+	font-weight: bold;
+	color: var(--obs-text-regular);
+	background: var(--obs-bg-translucent);
+	border-radius: 10px 10px 0 0;
+	margin-bottom: 3px;
+	text-transform: none;
+}
+
+.obsidian-sidebar .obsidian-collapsed .obsidian-char-box,
+.npc .obsidian [data-tab=desc] .obsidian-collapsed .obsidian-char-box {
+	display: none;
+}
+
+.obsidian-sidebar .obsidian-collapsed .obsidian-char-box-text,
+.npc .obsidian [data-tab=desc] .obsidian-collapsed .obsidian-char-box-text {
+	border-radius: 10px;
 }
 
 .obsidian-collapser-container {
@@ -363,6 +394,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	break-inside: avoid;
 }
 
 .obsidian-char-box-stacked {

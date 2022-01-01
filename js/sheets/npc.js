@@ -192,8 +192,11 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		options = mergeObject(editor.options, options);
 		options.height = this._calculateEditorHeight();
 		options.save_enablewhendirty = false;
-		options.content_css =
-			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		options.content_css = [
+			...CONFIG.TinyMCE.content_css,
+			OBSIDIAN.getFont(),
+			'modules/obsidian/css/obsidian-mce.css'
+		].join(',');
 
 		TextEditor.create(options, initialContent || editor.initial).then(mce => {
 			editor.mce = mce;

@@ -79,19 +79,10 @@ Hooks.once('init', async function () {
 Hooks.once('setup', translateLabels);
 
 Hooks.once('ready', function () {
-	let fontSheet = 'font';
-	if (game.i18n.lang === 'ja') {
-		fontSheet = 'ja';
-	}
-
-	if (game.i18n.lang === 'zh-TW') {
-		fontSheet = 'zh-TW';
-	}
-
 	const link = document.createElement('link');
 	link.type = 'text/css';
 	link.rel = 'stylesheet';
-	link.href = `modules/obsidian/css/${fontSheet}.css`;
+	link.href = OBSIDIAN.getFont();
 	document.getElementsByTagName('head')[0].appendChild(link);
 
 	registerSettings();

@@ -10,7 +10,7 @@ OBSIDIAN.spellComparator = (a, b) => {
 	return diff;
 };
 
-const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
+export const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 OBSIDIAN.collateSpells = async (compendium) => {
 	let pack = game.packs.get(compendium);
 	if (!pack) {

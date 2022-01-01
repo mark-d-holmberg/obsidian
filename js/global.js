@@ -30,6 +30,19 @@ OBSIDIAN.isMigrated = function () {
 	return moduleVersion === undefined || moduleVersion >= Schema.VERSION;
 };
 
+OBSIDIAN.getFont = function () {
+	let fontSheet = 'font';
+	if (game.i18n.lang === 'ja') {
+		fontSheet = 'ja';
+	}
+
+	if (game.i18n.lang === 'zh-TW') {
+		fontSheet = 'zh-TW';
+	}
+
+	return `modules/obsidian/css/${fontSheet}.css`;
+};
+
 function cloneWithObject (original, source = true) {
 	// Perform a deepClone but attempt to call toObject on complex objects
 	// instead of returning the original instance.

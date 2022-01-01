@@ -7,14 +7,12 @@
 	text-align: center;
 }
 
-.npc .obsidian [data-tab=desc] .obsidian-char-box,
-.vehicle .obsidian [data-tab=desc] .obsidian-char-box {
+.npc .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 350px;
-	text-align: left;
-	font-weight: normal;
-	color: var(--obs-text-regular);
-	font-size: 13px;
-	padding: 8px;
+}
+
+.npc .obsidian [data-tab=desc] .obsidian-char-box-text {
+	width: 350px;
 }
 
 .npc .obsidian [data-tab=desc] h3,

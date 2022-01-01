@@ -1,5 +1,5 @@
 import {OBSIDIAN} from '../global.js';
-import {cssIconDiamond, cssIconHexagon} from '../util/html.js';
+import {cssIconDiamond, iconD20} from '../util/html.js';
 
 let localize;
 
@@ -178,9 +178,7 @@ function formatFilter (filter) {
 			parts.push(`(${localize('StraightRollsOnly')})`);
 		} else {
 			const advantage = filter.mode === 'adv';
-			parts.push(
-				`(${cssIconHexagon({advantage, disadvantage: !advantage, wrapped: true})} `
-				+ `${localize('Only')})`);
+			parts.push(`(${iconD20({advantage})} ${localize('Only')})`);
 		}
 	}
 
@@ -221,7 +219,7 @@ function formatRollMod (mod) {
 
 	if (mod.mode !== 'reg') {
 		const advantage = mod.mode === 'adv';
-		parts.push(cssIconHexagon({advantage, disadvantage: !advantage, wrapped: true}));
+		parts.push(iconD20({advantage}));
 	}
 
 	return parts.join(', ');
@@ -339,11 +337,7 @@ function formatDefenses (defs) {
 		parts.push(
 			(level === 'imm'
 				? cssIconDiamond({level, wrapped: true})
-				: cssIconHexagon({
-					advantage: level === 'adv',
-					disadvantage: level === 'dis',
-					wrapped: true
-				}))
+				: iconD20({advantage: level === 'adv'}))
 			+ ` ${Array.from(conds[level].values()).map(cond =>
 					localize(`Condition.${cond}`)).join(', ')}`);
 	});

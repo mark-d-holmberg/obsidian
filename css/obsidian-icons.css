@@ -350,18 +350,42 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/compendium.svg');
 }
 
-.obsidian-css-icon-inline-diamond,
-.obsidian-css-icon-inline-hexagon {
+.obsidian-svg-icon {
+	display: inline-flex;
+	position: relative;
+	vertical-align: middle;
+}
+
+.obsidian-svg-icon label {
+	font-family: var(--obs-font);
+	font-size: 12px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.obsidian-svg-icon-positive label {
+	color: var(--obs-bg);
+}
+
+.obsidian-svg-icon-negative label {
+	color: var(--obs-text-regular);
+}
+
+.obsidian-css-icon-inline-diamond {
 	display: inline-block;
 	width: 20px;
 	position: relative;
 }
 .obsidian-css-icon-inline-diamond {
 	height: 14px;
-}
-
-.obsidian-css-icon-inline-hexagon {
-	height: 11px;
 }
 
 .obsidian-css-icon {
@@ -378,7 +402,7 @@ li.context-item .obsidian-icon {
 
 .obsidian-css-icon-label {
 	position: absolute;
-	font-family: Roboto, sans-serif;
+	font-family: var(--obs-font);
 	font-size: 16px;
 	top: 0;
 	left: 0;
@@ -390,13 +414,6 @@ li.context-item .obsidian-icon {
 
 .obsidian-css-icon-negative .obsidian-css-icon-label {
 	color: var(--obs-text-regular);
-}
-
-.obsidian-css-icon-hexagon,
-.obsidian-css-icon-hexagon .obsidian-css-icon-shape,
-.obsidian-css-icon-hexagon .obsidian-css-icon-label {
-	width: 20px;
-	height: 12px;
 }
 
 .obsidian-css-icon-diamond,
@@ -413,8 +430,7 @@ li.context-item .obsidian-icon {
 }
 
 .obsidian-css-icon-circle .obsidian-css-icon-label,
-.obsidian-css-icon-diamond .obsidian-css-icon-label,
-.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-label {
+.obsidian-css-icon-diamond .obsidian-css-icon-label {
 	font-weight: bold;
 }
 
@@ -448,26 +464,6 @@ li.context-item .obsidian-icon {
 	position: absolute;
 }
 
-.obsidian-css-icon-hexagon .obsidian-css-icon-shape:before {
-	top: -5px;
-	left: 0;
-	width: 0;
-	height: 0;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 5px solid transparent;
-}
-
-.obsidian-css-icon-hexagon .obsidian-css-icon-shape:after {
-	bottom: -5px;
-	left: 0;
-	width: 0;
-	height: 0;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 5px solid transparent;
-}
-
 .obsidian-css-icon-diamond .obsidian-css-icon-shape {
 	border-right: 5px solid transparent;
 	border-bottom: 5px solid transparent;
@@ -489,30 +485,6 @@ li.context-item .obsidian-icon {
 
 .obsidian-css-icon-circle .obsidian-css-icon-shape {
 	border-radius: 50%;
-}
-
-.obsidian-css-icon-positive.obsidian-css-icon-hexagon {
-	background: var(--obs-positive);
-}
-
-.obsidian-css-icon-negative.obsidian-css-icon-hexagon {
-	background: var(--obs-negative);
-}
-
-.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:before {
-	border-bottom-color: var(--obs-positive);
-}
-
-.obsidian-css-icon-hexagon.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
-	border-top-color: var(--obs-positive);
-}
-
-.obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:before {
-	border-bottom-color: var(--obs-negative);
-}
-
-.obsidian-css-icon-hexagon.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
-	border-top-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape {

@@ -39,7 +39,9 @@ export class ObsidianActor extends Actor5e {
 	}
 
 	get isObsidianSheet () {
-		return [ObsidianCharacter, ObsidianNPC, ObsidianVehicle].includes(this.sheet.constructor);
+		const obsidianSheets = [ObsidianCharacter, ObsidianNPC, ObsidianVehicle];
+		const cls = this._sheet?.constructor ?? this._getSheetClass();
+		return obsidianSheets.includes(cls);
 	}
 
 	prepareBaseData () {

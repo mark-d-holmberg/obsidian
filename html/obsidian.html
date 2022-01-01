@@ -2,26 +2,32 @@
 	<section class="obsidian-sidebar">
 		<img class="obsidian-profile-img obsidian-ptr profile" src="{{actor.img}}"
 		     title="{{actor.name}}" alt="{{actor.name}}" data-edit="img">
-		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.PersonalityTraits'}}</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked
+               {{#if detailsCollapsed.trait}}obsidian-collapsed{{/if}}">
+			<div class="obsidian-char-box-text" data-detail="trait">
+				{{localize 'OBSIDIAN.PersonalityTraits'}}
+			</div>
 			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.trait">
 				{{{data.details.trait}}}
 			</div>
 		</div>
-		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Ideals'}}</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked
+               {{#if detailsCollapsed.ideal}}obsidian-collapsed{{/if}}">
+			<div class="obsidian-char-box-text" data-detail="ideal">{{localize 'OBSIDIAN.Ideals'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.ideal">
 				{{{data.details.ideal}}}
 			</div>
 		</div>
-		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Bonds'}}</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked
+               {{#if detailsCollapsed.bond}}obsidian-collapsed{{/if}}">
+			<div class="obsidian-char-box-text" data-detail="bond">{{localize 'OBSIDIAN.Bonds'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.bond">
 				{{{data.details.bond}}}
 			</div>
 		</div>
-		<div class="obsidian-char-box-container obsidian-char-box-stacked">
-			<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Flaws'}}</div>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked
+               {{#if detailsCollapsed.flaw}}obsidian-collapsed{{/if}}">
+			<div class="obsidian-char-box-text" data-detail="flaw">{{localize 'OBSIDIAN.Flaws'}}</div>
 			<div class="obsidian-char-box" contenteditable="true" data-edit="data.details.flaw">
 				{{{data.details.flaw}}}
 			</div>
@@ -287,13 +293,7 @@
 						  {{/if}}
 							{{#if actor.obsidian.defenses.display.conditions.dis}}
 								<div class="obsidian-list-box-row">
-									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
-									 obsidian-css-icon-negative" title="{{localize 'OBSIDIAN.Disadvantage'}}">
-										<div class="obsidian-css-icon-shape"></div>
-										<div class="obsidian-css-icon-label">
-											{{localize 'OBSIDIAN.DisadvantageAbbr'}}
-										</div>
-									</div>
+									{{badge 'dis'}}
 									<span>{{{actor.obsidian.defenses.display.conditions.dis}}}</span>
 								</div>
 							{{/if}}
@@ -325,13 +325,7 @@
 						  {{/if}}
 							{{#if actor.obsidian.defenses.display.conditions.adv}}
 								<div class="obsidian-list-box-row">
-									<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-hexagon
-									     obsidian-css-icon-positive" title="{{localize 'OBSIDIAN.Advantage'}}">
-										<div class="obsidian-css-icon-shape"></div>
-										<div class="obsidian-css-icon-label">
-											{{localize 'OBSIDIAN.AdvantageAbbr'}}
-										</div>
-									</div>
+									{{badge 'adv'}}
 									<span>{{{actor.obsidian.defenses.display.conditions.adv}}}</span>
 								</div>
 							{{/if}}

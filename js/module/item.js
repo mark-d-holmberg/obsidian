@@ -3,7 +3,7 @@ import {Prepare} from '../data/prepare.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
 import {Filters} from '../data/filters.js';
-import {cssIconHexagon} from '../util/html.js';
+import {iconD20} from '../util/html.js';
 import {Config} from '../data/config.js';
 import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
@@ -256,7 +256,7 @@ const prepareItem = {
 				derived.notes.push(`
 					<div class="obsidian-table-note-flex">
 						${game.i18n.localize('OBSIDIAN.Skill.ste')}
-						${cssIconHexagon('OBSIDIAN.DisadvantageAbbr', false)}
+						${iconD20({advantage: false})}
 					</div>
 				`);
 			}
