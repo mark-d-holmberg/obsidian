@@ -34,7 +34,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		mergeObject(options, {
 			width: 768,
 			classes: options.classes.concat(['obsidian-window']),
-			scrollY: ['.obsidian'],
+			scrollY: ['.obsidian-scrollable'],
 			tabs: [{
 				navSelector: 'ul.obsidian-tab-bar[data-group="main-tabs"]',
 				contentSelector: 'form.obsidian',
@@ -377,18 +377,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_rollHP (evt) {
 		this.actor.rollHP(evt.shiftKey);
-	}
-
-	_restoreScrollPositions (html) {
-		const selectors = this.options.scrollY || [];
-		const positions = this._scrollPositions || {};
-
-		for (const sel of selectors) {
-			const el = this.element.find(sel);
-			if (el.length === 1) {
-				el[0].scrollTop = positions[sel] || 0;
-			}
-		}
 	}
 
 	async _updateObject (event, formData) {

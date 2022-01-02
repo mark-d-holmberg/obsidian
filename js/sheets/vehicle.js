@@ -35,7 +35,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		mergeObject(options, {
 			width: 768,
 			classes: options.classes.concat(['obsidian-window']),
-			scrollY: ['.obsidian'],
+			scrollY: ['.obsidian-scrollable'],
 			tabs: [{
 				navSelector: 'ul.obsidian-tab-bar[data-group="main-tabs"]',
 				contentSelector: 'form.obsidian',
@@ -240,10 +240,6 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 
 	async _onSubmit (event, {updateData = null, preventClose = false, preventRender = false} = {}) {
 		return ObsidianCharacter.prototype._onSubmit.apply(this, arguments);
-	}
-
-	_restoreScrollPositions (html, selectors) {
-		ObsidianNPC.prototype._restoreScrollPositions.apply(this, arguments);
 	}
 
 	async _updateObject (event, formData) {

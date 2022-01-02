@@ -1,27 +1,44 @@
-.obsidian-main-container {
-	padding-left: 10px;
-	align-items: flex-start;
+.obsidian-main {
+	padding: 0;
+	line-height: normal;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
 }
 
-.obsidian-main {
-	width: 578px;
-	height: 100%;
-	min-height: 660px;
-	padding: 12px 8px;
-	overflow: hidden;
-	line-height: normal;
+.dnd5e.sheet .window-content form.obsidian.obsidian-main-form {
+	display: flex;
+	flex-direction: column;
+	height: unset;
+	overflow: unset;
 }
 
 .obsidian-tab-bar {
 	list-style: none;
-	margin: 0 0 10px 0;
+	margin: 10px 0;
 	padding: 0;
 	display: flex;
 	justify-content: space-around;
 }
 
+.obsidian-tab-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.obsidian-tab-container > div:not(.obsidian-tab-contents) {
+	padding: 0 10px;
+}
+
 .obsidian-tab-container .obsidian-tab-bar {
 	justify-content: flex-start;
+	margin-top: 0;
+	padding: 0 10px;
 }
 
 .obsidian-tab,
@@ -60,37 +77,52 @@
 	border-bottom: 3px solid var(--obs-highlight);
 }
 
-.obsidian-tab-container .obsidian-tab-bar {
-	padding: 0 5px;
+.dnd5e.sheet form .tab.obsidian-tab-container {
+	height: unset;
+	overflow-y: unset;
 }
 
 .dnd5e.sheet form .tab.obsidian-tab-contents {
-	overflow-y: auto;
 	padding: 0 5px;
 	text-align: left;
-	height: 100%;
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
+	flex: 1;
+	position: relative;
 }
 
-.obsidian-tab-contents::-webkit-scrollbar {
+.obsidian-scrollable {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow-y: auto;
+	padding: 0 10px;
+}
+
+.obsidian-scrollable::-webkit-scrollbar {
 	height: 6px;
 }
 
-.obsidian-tab-contents::-webkit-scrollbar-track {
+.obsidian-scrollable::-webkit-scrollbar-track {
 	box-shadow: none;
 }
 
-.obsidian-tab-contents::-webkit-scrollbar-thumb {
+.obsidian-scrollable::-webkit-scrollbar-thumb {
 	border: none;
 	background: rgba(0, 0, 0, .75);
+}
+
+.tab[data-tab].active.obsidian-tab-container {
+	display: flex;
 }
 
 .tab[data-tab].active.obsidian-tab-contents {
 	display: block;
 }
 
-.obsidian-tab-contents > h3,
+.obsidian-tab-contents h3,
 .npc .obsidian h3,
 .vehicle .obsidian h3,
 .obsidian-char-notes h3 {
@@ -604,15 +636,23 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-char-inv-header {
 	display: flex;
 	padding-bottom: 10px;
-	margin-bottom: 10px;
+	margin: 0 10px 10px 10px;
 	border-bottom: 1px solid var(--obs-mid);
-	width: 100%;
+}
+
+.obsidian-form-bare .obsidian-char-inv-header {
+	margin: 0 0 10px 0;
 }
 
 .obsidian-char-spell-header {
 	justify-content: center;
 	cursor: pointer;
 	position: relative;
+}
+
+.obsidian-tab-container > div.obsidian-char-spell-header,
+.obsidian-tab-container > div.obsidian-char-inv-header {
+	padding: 0 0 10px 0;
 }
 
 .obsidian-char-spell-header a {
@@ -803,6 +843,10 @@ h3 > div > .obsidian-feature-recharge {
 	left: 2px;
 }
 
+.obsidian-spell-filter .obsidian-input-search-container > i {
+	top: 1px;
+}
+
 .obsidian-2-pane-window .obsidian-input-search-container > i,
 .obsidian-2-pane-window .obsidian-input-search-container > span {
 	top: 0;
@@ -813,6 +857,10 @@ h3 > div > .obsidian-feature-recharge {
 	top: 2px;
 	right: 0;
 	cursor: pointer;
+}
+
+.obsidian-spell-filter .obsidian-input-search-container > span {
+	top: 1px;
 }
 
 .obsidian-compendium .header-search > i {

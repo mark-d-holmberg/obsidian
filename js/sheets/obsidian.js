@@ -118,8 +118,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 					} else if (group === 'equipment') {
 						Sheet.filterEquipment(this);
 					}
-
-					ObsidianCharacter._resizeTabs(html);
 				}
 			});
 		});
@@ -127,7 +125,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		Sheet.activateFiltering(this, html);
 		Sheet.contextMenu(this, html);
-		ObsidianCharacter._resizeMain(html);
 
 		if (!this.options.editable) {
 			return;
@@ -216,11 +213,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		Sheet.getRules(data);
 		console.debug(data);
 		return data;
-	}
-
-	async maximize () {
-		await super.maximize();
-		ObsidianCharacter._resizeMain(this.element);
 	}
 
 	render (force = false, options = {}) {
@@ -327,24 +319,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			activeTab = activeContainer.find('.obsidian-tab-contents');
 		}
 
-		return activeTab;
-	}
-
-	_injectHTML (html) {
-		/**
-		 * For some reason, the first time this dialog is opened, the heights
-		 * of its elements are not calculated correctly until the dialog is
-		 * fully visible, so our resize code, which is called after rendering,
-		 * fails to calculate the height correctly as the dialog is still
-		 * fading in.
-		 *
-		 * Application#_injectHTML does not provide a callback for its call to
-		 * fadeIn so we must override it here in order to call our resize code
-		 * at the correct time, once the dialog is fully visible.
-		 */
-		$('body').append(html);
-		this._element = html;
-		html.hide().fadeIn(200, ObsidianCharacter._resizeMain.bind(this, html));
+		return activeTab?.find('.obsidian-scrollable');
 	}
 
 	/**
@@ -458,53 +433,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		this._saveScrollPositions();
 		await super._render(force, options);
 		this._restoreScrollPositions();
-	}
-
-	/**
-	 * @private
-	 */
-	static _resizeMain (html) {
-		let total = 0;
-		html.find('.obsidian-main-left > .obsidian-char-box-container')
-			.each((i, el) => total += $(el).outerHeight(true));
-
-		total -= html.find('.obsidian-conditions-box').outerHeight() + 13;
-		html.find('.obsidian-main').css('height', `${total}px`);
-		ObsidianCharacter._resizeTabs(html);
-	}
-
-	/**
-	 * @private
-	 */
-	static _resizeTabs (html) {
-		const total = html.find('.obsidian-main').outerHeight();
-		html.find('.obsidian-tab-contents').each((i, el) => {
-			const jqel = $(el);
-			let innerTotal = 0;
-			let current = jqel.prev();
-
-			if (current.length < 1) {
-				current = jqel.parent();
-			}
-
-			while (!current.hasClass('obsidian-main')) {
-				if (!current.hasClass('obsidian-tab-contents')
-					&& !current.hasClass('obsidian-tab-container'))
-				{
-					innerTotal += current.outerHeight(true);
-				}
-
-				const tmp = current.prev();
-				if (tmp.length < 1) {
-					current = current.parent();
-				} else {
-					current = tmp;
-				}
-			}
-
-			const offset = game.i18n.lang === 'ja' ? 29 : -30;
-			jqel.css('height', `${total - innerTotal + offset}px`);
-		});
 	}
 
 	/**

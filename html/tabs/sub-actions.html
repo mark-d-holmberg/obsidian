@@ -1,4 +1,5 @@
 <div class="obsidian-tab-contents tab" data-group="actions-tabs" data-tab="{{group}}">
+	<div class="obsidian-scrollable">
 	<h3>
 		{{localize title}}
 		<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-edit obsidian-add-feat"
@@ -9,5 +10,6 @@
 	<div class="obsidian-feature-list">
 		{{> modules/obsidian/html/components/features.html
 				feats=(filter actor.obsidian.feats 'data.activation.type' action)}}
+	</div>
 	</div>
 </div>

@@ -694,9 +694,17 @@ export class ObsidianActor extends Actor5e {
 		return item.setFlag('obsidian', 'effects', effects);
 	}
 
-	receiveCurrency (currency) {
-		const update = {...this.data.data.currency};
+	receiveCurrency (currency, containerID) {
+		const container = this.items.get(containerID);
+		if (containerID && !container) {
+			return;
+		}
+		const existing = container?.getFlag('obsidian', 'currency') ?? this.data.data.currency;
+		const update = {...existing};
 		Object.entries(currency).forEach(([denom, amount]) => update[denom] += amount);
+		if (container) {
+			return container.setFlag('obsidian', 'currency', update);
+		}
 		return this.update({'data.currency': update});
 	}
 

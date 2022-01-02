@@ -332,30 +332,28 @@ const prepareItem = {
 					derived.visible = false;
 				} else {
 					const parentComponent = item.getFlag('obsidian', 'parentComponent');
-					if (parentComponent) {
-						const component = item.actor.obsidian.components.get(parentComponent);
-						if (component.type === 'spells'
-							&& component.source === 'individual'
-							&& component.method === 'list')
-						{
-							cls = item.actor.items.get(component.class);
-							const spellList = cls?.obsidian?.spellcasting?.spellList || [];
+					const component = item.actor.obsidian.components.get(parentComponent);
+					if (component?.type === 'spells'
+						&& component?.source === 'individual'
+						&& component?.method === 'list')
+					{
+						cls = item.actor.items.get(component.class);
+						const spellList = cls?.obsidian?.spellcasting?.spellList || [];
 
-							if (!spellList.includes(item)) {
-								spellList.push(item);
-							}
+						if (!spellList.includes(item)) {
+							spellList.push(item);
+						}
 
-							if (flags.known === undefined) {
-								flags.known = false;
-							}
+						if (flags.known === undefined) {
+							flags.known = false;
+						}
 
-							if (flags.prepared === undefined) {
-								flags.prepared = false;
-							}
+						if (flags.prepared === undefined) {
+							flags.prepared = false;
+						}
 
-							if (flags.book === undefined) {
-								flags.book = false;
-							}
+						if (flags.book === undefined) {
+							flags.book = false;
 						}
 					}
 				}
