@@ -19,19 +19,17 @@ import {ObsidianActorDerived} from './derived.js';
 import {ObsidianVehicle} from '../sheets/vehicle.js';
 
 export class ObsidianActor extends Actor5e {
-	static _deriveLevelFromXP (data, derived) {
-		let i = 0;
-		for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
-			if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
-				break;
-			}
-		}
-
-		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
+	static _prepareActorXP (data) {
+		const level = data.details.level;
+		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[Math.max(0, level - 1)];
 		const xp = data.details.xp;
-		derived.details.level = i;
-		xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
-		xp.pct = Math.floor(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100);
+		xp.max = DND5E.CHARACTER_EXP_LEVELS[level];
+		if (xp.value < lowerBound) {
+			xp.pct = 0;
+			return;
+		}
+		const pct = Math.clamped(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100, 0, 100);
+		xp.pct = Math.floor(pct);
 	}
 
 	get obsidian () {
@@ -67,11 +65,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		if (this.data.type === 'character') {
-			if (flags.details.milestone) {
-				derived.details.level = data.details.level;
-			} else {
-				ObsidianActor._deriveLevelFromXP(data, derived);
-			}
+			ObsidianActor._prepareActorXP(data);
 		} else {
 			prepareNPC(flags, derived);
 		}

@@ -237,6 +237,7 @@
 
 .obsidian-npc-configure i {
 	color: var(--obs-text-subtle);
+	margin-left: 1px;
 }
 
 .obsidian-npc-configure div:hover i {

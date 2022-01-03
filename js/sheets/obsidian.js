@@ -246,6 +246,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 				return;
 			}
 
+			evt.stopPropagation();
 			if (options.width !== undefined) {
 				options.width = parseInt(options.width);
 			}

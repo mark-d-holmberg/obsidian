@@ -347,7 +347,7 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('number-format', function (n) {
-		return Intl.NumberFormat().format(n);
+		return new Intl.NumberFormat().format(n);
 	});
 
 	Handlebars.registerHelper('obs-i18n', function (...args) {

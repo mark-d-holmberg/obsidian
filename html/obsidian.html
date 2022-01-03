@@ -51,9 +51,15 @@
 	<section class="obsidian-char-overview">
 		<div class="obsidian-char-header-container">
 			<div class="obsidian-char-header">
-				<input name="name" type="text" value="{{actor.name}}"
-				       placeholder="{{localize 'OBSIDIAN.CharacterName'}}"
-				       class="obsidian-char-charname obsidian-condensed">
+				<div class="obsidian-char-charname-container">
+					<input name="name" type="text" value="{{actor.name}}"
+					       placeholder="{{localize 'OBSIDIAN.CharacterName'}}"
+					       class="obsidian-char-charname obsidian-condensed">
+					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
+					   data-dialog="HeaderDetails">
+						<i class="fas fa-cog"></i>
+					</a>
+				</div>
 				<div class="obsidian-char-header-minor obsidian-condensed">
 					{{#if actor.flags.obsidian.details.gender}}
 						<span>{{actor.flags.obsidian.details.gender}}</span>
@@ -69,15 +75,12 @@
 						{{/if}}
 					</span>
 					<span>{{actor.obsidian.details.class}}</span>
-					<a title="{{localize 'OBSIDIAN.EditDetails'}}" class="obsidian-edit"
-					   data-dialog="HeaderDetails">
-						<i class="fas fa-edit"></i>
-					</a>
 				</div>
-				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP">
+				<div class="obsidian-char-xp obsidian-ptr" data-dialog="XP"
+				     title="{{localize 'OBSIDIAN.ManageXP'}}">
 					<div class="obsidian-char-xp-bar">
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{actor.obsidian.details.level}}
+							{{localize 'OBSIDIAN.LevelAbbrUC'}} {{data.details.level}}
 						</span>
 						<span class="obsidian-char-xp-progress">
 							<span class="obsidian-char-xp-progress-bar" style="width:
@@ -88,10 +91,15 @@
 								{{~/if~}}%;"></span>
 						</span>
 						<span class="obsidian-char-lvl obsidian-condensed">
-							{{#if (geq actor.obsidian.details.level ObsidianConfig.MAX_LEVEL)}}
+							{{#if (geq data.details.level ObsidianConfig.MAX_LEVEL)}}
 								{{localize 'OBSIDIAN.MaximumAbbrUC'}}
+							{{else if (geq data.details.xp.value data.details.xp.max)}}
+								<a data-dialog="HeaderDetails" title="{{localize 'OBSIDIAN.LevelUp'}}"
+								   class="obsidian-edit">
+									<i class="fas fa-arrow-circle-up"></i>
+								</a>
 							{{else}}
-								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add actor.obsidian.details.level 1}}
+								{{localize 'OBSIDIAN.LevelAbbrUC'}} {{add data.details.level 1}}
 							{{/if}}
 						</span>
 					</div>
@@ -215,19 +223,24 @@
 			<div class="obsidian-char-top-level" style="align-items: flex-start;">
 				<div class="obsidian-char-column">
 					<div class="obsidian-char-box-container">
-						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.HP'}}</div>
+						<div class="obsidian-char-box-text">
+							{{localize 'OBSIDIAN.HP'}}
+							<a title="{{localize 'OBSIDIAN.ManageHP'}}" data-width="250" data-template="hp.html"
+							   class="obsidian-edit obsidian-simple-dialog">
+								<i class="fas fa-cog"></i>
+							</a>
+						</div>
 						<div class="obsidian-char-box obsidian-resource-box obsidian-char-hp">
 							<div class="obsidian-bisect">
 								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
 								       value="{{data.attributes.hp.value}}" data-dtype="Number">
 								/
-								<div class="obsidian-ptr obsidian-max-hp obsidian-resource-box-max
+								<div class="obsidian-max-hp obsidian-resource-box-max
 								{{#if (gt data.attributes.hp.max base.data.attributes.hp.max)~}}
 									obsidian-positive
 								{{else if (lt data.attributes.hp.max base.data.attributes.hp.max)~}}
 									obsidian-negative
-								{{~/if}} obsidian-simple-dialog" data-title="{{localize 'OBSIDIAN.EditMaxHP'}}"
-								     data-width="250" data-template="hp.html">
+								{{~/if}}">
 									{{data.attributes.hp.max}}
 								</div>
 							</div>
@@ -240,8 +253,12 @@
 				{{#if (not-empty actor.flags.obsidian.attributes.hd)}}
 					<div class="obsidian-char-column">
 						<div class="obsidian-char-box-container">
-							<div class="obsidian-char-box-text rollable" data-dialog="RollHD">
-								{{localize 'OBSIDIAN.HD'}}
+							<div class="obsidian-char-box-text">
+								<span class="rollable" data-dialog="RollHD">{{localize 'OBSIDIAN.HD'}}</span>
+								<a title="{{localize 'OBSIDIAN.ManageHD'}}" class="obsidian-edit" data-width="250"
+								   data-dialog="HD">
+									<i class="fas fa-cog"></i>
+								</a>
 							</div>
 							<div class="obsidian-char-box obsidian-resource-box obsidian-char-hd">
 								<div>
@@ -251,14 +268,14 @@
 											<input type="text" name="flags.obsidian.attributes.hd.{{id}}.value"
 											       class="obsidian-input-num" value="{{hd.value}}" data-dtype="Number">
 											/
-											<div class="obsidian-ptr obsidian-resource-box-max
+											<div class="obsidian-resource-box-max
 											{{#if (defined-and-not-empty hd.override)~}}
 												{{#if (gt hd.override hd.max)~}}
 													obsidian-positive
 												{{else if (lt hd.override hd.max)~}}
 													obsidian-negative
 												{{~/if}}
-											{{~/if}}" data-dialog="HD">
+											{{~/if}}">
 												{{#if (defined-and-not-empty hd.override)}}
 													{{hd.override}}
 												{{else}}
@@ -275,8 +292,14 @@
 					</div>
 				{{/if}}
 				<div class="obsidian-char-column">
-					<div class="obsidian-char-box-container" data-dialog="Defenses">
-						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Defenses'}}</div>
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">
+							{{localize 'OBSIDIAN.Defenses'}}
+							<a title="{{localize 'OBSIDIAN.ManageDefenses'}}" class="obsidian-edit"
+							   data-dialog="Defenses">
+								<i class="fas fa-cog"></i>
+							</a>
+						</div>
 						<div class="obsidian-char-box obsidian-list-box obsidian-defenses">
 						  {{#if actor.obsidian.defenses.display.damage.vuln}}
 							  <div class="obsidian-list-box-row">
@@ -349,7 +372,7 @@
 						<a title="{{localize 'OBSIDIAN.ManageSkills'}}" class="obsidian-edit"
 						   data-dialog="Skills" data-property="skills" data-template="skills.html"
 						   data-title="{{localize 'OBSIDIAN.ManageSkills'}}" data-width="440">
-							<i class="fas fa-edit"></i>
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
@@ -395,7 +418,7 @@
 						<a title="{{localize 'OBSIDIAN.ManageTools'}}" class="obsidian-edit"
 						   data-title="{{localize 'OBSIDIAN.ManageTools'}}" data-dialog="Skills"
 						   data-property="tools" data-template="tools.html" data-width="650">
-							<i class="fas fa-edit"></i>
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
@@ -442,7 +465,7 @@
 						{{localize 'OBSIDIAN.Senses'}}
 						<a title="{{localize 'OBSIDIAN.EditSenses'}}" class="obsidian-edit"
 						   data-dialog="Senses">
-							<i class="fas fa-edit"></i>
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
@@ -472,7 +495,7 @@
 						{{localize 'OBSIDIAN.Proficiencies'}}
 						<a title="{{localize 'OBSIDIAN.EditProficiencies'}}" class="obsidian-edit"
 						   data-dialog="Proficiencies">
-							<i class="fas fa-edit"></i>
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-skills-box">
@@ -523,9 +546,8 @@
 					<div class="obsidian-char-box-text">
 						{{localize 'OBSIDIAN.SavingThrows'}}
 						<a title="{{localize 'OBSIDIAN.ManageSaves'}}" data-template="saves.html"
-						   class="obsidian-edit obsidian-simple-dialog" data-width="250"
-						   data-title="{{localize 'OBSIDIAN.ManageSaves'}}">
-							<i class="fas fa-edit"></i>
+						   class="obsidian-edit obsidian-simple-dialog" data-width="250">
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg obsidian-grid-2-col">
@@ -540,7 +562,7 @@
 						<a title="{{localize 'OBSIDIAN.ManageDeathSaves'}}"
 						   class="obsidian-edit obsidian-simple-dialog" data-template="death-saves.html"
 						   data-title="{{localize 'OBSIDIAN.ManageDeathSaves'}}" data-width="250">
-							<i class="fas fa-edit"></i>
+							<i class="fas fa-cog"></i>
 						</a>
 					</div>
 					<div class="obsidian-char-box obsidian-char-box-lg">

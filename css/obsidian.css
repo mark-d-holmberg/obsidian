@@ -24,7 +24,7 @@
 	--obs-horizontal-space: 10px;
 	--obs-vertical-space: 20px;
 	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
-	--obs-bg-translucent: rgb(0 0 0 / 20%);
+	--obs-bg-translucent: rgb(0 0 0 / 15%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -255,6 +255,11 @@
 .obsidian-view {
 	color: var(--obs-text-secondary);
 	font-size: 11px;
+}
+
+.obsidian-edit .fa-cog {
+	color: var(--obs-text-subtle);
+	margin-left: 1px;
 }
 
 .obsidian-delete.obsidian-alert {
@@ -592,6 +597,17 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-right: 0;
 }
 
+.obsidian-char-charname-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 14px;
+}
+
+.obsidian-char-charname-container .obsidian-edit {
+	margin-right: 8px;
+}
+
 .dnd5e.sheet form input[type=text].obsidian-char-charname {
 	color: var(--obs-text-regular);
 	height: auto;
@@ -599,6 +615,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-size: 26px;
 	max-width: 300px;
 	line-height: 1;
+	margin: 0;
 }
 
 .dnd5e.sheet form input[type=number].obsidian-input-sheet,
@@ -628,10 +645,16 @@ form.obsidian .rollable:hover {
 .obsidian-char-xp-bar {
 	display: flex;
 	align-items: center;
+	min-height: 13px;
 }
 
 .obsidian-char-lvl {
 	font-size: 7px;
+}
+
+.obsidian-char-lvl i {
+	font-size: 10px;
+	color: var(--obs-positive);
 }
 
 .obsidian-char-xp-progress {

@@ -236,7 +236,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 				}
 
 				value = `${value} <span class="obsidian-npc-subtle">(`
-					+ Intl.NumberFormat().format(this.actor.getCRExp(cr))
+					+ new Intl.NumberFormat().format(this.actor.getCRExp(cr))
 					+ ` ${game.i18n.localize('OBSIDIAN.XP')})</span>`;
 			}
 
