@@ -19,32 +19,34 @@
 			</div>
 		</div>
 	</fieldset>
-	<label class="obsidian-label-lg">
-		{{localize 'OBSIDIAN.CustomSkills'}}
-		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-skill">
-			{{localize 'OBSIDIAN.Add'}}
-		</button>
-	</label>
-	{{#each custom}}
-		<input type="hidden" name="flags.obsidian.skills.{{key}}.custom" value="true"
-		       data-dtype="Boolean">
-		<div class="obsidian-form-row" data-item-id="{{key}}">
-			<div>
-				<select name="flags.obsidian.skills.{{key}}.value" data-dtype="Number">
-					{{selectOptions @root.ObsidianLabels.Proficiency selected=value}}
-				</select>
-				<select name="flags.obsidian.skills.{{key}}.ability" style="text-transform: uppercase;">
-					{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc ability)}}
-				</select>
-				<input type="text" placeholder="Skill" value="{{label}}"
-				       name="flags.obsidian.skills.{{key}}.label">
-				<span class="obsidian-binary-operator">&plus;</span>
-				<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{bonus}}"
-				       data-dtype="Number" name="flags.obsidian.skills.{{key}}.bonus">
-			</div>
-			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
-				{{localize 'OBSIDIAN.Remove'}}
+	<fieldset>
+		<legend>
+			{{localize 'OBSIDIAN.CustomSkills'}}
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-skill">
+				{{localize 'OBSIDIAN.Add'}}
 			</button>
-		</div>
-	{{/each}}
+		</legend>
+		{{#each custom}}
+			<input type="hidden" name="flags.obsidian.skills.{{key}}.custom" value="true"
+			       data-dtype="Boolean">
+			<div class="obsidian-form-row" data-item-id="{{key}}">
+				<div>
+					<select name="flags.obsidian.skills.{{key}}.value" data-dtype="Number">
+						{{selectOptions @root.ObsidianLabels.Proficiency selected=value}}
+					</select>
+					<select name="flags.obsidian.skills.{{key}}.ability" style="text-transform: uppercase;">
+						{{selectOptions @root.ObsidianLabels.AbilityAbbr selected=(lc ability)}}
+					</select>
+					<input type="text" placeholder="Skill" value="{{label}}"
+					       name="flags.obsidian.skills.{{key}}.label">
+					<span class="obsidian-binary-operator">&plus;</span>
+					<input class="obsidian-input-num-sm" type="text" placeholder="0" value="{{bonus}}"
+					       data-dtype="Number" name="flags.obsidian.skills.{{key}}.bonus">
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-skill">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+	</fieldset>
 </form>

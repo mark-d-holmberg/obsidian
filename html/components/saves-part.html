@@ -22,7 +22,7 @@
 				<input type="text" name="flags.obsidian.saves.{{id}}.override" data-dtype="Number"
 				       value="{{override}}" placeholder="&mdash;">
 			{{else}}
-				<div class="obsidian-save-mod obsidian-ptr">
+				<div class="obsidian-save-mod obsidian-ptr" title="{{localize 'OBSIDIAN.ManageSave'}}">
 					{{numberFormat save.save decimals=0 sign=true}}
 				</div>
 			{{/if}}

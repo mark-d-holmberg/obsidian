@@ -13,35 +13,36 @@
 		       placeholder="{{localize 'OBSIDIAN.Subrace'}}"
 		       value="{{actor.flags.obsidian.details.subrace}}">
 	</label>
-	<label class="obsidian-label-lg">
-		{{localize 'OBSIDIAN.Classes'}}
-		<button type="button" class="obsidian-btn-positive obsidian-add-class obsidian-btn-sm"
-		        style="margin-right: 3px;">
-			{{localize 'OBSIDIAN.Add'}}
-		</button>
-	</label>
-	{{#each actor.obsidian.classes}}
-		<div class="obsidian-class-row" data-item-id="{{_id}}">
-			<div class="obsidian-class-col-edit">
-				<a class="obsidian-edit" title="{{localize 'OBSIDIAN.EditClass'}}">
-					<i class="fas fa-edit"></i>
-				</a>
+	<fieldset>
+		<legend>
+			{{localize 'OBSIDIAN.Classes'}}
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-class">
+				{{localize 'OBSIDIAN.Add'}}
+			</button>
+		</legend>
+		{{#each actor.obsidian.classes}}
+			<div class="obsidian-class-row" data-item-id="{{_id}}">
+				<div class="obsidian-class-col-edit">
+					<a class="obsidian-edit" title="{{localize 'OBSIDIAN.EditClass'}}">
+						<i class="fas fa-cog"></i>
+					</a>
+				</div>
+				<div class="obsidian-class-col-name">{{obsidian.label}}</div>
+				<div class="obsidian-class-col-subclass">
+					<input placeholder="{{localize 'OBSIDIAN.Subclass'}}" type="text"
+					       value="{{data.subclass}}" name="items.{{idx}}.data.subclass">
+				</div>
+				<div class="obsidian-class-col-level">
+					<input type="text" class="obsidian-input-num-sm" data-dtype="Number"
+					       value="{{data.levels}}" name="items.{{idx}}.data.levels">
+				</div>
+				<div class="obsidian-class-col-hd">{{data.hitDice}}</div>
+				<div class="obsidian-class-col-rm">
+					<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
+						{{localize 'OBSIDIAN.Remove'}}
+					</button>
+				</div>
 			</div>
-			<div class="obsidian-class-col-name">{{obsidian.label}}</div>
-			<div class="obsidian-class-col-subclass">
-				<input placeholder="{{localize 'OBSIDIAN.Subclass'}}" type="text" value="{{data.subclass}}"
-				       name="items.{{idx}}.data.subclass">
-			</div>
-			<div class="obsidian-class-col-level">
-				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" value="{{data.levels}}"
-				       name="items.{{idx}}.data.levels">
-			</div>
-			<div class="obsidian-class-col-hd">{{data.hitDice}}</div>
-			<div class="obsidian-class-col-rm">
-				<button type="button" class="obsidian-btn-negative obsidian-rm-class obsidian-btn-sm">
-					{{localize 'OBSIDIAN.Remove'}}
-				</button>
-			</div>
-		</div>
-	{{/each}}
+		{{/each}}
+	</fieldset>
 </form>

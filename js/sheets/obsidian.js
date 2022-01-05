@@ -152,6 +152,14 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		html.find('.obsidian-sidebar .obsidian-char-box-text')
 			.mouseup(this._onCollapseDetails.bind(this));
 		html.find('.obsidian-speed').mouseup(this._cycleSpeed.bind(this));
+		html.find('.obsidian-skill-mod, .obsidian-save-mod').hover(function () {
+			this._obs_content = this.textContent;
+			this.textContent = '\uF013';
+		}, function () {
+			if (this._obs_content) {
+				this.textContent = this._obs_content;
+			}
+		});
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);

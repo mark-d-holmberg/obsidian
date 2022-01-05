@@ -33,15 +33,18 @@
 			</div>
 		</div>
 		{{#unless limited}}
-		<div class="obsidian-char-notes">
-			<h3>
+		<div class="obsidian-char-box-container obsidian-char-box-stacked obsidian-char-notes
+			         {{#if (or detailsCollapsed.notes (not actor.flags.obsidian.details.other))}}
+			           obsidian-collapsed
+               {{/if}}">
+			<div class="obsidian-char-box-text" data-detail="notes">
 				{{localize 'OBSIDIAN.Notes'}}
 				<a class="obsidian-edit obsidian-simple-dialog" data-template="other.html"
-				   data-title="{{localize 'OBSIDIAN.EditNotes'}}" data-width="578">
+				   data-title="{{localize 'OBSIDIAN.EditNote'}}" data-width="578">
 					<i class="fas fa-edit"></i>
 				</a>
-			</h3>
-			<div class="obsidian-feature-body">{{{actor.flags.obsidian.details.other}}}</div>
+			</div>
+			<div class="obsidian-char-box">{{{actor.flags.obsidian.details.other}}}</div>
 		</div>
 		{{/unless}}
 		<div class="obsidian-collapser-container obsidian-ptr">
@@ -153,7 +156,7 @@
 						</div>
 						<div class="obsidian-char-box obsidian-speed obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageSpeed'}}" data-width="250"
-						     data-template="speed.html">
+						     data-template="speed.html" title="{{localize 'OBSIDIAN.ManageSpeed'}}">
 							{{speed.value}}
 						</div>
 					</div>
@@ -166,7 +169,7 @@
 						</div>
 						<div class="obsidian-char-box obsidian-init obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageInitiative'}}" data-width="320"
-						     data-template="init.html">
+						     data-template="init.html" title="{{localize 'OBSIDIAN.ManageInitiative'}}">
 							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
 						</div>
 					</div>
@@ -182,7 +185,7 @@
 						<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.ACAbbr'}}</div>
 						<div class="obsidian-char-box obsidian-ac obsidian-ptr obsidian-simple-dialog"
 						     data-title="{{localize 'OBSIDIAN.ManageAC'}}" data-template="ac.html"
-						     data-width="450">
+						     data-width="450" title="{{localize 'OBSIDIAN.ManageAC'}}">
 							{{data.attributes.ac.value}}
 						</div>
 					</div>
@@ -404,10 +407,11 @@
 								     draggable="true">
 									{{skill.label}}
 								</div>
-								<div class="obsidian-skill-mod obsidian-ptr">
+								<div class="obsidian-skill-mod obsidian-ptr"
+								     title="{{localize 'OBSIDIAN.ManageSkill'}}">
 									{{numberFormat skill.total decimals=0 sign=true}}
 								</div>
-								<div class="obsidian-skill-passive">({{skill.passive}})</div>
+								<div class="obsidian-skill-passive">{{skill.passive}}</div>
 							</div>
 						{{/each}}
 					</div>
@@ -452,7 +456,8 @@
 								     draggable="true">
 									{{tool.label}}
 								</div>
-								<div class="obsidian-skill-mod obsidian-ptr">
+								<div class="obsidian-skill-mod obsidian-ptr"
+								     title="{{localize 'OBSIDIAN.ManageTool'}}">
 									{{numberFormat tool.total decimals=0 sign=true}}
 								</div>
 							</div>

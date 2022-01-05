@@ -467,6 +467,29 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	line-height: 1rem;
 }
 
+.obsidian-char-box.obsidian-simple-dialog {
+	position: relative;
+}
+
+.obsidian-char-box.obsidian-simple-dialog:hover {
+	color: transparent;
+}
+
+.obsidian-char-box.obsidian-simple-dialog:hover:after {
+	content: '\f013';
+	font-family: 'Font Awesome 5 Free';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	color: var(--obs-text-regular);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
 .obsidian-resource-box {
 	padding: 4px 8px;
 	font-size: 14px;
@@ -1202,6 +1225,12 @@ legend .fancy-checkbox {
 	width: 25px;
 }
 
+.obsidian-skill-mod:hover,
+.obsidian-save-mod:hover {
+	text-shadow: 0 0 8px var(--color-shadow-primary);
+	font-family: 'Font Awesome 5 Free';
+}
+
 .obsidian-skill-passive {
 	color: var(--obs-text-subtle);
 	font-weight: normal;
@@ -1387,6 +1416,15 @@ legend .fancy-checkbox {
 .npc .obsidian [data-tab="desc"] .obsidian-char-box-stacked,
 .vehicle .obsidian [data-tab=desc] .obsidian-char-box-stacked {
 	margin-top: 15px;
+}
+
+.obsidian-char-notes .obsidian-char-box-text {
+	display: flex;
+	justify-content: space-between;
+}
+
+.obsidian-char-notes .obsidian-edit {
+	color: var(--obs-text-subtle);
 }
 
 .obsidian-defenses {
