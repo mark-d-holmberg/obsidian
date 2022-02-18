@@ -471,7 +471,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 
 .obsidian-table-note-text .obsidian-binary-operator {
 	font-size: 12px;
-	margin-right: 5px;
+	margin: 0;
 }
 
 .obsidian-table-number-split {
@@ -522,7 +522,12 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 
 .obsidian-feature-header .obsidian-feature-uses {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
+}
+
+.obsidian-feature-uses .obsidian-binary-operator {
+	font-size: 14px;
+	margin: 0;
 }
 
 .obsidian-feature-body {

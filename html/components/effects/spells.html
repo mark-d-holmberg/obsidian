@@ -65,8 +65,11 @@
 		{{/unless}}
 		{{#each spells}}
 			<div class="obsidian-item-drop-pill" data-id="{{_id}}">
+				<div class="obsidian-item-drop-pill-header">
+					<div title="{{obs-i18n 'SpellSchool' data.school}}"
+					     class="obsidian-icon obsidian-icon-school-{{data.school}}"></div>
+				</div>
 				<div class="obsidian-item-drop-pill-body obsidian-provide-spell-body">
-					<div class="obsidian-icon obsidian-icon-school-{{data.school}}"></div>
 					{{name}}
 				</div>
 				<div class="obsidian-item-drop-pill-rm obsidian-rm-provide-spell">&times;</div>

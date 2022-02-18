@@ -25,6 +25,9 @@
 	--obs-vertical-space: 20px;
 	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
 	--obs-bg-translucent: rgb(0 0 0 / 15%);
+	--obs-pill-bg: hsl(222deg 14% 10%);
+	--obs-pill-border-light: rgb(255 255 255 / 15%);
+	--obs-pill-border-dark: rgb(0 0 0 / 97%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -126,6 +129,7 @@
 
 .obsidian option {
 	color: var(--obs-text-inverse);
+	background: transparent;
 }
 
 .obsidian hr {
@@ -1086,6 +1090,10 @@ legend .fancy-checkbox {
 	position: relative;
 }
 
+.obsidian-char-details-extra-abilities {
+	grid-template-rows: 244px 1fr;
+}
+
 .obsidian-main-left {
 	grid-row: 1 / span 2;
 }
@@ -1122,17 +1130,20 @@ legend .fancy-checkbox {
 .obsidian-save-item {
 	display: flex;
 	align-items: center;
-	margin-bottom: 5px;
 	border-bottom: 1px solid var(--obs-mid);
+}
+
+.obsidian-skill-item {
+	margin-bottom: 5px;
 }
 
 .obsidian-skill-item:last-child {
 	border: none;
 }
 
-.obsidian-save-item:nth-child(3n) {
+.obsidian-grid-3-row .obsidian-save-item:nth-child(3n),
+.obsidian-grid-4-row .obsidian-save-item:nth-child(4n) {
 	border: none;
-	margin: 0;
 }
 
 .obsidian-prof,
@@ -1254,6 +1265,19 @@ legend .fancy-checkbox {
 	grid-template-columns: 50% 50%;
 }
 
+.obsidian-grid-col-dir {
+	grid-auto-flow: column;
+	row-gap: 5px;
+}
+
+.obsidian-grid-3-row {
+	grid-template-rows: 1fr 1fr 1fr;
+}
+
+.obsidian-grid-4-row {
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
 .obsidian-radio-label {
 	display: flex;
 	cursor: pointer;
@@ -1287,6 +1311,11 @@ legend .fancy-checkbox {
 .obsidian-char-box-lg .obsidian-bisect {
 	padding-bottom: 8px;
 	margin-bottom: 8px;
+}
+
+.obsidian-char-details-extra-abilities .obsidian-conditions {
+	padding-bottom: 32px;
+	margin-bottom: 18px;
 }
 
 .obsidian-meatballs .obsidian-radio {
@@ -1408,7 +1437,7 @@ legend .fancy-checkbox {
 	width: 100%;
 }
 
-.compendium-pack[data-pack='dnd5e.spells'] {
+.compendium-pack[data-pack="dnd5e.spells"] {
 	display: none !important;
 }
 
@@ -1428,7 +1457,15 @@ legend .fancy-checkbox {
 }
 
 .obsidian-defenses {
-	padding: 8px 6px;
+	padding: 8px;
+	text-align: unset;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+}
+
+.obsidian-defenses .obsidian-item-drop-pill-body {
+	cursor: unset;
 }
 
 .obsidian-defenses .obsidian-css-icon {

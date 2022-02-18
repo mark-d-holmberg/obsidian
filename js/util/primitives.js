@@ -1,3 +1,5 @@
+import ObjectSet from './object-set.js';
+
 export function extendPrimitives () {
 	String.prototype.format = stringFormat;
 

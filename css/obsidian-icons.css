@@ -95,6 +95,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/healing.svg');
 }
 
+.obsidian-icon-spell {
+	background-image: url('../img/effect.svg');
+}
+
 .obsidian-icon-cp {
 	background-image: url('../img/currency/copper.png');
 }
@@ -342,12 +346,29 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/magic/necromancy.png');
 }
 
-.obsidian-icon-damage-reduction {
-	background-image: url('../img/damage-reduction.png');
+.obsidian-icon-damage-reduction,
+.obsidian-icon-def-dr {
+	background-image: url('../img/damage-reduction.svg');
 }
 
 .obsidian-icon-entity-Compendium {
 	background-image: url('../img/compendium.svg');
+}
+
+.obsidian-icon-def-vuln {
+	background-image: url('../img/vulnerability.svg');
+}
+
+.obsidian-icon-def-res {
+	background-image: url('../img/resistance.svg');
+}
+
+.obsidian-icon-def-imm {
+	background-image: url('../img/immunity.svg');
+}
+
+.obsidian-icon-def-nonmagical {
+	background-image: url('../img/nonmagical.svg');
 }
 
 .obsidian-svg-icon {
@@ -422,6 +443,10 @@ li.context-item .obsidian-icon {
 	height: 19px;
 }
 
+.obsidian-css-icon-circle {
+	position: relative;
+}
+
 .obsidian-css-icon-circle,
 .obsidian-css-icon-circle .obsidian-css-icon-shape,
 .obsidian-css-icon-circle .obsidian-css-icon-label {
@@ -439,7 +464,7 @@ li.context-item .obsidian-icon {
 .obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label {
 	width: 14px;
 	height: 14px;
-	transform: scale(1);
+	transform: unset;
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-xs,
@@ -452,6 +477,8 @@ li.context-item .obsidian-icon {
 .obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label,
 .obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-label {
 	font-size: 11px;
+	line-height: normal;
+	align-items: unset;
 }
 
 .obsidian-css-icon-shape {

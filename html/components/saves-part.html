@@ -1,10 +1,6 @@
 {{#each data.abilities as |save id|}}
 	{{#with (lookup ../actor.flags.obsidian.saves id)}}
-		<div {{#if (eq id 'dex')}}
-		style="grid-row-start: 2;"
-		{{else if (eq id 'con')}}
-		style="grid-row-start: 3;"
-		{{/if}} class="obsidian-save-item" data-value="{{id}}">
+		<div class="obsidian-save-item" data-value="{{id}}">
 			<div class="obsidian-radio obsidian-ptr
 				{{#if (eq 0.5 save.proficient)~}}
 					obsidian-half-proficient

@@ -1,17 +1,14 @@
 import {OBSIDIAN} from '../global.js';
+import ObjectSet from '../util/object-set.js';
 
 export function prepareDefenses (data, flags, derived) {
 	derived.defenses = {
 		parts: {
 			conditions: {imm: [], adv: [], dis: []},
-			damage: {res: [], imm: [], vuln: new Set()},
+			damage: {res: [], imm: [], vuln: []},
 			dr: null
 		},
-		display: {
-			conditions: {imm: new Set(), adv: new Set(), dis: new Set()},
-			damage: {res: '', imm: '', vuln: ''},
-			pc: []
-		}
+		display: {}
 	};
 
 	if (!flags.defenses.dr) {
@@ -20,9 +17,6 @@ export function prepareDefenses (data, flags, derived) {
 
 	prepareActiveDefenses(flags, derived);
 	prepareManualDefenses(flags, derived);
-
-	// Convert to normal arrays to avoid being nuked during duplication.
-	derived.defenses.parts.damage.vuln = Array.from(derived.defenses.parts.damage.vuln.values());
 }
 
 function prepareActiveDefenses (flags, derived) {
@@ -50,11 +44,7 @@ function prepareActiveDefenses (flags, derived) {
 			if (def.defense === 'condition') {
 				conditions[def.condition.level].push(def.condition.condition);
 			} else if (def.defense === 'damage') {
-				if (def.damage.level === 'vuln') {
-					damage.vuln.add(def.damage.dmg);
-				} else {
-					damage[def.damage.level].push(def.damage);
-				}
+				damage[def.damage.level].push(def.damage);
 			}
 		});
 
@@ -92,87 +82,76 @@ function prepareManualDefenses (flags, derived) {
 	});
 }
 
-export function prepareDefenseDisplay (derived) {
-	const parts = derived.defenses.parts;
-	const display = derived.defenses.display;
+export function prepareDefenseDisplay (parts) {
+	const display = {
+		conditions: {imm: new ObjectSet(), adv: new ObjectSet(), dis: new ObjectSet()},
+		damage: {res: new ObjectSet(), imm: new ObjectSet(), vuln: new ObjectSet()},
+		dr: null,
+		all: []
+	};
 
-	Object.entries(parts.conditions).forEach(([level, conditions]) =>
-		conditions.forEach(condition => display.conditions[level].add(condition)));
+	Object.entries(parts.conditions).forEach(([level, conditions]) => conditions.forEach(cond => {
+		const footers = [];
+		let label = `OBSIDIAN.Condition.${cond}`;
 
-	Object.entries(display.conditions).forEach(([level, conditions]) =>
-		display.conditions[level] = Array.from(conditions.values()).map(cond => {
-			let i18n = `Condition.${cond}`;
-			if (cond === 'sleep') {
-				i18n = 'MagicalSleep';
-			} else if (cond === 'disease') {
-				i18n = 'Disease';
-			}
+		if (cond === 'sleep') {
+			label = 'MagicalSleep';
+		} else if (cond === 'disease') {
+			label = 'Disease';
+		} else {
+			footers.push({
+				label, type: 'img', value: `modules/obsidian/img/conditions/${cond}.svg`
+			});
+		}
 
-			return game.i18n.localize(`OBSIDIAN.${i18n}`);
-		}).join(', '));
+		display.conditions[level].add({
+			size: 'sm', body: label, footers,
+			headers: [{level, label, type: level === 'imm' ? 'def' : 'd20'}]
+		});
+	}));
 
-	['adv', 'dis'].forEach(mode =>
-		display.conditions[mode] =
-			parts.conditions[mode]
-				.map(cond => game.i18n.localize(`OBSIDIAN.Condition.${cond}`))
-				.join(', '));
+	Object.entries(parts.damage).forEach(([level, dmgs]) => dmgs.forEach(dmg => {
+		const label = `OBSIDIAN.Damage.${dmg.dmg}`;
+		const headers = [{level, label, type: 'def'}];
 
-	display.damage.vuln =
-		Array.from(parts.damage.vuln.values())
-			.map(dmg => game.i18n.localize(`OBSIDIAN.Damage.${dmg}`))
-			.join(', ');
-
-	['imm', 'res'].forEach(level => {
-		const noCondition = new Set();
-		const nonMagical = new Set();
-		const nonMagicalSil = new Set();
-		const nonMagicalAdm = new Set();
-
-		for (const def of parts.damage[level]) {
-			const i18n = game.i18n.localize(`OBSIDIAN.Damage.${def.dmg}`);
-			if (OBSIDIAN.notDefinedOrEmpty(def.magic)) {
-				noCondition.add(i18n);
-			} else {
-				if (OBSIDIAN.notDefinedOrEmpty(def.material)) {
-					nonMagical.add(i18n);
-				} else if (def.material === 'sil') {
-					nonMagicalSil.add(i18n);
-				} else {
-					nonMagicalAdm.add(i18n);
-				}
+		if (dmg.magic === 'non') {
+			headers.push({level: 'nonmagical', label: 'OBSIDIAN.NonMagical', type: 'def'});
+			if (!OBSIDIAN.notDefinedOrEmpty(dmg.material)) {
+				headers.push({
+					type: 'circle', label: `OBSIDIAN.Defense.${dmg.material}`,
+					abbr: `OBSIDIAN.DefenseAbbr.${dmg.material}`
+				});
 			}
 		}
 
-		display.damage[level] = Array.from(noCondition.values()).join(', ');
-		const displayParts = [display.damage[level]];
+		display.damage[level].add({
+			size: 'sm', body: label, headers, footers: [{label, type: 'icon', value: dmg.dmg}]
+		});
+	}));
 
-		if (nonMagical.size) {
-			displayParts[1] = Array.from(nonMagical.values()).join(', ')
-				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagical')}`;
-		}
+	display.all = [
+		...display.damage.vuln.values(),
+		...display.conditions.dis.values(),
+		...display.damage.res.values(),
+		...display.conditions.imm.values(),
+		...display.damage.imm.values(),
+		...display.conditions.adv.values()
+	];
 
-		if (nonMagicalSil.size) {
-			displayParts[2] = Array.from(nonMagicalSil.values()).join(', ')
-				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalSil')}`;
-		}
+	if (parts.dr) {
+		display.dr = {
+			size: 'sm', body: 'OBSIDIAN.DefenseLevel.dr',
+			footers: [{type: 'number', value: parts.dr}],
+			headers: [
+				{type: 'def', label: 'OBSIDIAN.DefenseLevel.dr', level: 'dr'},
+				{type: 'def', label: 'OBSIDIAN.NonMagical', level: 'nonmagical'}
+			]
+		};
 
-		if (nonMagicalAdm.size) {
-			displayParts[3] = Array.from(nonMagicalAdm.values()).join(', ')
-				+ ` ${game.i18n.localize('OBSIDIAN.FromNonmagicalAdm')}`;
-		}
-
-		display.damage[level] = displayParts.filter(part => part && part.length).join('; ');
-	});
-
-	if (display.damage.imm.length) {
-		display.pc.push(display.damage.imm);
+		display.all.push(display.dr);
 	}
 
-	if (display.conditions.imm.length) {
-		display.pc.push(display.conditions.imm);
-	}
-
-	display.pc = display.pc.join(', ');
+	return display;
 }
 
 export function hpAfterDamage (actor, damage, attack) {

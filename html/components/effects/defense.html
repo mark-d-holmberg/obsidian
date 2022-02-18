@@ -4,10 +4,14 @@
 		<div>
 			{{fancy-checkbox prefix 'disease' content='OBSIDIAN.ImmuneDisease' checked=disease}}
 			{{fancy-checkbox prefix 'sleep' content='OBSIDIAN.ImmuneSleep' checked=sleep}}
+		</div>
+	</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
 			<label>
 				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" name="{{prefix}}.dr"
 				       value="{{dr}}">
-				<span>{{localize 'OBSIDIAN.DamageReduction'}}</span>
+				<span>{{localize 'OBSIDIAN.NonMagicalDamageReduction'}}</span>
 			</label>
 		</div>
 	</div>

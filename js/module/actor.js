@@ -257,7 +257,7 @@ export class ObsidianActor extends Actor5e {
 					&& (item.type !== 'spell' || item.obsidian?.visible))
 				.flatMap(item => item.obsidian.collection.attack);
 
-		prepareDefenseDisplay(derived);
+		derived.defenses.display = prepareDefenseDisplay(derived.defenses.parts);
 		prepareToggleableEffects(this);
 		applyBonuses(this, data, flags, derived);
 

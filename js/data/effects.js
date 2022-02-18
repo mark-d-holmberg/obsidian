@@ -1,5 +1,7 @@
 import {OBSIDIAN} from '../global.js';
-import {cssIconDiamond, iconD20} from '../util/html.js';
+import {cssIconCircle, cssIconDiamond, defensePill, iconD20} from '../util/html.js';
+import ObjectSet from '../util/object-set.js';
+import {prepareDefenseDisplay} from './defenses.js';
 
 let localize;
 
@@ -255,36 +257,17 @@ function formatConditions (components) {
 }
 
 function formatDefenses (defs) {
-	const dmg = dmg => localize(`Damage.${dmg}`);
-	const vuln = new Set();
-	const res = {
-		noCondition: new Set(),
-		nonMagical: new Set(),
-		nonMagicalSil: new Set(),
-		nonMagicalAdm: new Set()
-	};
-
-	const imm = {
-		noCondition: new Set(),
-		nonMagical: new Set(),
-		nonMagicalSil: new Set(),
-		nonMagicalAdm: new Set()
-	};
-
-	const conds = {
-		imm: new Set(),
-		adv: new Set(),
-		dis: new Set()
-	};
-
+	const damage = {vuln: [], res: [], imm: []};
+	const conditions = {imm: [], adv: [], dis: []};
 	let bestDR = 0;
+
 	defs.forEach(def => {
 		if (def.sleep) {
-			conds.imm.add('sleep');
+			conditions.imm.push('sleep');
 		}
 
 		if (def.disease) {
-			conds.imm.add('disease');
+			conditions.imm.push('disease');
 		}
 
 		if (def.dr && def.dr > bestDR) {
@@ -292,84 +275,12 @@ function formatDefenses (defs) {
 		}
 
 		if (def.defense === 'condition') {
-			conds[def.condition.level].add(def.condition.condition);
+			conditions[def.condition.level].push(def.condition.condition);
 		} else if (def.defense === 'damage') {
-			if (def.damage.level === 'vuln') {
-				vuln.add(def.damage.dmg);
-			} else {
-				const level = def.damage.level === 'res' ? res : imm;
-				if (OBSIDIAN.notDefinedOrEmpty(def.damage.magic)) {
-					level.noCondition.add(def.damage.dmg);
-				} else {
-					if (OBSIDIAN.notDefinedOrEmpty(def.damage.material)) {
-						level.nonMagical.add(def.damage.dmg);
-					} else if (def.damage.material === 'sil') {
-						level.nonMagicalSil.add(def.damage.dmg);
-					} else {
-						level.nonMagicalAdm.add(def.damage.dmg);
-					}
-				}
-			}
+			damage[def.damage.level].push(def.damage);
 		}
 	});
 
-	const parts = [];
-	if (vuln.size) {
-		parts.push(
-			cssIconDiamond({level: 'vuln', wrapped: true})
-			+ ` ${Array.from(vuln.values()).map(dmg).join(', ')}`);
-	}
-
-	if (bestDR) {
-		parts.push(`
-			<div class="obsidian-icon-sm obsidian-icon-damage-reduction"
-			     title="${localize('DamageReduction')}">
-				<strong>${bestDR}</strong>
-			</div>
-		`);
-	}
-
-	['imm', 'adv', 'dis'].forEach(level => {
-		if (!conds[level].size) {
-			return;
-		}
-
-		parts.push(
-			(level === 'imm'
-				? cssIconDiamond({level, wrapped: true})
-				: iconD20({advantage: level === 'adv'}))
-			+ ` ${Array.from(conds[level].values()).map(cond =>
-					localize(`Condition.${cond}`)).join(', ')}`);
-	});
-
-	[res, imm].forEach(level => {
-		const subParts = [];
-		[
-			['noCondition', ''],
-			['nonMagical', 'FromNonmagical'],
-			['nonMagicalSil', 'FromNonmagicalSil'],
-			['nonMagicalAdm', 'FromNonmagicalAdm']
-		].forEach(([p, t]) => {
-			if (!level[p].size) {
-				return;
-			}
-
-			let s = Array.from(level[p].values()).map(dmg).join(', ') + ` ${localize('DamageLC')}`;
-			if (t.length) {
-				s += ` ${localize(t)}`;
-			}
-
-			subParts.push(s);
-		});
-
-		if (!subParts.length) {
-			return;
-		}
-
-		parts.push(
-			cssIconDiamond({level: level === res ? 'res' : 'imm', wrapped: true})
-			+ subParts.join(', '));
-	});
-
-	return parts.join('; ');
+	const display = prepareDefenseDisplay({conditions, damage});
+	return display.all.map(defensePill).join(' ');
 }

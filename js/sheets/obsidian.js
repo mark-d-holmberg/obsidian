@@ -187,7 +187,8 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			isCharacter: true,
 			config: CONFIG.DND5E,
 			rollData: this.actor.getRollData.bind(this.actor),
-			detailsCollapsed: this.settings.detailsCollapsed
+			detailsCollapsed: this.settings.detailsCollapsed,
+			abilityRows: Math.ceil(Object.keys(CONFIG.DND5E.abilities).length / 2)
 		};
 
 		data.actor = this.actor.toObject(false);

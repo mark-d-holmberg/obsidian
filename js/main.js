@@ -64,6 +64,7 @@ Hooks.once('init', async function () {
 		label: 'OBSIDIAN.ItemSheet'
 	});
 
+	handleOptionalAbilities();
 	patchItem5e();
 	patchConditions();
 	patchToken();
@@ -149,6 +150,12 @@ function enrichActorFlags (data) {
 
 function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
+}
+
+function handleOptionalAbilities () {
+	const abilities = Object.keys(CONFIG.DND5E.abilities);
+	OBSIDIAN.Config.ABILITIES = abilities;
+	OBSIDIAN.Config.EFFECT_ABILITIES = abilities.concat(['spell']);
 }
 
 Hooks.on('preCreateActor', actor => {

@@ -16,6 +16,9 @@
 		{{/unless}}
 		{{#each tables}}
 			<div class="obsidian-item-drop-pill" data-id="{{_id}}">
+				<div class="obsidian-item-drop-pill-header">
+					<img alt="{{obs-i18n 'Table'}}" src="modules/obsidian/img/roll-table.svg">
+				</div>
 				<div class="obsidian-item-drop-pill-body obsidian-roll-table-body">{{name}}</div>
 				<div class="obsidian-item-drop-pill-rm obsidian-rm-roll-table">&times;</div>
 			</div>

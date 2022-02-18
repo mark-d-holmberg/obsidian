@@ -87,7 +87,7 @@ export function translateLabels () {
 	const allEntries = Object.entries(translations).concat(Object.entries(additionalTranslations));
 
 	for (let [rulesKey, translationKeys] of allEntries) {
-		translationKeys = translationKeys instanceof Array ? translationKeys : [translationKeys];
+		translationKeys = Array.isArray(translationKeys) ? translationKeys : [translationKeys];
 		translationKeys = translationKeys.map(item => {
 			if (typeof item === 'string') {
 				return {i18n: item, alias: item};

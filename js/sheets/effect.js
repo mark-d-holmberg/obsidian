@@ -237,7 +237,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 								Promise.resolve({
 									uuid: uuid,
 									entity: 'Compendium',
-									name: pack.metadata.label
+									name: pack.metadata.label,
+									icon: 'modules/obsidian/img/compendium.svg'
 								}).then(entry => component.processed.push(entry)));
 						}
 
@@ -252,7 +253,8 @@ export class ObsidianEffectSheet extends ObsidianItemSheet {
 						component.processed.push({
 							uuid: uuid,
 							entity: entity.documentName,
-							name: entity.name
+							name: entity.name,
+							icon: 'modules/obsidian/img/npc.svg'
 						});
 					}));
 				});
