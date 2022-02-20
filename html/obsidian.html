@@ -550,39 +550,31 @@
 			<div class="obsidian-char-box-container obsidian-conditions-box">
 				<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Conditions'}}</div>
 				<div class="obsidian-char-box obsidian-char-box-lg">
-					<div class="obsidian-bisect obsidian-grid-2-col obsidian-conditions">
+					<div class="obsidian-grid-2-col obsidian-conditions">
 						{{#each ObsidianConfig.CONDITIONS}}
-							<div class="
-							{{~#if (lookup ../actor.obsidian.conditions this)~}}
-								obsidian-radio-selected
-							{{~/if}} obsidian-radio-label" data-value="{{this}}">
-								<div class="
-								{{~#if (eq 'invisible' this)~}}
-									obsidian-radio-positive
-								{{~else~}}
-									obsidian-radio-negative
-								{{~/if}} obsidian-radio">
-									<span></span>
+							{{condition-pill this active=(lookup ../actor.obsidian.conditions this)}}
+						{{/each}}
+					</div>
+					<div class="obsidian-exhaustion">
+						<div class="
+							{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
+								obsidian-condition-pill-active
+							{{else}}
+								obsidian-condition-pill-inactive
+							{{/if}} obsidian-item-drop-pill obsidian-item-drop-pill-sm">
+							{{#each (range 1 6) as |level|}}
+								<div class="obsidian-item-drop-pill-header" data-value="{{level}}">
+									<div class="
+										{{#if (gt level ../actor.obsidian.conditions.exhaustion)}}
+											obsidian-condition-pill-inactive
+										{{else}}
+											obsidian-condition-pill-active
+										{{/if}} obsidian-svg-icon obsidian-svg-icon-sm
+										        obsidian-icon-condition-exhaust{{level}}"></div>
 								</div>
-								{{obs-i18n 'Condition' this}}
-							</div>
-						{{/each}}
-					</div>
-					<div class="
-						{{~#if (gt actor.obsidian.conditions.exhaustion 0)~}}
-							obsidian-meatballs-active
-						{{~/if}} obsidian-meatballs-title">
-						{{localize 'OBSIDIAN.Exhaustion'}}
-					</div>
-					<div class="obsidian-meatballs obsidian-exhaustion">
-						{{#each (range 1 6) as |level|}}
-							<div class="
-								{{~#if (leq level ../actor.obsidian.conditions.exhaustion)~}}
-									obsidian-radio-selected
-								{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{level}}">
-								<span></span>
-							</div>
-						{{/each}}
+							{{/each}}
+							<div class="obsidian-item-drop-pill-body">{{localize 'OBSIDIAN.Exhaustion'}}</div>
+						</div>
 					</div>
 				</div>
 			</div>

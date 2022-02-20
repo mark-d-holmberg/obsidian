@@ -1085,7 +1085,7 @@ legend .fancy-checkbox {
 .obsidian-char-details {
 	display: grid;
 	grid-template-columns: 280px 280px 280px;
-	grid-template-rows: 215px 1fr;
+	grid-template-rows: 229px 1fr;
 	grid-gap: 10px;
 	position: relative;
 }
@@ -1313,9 +1313,75 @@ legend .fancy-checkbox {
 	margin-bottom: 8px;
 }
 
+.obsidian-death-saves-box .obsidian-grid-2-col {
+	height: 100%;
+}
+
+.obsidian-death-saves-box .obsidian-vertical-bisect {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.character .obsidian-conditions-box .obsidian-char-box {
+	padding: 0;
+}
+
+.character .obsidian-conditions {
+	padding: 5px 10px 5px 5px;
+	row-gap: 2px;
+	column-gap: 5px;
+}
+
+.character .obsidian-conditions .obsidian-item-drop-pill {
+	cursor: pointer;
+}
+
+.character .obsidian-exhaustion .obsidian-item-drop-pill-body {
+	cursor: default;
+}
+
+.character .obsidian-exhaustion .obsidian-item-drop-pill-header {
+	cursor: pointer;
+}
+
+.obsidian-condition-pill-inactive {
+	color: var(--obs-text-secondary);
+}
+
+.obsidian-condition-pill-active {
+	color: var(--obs-negative);
+}
+
+.obsidian-condition-pill-active.obsidian-condition-invisible {
+	color: var(--obs-positive);
+}
+
+.obsidian-item-drop-pill.obsidian-condition-pill-active {
+	border-top-color: var(--obs-negative);
+	border-right-color: var(--obs-btn-negative-inner);
+	border-bottom-color: var(--obs-btn-negative-inner);
+	border-left-color: var(--obs-negative);
+}
+
+.obsidian-condition-pill-active .obsidian-item-drop-pill-header {
+	border-right-color: var(--obs-negative);
+}
+
+.obsidian-item-drop-pill.obsidian-condition-pill-active.obsidian-condition-invisible {
+	border-top-color: var(--obs-positive);
+	border-right-color: var(--obs-btn-positive-inner);
+	border-bottom-color: var(--obs-btn-positive-inner);
+	border-left-color: var(--obs-positive);
+}
+
+.obsidian-condition-pill-active.obsidian-condition-invisible .obsidian-item-drop-pill-header {
+	border-right-color: var(--obs-positive);
+}
+
 .obsidian-char-details-extra-abilities .obsidian-conditions {
-	padding-bottom: 32px;
-	margin-bottom: 18px;
+	padding-bottom: 12px;
 }
 
 .obsidian-meatballs .obsidian-radio {

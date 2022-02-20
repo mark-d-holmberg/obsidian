@@ -99,9 +99,7 @@ export function prepareDefenseDisplay (parts) {
 		} else if (cond === 'disease') {
 			label = 'Disease';
 		} else {
-			footers.push({
-				label, type: 'img', value: `modules/obsidian/img/conditions/${cond}.svg`
-			});
+			footers.push({label, type: 'svg', value: `obsidian-icon-condition-${cond}`});
 		}
 
 		display.conditions[level].add({

@@ -1,24 +1,26 @@
-export function iconD20 ({advantage, positive, label, title, size=16} = {}) {
+export function svgIcon ({positive, negative, label, title = '', size, icon} = {}) {
+	const classes = [icon];
+	if (size) {
+		classes.push(`obsidian-svg-icon-${size}`);
+	}
+
+	if (positive || negative) {
+		classes.push(`obsidian-svg-icon-${positive ? 'positive' : 'negative'}`);
+	}
+
+	return `
+		<div class="obsidian-svg-icon ${classes.join(' ')}" title="${game.i18n.localize(title)}">
+			${label ? `${game.i18n.localize(label)}` : ''}
+		</div>
+	`;
+}
+
+export function iconD20 ({advantage, positive, label, title, size} = {}) {
 	positive = positive ?? advantage;
 	title =  title ?? `OBSIDIAN.${advantage ? 'Advantage' : 'Disadvantage'}`;
 	label = label ?? `OBSIDIAN.${advantage ? 'Advantage' : 'Disadvantage'}Abbr`;
-	const onload = `
-		const style = getComputedStyle(document.documentElement);
-		const positive = style.getPropertyValue('--obs-positive').trim();
-		const negative = style.getPropertyValue('--obs-negative').trim();
-		const isPositive = this.dataset.positive === 'true';
-		const g = this.contentDocument.getElementsByTagName('g')[0];
-		g.setAttribute('fill', isPositive ? positive : negative);
-	`;
-
-	return `
-		<div class="obsidian-svg-icon obsidian-svg-icon-${positive ? 'positive' : 'negative'}"
-		     title="${game.i18n.localize(title)}">
-			<object type="image/svg+xml" data="modules/obsidian/img/d20.svg" height="${size}"
-			        width="${size}" data-positive="${positive}" onload="${onload}"></object>
-	        <label>${game.i18n.localize(label)}</label>
-		</div>
-	`;
+	const icon = `obsidian-icon-d20-${advantage ? 'adv' : 'dis'}`;
+	return svgIcon({positive, negative: !positive, label, title, size, icon});
 }
 
 export function cssIconCircle ({size, title, label} = {}) {
@@ -32,10 +34,17 @@ export function cssIconCircle ({size, title, label} = {}) {
 	`;
 }
 
-export function defensePill ({headers = [], body, footers = [], size} = {}) {
+export function defensePill ({
+	body, size,
+	headers = [],
+	footers = [],
+	classes = [],
+	data = {}} = {})
+{
 	const pill = [];
 	const sizeCls = size ? ` obsidian-item-drop-pill-${size}` : '';
-	pill.push(`<div class="obsidian-item-drop-pill${sizeCls}">`);
+	const dataset = Object.entries(data).map(([k, v]) => `data-${k}="${v}"`).join(' ');
+	pill.push(`<div class="obsidian-item-drop-pill${sizeCls} ${classes.join(' ')}"${dataset}>`);
 
 	const endPiece = (type, config) => {
 		const label = game.i18n.localize(config.label);
@@ -44,7 +53,7 @@ export function defensePill ({headers = [], body, footers = [], size} = {}) {
 		pill.push(`<div class="${type}${num}">`);
 
 		if (config.type === 'd20') {
-			pill.push(iconD20({advantage: config.level === 'adv', size: size === 'sm' ? 14 : 16}));
+			pill.push(iconD20({advantage: config.level === 'adv', size}));
 		} else if (config.type === 'circle') {
 			pill.push(cssIconCircle({size, title: config.label, label: config.abbr}));
 		} else if (config.type === 'def') {
@@ -59,6 +68,8 @@ export function defensePill ({headers = [], body, footers = [], size} = {}) {
 			pill.push(`<img alt="${label}" title="${label}" src="${config.value}">`);
 		} else if (config.type === 'number') {
 			pill.push(`<strong>${config.value}</strong>`);
+		} else if (config.type === 'svg') {
+			pill.push(svgIcon({title: config.label, icon: config.value, size}));
 		}
 
 		pill.push('</div>');
@@ -73,6 +84,18 @@ export function defensePill ({headers = [], body, footers = [], size} = {}) {
 	footers.forEach(config => endPiece('footer', config));
 	pill.push('</div>');
 	return pill.join('');
+}
+
+export function conditionPill ({condition, size = 'sm', active = false}) {
+	active = !!active;
+	const label = `OBSIDIAN.Condition.${condition}`;
+	return defensePill({
+		size, body: label, data: {value: condition},
+		headers: [{label, type: 'svg', value: `obsidian-icon-condition-${condition}`}],
+		classes: [
+			`obsidian-condition-pill-${active ? '' : 'in'}active`, `obsidian-condition-${condition}`
+		]
+	});
 }
 
 export function cssIconDiamond ({label, positive, wrapped, level, title}) {

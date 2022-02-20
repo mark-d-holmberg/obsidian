@@ -3,7 +3,7 @@ import {Prepare} from '../data/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
-import {defensePill, fancyCheckbox, iconD20} from './html.js';
+import {conditionPill, defensePill, fancyCheckbox, iconD20} from './html.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('attack-sort', function (list) {
@@ -48,6 +48,10 @@ export function registerHandlebarHelpers () {
 			const options = {hash: {content: val, checked: selected.has(key)}};
 			return fancyCheckbox(...prefix, key, options);
 		}).join(''));
+	});
+
+	Handlebars.registerHelper('condition-pill', function (condition, options) {
+		return new Handlebars.SafeString(conditionPill({condition, ...options.hash}));
 	});
 
 	Handlebars.registerHelper('count', function (ar) {

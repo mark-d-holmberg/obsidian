@@ -371,42 +371,232 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/nonmagical.svg');
 }
 
+.obsidian-icon-d20-adv {
+	background-image: url('../img/d20-adv.svg');
+}
+
+.obsidian-icon-d20-dis {
+	background-image: url('../img/d20-dis.svg');
+}
+
+.obsidian-icon-condition-blinded {
+	background-image: url('../img/conditions/blinded.svg');
+}
+
+.obsidian-icon-condition-charmed {
+	background-image: url('../img/conditions/charmed.svg');
+}
+
+.obsidian-icon-condition-deafened {
+	background-image: url('../img/conditions/deafened.svg');
+}
+
+.obsidian-icon-condition-exhaust1 {
+	background-image: url('../img/conditions/exhaust1.svg');
+}
+
+.obsidian-icon-condition-exhaust2 {
+	background-image: url('../img/conditions/exhaust2.svg');
+}
+
+.obsidian-icon-condition-exhaust3 {
+	background-image: url('../img/conditions/exhaust3.svg');
+}
+
+.obsidian-icon-condition-exhaust4 {
+	background-image: url('../img/conditions/exhaust4.svg');
+}
+
+.obsidian-icon-condition-exhaust5 {
+	background-image: url('../img/conditions/exhaust5.svg');
+}
+
+.obsidian-icon-condition-exhaust6 {
+	background-image: url('../img/conditions/exhaust6.svg');
+}
+
+.obsidian-icon-condition-exhaustion {
+	background-image: url('../img/conditions/exhaustion.svg');
+}
+
+.obsidian-icon-condition-frightened {
+	background-image: url('../img/conditions/frightened.svg');
+}
+
+.obsidian-icon-condition-grappled {
+	background-image: url('../img/conditions/grappled.svg');
+}
+
+.obsidian-icon-condition-incapacitated {
+	background-image: url('../img/conditions/incapacitated.svg');
+}
+
+.obsidian-icon-condition-invisible {
+	background-image: url('../img/conditions/invisible.svg');
+}
+
+.obsidian-icon-condition-paralysed {
+	background-image: url('../img/conditions/paralysed.svg');
+}
+
+.obsidian-icon-condition-petrified {
+	background-image: url('../img/conditions/petrified.svg');
+}
+
+.obsidian-icon-condition-poisoned {
+	background-image: url('../img/conditions/poisoned.svg');
+}
+
+.obsidian-icon-condition-prone {
+	background-image: url('../img/conditions/prone.svg');
+}
+
+.obsidian-icon-condition-restrained {
+	background-image: url('../img/conditions/restrained.svg');
+}
+
+.obsidian-icon-condition-stunned {
+	background-image: url('../img/conditions/stunned.svg');
+}
+
+.obsidian-icon-condition-unconscious {
+	background-image: url('../img/conditions/unconscious.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-blinded {
+	background-image: url('../img/conditions/inactive/blinded.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-charmed {
+	background-image: url('../img/conditions/inactive/charmed.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-deafened {
+	background-image: url('../img/conditions/inactive/deafened.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust1 {
+	background-image: url('../img/conditions/inactive/exhaust1.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust2 {
+	background-image: url('../img/conditions/inactive/exhaust2.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust3 {
+	background-image: url('../img/conditions/inactive/exhaust3.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust4 {
+	background-image: url('../img/conditions/inactive/exhaust4.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust5 {
+	background-image: url('../img/conditions/inactive/exhaust5.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaust6 {
+	background-image: url('../img/conditions/inactive/exhaust6.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust1 {
+	background-image: url('../img/conditions/inactive/exhaust1.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust2 {
+	background-image: url('../img/conditions/inactive/exhaust2.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust3 {
+	background-image: url('../img/conditions/inactive/exhaust3.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust4 {
+	background-image: url('../img/conditions/inactive/exhaust4.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust5 {
+	background-image: url('../img/conditions/inactive/exhaust5.svg');
+}
+
+.obsidian-condition-pill-inactive.obsidian-icon-condition-exhaust6 {
+	background-image: url('../img/conditions/inactive/exhaust6.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-exhaustion {
+	background-image: url('../img/conditions/inactive/exhaustion.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-frightened {
+	background-image: url('../img/conditions/inactive/frightened.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-grappled {
+	background-image: url('../img/conditions/inactive/grappled.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-incapacitated {
+	background-image: url('../img/conditions/inactive/incapacitated.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-invisible {
+	background-image: url('../img/conditions/inactive/invisible.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-paralysed {
+	background-image: url('../img/conditions/inactive/paralysed.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-petrified {
+	background-image: url('../img/conditions/inactive/petrified.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-poisoned {
+	background-image: url('../img/conditions/inactive/poisoned.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-prone {
+	background-image: url('../img/conditions/inactive/prone.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-restrained {
+	background-image: url('../img/conditions/inactive/restrained.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-stunned {
+	background-image: url('../img/conditions/inactive/stunned.svg');
+}
+
+.obsidian-condition-pill-inactive .obsidian-icon-condition-unconscious {
+	background-image: url('../img/conditions/inactive/unconscious.svg');
+}
+
 .obsidian-svg-icon {
 	display: inline-flex;
 	position: relative;
-	vertical-align: middle;
-}
-
-.obsidian-svg-icon label {
+	justify-content: center;
+	align-items: center;
+	width: 16px;
+	height: 16px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-size: cover;
 	font-family: var(--obs-font);
 	font-size: 12px;
 	font-weight: bold;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
 }
 
-.obsidian-svg-icon-positive label {
+.obsidian-svg-icon-sm {
+	width: 14px;
+	height: 14px;
+}
+
+.obsidian-svg-icon-positive {
 	color: var(--obs-bg);
 }
 
-.obsidian-svg-icon-negative label {
+.obsidian-svg-icon-negative {
 	color: var(--obs-text-regular);
-}
-
-.obsidian-css-icon-inline-diamond {
-	display: inline-block;
-	width: 20px;
-	position: relative;
-}
-.obsidian-css-icon-inline-diamond {
-	height: 14px;
 }
 
 .obsidian-css-icon {
@@ -437,12 +627,6 @@ li.context-item .obsidian-icon {
 	color: var(--obs-text-regular);
 }
 
-.obsidian-css-icon-diamond,
-.obsidian-css-icon-diamond .obsidian-css-icon-label {
-	width: 20px;
-	height: 19px;
-}
-
 .obsidian-css-icon-circle {
 	position: relative;
 }
@@ -454,8 +638,7 @@ li.context-item .obsidian-icon {
 	height: 20px;
 }
 
-.obsidian-css-icon-circle .obsidian-css-icon-label,
-.obsidian-css-icon-diamond .obsidian-css-icon-label {
+.obsidian-css-icon-circle .obsidian-css-icon-label {
 	font-weight: bold;
 }
 
@@ -491,43 +674,8 @@ li.context-item .obsidian-icon {
 	position: absolute;
 }
 
-.obsidian-css-icon-diamond .obsidian-css-icon-shape {
-	border-right: 5px solid transparent;
-	border-bottom: 5px solid transparent;
-	border-left: 5px solid transparent;
-	height: 0;
-	width: 10px;
-	box-sizing: content-box;
-}
-
-.obsidian-css-icon-diamond .obsidian-css-icon-shape:after {
-	top: 5px;
-	left: -5px;
-	width: 0;
-	height: 0;
-	border-top: 14px solid transparent;
-	border-right: 10px solid transparent;
-	border-left: 10px solid transparent;
-}
-
 .obsidian-css-icon-circle .obsidian-css-icon-shape {
 	border-radius: 50%;
-}
-
-.obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape {
-	border-bottom-color: var(--obs-positive);
-}
-
-.obsidian-css-icon-diamond.obsidian-css-icon-positive .obsidian-css-icon-shape:after {
-	border-top-color: var(--obs-positive);
-}
-
-.obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape {
-	border-bottom-color: var(--obs-negative);
-}
-
-.obsidian-css-icon-diamond.obsidian-css-icon-negative .obsidian-css-icon-shape:after {
-	border-top-color: var(--obs-negative);
 }
 
 .obsidian-css-icon-circle.obsidian-css-icon-secondary .obsidian-css-icon-shape {

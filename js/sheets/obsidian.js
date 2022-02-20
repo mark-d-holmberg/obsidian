@@ -136,7 +136,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration'));
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
-		html.find('.obsidian-conditions .obsidian-radio-label')
+		html.find('.obsidian-conditions .obsidian-item-drop-pill')
 			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>

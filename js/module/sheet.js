@@ -80,6 +80,8 @@ export const Sheet = {
 
 		html.find('.obsidian-exhaustion .obsidian-radio')
 			.click(evt => Sheet.setExhaustion(sheet, evt));
+		html.find('.obsidian-exhaustion .obsidian-item-drop-pill-header')
+			.click(evt => Sheet.setExhaustion(sheet, evt));
 		html.find('.obsidian-death-successes .obsidian-radio')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.success', evt));
 		html.find('.obsidian-death-failures .obsidian-radio')
