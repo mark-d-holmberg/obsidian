@@ -65,7 +65,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			settings = JSON.parse(settings);
 		}
 
-		this.scroll = {};
 		this.settings = settings;
 		this.tabs = {};
 		this.details = new Map();
@@ -82,7 +81,8 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			classes: options.classes.concat(['actor', 'character-sheet', 'obsidian-window']),
 			width: 1170,
 			height: 720,
-			showUnpreparedSpells: true
+			showUnpreparedSpells: true,
+			scrollY: ['form.obsidian', '.obsidian-scrollable']
 		});
 
 		return options;
@@ -126,6 +126,15 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		Sheet.activateFiltering(this, html);
 		Sheet.contextMenu(this, html);
 
+		// Since foundry disables the local cache and forces a request to the
+		// server to verify cache status, image elements always load in after
+		// the initial sheet render. When the image pops in, it causes the
+		// scrollHeight of the container to be recalculated which undoes the
+		// scroll position restoration that was just completed post-render, so
+		// we have to add the following as a workaround.
+		this.form.querySelector('img.obsidian-profile-img').onload = () =>
+			this._restoreScrollPositions(html);
+
 		if (!this.options.editable) {
 			return;
 		}
@@ -164,17 +173,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
 		this._activateDialogs(html);
-
-		if (this.settings.scrollTop !== undefined) {
-			this.form.scrollTop = this.settings.scrollTop;
-		}
-
-		if (this.settings.subScroll !== undefined) {
-			const activeTab = html.find('.obsidian-tab-contents.active');
-			if (activeTab.length > 0) {
-				activeTab[0].scrollTop = this.settings.subScroll;
-			}
-		}
 	}
 
 	getData () {
@@ -227,6 +225,14 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 	render (force = false, options = {}) {
 		this._applySettings();
 		return super.render(force, options);
+	}
+
+	_saveScrollPositions (html) {
+		return super._saveScrollPositions(html.parent());
+	}
+
+	_restoreScrollPositions (html) {
+		super._restoreScrollPositions(html.parent());
 	}
 
 	/**
@@ -313,23 +319,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		if (newSpeed && newSpeed !== currentSpeed) {
 			this.actor.update({'flags.obsidian.attributes.speedDisplay': newSpeed});
 		}
-	}
-
-	/**
-	 * @private
-	 */
-	_findActiveTab () {
-		if (!this.element) {
-			return [];
-		}
-
-		const activeContainer = this.element.find('.obsidian-tab-container.active');
-		let activeTab = activeContainer.find('.obsidian-tab-contents.active');
-		if (activeTab.length < 1) {
-			activeTab = activeContainer.find('.obsidian-tab-contents');
-		}
-
-		return activeTab?.find('.obsidian-scrollable');
 	}
 
 	/**
@@ -436,29 +425,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		atk.parentItem = this.actor.items.get(atk.parentEffect.parentItem).data;
 	}
 
-	/**
-	 * @private
-	 */
-	async _render (force = false, options = {}) {
-		this._saveScrollPositions();
-		await super._render(force, options);
-		this._restoreScrollPositions();
-	}
-
-	/**
-	 * @private
-	 */
-	_restoreScrollPositions () {
-		if (this.form) {
-			this.form.scrollTop = this.scroll.main;
-		}
-
-		const activeTab = this._findActiveTab();
-		if (activeTab.length > 0) {
-			activeTab[0].scrollTop = this.scroll.tab;
-		}
-	}
-
 	_rollHighestHD () {
 		const highest = Config.HD.reduce((max, hd) => {
 			const actorHD = this.actor.data.flags.obsidian.attributes.hd[`d${hd}`];
@@ -471,20 +437,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 
 		if (highest > 0) {
 			this.actor.rollHD([[1, highest]]);
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_saveScrollPositions () {
-		if (this.form) {
-			this.scroll.main = this.form.scrollTop;
-		}
-
-		const activeTab = this._findActiveTab();
-		if (activeTab.length > 0) {
-			this.scroll.tab = activeTab[0].scrollTop;
 		}
 	}
 

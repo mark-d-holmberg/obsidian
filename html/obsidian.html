@@ -522,24 +522,28 @@
 								<div class="obsidian-meatballs obsidian-death-successes">
 									{{#each (range 1 3) as |n|}}
 										<div class="
-										{{~#if (leq n ../data.attributes.death.success)~}}
-											obsidian-radio-selected
-										{{~/if}} obsidian-radio obsidian-radio-positive" data-value="{{n}}">
-											<span></span>
+											{{~#if (leq n ../data.attributes.death.success)~}}selected{{~/if}}
+											fancy-checkbox" data-value="{{n}}">
+											<div class="checkbox-container">
+												<div class="checkbox-inner-box"></div>
+												<div class="checkmark-container">
+													<div class="checkmark">
+														<div class="checkmark-short"></div>
+														<div class="checkmark-long"></div>
+													</div>
+												</div>
+											</div>
 										</div>
 									{{/each}}
 								</div>
 							</div>
 							<div class="obsidian-vertical-bisect">
 								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Failures'}}</div>
-								<div class="obsidian-meatballs obsidian-death-failures">
+								<div class="obsidian-meatballs obsidian-death-failures obsidian-feature-uses">
 									{{#each (range 1 3) as |n|}}
 										<div class="
-										{{~#if (leq n ../data.attributes.death.failure)~}}
-											obsidian-radio-selected
-										{{~/if}} obsidian-radio obsidian-radio-negative" data-value="{{n}}">
-											<span></span>
-										</div>
+											{{~#if (leq n ../data.attributes.death.failure)~}}obsidian-feature-used{{~/if}}
+											obsidian-feature-use" data-value="{{n}}">&times;</div>
 									{{/each}}
 								</div>
 							</div>

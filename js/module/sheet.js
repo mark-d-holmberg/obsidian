@@ -82,9 +82,11 @@ export const Sheet = {
 			.click(evt => Sheet.setExhaustion(sheet, evt));
 		html.find('.obsidian-exhaustion .obsidian-item-drop-pill-header')
 			.click(evt => Sheet.setExhaustion(sheet, evt));
-		html.find('.obsidian-death-successes .obsidian-radio')
+		html.find('.obsidian-death-successes .obsidian-radio, '
+			+ '.obsidian-death-successes .fancy-checkbox')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.success', evt));
-		html.find('.obsidian-death-failures .obsidian-radio')
+		html.find('.obsidian-death-failures .obsidian-radio, '
+			+ '.obsidian-death-failures .obsidian-feature-use')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.failure', evt));
 
 		html.find('.obsidian-spell-table .obsidian-tbody .obsidian-col-icon')

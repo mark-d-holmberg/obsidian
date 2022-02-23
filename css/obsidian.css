@@ -1103,6 +1103,14 @@ legend .fancy-checkbox {
 	height: 100%;
 }
 
+.obsidian-char-details-extra-abilities .obsidian-death-saves-box .obsidian-char-box-lg {
+	padding: 4px;
+}
+
+.obsidian-char-details-extra-abilities .obsidian-death-saves-box .obsidian-vertical-bisect {
+	gap: 0;
+}
+
 .obsidian-conditions-box .obsidian-char-box,
 .obsidian-death-saves-box .obsidian-char-box {
 	height: 100%;
@@ -1322,6 +1330,7 @@ legend .fancy-checkbox {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	gap: 6px;
 }
 
 .character .obsidian-conditions-box .obsidian-char-box {
@@ -1753,4 +1762,22 @@ legend .fancy-checkbox {
 
 .dnd5e.loot-sheet-npc .item-properties {
 	display: none;
+}
+
+.obsidian-meatballs .fancy-checkbox {
+	margin-bottom: 0;
+}
+
+.obsidian-meatballs .obsidian-feature-use {
+	width: 20px;
+	height: 20px;
+}
+
+.obsidian-death-successes .selected :is(.checkbox-container, .checkbox-inner-box) {
+	border-color: var(--obs-positive);
+}
+
+.obsidian-death-failures .obsidian-feature-used {
+	border-color: var(--obs-negative);
+	background-color: var(--obs-negative);
 }
