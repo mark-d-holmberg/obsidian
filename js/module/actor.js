@@ -16,25 +16,30 @@ import {Effect} from './effect.js';
 import {Filters} from '../data/filters.js';
 import {ObsidianCharacter} from '../sheets/obsidian.js';
 import {ObsidianActorDerived} from './derived.js';
+import {ObsidianVehicle} from '../sheets/vehicle.js';
 
 export class ObsidianActor extends Actor5e {
-	static _deriveLevelFromXP (data, derived) {
-		let i = 0;
-		for (; i < DND5E.CHARACTER_EXP_LEVELS.length; i++) {
-			if (data.details.xp.value < DND5E.CHARACTER_EXP_LEVELS[i]) {
-				break;
-			}
-		}
-
-		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[i - 1];
+	static _prepareActorXP (data) {
+		const level = data.details.level;
+		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[Math.max(0, level - 1)];
 		const xp = data.details.xp;
-		derived.details.level = i;
-		xp.max = DND5E.CHARACTER_EXP_LEVELS[i];
-		xp.pct = Math.floor(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100);
+		xp.max = DND5E.CHARACTER_EXP_LEVELS[level];
+		if (xp.value < lowerBound) {
+			xp.pct = 0;
+			return;
+		}
+		const pct = Math.clamped(((xp.value - lowerBound) / (xp.max - lowerBound)) * 100, 0, 100);
+		xp.pct = Math.floor(pct);
 	}
 
 	get obsidian () {
 		return this.data.obsidian;
+	}
+
+	get isObsidianSheet () {
+		const obsidianSheets = [ObsidianCharacter, ObsidianNPC, ObsidianVehicle];
+		const cls = this._sheet?.constructor ?? this._getSheetClass();
+		return obsidianSheets.includes(cls);
 	}
 
 	prepareBaseData () {
@@ -60,11 +65,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		if (this.data.type === 'character') {
-			if (flags.details.milestone) {
-				derived.details.level = data.details.level;
-			} else {
-				ObsidianActor._deriveLevelFromXP(data, derived);
-			}
+			ObsidianActor._prepareActorXP(data);
 		} else {
 			prepareNPC(flags, derived);
 		}
@@ -196,8 +197,12 @@ export class ObsidianActor extends Actor5e {
 		this._prepareInventory(data, derived.inventory);
 		applyProfBonus(this);
 		Prepare.abilities(this, data, flags, derived);
-		Prepare.ac(data, flags);
-		Prepare.armour(data, flags, derived);
+
+		if (this.isObsidianSheet) {
+			Prepare.ac(data, flags);
+			Prepare.armour(data, flags, derived);
+		}
+
 		Prepare.init(data, flags, derived);
 		prepareDefenses(data, flags, derived);
 		Prepare.conditions(this, data, flags, derived);
@@ -252,7 +257,7 @@ export class ObsidianActor extends Actor5e {
 					&& (item.type !== 'spell' || item.obsidian?.visible))
 				.flatMap(item => item.obsidian.collection.attack);
 
-		prepareDefenseDisplay(derived);
+		derived.defenses.display = prepareDefenseDisplay(derived.defenses.parts);
 		prepareToggleableEffects(this);
 		applyBonuses(this, data, flags, derived);
 
@@ -683,9 +688,17 @@ export class ObsidianActor extends Actor5e {
 		return item.setFlag('obsidian', 'effects', effects);
 	}
 
-	receiveCurrency (currency) {
-		const update = {...this.data.data.currency};
+	receiveCurrency (currency, containerID) {
+		const container = this.items.get(containerID);
+		if (containerID && !container) {
+			return;
+		}
+		const existing = container?.getFlag('obsidian', 'currency') ?? this.data.data.currency;
+		const update = {...existing};
 		Object.entries(currency).forEach(([denom, amount]) => update[denom] += amount);
+		if (container) {
+			return container.setFlag('obsidian', 'currency', update);
+		}
 		return this.update({'data.currency': update});
 	}
 

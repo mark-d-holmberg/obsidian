@@ -3,7 +3,7 @@ import {Prepare} from '../data/prepare.js';
 import {OBSIDIAN} from '../global.js';
 import {Effect} from './effect.js';
 import {Filters} from '../data/filters.js';
-import {cssIconHexagon} from '../util/html.js';
+import {iconD20} from '../util/html.js';
 import {Config} from '../data/config.js';
 import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
@@ -231,7 +231,7 @@ const prepareItem = {
 	equipment: function (item, data, flags, derived) {
 		if (item.isOwnedByActor() && flags.subtype === 'vehicle') {
 			derived.display = TextEditor.enrichHTML(data.description.value || '', {
-				entities: false,
+				documents: false,
 				links: false,
 				rollData: item.actor.getRollData(),
 				secrets: item.actor.isOwner
@@ -256,7 +256,7 @@ const prepareItem = {
 				derived.notes.push(`
 					<div class="obsidian-table-note-flex">
 						${game.i18n.localize('OBSIDIAN.Skill.ste')}
-						${cssIconHexagon('OBSIDIAN.DisadvantageAbbr', false)}
+						${iconD20({advantage: false})}
 					</div>
 				`);
 			}
@@ -281,7 +281,7 @@ const prepareItem = {
 		}
 
 		derived.display = TextEditor.enrichHTML(data.description.value || '', {
-			entities: true,
+			documents: true,
 			links: true,
 			rollData: item.actor.getRollData(),
 			secrets: item.actor.isOwner
@@ -332,30 +332,28 @@ const prepareItem = {
 					derived.visible = false;
 				} else {
 					const parentComponent = item.getFlag('obsidian', 'parentComponent');
-					if (parentComponent) {
-						const component = item.actor.obsidian.components.get(parentComponent);
-						if (component.type === 'spells'
-							&& component.source === 'individual'
-							&& component.method === 'list')
-						{
-							cls = item.actor.items.get(component.class);
-							const spellList = cls?.obsidian?.spellcasting?.spellList || [];
+					const component = item.actor.obsidian.components.get(parentComponent);
+					if (component?.type === 'spells'
+						&& component?.source === 'individual'
+						&& component?.method === 'list')
+					{
+						cls = item.actor.items.get(component.class);
+						const spellList = cls?.obsidian?.spellcasting?.spellList || [];
 
-							if (!spellList.includes(item)) {
-								spellList.push(item);
-							}
+						if (!spellList.includes(item)) {
+							spellList.push(item);
+						}
 
-							if (flags.known === undefined) {
-								flags.known = false;
-							}
+						if (flags.known === undefined) {
+							flags.known = false;
+						}
 
-							if (flags.prepared === undefined) {
-								flags.prepared = false;
-							}
+						if (flags.prepared === undefined) {
+							flags.prepared = false;
+						}
 
-							if (flags.book === undefined) {
-								flags.book = false;
-							}
+						if (flags.book === undefined) {
+							flags.book = false;
 						}
 					}
 				}
@@ -444,7 +442,7 @@ const prepareItem = {
 		}).filter(tag => tag != null));
 
 		derived.display = TextEditor.enrichHTML(data.description.value || '', {
-			entities: false,
+			documents: false,
 			links: false,
 			rollData: item.actor?.getRollData(),
 			secrets: item.actor?.isOwner
@@ -473,7 +471,7 @@ const prepareComponents = {
 
 	description: function (actor, item, effect, component) {
 		component.display = TextEditor.enrichHTML(component.raw || '', {
-			entities: true,
+			documents: true,
 			links: true,
 			rollData: actor?.getRollData(),
 			secrets: actor?.isOwner

@@ -1,7 +1,7 @@
 #tinymce {
 	font-size: 13px;
 	color: #cfd2da;
-	font-family: Roboto, sans-serif;
+	font-family: var(--obs-font);
 	scrollbar-color: transparent rgba(0, 0, 0, .75);
 	scrollbar-width: thin;
 }

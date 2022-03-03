@@ -181,18 +181,64 @@
 
 .obsidian-item-drop-pill {
 	display: inline-flex;
-	background-color: var(--obs-dark);
+	background-color: var(--obs-pill-bg);
 	border-radius: 5px;
 	font-family: var(--obs-font-condensed);
 	margin-bottom: 5px;
+	border-width: 1px;
+	border-style: solid;
+	border-top-color: var(--obs-pill-border-light);
+	border-right-color: var(--obs-pill-border-dark);
+	border-bottom-color: var(--obs-pill-border-dark);
+	border-left-color: var(--obs-pill-border-light);
+	font-size: 13px;
+	align-items: center;
+	font-weight: normal;
+	line-height: 1;
+}
+
+.obsidian-item-drop-pill-sm {
+	margin: 0;
+	font-size: 11px;
+}
+
+.obsidian-item-drop-pill-header,
+.obsidian-item-drop-pill-footer {
+	display: flex;
+	padding: 3px 4px;
+	align-items: center;
+}
+
+.obsidian-item-drop-pill-header {
+	border-right: 1px solid var(--obs-pill-border-light);
+}
+
+.obsidian-item-drop-pill-footer-num,
+.obsidian-item-drop-pill-header-num {
+	min-width: 24px;
+	justify-content: center;
+}
+
+.obsidian-item-drop-pill-header > :is(img, div),
+.obsidian-item-drop-pill-footer > :is(img, div) {
+	width: 16px;
+	height: 16px;
+	background-size: 16px 16px;
+}
+
+.obsidian-item-drop-pill-sm > :is(.obsidian-item-drop-pill-header, .obsidian-item-drop-pill-footer) > :is(img, div) {
+	width: 14px;
+	height: 14px;
+	background-size: 14px 14px;
 }
 
 .obsidian-item-drop-pill-body {
-	padding: 4px 8px;
-	border-right: 1px solid var(--obs-bg);
+	padding: 3px 8px;
 	cursor: pointer;
-	display: flex;
-	align-items: center;
+}
+
+.obsidian-item-drop-pill-sm .obsidian-item-drop-pill-body {
+	padding: 5px 8px 4px 8px;
 }
 
 .obsidian-item-drop-pill-body .obsidian-icon {
@@ -200,9 +246,13 @@
 }
 
 .obsidian-item-drop-pill-rm {
-	padding: 4px 8px;
+	padding: 3px 7px;
 	font-family: var(--obs-font);
 	cursor: pointer;
+}
+
+.obsidian-item-drop-pill-rm, .obsidian-item-drop-pill-footer {
+	border-left: 1px solid var(--obs-pill-border-light);
 }
 
 .obsidian-effect-row {

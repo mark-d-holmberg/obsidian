@@ -107,7 +107,7 @@ Config.CREATURE_TYPES = [
 ];
 
 Config.DEFENSE_LEVELS = ['res', 'imm', 'vuln'];
-Config.EFFECT_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha', 'spell'];
+Config.EFFECT_ABILITIES = Config.ABILITIES.concat(['spell']);
 Config.EFFECT_ADD_SPELLS_METHOD = ['innate', 'known', 'prep', 'list', 'item'];
 Config.EFFECT_ADD_SPELLS_SOURCE = ['list', 'individual'];
 Config.EFFECT_APPLIED_ON = ['target', 'hit', 'save'];

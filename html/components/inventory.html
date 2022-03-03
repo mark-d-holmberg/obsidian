@@ -51,9 +51,13 @@
 				{{else if (eq type 'equipment')}}
 					{{#if (eq flags.obsidian.subtype 'armour')}}
 						{{obs-i18n 'ArmourTypeFull' data.armor.type}}
+					{{else}}
+						{{obs-i18n 'ItemType' flags.obsidian.subtype}}
 					{{/if}}
 				{{else if (eq type 'consumable')}}
 					{{obs-i18n 'ConsumableType' flags.obsidian.subtype}}
+				{{else}}
+					{{obs-i18n 'ItemType' type}}
 				{{/if}}
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 import {Schema} from '../data/schema.js';
 import {ObsidianDialog} from './dialog.js';
+import {toSlug} from '../data.js';
 
 export class ObsidianSkillsDialog extends ObsidianDialog {
 	activateListeners (html) {
@@ -26,15 +27,30 @@ export class ObsidianSkillsDialog extends ObsidianDialog {
 		const data = FormApplication.prototype._getSubmitData.apply(this);
 		const expanded = expandObject(data);
 		const items = expanded.flags.obsidian[this.options.property];
-		const custom = Object.entries(items).filter(([_, item]) => item.custom);
+		const custom = Object.entries(items).filter(([, item]) => item.custom);
+
+		if (this.options.property === 'tools') {
+			// Make sure any tool that is enabled is automatically marked as
+			// proficient if it's not already.
+			Object.entries(items).forEach(([key, item]) => {
+				if (item.custom || !item.enabled) {
+					return;
+				}
+
+				const original = this.parent.actor.getFlag('obsidian', `tools.${key}`);
+				if (!original?.value) {
+					item.value = 1;
+				}
+			});
+		}
 
 		if (!custom.length) {
-			return data;
+			return flattenObject(expanded);
 		}
 
 		const newData = {};
 		for (const [id, item] of custom) {
-			const key = item.label.slugify({strict: true});
+			const key = toSlug(item.label);
 			if (id === key) {
 				continue;
 			}
@@ -50,7 +66,7 @@ export class ObsidianSkillsDialog extends ObsidianDialog {
 	async _onAdd (evt) {
 		evt.preventDefault();
 		const item = this._newItem();
-		item.key = item.label.slugify({strict: true});
+		item.key = toSlug(item.label);
 		const update = this._formData;
 		update[`flags.obsidian.${this.options.property}.${item.key}`] = item;
 		await this.parent.actor.update(update);

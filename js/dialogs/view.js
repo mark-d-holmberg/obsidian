@@ -15,7 +15,7 @@ export class ObsidianViewDialog extends ObsidianDialog {
 		this.item = item;
 
 		if (item.type === 'backpack') {
-			const hook = `renderObsidian${parent.actor.data.type === 'npc' ? 'NPC' : ''}`;
+			const hook = `renderObsidian${parent.actor.data.type === 'npc' ? 'NPC' : 'Character'}`;
 			this._hook = Hooks.on(hook, () => {
 				this.item = this.parent.actor.items.get(itemID);
 				this.render(false)
@@ -25,7 +25,9 @@ export class ObsidianViewDialog extends ObsidianDialog {
 
 	async close () {
 		if (this._hook) {
-			Hooks.off('renderObsidian', this._hook);
+			const hook =
+				`renderObsidian${this.parent.actor.data.type === 'npc' ? 'NPC' : 'Character'}`;
+			Hooks.off(hook, this._hook);
 		}
 		return super.close();
 	}
@@ -56,10 +58,23 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			if (this.element) {
 				this.element.find('.obsidian-drag-indicator').css('display', 'none');
 			}
+			this.parent.element.find('.obsidian-drag-indicator').css('display', 'none');
+			this.parent.element.find('.obsidian-inv-container')
+				.removeClass('obsidian-container-drop');
 		});
 
 		html.find('[draggable]').each((i, row) =>
-			row.addEventListener('dragstart', Reorder.dragStart, false));
+			row.addEventListener('dragstart', evt => {
+				if (evt.currentTarget.classList.contains('obsidian-char-inv-header-currency')) {
+					const dragData = {
+						containerId: this.item.id,
+						uuid: this.parent.actor.uuid,
+						type: 'obsidian-currency'
+					};
+					evt.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+				}
+				return Reorder.dragStart(evt);
+			}, false));
 
 		this.form.ondragover = Reorder.dragOver;
 		this.form.ondrop = () => Reorder.drop(this.parent.actor, event);
@@ -69,13 +84,8 @@ export class ObsidianViewDialog extends ObsidianDialog {
 			this.render(false);
 		});
 
-		html.find('[data-sheet]').click(() => {
-			const Item = CONFIG.Item.documentClass;
-			const item = new Item(this.item, {actor: this.parent.actor});
-			item.sheet.render(true);
-		});
-
 		Sheet.contextMenu(this.parent, html);
+		html.find('[data-sheet]').click(() => this.item.sheet.render(true));
 		html.find('[data-name]').each((i, el) => el.name = el.dataset.name);
 		html.find('.obsidian-equip-action').click(evt => Sheet.onEquip(this.parent, evt));
 		html.find('.obsidian-attune').click(evt => Sheet.onAttune(this.parent, evt));

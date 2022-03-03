@@ -1,10 +1,6 @@
 {{#each data.abilities as |save id|}}
 	{{#with (lookup ../actor.flags.obsidian.saves id)}}
-		<div {{#if (eq id 'dex')}}
-		style="grid-row-start: 2;"
-		{{else if (eq id 'con')}}
-		style="grid-row-start: 3;"
-		{{/if}} class="obsidian-save-item" data-value="{{id}}">
+		<div class="obsidian-save-item" data-value="{{id}}">
 			<div class="obsidian-radio obsidian-ptr
 				{{#if (eq 0.5 save.proficient)~}}
 					obsidian-half-proficient
@@ -22,7 +18,7 @@
 				<input type="text" name="flags.obsidian.saves.{{id}}.override" data-dtype="Number"
 				       value="{{override}}" placeholder="&mdash;">
 			{{else}}
-				<div class="obsidian-save-mod obsidian-ptr">
+				<div class="obsidian-save-mod obsidian-ptr" title="{{localize 'OBSIDIAN.ManageSave'}}">
 					{{numberFormat save.save decimals=0 sign=true}}
 				</div>
 			{{/if}}

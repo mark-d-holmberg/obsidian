@@ -24,6 +24,10 @@
 	--obs-horizontal-space: 10px;
 	--obs-vertical-space: 20px;
 	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
+	--obs-bg-translucent: rgb(0 0 0 / 15%);
+	--obs-pill-bg: hsl(222deg 14% 10%);
+	--obs-pill-border-light: rgb(255 255 255 / 15%);
+	--obs-pill-border-dark: rgb(0 0 0 / 97%);
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -125,6 +129,7 @@
 
 .obsidian option {
 	color: var(--obs-text-inverse);
+	background: transparent;
 }
 
 .obsidian hr {
@@ -194,8 +199,7 @@
 
 .dnd5e.sheet.npc form.obsidian,
 .dnd5e.sheet.vehicle form.obsidian {
-	display: block;
-	padding: 12px 8px;
+	padding: 12px 0;
 }
 
 .dnd5e.sheet form.obsidian.obsidian-collapsed {
@@ -257,6 +261,11 @@
 	font-size: 11px;
 }
 
+.obsidian-edit .fa-cog {
+	color: var(--obs-text-subtle);
+	margin-left: 1px;
+}
+
 .obsidian-delete.obsidian-alert {
 	color: var(--obs-negative);
 }
@@ -295,13 +304,43 @@
 	display: none;
 }
 
-.obsidian-sidebar .obsidian-char-box {
+.obsidian-sidebar .obsidian-char-box,
+.npc .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 100%;
 	font-weight: normal;
 	text-align: left;
 	color: var(--obs-text-regular);
 	font-size: 13px;
-	padding: 8px;
+	padding: 12px;
+	border: none;
+	border-radius: 0 0 10px 10px;
+	background: var(--obs-bg-translucent);
+}
+
+.obsidian-sidebar .obsidian-char-box-text,
+.npc .obsidian [data-tab=desc] .obsidian-char-box-text {
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 12px;
+	font-size: 13px;
+	font-family: var(--obs-font);
+	font-weight: bold;
+	color: var(--obs-text-regular);
+	background: var(--obs-bg-translucent);
+	border-radius: 10px 10px 0 0;
+	margin-bottom: 2px;
+	text-transform: none;
+}
+
+.obsidian-sidebar .obsidian-collapsed .obsidian-char-box,
+.npc .obsidian [data-tab=desc] .obsidian-collapsed .obsidian-char-box {
+	display: none;
+}
+
+.obsidian-sidebar .obsidian-collapsed .obsidian-char-box-text,
+.npc .obsidian [data-tab=desc] .obsidian-collapsed .obsidian-char-box-text {
+	border-radius: 10px;
 }
 
 .obsidian-collapser-container {
@@ -363,6 +402,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	break-inside: avoid;
 }
 
 .obsidian-char-box-stacked {
@@ -429,6 +469,29 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	min-width: 58px;
 	min-height: 46px;
 	line-height: 1rem;
+}
+
+.obsidian-char-box.obsidian-simple-dialog {
+	position: relative;
+}
+
+.obsidian-char-box.obsidian-simple-dialog:hover {
+	color: transparent;
+}
+
+.obsidian-char-box.obsidian-simple-dialog:hover:after {
+	content: '\f013';
+	font-family: 'Font Awesome 5 Free';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	color: var(--obs-text-regular);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-shadow: 0 0 8px var(--color-shadow-primary);
 }
 
 .obsidian-resource-box {
@@ -561,6 +624,17 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	margin-right: 0;
 }
 
+.obsidian-char-charname-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 14px;
+}
+
+.obsidian-char-charname-container .obsidian-edit {
+	margin-right: 8px;
+}
+
 .dnd5e.sheet form input[type=text].obsidian-char-charname {
 	color: var(--obs-text-regular);
 	height: auto;
@@ -568,6 +642,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-size: 26px;
 	max-width: 300px;
 	line-height: 1;
+	margin: 0;
 }
 
 .dnd5e.sheet form input[type=number].obsidian-input-sheet,
@@ -597,10 +672,16 @@ form.obsidian .rollable:hover {
 .obsidian-char-xp-bar {
 	display: flex;
 	align-items: center;
+	min-height: 13px;
 }
 
 .obsidian-char-lvl {
 	font-size: 7px;
+}
+
+.obsidian-char-lvl i {
+	font-size: 10px;
+	color: var(--obs-positive);
 }
 
 .obsidian-char-xp-progress {
@@ -1003,8 +1084,49 @@ legend .fancy-checkbox {
 
 .obsidian-char-details {
 	display: grid;
-	grid-template-columns: 280px auto;
-	grid-template-rows: 230px auto;
+	grid-template-columns: 280px 280px 280px;
+	grid-template-rows: 229px 1fr;
+	grid-gap: 10px;
+	position: relative;
+}
+
+.obsidian-char-details-extra-abilities {
+	grid-template-rows: 244px 1fr;
+}
+
+.obsidian-main-left {
+	grid-row: 1 / span 2;
+}
+
+.obsidian-death-saves-box {
+	width: 100%;
+	height: 100%;
+}
+
+.obsidian-char-details-extra-abilities .obsidian-death-saves-box .obsidian-char-box-lg {
+	padding: 4px;
+}
+
+.obsidian-char-details-extra-abilities .obsidian-death-saves-box .obsidian-vertical-bisect {
+	gap: 0;
+}
+
+.obsidian-conditions-box .obsidian-char-box,
+.obsidian-death-saves-box .obsidian-char-box {
+	height: 100%;
+}
+
+.obsidian-saves-box {
+	grid-column-start: 2;
+}
+
+.obsidian-conditions-box {
+	grid-column-start: 3;
+}
+
+.obsidian-main {
+	grid-row-start: 2;
+	grid-column: 2 / span 2;
 }
 
 .obsidian-skills-box {
@@ -1016,17 +1138,20 @@ legend .fancy-checkbox {
 .obsidian-save-item {
 	display: flex;
 	align-items: center;
-	margin-bottom: 5px;
 	border-bottom: 1px solid var(--obs-mid);
+}
+
+.obsidian-skill-item {
+	margin-bottom: 5px;
 }
 
 .obsidian-skill-item:last-child {
 	border: none;
 }
 
-.obsidian-save-item:nth-child(3n) {
+.obsidian-grid-3-row .obsidian-save-item:nth-child(3n),
+.obsidian-grid-4-row .obsidian-save-item:nth-child(4n) {
 	border: none;
-	margin: 0;
 }
 
 .obsidian-prof,
@@ -1119,6 +1244,12 @@ legend .fancy-checkbox {
 	width: 25px;
 }
 
+.obsidian-skill-mod:hover,
+.obsidian-save-mod:hover {
+	text-shadow: 0 0 8px var(--color-shadow-primary);
+	font-family: 'Font Awesome 5 Free';
+}
+
 .obsidian-skill-passive {
 	color: var(--obs-text-subtle);
 	font-weight: normal;
@@ -1132,9 +1263,27 @@ legend .fancy-checkbox {
 	margin-right: var(--obs-horizontal-space);
 }
 
+.obsidian-char-details .obsidian-char-box-lg {
+	margin: 0;
+	width: 100%;
+}
+
 .obsidian-grid-2-col {
 	display: grid;
 	grid-template-columns: 50% 50%;
+}
+
+.obsidian-grid-col-dir {
+	grid-auto-flow: column;
+	row-gap: 5px;
+}
+
+.obsidian-grid-3-row {
+	grid-template-rows: 1fr 1fr 1fr;
+}
+
+.obsidian-grid-4-row {
+	grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 
 .obsidian-radio-label {
@@ -1170,6 +1319,78 @@ legend .fancy-checkbox {
 .obsidian-char-box-lg .obsidian-bisect {
 	padding-bottom: 8px;
 	margin-bottom: 8px;
+}
+
+.obsidian-death-saves-box .obsidian-grid-2-col {
+	height: 100%;
+}
+
+.obsidian-death-saves-box .obsidian-vertical-bisect {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.character .obsidian-conditions-box .obsidian-char-box {
+	padding: 0;
+}
+
+.character .obsidian-conditions {
+	padding: 5px 10px 5px 5px;
+	row-gap: 2px;
+	column-gap: 5px;
+}
+
+.character .obsidian-conditions .obsidian-item-drop-pill {
+	cursor: pointer;
+}
+
+.character .obsidian-exhaustion .obsidian-item-drop-pill-body {
+	cursor: default;
+}
+
+.character .obsidian-exhaustion .obsidian-item-drop-pill-header {
+	cursor: pointer;
+}
+
+.obsidian-condition-pill-inactive {
+	color: var(--obs-text-secondary);
+}
+
+.obsidian-condition-pill-active {
+	color: var(--obs-negative);
+}
+
+.obsidian-condition-pill-active.obsidian-condition-invisible {
+	color: var(--obs-positive);
+}
+
+.obsidian-item-drop-pill.obsidian-condition-pill-active {
+	border-top-color: var(--obs-negative);
+	border-right-color: var(--obs-btn-negative-inner);
+	border-bottom-color: var(--obs-btn-negative-inner);
+	border-left-color: var(--obs-negative);
+}
+
+.obsidian-condition-pill-active .obsidian-item-drop-pill-header {
+	border-right-color: var(--obs-negative);
+}
+
+.obsidian-item-drop-pill.obsidian-condition-pill-active.obsidian-condition-invisible {
+	border-top-color: var(--obs-positive);
+	border-right-color: var(--obs-btn-positive-inner);
+	border-bottom-color: var(--obs-btn-positive-inner);
+	border-left-color: var(--obs-positive);
+}
+
+.obsidian-condition-pill-active.obsidian-condition-invisible .obsidian-item-drop-pill-header {
+	border-right-color: var(--obs-positive);
+}
+
+.obsidian-char-details-extra-abilities .obsidian-conditions {
+	padding-bottom: 12px;
 }
 
 .obsidian-meatballs .obsidian-radio {
@@ -1291,7 +1512,7 @@ legend .fancy-checkbox {
 	width: 100%;
 }
 
-.compendium-pack[data-pack='dnd5e.spells'] {
+.compendium-pack[data-pack="dnd5e.spells"] {
 	display: none !important;
 }
 
@@ -1301,8 +1522,25 @@ legend .fancy-checkbox {
 	margin-top: 15px;
 }
 
+.obsidian-char-notes .obsidian-char-box-text {
+	display: flex;
+	justify-content: space-between;
+}
+
+.obsidian-char-notes .obsidian-edit {
+	color: var(--obs-text-subtle);
+}
+
 .obsidian-defenses {
-	padding: 8px 6px;
+	padding: 8px;
+	text-align: unset;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2px;
+}
+
+.obsidian-defenses .obsidian-item-drop-pill-body {
+	cursor: unset;
 }
 
 .obsidian-defenses .obsidian-css-icon {
@@ -1312,10 +1550,13 @@ legend .fancy-checkbox {
 #compendium li.compendium-pack {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 #compendium li.compendium-pack h4.pack-title {
-	margin-bottom: 3px;
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
 }
 
 #compendium li.compendium-pack .entity-type {
@@ -1329,7 +1570,6 @@ legend .fancy-checkbox {
 }
 
 #compendium li.compendium-pack .status-icons {
-	top: 0;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -1343,7 +1583,7 @@ legend .fancy-checkbox {
 	color: var(--obs-text-bright);
 }
 
-.obsidian-compendium .directory-list .directory-item {
+.obsidian-compendium .compendium.directory .directory-list .directory-item {
 	line-height: normal;
 	border-bottom: 1px solid var(--obs-mid);
 	align-items: center;
@@ -1522,4 +1762,22 @@ legend .fancy-checkbox {
 
 .dnd5e.loot-sheet-npc .item-properties {
 	display: none;
+}
+
+.obsidian-meatballs .fancy-checkbox {
+	margin-bottom: 0;
+}
+
+.obsidian-meatballs .obsidian-feature-use {
+	width: 20px;
+	height: 20px;
+}
+
+.obsidian-death-successes .selected :is(.checkbox-container, .checkbox-inner-box) {
+	border-color: var(--obs-positive);
+}
+
+.obsidian-death-failures .obsidian-feature-used {
+	border-color: var(--obs-negative);
+	background-color: var(--obs-negative);
 }

@@ -3,7 +3,7 @@ import {Prepare} from '../data/prepare.js';
 import {Effect} from '../module/effect.js';
 import {getEffectLabel} from '../module/item.js';
 import {DND5E} from '../../../../systems/dnd5e/module/config.js';
-import {cssIconHexagon, fancyCheckbox} from './html.js';
+import {conditionPill, defensePill, fancyCheckbox, iconD20} from './html.js';
 
 export function registerHandlebarHelpers () {
 	Handlebars.registerHelper('attack-sort', function (list) {
@@ -18,9 +18,9 @@ export function registerHandlebarHelpers () {
 		return mapped.map(item => list[item.idx]);
 	});
 
-	Handlebars.registerHelper('badge', function (badge) {
+	Handlebars.registerHelper('badge', function (badge, options) {
 		const advantage = badge === 'adv';
-		return new Handlebars.SafeString(cssIconHexagon({advantage, disadvantage: !advantage}));
+		return new Handlebars.SafeString(iconD20({advantage, size: options.hash.size}));
 	});
 
 	Handlebars.registerHelper('capitalise', function (str) {
@@ -50,6 +50,10 @@ export function registerHandlebarHelpers () {
 		}).join(''));
 	});
 
+	Handlebars.registerHelper('condition-pill', function (condition, options) {
+		return new Handlebars.SafeString(conditionPill({condition, ...options.hash}));
+	});
+
 	Handlebars.registerHelper('count', function (ar) {
 		return ar.length;
 	});
@@ -59,6 +63,10 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('debug', console.debug);
+
+	Handlebars.registerHelper('defense-pill', function (config) {
+		return new Handlebars.SafeString(defensePill(config));
+	});
 
 	Handlebars.registerHelper('defined', function (arg) {
 		return arg !== undefined;
@@ -347,7 +355,7 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('number-format', function (n) {
-		return Intl.NumberFormat().format(n);
+		return new Intl.NumberFormat().format(n);
 	});
 
 	Handlebars.registerHelper('obs-i18n', function (...args) {

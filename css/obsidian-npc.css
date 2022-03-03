@@ -7,14 +7,12 @@
 	text-align: center;
 }
 
-.npc .obsidian [data-tab=desc] .obsidian-char-box,
-.vehicle .obsidian [data-tab=desc] .obsidian-char-box {
+.npc .obsidian [data-tab=desc] .obsidian-char-box {
 	width: 350px;
-	text-align: left;
-	font-weight: normal;
-	color: var(--obs-text-regular);
-	font-size: 13px;
-	padding: 8px;
+}
+
+.npc .obsidian [data-tab=desc] .obsidian-char-box-text {
+	width: 350px;
 }
 
 .npc .obsidian [data-tab=desc] h3,
@@ -22,11 +20,20 @@
 	margin: 15px 8px .5rem 8px;
 }
 
-.dnd5e.sheet.npc .window-content .obsidian .tab,
-.dnd5e.sheet.vehicle .window-content .obsidian .tab {
-	height: auto;
-	scrollbar-color: transparent rgba(0, 0, 0, .75);
-	scrollbar-width: thin;
+.dnd5e.sheet form.obsidian > .obsidian-tab-container {
+	flex: 1;
+}
+
+.obsidian-tab-container[data-tab=desc],
+.obsidian-tab-container[data-tab=stats],
+.obsidian-tab-container[data-tab=effects] {
+	position: relative;
+}
+
+.dnd5e.sheet.npc .window-content,
+.dnd5e.sheet.vehicle .window-content {
+	background: var(--obs-bg);
+	overflow: unset;
 }
 
 .dnd5e.sheet.npc .window-content .obsidian .tab::-webkit-scrollbar,
@@ -230,6 +237,7 @@
 
 .obsidian-npc-configure i {
 	color: var(--obs-text-subtle);
+	margin-left: 1px;
 }
 
 .obsidian-npc-configure div:hover i {

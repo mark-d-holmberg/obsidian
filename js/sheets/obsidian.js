@@ -65,7 +65,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			settings = JSON.parse(settings);
 		}
 
-		this.scroll = {};
 		this.settings = settings;
 		this.tabs = {};
 		this.details = new Map();
@@ -82,7 +81,8 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			classes: options.classes.concat(['actor', 'character-sheet', 'obsidian-window']),
 			width: 1170,
 			height: 720,
-			showUnpreparedSpells: true
+			showUnpreparedSpells: true,
+			scrollY: ['form.obsidian', '.obsidian-scrollable']
 		});
 
 		return options;
@@ -118,8 +118,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 					} else if (group === 'equipment') {
 						Sheet.filterEquipment(this);
 					}
-
-					ObsidianCharacter._resizeTabs(html);
 				}
 			});
 		});
@@ -127,7 +125,15 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		Sheet.activateFiltering(this, html);
 		Sheet.contextMenu(this, html);
-		ObsidianCharacter._resizeMain(html);
+
+		// Since foundry disables the local cache and forces a request to the
+		// server to verify cache status, image elements always load in after
+		// the initial sheet render. When the image pops in, it causes the
+		// scrollHeight of the container to be recalculated which undoes the
+		// scroll position restoration that was just completed post-render, so
+		// we have to add the following as a workaround.
+		this.form.querySelector('img.obsidian-profile-img').onload = () =>
+			this._restoreScrollPositions(html);
 
 		if (!this.options.editable) {
 			return;
@@ -139,7 +145,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		html.find('.obsidian-inspiration')
 			.click(this._toggleControl.bind(this, 'data.attributes.inspiration'));
 		html.find('.obsidian-prof').click(this._setSkillProficiency.bind(this));
-		html.find('.obsidian-conditions .obsidian-radio-label')
+		html.find('.obsidian-conditions .obsidian-item-drop-pill')
 			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-save-item .obsidian-radio').click(this._setSaveProficiency.bind(this));
 		html.find('.obsidian-skill-mod').click(evt =>
@@ -152,34 +158,35 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			new ObsidianSpellsDialog(this).render(true));
 		html.find('.obsidian-add-feat').click(this._onAddFeature.bind(this));
 		html.find('h3[data-notes]').mouseup(this._onCollapseNotes.bind(this));
+		html.find('.obsidian-sidebar .obsidian-char-box-text')
+			.mouseup(this._onCollapseDetails.bind(this));
 		html.find('.obsidian-speed').mouseup(this._cycleSpeed.bind(this));
+		html.find('.obsidian-skill-mod, .obsidian-save-mod').hover(function () {
+			this._obs_content = this.textContent;
+			this.textContent = '\uF013';
+		}, function () {
+			if (this._obs_content) {
+				this.textContent = this._obs_content;
+			}
+		});
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
 		this._activateDialogs(html);
-
-		if (this.settings.scrollTop !== undefined) {
-			this.form.scrollTop = this.settings.scrollTop;
-		}
-
-		if (this.settings.subScroll !== undefined) {
-			const activeTab = html.find('.obsidian-tab-contents.active');
-			if (activeTab.length > 0) {
-				activeTab[0].scrollTop = this.settings.subScroll;
-			}
-		}
 	}
 
 	getData () {
 		const data = {
 			owner: this.actor.isOwner,
-			limited: this.actor.limited,
+			limited: !this.actor.isOwner && this.actor.limited,
 			options: this.options,
 			editable: this.isEditable,
 			cssClass: this.actor.isOwner ? 'editable' : 'locked',
 			isCharacter: true,
 			config: CONFIG.DND5E,
-			rollData: this.actor.getRollData.bind(this.actor)
+			rollData: this.actor.getRollData.bind(this.actor),
+			detailsCollapsed: this.settings.detailsCollapsed,
+			abilityRows: Math.ceil(Object.keys(CONFIG.DND5E.abilities).length / 2)
 		};
 
 		data.actor = this.actor.toObject(false);
@@ -215,14 +222,17 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		return data;
 	}
 
-	async maximize () {
-		await super.maximize();
-		ObsidianCharacter._resizeMain(this.element);
-	}
-
 	render (force = false, options = {}) {
 		this._applySettings();
 		return super.render(force, options);
+	}
+
+	_saveScrollPositions (html) {
+		return super._saveScrollPositions(html.parent());
+	}
+
+	_restoreScrollPositions (html) {
+		super._restoreScrollPositions(html.parent());
 	}
 
 	/**
@@ -251,6 +261,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 				return;
 			}
 
+			evt.stopPropagation();
 			if (options.width !== undefined) {
 				options.width = parseInt(options.width);
 			}
@@ -312,40 +323,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 
 	/**
 	 * @private
-	 */
-	_findActiveTab () {
-		if (!this.element) {
-			return [];
-		}
-
-		const activeContainer = this.element.find('.obsidian-tab-container.active');
-		let activeTab = activeContainer.find('.obsidian-tab-contents.active');
-		if (activeTab.length < 1) {
-			activeTab = activeContainer.find('.obsidian-tab-contents');
-		}
-
-		return activeTab;
-	}
-
-	_injectHTML (html) {
-		/**
-		 * For some reason, the first time this dialog is opened, the heights
-		 * of its elements are not calculated correctly until the dialog is
-		 * fully visible, so our resize code, which is called after rendering,
-		 * fails to calculate the height correctly as the dialog is still
-		 * fading in.
-		 *
-		 * Application#_injectHTML does not provide a callback for its call to
-		 * fadeIn so we must override it here in order to call our resize code
-		 * at the correct time, once the dialog is fully visible.
-		 */
-		$('body').append(html);
-		this._element = html;
-		html.hide().fadeIn(200, ObsidianCharacter._resizeMain.bind(this, html));
-	}
-
-	/**
-	 * @private
 	 * @param {JQuery.TriggeredEvent} evt
 	 */
 	_onAddFeature (evt) {
@@ -369,6 +346,23 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			data: {activation: {type: evt.currentTarget.dataset.action}},
 			flags: flags
 		}]).then(items => items.shift().sheet.render(true));
+	}
+
+	_onCollapseDetails (evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+
+		const detail = evt.currentTarget.dataset.detail;
+		const collapsed = !!this.settings.detailsCollapsed?.[detail];
+		evt.currentTarget.parentElement.classList.toggle('obsidian-collapsed', !collapsed);
+
+		if (!this.settings.detailsCollapsed) {
+			this.settings.detailsCollapsed = {};
+		}
+
+		this.settings.detailsCollapsed[detail] = !collapsed;
+		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
 	}
 
 	_onCollapseNotes (evt) {
@@ -431,76 +425,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		atk.parentItem = this.actor.items.get(atk.parentEffect.parentItem).data;
 	}
 
-	/**
-	 * @private
-	 */
-	async _render (force = false, options = {}) {
-		this._saveScrollPositions();
-		await super._render(force, options);
-		this._restoreScrollPositions();
-	}
-
-	/**
-	 * @private
-	 */
-	static _resizeMain (html) {
-		let total = 0;
-		html.find('.obsidian-main-left > .obsidian-char-box-container')
-			.each((i, el) => total += $(el).outerHeight(true));
-
-		total -= html.find('.obsidian-conditions-box').outerHeight() + 13;
-		html.find('.obsidian-main').css('height', `${total}px`);
-		ObsidianCharacter._resizeTabs(html);
-	}
-
-	/**
-	 * @private
-	 */
-	static _resizeTabs (html) {
-		const total = html.find('.obsidian-main').outerHeight();
-		html.find('.obsidian-tab-contents').each((i, el) => {
-			const jqel = $(el);
-			let innerTotal = 0;
-			let current = jqel.prev();
-
-			if (current.length < 1) {
-				current = jqel.parent();
-			}
-
-			while (!current.hasClass('obsidian-main')) {
-				if (!current.hasClass('obsidian-tab-contents')
-					&& !current.hasClass('obsidian-tab-container'))
-				{
-					innerTotal += current.outerHeight(true);
-				}
-
-				const tmp = current.prev();
-				if (tmp.length < 1) {
-					current = current.parent();
-				} else {
-					current = tmp;
-				}
-			}
-
-			const offset = game.i18n.lang === 'ja' ? 29 : -30;
-			jqel.css('height', `${total - innerTotal + offset}px`);
-		});
-	}
-
-	/**
-	 * @private
-	 */
-	_restoreScrollPositions () {
-		if (this.form) {
-			this.form.scrollTop = this.scroll.main;
-		}
-
-		const activeTab = this._findActiveTab();
-		if (activeTab.length > 0) {
-			activeTab[0].scrollTop = this.scroll.tab;
-		}
-	}
-
 	_rollHighestHD () {
 		const highest = Config.HD.reduce((max, hd) => {
 			const actorHD = this.actor.data.flags.obsidian.attributes.hd[`d${hd}`];
@@ -513,20 +437,6 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 
 		if (highest > 0) {
 			this.actor.rollHD([[1, highest]]);
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_saveScrollPositions () {
-		if (this.form) {
-			this.scroll.main = this.form.scrollTop;
-		}
-
-		const activeTab = this._findActiveTab();
-		if (activeTab.length > 0) {
-			this.scroll.tab = activeTab[0].scrollTop;
 		}
 	}
 

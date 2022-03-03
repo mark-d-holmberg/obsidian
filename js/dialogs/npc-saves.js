@@ -11,6 +11,12 @@ export class ObsidianNPCSavesDialog extends ObsidianDialog {
 		return options;
 	}
 
+	getData () {
+		const data = super.getData();
+		data.abilityRows = Math.ceil(Object.keys(CONFIG.DND5E.abilities).length / 2);
+		return data;
+	}
+
 	activateListeners (html) {
 		super.activateListeners(html);
 		html.find('.obsidian-save-item .obsidian-radio').click(async evt => {

@@ -1,4 +1,4 @@
-<form class="obsidian {{cssClass}}" autocomplete="off">
+<form class="obsidian obsidian-main-form {{cssClass}}" autocomplete="off">
 	<ul class="obsidian-tab-bar" data-group="main-tabs">
 		<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
 		<li class="obsidian-tab item" data-tab="stats">{{localize 'OBSIDIAN.Stats'}}</li>
@@ -7,6 +7,7 @@
 		<li class="obsidian-tab item" data-tab="effects">{{localize 'OBSIDIAN.Effects'}}</li>
 	</ul>
 	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="desc">
+		<div class="obsidian-scrollable">
 		<section>
 			<img class="obsidian-profile-img obsidian-ptr profile" src="{{actor.img}}"
 			     title="{{actor.name}}" alt="{{actor.name}}" data-edit="img">
@@ -47,9 +48,11 @@
 				         target='data.details.biography.value'}}
 			</div>
 		</section>
+		</div>
 	</div>
 	<div class="obsidian-tab-container obsidian-npc-stats tab" data-group="main-tabs"
 	     data-tab="stats">
+		<div class="obsidian-scrollable">
 		<header>
 			<input name="name" type="text" value="{{actor.name}}"
 			       class="obsidian-char-charname obsidian-condensed"
@@ -213,28 +216,36 @@
 					{{/each}}
 				</div>
 				{{/if}}
-				{{#if actor.obsidian.defenses.display.damage.vuln}}
+				{{#if actor.obsidian.defenses.display.damage.vuln.size}}
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
 					<strong>{{localize 'OBSIDIAN.DamageVulnerabilities'}}</strong>
-					{{{lc actor.obsidian.defenses.display.damage.vuln}}}
+					{{#each actor.obsidian.defenses.display.damage.vuln}}
+						{{defense-pill this}}
+					{{/each}}
 				</div>
 				{{/if}}
-				{{#if actor.obsidian.defenses.display.damage.res}}
+				{{#if actor.obsidian.defenses.display.damage.res.size}}
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
 					<strong>{{localize 'OBSIDIAN.DamageResistances'}}</strong>
-					{{{lc actor.obsidian.defenses.display.damage.res}}}
+					{{#each actor.obsidian.defenses.display.damage.res}}
+						{{defense-pill this}}
+					{{/each}}
 				</div>
 				{{/if}}
-				{{#if actor.obsidian.defenses.display.damage.imm}}
+				{{#if actor.obsidian.defenses.display.damage.imm.size}}
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
 					<strong>{{localize 'OBSIDIAN.DamageImmunities'}}</strong>
-					{{{lc actor.obsidian.defenses.display.damage.imm}}}
+					{{#each actor.obsidian.defenses.display.damage.imm}}
+						{{defense-pill this}}
+					{{/each}}
 				</div>
 				{{/if}}
-				{{#if actor.obsidian.defenses.display.conditions.imm}}
+				{{#if actor.obsidian.defenses.display.conditions.imm.size}}
 				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
 					<strong>{{localize 'OBSIDIAN.ConditionImmunities'}}</strong>
-					{{{lc actor.obsidian.defenses.display.conditions.imm}}}
+					{{#each actor.obsidian.defenses.display.conditions.imm}}
+						{{defense-pill this}}
+					{{/each}}
 				</div>
 				{{/if}}
 				{{#if (not isObject)}}
@@ -354,6 +365,7 @@
 				</section>
 			{{/if}}
 		</main>
+		</div>
 	</div>
 	{{> modules/obsidian/html/tabs/equipment.html}}
 	{{> modules/obsidian/html/tabs/spells.html}}

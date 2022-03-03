@@ -10,7 +10,7 @@ OBSIDIAN.spellComparator = (a, b) => {
 	return diff;
 };
 
-const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
+export const toSlug = name => name.replace(/[',]/g, '').replace(/\s+/g, '-').trim().toLowerCase();
 OBSIDIAN.collateSpells = async (compendium) => {
 	let pack = game.packs.get(compendium);
 	if (!pack) {
@@ -52,6 +52,6 @@ export async function loadSpellData () {
 	await OBSIDIAN.collateSpells(compendium);
 	OBSIDIAN.computeSpellsByClass(spellLists);
 	game.actors.contents.forEach(actor => actor.prepareData());
-	Object.values(game.actors.tokens).forEach(actor => actor.prepareData());
+	Object.values(game.actors.tokens).forEach(actor => actor?.prepareData());
 	Hooks.callAll('obsidian.actorsPrepared');
 }

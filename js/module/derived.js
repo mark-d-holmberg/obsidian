@@ -34,7 +34,7 @@ export class ObsidianActorDerived extends ObsidianDerived {
 		this.components = new Map();
 		this.details = {};
 		this.effects = new Map();
-		this.itemsByType = new Partitioner(game.system.entityTypes.Item);
+		this.itemsByType = new Partitioner(game.system.documentTypes.Item);
 		this.magicalItems = [];
 		this.rules = {};
 		this.spellbook = {concentration: [], rituals: []};

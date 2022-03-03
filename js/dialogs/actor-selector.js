@@ -56,7 +56,7 @@ export default class ObsidianActorSelectorDialog extends ObsidianStandaloneDialo
 					return;
 				}
 
-				resolving.push(pack.getContent().then(content => actors.push(...content)));
+				resolving.push(pack.getDocuments().then(content => actors.push(...content)));
 				return;
 			}
 

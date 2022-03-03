@@ -3,11 +3,12 @@ import {determineMode} from '../data/prepare.js';
 import {Effect} from './effect.js';
 
 const CONDITIONS = [
-	'dead', 'bleeding', 'blinded', 'charmed', 'deafened',
-	'dodging', 'frightened', 'grappled', 'incapacitated',
-	'invisible', 'paralysed', 'petrified', 'poisoned',
-	'prone', 'restrained', 'stunned', 'unconscious',
-	'burning', 'concentrating', 'marked', 'surprised'
+	'dead', 'acidified', 'bleeding', 'blinded',
+	'charmed', 'deafened', 'dodging', 'frightened',
+	'grappled', 'incapacitated', 'invisible', 'paralysed',
+	'petrified', 'poisoned', 'prone', 'restrained',
+	'stunned', 'unconscious', 'burning', 'concentrating',
+	'marked', 'surprised'
 ];
 
 export function patchConditions () {

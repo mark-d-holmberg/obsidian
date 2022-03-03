@@ -55,15 +55,11 @@ export function registerSettings () {
 }
 
 function getSpellCompendiumChoices () {
-	const choices = {};
-	game.packs.filter(pack => pack.documentName === 'Item').forEach(pack =>
-		choices[pack.collection] =
-			`[${pack.metadata.module
-				? pack.metadata.module
-				: pack.metadata.system
-					? pack.metadata.system
-					: pack.metadata.package}] `
-			+ pack.metadata.label);
-
-	return choices;
+	return game.packs.reduce((acc, pack) => {
+		if (pack.documentName !== 'Item') {
+			return acc;
+		}
+		acc[pack.collection] = `[${pack.metadata.package}] ${pack.metadata.label}`;
+		return acc;
+	}, {});
 }

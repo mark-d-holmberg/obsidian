@@ -9,6 +9,8 @@ export class ObsidianItemSheet extends ItemSheet {
 				.filter(app => app.setModal)
 				.forEach(app => app.setModal(true));
 		}
+
+		this._numberFormatter = new Intl.NumberFormat();
 	}
 
 	static get defaultOptions () {
@@ -32,6 +34,7 @@ export class ObsidianItemSheet extends ItemSheet {
 
 		html.find('input').focusout(this._delaySubmit.bind(this));
 		html.find('select').change(this._onSubmit.bind(this));
+		ObsidianDialog.prototype.activateLargeNumberInputs.call(this, html);
 	}
 
 	getData () {
@@ -75,15 +78,23 @@ export class ObsidianItemSheet extends ItemSheet {
 	}
 
 	activateEditor (name, options = {}, initialContent = '') {
-		options.content_css =
-			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		options.content_css = [
+			...CONFIG.TinyMCE.content_css,
+			OBSIDIAN.getFont(),
+			'modules/obsidian/css/obsidian-mce.css'
+		].join(',');
 		super.activateEditor(name, options, initialContent);
+	}
+
+	formatLargeNumber (el) {
+		ObsidianDialog.prototype.formatLargeNumber.call(this, el);
 	}
 
 	/**
 	 * @private
 	 */
 	async _updateObject (event, formData) {
+		ObsidianDialog.prototype.updateLargeNumberInputs.call(this, formData);
 		return super._updateObject(event, OBSIDIAN.updateArrays(this.item.data._source, formData));
 	}
 }

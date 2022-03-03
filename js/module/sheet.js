@@ -80,9 +80,13 @@ export const Sheet = {
 
 		html.find('.obsidian-exhaustion .obsidian-radio')
 			.click(evt => Sheet.setExhaustion(sheet, evt));
-		html.find('.obsidian-death-successes .obsidian-radio')
+		html.find('.obsidian-exhaustion .obsidian-item-drop-pill-header')
+			.click(evt => Sheet.setExhaustion(sheet, evt));
+		html.find('.obsidian-death-successes .obsidian-radio, '
+			+ '.obsidian-death-successes .fancy-checkbox')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.success', evt));
-		html.find('.obsidian-death-failures .obsidian-radio')
+		html.find('.obsidian-death-failures .obsidian-radio, '
+			+ '.obsidian-death-failures .obsidian-feature-use')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.failure', evt));
 
 		html.find('.obsidian-spell-table .obsidian-tbody .obsidian-col-icon')
@@ -443,7 +447,7 @@ export const Sheet = {
 				return ActorSheet5e.prototype._onDropActor.call(sheet, event, data);
 			} else if (data.type === 'obsidian-currency') {
 				const from = ObsidianActor.fromUUID(data.uuid);
-				return Sheet.transferCurrency(from, sheet.actor);
+				return Sheet.transferCurrency(from, sheet.actor, event, data);
 			}
 		} catch (ignored) {}
 
@@ -679,12 +683,28 @@ export const Sheet = {
 		}
 	},
 
-	transferCurrency: async function (from, to) {
+	transferCurrency: async function (from, to, event, data) {
 		if (!from || !to) {
 			return;
 		}
 
-		const existing = from.data.data.currency;
+		let src;
+		let dest;
+		const [, container] = Reorder.detectElementBeneath(event);
+
+		if (container) {
+			dest = to.items.get(container.dataset.itemId);
+		}
+
+		if (data.containerId) {
+			src = from.items.get(data.containerId);
+		}
+
+		if (from.uuid === to.uuid && src?.id === dest?.id) {
+			return;
+		}
+
+		const existing = src?.getFlag('obsidian', 'currency') ?? from.data.data.currency;
 		const doTransfer = dlg => {
 			const transfer = {};
 			const remaining = {...existing};
@@ -701,21 +721,33 @@ export const Sheet = {
 				remaining[denom] -= transfer[denom];
 			});
 
-			from.update({'data.currency': remaining});
+			if (src) {
+				src.setFlag('obsidian', 'currency', remaining);
+			} else {
+				from.update({'data.currency': remaining});
+			}
 
 			if (to.isOwner) {
-				to.receiveCurrency(transfer);
+				to.receiveCurrency(transfer, dest?.id);
 			} else {
 				game.socket.emit('module.obsidian', {
 					action: 'CURRENCY',
 					uuid: to.uuid,
+					containerId: dest?.id,
 					currency: transfer
 				});
 			}
 		};
 
+		const currency = Object.fromEntries(Object.entries(existing).map(([k, v]) => {
+			if (v == null) {
+				v = 0;
+			}
+			return [k, v];
+		}));
+
 		const dlg = await renderTemplate('modules/obsidian/html/dialogs/transfer-currency.html', {
-			currency: existing
+			currency
 		});
 
 		new Dialog({

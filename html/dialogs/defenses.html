@@ -1,102 +1,113 @@
 <form class="obsidian" autocomplete="off">
-  <div class="obsidian-form-row">
-    <div>
-      {{fancy-checkbox 'flags.obsidian.defenses.disease' content='OBSIDIAN.ImmuneDisease'
-                       checked=actor.flags.obsidian.defenses.disease}}
-      {{fancy-checkbox 'flags.obsidian.defenses.sleep' content='OBSIDIAN.ImmuneSleep'
-                       checked=actor.flags.obsidian.defenses.sleep}}
-    </div>
-  </div>
-	<div class="obsidian-form-row obsidian-stacked-row">
-		<div>
-			<label>
-				<input type="text" class="obsidian-input-num-sm" data-dtype="Number"
-				       name="flags.obsidian.defenses.dr.value"
-				       value="{{actor.flags.obsidian.defenses.dr.value}}">
-				<span>{{localize 'OBSIDIAN.DamageReduction'}}</span>
-			</label>
+	<fieldset>
+		<legend>
+			{{localize 'OBSIDIAN.SpecialDefenses'}}
+		</legend>
+		<div class="obsidian-form-row">
+			<div>
+				{{fancy-checkbox 'flags.obsidian.defenses.disease' content='OBSIDIAN.ImmuneDisease'
+				                 checked=actor.flags.obsidian.defenses.disease}}
+				{{fancy-checkbox 'flags.obsidian.defenses.sleep' content='OBSIDIAN.ImmuneSleep'
+				                 checked=actor.flags.obsidian.defenses.sleep}}
+			</div>
 		</div>
-	</div>
-  <div class="obsidian-label-lg" style="margin-top: 10px;">
-    {{localize 'OBSIDIAN.DamageTitle'}}
-	  <div class="obsidian-flex">
-		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-res">
-			  {{localize 'OBSIDIAN.BPSRes'}}
-		  </button>
-		  <button type="button" class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-imm">
-			  {{localize 'OBSIDIAN.BPSImm'}}
-		  </button>
-	    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-dmg">
-	      {{localize 'OBSIDIAN.Add'}}
-	    </button>
-	  </div>
-  </div>
-  {{#each actor.flags.obsidian.defenses.damage as |def id|}}
-	  <div class="obsidian-form-row" data-item-id="{{id}}">
-	    <div>
-	      <select name="flags.obsidian.defenses.damage.{{id}}.level">
-		      {{selectOptions @root.ObsidianLabels.DefenseLevel selected=def.level}}
-	      </select>
-	      <select name="flags.obsidian.defenses.damage.{{id}}.dmg" data-selector="{{id}}.dmg">
-		      {{selectOptions @root.ObsidianLabels.DamageOnlySpell selected=def.dmg}}
-	      </select>
-		    <select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic"
-		            data-selector-parent="{{id}}.dmg" data-hide="spell">
-			    {{#select def.magic}}
-				    <option value="">&mdash;</option>
-				    <option value="non">{{localize 'OBSIDIAN.Defense.non'}}</option>
-			    {{/select}}
-		    </select>
-		    <select name="flags.obsidian.defenses.damage.{{id}}.material" data-show="non"
-		            data-selector-parent="{{id}}.magic">
-			    {{#select def.material}}
-				    <option value="">&mdash;</option>
-				    <option value="sil">{{localize 'OBSIDIAN.Defense.sil'}}</option>
-				    <option value="adm">{{localize 'OBSIDIAN.Defense.adm'}}</option>
-			    {{/select}}
-		    </select>
-	    </div>
-	    <button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-dmg">
-	      {{localize 'OBSIDIAN.Remove'}}
-	    </button>
-	  </div>
-  {{/each}}
-  <div class="obsidian-label-lg" style="margin-top: 10px;">
-    {{localize 'OBSIDIAN.ConditionImmunities'}}
-	  <div class="obsidian-flex">
-		  <button type="button"
-		          class="obsidian-btn-compact obsidian-btn-outline obsidian-def-magic-res">
-			  {{localize 'OBSIDIAN.MagicResistanceAbbr'}}
-		  </button>
-	    <button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-cond">
-	      {{localize 'OBSIDIAN.Add'}}
-	    </button>
-	  </div>
-  </div>
-  {{#each actor.flags.obsidian.defenses.conditions as |def id|}}
-	  <div class="obsidian-form-row" data-item-id="{{id}}">
-	    <div>
-		    <select name="flags.obsidian.defenses.conditions.{{id}}.level" data-selector="{{id}}.level">
-			    {{selectOptions @root.ObsidianLabels.ConditionLevel selected=def.level}}
-		    </select>
-	      <select name="flags.obsidian.defenses.conditions.{{id}}.condition">
-	        {{#select def.condition}}
-		        {{#each ../ObsidianConfig.CONDITIONS}}
-			        <option value="{{this}}">{{obs-i18n 'Condition' this}}</option>
-		        {{/each}}
-		        <option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
-		        <option value="spell" data-selector-parent="{{id}}.level" data-hide="imm">
-			        {{localize 'OBSIDIAN.Condition.spell'}}
-		        </option>
-	          <option value="magic" data-selector-parent="{{id}}.level" data-hide="imm">
-		          {{localize 'OBSIDIAN.Condition.magic'}}
-	          </option>
-	        {{/select}}
-	      </select>
-	    </div>
-	    <button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-cond">
-	      {{localize 'OBSIDIAN.Remove'}}
-	    </button>
-	  </div>
-  {{/each}}
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div>
+				<label>
+					<input type="text" class="obsidian-input-num-sm" data-dtype="Number"
+					       name="flags.obsidian.defenses.dr.value"
+					       value="{{actor.flags.obsidian.defenses.dr.value}}">
+					<span>{{localize 'OBSIDIAN.NonMagicalDamageReduction'}}</span>
+				</label>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>
+			<div class="obsidian-flex">
+				{{localize 'OBSIDIAN.DamageTitle'}}
+				<button type="button" style="margin-left: 8px;"
+				        class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-res">
+					{{localize 'OBSIDIAN.BPSRes'}}
+				</button>
+				<button type="button"
+				        class="obsidian-btn-compact obsidian-btn-outline obsidian-def-bps-imm">
+					{{localize 'OBSIDIAN.BPSImm'}}
+				</button>
+				<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-dmg">
+					{{localize 'OBSIDIAN.Add'}}
+				</button>
+			</div>
+		</legend>
+		{{#each actor.flags.obsidian.defenses.damage as |def id|}}
+			<div class="obsidian-form-row" data-item-id="{{id}}">
+				<div>
+					<select name="flags.obsidian.defenses.damage.{{id}}.level">
+						{{selectOptions @root.ObsidianLabels.DefenseLevel selected=def.level}}
+					</select>
+					<select name="flags.obsidian.defenses.damage.{{id}}.dmg" data-selector="{{id}}.dmg">
+						{{selectOptions @root.ObsidianLabels.DamageOnlySpell selected=def.dmg}}
+					</select>
+					<select name="flags.obsidian.defenses.damage.{{id}}.magic" data-selector="{{id}}.magic"
+					        data-selector-parent="{{id}}.dmg" data-hide="spell">
+						{{#select def.magic}}
+							<option value="">&mdash;</option>
+							<option value="non">{{localize 'OBSIDIAN.Defense.non'}}</option>
+						{{/select}}
+					</select>
+					<select name="flags.obsidian.defenses.damage.{{id}}.material" data-show="non"
+					        data-selector-parent="{{id}}.magic">
+						{{#select def.material}}
+							<option value="">&mdash;</option>
+							<option value="sil">{{localize 'OBSIDIAN.Defense.sil'}}</option>
+							<option value="adm">{{localize 'OBSIDIAN.Defense.adm'}}</option>
+						{{/select}}
+					</select>
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-dmg">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+	</fieldset>
+	<fieldset>
+		<legend>
+			<div class="obsidian-flex">
+				{{localize 'OBSIDIAN.ConditionImmunities'}}
+				<button type="button" style="margin-left: 8px;"
+				        class="obsidian-btn-compact obsidian-btn-outline obsidian-def-magic-res">
+					{{localize 'OBSIDIAN.MagicResistanceAbbr'}}
+				</button>
+				<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-cond">
+					{{localize 'OBSIDIAN.Add'}}
+				</button>
+			</div>
+		</legend>
+		{{#each actor.flags.obsidian.defenses.conditions as |def id|}}
+			<div class="obsidian-form-row" data-item-id="{{id}}">
+				<div>
+					<select name="flags.obsidian.defenses.conditions.{{id}}.level" data-selector="{{id}}.level">
+						{{selectOptions @root.ObsidianLabels.ConditionLevel selected=def.level}}
+					</select>
+					<select name="flags.obsidian.defenses.conditions.{{id}}.condition">
+						{{#select def.condition}}
+							{{#each ../ObsidianConfig.CONDITIONS}}
+								<option value="{{this}}">{{obs-i18n 'Condition' this}}</option>
+							{{/each}}
+							<option value="exhaustion">{{localize 'OBSIDIAN.Exhaustion'}}</option>
+							<option value="spell" data-selector-parent="{{id}}.level" data-hide="imm">
+								{{localize 'OBSIDIAN.Condition.spell'}}
+							</option>
+							<option value="magic" data-selector-parent="{{id}}.level" data-hide="imm">
+								{{localize 'OBSIDIAN.Condition.magic'}}
+							</option>
+						{{/select}}
+					</select>
+				</div>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-cond">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+	</fieldset>
 </form>

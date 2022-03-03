@@ -1,3 +1,5 @@
+import ObjectSet from './object-set.js';
+
 export function extendPrimitives () {
 	String.prototype.format = stringFormat;
 
@@ -29,6 +31,14 @@ export function extendPrimitives () {
 		}
 
 		return val;
+	};
+
+	Intl.NumberFormat.prototype.parse = function (string) {
+		const parts = this.formatToParts(12345.6);
+		const group = new RegExp(`[${parts.find(d => d.type === 'group').value}]`, 'g');
+		const decimal = new RegExp(`[${parts.find(d => d.type === 'decimal').value}]`);
+		string = string.trim().replace(group, '').replace(decimal, '.');
+		return Number(string);
 	};
 }
 

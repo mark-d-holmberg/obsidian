@@ -13,26 +13,28 @@
 		{{/each}}
 	</fieldset>
 	{{#unless dialogOptions.npc}}
-	<label class="obsidian-label-lg">
-		{{localize 'OBSIDIAN.PassiveDisplay'}}
-		<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-passive">
-			{{localize 'OBSIDIAN.Add'}}
-		</button>
-	</label>
-	{{#each actor.flags.obsidian.skills.passives as |passive id|}}
-		<div class="obsidian-form-row">
-			<select>
-				{{#select passive}}
-					{{#each ../data.skills as |skill id|}}
-						<option value="{{id}}">{{skill.label}}</option>
-					{{/each}}
-				{{/select}}
-			</select>
-			<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-passive"
-			        data-row-id="{{id}}">
-				{{localize 'OBSIDIAN.Remove'}}
+	<fieldset>
+		<legend>
+			{{localize 'OBSIDIAN.PassiveDisplay'}}
+			<button type="button" class="obsidian-btn-positive obsidian-btn-sm obsidian-add-passive">
+				{{localize 'OBSIDIAN.Add'}}
 			</button>
-		</div>
-	{{/each}}
+		</legend>
+		{{#each actor.flags.obsidian.skills.passives as |passive id|}}
+			<div class="obsidian-form-row">
+				<select>
+					{{#select passive}}
+						{{#each ../data.skills as |skill id|}}
+							<option value="{{id}}">{{skill.label}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+				<button type="button" class="obsidian-btn-negative obsidian-btn-sm obsidian-rm-passive"
+				        data-row-id="{{id}}">
+					{{localize 'OBSIDIAN.Remove'}}
+				</button>
+			</div>
+		{{/each}}
+	</fieldset>
 	{{/unless}}
 </form>

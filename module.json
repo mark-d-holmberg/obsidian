@@ -2,9 +2,9 @@
 	"name": "obsidian",
 	"title": "Obsidian Character Sheets",
 	"description": "Dark theme character sheets.",
-	"version": "5.0.21",
-	"minimumCoreVersion": "0.8.8",
-	"compatibleCoreVersion": "0.8.9",
+	"version": "5.1.1",
+	"minimumCoreVersion": "9",
+	"compatibleCoreVersion": "9",
 	"author": "Kim Mantas",
 	"system": ["dnd5e"],
 	"esmodules": ["js/main.js"],
@@ -19,14 +19,14 @@
 		"system": "dnd5e",
 		"module": "obsidian",
 		"path": "packs/spells.db",
-		"entity": "Item"
+		"entity": "Item",
+		"type": "Item"
 	}],
 	"url": "https://bitbucket.org/Fyorl/obsidian",
 	"bugs": "https://bitbucket.org/Fyorl/obsidian/issues",
 	"manifest": "https://bitbucket.org/Fyorl/obsidian/raw/master/module.json",
-	"download": "https://bitbucket.org/Fyorl/obsidian/get/5.0.21.zip",
+	"download": "https://bitbucket.org/Fyorl/obsidian/get/5.1.1.zip",
 	"license": "LICENSE",
-	"readme": "README.md",
 	"languages": [{
 		"lang": "en",
 		"name": "English",
@@ -39,5 +39,9 @@
 		"lang": "ja",
 		"name": "日本語",
 		"path": "lang/ja.json"
+	}, {
+		"lang": "zh-TW",
+		"name": "正體中文",
+		"path": "lang/zh-TW.json"
 	}]
 }

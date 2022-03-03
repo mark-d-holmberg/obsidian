@@ -27,11 +27,12 @@ export class ObsidianXPDialog extends ObsidianDialog {
 
 	async close () {
 		const xpDeltaStr = this.element.find('input[name="addRemoveXP"]').val();
+		const xp = this.element.find('input[name="data.details.xp.value"]');
+
 		if (xpDeltaStr != null && xpDeltaStr !== '') {
-			const delta = Number(xpDeltaStr);
+			const delta = this._numberFormatter.parse(xpDeltaStr);
 			if (!isNaN(delta)) {
-				this.element.find('input[name="data.details.xp.value"]')
-					.val(this.parent.actor.data.data.details.xp.value + delta);
+				xp.val(this.parent.actor.data.data.details.xp.value + delta);
 			}
 		}
 

@@ -1,3 +1,5 @@
+import {OBSIDIAN} from '../global.js';
+
 export class ObsidianDialog extends DocumentSheet {
 	constructor (parent, options = {register: false}) {
 		super(parent.object, options);
@@ -6,6 +8,8 @@ export class ObsidianDialog extends DocumentSheet {
 		if (this.parent.setModal && this.options.modal) {
 			this.parent.setModal(true);
 		}
+
+		this._numberFormatter = new Intl.NumberFormat();
 	}
 
 	static get defaultOptions () {
@@ -40,7 +44,14 @@ export class ObsidianDialog extends DocumentSheet {
 			html.find('select').off('change').change(this._onSubmit.bind(this));
 		}
 
+		this.activateLargeNumberInputs(html);
 		ObsidianDialog.initialiseComponents(html);
+	}
+
+	activateLargeNumberInputs (html) {
+		html.find('input.obsidian-num-fmt')
+			.keyup(evt => this.formatLargeNumber(evt.currentTarget))
+			.each((i, el) => this.formatLargeNumber(el));
 	}
 
 	static initialiseComponents (html) {
@@ -154,8 +165,11 @@ export class ObsidianDialog extends DocumentSheet {
 	}
 
 	activateEditor (name, options = {}, initialContent = '') {
-		options.content_css =
-			`${CONFIG.TinyMCE.content_css.join(',')},modules/obsidian/css/obsidian-mce.css`;
+		options.content_css = [
+			...CONFIG.TinyMCE.content_css,
+			OBSIDIAN.getFont(),
+			'modules/obsidian/css/obsidian-mce.css'
+		].join(',');
 		super.activateEditor(name, options, initialContent);
 	}
 
@@ -167,10 +181,40 @@ export class ObsidianDialog extends DocumentSheet {
 		}
 	}
 
+	formatLargeNumber (el) {
+		const value = el.value;
+		if (!value?.length) {
+			return value;
+		}
+
+		const parsed = this._numberFormatter.parse(value);
+		if (isNaN(parsed)) {
+			return value;
+		}
+
+		el.value = this._numberFormatter.format(parsed);
+	}
+
+	updateLargeNumberInputs (formData) {
+		this.element.find('input.obsidian-num-fmt').each((i, el) => {
+			if (!el.name || !(el.name in formData)) {
+				return;
+			}
+
+			const parsed = this._numberFormatter.parse(formData[el.name]);
+			if (isNaN(parsed)) {
+				delete formData[el.name];
+			} else {
+				formData[el.name] = parsed;
+			}
+		});
+	}
+
 	/**
 	 * @private
 	 */
 	async _updateObject (event, formData) {
+		this.updateLargeNumberInputs(formData);
 		return this.parent._updateObject(event, formData);
 	}
 

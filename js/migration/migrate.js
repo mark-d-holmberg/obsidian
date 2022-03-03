@@ -16,6 +16,7 @@ import {v11} from './v11.js';
 import {v12} from './v12.js';
 import {v13} from './v13.js';
 import {v14} from './v14.js';
+import {toSlug} from '../data.js';
 
 export const Migrate = {
 	core, v3, v4, v5, v6, v7, v9, v10, v11, v12, v13, v14,
@@ -130,6 +131,13 @@ export const Migrate = {
 			// spells when they come in via 'Manage Spells', so our usual
 			// detection for whether an item is from core or is already
 			// obsidian-enriched fails.
+			source = 'core';
+		}
+
+		if (data.flags.ddbimporter) {
+			// This is a DDB imported item, so we still want to apply most core
+			// conversions, but try to avoid clobbering any obsidian flags that
+			// may have been pre-emptively set.
 			source = 'core';
 		}
 
@@ -291,6 +299,10 @@ export const Migrate = {
 	},
 
 	convertFeature: function (data) {
+		if (data.flags.obsidian.source?.type) {
+			return;
+		}
+
 		data.flags.obsidian.source.type = 'other';
 	},
 
@@ -341,7 +353,7 @@ export const Migrate = {
 					.filter(prof => prof.length));
 
 			for (const tool of custom) {
-				const id = tool.slugify({strict: true});
+				const id = toSlug(tool);
 				tools[id] = {
 					ability: 'str', bonus: 0, value: 1, custom: true, enabled: true,
 					label: translateOrElseOriginal(`OBSIDIAN.ToolProf.${tool}`, tool)

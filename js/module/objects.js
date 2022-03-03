@@ -26,7 +26,7 @@ function onRenderDialog (dialog, html) {
 	const select = html.find('select[name="type"]');
 	const types = new Set(select.find('option').map((i, el) => el.value));
 
-	if (!game.system.entityTypes.Actor.every(type => types.has(type))) {
+	if (!game.system.documentTypes.Actor.every(type => types.has(type))) {
 		return;
 	}
 

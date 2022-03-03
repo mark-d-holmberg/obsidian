@@ -64,6 +64,7 @@ Hooks.once('init', async function () {
 		label: 'OBSIDIAN.ItemSheet'
 	});
 
+	handleOptionalAbilities();
 	patchItem5e();
 	patchConditions();
 	patchToken();
@@ -79,15 +80,10 @@ Hooks.once('init', async function () {
 Hooks.once('setup', translateLabels);
 
 Hooks.once('ready', function () {
-	let fontSheet = 'font';
-	if (game.i18n.lang === 'ja') {
-		fontSheet = 'ja';
-	}
-
 	const link = document.createElement('link');
 	link.type = 'text/css';
 	link.rel = 'stylesheet';
-	link.href = `modules/obsidian/css/${fontSheet}.css`;
+	link.href = OBSIDIAN.getFont();
 	document.getElementsByTagName('head')[0].appendChild(link);
 
 	registerSettings();
@@ -125,6 +121,7 @@ Hooks.on('renderCompendiumDirectory', (compendium, html) => {
 			}));
 		});
 
+	html.find('.compendium-footer .document-type').remove();
 	html.find('.compendium-footer span')
 		.each((i, el) => el.innerText = el.innerText.replace(/[)(]/g, ''));
 });
@@ -133,7 +130,7 @@ Hooks.on('renderActorDirectory', (directory, html) => {
 	const actors = html.find('.actor');
 	for (let i = 0; i < actors.length; i++) {
 		const actor = actors[i];
-		const name = actor.querySelector('.entity-name a');
+		const name = actor.querySelector('.document-name a');
 
 		if (name?.textContent === OBSIDIAN.GENERIC_ACTOR) {
 			actor.remove();
@@ -153,6 +150,12 @@ function enrichActorFlags (data) {
 
 function enrichItemFlags (data) {
 	mergeObject(data, Migrate.convertItem(data));
+}
+
+function handleOptionalAbilities () {
+	const abilities = Object.keys(CONFIG.DND5E.abilities);
+	OBSIDIAN.Config.ABILITIES = abilities;
+	OBSIDIAN.Config.EFFECT_ABILITIES = abilities.concat(['spell']);
 }
 
 Hooks.on('preCreateActor', actor => {

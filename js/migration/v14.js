@@ -1,5 +1,6 @@
 import {OBSIDIAN} from '../global.js';
 import {Config} from '../data/config.js';
+import {toSlug} from '../data.js';
 
 export const v14 = {
 	convertActiveEffect: function (data) {
@@ -67,7 +68,7 @@ export const v14 = {
 				continue;
 			}
 
-			const key = skill.label.slugify({strict: true});
+			const key = toSlug(skill.label);
 			skills[key] = duplicate(skill);
 		}
 
@@ -76,7 +77,7 @@ export const v14 = {
 				continue;
 			}
 
-			const key = tool.label.slugify({strict: true});
+			const key = toSlug(tool.label);
 			tools[key] = duplicate(tool);
 		}
 	},
