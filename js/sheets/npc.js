@@ -8,7 +8,9 @@ import {Sheet} from '../module/sheet.js';
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
 		super(...args);
-		if (this.actor.id !== null) {
+		this.settings = {};
+
+		if (this.actor.id) {
 			game.settings.register('obsidian', this.actor.id, {
 				default: '',
 				scope: 'client',
@@ -22,6 +24,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 				this.settings = JSON.parse(this.settings);
 			}
 		}
+
 		this.details = new Map();
 	}
 
