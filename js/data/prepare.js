@@ -319,8 +319,9 @@ export const Prepare = {
 			ac.value = Number(acFlags.override);
 			return;
 		}
-
+		
 		ac.value = acFlags.base + data.abilities[acFlags.ability1].mod;
+
 		if (!OBSIDIAN.notDefinedOrEmpty(acFlags.ability2)) {
 			ac.value += data.abilities[acFlags.ability2].mod;
 		}

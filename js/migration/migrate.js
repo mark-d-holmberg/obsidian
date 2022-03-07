@@ -134,7 +134,7 @@ export const Migrate = {
 			source = 'core';
 		}
 
-		if (data.flags.ddbimporter) {
+		if (data.flags.ddbimporter && !data.flags.obsidian.version) {
 			// This is a DDB imported item, so we still want to apply most core
 			// conversions, but try to avoid clobbering any obsidian flags that
 			// may have been pre-emptively set.
