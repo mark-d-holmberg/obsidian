@@ -48,24 +48,27 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		}
 
 		super(object, options);
-		game.settings.register('obsidian', this.actor.id, {
-			name: 'Obsidian settings',
-			default: '',
-			type: String,
-			scope: 'client',
-			onChange: settings => this.settings = JSON.parse(settings)
-		});
+		this.settings = {};
 
-		let settings = game.settings.get('obsidian', this.actor.id);
-		if (settings === '') {
-			settings = {};
-			settings.portraitCollapsed = false;
-			game.settings.set('obsidian', this.actor.id, JSON.stringify(settings));
-		} else {
-			settings = JSON.parse(settings);
+		if (this.actor.id) {
+			game.settings.register('obsidian', this.actor.id, {
+				name: 'Obsidian settings',
+				default: '',
+				type: String,
+				scope: 'client',
+				onChange: settings => this.settings = JSON.parse(settings)
+			});
+
+			this.settings = game.settings.get('obsidian', this.actor.id);
+			if (this.settings === '') {
+				this.settings = {};
+				this.settings.portraitCollapsed = false;
+				game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+			} else {
+				this.settings = JSON.parse(this.settings);
+			}
 		}
 
-		this.settings = settings;
 		this.tabs = {};
 		this.details = new Map();
 	}
@@ -362,7 +365,10 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		}
 
 		this.settings.detailsCollapsed[detail] = !collapsed;
-		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+
+		if (this.actor.id) {
+			game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+		}
 	}
 
 	_onCollapseNotes (evt) {
@@ -382,7 +388,10 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 		super._onResize(event);
 		this.settings.width = this.position.width;
 		this.settings.height = this.position.height;
-		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+
+		if (this.actor.id) {
+			game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+		}
 	}
 
 	/**
@@ -535,7 +544,10 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 
 		$(this.form).closest('.obsidian-window').width(this.position.width);
 		this.settings.width = this.position.width;
-		game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+
+		if (this.actor.id) {
+			game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+		}
 	}
 
 	async _updateObject (event, formData) {

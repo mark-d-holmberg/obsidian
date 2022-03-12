@@ -8,17 +8,21 @@ import {Sheet} from '../module/sheet.js';
 export class ObsidianNPC extends ActorSheet5eNPC {
 	constructor (...args) {
 		super(...args);
-		game.settings.register('obsidian', this.actor.id, {
-			default: '',
-			scope: 'client',
-			onChange: settings => this.settings = JSON.parse(settings)
-		});
+		this.settings = {};
 
-		this.settings = game.settings.get('obsidian', this.actor.id);
-		if (this.settings === '') {
-			this.settings = {};
-		} else {
-			this.settings = JSON.parse(this.settings);
+		if (this.actor.id) {
+			game.settings.register('obsidian', this.actor.id, {
+				default: '',
+				scope: 'client',
+				onChange: settings => this.settings = JSON.parse(settings)
+			});
+
+			this.settings = game.settings.get('obsidian', this.actor.id);
+			if (this.settings === '') {
+				this.settings = {};
+			} else {
+				this.settings = JSON.parse(this.settings);
+			}
 		}
 
 		this.details = new Map();

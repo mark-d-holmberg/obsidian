@@ -119,7 +119,11 @@ export const core = {
 
 			if (OBSIDIAN.notDefinedOrEmpty(data.data.ability)) {
 				if (action[0] === 'r') {
-					ability = 'dex';
+					if (data.type === 'spell') {
+						ability = 'spell';
+					} else {
+						ability = 'dex';
+					}
 				}
 			} else {
 				ability = data.data.ability;
@@ -137,6 +141,7 @@ export const core = {
 		{
 			let effect;
 			if (data.type === 'spell') {
+				spell = true;
 				effect = getSpellEffect(data);
 			} else {
 				effect = getPrimaryEffect(data);
