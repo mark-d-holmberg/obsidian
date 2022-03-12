@@ -1211,7 +1211,7 @@ export const Rolls = {
 		const data = actor.getRollData();
 		data.scaling = scaledAmount || 0;
 
-		const roll = new Roll(expr.expr, data).roll();
+		const roll = new Roll(expr.expr, data).roll({async: false});
 
 		return {
 			total: roll.total,
