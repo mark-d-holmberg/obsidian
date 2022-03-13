@@ -1210,14 +1210,8 @@ export const Rolls = {
 	rollExpression: function (actor, expr, scaledAmount) {
 		const data = actor.getRollData();
 		data.scaling = scaledAmount || 0;
-
-		const roll = new Roll(expr.expr, data).roll({async: false});
-
-		return {
-			total: roll.total,
-			flavour: expr.flavour,
-			breakdown: `${roll.formula} = ${Rolls.compileExpression(roll)}`
-		};
+		data.flavour = expr.flavour;
+		return new Roll(expr.expr, data).evaluate({async: true});
 	},
 
 	rollResource: function (resource, rolls) {
@@ -1320,6 +1314,22 @@ export const Rolls = {
 	},
 
 	toChat: async function (actor, ...msgs) {
+		// Evaluate any async rolls.
+		for (const msg of msgs) {
+			if (!msg.flags.obsidian.exprs?.length) {
+				continue;
+			}
+
+			msg.flags.obsidian.exprs = await Promise.all(msg.flags.obsidian.exprs.map(expr =>
+				expr.then(roll => {
+					return {
+						total: roll.total,
+						flavour: roll.data.flavour,
+						breakdown: `${roll.formula} = ${Rolls.compileExpression(roll)}`
+					};
+				})));
+		}
+
 		const dice3d = game.modules.get('dice-so-nice')?.active;
         if (dice3d) {
         	// Collect all the dice data.

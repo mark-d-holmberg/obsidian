@@ -393,6 +393,16 @@ const prepareItem = {
 				derived.visible = derived.visible || spellcasting.rituals === 'book';
 			}
 		}
+
+		if (derived.visible && item.isOwnedByActor() && item.actor.data.obsidian) {
+			if (data.components.concentration) {
+				item.actor.data.obsidian.spellbook.concentration.push(item);
+			}
+
+			if (data.components.ritual) {
+				item.actor.data.obsidian.spellbook.rituals.push(item);
+			}
+		}
 	},
 
 	weapon: function (item, data, flags, derived) {

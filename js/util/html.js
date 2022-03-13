@@ -28,8 +28,7 @@ export function cssIconCircle ({size, title, label} = {}) {
 		<div ${title ? `title="${game.i18n.localize(title)}"` : ''}
 		     class="obsidian-icon obsidian-css-icon-regular obsidian-css-icon-circle
 		           ${size ? `obsidian-css-icon-${size}` : ''}">
-			<div class="obsidian-css-icon-shape"></div>
-			<div class="obsidian-css-icon-label">${game.i18n.localize(label)}</div>
+			${game.i18n.localize(label)}
 		</div>
 	`;
 }
@@ -96,39 +95,6 @@ export function conditionPill ({condition, size = 'sm', active = false}) {
 			`obsidian-condition-pill-${active ? '' : 'in'}active`, `obsidian-condition-${condition}`
 		]
 	});
-}
-
-export function cssIconDiamond ({label, positive, wrapped, level, title}) {
-	switch (level) {
-		case 'vuln':
-			label = 'OBSIDIAN.VulnerabilityAbbr';
-			title = 'OBSIDIAN.DefenseLevel.vuln';
-			positive = false;
-			break;
-
-		case 'res':
-			label = 'OBSIDIAN.ResistanceAbbr';
-			title = 'OBSIDIAN.DefenseLevel.res';
-			positive = true;
-			break;
-
-		case 'imm':
-			label = 'OBSIDIAN.ImmunityAbbr';
-			title = 'OBSIDIAN.DefenseLevel.imm';
-			positive = true;
-			break;
-	}
-
-	return `
-		${wrapped ? '<div class="obsidian-css-icon-inline-diamond">' : ''}
-		<div class="obsidian-css-icon obsidian-css-icon-sm obsidian-css-icon-diamond
-		            obsidian-css-icon-${positive ? 'positive' : 'negative'}"
-		     title="${game.i18n.localize(title)}">
-			<div class="obsidian-css-icon-shape"></div>
-			<div class="obsidian-css-icon-label">${game.i18n.localize(label)}</div>
-		</div>
-		${wrapped ? '</div>' : ''}
-	`;
 }
 
 export function fancyCheckbox (...args) {

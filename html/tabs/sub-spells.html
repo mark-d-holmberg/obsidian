@@ -40,26 +40,23 @@
 						     data-concentration="{{data.components.concentration}}"
 						     data-ritual="{{data.components.ritual}}">
 							<div class="obsidian-col-icon">
-								<div class="obsidian-icon obsidian-icon-school-{{data.school}}
-									{{#if flags.obsidian.highlight}}obsidian-highlight{{/if}}"></div>
+								<div class="obsidian-icon obsidian-icon-school-{{data.school}}"></div>
 							</div>
 							<div class="obsidian-col-spell">
 								<div class="obsidian-table-text rollable" data-roll="item" data-id="{{_id}}">
 									{{name}}
 									{{#if data.components.concentration}}
-										<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+										<sup><div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
 						                    obsidian-css-icon-regular"
 										     title="{{localize 'OBSIDIAN.Concentration'}}">
-											<div class="obsidian-css-icon-shape"></div>
-											<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.ConcentrationAbbr'}}</div>
-										</div>
+											{{localize 'OBSIDIAN.ConcentrationAbbr'}}
+										</div></sup>
 									{{/if}}
 									{{#if data.components.ritual}}
-										<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+										<sup><div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
 						                    obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Ritual'}}">
-											<div class="obsidian-css-icon-shape"></div>
-											<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.RitualAbbr'}}</div>
-										</div>
+											{{localize 'OBSIDIAN.RitualAbbr'}}
+										</div></sup>
 									{{/if}}
 								</div>
 								<div class="obsidian-table-sub-text">
@@ -112,9 +109,9 @@
 								<div class="obsidian-table-dmg">
 									{{#each obsidian.collection.damage}}
 										<div class="obsidian-dmg-component">
-											{{display}}
 											<div class="obsidian-icon-sm obsidian-icon-{{damage}}"
 											     title="{{obs-i18n 'Damage' damage}}"></div>
+											{{display}}
 										</div>
 									{{/each}}
 								</div>

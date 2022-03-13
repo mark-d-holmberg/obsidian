@@ -214,10 +214,6 @@
 	height: 24px;
 }
 
-.obsidian-spell-table .obsidian-tbody .obsidian-col-icon {
-	cursor: pointer;
-}
-
 .obsidian-col-action {
 	width: 40px;
 }
@@ -291,8 +287,16 @@
 	width: 135px;
 }
 
+.obsidian-col-attunement {
+	width: 28px;
+}
+
 .obsidian-col-inv-item {
 	width: 150px;
+}
+
+.obsidian-col-inv-item.obsidian-sibling-attunement {
+	width: 122px;
 }
 
 .obsidian-col-time,
@@ -414,6 +418,10 @@
 	align-items: center;
 }
 
+.obsidian-dmg-component .obsidian-icon-sm {
+	margin-right: 2px;
+}
+
 .obsidian-table-note-text {
 	display: inline;
 }
@@ -503,7 +511,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	padding: 8px;
 	min-height: 29px;
 	background: var(--obs-bg-translucent);
-	border-radius: 10px 10px 0 0;
+	border-radius: 5px 5px 0 0;
 }
 
 .obsidian-feature-header h4 {
@@ -543,6 +551,10 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	margin: 2px 0;
 }
 
+.obsidian-main [data-tab=notes] .obsidian-feature-body {
+	background: transparent;
+}
+
 .obsidian-main .obsidian-feature-body p:first-child {
 	margin-top: 0;
 }
@@ -557,7 +569,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	align-items: center;
 	padding: 8px;
 	background: var(--obs-bg-translucent);
-	border-radius: 0 0 10px 10px;
+	border-radius: 0 0 5px 5px;
 }
 
 .obsidian-feature-footer > a {
@@ -718,10 +730,11 @@ h3 > div > .obsidian-feature-recharge {
 	margin: 0 0 10px 0;
 }
 
-.obsidian-char-spell-header {
+.obsidian-main .obsidian-tab-container > div:not(.obsidian-tab-contents).obsidian-char-spell-header {
 	justify-content: center;
 	cursor: pointer;
 	position: relative;
+	padding-bottom: 10px;
 }
 
 .obsidian-tab-container > div.obsidian-char-spell-header,
@@ -729,10 +742,14 @@ h3 > div > .obsidian-feature-recharge {
 	padding: 0 0 10px 0;
 }
 
-.obsidian-char-spell-header a {
+.obsidian-tab-container[data-tab=spells] ul {
+	position: relative;
+}
+
+.obsidian-tab-container[data-tab=spells] ul > a {
 	position: absolute;
-	right: 0;
-	bottom: 1px;
+	right: 10px;
+	bottom: 7px;
 	text-transform: uppercase;
 }
 
@@ -957,7 +974,15 @@ h3 > div > .obsidian-feature-recharge {
 .obsidian-spell-level-tab.obsidian-icon-tab {
 	min-width: 24px;
 	max-height: 24px;
-	padding: 2px;
+}
+
+.obsidian-icon-tab .obsidian-css-icon {
+	background: var(--obs-text-secondary);
+}
+
+.obsidian-icon-tab:hover .obsidian-css-icon,
+.obsidian-icon-tab.active .obsidian-css-icon {
+	background: var(--obs-text-regular);
 }
 
 .dnd5e.sheet.actor .obsidian .spell-component {
@@ -2074,6 +2099,50 @@ select[multiple] option:nth-child(2n) {
 
 .obsidian-equipped-box.obsidian-equipped {
 	background-color: var(--obs-highlight);
+}
+
+.obsidian-rarity-box {
+	width: 20px;
+	height: 20px;
+	border: 2px solid var(--obs-mid);
+	background: transparent;
+	border-radius: 3px;
+	box-sizing: border-box;
+	padding: 3px;
+	cursor: pointer;
+}
+
+.obsidian-rarity-pip {
+	height: 100%;
+	width: 100%;
+}
+
+.obsidian-rarity-c .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-common);
+}
+
+.obsidian-rarity-uc .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-uncommon);
+}
+
+.obsidian-rarity-r .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-rare);
+}
+
+.obsidian-rarity-vr .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-very-rare);
+}
+
+.obsidian-rarity-l .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-legendary);
+}
+
+.obsidian-rarity-a .obsidian-rarity-pip {
+	background-color: var(--obs-rarity-artefact);
+}
+
+.obsidian-rarity-box:not(.obsidian-rarity-box-attuned) .obsidian-rarity-pip {
+	background-color: transparent;
 }
 
 .obsidian-tab-container[data-tab=effects] h3 {

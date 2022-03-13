@@ -5,10 +5,6 @@
 	background-size: 20px 20px;
 }
 
-.obsidian-icon.obsidian-highlight {
-	filter: var(--obs-white-to-highlight);
-}
-
 li.context-item .obsidian-icon {
 	display: inline-block;
 	margin-right: 3px;
@@ -586,111 +582,64 @@ li.context-item .obsidian-icon {
 	font-weight: bold;
 }
 
-.obsidian-svg-icon-sm {
-	width: 14px;
-	height: 14px;
-}
-
+.obsidian-css-icon-positive,
 .obsidian-svg-icon-positive {
 	color: var(--obs-bg);
 }
 
+.obsidian-css-icon-negative,
 .obsidian-svg-icon-negative {
 	color: var(--obs-text-regular);
 }
 
 .obsidian-css-icon {
-	position: relative;
-}
-
-.obsidian-css-icon-inline .obsidian-css-icon {
-	position: absolute;
-}
-
-.obsidian-css-icon-sm {
-	transform: scale(.7);
-}
-
-.obsidian-css-icon-label {
-	position: absolute;
+	width: 20px;
+	height: 20px;
+	font-weight: bold;
 	font-family: var(--obs-font);
 	font-size: 16px;
-	top: 0;
-	left: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	color: var(--obs-bg);
+	line-height: 20px;
 }
 
-.obsidian-css-icon-negative .obsidian-css-icon-label {
-	color: var(--obs-text-regular);
+.obsidian-css-icon-sm,
+.obsidian-svg-icon-sm {
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
+	line-height: 14px;
+}
+
+.obsidian-css-icon-xs {
+	width: 12px;
+	height: 12px;
+	font-size: 11px;
+	line-height: 11px;
+	padding: 1px 0 0 1px;
+}
+
+sup .obsidian-css-icon {
+	width: 8px;
+	height: 8px;
+	font-size: 8px;
+	line-height: 8px;
+	padding: 0 0 0 1px;
 }
 
 .obsidian-css-icon-circle {
-	position: relative;
-}
-
-.obsidian-css-icon-circle,
-.obsidian-css-icon-circle .obsidian-css-icon-shape,
-.obsidian-css-icon-circle .obsidian-css-icon-label {
-	width: 20px;
-	height: 20px;
-}
-
-.obsidian-css-icon-circle .obsidian-css-icon-label {
-	font-weight: bold;
-}
-
-.obsidian-css-icon-circle.obsidian-css-icon-sm,
-.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-shape,
-.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label {
-	width: 14px;
-	height: 14px;
-	transform: unset;
-}
-
-.obsidian-css-icon-circle.obsidian-css-icon-xs,
-.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-shape,
-.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-label {
-	width: 12px;
-	height: 12px;
-}
-
-.obsidian-css-icon-circle.obsidian-css-icon-sm .obsidian-css-icon-label,
-.obsidian-css-icon-circle.obsidian-css-icon-xs .obsidian-css-icon-label {
-	font-size: 11px;
-	line-height: normal;
-	align-items: unset;
-}
-
-.obsidian-css-icon-shape {
-	position: relative;
-}
-
-.obsidian-css-icon-shape:before,
-.obsidian-css-icon-shape:after {
-	content: '';
-	position: absolute;
-}
-
-.obsidian-css-icon-circle .obsidian-css-icon-shape {
 	border-radius: 50%;
 }
 
-.obsidian-css-icon-circle.obsidian-css-icon-secondary .obsidian-css-icon-shape {
+.obsidian-css-icon-circle.obsidian-css-icon-secondary {
 	background: var(--obs-text-secondary);
 }
 
-.obsidian-css-icon-circle.obsidian-css-icon-regular .obsidian-css-icon-shape {
+.obsidian-css-icon-circle.obsidian-css-icon-regular {
 	background: var(--obs-text-regular);
 }
 
-.obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-shape {
+.obsidian-css-icon-circle.obsidian-css-icon-empty {
 	border: 1px solid var(--obs-text-regular);
-}
-
-.obsidian-css-icon-circle.obsidian-css-icon-empty .obsidian-css-icon-label {
 	color: var(--obs-text-regular);
 	font-weight: normal;
 }

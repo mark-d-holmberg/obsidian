@@ -25,9 +25,6 @@
 			</div>
 			<div class="obsidian-char-spell-header-label">{{localize 'OBSIDIAN.SaveDC'}}</div>
 		</div>
-		<a title="{{localize 'OBSIDIAN.AddCustom'}}" class="obsidian-edit obsidian-add-spell">
-			{{localize 'OBSIDIAN.AddCustom'}}
-		</a>
 	</div>
 	<div class="obsidian-char-spell-search">
 		<div class="obsidian-input-search-container">
@@ -55,15 +52,24 @@
 		{{#if (not-empty actor.obsidian.spellbook.concentration)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-concentration">
-				<div class="spell-component C">{{localize 'OBSIDIAN.ConcentrationAbbr'}}</div>
+				<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+					obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Concentration'}}">
+					{{localize 'OBSIDIAN.ConcentrationAbbr'}}
+				</div>
 			</li>
 		{{/if}}
 		{{#if (not-empty actor.obsidian.spellbook.rituals)}}
 			<li class="obsidian-sub-tab item obsidian-spell-level-tab obsidian-icon-tab"
 			    data-tab="spell-ritual">
-				<div class="spell-component R">{{localize 'OBSIDIAN.RitualAbbr'}}</div>
+				<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle
+					obsidian-css-icon-regular" title="{{localize 'OBSIDIAN.Ritual'}}">
+					{{localize 'OBSIDIAN.RitualAbbr'}}
+				</div>
 			</li>
 		{{/if}}
+		<a title="{{localize 'OBSIDIAN.AddCustomSpell'}}" class="obsidian-edit obsidian-add-spell">
+			<i class="fas fa-plus-circle"></i>
+		</a>
 	</ul>
 	{{> modules/obsidian/html/tabs/sub-spells.html npc=npc}}
 </div>

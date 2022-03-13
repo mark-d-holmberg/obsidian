@@ -29,18 +29,9 @@
 				<span class="obsidian-blank">&mdash;</span>
 			{{/if}}
 		</div>
-		<div class="obsidian-col-inv-item">
-			<div class="obsidian-table-text">
-				{{name}}
-				{{#if flags.obsidian.attunement}}
-					<div class="obsidian-css-icon obsidian-css-icon-xs obsidian-css-icon-circle obsidian-ptr
-					 obsidian-attune {{#if data.attuned}}obsidian-css-icon-regular{{else}}obsidian-css-icon-empty{{/if}}"
-					     title="{{localize 'OBSIDIAN.RequiresAttunement'}}">
-						<div class="obsidian-css-icon-shape"></div>
-						<div class="obsidian-css-icon-label">{{localize 'OBSIDIAN.AttunementAbbr'}}</div>
-					</div>
-				{{/if}}
-			</div>
+		<div class="obsidian-col-inv-item
+			{{#if flags.obsidian.attunement}}obsidian-sibling-attunement{{/if}}">
+			<div class="obsidian-table-text">{{name}}</div>
 			<div class="obsidian-table-sub-text">
 				{{#if (eq type 'weapon')}}
 					{{#if (eq flags.obsidian.type 'melee')}}
@@ -61,6 +52,20 @@
 				{{/if}}
 			</div>
 		</div>
+		{{#if flags.obsidian.attunement}}
+		<div class="obsidian-col-attunement">
+			<div class="obsidian-attune obsidian-rarity-box obsidian-rarity-{{data.rarity}}
+				{{#if data.attuned}}obsidian-rarity-box-attuned{{/if}}"
+			     title="
+					{{#if data.attuned}}
+				     {{localize 'OBSIDIAN.Attuned'}}
+			     {{else}}
+				     {{localize 'OBSIDIAN.RequiresAttunement'}}
+			     {{/if}}">
+				<div class="obsidian-rarity-pip"></div>
+			</div>
+		</div>
+		{{/if}}
 		<div class="obsidian-col-weight">
 			<div class="obsidian-table-number-{{num-size data.weight}}">
 				{{#if data.weight}}

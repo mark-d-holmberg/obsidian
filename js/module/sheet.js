@@ -89,9 +89,6 @@ export const Sheet = {
 			+ '.obsidian-death-failures .obsidian-feature-use')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.failure', evt));
 
-		html.find('.obsidian-spell-table .obsidian-tbody .obsidian-col-icon')
-			.click(evt => Sheet.highlightSpell(sheet, evt));
-
 		html.find(
 			'.obsidian-effect-row .obsidian-radio, .obsidian-effect-row-content strong:first-child')
 			.click(evt => Sheet.onEffectToggled(sheet, evt));
@@ -242,7 +239,9 @@ export const Sheet = {
 		const name = spellTab.find('.obsidian-input-search').val();
 		const filter = spellTab.find('ul[data-group="spells"] li.active').data('tab').substring(6);
 
-		spellTab.find('.obsidian-spell-table > h3, .obsidian-spell-table > .obsidian-table')
+		spellTab.find(
+			'.obsidian-spell-table .obsidian-scrollable > h3, '
+			+ '.obsidian-spell-table .obsidian-scrollable > .obsidian-table')
 			.addClass('obsidian-hidden');
 
 		spellTab.find('.obsidian-spell-table .obsidian-tr.item').each((_, el) => {
@@ -289,14 +288,6 @@ export const Sheet = {
 				.map(sense => data.data.attributes.senses[sense])
 				.filter(n => n != null)
 				.reduce((n, acc) => acc + n, 0) > 0;
-	},
-
-	highlightSpell: function (sheet, evt) {
-		const spell =
-			sheet.actor.items.get(evt.currentTarget.closest('.obsidian-tr').dataset.itemId);
-
-		const highlight = !!spell.getFlag('obsidian', 'highlight');
-		spell.setFlag('obsidian', 'highlight', !highlight);
 	},
 
 	onAddItem: async function (sheet, evt) {

@@ -1,6 +1,5 @@
 import {OBSIDIAN} from '../global.js';
-import {cssIconCircle, cssIconDiamond, defensePill, iconD20} from '../util/html.js';
-import ObjectSet from '../util/object-set.js';
+import {defensePill, iconD20} from '../util/html.js';
 import {prepareDefenseDisplay} from './defenses.js';
 
 let localize;

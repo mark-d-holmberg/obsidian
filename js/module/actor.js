@@ -3,7 +3,6 @@ import {OBSIDIAN} from '../global.js';
 import {Prepare} from '../data/prepare.js';
 import {prepareSpellcasting} from '../data/spellcasting.js';
 import {Rolls} from './rolls.js';
-import {DND5E} from '../../../../systems/dnd5e/module/config.js';
 import {Schema} from '../data/schema.js';
 import {prepareToggleableEffects} from '../data/effects.js';
 import {applyBonuses, applyProfBonus} from '../data/bonuses.js';
@@ -21,9 +20,9 @@ import {ObsidianVehicle} from '../sheets/vehicle.js';
 export class ObsidianActor extends Actor5e {
 	static _prepareActorXP (data) {
 		const level = data.details.level;
-		const lowerBound = DND5E.CHARACTER_EXP_LEVELS[Math.max(0, level - 1)];
+		const lowerBound = CONFIG.DND5E.CHARACTER_EXP_LEVELS[Math.max(0, level - 1)];
 		const xp = data.details.xp;
-		xp.max = DND5E.CHARACTER_EXP_LEVELS[level];
+		xp.max = CONFIG.DND5E.CHARACTER_EXP_LEVELS[level];
 		if (xp.value < lowerBound) {
 			xp.pct = 0;
 			return;
@@ -103,16 +102,6 @@ export class ObsidianActor extends Actor5e {
 				&& !OBSIDIAN.notDefinedOrEmpty(flags?.trigger))
 			{
 				actorDerived.triggers[flags.trigger].push(item);
-			}
-
-			if (item.type === 'spell' && derived.visible) {
-				if (data.concentration) {
-					actorDerived.spellbook.concentration.push(item);
-				}
-
-				if (data.components.ritual) {
-					actorDerived.spellbook.rituals.push(item);
-				}
 			}
 
 			if (item.type === 'backpack') {

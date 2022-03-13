@@ -23,11 +23,16 @@
 	--obs-positive: #40d250;
 	--obs-horizontal-space: 10px;
 	--obs-vertical-space: 20px;
-	--obs-white-to-highlight: invert(77%) sepia(45%) saturate(2540%) hue-rotate(334deg) brightness(109%) contrast(100%);
 	--obs-bg-translucent: rgb(0 0 0 / 15%);
 	--obs-pill-bg: hsl(222deg 14% 10%);
 	--obs-pill-border-light: rgb(255 255 255 / 15%);
 	--obs-pill-border-dark: rgb(0 0 0 / 97%);
+	--obs-rarity-common: #999;
+	--obs-rarity-uncommon: #10630d;
+	--obs-rarity-rare: #366cab;
+	--obs-rarity-very-rare: #6b0e9c;
+	--obs-rarity-legendary: #9c7d2f;
+	--obs-rarity-artefact: #be8972;
 }
 
 .dnd5e.sheet.actor.obsidian-window {
@@ -266,6 +271,10 @@
 	margin-left: 1px;
 }
 
+.obsidian-edit .fa-plus-circle {
+	color: var(--obs-text-subtle);
+}
+
 .obsidian-delete.obsidian-alert {
 	color: var(--obs-negative);
 }
@@ -313,7 +322,7 @@
 	font-size: 13px;
 	padding: 12px;
 	border: none;
-	border-radius: 0 0 10px 10px;
+	border-radius: 0 0 5px 5px;
 	background: var(--obs-bg-translucent);
 }
 
@@ -328,7 +337,7 @@
 	font-weight: bold;
 	color: var(--obs-text-regular);
 	background: var(--obs-bg-translucent);
-	border-radius: 10px 10px 0 0;
+	border-radius: 5px 5px 0 0;
 	margin-bottom: 2px;
 	text-transform: none;
 }
@@ -340,7 +349,7 @@
 
 .obsidian-sidebar .obsidian-collapsed .obsidian-char-box-text,
 .npc .obsidian [data-tab=desc] .obsidian-collapsed .obsidian-char-box-text {
-	border-radius: 10px;
+	border-radius: 5px;
 }
 
 .obsidian-collapser-container {
