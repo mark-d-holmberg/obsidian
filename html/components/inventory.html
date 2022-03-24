@@ -54,15 +54,15 @@
 		</div>
 		{{#if flags.obsidian.attunement}}
 		<div class="obsidian-col-attunement">
-			<div class="obsidian-attune obsidian-rarity-box obsidian-rarity-{{data.rarity}}
-				{{#if data.attuned}}obsidian-rarity-box-attuned{{/if}}"
+			<div class="obsidian-attune obsidian-rarity-{{data.rarity}}
+				{{#if data.attuned}}obsidian-attuned{{/if}}"
 			     title="
 					{{#if data.attuned}}
 				     {{localize 'OBSIDIAN.Attuned'}}
 			     {{else}}
 				     {{localize 'OBSIDIAN.RequiresAttunement'}}
 			     {{/if}}">
-				<div class="obsidian-rarity-pip"></div>
+				<i class="fas fa-certificate"></i>
 			</div>
 		</div>
 		{{/if}}

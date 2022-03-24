@@ -26,7 +26,7 @@ export function iconD20 ({advantage, positive, label, title, size} = {}) {
 export function cssIconCircle ({size, title, label} = {}) {
 	return `
 		<div ${title ? `title="${game.i18n.localize(title)}"` : ''}
-		     class="obsidian-icon obsidian-css-icon-regular obsidian-css-icon-circle
+		     class="obsidian-css-icon obsidian-css-icon-regular obsidian-css-icon-circle
 		           ${size ? `obsidian-css-icon-${size}` : ''}">
 			${game.i18n.localize(label)}
 		</div>

@@ -234,7 +234,7 @@ export const Summons = {
 		}
 
 		const tokenData =
-			(await actor.getTokenData({x, y, actorLink: false, actorData: {flags: {}}})).toJSON();
+			(await actor.getTokenData({x, y, actorLink: false, actorData: {flags: {}}})).toObject();
 
 		if (actor.compendium) {
 			// Since this actor doesn't actually exist in the world, and only
@@ -255,7 +255,7 @@ export const Summons = {
 		// Make sure the summoner has access to their summon.
 		tokenData.actorData.permission = duplicate(actor.data.permission);
 		if (!game.user.isGM) {
-			tokenData.actorData.permission[game.userId] = 3;
+			tokenData.actorData.permission[game.userId] = CONST.DOCUMENT_PERMISSION_LEVELS.OWNER;
 		}
 
 		const flags = tokenData.actorData.flags;

@@ -10,6 +10,11 @@ export function prepareToggleableEffects (actor) {
 		const filter =
 			effect.filters.length ? ` ${effect.filters.map(formatFilter).join(', ')}` : '';
 
+		effect.toggle.parent =
+			game.actors.get(effect.parentActor)?.items.get(effect.parentItem)?.name;
+		if (effect.toggle.parent === effect.label) {
+			delete effect.toggle.parent;
+		}
 		effect.toggle.display =
 			effect.active.bonus.map(bonus =>
 				formatBonus(actor, bonus)

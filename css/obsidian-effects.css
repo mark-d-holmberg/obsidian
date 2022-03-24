@@ -404,17 +404,18 @@
 }
 
 .obsidian-temp-effect {
-	padding: 5px 5px 5px 10px;
+	padding: 10px 20px 10px 10px;
+	font-size: 13px;
 }
 
-.obsidian-temp-effect legend {
-	font-weight: normal;
-	font-size: 16px;
+.obsidian-temp-effect > div {
 	display: flex;
+	width: 100%;
 	align-items: center;
+	justify-content: space-between;
 }
 
-.obsidian-temp-effect legend a {
-	font-size: 12px;
-	margin-left: 5px;
+.obsidian-temp-effect > div a {
+	color: var(--obs-text-regular);
+	margin-right: 10px;
 }

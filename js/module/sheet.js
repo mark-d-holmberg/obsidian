@@ -89,9 +89,7 @@ export const Sheet = {
 			+ '.obsidian-death-failures .obsidian-feature-use')
 			.click(evt => Sheet.setAttributeLevel(sheet, 'data.attributes.death.failure', evt));
 
-		html.find(
-			'.obsidian-effect-row .obsidian-radio, .obsidian-effect-row-content strong:first-child')
-			.click(evt => Sheet.onEffectToggled(sheet, evt));
+		html.find('.obsidian-effect-toggle').click(evt => Sheet.onEffectToggled(sheet, evt));
 
 		html.find('[data-spell-level] .obsidian-feature-use')
 			.click(evt => Sheet.onSlotClicked(sheet, evt));
@@ -446,7 +444,7 @@ export const Sheet = {
 	},
 
 	onEffectToggled: function (sheet, evt) {
-		const row = evt.currentTarget.closest('.obsidian-effect-row');
+		const row = evt.currentTarget.closest('.obsidian-tr');
 		const uuid = row.dataset.uuid;
 		const rule = row.dataset.rule;
 

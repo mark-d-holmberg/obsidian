@@ -43,48 +43,70 @@
 	{{/unless}}
 	{{#if rules}}
 		<h3>{{localize 'OBSIDIAN.Rules'}}</h3>
-		{{#each rules}}
-			<div class="obsidian-effect-row" data-rule="{{key}}">
-				<div class="{{#if active}}obsidian-radio-selected {{/if}}
-			            obsidian-radio obsidian-radio-negative">
-					<span></span>
+		<div class="obsidian-table">
+			<div class="obsidian-tbody">
+			{{#each rules}}
+				<div class="obsidian-tr" data-rule="{{key}}">
+					<div class="{{#if active}}obsidian-effect-toggled {{/if}}obsidian-col-toggle">
+						<div class="obsidian-effect-toggle">
+							<div class="obsidian-effect-toggle-pip"></div>
+						</div>
+					</div>
+					<div class="obsidian-col-effect-name">
+						<div class="obsidian-table-text">{{obs-i18n 'RulesKey' key}}</div>
+					</div>
+					<div class="obsidian-col-notes">
+						<div class="obsidian-table-note-text">{{{lookup @root.ObsidianLabels.Rules key}}}</div>
+					</div>
 				</div>
-				<div class="obsidian-effect-row-content">
-					<strong>{{obs-i18n 'RulesKey' key}}:</strong>
-					{{{lookup @root.ObsidianLabels.Rules key}}}
-				</div>
+			{{/each}}
 			</div>
-		{{/each}}
+		</div>
 	{{/if}}
 	{{#*inline 'effect'}}
-		<div class="obsidian-effect-row" data-uuid="{{uuid}}">
-			<div class="{{#if toggle.active}}obsidian-radio-selected {{/if}}
-			            obsidian-radio obsidian-radio-negative">
-				<span></span>
+		<div class="obsidian-tr" data-uuid="{{uuid}}">
+			<div class="{{#if toggle.active}}obsidian-effect-toggled {{/if}}obsidian-col-toggle">
+				<div class="obsidian-effect-toggle">
+					<div class="obsidian-effect-toggle-pip"></div>
+				</div>
 			</div>
-			<div class="obsidian-effect-row-content">
-				<strong>{{label}}:</strong>
-				{{{toggle.display}}}
+			<div class="obsidian-col-effect-name">
+				<div class="obsidian-table-text">{{label}}</div>
+				{{#if toggle.parent}}<div class="obsidian-table-sub-text">{{toggle.parent}}</div>{{/if}}
+			</div>
+			<div class="obsidian-col-notes">
+				<div class="obsidian-table-note-text">{{{toggle.display}}}</div>
 			</div>
 		</div>
 	{{/inline}}
 	<h3>{{localize 'OBSIDIAN.Permanent'}}</h3>
-	{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
-		{{> effect}}
-	{{/each}}
+	<div class="obsidian-table">
+		<div class="obsidian-tbody">
+		{{#each (filter actor.obsidian.toggleable 'activeEffect' undefined)}}
+			{{> effect}}
+		{{/each}}
+		</div>
+	</div>
 	<h3>{{localize 'OBSIDIAN.Temporary'}}</h3>
-	{{#each actor.obsidian.tempEffects}}
-		<fieldset data-item-id="{{_id}}" class="obsidian-temp-effect item">
-			<legend>
-				{{name}}
-				<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
-					<i class="fas fa-trash"></i>
-				</a>
-			</legend>
-			{{#each flags.obsidian.effects}}
-				{{> effect}}
-			{{/each}}
-		</fieldset>
-	{{/each}}
+	<div class="obsidian-table">
+		<div class="obsidian-tbody">
+		{{#each actor.obsidian.tempEffects}}
+			<details open>
+				<summary class="obsidian-temp-effect item" data-item-id="{{_id}}">
+					<div>
+						{{name}}
+						<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+					<i class="fas fa-angle-down"></i>
+				</summary>
+				{{#each flags.obsidian.effects}}
+					{{> effect}}
+				{{/each}}
+			</details>
+		{{/each}}
+		</div>
+	</div>
 	</div>
 </div>

@@ -610,6 +610,10 @@ li.context-item .obsidian-icon {
 	line-height: 14px;
 }
 
+.obsidian-css-icon-sm {
+	padding: 1px 0 0 2px;
+}
+
 .obsidian-css-icon-xs {
 	width: 12px;
 	height: 12px;

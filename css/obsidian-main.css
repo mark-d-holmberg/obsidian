@@ -291,7 +291,12 @@
 	width: 28px;
 }
 
-.obsidian-col-inv-item {
+.obsidian-col-toggle {
+	width: 30px;
+}
+
+.obsidian-col-inv-item,
+.obsidian-col-effect-name {
 	width: 150px;
 }
 
@@ -2101,7 +2106,7 @@ select[multiple] option:nth-child(2n) {
 	background-color: var(--obs-highlight);
 }
 
-.obsidian-rarity-box {
+.obsidian-effect-toggle {
 	width: 20px;
 	height: 20px;
 	border: 2px solid var(--obs-mid);
@@ -2110,6 +2115,33 @@ select[multiple] option:nth-child(2n) {
 	box-sizing: border-box;
 	padding: 3px;
 	cursor: pointer;
+	margin-left: 3px;
+}
+
+.obsidian-effect-toggle-pip {
+	height: 100%;
+	width: 100%;
+	background-color: transparent;
+}
+
+.obsidian-effect-toggled .obsidian-effect-toggle-pip {
+	background-color: var(--obs-negative);
+}
+
+.obsidian-col-effect-name .obsidian-table-text {
+	color: var(--obs-text-secondary);
+}
+
+.obsidian-effect-toggled + .obsidian-col-effect-name .obsidian-table-text {
+	color: var(--obs-text-regular);
+}
+
+.obsidian-attune {
+	width: 14px;
+	height: 14px;
+	box-sizing: border-box;
+	cursor: pointer;
+	font-size: 14px;
 }
 
 .obsidian-rarity-pip {
@@ -2117,32 +2149,32 @@ select[multiple] option:nth-child(2n) {
 	width: 100%;
 }
 
-.obsidian-rarity-c .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-common);
+.obsidian-rarity-c i {
+	color: var(--obs-rarity-common);
 }
 
-.obsidian-rarity-uc .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-uncommon);
+.obsidian-rarity-uc i {
+	color: var(--obs-rarity-uncommon);
 }
 
-.obsidian-rarity-r .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-rare);
+.obsidian-rarity-r i {
+	color: var(--obs-rarity-rare);
 }
 
-.obsidian-rarity-vr .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-very-rare);
+.obsidian-rarity-vr i {
+	color: var(--obs-rarity-very-rare);
 }
 
-.obsidian-rarity-l .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-legendary);
+.obsidian-rarity-l i {
+	color: var(--obs-rarity-legendary);
 }
 
-.obsidian-rarity-a .obsidian-rarity-pip {
-	background-color: var(--obs-rarity-artefact);
+.obsidian-rarity-a i {
+	color: var(--obs-rarity-artefact);
 }
 
-.obsidian-rarity-box:not(.obsidian-rarity-box-attuned) .obsidian-rarity-pip {
-	background-color: transparent;
+.obsidian-attune:not(.obsidian-attuned) i {
+	color: var(--obs-text-secondary);
 }
 
 .obsidian-tab-container[data-tab=effects] h3 {
