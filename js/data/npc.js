@@ -34,28 +34,8 @@ export function prepareNPCHD (data, flags, derived) {
 	};
 }
 
-export function prepareSpeed (data, derived) {
-	const speed = [];
-	const feet = game.i18n.localize('OBSIDIAN.FeetAbbr');
-	const hover = game.i18n.localize('OBSIDIAN.Hover').toLowerCase();
-	const walk = data.attributes.movement.walk || 0;
-	speed.push(`${walk} ${feet}`);
-
-	for (const key of Config.SPEEDS) {
-		const value = data.attributes.movement[key];
-		if (key === 'walk' || !value) {
-			continue;
-		}
-
-		let display = `${game.i18n.localize(`OBSIDIAN.SpeedAbbr.${key}`)} ${value} ${feet}`;
-		if (key === 'fly' && data.attributes.movement.hover) {
-			display += ` (${hover})`;
-		}
-
-		speed.push(display);
-	}
-
-	derived.attributes.speed.display = speed.join(', ');
+export function prepareSpeed (data) {
+	data.attributes.movement.walk ??= 0;
 }
 
 export async function refreshNPC (combat) {

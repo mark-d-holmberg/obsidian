@@ -60,7 +60,9 @@
 	border-bottom: 1px solid var(--obs-mid);
 	padding-bottom: 8px;
 	width: 100%;
-	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .obsidian-npc-stats header .obsidian-char-charname {
@@ -169,8 +171,7 @@
 	font-size: 13px;
 }
 
-.dnd5e.sheet .obsidian-npc-dt input[type=text],
-.dnd5e.sheet .obsidian-npc-cr input[type=text] {
+.dnd5e.sheet .obsidian-npc-dt input[type=text] {
 	width: 75px;
 	font-weight: normal;
 	border: none;
@@ -178,9 +179,7 @@
 }
 
 .dnd5e.sheet .obsidian-npc-dt input[type=text]:hover,
-.dnd5e.sheet .obsidian-npc-dt input[type=text]:focus,
-.dnd5e.sheet .obsidian-npc-cr input[type=text]:hover,
-.dnd5e.sheet .obsidian-npc-cr input[type=text]:focus {
+.dnd5e.sheet .obsidian-npc-dt input[type=text]:focus {
 	box-shadow: none;
 	border: none;
 	border-bottom: 1px solid var(--obs-mid);
@@ -189,6 +188,10 @@
 .npc .obsidian-char-abilities,
 .vehicle .obsidian-char-abilities {
 	padding: 2px 0 6px 0;
+}
+
+.npc .obsidian-char-ability .obsidian-char-box {
+	margin-top: 8px;
 }
 
 .obsidian fieldset.obsidian-edit-npc-stats {
@@ -233,6 +236,7 @@
 	margin-top: 8px;
 	padding-top: 8px;
 	border-top: 1px dotted var(--obs-mid);
+	width: 100%;
 }
 
 .obsidian-npc-configure i {
@@ -274,6 +278,9 @@
 	padding-bottom: 8px;
 	border-bottom: 2px solid var(--obs-mid);
 	break-inside: avoid;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .npc main section,
@@ -341,35 +348,121 @@
 	margin-top: 8px;
 }
 
-.obsidian-npc-exhaustion .obsidian-exhaustion {
-	text-align: center;
-}
-
-.obsidian-npc-death {
-	display: flex;
-	align-items: center;
-}
-
-.obsidian-npc-death .obsidian-meatballs {
-	display: inline-block;
-}
-
-.obsidian-npc-death .obsidian-radio {
-	width: 16px;
-}
-
-.obsidian-npc-death .obsidian-binary-operator {
-	margin: 0 10px;
-}
-
 .npc .obsidian-spell-table .obsidian-col-icon {
 	font-size: 18px;
 }
 
-.obsidian-npc-btns {
-	position: absolute;
-	top: 0;
-	right: 0;
+.npc .obsidian-char-box-text {
+	padding-bottom: 2px;
+}
+
+.npc .obsidian-char-box {
+	padding: 6px 0;
+	font-size: 14px;
+	line-height: normal;
+	min-height: unset;
+	min-width: 45px;
+}
+
+.npc .obsidian-conditions-box .obsidian-char-box {
+	padding: 0;
+	border: 0;
+}
+
+.npc .obsidian-char-box.obsidian-skills-box {
+	padding: 8px 8px 0;
+	width: 308px;
+}
+
+.npc .obsidian-char-box.obsidian-defenses {
+	padding: 8px;
+}
+
+.obsidian-window.npc .obsidian-char-header-container {
+	flex-wrap: unset;
+	flex-direction: column;
+	flex: 1;
+}
+
+.obsidian-npc-cr-container {
+	margin-right: 10px;
+	display: flex;
+	align-items: flex-end;
+}
+
+.obsidian-npc-cr-input {
+	font-size: 20px;
+}
+
+.obsidian-npc-cr-xp {
+	color: var(--obs-text-subtle);
+	font-size: 11px;
+}
+
+.dnd5e.sheet .obsidian-npc-cr-input input[type=text] {
+	font-size: 20px;
+	padding: 0;
+	line-height: 1;
+	min-width: 30px;
+}
+
+.obsidian-npc-box-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 4px;
+}
+
+.obsidian-npc-box-row .obsidian-char-box-container {
+	padding-right: 4px;
+}
+
+.npc .obsidian-char-box.obsidian-npc-hp-box {
+	padding: 2px 14px;
+}
+
+.npc .obsidian-char-box.obsidian-npc-hd-box {
+	padding: 2px 6px;
+}
+
+.obsidian-char-box.obsidian-char-input-box {
+	padding: 0;
+}
+
+.dnd5e.sheet.npc .obsidian-char-input-box input[type=text] {
+	width: 37px;
+	margin: 0;
+	font-size: 14px;
+	line-height: normal;
+	padding: 6px 0 4px 0;
+	font-weight: bold;
+	color: var(--obs-text-regular);
+	font-family: var(--obs-font);
+}
+
+.obsidian-npc-stat-block > .obsidian-char-box-container {
+	align-items: unset;
+}
+
+.obsidian-npc-stat-block > .obsidian-char-box-container > .obsidian-char-box-text {
+	text-align: center;
+	width: 308px;
+}
+
+.obsidian-npc-stat-block .obsidian-skills-box .obsidian-bisect {
+	margin-top: 8px;
+}
+
+.obsidian-npc-stat-block .obsidian-skills-box .obsidian-bisect ~ .obsidian-bisect {
+	margin-top: 0;
+}
+
+.obsidian-npc-stat-block .obsidian-death-saves-box {
+	width: 308px;
+}
+
+.obsidian-npc-stat-block .obsidian-char-box-lg {
+	margin-right: 0;
+	width: 308px;
 }
 
 .obsidian-npc-btns button.obsidian-btn-sm.obsidian-btn-sheet {

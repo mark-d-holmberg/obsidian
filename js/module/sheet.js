@@ -78,6 +78,8 @@ export const Sheet = {
 		html.find('.obsidian-global-disadvantage').click(() => Sheet.setGlobalRoll(sheet, 'dis'));
 		html.find('.obsidian-feature-header').mouseup(evt => Sheet.collapseFeature(sheet, evt));
 
+		html.find('.obsidian-conditions .obsidian-item-drop-pill')
+			.click(evt => Sheet.setCondition(sheet, evt));
 		html.find('.obsidian-exhaustion .obsidian-radio')
 			.click(evt => Sheet.setExhaustion(sheet, evt));
 		html.find('.obsidian-exhaustion .obsidian-item-drop-pill-header')

@@ -56,8 +56,9 @@ export function defensePill ({
 		} else if (config.type === 'circle') {
 			pill.push(cssIconCircle({size, title: config.label, label: config.abbr}));
 		} else if (config.type === 'def') {
+			const title = game.i18n.localize(`OBSIDIAN.DefenseLevel.${config.level}`);
 			pill.push(`
-				<div title="${label}" class="obsidian-icon obsidian-icon-def-${config.level}"></div>
+				<div title="${title}" class="obsidian-icon obsidian-icon-def-${config.level}"></div>
 			`);
 		} else if (config.type === 'icon') {
 			pill.push(`

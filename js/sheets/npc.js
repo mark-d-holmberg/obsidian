@@ -83,12 +83,8 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 		Sheet.activateDragging(this, html);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
-		html.find('.obsidian-npc-dt').click(this._enterDT.bind(this));
-		html.find('.obsidian-npc-cr').click(this._enterCR.bind(this));
 		html.find('.obsidian-npc-roll-hp').click(this._rollHP.bind(this));
 		html.find('.obsidian-npc-roll-hd').click(this._rollHD.bind(this));
-		html.find('.obsidian-npc-condition-grid .obsidian-radio-label')
-			.click(evt => Sheet.setCondition(this, evt));
 		html.find('.obsidian-legendary-actions .obsidian-feature-use')
 			.click(this._useLegendaryAction.bind(this));
 
@@ -213,57 +209,6 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_editDetails () {
 		new ObsidianNPCDetailsDialog(this).render(true);
-	}
-
-	_enterCR (evt) {
-		const crs = {0: '0', .125: '1/8', .25: '1/4', .5: '1/2'};
-		const cr = this.actor.data.data.details.cr;
-		const target = $(evt.currentTarget);
-		target.off();
-		target.empty();
-		target.append(
-			$(`<input type="text" name="data.details.cr" value="${crs[cr] || cr}"`
-				+ ` placeholder="${game.i18n.localize('OBSIDIAN.Challenge')}">`));
-
-		target.find('input').focus().focusout(evt => {
-			this._onSubmit(evt);
-			const target = $(evt.currentTarget);
-			let value = target.val();
-
-			if (value === '') {
-				value = '—';
-			} else {
-				let cr = Number(value);
-				if (isNaN(cr) && value.includes('/')) {
-					const [nom, denom] = value.split('/');
-					cr = nom / denom;
-				}
-
-				value = `${value} <span class="obsidian-npc-subtle">(`
-					+ new Intl.NumberFormat().format(this.actor.getCRExp(cr))
-					+ ` ${game.i18n.localize('OBSIDIAN.XP')})</span>`;
-			}
-
-			target.parent().html(value).click(this._enterCR.bind(this));
-		});
-	}
-
-	_enterDT (evt) {
-		const target = $(evt.currentTarget);
-		target.off();
-		target.empty();
-		target.append(
-			$('<input type="text" name="flags.obsidian.attributes.dt" data-dtype="Number"'
-				+ ` value="${this.actor.data.flags.obsidian.attributes.dt ?? ''}"`
-				+ ' placeholder="0">'));
-
-		target.find('input').focus().focusout(evt => {
-			this._onSubmit(evt);
-			const target = $(evt.currentTarget);
-			target.parent()
-				.text(`${game.i18n.localize('OBSIDIAN.DT')} ${(target.val())}`)
-				.click(this._enterDT.bind(this));
-		});
 	}
 
 	_formatCreatureType () {

@@ -193,7 +193,7 @@
 }
 
 .dnd5e.sheet form.editable.obsidian .rollable:hover {
-	color: inherit;
+	color: var(--obs-text-regular);
 }
 
 .dnd5e.sheet form.obsidian {
@@ -467,6 +467,12 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-weight: bold;
 	padding-bottom: 4px;
 	color: var(--obs-text-secondary);
+}
+
+.obsidian-char-sub-box-text {
+	color: var(--obs-text-subtle);
+	padding-top: 4px;
+	text-align: center;
 }
 
 .obsidian-char-box {
@@ -1342,25 +1348,25 @@ legend .fancy-checkbox {
 	gap: 6px;
 }
 
-.character .obsidian-conditions-box .obsidian-char-box {
+.obsidian-conditions-box .obsidian-char-box {
 	padding: 0;
 }
 
-.character .obsidian-conditions {
+.obsidian-conditions {
 	padding: 5px 10px 5px 5px;
 	row-gap: 2px;
 	column-gap: 5px;
 }
 
-.character .obsidian-conditions .obsidian-item-drop-pill {
+.obsidian-conditions .obsidian-item-drop-pill {
 	cursor: pointer;
 }
 
-.character .obsidian-exhaustion .obsidian-item-drop-pill-body {
+.obsidian-exhaustion .obsidian-item-drop-pill-body {
 	cursor: default;
 }
 
-.character .obsidian-exhaustion .obsidian-item-drop-pill-header {
+.obsidian-exhaustion .obsidian-item-drop-pill-header {
 	cursor: pointer;
 }
 

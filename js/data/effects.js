@@ -232,7 +232,7 @@ function formatRollMod (mod) {
 }
 
 function formatSetter (setter) {
-	return `${setter.min ? `(${localize('IfNotHigher')}) ` : ''}<strong>${setter.score}</strong>`;
+	return ` <strong>${setter.score}</strong>${setter.min ? ` (${localize('IfNotHigher')})` : ''}`;
 }
 
 function formatMultiplier (multiplier) {

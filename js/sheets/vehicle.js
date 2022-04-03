@@ -79,8 +79,6 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 
 		Sheet.activateDragging(this, html);
 		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
-		html.find('.obsidian-npc-condition-grid .obsidian-radio-label')
-			.click(evt => Sheet.setCondition(this, evt));
 
 		const activateEditor =
 			html.find('[data-edit="data.details.biography.value"]+.editor-edit')[0].onclick;

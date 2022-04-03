@@ -1,46 +1,6 @@
 <div class="obsidian-tab-container obsidian-tab-contents tab" data-group="main-tabs"
      data-tab="effects">
 	<div class="obsidian-scrollable">
-	{{#unless isCharacter}}
-	<h3>{{localize 'OBSIDIAN.Conditions'}}</h3>
-	<div class="obsidian-npc-grid obsidian-npc-condition-grid">
-		{{#each ObsidianConfig.CONDITIONS}}
-			<div class="obsidian-npc-grid-item">
-				<div class="
-				{{#if (lookup ../actor.obsidian.conditions this)}}
-					obsidian-radio-selected
-				{{/if}} obsidian-radio-label" data-value="{{this}}">
-					<div class="
-					{{#if (eq 'invisible' this)}}
-						obsidian-radio-positive
-					{{else}}
-						obsidian-radio-negative
-					{{/if}} obsidian-radio">
-						<span></span>
-					</div>
-					{{obs-i18n 'Condition' this}}
-				</div>
-			</div>
-		{{/each}}
-	</div>
-	<div class="obsidian-npc-exhaustion">
-		<div class="
-		{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
-			obsidian-meatballs-active
-		{{/if}} obsidian-meatballs-title">
-			{{localize 'OBSIDIAN.Exhaustion'}}
-		</div>
-		<div class="obsidian-meatballs obsidian-exhaustion">
-			{{#each (range 1 6)}}
-				<div class="{{#if (leq this ../actor.obsidian.conditions.exhaustion)}}
-					obsidian-radio-selected
-				{{/if}} obsidian-radio obsidian-radio-negative" data-value="{{this}}">
-					<span></span>
-				</div>
-			{{/each}}
-		</div>
-	</div>
-	{{/unless}}
 	{{#if rules}}
 		<h3>{{localize 'OBSIDIAN.Rules'}}</h3>
 		<div class="obsidian-table">
