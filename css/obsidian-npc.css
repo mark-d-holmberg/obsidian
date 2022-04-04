@@ -371,7 +371,7 @@
 
 .npc .obsidian-char-box.obsidian-skills-box {
 	padding: 8px 8px 0;
-	width: 308px;
+	width: 100%;
 }
 
 .npc .obsidian-char-box.obsidian-defenses {
@@ -441,11 +441,12 @@
 
 .obsidian-npc-stat-block > .obsidian-char-box-container {
 	align-items: unset;
+	width: 100%;
 }
 
 .obsidian-npc-stat-block > .obsidian-char-box-container > .obsidian-char-box-text {
 	text-align: center;
-	width: 308px;
+	width: unset;
 }
 
 .obsidian-npc-stat-block .obsidian-skills-box .obsidian-bisect {
@@ -457,12 +458,31 @@
 }
 
 .obsidian-npc-stat-block .obsidian-death-saves-box {
-	width: 308px;
+	width: unset;
+	height: unset;
+}
+
+.obsidian-npc-stat-block .obsidian-death-saves-box .obsidian-char-box {
+	height: unset;
 }
 
 .obsidian-npc-stat-block .obsidian-char-box-lg {
 	margin-right: 0;
-	width: 308px;
+	width: 100%;
+}
+
+.obsidian-npc-stat-block .obsidian-conditions-box {
+	grid-column-start: unset;
+}
+
+.obsidian-npc-stat-block .obsidian-death-saves-box .obsidian-char-box-lg {
+	min-width: 261px;
+}
+
+.obsidian-npc-stat-block-grid {
+	display: grid;
+	width: 100%;
+	grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
 }
 
 .obsidian-npc-btns button.obsidian-btn-sm.obsidian-btn-sheet {

@@ -613,6 +613,18 @@ h3 > div > .obsidian-feature-recharge {
 	margin-left: 10px;
 }
 
+.obsidian-death-failures.obsidian-feature-uses {
+	margin-left: 0;
+}
+
+.obsidian-death-failures.obsidian-feature-uses .obsidian-feature-use {
+	margin-right: 0;
+}
+
+.obsidian-death-successes, .obsidian-death-failures {
+	height: 20px;
+}
+
 .obsidian-feature-use {
 	height: 15px;
 	width: 15px;

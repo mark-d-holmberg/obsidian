@@ -215,6 +215,51 @@
 					</div>
 					{{/unless}}
 				</div>
+				{{#if actor.flags.obsidian.showDeathSaves}}
+				<div class="obsidian-npc-box-row">
+					<div class="obsidian-char-box-container obsidian-death-saves-box">
+						<div class="obsidian-char-box-text">
+						<span class="rollable" data-roll="save" data-save="death">
+							{{localize 'OBSIDIAN.DeathSaves'}}
+						</span>
+						</div>
+						<div class="obsidian-char-box obsidian-char-box-lg">
+							<div class="obsidian-grid-2-col">
+								<div class="obsidian-vertical-bisect">
+									<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Successes'}}</div>
+									<div class="obsidian-meatballs obsidian-death-successes">
+										{{#each (range 1 3) as |n|}}
+											<div class="
+										{{~#if (leq n ../data.attributes.death.success)~}}selected{{~/if}}
+										fancy-checkbox" data-value="{{n}}">
+												<div class="checkbox-container">
+													<div class="checkbox-inner-box"></div>
+													<div class="checkmark-container">
+														<div class="checkmark">
+															<div class="checkmark-short"></div>
+															<div class="checkmark-long"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										{{/each}}
+									</div>
+								</div>
+								<div class="obsidian-vertical-bisect">
+									<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Failures'}}</div>
+									<div class="obsidian-meatballs obsidian-death-failures obsidian-feature-uses">
+										{{#each (range 1 3) as |n|}}
+											<div class="
+										{{~#if (leq n ../data.attributes.death.failure)~}}obsidian-feature-used{{~/if}}
+										obsidian-feature-use" data-value="{{n}}">&times;</div>
+										{{/each}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{{/if}}
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
 					<div class="obsidian-char-ability">
@@ -244,151 +289,114 @@
 					</div>
 					{{/each}}
 				</div>
-				<div class="obsidian-char-box-container obsidian-char-box-stacked">
-					<div class="obsidian-char-box-text">
-						{{localize 'OBSIDIAN.Defenses'}}
-						<a title="{{localize 'OBSIDIAN.ManageDefenses'}}" class="obsidian-edit"
-						   data-dialog="Defenses">
-							<i class="fas fa-cog"></i>
-						</a>
-					</div>
-					<div class="obsidian-char-box obsidian-skills-box obsidian-defenses">
-						{{#each actor.obsidian.defenses.display.all}}
-							{{defense-pill this}}
-						{{/each}}
-					</div>
-				</div>
-				{{#unless isObject}}
-				<div class="obsidian-char-box-container obsidian-char-box-stacked">
-					<div class="obsidian-char-box obsidian-skills-box">
-						<div class="obsidian-passive-item">
-							<div class="obsidian-skill-name">
-								{{localize 'OBSIDIAN.PassiveFmt' skl=(obs-i18n 'Skill' 'prc')}}
+				<div class="obsidian-npc-stat-block-grid">
+					<div class="obsidian-char-box-container obsidian-char-box-stacked">
+						<div class="obsidian-char-box obsidian-skills-box">
+							{{#unless isObject}}
+							<div class="obsidian-passive-item">
+								<div class="obsidian-skill-name">
+									{{localize 'OBSIDIAN.PassiveFmt' skl=(obs-i18n 'Skill' 'prc')}}
+								</div>
+								<div class="obsidian-skill-passive">{{data.skills.prc.passive}}</div>
 							</div>
-							<div class="obsidian-skill-passive">{{data.skills.prc.passive}}</div>
-						</div>
-						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
-								{{obs-i18n 'Senses'}}
-								<a class="obsidian-edit" data-dialog="Senses" data-npc="true">
-									<i class="fas fa-cog"></i>
-								</a>
-							</div>
-							{{#if hasSenses}}
-							<div class="obsidian-horizontal-list obsidian-list-compact">
-							{{#each senses}}
-								{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
-									<span>
-										{{obs-i18n 'Sense' @key}}
-										{{lookup ../data.attributes.senses @key}}
-										{{localize 'OBSIDIAN.FeetAbbr'~}}
-									</span>
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{obs-i18n 'Senses'}}
+									<a class="obsidian-edit" data-dialog="Senses" data-npc="true">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								{{#if hasSenses}}
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+								{{#each senses}}
+									{{#if (gt (lookup ../data.attributes.senses @key) 0)}}
+										<span>
+											{{obs-i18n 'Sense' @key}}
+											{{lookup ../data.attributes.senses @key}}
+											{{localize 'OBSIDIAN.FeetAbbr'~}}
+										</span>
+									{{/if}}
+								{{/each}}
+								</div>
 								{{/if}}
-							{{/each}}
 							</div>
-							{{/if}}
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{obs-i18n 'Skills'}}
+									<a class="obsidian-edit" data-dialog="NPCSkills"><i class="fas fa-cog"></i></a>
+								</div>
+								{{#if (not-empty skills)}}
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+									{{#each skills}}
+									<span class="rollable" data-roll="skl" data-skl="{{@key}}">
+										{{obs-i18n 'Skill' @key}} {{numberFormat total decimals=0 sign=true}}
+									</span>
+									{{/each}}
+								</div>
+								{{/if}}
+							</div>
+							{{/unless}}
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{localize 'OBSIDIAN.Defenses'}}
+									<a title="{{localize 'OBSIDIAN.ManageDefenses'}}" class="obsidian-edit"
+									   data-dialog="Defenses">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+									{{#each actor.obsidian.defenses.display.all}}
+										{{defense-pill this}}
+									{{/each}}
+								</div>
+							</div>
+							{{#unless isObject}}
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{obs-i18n 'Languages'}}
+									<a class="obsidian-edit" data-dialog="Proficiencies" data-npc="true">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+								{{#each data.traits.languages.value}}<span>{{obs-i18n 'Lang' this}}</span>{{/each}}
+								{{#each actor.flags.obsidian.traits.profs.custom.langs}}
+									<span>{{this}}</span>
+								{{/each}}
+								</div>
+								{{/if}}
+							</div>
+							{{/unless}}
 						</div>
-						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
-								{{obs-i18n 'Skills'}}
-								<a class="obsidian-edit" data-dialog="NPCSkills"><i class="fas fa-cog"></i></a>
-							</div>
-							{{#if (not-empty skills)}}
-							<div class="obsidian-horizontal-list obsidian-list-compact">
-								{{#each skills}}
-								<span class="rollable" data-roll="skl" data-skl="{{@key}}">
-									{{obs-i18n 'Skill' @key}} {{numberFormat total decimals=0 sign=true}}
-								</span>
+					</div>
+					<div class="obsidian-char-box-container obsidian-conditions-box obsidian-char-box-stacked">
+						<div class="obsidian-char-box obsidian-char-box-lg">
+							<div class="obsidian-grid-2-col obsidian-conditions">
+								{{#each ObsidianConfig.CONDITIONS}}
+									{{condition-pill this active=(lookup ../actor.obsidian.conditions this)}}
 								{{/each}}
 							</div>
-							{{/if}}
-						</div>
-						<div class="obsidian-bisect">
-							<div class="obsidian-char-box-text obsidian-char-box-text-compact">
-								{{obs-i18n 'Languages'}}
-								<a class="obsidian-edit" data-dialog="Proficiencies" data-npc="true">
-									<i class="fas fa-cog"></i>
-								</a>
-							</div>
-							{{#if (or (not-empty data.traits.languages.value) (not-empty actor.flags.obsidian.traits.profs.custom.langs))}}
-							<div class="obsidian-horizontal-list obsidian-list-compact">
-							{{#each data.traits.languages.value}}<span>{{obs-i18n 'Lang' this}}</span>{{/each}}
-							{{#each actor.flags.obsidian.traits.profs.custom.langs}}
-								<span>{{this}}</span>
-							{{/each}}
-							</div>
-							{{/if}}
-						</div>
-					</div>
-				</div>
-				<div class="obsidian-char-box-container obsidian-char-box-stacked obsidian-death-saves-box">
-					<div class="obsidian-char-box-text">
-						<span class="rollable" data-roll="save" data-save="death">
-							{{localize 'OBSIDIAN.DeathSaves'}}
-						</span>
-					</div>
-					<div class="obsidian-char-box obsidian-char-box-lg">
-						<div class="obsidian-grid-2-col">
-							<div class="obsidian-vertical-bisect">
-								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Successes'}}</div>
-								<div class="obsidian-meatballs obsidian-death-successes">
-									{{#each (range 1 3) as |n|}}
-										<div class="
-										{{~#if (leq n ../data.attributes.death.success)~}}selected{{~/if}}
-										fancy-checkbox" data-value="{{n}}">
-											<div class="checkbox-container">
-												<div class="checkbox-inner-box"></div>
-												<div class="checkmark-container">
-													<div class="checkmark">
-														<div class="checkmark-short"></div>
-														<div class="checkmark-long"></div>
-													</div>
-												</div>
-											</div>
+							<div class="obsidian-exhaustion">
+								<div class="
+								{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
+									obsidian-condition-pill-active
+								{{else}}
+									obsidian-condition-pill-inactive
+								{{/if}} obsidian-item-drop-pill obsidian-item-drop-pill-sm">
+									{{#each (range 1 6) as |level|}}
+										<div class="obsidian-item-drop-pill-header" data-value="{{level}}">
+											<div class="
+											{{#if (gt level ../actor.obsidian.conditions.exhaustion)}}
+												obsidian-condition-pill-inactive
+											{{else}}
+												obsidian-condition-pill-active
+											{{/if}} obsidian-svg-icon obsidian-svg-icon-sm
+											        obsidian-icon-condition-exhaust{{level}}"></div>
 										</div>
 									{{/each}}
+									<div class="obsidian-item-drop-pill-body">{{localize 'OBSIDIAN.Exhaustion'}}</div>
 								</div>
-							</div>
-							<div class="obsidian-vertical-bisect">
-								<div class="obsidian-char-box-text">{{localize 'OBSIDIAN.Failures'}}</div>
-								<div class="obsidian-meatballs obsidian-death-failures obsidian-feature-uses">
-									{{#each (range 1 3) as |n|}}
-										<div class="
-										{{~#if (leq n ../data.attributes.death.failure)~}}obsidian-feature-used{{~/if}}
-										obsidian-feature-use" data-value="{{n}}">&times;</div>
-									{{/each}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				{{/unless}}
-				<div class="obsidian-char-box-container obsidian-conditions-box obsidian-char-box-stacked">
-					<div class="obsidian-char-box obsidian-char-box-lg">
-						<div class="obsidian-grid-2-col obsidian-conditions">
-							{{#each ObsidianConfig.CONDITIONS}}
-								{{condition-pill this active=(lookup ../actor.obsidian.conditions this)}}
-							{{/each}}
-						</div>
-						<div class="obsidian-exhaustion">
-							<div class="
-							{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
-								obsidian-condition-pill-active
-							{{else}}
-								obsidian-condition-pill-inactive
-							{{/if}} obsidian-item-drop-pill obsidian-item-drop-pill-sm">
-								{{#each (range 1 6) as |level|}}
-									<div class="obsidian-item-drop-pill-header" data-value="{{level}}">
-										<div class="
-										{{#if (gt level ../actor.obsidian.conditions.exhaustion)}}
-											obsidian-condition-pill-inactive
-										{{else}}
-											obsidian-condition-pill-active
-										{{/if}} obsidian-svg-icon obsidian-svg-icon-sm
-										        obsidian-icon-condition-exhaust{{level}}"></div>
-									</div>
-								{{/each}}
-								<div class="obsidian-item-drop-pill-body">{{localize 'OBSIDIAN.Exhaustion'}}</div>
 							</div>
 						</div>
 					</div>
