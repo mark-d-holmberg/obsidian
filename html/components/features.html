@@ -4,7 +4,7 @@
 		{{#if (and ../heading (eq idx 0))}}
 			<h3>{{localize ../heading}} {{format-legendary ../legendary}}</h3>
 			{{#if ../subtext}}
-				<div class="obsidian-rules-text">{{../subtext}}</div>
+				<div class="obsidian-rules-text">{{localize ../subtext}}</div>
 			{{/if}}
 		{{/if}}
 		<div class="obsidian-feature-header {{#if ../component}}obsidian-vehicle-component{{/if}}">
@@ -14,18 +14,6 @@
 				<div class="obsidian-feature-recharge"> &bull; {{format-cover feat.data.cover}}</div>
 				{{/if}}
 				<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat bull=true}}}</div>
-				{{#unless @root.isCharacter}}
-				<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
-				   data-item-id="{{feat._id}}">
-					<i class="fas fa-eye"></i>
-				</a>
-				<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
-					<i class="fas fa-edit"></i>
-				</a>
-				<a title="{{localize 'OBSIDIAN.Delete'}}" class="obsidian-delete">
-					<i class="fas fa-trash"></i>
-				</a>
-				{{/unless}}
 			</div>
 			{{#if (and @root.landVehicle (or (eq feat.data.activation.type 'action') (eq feat.type 'weapon')))}}
 				<select name="items.{{feat.idx}}.flags.obsidian.crewed" class="obsidian-select-crew">
@@ -91,22 +79,15 @@
 					<div class="obsidian-icon obsidian-icon-{{attack}}"></div>
 				{{/if}}
 			</div>
-			<div class="obsidian-col-range">
+			<div class="obsidian-col-attack-line">
 				{{#if (eq mode 'ranged')}}
 					<div class="obsidian-table-number-md">
+						{{parentItem.data.range.value}}
 						{{#if parentItem.data.range.long}}
-							<div>
-								{{parentItem.data.range.value}}
-								<span class="obsidian-table-number-split">/</span>
-							</div>
-							<div>
-								<span class="obsidian-table-number-minor">{{parentItem.data.range.long}}</span>
-								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
-							</div>
-						{{else}}
-							{{parentItem.data.range.value}}
-							<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
+							<span class="obsidian-table-number-subtle">&sol;</span>
+							<span class="obsidian-table-number-subtle">{{parentItem.data.range.long}}</span>
 						{{/if}}
+						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
 				{{else if (eq parentItem.type 'spell')}}
 					{{#if (or (eq parentItem.flags.obsidian.range.type 'short') (eq parentItem.flags.obsidian.range.type 'long'))}}
@@ -128,41 +109,30 @@
 						{{parentItem.obsidian.attributes.reach}}
 						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
-					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
 				{{else}}
 					{{#if (eq attack 'ranged')}}
 					<div class="obsidian-table-number-md">
+						{{range1}}
 						{{#if range2}}
-							<div>
-								{{range1}}
-								<span class="obsidian-table-number-split">&sol;</span>
-							</div>
-							<div>
-								<span class="obsidian-table-number-minor">{{range2}}</span>
-								<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
-							</div>
-						{{else}}
-							{{range1}}
-							<span class="obsidian-table-unit">
-								{{localize 'OBSIDIAN.FeetAbbr'}}
-							</span>
+							<span class="obsidian-table-number-subtle">&sol;</span>
+							<span class="obsidian-table-number-subtle">{{range2}}</span>
 						{{/if}}
+						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
 					{{else}}
 					<div class="obsidian-table-number-md">
 						{{reach}}
 						<span class="obsidian-table-unit">{{localize 'OBSIDIAN.FeetAbbr'}}</span>
 					</div>
-					<div class="obsidian-table-sub-text">{{localize 'OBSIDIAN.Reach'}}</div>
 					{{/if}}
 				{{/if}}
 			</div>
-			<div class="obsidian-col-hit">
-				<div class="obsidian-table-number-lg">
+			<div class="obsidian-col-attack-line">
+				<div class="obsidian-table-number-md">
 					{{numberFormat value decimals=0 sign=true}}
 				</div>
 			</div>
-			<div class="obsidian-col-damage">
+			<div class="obsidian-col-attack-line">
 				<div class="obsidian-table-dmg">
 					{{#each (which-damage parentItem this)}}
 						<div class="obsidian-dmg-component">
@@ -184,13 +154,13 @@
 		<div class="obsidian-feature-body">{{{clean-formatting feat.obsidian.display}}}</div>
 		{{/if}}
 		{{/unless}}
-		{{#if @root.isCharacter}}
 		<div class="obsidian-feature-footer">
 			<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
 			   data-item-id="{{feat._id}}">
 				{{localize 'OBSIDIAN.View'}}
 				<i class="fas fa-eye"></i>
 			</a>
+			{{#if @root.editable}}
 			<a title="{{localize 'OBSIDIAN.EditFeature'}}" class="obsidian-edit item-edit">
 				{{localize 'OBSIDIAN.Edit'}}
 				<i class="fas fa-cog"></i>
@@ -199,8 +169,8 @@
 				{{localize 'OBSIDIAN.Delete'}}
 				<i class="fas fa-trash"></i>
 			</a>
+			{{/if}}
 		</div>
-		{{/if}}
 	</div>
 	{{#if ../component}}</section>{{/if}}
 {{/each}}

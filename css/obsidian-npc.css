@@ -295,11 +295,6 @@
 	border: none;
 }
 
-.npc main section .obsidian-feature:last-child,
-.vehicle main section .obsidian-feature:last-child {
-	margin-bottom: 10px;
-}
-
 .obsidian-npc-stats .obsidian-feature {
 	margin-bottom: 0;
 	break-inside: avoid;
@@ -342,6 +337,8 @@
 	border: 1px dotted var(--obs-mid);
 	padding: 6px 8px;
 	margin-top: 8px;
+	border-left: none;
+	border-right: none;
 }
 
 .obsidian-attack-line + .obsidian-feature-body {

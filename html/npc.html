@@ -421,6 +421,12 @@
 							heading='OBSIDIAN.Actions' alreadySorted=true}}
 				</section>
 			{{/if}}
+			{{#if featCategories.bonus}}
+				<section>
+					{{> modules/obsidian/html/components/features.html feats=featCategories.bonus
+							heading='OBSIDIAN.BonusActions'}}
+				</section>
+			{{/if}}
 			{{#if featCategories.reaction}}
 				<section>
 					{{> modules/obsidian/html/components/features.html feats=featCategories.reaction
@@ -436,7 +442,7 @@
 			{{#if featCategories.lair}}
 				<section>
 					{{> modules/obsidian/html/components/features.html feats=featCategories.lair
-							heading='OBSIDIAN.LairActions' subtext=actor.flags.obsidian.lair}}
+							heading='OBSIDIAN.LairActions' subtext='OBSIDIAN.LairRules'}}
 				</section>
 			{{/if}}
 		</main>

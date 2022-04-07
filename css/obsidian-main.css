@@ -325,6 +325,11 @@
 	width: 75px;
 }
 
+.obsidian-col-attack-line {
+	width: unset;
+	margin-right: 15px;
+}
+
 .obsidian-table {
 	margin-bottom: 30px;
 }
@@ -498,8 +503,13 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	font-size: 13px;
 }
 
+.obsidian-table-number-subtle {
+	font-weight: normal;
+	color: var(--obs-text-subtle);
+}
+
 .obsidian-feature {
-	margin-bottom: 17px;
+	margin-bottom: 10px;
 }
 
 .obsidian-feature-header {
@@ -564,7 +574,8 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	margin-bottom: 0;
 }
 
-.obsidian-main .obsidian-feature-footer {
+.obsidian-main .obsidian-feature-footer,
+.obsidian-npc-stats .obsidian-feature-footer {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;

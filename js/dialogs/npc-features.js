@@ -13,28 +13,6 @@ export class ObsidianNPCFeaturesDialog extends ObsidianDialog {
 	}
 
 	activateListeners (html) {
-		const multiline = html.find('.obsidian-multiline-input');
-		const placeholder = evt => {
-			if (!evt) {
-				return;
-			}
-
-			const target = evt.currentTarget || evt;
-			if (target.innerText === '') {
-				target.innerText = target.dataset.placeholder;
-				target.classList.add('obsidian-placeholder');
-			}
-		};
-
-		placeholder(multiline[0]);
-		multiline.focus(evt => {
-			const target = evt.currentTarget;
-			if (target.innerText === target.dataset.placeholder) {
-				target.innerText = '';
-				target.classList.remove('obsidian-placeholder');
-			}
-		}).focusout(placeholder);
-
 		super.activateListeners(html);
 		html.find('button').click(this._onAddFeature.bind(this));
 	}
@@ -50,13 +28,5 @@ export class ObsidianNPCFeaturesDialog extends ObsidianDialog {
 		const item = created.shift();
 		item.sheet.render(true);
 		this.close();
-	}
-
-	async _updateObject (event, formData) {
-		if (formData['flags.obsidian.lair'] === game.i18n.localize('OBSIDIAN.LairRules')) {
-			formData['flags.obsidian.lair'] = '';
-		}
-
-		return super._updateObject(event, formData);
 	}
 }
