@@ -154,7 +154,20 @@
 		<div class="obsidian-feature-body">{{{clean-formatting feat.obsidian.display}}}</div>
 		{{/if}}
 		{{/unless}}
-		<div class="obsidian-feature-footer">
+		<div class="obsidian-feature-footer obsidian-collapsed">
+			<a title="
+				{{#if feat.flags.obsidian.collapsed}}
+					{{obs-i18n 'Expand'}}
+				{{else}}
+					{{obs-i18n 'Collapse'}}
+				{{/if}}" class="obsidian-expand-collapse" data-item-id="{{feat._id}}">
+				{{#if feat.flags.obsidian.collapsed}}
+					{{obs-i18n 'Expand'}}
+				{{else}}
+					{{obs-i18n 'Collapse'}}
+				{{/if}}
+				<i class="fas fa-exchange-alt fa-rotate-90"></i>
+			</a>
 			<a title="{{localize 'OBSIDIAN.ViewFeature'}}" class="obsidian-view"
 			   data-item-id="{{feat._id}}">
 				{{localize 'OBSIDIAN.View'}}

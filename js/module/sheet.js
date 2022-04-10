@@ -76,7 +76,8 @@ export const Sheet = {
 		html.find('.obsidian-long-rest').click(sheet.actor.longRest.bind(sheet.actor));
 		html.find('.obsidian-global-advantage').click(() => Sheet.setGlobalRoll(sheet, 'adv'));
 		html.find('.obsidian-global-disadvantage').click(() => Sheet.setGlobalRoll(sheet, 'dis'));
-		html.find('.obsidian-feature-header').mouseup(evt => Sheet.collapseFeature(sheet, evt));
+		html.find('.obsidian-expand-collapse').click(evt => Sheet.collapseFeature(sheet, evt));
+		html.find('.obsidian-feature').mouseup(evt => Sheet.featureFooter(sheet, evt));
 
 		html.find('.obsidian-conditions .obsidian-item-drop-pill')
 			.click(evt => Sheet.setCondition(sheet, evt));
@@ -108,11 +109,7 @@ export const Sheet = {
 	},
 
 	collapseFeature: function (sheet, evt) {
-		if (evt.button !== 2) {
-			return;
-		}
-
-		const id = evt.currentTarget.parentElement.dataset.itemId;
+		const id = evt.currentTarget.dataset.itemId;
 		const item = sheet.actor.items.get(id);
 
 		if (!item) {
@@ -205,6 +202,14 @@ export const Sheet = {
 
 	editItem: function (sheet, el) {
 		sheet.actor.items.find(item => item.id === el.data('item-id')).sheet.render(true);
+	},
+
+	featureFooter: function (sheet, evt) {
+		if (evt.button !== 2) {
+			return;
+		}
+		const footer = evt.currentTarget.querySelector('.obsidian-feature-footer');
+		footer.classList.toggle('obsidian-collapsed');
 	},
 
 	filterEquipment: function (sheet) {

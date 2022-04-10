@@ -29,7 +29,9 @@
 					<div class="obsidian-col-range">{{localize 'OBSIDIAN.Range'}}</div>
 					<div class="obsidian-col-dc">{{localize 'OBSIDIAN.HitDC'}}</div>
 					<div class="obsidian-col-damage">{{localize 'OBSIDIAN.DamageTitle'}}</div>
-					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+					{{#unless @root.isNPC}}
+						<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+					{{/unless}}
 				</div>
 				<div class="obsidian-tbody">
 					{{#with (spellbook-lookup ../spellbook this)}}
@@ -116,11 +118,13 @@
 									{{/each}}
 								</div>
 							</div>
+							{{#unless @root.isNPC}}
 							<div class="obsidian-col-spell-notes">
 								{{#each obsidian.notes}}
 									<div class="obsidian-table-note-text">{{{this}}}</div>
 								{{/each}}
 							</div>
+							{{/unless}}
 						</div>
 					{{/if}}
 					{{/each}}

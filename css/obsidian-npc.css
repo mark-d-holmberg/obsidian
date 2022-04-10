@@ -190,7 +190,7 @@
 	padding: 2px 0 6px 0;
 }
 
-.npc .obsidian-char-ability .obsidian-char-box {
+:is(.npc, .vehicle) .obsidian-char-ability .obsidian-char-box {
 	margin-top: 8px;
 }
 
@@ -349,11 +349,11 @@
 	font-size: 18px;
 }
 
-.npc .obsidian-char-box-text {
+:is(.npc, .vehicle) .obsidian-char-box-text {
 	padding-bottom: 2px;
 }
 
-.npc .obsidian-char-box {
+:is(.npc, .vehicle) .obsidian-char-box {
 	padding: 6px 0;
 	font-size: 14px;
 	line-height: normal;
@@ -361,21 +361,21 @@
 	min-width: 45px;
 }
 
-.npc .obsidian-conditions-box .obsidian-char-box {
+:is(.npc, .vehicle) .obsidian-conditions-box .obsidian-char-box {
 	padding: 0;
 	border: 0;
 }
 
-.npc .obsidian-char-box.obsidian-skills-box {
+:is(.npc, .vehicle) .obsidian-char-box.obsidian-skills-box {
 	padding: 8px 8px 0;
 	width: 100%;
 }
 
-.npc .obsidian-char-box.obsidian-defenses {
+:is(.npc, .vehicle) .obsidian-char-box.obsidian-defenses {
 	padding: 8px;
 }
 
-.obsidian-window.npc .obsidian-char-header-container {
+.obsidian-window:is(.npc, .vehicle) .obsidian-char-header-container {
 	flex-wrap: unset;
 	flex-direction: column;
 	flex: 1;
@@ -413,11 +413,11 @@
 	padding-right: 4px;
 }
 
-.npc .obsidian-char-box.obsidian-npc-hp-box {
+:is(.npc, .vehicle) .obsidian-char-box.obsidian-npc-hp-box {
 	padding: 2px 14px;
 }
 
-.npc .obsidian-char-box.obsidian-npc-hd-box {
+:is(.npc, .vehicle) .obsidian-char-box.obsidian-npc-hd-box {
 	padding: 2px 6px;
 }
 
@@ -425,7 +425,7 @@
 	padding: 0;
 }
 
-.dnd5e.sheet.npc .obsidian-char-input-box input[type=text] {
+.dnd5e.sheet:is(.npc, .vehicle) .obsidian-char-input-box input[type=text] {
 	width: 37px;
 	margin: 0;
 	font-size: 14px;
@@ -434,6 +434,10 @@
 	font-weight: bold;
 	color: var(--obs-text-regular);
 	font-family: var(--obs-font);
+}
+
+:is(.npc, .vehicle) .obsidian-tab-container > :is(.obsidian-char-spell-search, .obsidian-char-inv-search) {
+	padding: 0 10px;
 }
 
 .obsidian-npc-stat-block > .obsidian-char-box-container {
@@ -539,4 +543,47 @@
 	color: var(--obs-text-subtle);
 	font-weight: bold;
 	text-align: right;
+}
+
+.obsidian-tab-container > div.obsidian-spell-tab-toggle {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 35px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	cursor: pointer;
+	background: transparent;
+}
+
+.obsidian-tab-container > div.obsidian-spell-tab-toggle:hover {
+	background: rgb(255 255 255 / 10%);
+}
+
+.obsidian-tab-container.obsidian-npc-stats > .obsidian-scrollable {
+	padding: 0 37px 0 16px;
+}
+
+.obsidian-spell-tab-toggle object {
+	width: 15px;
+	height: 15px;
+}
+
+.npc form.obsidian {
+	position: relative;
+}
+
+.dnd5e.sheet form .tab.obsidian-tab-container.obsidian-floating-tab {
+	position: absolute;
+	top: 0;
+	right: -410px;
+	width: 400px;
+	background: var(--obs-bg);
+	height: 100%;
+	padding-top: 10px;
+	border-radius: 5px;
+	box-shadow: 0 0 20px var(--color-shadow-dark);
 }

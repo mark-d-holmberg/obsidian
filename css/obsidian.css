@@ -261,7 +261,8 @@
 
 .obsidian-edit,
 .obsidian-delete,
-.obsidian-view {
+.obsidian-view,
+.obsidian-expand-collapse {
 	color: var(--obs-text-secondary);
 	font-size: 11px;
 }

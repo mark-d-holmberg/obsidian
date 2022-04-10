@@ -1,6 +1,6 @@
-<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="spells">
-	<div class="obsidian-char-spell-header obsidian-simple-dialog" data-template="spellcasting.html"
-	     data-title="{{localize 'OBSIDIAN.ManageSpellcasting'}}" data-width="450">
+<div class="obsidian-tab-container tab {{#if isNPC}}obsidian-floating-tab{{/if}}"
+     data-group="main-tabs" data-tab="spells">
+	<div class="obsidian-char-spell-header">
 		<div>
 			<div class="obsidian-table-number-lg">
 				{{#each actor.obsidian.spellcasting.mods}}
@@ -25,6 +25,11 @@
 			</div>
 			<div class="obsidian-char-spell-header-label">{{localize 'OBSIDIAN.SaveDC'}}</div>
 		</div>
+		<a class="obsidian-edit obsidian-simple-dialog" data-template="spellcasting.html"
+		   data-title="{{obs-i18n 'ManageSpellcasting'}}" data-width="450"
+		   title="{{obs-i18n 'ManageSpellcasting'}}">
+			<i class="fas fa-cog"></i>
+		</a>
 	</div>
 	<div class="obsidian-char-spell-search">
 		<div class="obsidian-input-search-container">
@@ -71,5 +76,5 @@
 			<i class="fas fa-plus-circle"></i>
 		</a>
 	</ul>
-	{{> modules/obsidian/html/tabs/sub-spells.html npc=npc}}
+	{{> modules/obsidian/html/tabs/sub-spells.html}}
 </div>

@@ -19,7 +19,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 			this.settings = game.settings.get('obsidian', this.actor.id);
 			if (this.settings === '') {
-				this.settings = {};
+				this.settings = {spellsCollapsed: true};
 			} else {
 				this.settings = JSON.parse(this.settings);
 			}
@@ -73,6 +73,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			return;
 		}
 
+		this._setCollapsed();
 		html.find('.obsidian-tab.item, .obsidian-sub-tab.item').removeAttr('draggable');
 		Sheet.activateFiltering(this, html);
 		Sheet.contextMenu(this, html, true);
@@ -92,6 +93,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 			html.find('[data-edit="data.details.biography.value"]+.editor-edit')[0].onclick;
 
 		html.find('.obsidian-edit-npc-notes').click(activateEditor.bind(this));
+		html.find('.obsidian-spell-tab-toggle').click(this._toggleSpells.bind(this));
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -326,6 +328,42 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_rollHP (evt) {
 		this.actor.rollHP(evt.shiftKey);
+	}
+
+	_setCollapsed () {
+		const tab = this.form.querySelector('.obsidian-floating-tab[data-tab="spells"]');
+		tab.classList.toggle('active', this.settings.spellsCollapsed === false);
+		const toggle = this.form.querySelector('.obsidian-spell-tab-toggle object');
+		toggle.dataset.fill =
+			this.settings.spellsCollapsed === false ? '--obs-text-regular' : '--obs-mid';
+		if (toggle.onload) {
+			this._applySVGFill(toggle);
+		} else {
+			toggle.onload = () => this._applySVGFill(toggle);
+		}
+	}
+
+	_toggleSpells () {
+		if (this.settings.spellsCollapsed === undefined) {
+			this.settings.spellsCollapsed = false;
+		} else {
+			this.settings.spellsCollapsed = !this.settings.spellsCollapsed;
+		}
+		this._setCollapsed();
+
+		if (this.actor.id) {
+			game.settings.set('obsidian', this.actor.id, JSON.stringify(this.settings));
+		}
+	}
+
+	_applySVGFill (svg) {
+		let fill = svg.dataset.fill;
+		if (fill.startsWith('--')) {
+			fill = getComputedStyle(document.documentElement).getPropertyValue(fill).trim();
+		}
+
+		const path = svg.contentDocument.documentElement.querySelector('path');
+		path?.setAttribute('fill', fill);
 	}
 
 	async _updateObject (event, formData) {

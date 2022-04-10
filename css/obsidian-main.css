@@ -509,7 +509,7 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 }
 
 .obsidian-feature {
-	margin-bottom: 10px;
+	margin-bottom: 9px;
 }
 
 .obsidian-feature-header {
@@ -581,6 +581,8 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 	align-items: center;
 	padding: 8px 0;
 	border-top: 1px dotted var(--obs-mid);
+	transition: height .2s ease-out, padding-top .2s ease-out, padding-bottom .2s ease-out;
+	overflow: hidden;
 }
 
 .obsidian-feature-footer > a {
@@ -603,6 +605,12 @@ form.obsidian .obsidian-table-note-text .obsidian-feature-uses input[type=number
 .obsidian-feature-footer > .obsidian-alert i,
 .obsidian-feature-footer > .obsidian-alert:hover i {
 	color: var(--obs-negative);
+}
+
+.obsidian-feature-footer.obsidian-collapsed {
+	height: 0;
+	padding: 0;
+	border: none;
 }
 
 .obsidian-feature-header + .obsidian-feature-footer {
@@ -753,11 +761,17 @@ h3 > div > .obsidian-feature-recharge {
 	margin: 0 0 10px 0;
 }
 
-.obsidian-main .obsidian-tab-container > div:not(.obsidian-tab-contents).obsidian-char-spell-header {
+.obsidian-tab-container > div:not(.obsidian-tab-contents).obsidian-char-spell-header {
 	justify-content: center;
-	cursor: pointer;
 	position: relative;
 	padding-bottom: 10px;
+}
+
+.obsidian-char-spell-header a.obsidian-edit {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 11px;
 }
 
 .obsidian-tab-container > div.obsidian-char-spell-header,

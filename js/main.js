@@ -192,6 +192,10 @@ document.addEventListener('click', evt => {
 		$('#obsidian-duration-menu').remove();
 		$('.context').removeClass('context');
 	}
+
+	if (evt.button !== 2 && !evt.target.closest('.obsidian-feature')) {
+		$('.obsidian-feature-footer').addClass('obsidian-collapsed');
+	}
 });
 
 document.addEventListener('keydown', updateApplyIcons);
