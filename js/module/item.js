@@ -236,6 +236,11 @@ const prepareItem = {
 				rollData: item.actor.getRollData(),
 				secrets: item.actor.isOwner
 			});
+
+			if (flags.componentType === 'movement') {
+				const direction = item.actor.getFlag('obsidian', 'conditions.speed.direction');
+				data.speed.value = flags.conditions.speed[direction] ?? data.speed.value;
+			}
 		}
 
 		if (!flags.armour) {

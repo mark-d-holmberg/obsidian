@@ -64,15 +64,21 @@
 		</div>
 	</div>
 	{{#if isVehicle}}
-		<div class="obsidian-form-row obsidian-stacked-row">
-			<div>
-				<label>
-					{{localize 'DND5E.Cover'}}
-					<select name="data.cover" data-dtype="Number">
-						{{selectOptions config.cover selected=item.data.cover localize=true}}
-					</select>
-				</label>
-			</div>
+	<div class="obsidian-form-row obsidian-stacked-row">
+		<div>
+			<label>
+				{{localize 'DND5E.Cover'}}
+				<select name="data.cover" data-dtype="Number">
+					{{selectOptions config.cover selected=item.data.cover localize=true}}
+				</select>
+			</label>
+			<label>
+				{{obs-i18n 'MinCrew'}}
+				<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+				       value="{{item.flags.obsidian.conditions.crew}}"
+				       name="flags.obsidian.conditions.crew">
+			</label>
 		</div>
+	</div>
 	{{/if}}
 </fieldset>

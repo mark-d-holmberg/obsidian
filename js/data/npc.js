@@ -38,6 +38,35 @@ export function prepareSpeed (data) {
 	data.attributes.movement.walk ??= 0;
 }
 
+export function prepareVehicleActions (data) {
+	const actions = data.attributes.actions;
+	if (!actions.value) {
+		return;
+	}
+
+	const crew = data.cargo.crew.length;
+	const thresholds =
+		Object.entries(actions.thresholds)
+			.map(([n, _]) => [Number(n), _])
+			.filter(([n]) => n < actions.value)
+			.sort(([a], [b]) => b - a);
+
+	actions.max = actions.value;
+	actions.value = 0;
+	for (const [actions, threshold] of thresholds) {
+		if (threshold && crew >= threshold) {
+			actions.value = actions + 1;
+			break;
+		}
+	}
+}
+
+export function prepareVehicleQuality (flags) {
+	if (OBSIDIAN.notDefinedOrEmpty(flags.attributes.quality)) {
+		flags.attributes.quality = 4;
+	}
+}
+
 export async function refreshNPC (combat) {
 	const actor = combat.combatant?.actor;
 	if (actor?.type !== 'npc') {

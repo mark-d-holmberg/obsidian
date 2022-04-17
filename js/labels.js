@@ -61,9 +61,11 @@ const translations = {
 	SPELL_RITUALS: 'RitualCast',
 	SPELL_SCHOOLS: 'SpellSchool',
 	SPELL_SOURCES: 'SpellSrc',
+	VEHICLE_COMPONENTS: 'VehicleComponents',
 	VEHICLE_TYPES: 'VehicleType',
 	WEAPON_CATEGORIES: 'WeaponCat',
 	WEAPON_TAGS: 'AtkTag',
+	WIND_DIRECTIONS: 'WindDirections'
 };
 
 // These ones we cannot be lazy and reuse the translation key as the Labels

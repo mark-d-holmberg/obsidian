@@ -259,7 +259,9 @@ Config.SPELLS_KNOWN_TABLE = {
 	}
 };
 
+Config.VEHICLE_COMPONENTS = ['hull', 'control', 'movement', 'weapon'];
 Config.VEHICLE_LAND_FEATURES = ['none', 'action', 'weapon', 'reaction'];
 Config.VEHICLE_WATER_FEATURES = ['action', 'component', 'siege', 'none'];
-Config.VEHICLE_TYPES = ['land', 'water'];
+Config.VEHICLE_TYPES = ['land', 'water', 'air'];
 Config.WEAPON_CATEGORIES = ['simple', 'martial', 'unarmed', 'siege'];
+Config.WIND_DIRECTIONS = ['reaching', 'with', 'against'];

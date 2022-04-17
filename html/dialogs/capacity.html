@@ -1,0 +1,27 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<fieldset>
+		<legend>{{obs-i18n 'Capacity'}}</legend>
+		<div class="obsidian-form-row">
+			<div>
+				<label>
+					<input type="text" name="data.attributes.capacity.crew" data-dtype="Number"
+					       value="{{data.attributes.capacity.crew}}" placeholder="&mdash;"
+					       class="obsidian-input-num-sm">
+					<span>{{localize 'DND5E.VehicleCrew'}}</span>
+				</label>
+				<label>
+					<input type="text" name="data.attributes.capacity.passengers" data-dtype="Number"
+					       value="{{data.attributes.capacity.passengers}}" placeholder="&mdash;"
+					       class="obsidian-input-num-sm">
+					<span>{{localize 'DND5E.VehiclePassengers'}}</span>
+				</label>
+				<label>
+					<input type="text" name="data.attributes.capacity.cargo" data-dtype="Number"
+					       value="{{data.attributes.capacity.cargo}}" placeholder="0"
+					       class="obsidian-input-num-lg">
+					<span>{{localize 'DND5E.VehicleCargo'}}</span>
+				</label>
+			</div>
+		</div>
+	</fieldset>
+</form>

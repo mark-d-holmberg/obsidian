@@ -1,0 +1,37 @@
+<form class="obsidian obsidian-form-bare" autocomplete="off">
+	<fieldset>
+		<legend>{{obs-i18n 'Configuration'}}</legend>
+		<div class="obsidian-form-row">
+			<label>
+				<input type="text" name="data.attributes.capacity.crew" data-dtype="Number"
+				       value="{{data.attributes.capacity.crew}}" class="obsidian-input-num-sm"
+				       placeholder="&mdash;">
+				<span>{{obs-i18n 'CrewCapacity'}}</span>
+			</label>
+		</div>
+		<div class="obsidian-form-row">
+			<label>
+				<input type="text" name="data.attributes.actions.value" data-dtype="Number"
+				       value="{{base.data.attributes.actions.value}}" class="obsidian-input-num-sm"
+				       placeholder="&mdash;">
+				<span>{{obs-i18n 'MaxActions'}}</span>
+			</label>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>{{obs-i18n 'Thresholds'}}</legend>
+		{{#if (gt actions 0)}}
+		{{#each (range actions 1)}}
+		<div class="obsidian-form-row obsidian-vehicle-threshold-row">
+			<span class="obsidian-binary-operator">&ge;</span>
+			<input type="text" name="data.attributes.actions.thresholds.{{add this -1}}" placeholder="0"
+			       value="{{lookup ../data.attributes.actions.thresholds (add this -1)}}"
+			       class="obsidian-input-num-sm" data-dtype="Number" >
+			<span>{{localize 'DND5E.VehicleCrew'}}</span>
+			<span class="obsidian-binary-operator">&#8594;</span>
+			<span>{{this}} {{#if (gt this 1)}}{{obs-i18n 'Actions'}}{{else}}{{obs-i18n 'FeatAction' 'action'}}{{/if}}</span>
+		</div>
+		{{/each}}
+		{{/if}}
+	</fieldset>
+</form>

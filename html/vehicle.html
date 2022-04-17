@@ -28,33 +28,45 @@
 	     data-tab="stats">
 		<div class="obsidian-scrollable">
 		<header>
-			<input name="name" type="text" value="{{actor.name}}"
-			       class="obsidian-char-charname obsidian-condensed"
-			       placeholder="{{localize 'OBSIDIAN.Name'}}">
-			<div class="obsidian-char-header-minor obsidian-condensed">
-				<span>{{obs-i18n 'Size' data.traits.size}}</span>
-				<span>{{~lc (localize 'DND5E.Vehicle')~}}</span>
-				{{#if actor.flags.obsidian.details.type}}
-					<span>
-						({{lc (obs-i18n 'VehicleType' actor.flags.obsidian.details.type)}})
-					</span>
-				{{/if}}
-				{{#if data.traits.dimensions}}
-					<span>({{lc data.traits.dimensions}})</span>
-				{{/if}}
+			<div class="obsidian-char-header-container">
+				<input name="name" type="text" value="{{actor.name}}"
+				       class="obsidian-char-charname obsidian-condensed"
+				       placeholder="{{localize 'OBSIDIAN.Name'}}">
+				<div class="obsidian-char-header-minor obsidian-condensed obsidian-simple-dialog"
+				     data-template="vehicle-details.html" data-width="400"
+				     data-title="{{obs-i18n 'EditDetails'}}" title="{{obs-i18n 'EditDetails'}}">
+					<span>{{obs-i18n 'Size' data.traits.size}}</span>
+					<span>{{~lc (localize 'DND5E.Vehicle')~}}</span>
+					{{#if actor.flags.obsidian.details.type}}
+						<span>
+							({{lc (obs-i18n 'VehicleType' actor.flags.obsidian.details.type)}})
+						</span>
+					{{/if}}
+					{{#if data.traits.dimensions}}
+						<span>({{lc data.traits.dimensions}})</span>
+					{{/if}}
+				</div>
 			</div>
 			<div class="obsidian-npc-btns">
+				{{#unless landVehicle}}
+				<div class="obsidian-npc-btn-row">
+					<select name="flags.obsidian.conditions.speed.direction">
+						{{selectOptions ObsidianLabels.WindDirections
+						                selected=actor.flags.obsidian.conditions.speed.direction}}
+					</select>
+				</div>
+				{{/unless}}
 				<div class="obsidian-npc-btn-row">
 					<button type="button" class="
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'adv')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-positive
-					        obsidian-global-advantage">
+					        obsidian-global-advantage" style="margin-bottom: 0;">
 						{{localize 'OBSIDIAN.Roll.adv'}}
 					</button>
 					<button type="button" class="
 					        {{#if (eq actor.flags.obsidian.sheet.roll 'dis')}}obsidian-btn-active{{/if}}
 					        obsidian-btn-outline obsidian-btn-sm obsidian-btn-sheet obsidian-btn-negative
-					        obsidian-global-disadvantage">
+					        obsidian-global-disadvantage" style="margin-bottom: 0;">
 						{{localize 'OBSIDIAN.Roll.dis'}}
 					</button>
 				</div>
@@ -62,71 +74,92 @@
 		</header>
 		<main>
 			<section class="obsidian-npc-stat-block">
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">{{localize 'DND5E.VehicleCreatureCapacity'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13" contenteditable="true"
-					     data-edit="data.attributes.capacity.creature">
-						{{data.attributes.capacity.creature}}
-					</div>
-				</div>
-				<div class="obsidian-npc-stat-row" style="height: 17px;">
-					<div class="obsidian-npc-stat-key">{{localize 'DND5E.VehicleCargoCapacity'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-vehicle-cargo-cap">
-						<input type="text" name="data.attributes.capacity.cargo" data-dtype="Number"
-						       class="obsidian-input-num-md" placeholder="0"
-						       value="{{data.attributes.capacity.cargo}}">
-						<span class="obsidian-npc-subtle">{{localize 'OBSIDIAN.Tons'}}</span>
-					</div>
-				</div>
-
 				{{#if landVehicle}}
-				<div class="obsidian-npc-stat-row" style="height: 17px;">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.AC'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-vehicle-ac">
-						<input type="text" name="data.attributes.ac.flat" data-dtype="Number"
-						       class="obsidian-input-num" value="{{data.attributes.ac.flat}}"
-						       placeholder="&mdash;">
+				<div class="obsidian-npc-box-row">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'ACAbbr'}}</div>
+						<div class="obsidian-char-box obsidian-npc-ac obsidian-ptr obsidian-simple-dialog"
+						     data-title="{{obs-i18n 'ManageAC'}}" data-template="ac.html" data-width="450">
+							{{data.attributes.ac.value}}
+						</div>
+					</div>
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'ThresholdAbbr'}}</div>
+						<div class="obsidian-char-box obsidian-char-input-box">
+							<input type="text" data-dtype="Number" name="data.attributes.hp.dt"
+							       class="obsidian-input-num" value="{{data.attributes.hp.dt}}"
+							       placeholder="&mdash;">
+						</div>
+					</div>
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{localize 'DND5E.VehicleMishap'}}</div>
+						<div class="obsidian-char-box obsidian-char-input-box">
+							<input type="text" data-dtype="Number" name="data.attributes.hp.mt"
+							       class="obsidian-input-num" value="{{data.attributes.hp.mt}}"
+							       placeholder="&mdash;">
+						</div>
+					</div>
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'SpeedTitle'}}</div>
+						<div class="obsidian-char-box obsidian-npc-speed obsidian-ptr obsidian-simple-dialog"
+						     data-title="{{obs-i18n 'ManageSpeed'}}" data-template="speed.html" data-width="250"
+						     title="{{obs-i18n 'ManageSpeed'}}" data-vehicle="true">
+							{{data.attributes.movement.walk}}
+						</div>
 					</div>
 				</div>
-				<div class="obsidian-npc-stat-row" style="height: 17px;">
-					<div class="obsidian-npc-stat-key">{{localize 'OBSIDIAN.HP'}}</div>
-					<div class="obsidian-npc-stat-value obsidian-npc-hp">
-						<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
-						       value="{{data.attributes.hp.value}}" data-dtype="Number">
-						<span class="obsidian-binary-operator" style="color: var(--obs-text-subtle);">&sol;</span>
-						<input type="text" name="data.attributes.hp.max" class="obsidian-input-num"
-						       value="{{data.attributes.hp.max}}" data-dtype="Number">
-					</div>
-				</div>
-				<div class="obsidian-npc-stat-row" style="height: 17px;">
-					<div class="obsidian-npc-stat-key" style="color: transparent">
-						{{localize 'OBSIDIAN.HP'}}
-					</div>
-					<div class="obsidian-npc-stat-value obsidian-vehicle-dt">
-						<span class="obsidian-npc-subtle">{{localize 'DND5E.Threshold'}}</span>
-						<input type="text" name="data.attributes.hp.dt" class="obsidian-input-num"
-						       value="{{data.attributes.hp.dt}}" data-dtype="Number" placeholder="&mdash;">
-						<span class="obsidian-npc-subtle">{{localize 'DND5E.VehicleMishap'}}</span>
-						<input type="text" name="data.attributes.hp.mt" class="obsidian-input-num"
-						       value="{{data.attributes.hp.mt}}" data-dtype="Number" placeholder="&mdash;">
+				<div class="obsidian-npc-box-row">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'HP'}}</div>
+						<div class="obsidian-char-box obsidian-resource-box obsidian-npc-hp-box">
+							<div class="obsidian-bisect">
+								<input type="text" name="data.attributes.hp.value" class="obsidian-input-num"
+								       value="{{data.attributes.hp.value}}" data-dtype="Number">
+								&sol;
+								<input type="text" name="data.attributes.hp.max" class="obsidian-input-num"
+								       value="{{data.attributes.hp.max}}" data-dtype="Number">
+							</div>
+							<div class="obsidian-bisect">
+								<input type="text" name="data.attributes.hp.temp" data-dtype="Number"
+								       class="obsidian-input-num" value="{{data.attributes.hp.temp}}"
+								       placeholder="{{obs-i18n 'TempAbbrUC'}}">
+							</div>
+						</div>
 					</div>
 				</div>
 				{{/if}}
-
-				<div class="obsidian-npc-stat-row">
-					<div class="obsidian-npc-stat-key">
-						{{#if waterVehicle}}
-							{{localize 'OBSIDIAN.TravelPace'}}
-						{{else}}
-							{{localize 'DND5E.Speed'}}
-						{{/if}}
+				{{#unless landVehicle}}
+				<div class="obsidian-npc-box-row">
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'Actions'}}</div>
+						<div class="obsidian-char-box obsidian-vehicle-actions obsidian-ptr
+							{{#if (gt base.data.attributes.actions.value data.attributes.actions.value)}}
+								obsidian-negative
+							{{else if (lt base.data.attributes.actions.value data.attributes.actions.value)}}
+								obsidian-positive
+							{{/if}}" title="{{obs-i18n 'ManageActions'}}" data-dialog="VehicleActions">
+							{{data.attributes.actions.value}}
+						</div>
 					</div>
-					<div class="obsidian-npc-stat-value obsidian-font-13" contenteditable="true"
-					     data-edit="data.attributes.speed">
-						{{data.attributes.speed}}
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text">{{obs-i18n 'Quality'}}</div>
+						<div class="obsidian-char-box obsidian-char-input-box">
+							<input type="text" data-dtype="Number" name="flags.obsidian.attributes.quality"
+							       class="obsidian-input-num obsidian-vehicle-quality" placeholder="+4"
+							       value="{{numberFormat actor.flags.obsidian.attributes.quality decimals=0
+							                             sign=true}}">
+						</div>
+					</div>
+					<div class="obsidian-char-box-container">
+						<div class="obsidian-char-box-text rollable" data-roll="abl" data-abl="init">
+							{{obs-i18n 'Initiative'}}
+						</div>
+						<div class="obsidian-char-box">
+							{{numberFormat data.attributes.init.mod decimals=0 sign=true}}
+						</div>
 					</div>
 				</div>
-
+				{{/unless}}
 				<div class="obsidian-char-abilities">
 					{{#each data.abilities}}
 						<div class="obsidian-char-ability">
@@ -148,55 +181,100 @@
 								<input name="data.abilities.{{@key}}.value" type="hidden" value="{{value}}"
 								       data-dtype="Number">
 							{{/with}}
+							<div class="obsidian-char-box rollable" data-roll="save" data-save="{{@key}}"
+							     title="{{localize 'Obsidian.SavingThrowFmt' save=(obs-i18n 'Ability' @key)}}">
+								{{numberFormat save decimals=0 sign=true}}
+							</div>
 						</div>
 					{{/each}}
 				</div>
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-npc-saves">
-					<strong>{{localize 'OBSIDIAN.Saves'}}</strong>
-					{{#each data.abilities}}
-						<div class="obsidian-npc-stat-li">
-							<span class="rollable" data-roll="save" data-save="{{@key}}" draggable="true">
-								{{obs-i18n 'AbilityAbbr' @key}}
-							</span>
-							{{numberFormat save decimals=0 sign=true~}}
+				<div class="obsidian-npc-stat-block-grid">
+					<div class="obsidian-char-box-container obsidian-char-box-stacked">
+						<div class="obsidian-char-box obsidian-skills-box">
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{obs-i18n 'Capacity'}}
+									<a title="{{obs-i18n 'ManageCapacity'}}" data-width="400"
+									   class="obsidian-edit obsidian-simple-dialog" data-template="capacity.html"
+									   data-title="{{obs-i18n 'ManageCapacity'}}">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+									<span>{{{vehicleCapacity}}}</span>
+								</div>
+							</div>
+							{{#unless landVehicle}}
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{obs-i18n 'TravelPace'}}
+									<a title="{{obs-i18n 'ManageSpeed'}}" data-title="{{obs-i18n 'ManageSpeed'}}"
+									   data-width="250" data-template="vehicle-speed.html"
+									   class="obsidian-edit obsidian-simple-dialog">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								<div class="obsidian-skill-box-value obsidian-list-compact">
+									{{#if data.attributes.movement.walk}}
+											<span>{{data.attributes.movement.walk}}</span>
+									{{else}}
+										<span>0</span>
+									{{/if}}
+									<span class="obsidian-npc-subtle">{{obs-i18n 'MilesPerHour'}}</span>
+									<span>{{{pacePerDay}}}</span>
+								</div>
+							</div>
+							{{/unless}}
+							<div class="obsidian-bisect">
+								<div class="obsidian-char-box-text obsidian-char-box-text-compact">
+									{{localize 'OBSIDIAN.Defenses'}}
+									<a title="{{localize 'OBSIDIAN.ManageDefenses'}}" class="obsidian-edit"
+									   data-dialog="Defenses">
+										<i class="fas fa-cog"></i>
+									</a>
+								</div>
+								<div class="obsidian-horizontal-list obsidian-list-compact">
+									{{#each actor.obsidian.defenses.display.all}}
+										{{defense-pill this}}
+									{{/each}}
+								</div>
+							</div>
 						</div>
-					{{/each}}
+					</div>
+					<div class="obsidian-char-box-container obsidian-conditions-box obsidian-char-box-stacked">
+						<div class="obsidian-char-box obsidian-char-box-lg">
+							<div class="obsidian-grid-2-col obsidian-conditions">
+								{{#each ObsidianConfig.CONDITIONS}}
+									{{condition-pill this active=(lookup ../actor.obsidian.conditions this)}}
+								{{/each}}
+							</div>
+							<div class="obsidian-exhaustion">
+								<div class="
+								{{#if (gt actor.obsidian.conditions.exhaustion 0)}}
+									obsidian-condition-pill-active
+								{{else}}
+									obsidian-condition-pill-inactive
+								{{/if}} obsidian-item-drop-pill obsidian-item-drop-pill-sm">
+									{{#each (range 1 6) as |level|}}
+										<div class="obsidian-item-drop-pill-header" data-value="{{level}}">
+											<div class="
+											{{#if (gt level ../actor.obsidian.conditions.exhaustion)}}
+												obsidian-condition-pill-inactive
+											{{else}}
+												obsidian-condition-pill-active
+											{{/if}} obsidian-svg-icon obsidian-svg-icon-sm
+											        obsidian-icon-condition-exhaust{{level}}"></div>
+										</div>
+									{{/each}}
+									<div class="obsidian-item-drop-pill-body">{{localize 'OBSIDIAN.Exhaustion'}}</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				{{#if actor.obsidian.defenses.display.damage.vuln.size}}
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
-					<strong>{{localize 'OBSIDIAN.DamageVulnerabilities'}}</strong>
-					{{#each actor.obsidian.defenses.display.damage.vuln}}
-						{{defense-pill this}}
-					{{/each}}
-				</div>
-				{{/if}}
-				{{#if actor.obsidian.defenses.display.damage.res.size}}
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
-					<strong>{{localize 'OBSIDIAN.DamageResistances'}}</strong>
-					{{#each actor.obsidian.defenses.display.damage.res}}
-						{{defense-pill this}}
-					{{/each}}
-				</div>
-				{{/if}}
-				{{#if actor.obsidian.defenses.display.damage.imm.size}}
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
-					<strong>{{localize 'OBSIDIAN.DamageImmunities'}}</strong>
-					{{#each actor.obsidian.defenses.display.damage.imm}}
-						{{defense-pill this}}
-					{{/each}}
-				</div>
-				{{/if}}
-				{{#if actor.obsidian.defenses.display.conditions.imm}}
-				<div class="obsidian-npc-stat-runon obsidian-font-13 obsidian-ptr" data-dialog="Defenses">
-					<strong>{{localize 'OBSIDIAN.ConditionImmunities'}}</strong>
-					{{#each actor.obsidian.defenses.display.conditions.imm}}
-						{{defense-pill this}}
-					{{/each}}
-				</div>
-				{{/if}}
 				<div class="obsidian-npc-configure">
-					<div data-dialog="Defenses">
-						{{localize 'OBSIDIAN.Defenses'}} <i class="fas fa-cog"></i>
+					<div data-dialog="NPCSaves">
+						{{obs-i18n 'Saves'}} <i class="fas fa-cog"></i>
 					</div>
 					<div data-dialog="VehicleFeatures">
 						{{localize 'OBSIDIAN.Features'}} <i class="fas fa-cog"></i>
@@ -213,15 +291,15 @@
 					{{#if landVehicle}}
 						{{> modules/obsidian/html/components/features.html feats=featCategories.action
 								heading='DND5E.VehicleActionStations'}}
-					{{else if waterVehicle}}
+					{{else}}
 						{{> modules/obsidian/html/components/features.html feats=featCategories.action
-								heading='OBSIDIAN.Actions' subtext=actor.flags.obsidian.actions}}
+								heading='OBSIDIAN.Actions'}}
 					{{/if}}
 				</section>
 			{{/if}}
 			{{#if featCategories.component}}
 				{{> modules/obsidian/html/components/features.html feats=featCategories.component
-						component=true}}
+						component=true alreadySorted=true}}
 			{{/if}}
 			{{#if featCategories.reaction}}
 				<section>

@@ -22,10 +22,11 @@ function applyInitBonuses (actor, data, flags, derived) {
 	if (bonuses.length) {
 		derived.attributes.init.rollParts.push(
 			...bonuses.flatMap(bonus => bonusToParts(actor, bonus)));
-		data.attributes.init.mod +=
-			derived.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
-		data.attributes.init.mod = Math.floor(data.attributes.init.mod);
 	}
+
+	data.attributes.init.mod +=
+		derived.attributes.init.rollParts.reduce((acc, part) => acc + part.mod, 0);
+	data.attributes.init.mod = Math.floor(data.attributes.init.mod);
 }
 
 function applyACBonuses (actor, data, flags) {

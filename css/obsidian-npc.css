@@ -450,12 +450,8 @@
 	width: unset;
 }
 
-.obsidian-npc-stat-block .obsidian-skills-box .obsidian-bisect {
+.obsidian-npc-stat-block .obsidian-skills-box .obsidian-passive-item + .obsidian-bisect {
 	margin-top: 8px;
-}
-
-.obsidian-npc-stat-block .obsidian-skills-box .obsidian-bisect ~ .obsidian-bisect {
-	margin-top: 0;
 }
 
 .obsidian-npc-stat-block .obsidian-death-saves-box {
@@ -563,7 +559,7 @@
 	background: rgb(255 255 255 / 10%);
 }
 
-.obsidian-tab-container.obsidian-npc-stats > .obsidian-scrollable {
+.npc .obsidian-tab-container.obsidian-npc-stats > .obsidian-scrollable {
 	padding: 0 37px 0 16px;
 }
 
@@ -586,4 +582,38 @@
 	padding-top: 10px;
 	border-radius: 5px;
 	box-shadow: 0 0 20px var(--color-shadow-dark);
+}
+
+.obsidian-vehicle-threshold-row {
+	justify-content: flex-start;
+}
+
+.obsidian-vehicle-threshold-row > span {
+	margin-right: 16px;
+	font-weight: bold;
+	font-size: 12px;
+	color: var(--obs-text-secondary);
+	text-transform: uppercase;
+}
+
+.obsidian-vehicle-threshold-row > span.obsidian-binary-operator {
+	font-size: 16px;
+}
+
+.obsidian-vehicle-component s {
+	color: var(--obs-text-subtle);
+}
+
+.obsidian-attack-line + .obsidian-feature-footer {
+	border-top: none;
+}
+
+.obsidian-vehicle-component + .obsidian-table-sub-text {
+	margin: -4px 0 4px 0;
+}
+
+.dnd5e.sheet .obsidian-npc-btn-row select {
+	min-width: 168px;
+	font-size: 14px;
+	margin-bottom: 8px;
 }

@@ -306,6 +306,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		} else if (active.startsWith('spell-')) {
 			Sheet.filterSpells(this);
 		}
+		this._setCollapsed();
 	}
 
 	_onResize (event) {
@@ -332,10 +333,10 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_setCollapsed () {
 		const tab = this.form.querySelector('.obsidian-floating-tab[data-tab="spells"]');
-		tab.classList.toggle('active', this.settings.spellsCollapsed === false);
+		const active = this.settings.spellsCollapsed === false && this._tabs[0]?.active === "stats";
+		tab.classList.toggle('active', active);
 		const toggle = this.form.querySelector('.obsidian-spell-tab-toggle object');
-		toggle.dataset.fill =
-			this.settings.spellsCollapsed === false ? '--obs-text-regular' : '--obs-mid';
+		toggle.dataset.fill = active ? '--obs-text-regular' : '--obs-mid';
 		if (toggle.onload) {
 			this._applySVGFill(toggle);
 		} else {

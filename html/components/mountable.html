@@ -13,24 +13,67 @@
 			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
 			       name="data.hp.dt" value="{{data.hp.dt}}">
 		</label>
-		<input type="text" style="max-width: 190px;" name="data.hp.conditions"
-		       value="{{data.hp.conditions}}" placeholder="{{localize 'OBSIDIAN.Conditions'}}">
-	</div>
-</div>
-<div class="obsidian-form-row obsidian-stacked-row">
-	<div>
-		<label>
-			{{localize 'OBSIDIAN.AC'}}
+		<label style="margin: 0 10px 0 0;">
+			{{localize 'OBSIDIAN.ACAbbr'}}
 			<input type="text" class="obsidian-input-num-sm" placeholder="10" data-dtype="Number"
 			       name="data.armor.value" value="{{data.armor.value}}">
 		</label>
-		{{fancy-checkbox 'flags.obsidian.speed' content='OBSIDIAN.SpeedTitle' selector='speed'
-		                 checked=item.flags.obsidian.speed}}
-		<input type="text" class="obsidian-input-num-md" data-selector-parent="speed"
-		       data-dtype="Number" name="data.speed.value" value="{{data.speed.value}}"
-		       placeholder="&mdash;">
-		<input type="text" data-selector-parent="speed" name="data.speed.conditions"
-		       value="{{data.speed.conditions}}" placeholder="{{localize 'OBSIDIAN.Conditions'}}"
-		       style="max-width: 245px;">
+		<label style="margin: 0 10px;">
+			{{localize 'OBSIDIAN.MinCrew'}}
+			<input type="text" class="obsidian-input-num-sm" data-dtype="Number" placeholder="0"
+			       name="flags.obsidian.conditions.crew" value="{{item.flags.obsidian.conditions.crew}}">
+		</label>
+	</div>
+</div>
+{{#unless (eq item.type 'weapon')}}
+<div class="obsidian-form-row obsidian-stacked-row" data-selector-parent="componentType"
+     data-show="movement">
+	<div>
+		<label>
+			{{localize 'OBSIDIAN.SpeedTitle'}}
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" name="data.speed.value"
+			       value="{{base.data.speed.value}}" placeholder="&mdash;">
+		</label>
+		<label>
+			{{localize 'OBSIDIAN.SpeedWithWind'}}
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" placeholder="&mdash;"
+			       value="{{item.flags.obsidian.conditions.speed.with}}"
+			       name="flags.obsidian.conditions.speed.with">
+		</label>
+		<label>
+			{{localize 'OBSIDIAN.SpeedAgainstWind'}}
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" placeholder="&mdash;"
+			       value="{{item.flags.obsidian.conditions.speed.against}}"
+			       name="flags.obsidian.conditions.speed.against">
+		</label>
+	</div>
+</div>
+<div class="obsidian-form-row obsidian-stacked-row" data-selector-parent="componentType"
+     data-show="movement">
+	<div>
+		<label>
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" placeholder="&mdash;"
+			       value="{{item.flags.obsidian.conditions.speed.loss}}"
+			       name="flags.obsidian.conditions.speed.loss">
+			<span>{{localize 'OBSIDIAN.SpeedLoss'}}</span>
+		</label>
+		<span class="obsidian-binary-operator">&sol;</span>
+		<label>
+			<input type="text" class="obsidian-input-num-md" data-dtype="Number" placeholder="&mdash;"
+			       value="{{item.flags.obsidian.conditions.speed.hp}}"
+			       name="flags.obsidian.conditions.speed.hp">
+			<span>{{localize 'OBSIDIAN.DamageTaken'}}</span>
+		</label>
+	</div>
+</div>
+{{/unless}}
+<div class="obsidian-form-row obsidian-stacked-row">
+	<div>
+		<label>
+			{{localize 'DND5E.Cover'}}
+			<select name="data.cover" data-dtype="Number">
+				{{selectOptions config.cover selected=item.data.cover localize=true}}
+			</select>
+		</label>
 	</div>
 </div>

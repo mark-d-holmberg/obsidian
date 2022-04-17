@@ -370,7 +370,11 @@ export function registerHandlebarHelpers () {
 			start = 0;
 		}
 
-		return Array.range(start, end);
+		if (end >= start) {
+			return Array.range(start, end);
+		} else {
+			return Array.range(end, start).reverse();
+		}
 	});
 
 	Handlebars.registerHelper('sort', function (list, by, alreadySorted) {

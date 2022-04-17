@@ -1,7 +1,7 @@
 <form class="obsidian obsidian-form-bare" autocomplete="off">
 	<fieldset>
 		<legend>{{localize 'OBSIDIAN.SpeedTitle'}}</legend>
-		{{#unless dialogOptions.npc}}
+		{{#unless (or dialogOptions.npc dialogOptions.vehicle)}}
 			<div class="obsidian-form-row">
 				<label>
 					<select name="flags.obsidian.attributes.speedDisplay">
@@ -13,6 +13,7 @@
 			</div>
 		{{/unless}}
 		{{#each ObsidianConfig.SPEEDS as |id|}}
+		{{#if (or (not @root.dialogOptions.vehicle) (eq id 'walk'))}}
 			<div class="obsidian-form-row">
 				<div class="obsidian-flex">
 					<label>
@@ -26,6 +27,7 @@
 					{{/if}}
 				</div>
 			</div>
+		{{/if}}
 		{{/each}}
 	</fieldset>
 </form>

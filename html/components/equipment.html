@@ -16,6 +16,11 @@
 							{{/each}}
 						{{/select}}
 					</select>
+					<select name="flags.obsidian.componentType" data-selector-parent="subtype"
+					        data-show="vehicle" data-selector="componentType">
+						{{selectOptions ObsidianLabels.VehicleComponents
+						                selected=item.flags.obsidian.componentType}}
+					</select>
 				</div>
 			</div>
 			<div class="obsidian-form-row obsidian-stacked-row">

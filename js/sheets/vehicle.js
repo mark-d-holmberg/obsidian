@@ -4,7 +4,6 @@ import {Reorder} from '../module/reorder.js';
 import {ObsidianCharacter} from './obsidian.js';
 import {ObsidianNPC} from './npc.js';
 import {OBSIDIAN} from '../global.js';
-import {ObsidianVehicleDetailsDialog} from '../dialogs/vehicle-details.js';
 
 export class ObsidianVehicle extends ActorSheet5eVehicle {
 	constructor (...args) {
@@ -78,7 +77,6 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		}
 
 		Sheet.activateDragging(this, html);
-		html.find('.obsidian-char-header-minor').click(this._editDetails.bind(this));
 
 		const activateEditor =
 			html.find('[data-edit="data.details.biography.value"]+.editor-edit')[0].onclick;
@@ -86,6 +84,11 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		html.find('.obsidian-edit-npc-notes').click(activateEditor.bind(this));
 		html.find('.obsidian-add-crew').click(this._onItemCreate.bind(this));
 		html.find('.obsidian-rm-crew').click(this._onCrewDelete.bind(this));
+		html.find('.obsidian-vehicle-quality').focus(function () {
+			this.value = Number(this.value).toString();
+		}).blur(function () {
+			this.value = Math.sgn(this.value);
+		});
 
 		Sheet.activateListeners(this, html);
 		Sheet.activateAbilityScores(this, html);
@@ -99,11 +102,14 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		data.items = this.actor.items.map(item => item.toObject(false));
 		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
+		data.airVehicle = type === 'air';
 		data.landVehicle = type === 'land';
 		data.waterVehicle = !type || type === 'water';
 		data.featCategories = {};
 		data.availableCrew = data.actor.data.cargo.crew.map(crew => crew.name);
 		data.availableCrew.sort();
+		data.vehicleCapacity = this._formatVehicleCapacity();
+		data.pacePerDay = this._formatPacePerDay();
 
 		for (const item of data.items) {
 			let cat;
@@ -114,8 +120,19 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 				}
 			} else if (item.type === 'weapon') {
 				cat = data.landVehicle ? 'action' : 'component';
+				if (!data.landVehicle) {
+					item.componentType = 'weapon';
+				}
 			} else if (item.type === 'equipment' && item.flags.obsidian.subtype === 'vehicle') {
 				cat = 'component';
+				item.isMovement = item.flags.obsidian.componentType === 'movement';
+				item.disabled =
+					!OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.conditions?.crew)
+					&& data.actor.data.cargo.crew.length < item.flags.obsidian.conditions.crew;
+
+				if (item.flags.obsidian.componentType !== 'hull') {
+					item.componentType = item.flags.obsidian.componentType;
+				}
 			} else {
 				continue;
 			}
@@ -127,8 +144,22 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 			}
 
 			category.push(item);
-			item.obsidian.collection.attack.forEach(ObsidianCharacter.prototype._reifyAttackLinks, this);
+			item.obsidian.collection.attack.forEach(
+				ObsidianCharacter.prototype._reifyAttackLinks,
+				this);
 		}
+
+		data.featCategories.component?.sort((a, b) => {
+			const typeA = a.componentType ?? a.flags.obsidian.componentType;
+			const typeB = b.componentType ?? b.flags.obsidian.componentType;
+
+			if (typeA === typeB) {
+				return a.name.localeCompare(b.name);
+			}
+
+			const types = {hull: 1, control: 2, movement: 3, weapon: 4};
+			return types[typeA] - types[typeB];
+		});
 
 		return data;
 	}
@@ -206,8 +237,32 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		ObsidianNPC.prototype.activateEditor.apply(this, arguments);
 	}
 
-	_editDetails () {
-		new ObsidianVehicleDetailsDialog(this).render(true);
+	_formatPacePerDay () {
+		const walk = this.object.data.data.attributes.movement.walk;
+		if (!walk || this.object.getFlag('obsidian', 'details.type') === 'land') {
+			return '';
+		}
+
+		return `
+			(${walk * 24}
+			<span class="obsidian-npc-subtle">${game.i18n.localize('OBSIDIAN.MilesPerDay')}</span>)
+		`;
+	}
+
+	_formatVehicleCapacity () {
+		const capacity = this.object.data.data.attributes.capacity;
+		const crew = capacity.crew
+			? `${capacity.crew} ${game.i18n.localize('DND5E.VehicleCrew').toLowerCase()}`
+			: '';
+		const passengers = capacity.passengers
+			? capacity.passengers
+				+ ` ${game.i18n.localize('DND5E.VehiclePassengers').toLowerCase()}`
+			: '';
+		const cargo = capacity.cargo
+			? capacity.cargo
+				+ ` <span class="obsidian-npc-subtle">${game.i18n.localize('OBSIDIAN.Tons')}</span>`
+			: '';
+		return [[crew, passengers].filterJoin(', '), cargo].filterJoin('; ');
 	}
 
 	_onCrewDelete (evt) {
@@ -216,6 +271,33 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		}
 
 		this._onItemDelete(evt);
+	}
+
+	async _onChangeInputDelta (event) {
+		const delta = event.currentTarget.value;
+		if (!event.currentTarget.classList.contains('obsidian-vehicle-component-hp')
+			|| !['+', '-'].includes(delta.charAt(0)))
+		{
+			return super._onChangeInputDelta(event);
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		const [, idx, ...props] = event.currentTarget.name.split('.');
+		const item = this.object.items.contents[idx];
+
+		if (!item) {
+			return super._onChangeInputDelta(event);
+		}
+
+		const prop = props.join('.');
+		let current = getProperty(item.data, prop);
+
+		if (OBSIDIAN.notDefinedOrEmpty(current)) {
+			current = 0;
+		}
+
+		item.update({[prop]: current + Number(delta)});
 	}
 
 	_onChangeTab (event, tabs, active) {

@@ -5,6 +5,8 @@
 			{{> modules/obsidian/html/components/saves-part.html}}
 		</div>
 	</fieldset>
+	{{#if isNPC}}
 	{{fancy-checkbox 'flags.obsidian.showDeathSaves' content='OBSIDIAN.ShowDeathSaves'
 	                 checked=actor.flags.obsidian.showDeathSaves style='margin: 0 0 0 .75em;'}}
+	{{/if}}
 </form>

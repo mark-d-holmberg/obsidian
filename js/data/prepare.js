@@ -319,7 +319,7 @@ export const Prepare = {
 			ac.value = Number(acFlags.override);
 			return;
 		}
-		
+
 		ac.value = acFlags.base + data.abilities[acFlags.ability1].mod;
 
 		if (!OBSIDIAN.notDefinedOrEmpty(acFlags.ability2)) {
@@ -514,7 +514,7 @@ export const Prepare = {
 		}
 	},
 
-	init: function (data, flags, derived) {
+	init: function (type, data, flags, derived) {
 		derived.attributes.init.rollParts = [];
 		data.attributes.init.mod =
 			data.abilities[flags.attributes.init.ability].mod
@@ -522,6 +522,13 @@ export const Prepare = {
 
 		if (flags.skills.joat) {
 			data.attributes.init.mod += Math.floor(data.attributes.prof / 2);
+		}
+
+		if (type === 'vehicle' && flags.details.type !== 'land') {
+			derived.attributes.init.rollParts.push({
+				mod: flags.attributes.quality ?? 0,
+				name: game.i18n.localize('OBSIDIAN.Quality')
+			});
 		}
 
 		if (!OBSIDIAN.notDefinedOrEmpty(flags.attributes.init.override)) {

@@ -57,12 +57,4 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 		item.sheet.render(true);
 		this.close();
 	}
-
-	async _updateObject (event, formData) {
-		if (formData['flags.obsidian.actions'] === game.i18n.localize('OBSIDIAN.ActionRules')) {
-			formData['flags.obsidian.actions'] = '';
-		}
-
-		return super._updateObject(event, formData);
-	}
 }

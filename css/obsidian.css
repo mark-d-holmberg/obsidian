@@ -487,7 +487,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	line-height: 1rem;
 }
 
-.obsidian-char-box.obsidian-simple-dialog {
+.obsidian-char-box:is(.obsidian-simple-dialog,[data-dialog]) {
 	position: relative;
 }
 
@@ -495,7 +495,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	color: transparent;
 }
 
-.obsidian-char-box.obsidian-simple-dialog:hover:after {
+.obsidian-char-box:is(.obsidian-simple-dialog,[data-dialog]):hover:after {
 	content: '\f013';
 	font-family: 'Font Awesome 5 Free';
 	position: absolute;
@@ -600,7 +600,7 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	font-weight: bold;
 }
 
-.dnd5e.sheet form .obsidian-char-hp input[placeholder="TMP"] {
+.dnd5e.sheet form :is(.obsidian-char-hp, .obsidian-npc-hp-box) input[placeholder="TMP"] {
 	color: var(--obs-text-secondary);
 	font-weight: normal;
 }
@@ -1489,7 +1489,8 @@ legend .fancy-checkbox {
 	margin-bottom: 6px;
 }
 
-.obsidian-horizontal-list {
+.obsidian-horizontal-list,
+.obsidian-skill-box-value {
 	margin: 8px 0;
 }
 
@@ -1501,7 +1502,7 @@ legend .fancy-checkbox {
 	content: '';
 }
 
-.dnd5e.sheet form.obsidian .obsidian-horizontal-list span {
+.dnd5e.sheet form.obsidian :is(.obsidian-horizontal-list, .obsidian-skill-box-value) span {
 	display: inline;
 	font-size: 12px;
 	font-weight: normal;

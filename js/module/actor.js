@@ -6,7 +6,13 @@ import {Rolls} from './rolls.js';
 import {Schema} from '../data/schema.js';
 import {prepareToggleableEffects} from '../data/effects.js';
 import {applyBonuses, applyProfBonus} from '../data/bonuses.js';
-import {prepareNPC, prepareNPCHD, prepareSpeed} from '../data/npc.js';
+import {
+	prepareNPC,
+	prepareNPCHD,
+	prepareSpeed,
+	prepareVehicleActions,
+	prepareVehicleQuality
+} from '../data/npc.js';
 import {prepareDefenseDisplay, prepareDefenses} from '../data/defenses.js';
 import {Config} from '../data/config.js';
 import {Migrate} from '../migration/migrate.js';
@@ -192,7 +198,7 @@ export class ObsidianActor extends Actor5e {
 			Prepare.armour(data, flags, derived);
 		}
 
-		Prepare.init(data, flags, derived);
+		Prepare.init(this.type, data, flags, derived);
 		prepareDefenses(data, flags, derived);
 		Prepare.conditions(this, data, flags, derived);
 
@@ -252,6 +258,9 @@ export class ObsidianActor extends Actor5e {
 
 		if (this.type === 'npc') {
 			prepareSpeed(data, derived);
+		} else if (this.type === 'vehicle') {
+			prepareVehicleActions(data);
+			prepareVehicleQuality(flags);
 		}
 
 		if (this.isToken) {
