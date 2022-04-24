@@ -67,6 +67,81 @@ export function prepareVehicleQuality (flags) {
 	}
 }
 
+export function prepareVehicleLayout (actor, flags, derived) {
+	const layout = {groups: {}, items: {}, actors: {}};
+	derived.layout = layout;
+	(flags.layout?.groups || []).forEach(g => {
+		g = duplicate(g);
+		g.items = [];
+		layout.groups[g.id] = g;
+
+		if (OBSIDIAN.notDefinedOrEmpty(g.name)) {
+			g.name = '[Unnamed]';
+		}
+
+		const item = actor.items.get(g.id);
+		if (item) {
+			g.img = item.data.img;
+			g.name = item.data.name;
+		}
+	});
+
+	['crew', 'passengers', 'cargo'].forEach((id, i) => {
+		if (layout.groups[id]) {
+			return;
+		}
+
+		layout.groups[id] = {
+			id, x: i * 3, y: 0, w: 3, h: 5, items: [],
+			name: game.i18n.localize(`OBSIDIAN.LayoutGroup.${id}`)
+		};
+	});
+
+	const existingItems = [];
+	(flags.layout?.items || []).forEach(i => {
+		const item = actor.items.get(i.id);
+		if (!item) {
+			return;
+		}
+
+		existingItems.push(i);
+		i = duplicate(i);
+		i.type = 'items';
+		layout.items[i.id] = i;
+		layout.groups[i.parent]?.items.push(i);
+	});
+
+	if (flags.layout) {
+		flags.layout.items = existingItems;
+	}
+
+	for (const item of actor.items) {
+		if (!('quantity' in item.data.data)) {
+			continue;
+		}
+
+		let i = layout.items[item.id];
+		if (!i && !layout.groups[item.id]) {
+			i = layout.items[item.id] = {id: item.id, parent: null};
+		}
+
+		if (i) {
+			i.quantity = item.data.data.quantity;
+			i.name = item.data.name;
+			i.img = item.data.img;
+			i.type = 'items';
+			layout.groups[i.parent]?.items.push(i);
+		}
+	}
+
+	(flags.layout?.actors || []).forEach(a => {
+		a = duplicate(a);
+		a.type = 'actors';
+		layout.actors[a.id] = a;
+		layout.groups[a.parent]?.items.push(a);
+	});
+}
+
 export async function refreshNPC (combat) {
 	const actor = combat.combatant?.actor;
 	if (actor?.type !== 'npc') {

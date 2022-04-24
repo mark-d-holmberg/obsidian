@@ -17,6 +17,16 @@
 				{{/if}}
 				<div class="obsidian-feature-recharge">{{{format-recharge @root.actor feat bull=true}}}</div>
 			</div>
+			{{#if (and (eq feat.type 'weapon') feat.flags.obsidian.tags.ammunition)}}
+				<select name="items.{{feat.idx}}.flags.obsidian.ammo" class="obsidian-select-crew">
+					{{#select feat.flags.obsidian.ammo}}
+						<option value="">{{obs-i18n 'AtkTag' 'ammunition'}}</option>
+						{{#each @root.actor.obsidian.ammo}}
+							<option value="{{_id}}">{{name}}</option>
+						{{/each}}
+					{{/select}}
+				</select>
+			{{/if}}
 			{{format-uses @root.actor feat}}
 		</div>
 		{{#if (and ../component feat.componentType)}}

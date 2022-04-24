@@ -775,7 +775,8 @@ h3 > div > .obsidian-feature-recharge {
 }
 
 .obsidian-tab-container > div.obsidian-char-spell-header,
-.obsidian-tab-container > div.obsidian-char-inv-header {
+.obsidian-tab-container > div.obsidian-char-inv-header,
+.obsidian-main .obsidian-tab-container > div.obsidian-char-inv-header {
 	padding: 0 0 10px 0;
 }
 

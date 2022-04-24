@@ -10,7 +10,7 @@ import {
 	prepareNPC,
 	prepareNPCHD,
 	prepareSpeed,
-	prepareVehicleActions,
+	prepareVehicleActions, prepareVehicleLayout,
 	prepareVehicleQuality
 } from '../data/npc.js';
 import {prepareDefenseDisplay, prepareDefenses} from '../data/defenses.js';
@@ -261,6 +261,7 @@ export class ObsidianActor extends Actor5e {
 		} else if (this.type === 'vehicle') {
 			prepareVehicleActions(data);
 			prepareVehicleQuality(flags);
+			prepareVehicleLayout(this, flags, derived);
 		}
 
 		if (this.isToken) {

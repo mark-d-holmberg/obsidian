@@ -105,6 +105,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 		data.actor = this.actor.toObject(false);
 		data.base = this.actor.toObject();
 		data.items = this.actor.items.map(item => item.toObject(false));
+		data.items.sort((a, b) => a.sort - b.sort);
 		data.ObsidianConfig = OBSIDIAN.Config;
 		data.ObsidianLabels = OBSIDIAN.Labels;
 		data.isObject = data.data.details?.type?.value === 'object';
@@ -333,7 +334,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 
 	_setCollapsed () {
 		const tab = this.form.querySelector('.obsidian-floating-tab[data-tab="spells"]');
-		const active = this.settings.spellsCollapsed === false && this._tabs[0]?.active === "stats";
+		const active = this.settings.spellsCollapsed === false && this._tabs[0]?.active === 'stats';
 		tab.classList.toggle('active', active);
 		const toggle = this.form.querySelector('.obsidian-spell-tab-toggle object');
 		toggle.dataset.fill = active ? '--obs-text-regular' : '--obs-mid';

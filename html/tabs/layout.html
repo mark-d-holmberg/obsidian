@@ -1,0 +1,53 @@
+{{#*inline 'item'}}
+	<div class="obsidian-layout-item {{#if (gt quantity 1)}}obsidian-layout-item-stacked{{/if}}"
+	     data-id="{{id}}" data-type="{{type}}">
+		<img alt="{{name}}" src="{{img}}">
+		<div class="obsidian-msg-tooltip">
+					{{#if (gt quantity 1)}}{{quantity}}&times;{{/if}}
+			{{name}}
+		</div>
+		<div class="obsidian-layout-item-qty">
+			<input name="qty-{{id}}" value="{{quantity}}">
+		</div>
+		<div class="obsidian-layout-item-controls">
+			<div class="obsidian-layout-item-qty-add"><i class="fas fa-plus"></i></div>
+			<div class="obsidian-layout-item-qty-minus"><i class="fas fa-minus"></i></div>
+			<div class="obsidian-layout-item-qty-split"><i class="fas fa-slash fa-rotate-90"></i></div>
+			{{#if (eq type 'items')}}
+			<div class="obsidian-layout-item-make-group"><i class="far fa-square"></i></div>
+			{{/if}}
+		</div>
+	</div>
+{{/inline}}
+
+<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="layout">
+	<div class="obsidian-layout">
+		{{#each layout.groups}}
+		<div class="obsidian-layout-group" data-id="{{id}}">
+			{{#if img}}
+			<img alt="{{name}}" src="{{img}}">
+			{{/if}}
+			<header>
+				<h1>{{name}}</h1>
+				{{#unless (or (eq id 'crew') (eq id 'passengers') (eq id 'cargo'))}}
+				<a class="obsidian-layout-delete-group">
+					<i class="fas fa-times"></i>
+				</a>
+				{{/unless}}
+			</header>
+			<footer><a class="obsidian-layout-resize-group"></a></footer>
+		</div>
+		{{/each}}
+		{{#each layout.items}}
+			{{> item}}
+		{{/each}}
+		{{#each layout.actors}}
+			{{> item}}
+		{{/each}}
+	</div>
+	<div class="obsidian-equipment-tab-toggle">
+		<object type="image/svg+xml" data="modules/obsidian/img/gear.svg" width="15"
+		        height="15"></object>
+	</div>
+	<div class="obsidian-layout-add-group"><i class="fas fa-plus"></i></div>
+</div>

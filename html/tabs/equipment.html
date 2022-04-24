@@ -1,4 +1,5 @@
-<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="equipment">
+<div class="obsidian-tab-container tab {{#if isVehicle}}obsidian-floating-tab{{/if}}"
+     data-group="main-tabs" data-tab="equipment">
 	<div class="obsidian-char-inv-header">
 		<div class="obsidian-char-inv-header-weight">
 			<div>
@@ -22,6 +23,9 @@
 				{{/if}}
 			</div>
 		</div>
+		{{#if isVehicle}}
+		</div><div class="obsidian-char-inv-header">
+		{{/if}}
 		<div class="obsidian-char-inv-header-currency" data-dialog="Currency" draggable="true">
 			{{localize 'OBSIDIAN.Currency'}}:
 			{{#each data.currency}}
@@ -102,7 +106,9 @@
 					<i class="obsidian-icon obsidian-icon-sm obsidian-icon-gp"></i>
 				</div>
 				<div class="obsidian-col-type">{{localize 'OBSIDIAN.Type'}}</div>
-				<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+				{{#unless isVehicle}}
+					<div class="obsidian-col-notes">{{localize 'OBSIDIAN.Notes'}}</div>
+				{{/unless}}
 			</div>
 			<div class="obsidian-tbody">
 				{{> modules/obsidian/html/components/inventory.html actor.obsidian.inventory.root}}

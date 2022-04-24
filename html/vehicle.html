@@ -2,8 +2,7 @@
 	<ul class="obsidian-tab-bar" data-group="main-tabs">
 		<li class="obsidian-tab item" data-tab="desc">{{localize 'OBSIDIAN.Description'}}</li>
 		<li class="obsidian-tab item" data-tab="stats">{{localize 'OBSIDIAN.Stats'}}</li>
-		<li class="obsidian-tab item" data-tab="equipment">{{localize 'OBSIDIAN.CargoEquipment'}}</li>
-		<li class="obsidian-tab item" data-tab="crew">{{localize 'OBSIDIAN.PassengerCrew'}}</li>
+		<li class="obsidian-tab item" data-tab="layout">{{localize 'OBSIDIAN.LayoutTitle'}}</li>
 		<li class="obsidian-tab item" data-tab="effects">{{localize 'OBSIDIAN.Effects'}}</li>
 	</ul>
 	<div class="obsidian-tab-container tab" data-group="main-tabs" data-tab="desc">
@@ -82,6 +81,11 @@
 						     data-title="{{obs-i18n 'ManageAC'}}" data-template="ac.html" data-width="450">
 							{{data.attributes.ac.value}}
 						</div>
+						{{#if motionlessAC}}
+						<div class="obsidian-char-box-minor" title="{{obs-i18n 'ACMotionless'}}">
+							{{motionlessAC}}
+						</div>
+						{{/if}}
 					</div>
 					<div class="obsidian-char-box-container">
 						<div class="obsidian-char-box-text">{{obs-i18n 'ThresholdAbbr'}}</div>
@@ -310,7 +314,7 @@
 		</main>
 		</div>
 	</div>
+	{{> modules/obsidian/html/tabs/layout.html}}
 	{{> modules/obsidian/html/tabs/equipment.html}}
-	{{> modules/obsidian/html/tabs/crew.html}}
 	{{> modules/obsidian/html/tabs/effects.html}}
 </form>

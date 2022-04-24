@@ -204,6 +204,10 @@ li.context-item .obsidian-icon {
 	background-image: url('../img/demolish.svg');
 }
 
+.obsidian-icon-vehicle {
+	background-image: url('../img/vehicle.svg');
+}
+
 .obsidian-icon-comp-attack {
 	background-image: url('../img/melee.svg');
 }

@@ -19,7 +19,11 @@
 					<label>
 						<input class="obsidian-input-num-md" name="data.attributes.movement.{{id}}" type="text"
 						       data-dtype="Number" value="{{lookup ../base.data.attributes.movement id}}">
-						<span>{{obs-i18n 'Speed' id}}</span>
+						{{#if @root.dialogOptions.vehicle}}
+							<span>{{obs-i18n 'Speed' 'drive'}}</span>
+						{{else}}
+							<span>{{obs-i18n 'Speed' id}}</span>
+						{{/if}}
 					</label>
 					{{#if (eq id 'fly')}}
 						{{fancy-checkbox 'data.attributes.movement.hover' content='OBSIDIAN.Hover'

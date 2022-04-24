@@ -13,7 +13,6 @@ export const preloadPartials = function () {
 		'modules/obsidian/html/components/loot.html',
 		'modules/obsidian/html/components/saves-part.html',
 		'modules/obsidian/html/components/features.html',
-		'modules/obsidian/html/components/crew-table.html',
 		'modules/obsidian/html/components/mountable.html',
 		'modules/obsidian/html/components/effects/resource.html',
 		'modules/obsidian/html/components/effects/attack.html',
@@ -63,6 +62,6 @@ export const preloadTemplates = function () {
 		'modules/obsidian/html/tabs/sub-features.html',
 		'modules/obsidian/html/tabs/notes.html',
 		'modules/obsidian/html/tabs/effects.html',
-		'modules/obsidian/html/tabs/crew.html'
+		'modules/obsidian/html/tabs/layout.html'
 	]);
 };

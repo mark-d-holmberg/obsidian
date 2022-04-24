@@ -86,6 +86,10 @@ export function registerHandlebarHelpers () {
 		})));
 	});
 
+	Handlebars.registerHelper('escape', function (obj) {
+		return escape(JSON.stringify(obj));
+	});
+
 	Handlebars.registerHelper('exists', function (arg) {
 		return arg != null;
 	});

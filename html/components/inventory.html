@@ -2,7 +2,8 @@
 	<div class="obsidian-tr item" data-item-id="{{_id}}" data-reorderable="true" data-name="{{name}}"
 	     draggable="true"
 	     {{#if @root.isVehicle}}
-		     {{#if (eq type 'equipment')}}data-filter-component="true"
+		     {{#if (and (eq type 'equipment') (eq flags.obsidian.subtype 'vehicle'))}}data-filter-component="true"
+		     {{else if (and (eq type 'weapon') (eq flags.obsidian.category 'siege'))}}data-filter-component="true"
 		     {{else}}data-filter-cargo="true" {{/if}}
 	     {{else}}
 		     {{#if flags.obsidian.magical}}data-filter-magical="true" {{/if}}
@@ -104,10 +105,12 @@
 				{{~/if~}}
 			"></div>
 		</div>
+		{{#unless @root.isVehicle}}
 		<div class="obsidian-col-notes">
 			{{#each obsidian.notes}}
 				<div class="obsidian-table-note-text">{{{this}}}</div>
 			{{/each}}
 		</div>
+		{{/unless}}
 	</div>
 {{/each}}

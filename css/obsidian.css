@@ -487,6 +487,15 @@ button.obsidian-btn-sm.obsidian-btn-sheet {
 	line-height: 1rem;
 }
 
+.obsidian-char-box-minor {
+	min-width: 45px;
+	text-align: center;
+	color: var(--obs-text-subtle);
+	border: 2px solid var(--obs-mid);
+	border-top: none;
+	padding: 2px 0;
+}
+
 .obsidian-char-box:is(.obsidian-simple-dialog,[data-dialog]) {
 	position: relative;
 }

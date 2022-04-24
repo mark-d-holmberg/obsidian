@@ -641,15 +641,15 @@ export const Sheet = {
 	},
 
 	splitItem: async function (sheet, li) {
-		const item = sheet.actor.items.get(li.data('item-id'));
+		const item = sheet.actor.items.get(li.data('item-id') ?? li.data('id'));
 		if (!item) {
 			return;
 		}
 
 		const doSplit = async qty => {
-			const newItem = ObsidianActor.duplicateItem(item);
-			newItem.data.data.quantity = qty;
-			await sheet.actor.createEmbeddedDocuments('Item', [newItem.toJSON()]);
+			const newItem = ObsidianActor.duplicateItem(item).toObject();
+			newItem.data.quantity = qty;
+			await sheet.actor.createEmbeddedDocuments('Item', [newItem]);
 			sheet.actor.updateEmbeddedDocuments('Item', [{
 				_id: item.id,
 				'data.quantity': item.data.data.quantity - qty
