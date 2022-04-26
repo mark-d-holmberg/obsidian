@@ -18,8 +18,8 @@ export class ObsidianVehicleFeaturesDialog extends ObsidianDialog {
 		ObsidianNPCFeaturesDialog.prototype.activateListeners.apply(this, arguments);
 	}
 
-	getData () {
-		const data = super.getData();
+	async getData () {
+		const data = await this.parent.getData();
 		data.featureList =
 			data.landVehicle
 				? OBSIDIAN.Config.VEHICLE_LAND_FEATURES

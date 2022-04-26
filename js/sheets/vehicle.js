@@ -142,6 +142,9 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 
 		for (const item of data.items) {
 			let cat;
+			const isVehicleComponent =
+				item.type === 'equipment' && item.flags.obsidian.subtype === 'vehicle';
+
 			if (item.type === 'feat') {
 				cat = item.data.activation.type;
 				if (cat === 'special' || cat === 'bonus' || !cat.length) {
@@ -152,18 +155,35 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 				if (!data.landVehicle) {
 					item.componentType = 'weapon';
 				}
-			} else if (item.type === 'equipment' && item.flags.obsidian.subtype === 'vehicle') {
+			} else if (isVehicleComponent) {
 				cat = 'component';
 				item.isMovement = item.flags.obsidian.componentType === 'movement';
-				item.disabled =
-					!OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.conditions?.crew)
-					&& data.actor.data.cargo.crew.length < item.flags.obsidian.conditions.crew;
 
 				if (item.flags.obsidian.componentType !== 'hull') {
 					item.componentType = item.flags.obsidian.componentType;
 				}
 			} else {
 				continue;
+			}
+
+			if ((['feat', 'weapon'].includes(item.type) || isVehicleComponent)
+				&& !OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.conditions?.crew))
+			{
+				const threshold = item.flags.obsidian.conditions.crew;
+				const layout = this.object.obsidian.layout;
+
+				if (data.landVehicle) {
+					const group = layout.groups[item._id];
+					const crew = (group?.items || []).reduce((acc, a) => {
+						if (layout.actors[a.id]) {
+							acc += a.quantity;
+						}
+						return acc;
+					}, 0);
+					item.disabled = crew < threshold;
+				} else {
+					item.disabled = layout.crew < threshold;
+				}
 			}
 
 			let category = data.featCategories[cat];
@@ -709,6 +729,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 			}
 		});
 
+		html.find('.obsidian-layout-item-make-group').click(this._layoutItemMakeGroup.bind(this));
 		html.find('.obsidian-layout-item-qty-add').click(evt => this._adjustLayoutItemQty(evt, 1));
 		html.find('.obsidian-layout-item-qty-minus')
 			.click(evt => this._adjustLayoutItemQty(evt, -1));
@@ -766,7 +787,6 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 				}, {classes: ['form', 'dialog', 'obsidian-window'], width: 300}).render(true);
 			}
 		});
-		html.find('.obsidian-layout-item-make-group').click(this._layoutItemMakeGroup.bind(this));
 
 		const initDrag = (evt, target) => {
 			let {top, left} = target.style;

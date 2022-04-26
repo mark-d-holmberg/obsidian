@@ -38,13 +38,13 @@ export function prepareSpeed (data) {
 	data.attributes.movement.walk ??= 0;
 }
 
-export function prepareVehicleActions (data) {
+export function prepareVehicleActions (data, derived) {
 	const actions = data.attributes.actions;
 	if (!actions.value) {
 		return;
 	}
 
-	const crew = data.cargo.crew.length;
+	const crew = derived.layout.crew;
 	const thresholds =
 		Object.entries(actions.thresholds)
 			.map(([n, _]) => [Number(n), _])
@@ -53,6 +53,7 @@ export function prepareVehicleActions (data) {
 
 	actions.max = actions.value;
 	actions.value = 0;
+
 	for (const [actions, threshold] of thresholds) {
 		if (threshold && crew >= threshold) {
 			actions.value = actions + 1;
@@ -116,7 +117,11 @@ export function prepareVehicleLayout (actor, flags, derived) {
 	}
 
 	for (const item of actor.items) {
-		if (!('quantity' in item.data.data)) {
+		const hasQuantity = 'quantity' in item.data.data;
+		const requiresCrew =
+			!OBSIDIAN.notDefinedOrEmpty(item.data.flags.obsidian?.conditions?.crew);
+
+		if (!hasQuantity && !requiresCrew) {
 			continue;
 		}
 
@@ -139,6 +144,17 @@ export function prepareVehicleLayout (actor, flags, derived) {
 		a.type = 'actors';
 		layout.actors[a.id] = a;
 		layout.groups[a.parent]?.items.push(a);
+	});
+
+	layout.passengers = 0;
+	layout.crew = 0;
+
+	Object.values(layout.actors).forEach(a => {
+		if (a.parent === 'passengers') {
+			layout.passengers += a.quantity;
+		} else {
+			layout.crew += a.quantity;
+		}
 	});
 }
 

@@ -12,8 +12,8 @@ export class ObsidianVehicleActionsDialog extends ObsidianDialog {
 		});
 	}
 
-	getData () {
-		const data = super.getData();
+	async getData () {
+		const data = await this.parent.getData();
 		data.actions = Math.abs(this.object.data.data.attributes.actions.max ?? 0);
 		return data;
 	}

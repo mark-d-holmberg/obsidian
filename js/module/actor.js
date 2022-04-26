@@ -259,9 +259,9 @@ export class ObsidianActor extends Actor5e {
 		if (this.type === 'npc') {
 			prepareSpeed(data, derived);
 		} else if (this.type === 'vehicle') {
+			prepareVehicleLayout(this, flags, derived);
 			prepareVehicleActions(data);
 			prepareVehicleQuality(flags);
-			prepareVehicleLayout(this, flags, derived);
 		}
 
 		if (this.isToken) {
