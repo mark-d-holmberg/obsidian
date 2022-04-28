@@ -45,6 +45,7 @@ export const Migrate = {
 				Migrate.core.convertVehicle(data);
 			}
 
+			Migrate.core.convertAC(data);
 			Migrate.core.convertDefenses(data);
 		}
 

@@ -35,7 +35,13 @@ export function prepareNPCHD (data, flags, derived) {
 }
 
 export function prepareSpeed (data) {
-	data.attributes.movement.walk ??= 0;
+	const move = data.attributes.movement;
+	Config.SPEEDS.forEach(spd => {
+		if (!move[spd]) {
+			delete move[spd];
+		}
+	});
+	move.walk ??= 0;
 }
 
 export function prepareVehicleActions (data, derived) {

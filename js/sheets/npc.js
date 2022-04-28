@@ -36,7 +36,7 @@ export class ObsidianNPC extends ActorSheet5eNPC {
 	static get defaultOptions () {
 		const options = super.defaultOptions;
 		mergeObject(options, {
-			width: 768,
+			width: 780,
 			classes: options.classes.concat(['obsidian-window']),
 			scrollY: ['.obsidian-scrollable'],
 			tabs: [{

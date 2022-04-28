@@ -106,7 +106,7 @@ Hooks.on('renderCompendium', (compendium, html) => {
 		.append($('<span class="obsidian-clear-search">&times;</span>'));
 	html.find('.header-search > span').click(evt => {
 		evt.currentTarget.previousElementSibling.previousElementSibling.value = '';
-		compendium._onFilterResults({currentTarget: {value: ''}, preventDefault: () => {}});
+		compendium._onSearchFilter(null, null, new RegExp(''), html.find('.directory-list')[0]);
 	});
 });
 

@@ -9,6 +9,24 @@ const OPERATORS = {
 };
 
 export const core = {
+	convertAC: function (data) {
+		const ac = data.data?.attributes.ac;
+		if (!ac) {
+			return;
+		}
+
+		const flags = data.flags.obsidian.attributes.ac;
+		switch (ac.calc) {
+			case 'draconic': flags.base = 13; break;
+			case 'unarmoredMonk': flags.ability2 = 'wis'; break;
+			case 'unarmoredBarb': flags.ability2 = 'con'; break;
+			case 'natural':
+				const dexMod = Math.floor((data.data?.abilities.dex.value - 10) / 2);
+				flags.base = ac.flat - dexMod;
+				break;
+		}
+	},
+
 	convertActivation: function (data) {
 		if (data.type === 'spell') {
 			const activation = CONVERT.castTime[getProperty(data.data, 'activation.type')];

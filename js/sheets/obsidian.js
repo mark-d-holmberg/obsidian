@@ -192,6 +192,7 @@ export class ObsidianCharacter extends ActorSheet5eCharacter {
 			abilityRows: Math.ceil(Object.keys(CONFIG.DND5E.abilities).length / 2)
 		};
 
+		data.labels = this.actor.labels || {};
 		data.actor = this.actor.toObject(false);
 		data.base = this.actor.toObject();
 		data.data = data.actor.data;
