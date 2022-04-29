@@ -1,17 +1,29 @@
 <div class="obsidian-tab-container tab {{#if isVehicle}}obsidian-floating-tab{{/if}}"
      data-group="main-tabs" data-tab="equipment">
 	<div class="obsidian-char-inv-header">
-		<div class="obsidian-char-inv-header-weight">
+		<div class="obsidian-char-inv-header-weight {{#if isVehicle}}obsidian-vehicle-weight{{/if}}">
 			<div>
 				{{localize 'OBSIDIAN.WeightCarried'}}:
 				<span>{{numberFormat actor.obsidian.inventory.weight decimals=2}}</span>
 				<span>&sol;</span>
 				<span>{{numberFormat actor.obsidian.inventory.max decimals=0}}</span>
-				<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+				{{#if isVehicle}}
+					<span class="obsidian-table-unit">{{obs-i18n 'Tons'}}</span>
+				{{else}}
+					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
+				{{/if}}
 			</div>
-			<div{{#if (or actor.obsidian.rules.encumbered
+			<div class="obsidian-vehicle-capacity-persons">
+				{{localize 'DND5E.VehicleCrew'}}:
+				<div{{#if (gt actor.obsidian.layout.crew data.attributes.capacity.crew)}} class="obsidian-negative"{{/if}}>
+					<span>{{numberFormat actor.obsidian.layout.crew}}</span>
+					<span>&sol;</span>
+					<span>{{numberFormat data.attributes.capacity.crew}}</span>
+				</div>
+			</div>
+			<div class="obsidian-char-inv-header-encumbrance {{#if (or actor.obsidian.rules.encumbered
 					          actor.obsidian.rules.heavilyEncumbered
-					          actor.obsidian.rules.overCapacity)}} class="obsidian-negative"{{/if}}>
+					          actor.obsidian.rules.overCapacity)}}obsidian-negative{{/if}}">
 				{{#if actor.obsidian.rules.overCapacity}}
 					{{localize 'OBSIDIAN.OverCapacity'}}
 				{{else if actor.obsidian.rules.heavilyEncumbered}}
@@ -21,6 +33,14 @@
 				{{else}}
 					{{localize 'OBSIDIAN.Unencumbered'}}
 				{{/if}}
+			</div>
+			<div class="obsidian-vehicle-capacity-persons">
+				{{localize 'DND5E.VehiclePassengers'}}:
+				<div{{#if (gt actor.obsidian.layout.passengers data.attributes.capacity.passengers)}} class="obsidian-negative"{{/if}}>
+					<span>{{numberFormat actor.obsidian.layout.passengers}}</span>
+					<span>&sol;</span>
+					<span>{{numberFormat data.attributes.capacity.passengers}}</span>
+				</div>
 			</div>
 		</div>
 		{{#if isVehicle}}

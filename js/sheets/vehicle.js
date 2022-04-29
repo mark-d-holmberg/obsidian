@@ -431,7 +431,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		[top, left, width, height] = [top, left, width, height].map(x =>
 			Number(x.replace('px', '')).toNearest(stride) / stride);
 		const id = (this._dragging || this._resizing).dataset.id;
-		const type = this._dragging?.dataset.type;
+		const type = this._dragging?.dataset?.type;
 		const isDrag = !!this._dragging;
 		const isGroup = isDrag
 			? this._dragging.classList.contains('obsidian-layout-group')
@@ -615,6 +615,18 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		return this.object.setFlag('obsidian', 'layout.groups', groups);
 	}
 
+	_onDeleteGroup (evt) {
+		const id = evt.currentTarget.closest('[data-id]').dataset.id;
+		const layout = this.object.getFlag('obsidian', 'layout');
+		layout.groups.findSplice(g => g.id === id);
+		layout.actors.forEach(a => {
+			if (a.parent === id) {
+				a.parent = null;
+			}
+		});
+		return this.object.setFlag('obsidian', 'layout', layout);
+	}
+
 	_layoutForGroup (config, stride, gap) {
 		const padding = gap / 2;
 		return {
@@ -638,12 +650,7 @@ export class ObsidianVehicle extends ActorSheet5eVehicle {
 		html.find('.obsidian-layout-add-group').css('display', 'flex')
 			.click(this._onAddGroup.bind(this));
 
-		html.find('.obsidian-layout-delete-group').click(evt => {
-			const id = evt.currentTarget.closest('[data-id]').dataset.id;
-			const groups = this.object.getFlag('obsidian', 'layout.groups');
-			groups.findSplice(g => g.id === id);
-			this.object.setFlag('obsidian', 'layout.groups', groups);
-		});
+		html.find('.obsidian-layout-delete-group').click(this._onDeleteGroup.bind(this));
 
 		html.find('.obsidian-layout-group h1').dblclick(evt => {
 			evt.preventDefault();

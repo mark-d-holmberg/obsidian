@@ -60,9 +60,9 @@ export function prepareVehicleActions (data, derived) {
 	actions.max = actions.value;
 	actions.value = 0;
 
-	for (const [actions, threshold] of thresholds) {
+	for (const [n, threshold] of thresholds) {
 		if (threshold && crew >= threshold) {
-			actions.value = actions + 1;
+			actions.value = n + 1;
 			break;
 		}
 	}
@@ -107,7 +107,7 @@ export function prepareVehicleLayout (actor, flags, derived) {
 	const existingItems = [];
 	(flags.layout?.items || []).forEach(i => {
 		const item = actor.items.get(i.id);
-		if (!item) {
+		if (!item || layout.groups[item.id]) {
 			return;
 		}
 

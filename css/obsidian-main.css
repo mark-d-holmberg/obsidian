@@ -43,6 +43,7 @@
 	justify-content: flex-start;
 	margin-top: 0;
 	padding: 0 10px;
+	flex-wrap: wrap;
 }
 
 .obsidian-tab,
@@ -845,13 +846,32 @@ h3 > div > .obsidian-feature-recharge {
 	margin-left: 5px;
 }
 
-.obsidian-char-inv-header-weight > div:last-child {
+.obsidian-char-inv-header-weight > .obsidian-char-inv-header-encumbrance {
 	font-size: 10px;
 	color: var(--obs-text-subtle);
 }
 
-.obsidian-char-inv-header-weight > div:last-child.obsidian-negative {
+.obsidian-char-inv-header-weight > .obsidian-char-inv-header-encumbrance.obsidian-negative {
 	color: var(--obs-negative);
+}
+
+.obsidian-char-inv-header-weight.obsidian-vehicle-weight {
+	display: grid;
+	grid-template-rows: 50% 50%;
+	grid-template-columns: 50% 50%;
+	width: 100%;
+	column-gap: 8px;
+}
+
+.obsidian-vehicle-capacity-persons {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 10px;
+}
+
+.obsidian-vehicle-capacity-persons > div {
+	font-family: var(--obs-font);
+	font-weight: normal;
 }
 
 .obsidian-char-inv-header-currency {

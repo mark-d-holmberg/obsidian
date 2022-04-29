@@ -10,7 +10,10 @@
 		<div class="obsidian-feature-header {{#if ../component}}obsidian-vehicle-component{{/if}}">
 			<div>
 				{{#if feat.disabled}}<s>{{/if}}
-				<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">{{feat.name}}</h4>
+				<h4 class="rollable" data-roll="item" data-id="{{feat._id}}">
+					{{feat.name}}
+					{{#if (and (gt feat.data.quantity 1) ../component)}}({{feat.data.quantity}}){{/if}}
+				</h4>
 				{{#if feat.disabled}}</s>{{/if}}
 				{{#if (and feat.data.cover (gt feat.data.cover 0))}}
 				<div class="obsidian-feature-recharge"> &bull; {{format-cover feat.data.cover}}</div>

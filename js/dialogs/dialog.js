@@ -188,7 +188,7 @@ export class ObsidianDialog extends DocumentSheet {
 		}
 
 		const parsed = this._numberFormatter.parse(value);
-		if (isNaN(parsed)) {
+		if (isNaN(parsed) || value.includes('.')) {
 			return value;
 		}
 

@@ -189,7 +189,7 @@ export class ObsidianActor extends Actor5e {
 		}
 
 		data.attributes.hp.max += data.attributes.hp.tempmax;
-		this._prepareInventory(data, derived.inventory);
+		this._prepareInventory(this, data, derived.inventory);
 		applyProfBonus(this);
 		Prepare.abilities(this, data, flags, derived);
 
@@ -260,7 +260,7 @@ export class ObsidianActor extends Actor5e {
 			prepareSpeed(data, derived);
 		} else if (this.type === 'vehicle') {
 			prepareVehicleLayout(this, flags, derived);
-			prepareVehicleActions(data);
+			prepareVehicleActions(data, derived);
 			prepareVehicleQuality(flags);
 		}
 
@@ -285,7 +285,7 @@ export class ObsidianActor extends Actor5e {
 		}
 	}
 
-	_prepareInventory (actorData, inventory) {
+	_prepareInventory (actor, actorData, inventory) {
 		for (const item of inventory.items) {
 			const data = item.data.data;
 			const flags = item.data.flags.obsidian;
@@ -335,6 +335,10 @@ export class ObsidianActor extends Actor5e {
 		inventory.root.sort(sort);
 		inventory.containers.sort(sort);
 		inventory.containers.forEach(container => container.obsidian.contents.sort(sort));
+
+		if (actor.type === 'vehicle') {
+			inventory.weight /= CONFIG.DND5E.encumbrance.vehicleWeightMultiplier.imperial;
+		}
 	}
 
 	async createEmbeddedDocuments (embeddedName, data, options = {}) {

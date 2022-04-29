@@ -467,10 +467,14 @@ export const Prepare = {
 		const encumbrance = game.settings.get('obsidian', 'encumbrance');
 		const sizeMod = Config.ENCUMBRANCE_SIZE_MOD[data.traits.size] || 1;
 
-		inventory.max = str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier.imperial;
-		inventory.max += Effect.applyBonuses(actor, Filters.isCarry);
-		inventory.max = Effect.applyMultipliers(actor, Filters.isCarry, inventory.max);
-		inventory.max = Effect.applySetters(actor, Filters.isCarry, inventory.max);
+		if (actor.type === 'vehicle') {
+			inventory.max = data.attributes.capacity.cargo;
+		} else {
+			inventory.max = str * sizeMod * CONFIG.DND5E.encumbrance.strMultiplier.imperial;
+			inventory.max += Effect.applyBonuses(actor, Filters.isCarry);
+			inventory.max = Effect.applyMultipliers(actor, Filters.isCarry, inventory.max);
+			inventory.max = Effect.applySetters(actor, Filters.isCarry, inventory.max);
+		}
 
 		rules.encumbered = false;
 		rules.heavilyEncumbered = false;

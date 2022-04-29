@@ -630,9 +630,9 @@
 .obsidian-layout-group {
 	position: absolute;
 	border-radius: 6px;
-	background: rgb(0 0 0 / 35%);
-	border: 1px solid var(--obs-dark);
+	background: rgb(0 0 0 / 17%);
 	overflow: hidden;
+	box-shadow: 0 0 5px 3px rgb(0 0 0 / 32%)
 }
 
 .obsidian-layout-item {
@@ -758,7 +758,7 @@
 	align-items: center;
 	padding: 8px;
 	border-radius: 6px;
-	background: rgb(0 0 0 / 35%);
+	background: rgb(0 0 0 / 70%);
 	border: 1px solid var(--obs-mid);
 	position: absolute;
 	bottom: 10px;
@@ -777,6 +777,7 @@
 	--obs-item-controls-size: calc(var(--obs-grid-size) / 2 - var(--obs-item-controls-gap));
 	grid-template: repeat(2, var(--obs-item-controls-size)) / repeat(2, var(--obs-item-controls-size));
 	grid-gap: var(--obs-item-controls-gap);
+	z-index: 3;
 }
 
 .obsidian-layout-item-qty {
@@ -786,6 +787,7 @@
 	left: calc(var(--obs-grid-size) * -1 - 4px);
 	width: calc(var(--obs-grid-size) - 4px);
 	height: calc(var(--obs-grid-size) - 4px);
+	z-index: 3;
 }
 
 .dnd5e.sheet .obsidian-layout-item-qty input {
@@ -794,7 +796,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgb(0 0 0 / 35%);
+	background: rgb(0 0 0 / 70%);
 	border: 1px solid var(--obs-mid);
 	border-radius: 6px;
 	color: var(--obs-text-regular);
