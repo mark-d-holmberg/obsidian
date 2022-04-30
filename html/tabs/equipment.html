@@ -13,6 +13,7 @@
 					<span class="obsidian-table-unit">{{localize 'OBSIDIAN.PoundsAbbr'}}</span>
 				{{/if}}
 			</div>
+			{{#if isVehicle}}
 			<div class="obsidian-vehicle-capacity-persons">
 				{{localize 'DND5E.VehicleCrew'}}:
 				<div{{#if (gt actor.obsidian.layout.crew data.attributes.capacity.crew)}} class="obsidian-negative"{{/if}}>
@@ -21,6 +22,7 @@
 					<span>{{numberFormat data.attributes.capacity.crew}}</span>
 				</div>
 			</div>
+			{{/if}}
 			<div class="obsidian-char-inv-header-encumbrance {{#if (or actor.obsidian.rules.encumbered
 					          actor.obsidian.rules.heavilyEncumbered
 					          actor.obsidian.rules.overCapacity)}}obsidian-negative{{/if}}">
@@ -34,6 +36,7 @@
 					{{localize 'OBSIDIAN.Unencumbered'}}
 				{{/if}}
 			</div>
+			{{#if isVehicle}}
 			<div class="obsidian-vehicle-capacity-persons">
 				{{localize 'DND5E.VehiclePassengers'}}:
 				<div{{#if (gt actor.obsidian.layout.passengers data.attributes.capacity.passengers)}} class="obsidian-negative"{{/if}}>
@@ -42,6 +45,7 @@
 					<span>{{numberFormat data.attributes.capacity.passengers}}</span>
 				</div>
 			</div>
+			{{/if}}
 		</div>
 		{{#if isVehicle}}
 		</div><div class="obsidian-char-inv-header">
