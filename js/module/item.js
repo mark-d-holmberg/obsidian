@@ -8,6 +8,7 @@ import {Config} from '../data/config.js';
 import {Schema} from '../data/schema.js';
 import {Migrate} from '../migration/migrate.js';
 import {ObsidianItemDerived} from './derived.js';
+import {findClassSpellList} from '../data.js';
 
 // We could reconfigure the Item documentClass like we did with a RollTable
 // but patching should play more nicely with other modules and Item is a lot
@@ -165,29 +166,30 @@ const prepareItem = {
 	'class': function (item, data, flags, derived) {
 		data.levels = Number(data.levels);
 		derived.label = item.name;
-		derived.key = OBSIDIAN.Labels.ClassMap?.get(item.name.toLocaleLowerCase());
+		derived.key = OBSIDIAN.Config.CLASS_MAP[item.identifier];
 
 		if (!flags.spellcasting?.enabled) {
 			return;
 		}
 
 		if (data.spellcasting?.progression === 'none') {
-			data.spellcasting.progession = Config.CLASS_SPELL_PROGRESSION[derived.key] || 'none';
+			data.spellcasting.progession =
+				Config.CLASS_SPELL_PROGRESSION[item.identifier] || 'none';
 		}
 
 		if (flags.spellcasting.preparation === undefined) {
-			flags.spellcasting.preparation = Config.CLASS_SPELL_PREP[derived.key];
+			flags.spellcasting.preparation = Config.CLASS_SPELL_PREP[item.identifier];
 		}
 
 		if (flags.spellcasting.rituals === undefined) {
-			flags.spellcasting.rituals = Config.CLASS_RITUALS[derived.key] || 'none';
+			flags.spellcasting.rituals = Config.CLASS_RITUALS[item.identifier] || 'none';
 		}
 
 		derived.spellcasting = {...duplicate(flags.spellcasting), ...duplicate(data.spellcasting)};
 		const spellcasting = derived.spellcasting;
 		const levels = data.levels;
 
-		spellcasting.list = derived.key ?? item.name;
+		spellcasting.list = findClassSpellList(item);
 		spellcasting.spellList = [];
 
 		if (OBSIDIAN.Data.SPELLS_BY_CLASS && OBSIDIAN.Data.SPELLS_BY_CLASS[spellcasting.list]) {
@@ -196,7 +198,7 @@ const prepareItem = {
 		}
 
 		if (spellcasting.ability === undefined) {
-			spellcasting.ability = Config.CLASS_SPELL_MODS[derived.key];
+			spellcasting.ability = Config.CLASS_SPELL_MODS[item.identifier];
 		}
 
 		if (!OBSIDIAN.notDefinedOrEmpty(spellcasting.ability) && item.isOwnedByActor()) {
@@ -207,7 +209,7 @@ const prepareItem = {
 			spellcasting.save = mod + actorData.attributes.prof + 8;
 		}
 
-		const spellsKnown = Config.SPELLS_KNOWN_TABLE[derived.key];
+		const spellsKnown = Config.SPELLS_KNOWN_TABLE[item.identifier];
 		if (spellsKnown !== undefined) {
 			spellcasting.maxKnown = spellsKnown.known[levels - 1];
 			spellcasting.maxCantrips = spellsKnown.cantrips[levels - 1];
@@ -322,7 +324,7 @@ const prepareItem = {
 		derived.visible = true;
 
 		if (flags.source === undefined) {
-			derived.source.display = game.i18n.localize('OBSIDIAN.Class.custom');
+			derived.source.display = game.i18n.localize('OBSIDIAN.Custom');
 		} else if (flags.source.type === 'custom') {
 			derived.source.display = flags.source.custom;
 		} else if (item.isOwnedByActor() && item.actor.data.obsidian) {
@@ -338,6 +340,7 @@ const prepareItem = {
 				} else {
 					const parentComponent = item.getFlag('obsidian', 'parentComponent');
 					const component = item.actor.obsidian.components.get(parentComponent);
+
 					if (component?.type === 'spells'
 						&& component?.source === 'individual'
 						&& component?.method === 'list')

@@ -23,6 +23,21 @@ OBSIDIAN.collateSpells = async (compendium) => {
 	OBSIDIAN.Data.SPELLS_BY_SLUG = new Map(spells.map(spell => [toSlug(spell.name), spell]));
 };
 
+export const findClassSpellList = cls => {
+	const byClass = OBSIDIAN.Data.SPELLS_BY_CLASS;
+	if (byClass[cls.identifier]) {
+		return cls.identifier;
+	}
+
+	if (byClass[cls.data.obsidian.key]) {
+		return cls.data.obsidian.key;
+	}
+
+	if (byClass[cls.name]) {
+		return cls.name;
+	}
+};
+
 OBSIDIAN.computeSpellsByClass = lists => {
 	OBSIDIAN.Data.SPELLS_BY_CLASS = {};
 	Object.entries(lists).forEach(([cls, slugs]) =>

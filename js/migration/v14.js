@@ -80,19 +80,5 @@ export const v14 = {
 			const key = toSlug(tool.label);
 			tools[key] = duplicate(tool);
 		}
-	},
-
-	convertClass: function (data) {
-		if (data.type !== 'class') {
-			return;
-		}
-
-		if (Config.CLASSES.includes(data.name)) {
-			if (data.name === 'custom') {
-				data.name = data.flags.obsidian.custom;
-			} else {
-				data.name = game.i18n.localize(`OBSIDIAN.Class.${data.name}`);
-			}
-		}
 	}
 };

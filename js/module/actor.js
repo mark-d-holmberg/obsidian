@@ -421,9 +421,7 @@ export class ObsidianActor extends Actor5e {
 			.filter(c => !OBSIDIAN.notDefinedOrEmpty(c.text))
 			.forEach(c => {
 				const needle = c.text.toLowerCase();
-				const cls =
-					this.obsidian.classes.find(cls => cls.obsidian.label.toLowerCase() === needle);
-
+				const cls = this.obsidian.classes.find(cls => cls.identifier === needle);
 				c.class = cls?.id || '';
 			});
 
@@ -433,8 +431,7 @@ export class ObsidianActor extends Actor5e {
 
 		if (!OBSIDIAN.notDefinedOrEmpty(item.flags.obsidian.source.text)) {
 			const needle = item.flags.obsidian.source.text.toLowerCase();
-			const cls =
-				this.obsidian.classes.find(cls => cls.obsidian.label.toLowerCase() === needle);
+			const cls = this.obsidian.classes.find(cls => cls.identifier === needle);
 
 			if (cls === undefined) {
 				item.flags.obsidian.source.type = 'other';
@@ -444,7 +441,7 @@ export class ObsidianActor extends Actor5e {
 			}
 		} else {
 			const needle = item.flags.obsidian.source.class;
-			const cls = this.obsidian.classes.find(cls => cls.id === needle);
+			const cls = this.items.get(needle);
 
 			if (cls === undefined) {
 				const byName = this.obsidian.classes.find(cls => cls.name === needle);

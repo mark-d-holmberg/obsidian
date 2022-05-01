@@ -3,8 +3,9 @@
 		<label>{{localize 'OBSIDIAN.ClassTitle'}}</label>
 		<select name="cls" data-selector="cls" style="margin-bottom: 4px;">
 			{{#each ObsidianLabels.Class}}
-				<option value="{{@key}}">{{this}}</option>
+				<option value="{{@key}}">{{obs-i18n 'Class' this}}</option>
 			{{/each}}
+			<option value="custom">{{obs-i18n 'Custom'}}</option>
 		</select>
 	</div>
 	<div class="form-group" data-selector-parent="cls" data-show="custom">

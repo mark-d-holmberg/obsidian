@@ -1,6 +1,6 @@
 export const Schema = {};
 
-Schema.VERSION = 15;
+Schema.VERSION = 16;
 
 Schema.Actor = {
 	attributes: {

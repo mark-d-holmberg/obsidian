@@ -17,9 +17,10 @@ import {v12} from './v12.js';
 import {v13} from './v13.js';
 import {v14} from './v14.js';
 import {toSlug} from '../data.js';
+import {v15} from './v15.js';
 
 export const Migrate = {
-	core, v3, v4, v5, v6, v7, v9, v10, v11, v12, v13, v14,
+	core, v3, v4, v5, v6, v7, v9, v10, v11, v12, v13, v14, v15,
 	convertActor: function (data) {
 		lazyConvert();
 
@@ -248,7 +249,10 @@ export const Migrate = {
 		if (version < 15 && source !== 'core') {
 			Migrate.v14.convertSpellcasting(data);
 			Migrate.v14.convertActiveEffect(data);
-			Migrate.v14.convertClass(data);
+		}
+
+		if (version < 16 && source !== 'core') {
+			Migrate.v15.convertClass(data);
 		}
 
 		data.flags.obsidian.version = Schema.VERSION;
@@ -262,20 +266,20 @@ export const Migrate = {
 	},
 
 	convertClass: function (data) {
-		const key = OBSIDIAN.Labels.ClassMap.get(data.name.toLocaleLowerCase());
+		const identifier = data.data?.identifier || data.name.slugify({strict: true});
 		if (!data.data.hitDice) {
-			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(key);
+			data.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(identifier);
 		}
 
 		if (!data.flags.obsidian.spellcasting) {
 			data.flags.obsidian.spellcasting =
-				ObsidianHeaderDetailsDialog.determineSpellcasting(key);
+				ObsidianHeaderDetailsDialog.determineSpellcasting(identifier);
 		}
 
 		if (!data.data.spellcasting) {
 			data.data.spellcasting = {
-				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[key] || 'none',
-				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[key] || ''
+				progression: OBSIDIAN.Config.CLASS_SPELL_PROGRESSION[identifier] || 'none',
+				ability: OBSIDIAN.Config.CLASS_SPELL_MODS[identifier] || ''
 			};
 		}
 	},

@@ -25,6 +25,15 @@
 				</label>
 			</div>
 		</div>
+		<div class="obsidian-form-row obsidian-stacked-row">
+			<div>
+				<label>
+					{{localize 'DND5E.Identifier'}}
+					<input type="text" name="data.identifier" placeholder="{{identifier}}"
+					       value="{{data.identifier}}">
+				</label>
+			</div>
+		</div>
 	</fieldset>
 	<fieldset {{disabled (not item.flags.obsidian.spellcasting.enabled)}}>
 		<legend>

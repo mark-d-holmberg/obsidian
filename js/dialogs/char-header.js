@@ -36,24 +36,24 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 		return super.close();
 	}
 
-	static determineHD (cls) {
-		if (!Object.keys(OBSIDIAN.Config.CLASS_HIT_DICE).includes(cls)) {
+	static determineHD (identifier) {
+		if (!Object.keys(OBSIDIAN.Config.CLASS_HIT_DICE).includes(identifier)) {
 			return 'd6';
 		}
 
-		return `d${OBSIDIAN.Config.CLASS_HIT_DICE[cls]}`;
+		return `d${OBSIDIAN.Config.CLASS_HIT_DICE[identifier]}`;
 	}
 
-	static determineSpellcasting (cls) {
-		if (!Object.keys(OBSIDIAN.Config.CLASS_SPELL_PREP).includes(cls)) {
+	static determineSpellcasting (identifier) {
+		if (!Object.keys(OBSIDIAN.Config.CLASS_SPELL_PREP).includes(identifier)) {
 			return {enabled: false};
 		}
 
 		return {
 			enabled: true,
-			preparation: OBSIDIAN.Config.CLASS_SPELL_PREP[cls],
-			rituals: OBSIDIAN.Config.CLASS_RITUALS[cls],
-			spell: OBSIDIAN.Config.CLASS_SPELL_MODS[cls]
+			preparation: OBSIDIAN.Config.CLASS_SPELL_PREP[identifier],
+			rituals: OBSIDIAN.Config.CLASS_RITUALS[identifier],
+			spell: OBSIDIAN.Config.CLASS_SPELL_MODS[identifier]
 		};
 	}
 
@@ -94,7 +94,7 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 	 */
 	async _onNewClass (cls) {
 		const item = {
-			name: game.i18n.localize(`OBSIDIAN.Class.${cls.name}`),
+			name: cls.name,
 			type: 'class',
 			data: {levels: 1},
 			flags: {obsidian: {}}
@@ -102,9 +102,11 @@ export class ObsidianHeaderDetailsDialog extends ObsidianDialog {
 
 		if (cls.name === 'custom') {
 			item.name = cls.custom;
+		} else {
+			item.name = game.i18n.localize(`OBSIDIAN.Class.${item.name}`);
 		}
 
-		const key = OBSIDIAN.Labels.ClassMap.get(item.name.toLocaleLowerCase());
+		const key = item.name.slugify({strict: true});
 		if (key) {
 			item.data.hitDice = ObsidianHeaderDetailsDialog.determineHD(key);
 			item.data.spellcasting = {

@@ -17,9 +17,14 @@ Config.ALIGNMENT_PARTS_2 = ['g', 'n', 'e', 'u'];
 Config.ATTACK_TYPES = ['melee', 'ranged'];
 Config.ARMOUR_TYPES = ['light', 'medium', 'heavy', 'shield'];
 Config.CONSUMABLE_TYPES = ['ammo', 'potion', 'scroll', 'wand', 'rod', 'trinket', 'gear', 'food'];
+Config.CLASS_MAP = {
+	artificer: 'art', barbarian: 'brb', bard: 'brd', cleric: 'clr', druid: 'drd', fighter: 'fgt',
+	monk: 'mnk', paladin: 'pal', ranger: 'rng', rogue: 'rog', sorcerer: 'src', warlock: 'war',
+	wizard: 'wiz'
+};
 Config.CLASSES = [
-	'art', 'brb', 'brd', 'clr', 'drd', 'fgt', 'mnk', 'pal', 'rng', 'rog', 'src', 'war', 'wiz',
-	'custom'
+	'artificer', 'barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 'paladin', 'ranger',
+	'rogue', 'sorcerer', 'warlock', 'wizard'
 ];
 
 Config.CURRENCY = ['pp', 'gp', 'ep', 'sp', 'cp'];
@@ -38,63 +43,63 @@ Config.CONVERT_CONDITIONS = Config.CONDITIONS.concat('exhaustion');
 Config.CONVERT_DAMAGE_TYPES = Config.DAMAGE_TYPES.concat('nonmagical');
 
 Config.CLASS_HIT_DICE = {
-	art: 8,
-	brb: 12,
-	brd: 8,
-	clr: 8,
-	drd: 8,
-	fgt: 10,
-	mnk: 8,
-	pal: 10,
-	rng: 10,
-	rog: 8,
-	src: 6,
-	war: 8,
-	wiz: 6
+	artificer: 8,
+	barbarian: 12,
+	bard: 8,
+	cleric: 8,
+	druid: 8,
+	fighter: 10,
+	monk: 8,
+	paladin: 10,
+	ranger: 10,
+	rogue: 8,
+	sorcerer: 6,
+	warlock: 8,
+	wizard: 6
 };
 
 Config.CLASS_SPELL_MODS = {
-	art: 'int',
-	brd: 'cha',
-	clr: 'wis',
-	drd: 'wis',
-	pal: 'cha',
-	rng: 'wis',
-	src: 'cha',
-	war: 'cha',
-	wiz: 'int'
+	artificer: 'int',
+	bard: 'cha',
+	cleric: 'wis',
+	druid: 'wis',
+	paladin: 'cha',
+	ranger: 'wis',
+	sorcerer: 'cha',
+	warlock: 'cha',
+	wizard: 'int'
 };
 
 Config.CLASS_SPELL_PROGRESSION = {
-	art: 'artificer',
-	brd: 'full',
-	clr: 'full',
-	drd: 'full',
-	pal: 'half',
-	rng: 'half',
-	src: 'full',
-	war: 'pact',
-	wiz: 'full'
+	artificer: 'artificer',
+	bard: 'full',
+	cleric: 'full',
+	druid: 'full',
+	paladin: 'half',
+	ranger: 'half',
+	sorcerer: 'full',
+	warlock: 'pact',
+	wizard: 'full'
 };
 
 Config.CLASS_SPELL_PREP = {
-	art: 'prep',
-	brd: 'known',
-	clr: 'prep',
-	drd: 'prep',
-	pal: 'prep',
-	rng: 'known',
-	src: 'known',
-	war: 'known',
-	wiz: 'book'
+	artificer: 'prep',
+	bard: 'known',
+	cleric: 'prep',
+	druid: 'prep',
+	paladin: 'prep',
+	ranger: 'known',
+	sorcerer: 'known',
+	warlock: 'known',
+	wizard: 'book'
 };
 
 Config.CLASS_RITUALS = {
-	art: 'prep',
-	brd: 'prep',
-	clr: 'prep',
-	drd: 'prep',
-	wiz: 'book'
+	artificer: 'prep',
+	bard: 'prep',
+	cleric: 'prep',
+	druid: 'prep',
+	wizard: 'book'
 };
 
 Config.CREATURE_TAGS = [
@@ -225,35 +230,35 @@ Config.SPELL_PROGRESSION = ['third', 'half', 'full', 'pact', 'artificer'];
 Config.SPELL_RITUALS = ['none', 'prep', 'book'];
 
 Config.SPELLS_KNOWN_TABLE = {
-	art: {
+	artificer: {
 		cantrips: [2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4],
 		known: []
 	},
-	brd: {
+	bard: {
 		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
 		known: [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22]
 	},
-	clr: {
+	cleric: {
 		cantrips: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5],
 		known: []
 	},
-	drd: {
+	druid: {
 		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
 		known: []
 	},
-	rng: {
+	ranger: {
 		cantrips: [],
 		known: [0, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11]
 	},
-	src: {
+	sorcerer: {
 		cantrips: [4, 4, 4, 5, 5, 5, 5, 5, 5, 6],
 		known: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 13, 13, 14, 14, 15, 15, 15, 15]
 	},
-	war: {
+	warlock: {
 		cantrips: [2, 2, 2, 3, 3, 3, 3, 3, 3, 4],
 		known: [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15]
 	},
-	wiz: {
+	wizard: {
 		cantrips: [3, 3, 3, 4, 4, 4, 4, 4, 4, 5],
 		known: []
 	}
