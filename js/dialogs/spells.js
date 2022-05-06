@@ -58,7 +58,7 @@ export class ObsidianSpellsDialog extends ObsidianDialog {
 				spellcasting.totalKnown = 0;
 
 				if (spellcasting.spellList) {
-					const listKey = cls.obsidian.key ?? cls.name;
+					const listKey = cls.identifier ?? cls.obsidian.key ?? cls.name;
 					data.spellsByClass[listKey] = duplicate(spellcasting.spellList);
 				}
 

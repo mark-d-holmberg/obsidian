@@ -291,7 +291,9 @@ export function registerHandlebarHelpers () {
 	});
 
 	Handlebars.registerHelper('i18n-class', function (cls) {
-		const key = `OBSIDIAN.Class.${cls}`;
+		const config = OBSIDIAN.Config.CLASS_MAP;
+		const map = Object.fromEntries(Object.entries(config).map(([k, v]) => [v, k]));
+		const key = `OBSIDIAN.Class.${map[cls]}`;
 		if (!game.i18n.has(key)) {
 			return cls;
 		}

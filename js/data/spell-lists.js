@@ -1,4 +1,5 @@
 import {OBSIDIAN} from '../global.js';
+import {toSlug} from '../data.js';
 
 // noinspection JSClosureCompilerSyntax
 export default class ObsidianSpellLists extends FormApplication {
@@ -66,8 +67,8 @@ export default class ObsidianSpellLists extends FormApplication {
 			const levels =
 				this._filters[filter]
 					.map((f, i) => [f, i])
-					.filter(([f, _]) => f)
-					.map(([_, i]) => i);
+					.filter(([f]) => f)
+					.map(([, i]) => i);
 
 			const name =
 				this.element.find(`.obsidian-input-search[data-prop="${filter}"]`)
@@ -77,12 +78,13 @@ export default class ObsidianSpellLists extends FormApplication {
 				return false;
 			}
 
-			return !(levels.length && !levels.includes(spell.data.level));
+			return !(levels.length && !levels.includes(spell.data.data.level));
 		};
 
 		const allList = this.element.find('#obsidian-all-spells').empty();
 		const clsList = this.element.find('#obsidian-class-spells').empty();
 		const cls = this.element.find('#obsidian-class-list').val();
+		const [left, right] = [[], []];
 		let list = [];
 
 		if (this._lists[cls]) {
@@ -90,15 +92,21 @@ export default class ObsidianSpellLists extends FormApplication {
 		}
 
 		for (const [slug, spell] of OBSIDIAN.Data.SPELLS_BY_SLUG) {
-			const opt = $(`<option value="${slug}">${spell.name}</option>`);
 			const inList = list.includes(slug);
 
 			if (inList && matchesFilter('right', spell)) {
-				clsList.append(opt);
+				right.push(spell);
 			} else if (!inList && matchesFilter('left', spell)) {
-				allList.append(opt);
+				left.push(spell);
 			}
 		}
+
+		const sort = (a, b) => a.name.localeCompare(b.name);
+		left.sort(sort);
+		right.sort(sort);
+
+		[[left, allList], [right, clsList]].forEach(([spells, el]) => spells.forEach(spell =>
+			el.append(`<option value="${toSlug(spell.name)}">${spell.name}</option>`)));
 	}
 
 	/**
@@ -189,7 +197,7 @@ class ObsidianCustomListManager extends Application {
 		const data = super.getData(options);
 		data.classes =
 			Object.keys(JSON.parse(game.settings.get('obsidian', 'spell-class-lists')))
-				.filter(cls => !OBSIDIAN.Config.CLASSES.includes(cls));
+				.filter(cls => !Object.values(OBSIDIAN.Config.CLASS_MAP).includes(cls));
 
 		data.max = Math.max(data.classes.length, 9);
 		return data;
@@ -219,7 +227,7 @@ class ObsidianCustomListManager extends Application {
 		}, []);
 
 		for (const key of Object.keys(lists)) {
-			if (!OBSIDIAN.Config.CLASSES.includes(key) && !classes.includes(key)) {
+			if (!Object.values(OBSIDIAN.Config.CLASS_MAP).includes(key) && !classes.includes(key)) {
 				delete lists[key];
 			}
 		}
