@@ -98,14 +98,14 @@ async function onHotbarDrop (bar, data, slot) {
 	return false;
 }
 
-export function hotbarRender (hotbar, html) {
+export async function hotbarRender (hotbar, html) {
 	for (const macro of hotbar.macros) {
 		const args = macro.macro?.data.flags?.obsidian?.args;
 		if (!args) {
 			continue;
 		}
 
-		let actor = game.actors.get(args.actor);
+		let actor = await fromUuid(args.uuid);
 		if (args.token && args.scene) {
 			actor = ObsidianActor.fromSceneTokenPair(args.scene, args.token);
 		}

@@ -14,18 +14,27 @@ export function patchChatMessage () {
 
 			let triggers;
 			const actor = ChatMessage.getSpeakerActor(this.data.speaker);
+			const message = this.toObject(false);
+			let details = message.flags.obsidian.details;
+
+			if (actor) {
+				details =
+					TextEditor.enrichHTML(details, {
+						secrets: this.user === game.userId,
+						rollData: actor.getRollData
+					});
+			}
 
 			if (actor?.data.obsidian?.triggers) {
 				triggers = duplicate(actor.data.obsidian.triggers);
 			}
 
 			const messageData = {
+				triggers, message, details,
 				user: game.user,
 				author: this.user,
 				alias: this.alias,
-				message: this.toObject(false),
 				isWhisper: this.data.whisper.some(id => id !== game.user.id),
-				triggers: triggers,
 				popout: options?.popout,
 				whisperTo:
 					this.data.whisper

@@ -95,9 +95,9 @@ export function prepareDefenseDisplay (parts) {
 		let label = `OBSIDIAN.Condition.${cond}`;
 
 		if (cond === 'sleep') {
-			label = 'MagicalSleep';
+			label = 'OBSIDIAN.MagicalSleep';
 		} else if (cond === 'disease') {
-			label = 'Disease';
+			label = 'OBSIDIAN.Disease';
 		} else {
 			footers.push({label, type: 'svg', value: `obsidian-icon-condition-${cond}`});
 		}
