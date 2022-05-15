@@ -21,7 +21,7 @@ export function patchChatMessage () {
 				details =
 					TextEditor.enrichHTML(details, {
 						secrets: this.user === game.userId,
-						rollData: actor.getRollData
+						rollData: actor.getRollData()
 					});
 			}
 
