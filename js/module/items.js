@@ -72,7 +72,7 @@ export const ObsidianItems = {
 			return;
 		}
 
-		ObsidianItems.roll(actor, {roll: 'fx', uuid: effect});
+		ObsidianItems.roll(actor, {roll: 'fx', effectId: effect});
 	},
 
 	itemMacro: function ({actor, token, scene, item, uuid}) {

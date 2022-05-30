@@ -248,7 +248,8 @@
 									{{data.attributes.hp.max}}
 								</div>
 							</div>
-							<input type="text" name="data.attributes.hp.temp" value="{{data.attributes.hp.temp}}"
+							<input type="text" name="data.attributes.hp.temp"
+							       value="{{#if data.attributes.hp.temp}}{{data.attributes.hp.temp}}{{/if}}"
 							       class="obsidian-input-num" placeholder="{{localize 'OBSIDIAN.TempAbbrUC'}}"
 							       data-dtype="Number">
 						</div>
