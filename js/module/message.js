@@ -53,7 +53,7 @@ export function patchChatMessage () {
 			let html = await renderTemplate('modules/obsidian/html/message.html', messageData);
 			html = $(html);
 
-			html.find('.obsidian-msg-roll-box').hover(evt => {
+			html.find('.obsidian-msg-roll-box:not(.obsidian-msg-wide-box)').hover(evt => {
 				const rect = evt.currentTarget.getBoundingClientRect();
 				let topLevel = evt.currentTarget._tt;
 
