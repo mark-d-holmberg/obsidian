@@ -516,12 +516,13 @@ export const Rolls = {
 
 		const msgs = [];
 		for (let i = 0; i < count; i++) {
+			const dmg = [...damage];
 			msgs.push({
 				flags: {
 					obsidian: {
 						type: 'dmg',
 						title: item.name,
-						damage: Rolls.rollDamage(actor, damage, {
+						damage: Rolls.rollDamage(actor, dmg, {
 							item: item,
 							scaledAmount: scaledAmount,
 							scaling: scaling
