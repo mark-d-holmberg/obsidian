@@ -1807,3 +1807,10 @@ legend .fancy-checkbox {
 	border-color: var(--obs-negative);
 	background-color: var(--obs-negative);
 }
+
+[contenteditable], [contenteditable] * {
+	user-select: unset;
+	-moz-user-select: unset;
+	-webkit-user-select: unset;
+	-ms-user-select: unset;
+}

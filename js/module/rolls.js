@@ -1371,7 +1371,7 @@ export const Rolls = {
 				Rolls.DSN(data3d),
 				game.user,
 				rollMode !== 'selfroll',
-				whisper,
+				whisper.length ? whisper : null,
 				rollMode === 'blindroll');
         }
 
